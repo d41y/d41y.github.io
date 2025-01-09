@@ -1,6 +1,6 @@
 # Notizen
 
-##### Meine persönlichen Notizen und Learnings zu verschiedenen Themen (_mit VSCode_)
+##### Meine persönlichen Notizen und Learnings zu verschiedenen Themen (_mit VSCode_).
 
 - [Pivoting](pivoting)
     - [SSH und Proxychains](pivoting/01_ssh_und_proxychains.md)
