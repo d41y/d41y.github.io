@@ -9,4 +9,8 @@
     - [Ligolo](pivoting/04_ligolo.md)
     - [Chisel](pivoting/05_chisel.md)
 
-    
+<!-- TOC -->
+- [Notizen](#notizen)
+        - [Meine persönlichen Notizen und Learnings zu verschiedenen Themen (_mit VSCode_).](#meine-persönlichen-notizen-und-learnings-zu-verschiedenen-themen-mit-vscode)
+
+<!-- /TOC -->
