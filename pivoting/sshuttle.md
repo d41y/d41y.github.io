@@ -1,4 +1,4 @@
-# 02 - SShuttle
+# SShuttle
 
 = ähnlich zu Proxychains, baut selbst SSH auf
 

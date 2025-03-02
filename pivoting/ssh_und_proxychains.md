@@ -1,4 +1,4 @@
-# 01 - SSH und Proxychains
+# SSH und Proxychains
 
 ### SSH unter Windows
 

@@ -1,4 +1,4 @@
-# 03 - Socat
+# Socat
 
 = Tool zur bidirektionalen Weiterleitung
 

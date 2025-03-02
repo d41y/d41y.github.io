@@ -1,4 +1,4 @@
-# 04 - LigoloNG
+# LigoloNG
 
 = erweiterte Version von Ligolo, einem Sicherheitstool, das für Red-Teaming und Pentests entwickelt wurde. Es ermöglicht sichere, multiplexierte und authentifizierte Tunnel.
 

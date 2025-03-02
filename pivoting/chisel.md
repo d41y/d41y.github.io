@@ -1,4 +1,4 @@
-# 05 - Chisel
+# Chisel
 
 = zum Tunneln von Traffic, wobei Chisel den zu übertragenden TCP Traffic in einen HTTP Tunnel verpackt, welcher wiederum mit SSH gesichert wird.
 
