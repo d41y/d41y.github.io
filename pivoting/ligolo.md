@@ -1,3 +1,15 @@
+- [LigoloNG](#ligolong)
+	- [Verwendung](#verwendung)
+		- [Verbindungsaufbau](#verbindungsaufbau)
+		- [Single Pivot](#single-pivot)
+		- [Multi Pivot](#multi-pivot)
+		- [Localhost Pivot](#localhost-pivot)
+	- [Aufgabe 1](#aufgabe-1)
+	- [Aufgabe 2](#aufgabe-2)
+	- [Aufgabe 3 (optional)](#aufgabe-3-optional)
+
+---
+
 # LigoloNG
 
 = erweiterte Version von Ligolo, einem Sicherheitstool, das für Red-Teaming und Pentests entwickelt wurde. Es ermöglicht sichere, multiplexierte und authentifizierte Tunnel.
@@ -24,7 +36,7 @@ Hauptmerkmale:
     - es werden keine Root-Rechte für die Anwendung auf dem Zielsystem benötigt
     - **Nachteil**: es können über den Agent keine Raw Packets versendet werden; Nmap SYN-Scans werden dann z. B. zu TCP Connect-Scans umgewandelt
 
-### Verwendung
+## Verwendung
 
 - Ligolo-ng verwendet ein Proxy-Server-Agent-Modell
     - entsprechende Binaries müssen auf dem Target bzw. dem Attacker vorhanden sein

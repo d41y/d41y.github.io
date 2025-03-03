@@ -6,6 +6,7 @@
   - [HTTPs Flow](#https-flow)
   - [cURL with HTTPs](#curl-with-https)
 
+---
 
 # HyperText Transfer Protocol (HTTP)
 
