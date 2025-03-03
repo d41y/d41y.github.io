@@ -2,7 +2,7 @@
 
 ## Web Requests
 - [HTTP/HTTPs Fundamentals](./web/http_https_fundamentals.md)
-- [Web Applications](./web/web_applications.md)
+- [Web Applications](./web/web_applications_fundamentals.md)
 
 ## Pivoting
 - [SSH und Proxychains](pivoting/ssh_und_proxychains.md)
