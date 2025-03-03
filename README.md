@@ -5,7 +5,7 @@
 - [Web Applications](./fundamentals/web_applications_fundamentals.md)
 
 ## Recon - Passive
-- [test](./info_gathering/test.md)
+- [test](./recon_passive/test.md)
 
 ## Recon - Active
 - [test](./recon_active/test.md)
