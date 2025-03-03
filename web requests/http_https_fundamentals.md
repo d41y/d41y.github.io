@@ -20,4 +20,43 @@ _Most internet communications are made with web requests through the HTTP protoc
 
 ![HTTP-Flow](../images/http_flow.png)
 
-1. 
+## cURL
+
+_cURL is a command-line tool and library that primarily supports HTTP along with many other protocols. -> Good candidate for scripts as well as automation, making it essential for sending various types of web requests from the command line._
+
+Example:
+```bash
+d41y@htb[/htb]$ curl inlanefreight.com
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+...SNIP...
+```
+
+
+# HyperText Transfer Protocol Secure (HTTPs)
+
+_One significant drawback of HTTP is that all data is transferred in clear-text. This means that anyone between the source and destination can perform a Man-in-the-Middle (MiTM) attack to view the transferred data.<br>To counter the issue, the HTTPs was created, in which all communications are transferred in an encrypted format, so even if a third party does intercept the request, they would not be able to extract the data out of it._
+
+## HTTPs Flow
+
+![HTTPs-Flow](../images/https_flow.png)
+
+## cURL with HTTPs
+
+cURL should automatically handle all the HTTPs communication standards and perform a secure handshake and then encrypt and decrypt the data automatically. However, if you contact a website with an invalid SSL certificate or an outdated one, then cURL by default would not proceed with the communication to protect against MiTM attacks.<br>To ignore certificate checks, you can set ```-k```.
+
+```bash
+d41y@htb[/htb]$ curl https://inlanefreight.com
+
+curl: (60) SSL certificate problem: Invalid certificate chain
+More details here: https://curl.haxx.se/docs/sslcerts.html
+...SNIP...
+
+d41y@htb[/htb]$ curl -k https://inlanefreight.com
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+...SNIP...
+```
+
