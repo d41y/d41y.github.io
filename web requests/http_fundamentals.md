@@ -20,7 +20,4 @@ _Most internet communications are made with web requests through the HTTP protoc
 
 ![HTTP-Flow](../images/http_flow.png)
 
-```mermaid
-flowchart LR
-    Start --> Stop
-```
+1. 
