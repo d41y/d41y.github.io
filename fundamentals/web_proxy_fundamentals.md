@@ -37,6 +37,12 @@
       - [Processors](#processors)
       - [Options](#options-1)
   - [Web Scanner](#web-scanner)
+    - [Burp Scanner](#burp-scanner)
+    - [ZAP Scanner](#zap-scanner)
+      - [ZAP Spider](#zap-spider)
+      - [ZAP Passive Scanner](#zap-passive-scanner)
+      - [ZAP Active Scanner](#zap-active-scanner)
+      - [ZAP Reporting](#zap-reporting)
 
 
 # Web Proxies
@@ -290,3 +296,37 @@ You may also want to perform some processing on each word in your payload wordli
 You can set a few options for your fuzzer.
 
 ## Web Scanner
+
+### Burp Scanner
+
+_Pro-Only Feature_
+
+... a powerful scanner various types of web vulnerabilities, using a Crawler for building the website structure, and scanner for passive and active scanning.
+
+### ZAP Scanner
+
+#### ZAP Spider
+
+... is capable of building site maps using ZAP Spider and performing both passive and active scans to look for various types of vulnerabilities.
+
+After starting a spider scan, the scan spiders the website by looking for links and validating them.
+
+A possible outcome:
+
+![Sites Tree](../images/proxy_zap_spider.png)
+
+#### ZAP Passive Scanner
+
+... runs and makes requests to various end-points, it is automatically running its passive scanner on each response to see if it can identify potential issues from the source code, like missing security headers or DOM-based XSS vulnerabilities.
+
+#### ZAP Active Scanner
+
+... will try various tyoes of attacks against all identified pages and HTTP parameters to identify as many vulnerabilities as it can. As the active Scan runs, you will see the alerts button start to get populated with more alers as ZAP uncovers more issues.
+
+#### ZAP Reporting
+
+You can generate a report with all of the findings identified by ZAP through its various scans and can be exported in other formats like XML or Markdown.
+
+Looks like:
+
+![ZAP Reporting](../images/proxy_zap_report.png)
