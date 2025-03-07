@@ -66,3 +66,7 @@ Server-side
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
+
+## GitHub
+
+[Cloning GitHub, committing and pushing](./infra_misc/github_cloning_enabling.md)
