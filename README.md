@@ -20,6 +20,7 @@
 ## Fundamentals
 - [HTTP/HTTPs Fundamentals](./fundamentals/http_https_fundamentals.md)
 - [Web Applications](./fundamentals/web_applications_fundamentals.md)
+- [Web Reconnaissance](./fundamentals/web_recon_fundamentals.md)
 - [Web Proxies](./fundamentals/web_proxy_fundamentals.md)
 
 ## Pivoting
