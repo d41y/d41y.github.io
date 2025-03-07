@@ -29,13 +29,6 @@
 - [SSH und Proxychains](pivoting/ssh_und_proxychains.md)
 - [Sshuttle](pivoting/sshuttle.md)
 
-## Recon
-Active
-  - [test](./recon/active/test.md)
-
-Passive
-- [test](./recon/passive/test.md)
-
 ## Web Attacks
 Client-side
   - [SSRF](./web_attacks/server_side/ssrf.md)
