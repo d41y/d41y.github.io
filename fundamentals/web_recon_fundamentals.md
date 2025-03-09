@@ -18,8 +18,18 @@
     - [Techniques](#techniques)
     - [Tools](#tools)
   - [Crawling](#crawling)
+    - [Breadth-first-crawling](#breadth-first-crawling)
+    - [Depth-first-crawling](#depth-first-crawling)
+    - [Extractig Valuable Information](#extractig-valuable-information)
+    - [Popular Crawlers](#popular-crawlers)
+  - [robots.txt](#robotstxt)
+    - [Structure](#structure)
+  - [Well-Known URIs](#well-known-uris)
   - [Search Engines](#search-engines)
+    - [Search Operators](#search-operators)
   - [Web Archives](#web-archives)
+  - [Automating Recon](#automating-recon)
+    - [Recon Frameworks](#recon-frameworks)
   - [Certificate Transparency Logs](#certificate-transparency-logs)
     - [CT Logs and Web Recon](#ct-logs-and-web-recon)
 
@@ -587,9 +597,204 @@ d41y@htb[/htb]$ nikto -h inlanefreight.com -Tuning b
 
 ## Crawling
 
+... often called spidering, is the automated process of systematically browsing the World Wide Web. It follows links from one page to another, collecting information.
+
+Example:
+
+1. Homepage<br>
+├── link1<br>
+├── link2<br>
+└── link3
+
+2. link1 Page<br>
+├── Homepage<br>
+├── link2<br>
+├── link4<br>
+└── link5
+
+3. and so on ...
+
+### Breadth-first-crawling
+
+... prioritizes exploring a website's width before going deep. It starts by crawling all the links on the seed page, then moves on those pages, and so on. This is useful for getting a broad overview of a website's structure and content.
+
+### Depth-first-crawling
+
+... prioritizes depth over breadth. It follows a single path of links as far as possible before backtracking and exploring other paths. This can be useful for finding specific content or reaching deep into a website's structure.
+
+### Extractig Valuable Information
+
+- Links (_Internal and External)
+  - fundamental building blocks of the web, connecting pages within a website and to other websites
+- Comments
+  - comment sections on blogs, forums, or other interactive pages can be a goldmine of information
+- Metadata
+  - refers to data about data
+  - in the context of web pages, it includes information like page titles, descriptions, keywords, author names, and dates
+- Sensitive Files
+  - web crawlers can be configured to actively search for sensitive files that might be inadvertently exposed on a website
+
+### Popular Crawlers
+
+- Burp Suite Spider
+- OWASP ZAP
+- Scrapy
+- Apache Nutch
+- ReconSpider
+
+## robots.txt
+
+... is a simple text file placed in the root directory of a website. It adheres to the **Robots Exclusion Standard**, guidelines for how web crawlers should behave when visiting a website. This file contains instructions in the form of "directives" that tell bots which parts of the website they can and cannot crawl.
+
+### Structure
+
+The robots.txt follows a straightforward structure, with each set of instruction, or "record", separated by a blank line. Each record consists of two main components:
+
+1. User-Agent
+   - specifies which crawler or bot the following rules apply to
+   - a "*" indicates that the rules apply to all bots
+2. Directives
+   - these lines provide specific instructions to the identified user-agent
+
+Common directives:
+
+| Directive | Example | Description |
+| --------- | ------- | ----------- |
+| **Disallow** | _Disallow: /admin/_ | specifies paths or patterns that the bot should not crawl |
+| **Allow** | _Allow: /public/_ | explicitly permits the bot to crawl specific paths or patterns, even if they fall under a broader Disallow rule |
+| **Crawl-delay** | _Crawl-delay: 10_ | sets a delay between successive requests from the bot to avoid overloading the server |
+| **Sitemap** | _Sitemap: https://www.example.com/sitemap.xml_ | provides the URL to an XML sitemap for more efficient crawling |
+
+Full robots.txt example:
+
+```txt
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Allow: /public/
+
+User-agent: Googlebot
+Crawl-delay: 10
+
+Sitemap: https://www.example.com/sitemap.xml
+```
+
+## Well-Known URIs
+
+The ```.well-known``` standard, defined in RFC 8615, serves as a standardized directory within a website's root domain. This designated location, typically accessible via the ```/.well-known/``` path on a web server, centralizes a website's critical configuration files and information related to its services, protocols. and security mechanisms.
+
+The Internet Assigned Numbers Authority (IANA) maintains a [registry](https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml) of .well-known URIs, each serving a specific purpose defined by various specifications and standards. Some examples:
+
+| URI Suffix | Description |
+| ---------- | ----------- |
+| **security.txt** | contains contact information for security researchers to report vulnerability |
+| **/.well-known/change-password** | provides a standard URL for directing users to a password change page |
+| **openid-configuration** | defines configuration details for OpenID Connect, an identity layer on top of the OAuth 2.0 protocol |
+| **assetlinks.json** | used for verifying ownership of digital assets associated with a domain |
+| **mta-sts.txt** | specifies the policy for SMTP MTA Strict Transport Security to enhace email security |
+
 ## Search Engines
 
+... serve you as your guides in the vast landscape of the internet, helping you to navigate through the seemingly endless expanse of information. However, beyond their primary function of answering everyday queries, search engines also hold a treasure trove of data that can be invaluable for web recon and information gathering.
+
+### Search Operators
+
+... are like search engines' secret codes. These special commands and modifiers unlock a new level of precision and control allowing you to pinpoint specific types of information amidst the vastness of the indexed web.
+
+[Here](https://www.recordedfuture.com/threat-intelligence-101/threat-analysis-techniques/google-dorks) are some of them.
+
+_OffSec maintains the [Exploit Database](https://www.exploit-db.com/google-hacking-database) which has lots of different approaches to a various amount of google dorks._
+
 ## Web Archives
+
+With the [Internet Archive's Wayback Machine](http://web.archive.org/), you have a unique oppurtunity to revisit the past and explore the digital footprints of websites as they once were.
+
+It can help with:
+
+- uncovering hidden assets and vulns
+- tracking changes and identifying patterns
+- gathering intel
+- stealthy recon
+
+## Automating Recon
+
+... can significantly enhance efficiency and accuracy, allowing you to gather information at scale and identify potential vulns more rapidly.
+
+### Recon Frameworks
+
+... aim to provide a complete suite of tools for web recon. Some are:
+
+- [FinalRecon](https://github.com/thewhiteh4t/FinalRecon)
+- Recon-ng
+- theHarvester
+- SpiderFoot
+- OSINT Framework
+
+FinalRecon example:
+
+```bash
+d41y@htb[/htb]$ ./finalrecon.py --headers --whois --url http://inlanefreight.com
+
+ ______  __   __   __   ______   __
+/\  ___\/\ \ /\ "-.\ \ /\  __ \ /\ \
+\ \  __\\ \ \\ \ \-.  \\ \  __ \\ \ \____
+ \ \_\   \ \_\\ \_\\"\_\\ \_\ \_\\ \_____\
+  \/_/    \/_/ \/_/ \/_/ \/_/\/_/ \/_____/
+ ______   ______   ______   ______   __   __
+/\  == \ /\  ___\ /\  ___\ /\  __ \ /\ "-.\ \
+\ \  __< \ \  __\ \ \ \____\ \ \/\ \\ \ \-.  \
+ \ \_\ \_\\ \_____\\ \_____\\ \_____\\ \_\\"\_\
+  \/_/ /_/ \/_____/ \/_____/ \/_____/ \/_/ \/_/
+
+[>] Created By   : thewhiteh4t
+ |---> Twitter   : https://twitter.com/thewhiteh4t
+ |---> Community : https://twc1rcle.com/
+[>] Version      : 1.1.6
+
+[+] Target : http://inlanefreight.com
+
+[+] IP Address : 134.209.24.248
+
+[!] Headers :
+
+Date : Tue, 11 Jun 2024 10:08:00 GMT
+Server : Apache/2.4.41 (Ubuntu)
+Link : <https://www.inlanefreight.com/index.php/wp-json/>; rel="https://api.w.org/", <https://www.inlanefreight.com/index.php/wp-json/wp/v2/pages/7>; rel="alternate"; type="application/json", <https://www.inlanefreight.com/>; rel=shortlink
+Vary : Accept-Encoding
+Content-Encoding : gzip
+Content-Length : 5483
+Keep-Alive : timeout=5, max=100
+Connection : Keep-Alive
+Content-Type : text/html; charset=UTF-8
+
+[!] Whois Lookup : 
+
+   Domain Name: INLANEFREIGHT.COM
+   Registry Domain ID: 2420436757_DOMAIN_COM-VRSN
+   Registrar WHOIS Server: whois.registrar.amazon.com
+   Registrar URL: http://registrar.amazon.com
+   Updated Date: 2023-07-03T01:11:15Z
+   Creation Date: 2019-08-05T22:43:09Z
+   Registry Expiry Date: 2024-08-05T22:43:09Z
+   Registrar: Amazon Registrar, Inc.
+   Registrar IANA ID: 468
+   Registrar Abuse Contact Email: abuse@amazonaws.com
+   Registrar Abuse Contact Phone: +1.2024422253
+   Domain Status: clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited
+   Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+   Domain Status: clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited
+   Name Server: NS-1303.AWSDNS-34.ORG
+   Name Server: NS-1580.AWSDNS-05.CO.UK
+   Name Server: NS-161.AWSDNS-20.COM
+   Name Server: NS-671.AWSDNS-19.NET
+   DNSSEC: unsigned
+   URL of the ICANN Whois Inaccuracy Complaint Form: https://www.icann.org/wicf/
+
+
+[+] Completed in 0:00:00.257780
+
+[+] Exported : /home/htb-ac-643601/.local/share/finalrecon/dumps/fr_inlanefreight.com_11-06-2024_11:07:59
+```
 
 ## Certificate Transparency Logs
 
