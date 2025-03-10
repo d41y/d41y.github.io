@@ -33,6 +33,7 @@
   - [Certificate Transparency Logs](#certificate-transparency-logs)
     - [CT Logs and Web Recon](#ct-logs-and-web-recon)
 
+---
 
 # Web Reconnaissance
 
