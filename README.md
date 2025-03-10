@@ -27,6 +27,7 @@ _to-Do's_:
 
 ## Fundamentals
 Web
+- [Fuzzing](../notes/fundamentals/fuzzing_fundamentals.md)
 - [HTTP/HTTPs Fundamentals](./fundamentals/http_https_fundamentals.md)
 - [Proxies](./fundamentals/web_proxy_fundamentals.md)
 - [Reconnaissance](./fundamentals/web_recon_fundamentals.md)
