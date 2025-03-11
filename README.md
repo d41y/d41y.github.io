@@ -50,6 +50,10 @@ Injection Attacks
 Server-side
   - [XSS](./web_attacks/client_side/xss.md)
 
+## Web Security Techniques
+
+- [JavaScript Deobfuscation](./web_security_techniques/javascript_deobfuscation.md)
+
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
