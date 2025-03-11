@@ -4,7 +4,7 @@
 flowchart TD
 
     A[Login to GitHub]
-    B[git config --global user.name 'Your GitHub Username'<br>git config --global user.email 'your-email@example.com']
+    B[git config --global user.name 'Your GitHub Username'<br>git config --global user.email 'your-email\@example.com']
     C[Generate new SSH-Key]
     D[Add SSH-Key to GitHub]
     E[ssh -T git\@github.com]
