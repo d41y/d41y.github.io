@@ -42,13 +42,13 @@ Web
 
 ## Web Attacks
 Client-side
-  - [SSRF](./web_attacks/server_side/ssrf.md)
+  - [XSS](./web_attacks/client_side/xss.md)
 
 Injection Attacks
   - [SQLi](./web_attacks/injection_attacks/sqli.md)
   
 Server-side
-  - [XSS](./web_attacks/client_side/xss.md)
+  - [SSRF](./web_attacks/server_side/ssrf.md)
 
 ## Web Security Techniques
 
