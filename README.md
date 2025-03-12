@@ -34,7 +34,7 @@ _to-Do's_:
 ### 0x00
 
 - [Fuzzing](./fundamentals/fuzzing_fundamentals.md)
-- [HTTP/HTTPs Fundamentals](./fundamentals/http_https_fundamentals.md)
+- [HTTP/HTTPs](./fundamentals/http_https_fundamentals.md)
 - [Proxies](./fundamentals/web_proxy_fundamentals.md)
 - [Reconnaissance](./fundamentals/web_recon_fundamentals.md)
 - [Web Applications](./fundamentals/web_applications_fundamentals.md)
@@ -71,7 +71,16 @@ Server-side
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
-  INFRA & MISC
+  GENERAL
+</h3>
+
+<hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
+
+<br>
+<hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
+
+<h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
+  INFRA
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
