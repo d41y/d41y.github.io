@@ -39,10 +39,6 @@ _to-Do's_:
 - [Reconnaissance](./fundamentals/web_recon_fundamentals.md)
 - [Web Applications](./fundamentals/web_applications_fundamentals.md)
 
-### Content Management Systems
-
-- [Wordpress]()
-
 ### Attacks
 
 Client-side
@@ -53,6 +49,10 @@ Injection Attacks
   
 Server-side
   - [SSRF](./web_attacks/server_side/ssrf.md)
+
+### Content Management Systems
+
+- [Wordpress]()
 
 ### Security Techniques
 
