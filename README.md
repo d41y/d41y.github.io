@@ -22,17 +22,6 @@ _to-Do's_:
 ## Active Directory
 - [testlink]()
 
-## CMS
-- [Wordpress]()
-
-## Fundamentals
-Web
-- [Fuzzing](./fundamentals/fuzzing_fundamentals.md)
-- [HTTP/HTTPs Fundamentals](./fundamentals/http_https_fundamentals.md)
-- [Proxies](./fundamentals/web_proxy_fundamentals.md)
-- [Reconnaissance](./fundamentals/web_recon_fundamentals.md)
-- [Web Applications](./fundamentals/web_applications_fundamentals.md)
-
 ## Pivoting
 - [Chisel](pivoting/chisel.md)
 - [Ligolo](pivoting/ligolo.md)
@@ -41,6 +30,18 @@ Web
 - [Sshuttle](pivoting/sshuttle.md)
 
 ## Web
+
+### 0x00
+
+- [Fuzzing](./fundamentals/fuzzing_fundamentals.md)
+- [HTTP/HTTPs Fundamentals](./fundamentals/http_https_fundamentals.md)
+- [Proxies](./fundamentals/web_proxy_fundamentals.md)
+- [Reconnaissance](./fundamentals/web_recon_fundamentals.md)
+- [Web Applications](./fundamentals/web_applications_fundamentals.md)
+
+### Content Management Systems
+
+- [Wordpress]()
 
 ### Attacks
 

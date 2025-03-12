@@ -1,17 +1,16 @@
 - [Fuzzing](#fuzzing)
   - [Wordlists](#wordlists)
-  - [ffuf](#ffuf)
-    - [Directory Fuzzing](#directory-fuzzing)
-    - [Extension Fuzzing](#extension-fuzzing)
-    - [Page Fuzzing](#page-fuzzing)
-    - [Recursive Fuzzing](#recursive-fuzzing)
-    - [Sub-domain Fuzzing](#sub-domain-fuzzing)
-    - [Vhost Fuzzing](#vhost-fuzzing)
-      - [Vhosts vs. Sub-domains](#vhosts-vs-sub-domains)
-    - [Filtering Results](#filtering-results)
-    - [Parameter Fuzzing - GET](#parameter-fuzzing---get)
-    - [Parameter Fuzzing - POST](#parameter-fuzzing---post)
-    - [Value Fuzzing](#value-fuzzing)
+  - [Directory Fuzzing](#directory-fuzzing)
+  - [Extension Fuzzing](#extension-fuzzing)
+  - [Page Fuzzing](#page-fuzzing)
+  - [Recursive Fuzzing](#recursive-fuzzing)
+  - [Sub-domain Fuzzing](#sub-domain-fuzzing)
+  - [Vhost Fuzzing](#vhost-fuzzing)
+    - [Vhosts vs. Sub-domains](#vhosts-vs-sub-domains)
+  - [Filtering Results](#filtering-results)
+  - [Parameter Fuzzing - GET](#parameter-fuzzing---get)
+  - [Parameter Fuzzing - POST](#parameter-fuzzing---post)
+  - [Value Fuzzing](#value-fuzzing)
 
 ---
 
@@ -21,13 +20,13 @@
 
 You usually utilize pre-defined wordlists of commonly used terms for each type of test for web fuzzing to see if the webserver would accept them. This is done because web servers do not usually provide a directory of all available links and domains, and so you would have to check for various links and see which ones return pages.
 
+_The tool 'ffuf' will be used for the coming examples._
+
 ## Wordlists
 
 To determine which pages exist, you shoud have a wordlist containing commonly used words for web directories and pages. [SecLists](https://github.com/danielmiessler/SecLists) might help.
 
-## ffuf
-
-### Directory Fuzzing
+## Directory Fuzzing
 
 Example:
 
@@ -60,7 +59,7 @@ blog                    [Status: 301, Size: 326, Words: 20, Lines: 10]
 :: Progress: [87651/87651] :: Job [1/1] :: 9739 req/sec :: Duration: [0:00:09] :: Errors: 0 ::
 ```
 
-### Extension Fuzzing
+## Extension Fuzzing
 
 One common way to identify, what types of pages the website uses, is by finding the server type through the HTTP response headers and guessing the extension. For example, if the server is apache, then it may be ```.php```, or if it was ```IIS```, then it could be ```.asp``` or ```.apsx```.
 
@@ -95,7 +94,7 @@ ________________________________________________
 :: Progress: [39/39] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Errors: 0 ::
 ```
 
-### Page Fuzzing
+## Page Fuzzing
 
 You place the keyword where the filename should be, and use the same wordlist you used for fuzzing directories.
 
@@ -130,7 +129,7 @@ REDACTED                [Status: 200, Size: 465, Words: 42, Lines: 15]
 :: Progress: [87651/87651] :: Job [1/1] :: 5843 req/sec :: Duration: [0:00:15] :: Errors: 0 ::
 ```
 
-### Recursive Fuzzing
+## Recursive Fuzzing
 
 If you had dozens of directories, each with their own subdirectories and files, fuzzing for directories,then going under these directories, and then fuzzing for files would take a very long time to complete. To be able to automate this, you can utilize recursive fuzzing.
 
@@ -183,7 +182,7 @@ ________________________________________________
 <...SNIP...>
 ```
 
-### Sub-domain Fuzzing
+## Sub-domain Fuzzing
 
 A subdomain is any webstie underlying another domain. For example, ```https://photos.google.com``` is the 'photos' subdomain of 'google.com'.
 
@@ -234,11 +233,11 @@ ________________________________________________
 > [!IMPORTANT]
 > If a domain does not have a public DNS, there are no public subdomains for the domain. Even though you added the main domain to your local hosts file, only the primary domain was included. Therefore, when a tools tries to find subdomains, it won't find them in the local file and will query the DNS, which doesn't have them.
 
-### Vhost Fuzzing
+## Vhost Fuzzing
 
 When it comes to fuzzing subdomains that do not have a public DNS record or sub-domains under websites that are not public, you could use Vhost Fuzzing.
 
-#### Vhosts vs. Sub-domains
+### Vhosts vs. Sub-domains
 
 The key difference between Vhosts and sub-domains is that a Vhost is basically a 'sub-domain' served on the same server and has the same IP, such that a single IP could be serving two or more different websites.
 
@@ -284,7 +283,7 @@ www1                    [Status: 200, Size: 900, Words: 423, Lines: 56]
 <...SNIP...>
 ```
 
-### Filtering Results
+## Filtering Results
 
 Ffuf provides the option to match or filter out a specific HTTP code, response size, or amount of words.
 
@@ -340,7 +339,7 @@ admin                   [Status: 200, Size: 0, Words: 1, Lines: 1]
 :: Progress: [4997/4997] :: Job [1/1] :: 1249 req/sec :: Duration: [0:00:04] :: Errors: 0 ::
 ```
 
-### Parameter Fuzzing - GET
+## Parameter Fuzzing - GET
 
 If you try to access a page, and see this:
 
@@ -388,7 +387,7 @@ Once you get a hit and try the result, it might look like this:
 
 ![Ffuf GET 2](../images/fuzzing_ffuf_get2.png)
 
-### Parameter Fuzzing - POST
+## Parameter Fuzzing - POST
 
 POST requests are not passed with the URL and cannot simply be appended after a ```?``` symbol. POST requests are passed in the data field within the HTTP request.
 
@@ -435,7 +434,7 @@ d41y@htb[/htb]$ curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'i
 <...SNIP...>
 ```
 
-### Value Fuzzing
+## Value Fuzzing
 
 After fuzzing a working parameter, you now have to fuzz the correct value.
 
