@@ -40,7 +40,10 @@ Web
 - [SSH und Proxychains](pivoting/ssh_und_proxychains.md)
 - [Sshuttle](pivoting/sshuttle.md)
 
-## Web Attacks
+## Web
+
+### Attacks
+
 Client-side
   - [XSS](./web_attacks/client_side/xss.md)
 
@@ -50,7 +53,7 @@ Injection Attacks
 Server-side
   - [SSRF](./web_attacks/server_side/ssrf.md)
 
-## Web Security Techniques
+### Security Techniques
 
 - [JavaScript Deobfuscation](./web_security_techniques/javascript_deobfuscation.md)
 
