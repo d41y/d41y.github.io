@@ -1,4 +1,4 @@
-- [JavaScript Deobfuscation](#javascript-deobfuscation)
+- [JavaScript (De-)Obfuscation](#javascript-de-obfuscation)
   - [Source Code](#source-code)
     - [HTML](#html)
     - [CSS](#css)
@@ -16,7 +16,7 @@
 
 ---
 
-# JavaScript Deobfuscation
+# JavaScript (De-)Obfuscation
 
 Reference JavaScript code:
 
