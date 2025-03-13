@@ -19,8 +19,19 @@ _to-Do's_:
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
-## Active Directory
-- [testlink]()
+## Cloud
+
+## Crypto
+
+## GamePwn
+
+## Hardware
+
+## Linux
+
+## Mobile
+
+## OSINT
 
 ## Pivoting
 - [Chisel](./attack/pivoting/chisel.md)
@@ -28,6 +39,8 @@ _to-Do's_:
 - [Socat](./attack/pivoting/socat.md)
 - [SSH und Proxychains](./attack/pivoting/ssh_und_proxychains.md)
 - [Sshuttle](./attack/pivoting/sshuttle.md)
+
+## Reversing
 
 ## Web
 
@@ -44,19 +57,42 @@ _to-Do's_:
 Client-side
   - [XSS](./attack/web_attacks/client_side/xss.md)
 
-Injection Attacks
+File Upload
+  - [File Upload]()
+
+Injections
   - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
+  - [Command Injections]()
   
 Server-side
   - [SSRF](./attack/web_attacks/server_side/ssrf.md)
+  - [File Inclusion]()
 
-### Content Management Systems
+Web Service & API
+  - [Web Service & API]()
+
+### Authentication
+
+- [Broken Authentication]()
+- [Login Brute Forcing]()
+
+### CMS
 
 - [Wordpress]()
 
-### Security Techniques
+### Processes
+
+- [Bug Bounty Hunting Process]()
+
+### Web Security
 
 - [JavaScript (De-)Obfuscation](./attack/web_security_techniques/javascript_deobfuscation.md)
+- [Session Security]()
+
+## Windows
+
+### Active Directory
+- [testlink]()
 
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
@@ -67,6 +103,12 @@ Server-side
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
+## Forensics
+
+## Malware Analysis
+
+## Network Traffic Analysis
+
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
@@ -75,6 +117,10 @@ Server-side
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
+
+## RegEx
+
+## Reporting
 
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
@@ -88,3 +134,5 @@ Server-side
 ## GitHub
 
 [Cloning GitHub, committing and pushing](./attack/infra_misc/github_cloning_enabling.md)
+
+## VPS
