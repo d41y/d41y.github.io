@@ -82,10 +82,6 @@ Web Service & API
 
 - [Wordpress]()
 
-### Processes
-
-- [Bug Bounty Hunting Process]()
-
 ### Web Security
 
 - [JavaScript (De-)Obfuscation](./attack/web_security_techniques/javascript_deobfuscation.md)
@@ -129,6 +125,10 @@ Relational
 Non-Relational
 
 - [Neo4J]()
+
+## Processes
+
+- [Bug Bounty Hunting Process]()
 
 ## RegEx
 
