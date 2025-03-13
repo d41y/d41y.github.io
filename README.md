@@ -29,6 +29,8 @@ _to-Do's_:
 
 ## Linux
 
+## MacOS
+
 ## Mobile
 
 ## OSINT
