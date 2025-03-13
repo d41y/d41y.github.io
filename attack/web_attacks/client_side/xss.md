@@ -1,28 +1,37 @@
 - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
-	- [Stored XSS](#stored-xss)
-	- [Reflected XSS](#reflected-xss)
-	- [DOM XSS](#dom-xss)
-		- [Source and Sink](#source-and-sink)
-		- [DOM attacks](#dom-attacks)
-	- [XSS Discovery](#xss-discovery)
-		- [Automated Discovery](#automated-discovery)
-			- [XSS Strike example:](#xss-strike-example)
-		- [Manual Discovery](#manual-discovery)
-		- [Code Review](#code-review)
-	- [XSS Attacks](#xss-attacks)
-		- [Defacing](#defacing)
-			- [Defacement Elements](#defacement-elements)
-			- [Changing Background](#changing-background)
-			- [Changing Page Title](#changing-page-title)
-			- [Changing Page Text](#changing-page-text)
-		- [Phishing](#phishing)
-			- [Login Form Injection](#login-form-injection)
-			- [Credential Stealing](#credential-stealing)
-		- [Session Hijacking](#session-hijacking)
-			- [Blind XSS Detection](#blind-xss-detection)
-			- [Loading a Remote Script](#loading-a-remote-script)
-			- [Session Hijacking](#session-hijacking-1)
-	- [XSS Prevention](#xss-prevention)
+  - [Stored XSS](#stored-xss)
+  - [Reflected XSS](#reflected-xss)
+  - [DOM XSS](#dom-xss)
+    - [Source and Sink](#source-and-sink)
+    - [DOM attacks](#dom-attacks)
+  - [XSS Discovery](#xss-discovery)
+    - [Automated Discovery](#automated-discovery)
+      - [XSS Strike example:](#xss-strike-example)
+    - [Manual Discovery](#manual-discovery)
+    - [Code Review](#code-review)
+  - [XSS Attacks](#xss-attacks)
+    - [Defacing](#defacing)
+      - [Defacement Elements](#defacement-elements)
+      - [Changing Background](#changing-background)
+      - [Changing Page Title](#changing-page-title)
+      - [Changing Page Text](#changing-page-text)
+    - [Phishing](#phishing)
+      - [Login Form Injection](#login-form-injection)
+      - [Credential Stealing](#credential-stealing)
+    - [Session Hijacking](#session-hijacking)
+      - [Blind XSS Detection](#blind-xss-detection)
+      - [Loading a Remote Script](#loading-a-remote-script)
+      - [Session Hijacking](#session-hijacking-1)
+  - [XSS Prevention](#xss-prevention)
+    - [Front End](#front-end)
+      - [Input Validation](#input-validation)
+      - [Input Sanitization](#input-sanitization)
+      - [Direct Input](#direct-input)
+    - [Back End](#back-end)
+      - [Input Validation](#input-validation-1)
+      - [Input Sanitization](#input-sanitization-1)
+      - [Output HTML Encoding](#output-html-encoding)
+      - [Server Configuration](#server-configuration)
 
 ---
 
@@ -527,3 +536,132 @@ Victim IP: 10.10.10.1 | Cookie: cookie=f904f93c949d19d870911bf8b05fe7b2
 Finally, you can use this cookie on the login page to acces the victim's account. For that, you need to add the cookie name (_part of the request made on your server before the '='_) and the cookie value (_the part after the '='_). Once the cookie is set, you can refresh the web page and you will get access as the victim.
 
 ## XSS Prevention
+
+The most important aspect of preventing XSS vulnerabilities is proper input sanitization and validation on both the front and back end. In addition to that, other security measures can be taken to prevent XSS attacks.
+
+### Front End
+
+As the front-end of the web app is where most of the user input is taken from, it is essential to sanitize and validate the user input on the front-end using JavaScript.
+
+#### Input Validation
+
+Can be done with the following code:
+
+```javascript
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test($("#login input[name=email]").val());
+}
+```
+
+This code tests the ```email``` input field and returns ```true``` or ```false``` whether it makes the Regex validation of an email format.
+
+#### Input Sanitization
+
+You should always ensure that you do not allow any input with JavaScript code in it, by escaping any special characters. For this, you can utilize the [DOMPurify(https://github.com/cure53/DOMPurify)] JavaScript library:
+
+```javascript
+<script type="text/javascript" src="dist/purify.min.js"></script>
+let clean = DOMPurify.sanitize( dirty );
+```
+
+This will escape any special characters with a backslash, which should help ensure that a user does not send any input with special characters.
+
+#### Direct Input
+
+Finally, youo should always ensure that you never use user input directly within certain HTML tags, like:
+
+1. JavaScript code ```<script></script>```
+2. CSS Style code ```<style></style>```
+3. Tag/Attribute Fields ```<div name='INPUT'></>```
+4. HTML Comments ```<!-- -->```
+
+If user input goes into any of the above examples, it can inject malicious JavaScript code, which may lead to an XSS vuln. In addition to this, you should avoid using JavaScript functions that allow changing raw text of HTML fields, like:
+
+- ```DOM.innerHTML```
+- ```DOM.outerHTML```
+- ```document.write()```
+- ```document.writeln()```
+- ```document.domain```
+
+And the following jQuery functions:
+
+- ```html()```
+- ```parseHTML()```
+- ```add()```
+- ```append()```
+- ```prepend()```
+- ```after()```
+- ```insertAfter()```
+- ```before()```
+- ```insertBefore()```
+- ```replaceAll()```
+- ```replaceWith()```
+
+As these functions write raw text to the HTML code, if any user input goes into them, it may include malicious JavaScript code, which leads to an XSS vuln.
+
+### Back End
+
+You should also ensure that you prevent XSS vulns with measures on the back-end to prevent stored and reflected XSS vulns. This can be achieved with input and output sanitization and validation, server configuration, and back-end tools that help prevent XSS vulns.
+
+#### Input Validation
+
+... in the back-end is quite similar to the front-end, and it uses Regex or library functions to ensure that the input field is what is expected. If it does not match, then the back-end server will reject it and not display it.
+
+PHP back-end example:
+
+```php
+if (filter_var($_GET['email'], FILTER_VALIDATE_EMAIL)) {
+    // do task
+} else {
+    // reject input - do not display it
+}
+```
+
+For a NodeJS back-end, you can use the same JavaScript code mentioned earlier for the front-end.
+
+#### Input Sanitization
+
+When it comes to input sanitization, then the back-end plays a vital role, as front-end input sanitization can be easily bypassed by sending custom GET and POST requests. There are very strong libraries for various back-end languages that can properly sanitize any user input, such that you ensure that no injection can occur.
+
+For a PHP back-end, you could use ```addslashes```:
+
+```php
+addslashes($_GET['email'])
+```
+
+For a NodeJS back-end, you can also use the DOMPurify library:
+
+```javascript
+import DOMPurify from 'dompurify';
+var clean = DOMPurify.sanitize(dirty);
+```
+
+#### Output HTML Encoding
+
+This means you have to encode any special characters into their HTML codes (_e. g. ```<``` into ```&lt;```_), which is helpful if you need to display the entire user input without introducing an XSS vuln.
+
+For PHP:
+
+```php
+htmlentities($_GET['email']);
+```
+
+For NodeJS:
+
+```javascript
+import encode from 'html-entities';
+encode('<'); // -> '&lt;'
+```
+
+#### Server Configuration
+
+There are certain back-end web server configurations that may help in preventing XSS attacks:
+
+- Using HTTPS across the entire domain
+- Using XSS prevention headers
+- Using the appropriate Content-Type for the page
+- Using Content-Security-Policy options, which only allows locally hosted scripts
+- Using the Httponly and Secure flags to prevent JavaScript from reading cookies and only transport them over HTTPS
+
+In addition, having a good Web App Firewall (_WAF_) can significantly reduce the chances of XSS exploitation, as it will automatically detect any type of injection going through HTTP requests and will automatically reject such requests.
