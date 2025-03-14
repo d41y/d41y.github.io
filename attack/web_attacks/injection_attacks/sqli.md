@@ -17,7 +17,18 @@
   - [UNION Injection](#union-injection)
     - [Detect number of columns](#detect-number-of-columns)
       - [Using ORDER BY](#using-order-by)
-    - [Using UNION](#using-union)
+      - [Using UNION](#using-union)
+    - [Location of Injection](#location-of-injection)
+    - [Database Enumeration](#database-enumeration)
+      - [MySQL Fingerprinting](#mysql-fingerprinting)
+      - [INFORMATION\_SCHEMA Database](#information_schema-database)
+      - [SCHEMA](#schema)
+      - [TABLES](#tables)
+      - [COLUMNS](#columns)
+      - [Data](#data)
+    - [Reading Files](#reading-files)
+    - [Writing Files](#writing-files)
+  - [SQLi Mitigation](#sqli-mitigation)
 
 ---
 
@@ -62,7 +73,7 @@ $query = "select * from logins where username like '%$searchInput'";
 $result = $conn->query($query);
 ```
 
-In this case you can add a single quote ```'```, which will end the user-input field, and after it, we can write actual SQL code. If you search for ```1'; DROP TABLE users;```, the search input would be:
+In this case you can add a single quote ```'```, which will end the user-input field, and after it, you can write actual SQL code. If you search for ```1'; DROP TABLE users;```, the search input would be:
 
 ```sql
 select * from logins where username like '%1'; DROP TABLE users;'
@@ -320,5 +331,146 @@ You have to inject a query that sorts the results by a column you specified unti
 
 For example, you can start with ```order by 1```, sort by the first column, and succeed, as the table must have at least one column. Then you will do ```order by 2``` and then ```order by 3``` until you reach a number that returns an error, or the page does not show any output, which means that this column number does not exist. The final successful column you successfully sorted gives you the total number of columns.
 
-### Using UNION
+#### Using UNION
 
+The other method is to attempt a UNION injection with a different number of columns until you successfully get the results back. The first method always returns the results until you hit an error, while this method always gives an error until you get success. You can start by injecting a 3 column UNION query:
+
+```sql
+cn' UNION select 1,2,3-- 
+```
+
+You get an error saying that the number of columns don't match. Now you can try four columns:
+
+```sql
+cn' UNION select 1,2,3,4-- 
+```
+
+This time you successfully get the results, meaning once again that the table has 4 columns. You can use either method to determine the number of columns.
+
+### Location of Injection
+
+While a query may return multiple columns, the web app may only display some of them. So, if you inject your query in a column that is not printed on the page, you will not get its output. This is why you need to determine which columns are printed to the page, to determine where to place your injection.
+
+It is very common that not every column will be displayed back to the user. For example, the ID field is often used to link different tables together, but the user doesn't need to see it. This tells you that columns 2, 3, and 4 are printed to place your injection in any of them.
+
+This is the benefit of using numbers as your junk data, as it makes it easy to track which columns are printed, so you know at which column to place your query. To test that you get actual data from the database, you can use the ```@@version``` SQL query as a test and place it in the second column instead of the number 2:
+
+```sql
+cn' UNION select 1,@@version,3,4-- 
+```
+
+![@@version](../../../images/sqli10.png)
+
+### Database Enumeration
+
+#### MySQL Fingerprinting
+
+Before enumerating the database, we usually need to identify the type of DBMS you are dealing with. This is because each DBMS has different querries, and knowing what it is will help you know what queries to use.
+
+Initial guesses:
+- If webserver = Apache / Nginx
+  - likely MySQL
+- if webserver = IIS
+  - MSSQL
+
+For MySQL:
+
+| Payload | When to Use | Expected Output | Wrong Output |
+| ------- | ----------- | --------------- | ------------ |
+| **SELECT @@version** | when you have full query output | MySQL Version 'i.e. ```10.3.22-MariaDB-1ubuntu1```' | in MSSQL it returns MSSQL version; error with other DBMS |
+| **SELECT POW(1,1)** | when you only have numeric output | ```1``` | error with other DBMS |
+| **SELCECT SLEEP(5)** | blind / no output | delays page response for 5 seconds and returns 0 | will not delay with other DBMS |
+
+#### INFORMATION_SCHEMA Database
+
+To pull data from tables using UNION SELECT, you need to properly from you SELECT queries. To do so, you need the following information:
+
+- list of databases
+- list of tables within each database
+- list of columns within each table
+
+This is where you can utilize the **INFORMATION_SCHEMA Database**. It contains metadata about the database and tables present on the server. This database plays a crucial role while exploiting SQLi vulnerabilities. As this is a different database, you cannot call its tables directly with a SELECT statement. If you only specify a table's name for a SELECT statement, it will look for tables within the same database.
+
+So, to reference a table present in another DB, you can use the ```.``` operator. For example, to SELECT a table ```users``` present in a database named ```my_database```, you can use:
+
+```sql
+SELECT * FROM my_database.users;
+```
+
+#### SCHEMA
+
+To start your enumeration, you should find what databases are available on the DBMS. The table SCHEMATA in the INFORMATION_SCHEMA database contains information about all databases on the server. It is used to obtain database names so you can then query them. The SCHEMA_NAME column contains all the database names currently present.
+
+```bash
+mysql> SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA;
+
++--------------------+
+| SCHEMA_NAME        |
++--------------------+
+| mysql              |
+| information_schema |
+| performance_schema |
+| ilfreight          |
+| dev                |
++--------------------+
+6 rows in set (0.01 sec)
+```
+
+The SQLi looks like that:
+
+```sql
+cn' UNION select 1,schema_name,3,4 from INFORMATION_SCHEMA.SCHEMATA-- 
+```
+
+And you get a result like this:
+
+![SCHEMATA](../../../images/sqli11.png)
+
+You can see two databases ```ilfreight``` and ```dev```. To find out which database the web app is running to retrieve ports data from, you can use ```SELECT database()```.
+
+```sql
+cn' UNION select 1,database(),2,3-- 
+```
+
+#### TABLES
+
+Before you dump data from the ```dev``` database, you need to get a list of the tables to query them with a SELECT statement. To find all tables within a database, you can use the TABLES table in the INFORMATION_SCHEMA Database.
+
+The TABLES table contains information about all tables throughout the database. This table contains multiple columns, but you are interested in the TABLE_SCHEMA and TABLE_NAME columns. The TABLE_NAME column stores table names, while the TABLE_SCHEMA column points to the database each table belongs to. This can be done like this:
+
+```sql
+cn' UNION select 1,TABLE_NAME,TABLE_SCHEMA,4 from INFORMATION_SCHEMA.TABLES where table_schema='dev'-- 
+```
+
+![TABLE_NAME](../../../images/sqli12.png)
+
+> [!NOTE]
+> Added a (_where table_schema='dev'_) condition to only return tables from the 'dev' database, otherwise you would get all tables in all databases, which can be many
+
+#### COLUMNS
+
+To dump the data of the ```credentials``` table, you first need to find the column names in the table, which can be found in the COLUMNS table in the INFORMATION_SCHEMA database. The COLUMNS table contains information about all columns present in all the databases. This helps you find the column names to query a table for. The COLUMN_NAME, TABLE_NAME, and TABLE_SCHEMA columns can be used to achieve this.
+
+```sql
+cn' UNION select 1,COLUMN_NAME,TABLE_NAME,TABLE_SCHEMA from INFORMATION_SCHEMA.COLUMNS where table_name='credentials'-- 
+```
+
+![two columns](../../../images/sqli13.png)
+
+The table has two columns named ```username``` and ```password```.
+
+#### Data
+
+Now that you have all the information, you can form your UNION query to dump data of the ```username``` and ```password``` columns from the ```credentials``` table in the ```dev``` database. You can place ```username``` and ```password``` in place of columns 2 and 3:
+
+```sql
+cn' UNION select 1, username, password, 4 from dev.credentials-- 
+```
+
+![Creds](../../../images/sqli14.png)
+
+### Reading Files
+
+### Writing Files
+
+## SQLi Mitigation
