@@ -64,6 +64,7 @@ File Upload
 
 Injections
   - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
+    - [SQLMap](./attack/web_attacks/injection_attacks/sqli.md#sqlmap)
   - [Command Injections]()
   
 Server-side
