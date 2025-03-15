@@ -1055,14 +1055,14 @@ d41y@htb[/htb]$ sqlmap -r req.txt
 
 You can craft complicated requests manually, there are numerous switches and options to fine-tune SQLMap.
 
-- --cookie
-- -H/--header
-- --host
-- --referer
-- -A/--user-agent
-- --random-agent
-- --mobile
-- --method
+- ```--cookie```
+- ```-H/--header```
+- ```--host```
+- ```--referer```
+- ```-A/--user-agent```
+- ```--random-agent```
+- ```--mobile```
+- ```--method```
 
 ### Custom HTTP Requests
 
