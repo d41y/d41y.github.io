@@ -1915,7 +1915,7 @@ Reading data is much more common than writing data, which is strictly privileged
 
 Example:
 
-```LOAD DATA LOCAL INFILE '/etc'passwd' INTO TABLE passwd;```
+```LOAD DATA LOCAL INFILE '/etc/passwd' INTO TABLE passwd;```
 
 > [!NOTE]
 > It is becoming much more common in modern DBMSes, to have DBA to read data.
