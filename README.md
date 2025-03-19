@@ -29,6 +29,8 @@ _to-Do's_:
 
 ## Linux
 
+### 0x00
+
 ## MacOS
 
 ## Mobile
@@ -63,16 +65,15 @@ File Upload
   - [File Upload]()
 
 Injections
+  - [Command Injections]()
   - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
     - [SQLMap](./attack/web_attacks/injection_attacks/sqli.md#sqlmap)
-  - [Command Injections]()
-  
+
 Server-side
-  - [SSRF](./attack/web_attacks/server_side/ssrf.md)
   - [File Inclusion]()
+  - [SSRF](./attack/web_attacks/server_side/ssrf.md)
 
 Web Service & API
-  - [Web Service & API]()
 
 ### Authentication
 
@@ -89,6 +90,8 @@ Web Service & API
 - [Session Security]()
 
 ## Windows
+
+### 0x00
 
 ### Active Directory
 - [testlink]()
