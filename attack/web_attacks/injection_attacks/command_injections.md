@@ -12,6 +12,14 @@
     - [Filter/WAF Detection](#filterwaf-detection)
     - [Blacklisted Characters](#blacklisted-characters)
       - [Identifying Blacklisted Character](#identifying-blacklisted-character)
+  - [Bypassing Space Filters](#bypassing-space-filters)
+    - [Using Tabs](#using-tabs)
+    - [Using $IFS](#using-ifs)
+    - [Using Brace Expansion](#using-brace-expansion)
+  - [Bypassing Other Blacklisted Characters](#bypassing-other-blacklisted-characters)
+    - [Linux](#linux)
+    - [Windows](#windows)
+    - [Character Shifting](#character-shifting)
 
 ---
 
@@ -146,3 +154,112 @@ One way to identify a blackliste character is to just reduce the command part by
 
 ![blacklist](../../../images/command_injection5.png)
 
+> [!NOTE]
+> The new-line character is usually not blacklisted, as it may be needed in the payload itseld. It in appending your commands both in Linux and Windows.
+
+## Bypassing Space Filters
+
+A space is a common blacklisted character, especially if the input should not contain any spaces, like an IP. Still, there are many ways to add a space character without actually using the space character.
+
+![Space filter](../../../images/command_injection6.png)
+
+### Using Tabs
+
+Using Tabs (_%09_) instead of spaces is a technique that may work, as both Linux and Windows accept commands with tabs between arguments, and they are executed the same.
+
+![tab](../../../images/command_injection7.png)
+
+### Using $IFS
+
+> [!NOTE]
+> "The special shell variable _IFS_ determines how Bash recognizes word boundaries while splitting a sequence of character strings."
+
+Using the (\$IFS) Linux Environment Variable may also work since its default value is a space and a tab, which would work between command arguments. So, if you use ```${IFS}``` where the spaces should be, the variable should be automatically replaced with a space, and your command should work.
+
+![ifs](../../../images/command_injection8.png)
+
+### Using Brace Expansion
+
+... which automatically adds spaces between arguments wrapped between braces.
+
+Payload example:
+
+```bash
+127.0.0.1%0a{ls,-la}
+```
+
+Bash example:
+
+```bash
+d41y@htb[/htb]$ {ls,-la}
+
+total 0
+drwxr-xr-x 1 21y4d 21y4d   0 Jul 13 07:37 .
+drwxr-xr-x 1 21y4d 21y4d   0 Jul 13 13:01 ..
+```
+
+## Bypassing Other Blacklisted Characters
+
+A very commonly blacklisted character is the slash (```/```) or backslash (```\```) character, as it is necessary to specify directories in Linux or Windows.
+
+### Linux
+
+One technique you can use for replacing slashes is through Linux Environment Variables. While ```${IFS}``` is directly replaced with a space, there's no such environment variable for slashes or semi-colons. However, these characters may be used in an environment variable, and you can specify start and length of your string to exactly match this character.
+
+```bash
+d41y@htb[/htb]$ echo ${PATH}
+
+/usr/local/bin:/usr/bin:/bin:/usr/games
+
+...
+
+d41y@htb[/htb]$ echo ${PATH:0:1}
+
+/
+
+...
+
+d41y@htb[/htb]$ echo ${LS_COLORS:10:1}
+
+;
+```
+
+![env](../../../images/command_injection9.png)
+
+### Windows
+
+The same concept works on Windows as well. To produce a slash in CMD, you can echo a Windows variable (e.g. ```%HOMEPATH%```), and then specify a starting position, and finally specifying a negative end position.
+
+For ```%HOMEPATH%``` -> ```\User\htb-student```:
+
+```cmd
+C:\htb> echo %HOMEPATH:~6,-11%
+
+\
+```
+
+It also works on Powershell using the same variables. With Powershell, a word is considered an array, so you have to specify the index of the character you need. As you only need one character, you don't have to specify the start and end positions:
+
+```powershell
+PS C:\htb> $env:HOMEPATH[0]
+
+\
+
+
+PS C:\htb> $env:PROGRAMFILES[10]
+PS C:\htb>
+```
+
+> [!NOTE]
+> Use ```Get-ChildItem Env:``` to print all environment variables and then pick one of them to produce a character you need.
+
+### Character Shifting
+
+The following Linux command shifts the character you pass by 1. So, all you have to do is find the character in the ASCII table that is just before your needed character (_```man ascii``` to get the position_), then add it instead of ```[``` in the below example.
+
+```bash
+d41y@htb[/htb]$ man ascii     # \ is on 92, before it is [ on 91
+d41y@htb[/htb]$ echo $(tr '!-}' '"-~'<<<[)
+
+\
+```
