@@ -65,7 +65,7 @@ File Upload
   - [File Upload]()
 
 Injections
-  - [Command Injections]()
+  - [Command Injections](./attack/web_attacks/injection_attacks/command_injections.md)
   - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
     - [SQLMap](./attack/web_attacks/injection_attacks/sqli.md#sqlmap)
 
