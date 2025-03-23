@@ -36,7 +36,7 @@
 
 ---
 
-[Cheatsheet](../../../cheatsheets/Command_Injections_Module_Cheat_Sheet.pdf)
+[Cheatsheet Command Injections](../../../cheatsheets/Command_Injections_Module_Cheat_Sheet.pdf)
 
 # Command Injections
 
