@@ -36,6 +36,8 @@
 
 ---
 
+[Cheatsheet](../../../cheatsheets/Command_Injections_Module_Cheat_Sheet.pdf)
+
 # Command Injections
 
 When it comes to OS Command Injections, the user input you control must directly or indirectly go into a web query that executes system commands. All web programming languages have different functions that enable the developer to execute operating system commands directly on the back-end server whenever they need to. This may be used for various purposes, like installing plugins or executing certain plugins.

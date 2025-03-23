@@ -35,6 +35,8 @@
 
 ---
 
+[Cheatsheet XSS](../../../cheatsheets/Cross_Site_Scripting_Xss_Module_Cheat_Sheet.pdf)
+
 # Cross-Site Scripting (XSS)
 
 A typical web app works by receiving the HTML code from the back-end server and rendering it on the client-side internet browser. When a vulnerable web app does not properly sanitize user input, a malicious user can inject extra JavaScript code in an input field, so once another user views the same page, they unknowingly execute the malicious JavaScript code.
