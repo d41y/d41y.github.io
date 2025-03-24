@@ -115,7 +115,7 @@ Many web apps only rely on front-end JavaScript code to validate the selected fi
 
 However, as the file format validation is happening on the client-side, you can easily bypass it by directly interacting with the server, skipping the front-end validations altogether. You may also modify the front-end code through your browser's dev tools to disable any validation in place.
 
-This time, wen trying to upload a file, you cannot see your PHP scripts, as the dialog appears to be limited to image formats only.
+This time, when trying to upload a file, you cannot see your PHP scripts, as the dialog appears to be limited to image formats only.
 
 ![limited](../../../images/file_upload4.png)
 
