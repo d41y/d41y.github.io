@@ -61,9 +61,6 @@ _to-Do's_:
 Client-side
   - [XSS](./attack/web_attacks/client_side/xss.md)
 
-File Upload
-  - [File Upload]()
-
 Injections
   - [Command Injections](./attack/web_attacks/injection_attacks/command_injections.md)
   - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
@@ -71,6 +68,7 @@ Injections
 
 Server-side
   - [File Inclusion]()
+  - [File Upload Attack](./attack/web_attacks/server_side/file_upload_attacks.md)
   - [SSRF](./attack/web_attacks/server_side/ssrf.md)
 
 Web Service & API
