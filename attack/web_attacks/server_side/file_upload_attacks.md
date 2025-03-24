@@ -11,6 +11,9 @@
   - [Client-Side Validation](#client-side-validation)
     - [Back-End Request Modification](#back-end-request-modification)
     - [Disabling Front-End Validation](#disabling-front-end-validation)
+  - [Blacklist Filters](#blacklist-filters)
+    - [Blacklisting Extensions](#blacklisting-extensions)
+    - [Fuzzing Extensions](#fuzzing-extensions)
 
 ---
 
@@ -177,4 +180,46 @@ Once you upload your web shell, you can use the Page Inspector once more, click 
 ```html
 <img src="/profile_images/shell.php" class="profile-image" id="profile-image">
 ```
+
+## Blacklist Filters
+
+### Blacklisting Extensions
+
+When you try the previous attack now, you get  ```Extension not allowed```. This indicates that the web application may have some form of file type validation on the back-end, in addition to the front-end validations.
+
+There are generally two common forms of validating a file extension on the back-end:
+
+- Testing against a blacklist of types
+- Testing against a whitelist of types
+
+Furthermore, the validation may also check the file type or the file content for type matching. The weakest form of validation amongst these is testing the file extension against a blacklist of extension to determine whether the upload request should be blocked. For example, the following pieve of code checks if the uploaded file extension is PHP and drops the request if it is:
+
+```php
+$fileName = basename($_FILES["uploadFile"]["name"]);
+$extension = pathinfo($fileName, PATHINFO_EXTENSION);
+$blacklist = array('php', 'php7', 'phps');
+
+if (in_array($extension, $blacklist)) {
+    echo "File type not allowed";
+    die();
+}
+```
+
+The code is taking the file extension from the uploaded file name and then comparing it against a list of blacklisted extensions. However, this validation method has a major flaw. It is not comprehensive, as many other extensions are not included in this list, which may still be used to execute PHP code on the back-end server if uploaded.
+
+### Fuzzing Extensions
+
+If a web app seems to be testing the file extensions, your first step is to fuzz the upload functionality with a list of potential extensions and see which of them return the previous error message. Any upload requests that do not return an error message, return a differetn message, or succeed in uploading the file, may indicate an allowed file extension.
+
+![fuzzing](../../../images/file_upload7.png)
+
+You should keep the file content for this attack, as you are only interested in fuzzing file extensions. You can use this [list](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Upload%20Insecure%20Files/Extension%20PHP/extensions.lst) to test for possible php extensions.
+
+![success](../../../images/file_upload8.png)
+
+You can sort the result by length, and you will see that all requests with the Content-Length of 193 passed the extension validation, as they all responded with ```File successfully uploaded```. In contrast, the rest responded with an error message saying ```Extension not allowed```.
+
+
+> [!NOTE]
+> Now, you can try uploading a file using any of the allowed extensions, and some of them may allow you to execute PHP code. Not all extensions will work with all web server configurations, so you may need to try several extensions to get one that successfully executes PHP code.
 
