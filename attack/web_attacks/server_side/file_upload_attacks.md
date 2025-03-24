@@ -14,6 +14,11 @@
   - [Blacklist Filters](#blacklist-filters)
     - [Blacklisting Extensions](#blacklisting-extensions)
     - [Fuzzing Extensions](#fuzzing-extensions)
+  - [Whitelist Filters](#whitelist-filters)
+    - [Whitelisting Extensions](#whitelisting-extensions)
+    - [Double Extensions](#double-extensions)
+    - [Reverse Double Extension](#reverse-double-extension)
+    - [Character Injection](#character-injection)
 
 ---
 
@@ -222,4 +227,88 @@ You can sort the result by length, and you will see that all requests with the C
 
 > [!NOTE]
 > Now, you can try uploading a file using any of the allowed extensions, and some of them may allow you to execute PHP code. Not all extensions will work with all web server configurations, so you may need to try several extensions to get one that successfully executes PHP code.
+
+## Whitelist Filters
+
+### Whitelisting Extensions
+
+If you try the same approach you did before, you will now get ```Only Images are allowed```, which may be more common in web apps than seeing a blocked extension type. However, error messages do not always reflect which form of validation is being utilized.
+
+![only images](../../../images/file_upload9.png)
+
+All variations of PHP extensions are blocked. However, the wordlist you used also contained other 'malicious' extensions that were not blocked and were successfully uploaded.
+
+```php
+$fileName = basename($_FILES["uploadFile"]["name"]);
+
+if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
+    echo "Only images are allowed";
+    die();
+}
+```
+
+You see that the script uses a regex to test whether the filename contains any whitelisted image extensions. The issue here lies within the regex, as it only checks whether the file name contains the extension and not if it actually ends with it.
+
+### Double Extensions
+
+A straightforward method of passing the regex test is through Double Extensions. For example, if the ```.jpg``` extension was allowed, you can add it in your uploaded file name and still end your filename with ```.php```, in which case you should be able to pass the whitelist test, while still uploading a PHP script that can execute PHP code.
+
+![whitelist](../../../images/file_upload10.png)
+
+However, this may not always work, as some web applications may use a strict regex pattern.
+
+```php
+if (!preg_match('/^.*\.(jpg|jpeg|png|gif)$/', $fileName)) { ...SNIP... }
+```
+
+This pattern should only consider the final file extension, as it uses ```^.*\.```  to match everything up to the last ```.``` and then uses ```$``` at the end to only match extensions that end the file name. So, the above attack would not work. Nevertheless, some exploitation techniques may allow you to bypass this pattern, but most rely on misconfigurations or outdated systems.
+
+### Reverse Double Extension
+
+In some cases, the file upload functionality itself may not be vulnerable, but the web server configuration may lead to a vulnerability. For example, an organization may use an open-source web application, which has a file upload functionality. Even if the file upload functionality uses a strict regex pattern that only matches the final extension in the file name, the organization may use the insecure configurations for the web server.
+
+For example, the ```/etc/apache2/mods-enabled/php7.4.conf``` for the Apache2 web server may include the following configuration:
+
+```xml
+<FilesMatch ".+\.ph(ar|p|tml)">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+```
+
+The above configuration is how the web server determines which files to allow PHP code execution. It specifies a whitelist with a regex pattern that matches ```.phar```, ```.php```, and ```phtml```. However, this regex pattern can have the same mistake you saw earlier if you forgot to end it with ```$```. In such cases, any file that contains the above extensions will be allowed PHP code execution, even if it does not end with the PHP extension. For example, ```shell.php.jpg``` should pass the earlier whitelist test as it ends with ```.jpg```, and it would be able to execute PHP code due to the above misconfiguration, as it contains ```.php``` in its name.
+
+![php.jpg](../../../images/file_upload11.png)
+
+### Character Injection
+
+... is another method of bypassing a whitelist validation test.
+
+You can inject several characters before or after the final extension to cause the web application to misinterpret the filename and execute the uploaded file as a PHP file.
+
+Some are:
+
+- ```%20```
+- ```%0a```
+- ```%00```
+- ```&0d0a```
+- ```/```
+- ```.\```
+- ```.```
+- ```...```
+- ```:```
+
+Each character has a special use case that may trick the web application to misinterpret the file extension.
+
+A little script to generate all permutations:
+
+```bash
+for char in '%20' '%0a' '%00' '%0d0a' '/' '.\\' '.' '…' ':'; do
+    for ext in '.php' '.phps'; do
+        echo "shell$char$ext.jpg" >> wordlist.txt
+        echo "shell$ext$char.jpg" >> wordlist.txt
+        echo "shell.jpg$char$ext" >> wordlist.txt
+        echo "shell.jpg$ext$char" >> wordlist.txt
+    done
+done
+```
 
