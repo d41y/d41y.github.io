@@ -8,6 +8,9 @@
     - [Writing Custom Web Shell](#writing-custom-web-shell)
     - [Reverse Shell](#reverse-shell)
     - [Generating Custom Reverse Shell Scripts](#generating-custom-reverse-shell-scripts)
+  - [Client-Side Validation](#client-side-validation)
+    - [Back-End Request Modification](#back-end-request-modification)
+    - [Disabling Front-End Validation](#disabling-front-end-validation)
 
 ---
 
@@ -105,4 +108,73 @@ Payload size: 3033 bytes
 
 > [!TIP]
 > You can generate reverse shell scripts for several languages. You can use many reverse shell payloads with the ```-p``` flag and specify the output language with the ```-f``` flag.
+
+## Client-Side Validation
+
+Many web apps only rely on front-end JavaScript code to validate the selected file format before it is uploaded and would not upload it if the file is not in the required format.
+
+However, as the file format validation is happening on the client-side, you can easily bypass it by directly interacting with the server, skipping the front-end validations altogether. You may also modify the front-end code through your browser's dev tools to disable any validation in place.
+
+This time, wen trying to upload a file, you cannot see your PHP scripts, as the dialog appears to be limited to image formats only.
+
+![limited](../../../images/file_upload4.png)
+
+You may still select the ```All Files``` option to select your PHP script anyway, but when you do so, you get an error message saying "Only images are allowed!", and the "Upload" button gets disabled.
+
+This indicates some form of file type validation, so you cannot just upload a web shell through the upload form, as you did before. Luckily, all validation appears to be happening on the front-end, as the page never refreshes or sends any HTTP requests after selecting your file. So, you should be able to have complete control over these client-side validations.
+
+Any code that runs on the client-side is under your control. While the web server is responsible for sending the front-end code, the rendering and execution of the front-end code happen within your browser. If the web app does not apply any of these validations on the back-end, you should be able to upload any file type.
+
+### Back-End Request Modification
+
+Start by examining a normal request through Burp. When you select an image, you see that it gets reflected as your profile image, and when you click on ```Upload```, your profile image gets updated and persists through refreshes. This indicates that your image was uploaded to the server, which is now displaying it back to you.
+
+![png](../../../images/file_upload5.png)
+
+The web app appears to be sending a standard HTTP upload request to ```upload.php```. This way, you can now modify the request to meet your needs without having the front-end type validation restrictions. If the back-end server does not validate the uploaded file, then you should theoretically be able to send any file type/content, and it would be uploaded to the server.
+
+- ```filename=```
+  - change to ```shell.php```
+- Content
+  - modify to the web shell used before
+
+![burp](../../../images/file_upload6.png)
+
+### Disabling Front-End Validation
+
+Another method to bypass client-side validations is through manipulating the front-end code. As these functions are being completely processed within your web browser, you have complete control over them. So, you can modify these scripts or disable them entirely. Then, you may use the upload functionality to upload any file type without needing to utilize Burp to capture and modify your requests.
+
+To start, you can open the browser's Page Inspector, and then click on the profile image, which is where you trigger the file selector for upload form.
+
+```html
+<input type="file" name="uploadFile" id="uploadFile" onchange="checkFile(this)" accept=".jpg,.jpeg,.png">
+```
+
+You see that the file input specifies (```.jpg```, ```.jpeg```, ```.png```) as the allowed file types within the file selection dialog. However, you can easily modify this and select ```All Files``` as you did before, so it is unnecessary to change this part of the page.
+
+The more interesting part is ```onchange="checkFile(this)"```, which appears to run a JavaScript code whenever you select a file, which appears to be doing the file type validation. To get the details of this function, you can go to the browser's console, and then you can type the function's name to get its details.
+
+```javascript
+function checkFile(File) {
+...SNIP...
+    if (extension !== 'jpg' && extension !== 'jpeg' && extension !== 'png') {
+        $('#error_message').text("Only images are allowed!");
+        File.form.reset();
+        $("#submit").attr("disabled", true);
+    ...SNIP...
+    }
+}
+```
+
+Luckily, you don't need to get into writing and modifying JavaScript code. You can remove this function from the HTML code since its primary use appears to be file type validation, and removing it should not break anything.
+
+To do so, you can go back to your inspector, click on the profile image again, double-click on the function name, and delete it.
+
+With the ```checkFile``` function removed from the file input, you should be able to select your PHP web shell through the file selection dialog and upload it normally with no validations.
+
+Once you upload your web shell, you can use the Page Inspector once more, click on the profile image, and you should see the URL of your uploaded web shell.
+
+```html
+<img src="/profile_images/shell.php" class="profile-image" id="profile-image">
+```
 
