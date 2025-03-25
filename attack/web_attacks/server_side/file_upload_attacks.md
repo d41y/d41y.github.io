@@ -19,6 +19,9 @@
     - [Double Extensions](#double-extensions)
     - [Reverse Double Extension](#reverse-double-extension)
     - [Character Injection](#character-injection)
+  - [Type Filters](#type-filters)
+    - [Content-Type](#content-type)
+    - [MIME-Type](#mime-type)
 
 ---
 
@@ -311,4 +314,72 @@ for char in '%20' '%0a' '%00' '%0d0a' '/' '.\\' '.' '…' ':'; do
     done
 done
 ```
+
+## Type Filters
+
+While extension filters may accept several extensions, content filters usually specify a single category, which is why they do not typically use blacklists or whitelists. This is because web servers provide functions to check for the file content type, and it usually falls under a specific category.
+
+### Content-Type
+
+![only images](../../../images/file_upload12.png)
+
+You get a message saying ```Only images are allowed```. The error message persists, and your file fails to upload. If you change the file name to ```shell.jpg.phtml``` or ```shell.php.jpg```, or even if you use ```shell.jpg``` with a web shell content, your upload will fail. As the file extension does not affect the error message, the web application muste be testing the file content for type validation.
+
+The following is an example of how a PHP web app tests the Content-Type header to validate the file type:
+
+```php
+$type = $_FILES['uploadFile']['type'];
+
+if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))) {
+    echo "Only images are allowed";
+    die();
+}
+```
+The code sets the ```$type``` variable from the uploaded file's ```Content-Type``` header. Your browser automatically set the Content-Type header when selecting a file through the file selector dialog, usually derived from the file extension. However, since your browsers set this, this operation is a client-side operation, and you can manipulate it to change the perceived file type and potentially bypass the type filter.
+
+You may start by fuzzing the Content-Type header with [Content-Type Wordlist](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-all-content-types.txt) through Burp Intruder, to see which types are allowed. However, the message tells you that only images are allowed, so you can limit your scan to image types, which reduces the wordlist to 45 types only.
+
+![content type](../../../images/file_upload13.png)
+
+Now you get a ```File successfully uploaded```.
+
+> [!NOTE]
+> A file upload HTTP request has two Content-Type headers, one for the attached file (_at the bottom_), and one for the full request (_at the top_). You usually need to modify the file's Content-Type header, but in some cases the request will only contain the main Content-Type header, in which case you will need to modify the main Content-Type header.
+
+### MIME-Type
+
+_Multipurpose Internet Mail Extensions (MIME)_ is an internet standard that determines the type of a file through its general format and bytes structure.
+
+This is usually done by inspecting the first few bytes of the file's content, which contain the File Signature or Magic Bytes. For example, if a file starts with ```GIF87a``` this indicates that it is a GIF image, while a file starting with plaintext is usually considered a Text file. If you change the first bytes of any file to the GIF magic bytes, its MIME type would be changed to a GIF image, regardless of its remaining content or extension.
+
+Example:
+
+```bash
+d41y@htb[/htb]$ echo "this is a text file" > text.jpg 
+d41y@htb[/htb]$ file text.jpg 
+text.jpg: ASCII text
+
+d41y@htb[/htb]$ echo "GIF8" > text.jpg 
+d41y@htb[/htb]$file text.jpg
+text.jpg: GIF image data
+```
+
+Web servers can utilize this standard to determine file types, which is usually more accurate than testing the file extension.
+
+PHP MIME testing example:
+
+```php
+$type = mime_content_type($_FILES['uploadFile']['tmp_name']);
+
+if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))) {
+    echo "Only images are allowed";
+    die();
+}
+```
+
+Burp example:
+
+![mime](../../../images/file_upload14.png)
+
+You can use a combination of the two methods, which may help bypass some more robust content filters.
 
