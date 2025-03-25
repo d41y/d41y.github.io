@@ -22,6 +22,10 @@
   - [Type Filters](#type-filters)
     - [Content-Type](#content-type)
     - [MIME-Type](#mime-type)
+  - [Limited File Uploads](#limited-file-uploads)
+    - [XSS](#xss)
+    - [XXE](#xxe)
+    - [DoS](#dos)
 
 ---
 
@@ -383,3 +387,72 @@ Burp example:
 
 You can use a combination of the two methods, which may help bypass some more robust content filters.
 
+## Limited File Uploads
+
+While file upload forms with weak filters can be exploited to upload arbitrary files, some upload forms have secure filters that may not be exploitable with the techniques discussed. However, even if you are dealing with a limited file upload form, which only allows you to upload specific file types, you may still be able to perform attacks on the web app.
+
+Certain file types, like ```SVG```, ```HTML```, ```XML``` and even some image and document files, may allow you to introduce new vulnerabilities to the web application by uploading malicious versions of these files. This is why fuzzing allowed file extensions is an important exercise for any file upload attack. It enables you to explore what attacks may be achievable on the web server.
+
+### XSS
+
+Many file types may allow you to introduce a Stored XSS vulnerability to the web application maliciously crafted versions of them.
+
+The most basic example is when a web application allows you to upload HTML files. Although HTML files won't allow you to execute code, it would still be possible to implement JavaScript code within them to carry an XSS or CSRF attack on whoever visits the uploaded HTML page. If the target sees a link from a website they trust, and the website is vulnerable to uploading HTML documents, it may be possible to trick them into visiting the link and carry the attack on their machines.
+
+Another example of XSS attacks is web applications that display an image's metadata after its upload. For such web apps, you can include an XSS payload in one of the Metadata parameters that accept raw text, like the ```Comment``` or ```Artist```.
+
+```bash
+d41y@htb[/htb]$ exiftool -Comment=' "><img src=1 onerror=alert(window.origin)>' HTB.jpg
+d41y@htb[/htb]$ exiftool HTB.jpg
+...SNIP...
+Comment                         :  "><img src=1 onerror=alert(window.origin)>
+```
+
+You can see that the Comment parameter was updated to your XSS payload. When the image's metadata is displayed, the XSS payload should be triggered, and the JavaScript code will be executed to carry the XSS attack. Furthermore, if you change the image's MIME-Type to ```text/html```, some web apps may show it as an HTML document instead of an image, in which case the XSS payload would be triggered even if the metadata wasn't directly displayed.
+
+XSS attacks can also be carried with ```SVG``` images, along with several other attacks. Scalable Vector Graphics images are XML-based, and they describe 2D vector graphics, which the browser renders into an image. For this reason, you can modify their XML data to include an XSS payload.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1" height="1">
+    <rect x="1" y="1" width="1" height="1" fill="green" stroke="black" />
+    <script type="text/javascript">alert(window.origin);</script>
+</svg>
+```
+
+### XXE
+
+With SVG images, you can also include malicious XML data to leak the source code of the web app, and other internal documents within the server.
+
+Example to leak ```/etc/passwd```:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+<svg>&xxe;</svg>
+```
+
+Once the above SVG image is uploaded and viewed, the XML document would get processed, and you should get the info of ```/etc/passwd``` printed on the page or shown in the page source. Similarly, if the web app allows the upload of XML documents, then the same payload can carry the same attack when the XML data is displayed on the web app.
+
+While reading systems files like ```/etc/passwd``` can be very useful for server enumeration, it can have an even more significant benefit for the web penetration testing, as it allows you to read the web application's source files. Access to the source code will enable you to find more vulnerabilities to exploit within the web application through Whitebox Penetration Testing. For File Upload exploitation, it may allow you to locate the upload directory, identify allowed extensions, or find the file naming scheme, which may become handy for further exploitation.
+
+Example for reading source code in PHP web applications:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [ <!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"> ]>
+<svg>&xxe;</svg>
+```
+
+Once the SVG image is displayed, you should get the base64 encoded content of ```index.php```, which can decode to read the source code.
+
+Using XML data is not unique to SVG images, as it is also utilized by many types of documents, like PDF, Word Documents, PowerPoint Documents, amond many others. All of these documents include XML data within them to specify their format and structure. Suppose a web app used a document viewer that is vulnerable to XXE and allowed uploading any of these documents. In that case, you may also modify their XML data to include the malicious XXE elements, and you would be able to carry a blind XXE attack on the back-end web server.
+
+### DoS
+
+Many file upload vulnerabilities may lead to a Denial of Service attack on the web server. For example, you can use the previous XXE payloads to achieve DoS attacks.
+
+Furthermore, you can utilize a Decompression Bomb with file types that uses data compression, like ZIP archives. If a web application automatically unzips a ZIP archive, it is possible to upload a malicious archive containing nested ZIP archives within it, which can eventually lead to many Petabytes of data, resulting in a crash on the back-end server.
+
+Another possible DoS attack is a Pixel Flood attack with some image files that utilize image compression, like JPG or PNG. You can create any JPG image file with any image size, and then manually modify its compression data to say it has a size of ``` 0xffff x 0xffff```, which results in an image with a perceived size of 5 Gigapixels. When the web application attempts to display the image, it will attempt to allocate all of its memory to this image, resulting in a crash on the back-end server.
