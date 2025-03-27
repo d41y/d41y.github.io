@@ -26,6 +26,15 @@
     - [XSS](#xss)
     - [XXE](#xxe)
     - [DoS](#dos)
+  - [Other Upload Attacks](#other-upload-attacks)
+    - [Injections in File Names](#injections-in-file-names)
+    - [Upload Directory Disclosure](#upload-directory-disclosure)
+    - [Windows-specific Attacks](#windows-specific-attacks)
+  - [Preventing File Upload Vulnerabilities](#preventing-file-upload-vulnerabilities)
+    - [Extension Validation](#extension-validation)
+    - [Content Validation](#content-validation)
+    - [Upload Disclosure](#upload-disclosure)
+    - [Further Security](#further-security)
 
 ---
 
@@ -456,3 +465,99 @@ Many file upload vulnerabilities may lead to a Denial of Service attack on the w
 Furthermore, you can utilize a Decompression Bomb with file types that uses data compression, like ZIP archives. If a web application automatically unzips a ZIP archive, it is possible to upload a malicious archive containing nested ZIP archives within it, which can eventually lead to many Petabytes of data, resulting in a crash on the back-end server.
 
 Another possible DoS attack is a Pixel Flood attack with some image files that utilize image compression, like JPG or PNG. You can create any JPG image file with any image size, and then manually modify its compression data to say it has a size of ``` 0xffff x 0xffff```, which results in an image with a perceived size of 5 Gigapixels. When the web application attempts to display the image, it will attempt to allocate all of its memory to this image, resulting in a crash on the back-end server.
+
+## Other Upload Attacks
+
+### Injections in File Names
+
+A common file upload attack uses a malicious string for the uploaded file name, which may get executed or processed if the uploaded file name is displayed on the page. You can try injecting a command in the file name, and if the web application uses the file name within an OS command, it may lead to a command injection attack.
+
+For example, if you name a file ```file$(whoami).jpg``` or ```file`whoami`.jpg``` or ```file.jpg||whoami```, and then the web application attempts to move the uploaded file with an OS command, then your file name would inject the ```whoami``` command, which would get executed, leading to remote code execution.
+
+Similarly, you may use an XSS payload in the file name (```<script>alert(window.origin);</script>```), which would get executed on the target`s machine if the file name is displayed to them. You may also inject an SQL query in the file name, which may lead to an SQLi if the file name is insecurely used in an SQL query.
+
+### Upload Directory Disclosure
+
+In some file upload forms, like a feedback form or a submission form, you may not have access to the link of your uploaded file and may not know the uploads directory. In such cases, you may utilize fuzzing to look for the uploads directory or even use other vulnerabilities to find where the uploaded files are by reading the web application's source code.
+
+Another method you can use to disclose the uploads directory is through forcing error messages, as they often reveal helpful information for further exploitation. One attack you can use to cause such errors is uploading a file with a name that already exists or sending two identical requests silmutaneously. This may lead the web server to show an error that it could not write the file, which may disclose the uploads directory. You may also try uploading a file with an overly long name. If the web application does not handle this correcty, it may also error out and disclose the upload directory.
+
+### Windows-specific Attacks
+
+One such attack is using reserved characters, such as ```| < > * ?```, which are usually reserved for special uses like wildcards. If the web application does not properly sanitize these names or wrap them within quotes, they may refer to another file and cause an error that discloses the upload directory. Similarly, you may use Windows reserved names for the uploaded file name, like ```CON COM1 LPT1```, or ```NUL```, which may also cause an error as the web application will not be allowed to write a file with this name.
+
+Finally, you may utilize the [Windows 8.3 Filename Convention](https://en.wikipedia.org/wiki/8.3_filename) to overwrite existing files or refer to files that do not exist. Older versions of Windows were limited to a short length for file names, so they used a ```~```  to complete the file name, which you can use to your advantage.
+
+For example, to refer to a file called ```hackthebox.txt``` you can use ```HAC~1.TXT``` or ```HAC~2.TXT```, where the digit represents the order of the matching files that start with ```HAC```. As windows still supports this convention, you can write a file called ```WEB~.CONF``` to overwrite the ```web.conf``` file. Similarly, you may write a file that replaces sensitive system files. This attack can lead to several outcomes, like causing information disclosure through errors, causing a DoS on the back-end server, or even accessing private files.
+
+## Preventing File Upload Vulnerabilities
+
+### Extension Validation
+
+While whitelisting extensions is always more secure than blacklisting, it is recommended to use both by whitelisting the allowed extensions and blacklisting dangerous extensions. This way, the blacklist list will prevent uploading malicious scripts if the whitelist is ever bypassed.
+
+PHP example:
+
+```php
+$fileName = basename($_FILES["uploadFile"]["name"]);
+
+// blacklist test
+if (preg_match('/^.+\.ph(p|ps|ar|tml)/', $fileName)) {
+    echo "Only images are allowed";
+    die();
+}
+
+// whitelist test
+if (!preg_match('/^.*\.(jpg|jpeg|png|gif)$/', $fileName)) {
+    echo "Only images are allowed";
+    die();
+}
+```
+
+### Content Validation
+
+You should also validate the file content, since extension validation is not enough. You cannot validate one without the other and must always validate both the file extension and its content. Furthermore, you should always make sure that the file extension matches the file's content.
+
+PHP example:
+
+```php
+$fileName = basename($_FILES["uploadFile"]["name"]);
+$contentType = $_FILES['uploadFile']['type'];
+$MIMEtype = mime_content_type($_FILES['uploadFile']['tmp_name']);
+
+// whitelist test
+if (!preg_match('/^.*\.png$/', $fileName)) {
+    echo "Only PNG images are allowed";
+    die();
+}
+
+// content test
+foreach (array($contentType, $MIMEtype) as $type) {
+    if (!in_array($type, array('image/png'))) {
+        echo "Only PNG images are allowed";
+        die();
+    }
+}
+```
+
+### Upload Disclosure
+
+Another thing you should avoid doing is disclosing the uploads directory or providing direct access to uploaded files. It is always recommended to hide the uploads directory from the end-users and only allow them to download the uploaded files through a download page.
+
+You may write a ```download.php``` script to fetch the requested file from the uploads directory and then download the file for the end-user. This way, the web application hides the uploads directory and prevents the user from directly accessing the uploaded files. This can significantly reduce the chances of accessing a malicously uploaded script to execute code.
+
+If you utilize a download page, you should make sure that the ```download.php``` script only grants access to files owned by the users and that the users do not have direct access to the uploads directory. This can be achieved by utilizing the ```Content-Disposition``` and ```nosniff``` headers and using an accurate ```Content-Type``` header.
+
+In addition to restricting the uploads directory, you should also randomize the names of the uploaded files in storage and store their sanitized original names in a database. When the ```download.php``` script needs to download a file, it fetches its original name from the database and provides it at download time for the user. This way, users will neither know the uploads directory nor the uploaded file name. You can also avoid vulnerabilities caused by injections in the file names.
+
+Another thing you can do is store the uploaded files in a separate server or container. If an attacker can gain remote code execution, they would only compromise the uploads server, not the entire back-end server. Furthermore, web servers can be configured to prevent web applications from accessing files outside their restricted directories by using configurations like ```open_basedir``` in PHP.
+
+### Further Security
+
+A critical configuration you can add is disabling specific functions that may be used to execute system commands through the web application. For example, to do so in PHP, you can use the ```disable_functions``` configuration in ```php.ini``` and add such dangerous functions, like ```exec```, ```shell_exec``` ```system```, ```passthru```, and few others.
+
+Few other tips you should consider for web applications:
+- limit file size
+- update any used libraries
+- scan uploaded files for malware or malicious strings
+- utilize a WAF as a secondary layer of protection
