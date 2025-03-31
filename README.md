@@ -69,7 +69,11 @@ Injections
 Server-side
   - [File Inclusion]()
   - [File Upload Attack](./attack/web_attacks/server_side/file_upload_attacks.md)
+  - [SSI](./attack/web_attacks/server_side/ssi.md)
   - [SSRF](./attack/web_attacks/server_side/ssrf.md)
+  - [SSTI](./attack/web_attacks/server_side/ssti.md)
+  - [SSRF](./attack/web_attacks/server_side/ssrf.md)
+  - [XLST](./attack/web_attacks/server_side/xlst.md)
 
 Web Service & API
 
