@@ -1,10 +1,14 @@
 - [Server-Side Request Forgery (SSRF)](#server-side-request-forgery-ssrf)
   - [Identifying SSRF](#identifying-ssrf)
-  - [Enumerating the System](#enumerating-the-system)
+  - [System Enumeration](#system-enumeration)
   - [Accessing Restricted Endpoints](#accessing-restricted-endpoints)
-  - [Local File Inclusion (LFI)](#local-file-inclusion-lfi)
+  - [LFI](#lfi)
   - [gopher Protocol](#gopher-protocol)
     - [Gopherus](#gopherus)
+  - [Blind SSRF](#blind-ssrf)
+    - [Identifying Blind SSRF](#identifying-blind-ssrf)
+    - [Exploiting Blind SSRF](#exploiting-blind-ssrf)
+  - [Prevention](#prevention)
 
 ---
 
@@ -54,7 +58,7 @@ Now, to determine whether the HTTP response reflects the SSRF response to you, p
 
 Since the response contains the web application's HTML code, the SSRF vuln is not blind.
 
-## Enumerating the System
+## System Enumeration
 
 You can use the SSRF vulnerability to conduct a port scan of the system to enumerate running services. To achieve this, you need to be able to infer whether a port is open or not from the response to your SSRF payload.
 
@@ -92,7 +96,7 @@ d41y@htb[/htb]$ ffuf -w /opt/SecLists/Discovery/Web-Content/raft-small-words.txt
     * FUZZ: availability
 ```
 
-## Local File Inclusion (LFI)
+## LFI
 
 You can manipulate the URL scheme to provoke further unexpected behavior. Since the URL scheme is part of the URL supplied to the web application, you can attempt to read local files from the file system using the ```file://``` URL scheme. You can achieve this by supplying the URL ```file:///etc/passwd```.
 
@@ -168,3 +172,36 @@ optional arguments:
                      pymemcache, rbmemcache, phpmemcache, dmpmemcache
 ```
 
+## Blind SSRF
+
+Instances in which the response is not directly displayed to you are called blind SSRF vulnerabilities.
+
+### Identifying Blind SSRF
+
+This time, the response looks different:
+
+![blind 1](../../../images/ssrf_10.png)
+
+The response does not contain the HTML response of the coerced request; instead, it simply tells you that the date is unvailable
+
+### Exploiting Blind SSRF
+
+... is generally severely limited compared to non-blind SSRF vulns. However, depending on the web app's behavior, you might still be able to conduct a (restricted) local port scan of the system, provided the response differs for open and closed ports. In this case, the web app respons with ```Something went wrong``` for closed ports.
+
+Compare this:
+
+![ssrf 2](../../../images/ssrf_11.png)
+
+... to:
+
+![ssrf 3](../../../images/ssrf_12.png)
+
+Furthermore, while you cannot read **local files** on the system, you can use the same technique to identify existing files on the filesystem. That is because the error message is different for existing and non-existing files, just like it differs for open and closed ports.
+
+## Prevention
+
+Mitigations and countermeasures against SSRF vulns can be implemented at the web app or network layers. If the web app fetches data from a remote host based on user input, proper security measures to prevent SSRF scenarios are crucial.
+
+The remote origin data is fetched from should be checked against a whitelist to prevent an attacker from coercing the server to make requests against arbitrary origins. A whitelist prevents an attacker from making unintended requests to internal systems. Additionally, the URL scheme and protocol used in the request need to be restricted to prevent attackers from supplying arbitrary protocols. Instead, it should be hardcoded or checked against a whitelist. As with any user input, input sanitization can help prevent unexpected behavior that may lead to SSRF vulns.
+
+On the network layer, appropriate firewall rules can prevent outgoing requests to unexpected remote systems. If properly implemented, a restricting firewall config can mitigate SSRF vulns in the web app by dropping any outgoing requests to potentially interesting target systems. Additionally, network segmentation can prevent attackers from exploiting SSRF vulns to access internal systems.
