@@ -1,8 +1,11 @@
 - [eXtensible Stylesheet Language Transformations Server-Side Injection (XSLT)](#extensible-stylesheet-language-transformations-server-side-injection-xslt)
   - [Identifying](#identifying)
-  - [Information Disclosure](#information-disclosure)
-  - [LFI](#lfi)
-  - [RCE](#rce)
+    - [Identifying XSLT Injection](#identifying-xslt-injection)
+    - [Information Disclosure](#information-disclosure)
+  - [Exploitation](#exploitation)
+    - [LFI](#lfi)
+    - [RCE](#rce)
+  - [Prevention](#prevention)
 
 ---
 
@@ -97,6 +100,8 @@ XSLT injection occurs whenever user input is inserted into XSL data before outpu
 
 ## Identifying
 
+### Identifying XSLT Injection
+
 ![xslt 1](../../../images/xslt_1.png)
 
 At the bottom of the page, you can provide a username that is inserted into the headline at the top of the list.
@@ -107,7 +112,7 @@ As you can see, the name you provide is reflected on the page. Suppose the web a
 
 As you can see the web app responds with a server error. While this does not confirm that an XSLT injection vuln is present, it might indicate the presence of a security issue.
 
-## Information Disclosure
+### Information Disclosure
 
 You can try to infer some basic information about the XSLT processor in use by injecting the following XSLT elements:
 
@@ -127,7 +132,9 @@ Since the web app interpreted the XSLT elements you provided, this confirms an X
 
 ![xslt 3](../../../images/xslt_3.png)
 
-## LFI
+## Exploitation
+
+### LFI
 
 You can try to use multiple different functions to read a local file. Whether a payload will work depends on the XSLT version and the configuration of the XSLT library. For instance, XSLT contains a function ```unparsed-text``` that can be used to read a local file:
 
@@ -141,10 +148,18 @@ However, it was only introduced in XSLT version 2.0. BUT, if the XSLT library is
 <xsl:value-of select="php:function('file_get_contents','/etc/passwd')" />
 ```
 
-## RCE
+### RCE
 
 If an XSLT processor supports PHP functions, you can call a PHP function that executes a local system command to obtain RCE.
 
 ```xml
 <xsl:value-of select="php:function('system','id')" />
 ```
+
+## Prevention
+
+XSLT injection can be prevented by ensuring that user input is not inserted into XSL data before processing by the XSLT processor. However, if the output should reflect values provided by the user, user-provided data might be required to be added to the XSL document before processing. In this case, it is essential to implement proper sanitization and input validation to avoid XSLT injection vulnerabilities. This may prevent attackers from injecting additional XSLT elemts, but the implementation may depend on the output format.
+
+For instance, if the XSLT processor generates an HTML response, HTML-encoding user input before inserting it into the XSL data can prevent XSLT injection vulnerabilities. As HTML-encoding converts all instances of ```<``` to ```&lt;``` and ```>``` to ```&gt;```, an attacker should not be able to inject additional XSLT elements, thus preventing an XSLT vulnerability.
+
+Additional hardening measures such as running the XSLT processor as a low-privileged process, preventing the use of external functions by turning off PHP functions within XSLT, and keeping the XSLT library up-to-date can mitigate the impact of potential XSLT injection vulnerabilities.
