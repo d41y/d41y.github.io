@@ -7,12 +7,18 @@
     - [Information Disclosure](#information-disclosure)
     - [LFI](#lfi)
     - [RCE](#rce)
+  - [Exploiting Twig](#exploiting-twig)
+    - [Information Disclosure](#information-disclosure-1)
+    - [LFI](#lfi-1)
+    - [RCE](#rce-1)
 
 ---
 
+[SSTI cheatsheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md)
+
 # Server-Side Template Injection (SSTI)
 
-Web applications can utilize templating engines and server-side templates to generate responses such as HTML content dynamically. This generation is often based on user input, enabling the web application to respond to user input dynamically. When an attacker can inject templacte code, a SSTI vulnerability can occur. STTI can lead to various security risks, including data leakage and even full server compromise via remote code execution.
+Web applications can utilize templating engines and server-side templates to generate responses such as HTML content dynamically. This generation is often based on user input, enabling the web application to respond to user input dynamically. When an attacker can inject template code, a SSTI vulnerability can occur. STTI can lead to various security risks, including data leakage and even full server compromise via remote code execution.
 
 ## Templating
 
@@ -174,4 +180,38 @@ To achieve remote code execution in Python, you can use functions provided by th
 ```
 
 ![ssti 8](../../../images/ssti_8.png)
+
+## Exploiting Twig
+
+### Information Disclosure
+
+In Twig, you can use the ```_self``` keyword to obtain a little information about the current template:
+
+```twig
+{{ _self }}
+```
+
+![ssti 9](../../../images/ssti_9.png)
+
+However, the amount of information is limited compared to Jinja.
+
+### LFI
+
+Reading local files is not possible using internal functions directly provided by Twig. However, the PHP web framework Symfony defines additional Twig filters. One of these filters is ```file_excerpt``` and can be used to read local files:
+
+```twig
+{{ "/etc/passwd"|file_excerpt(1,-1) }}
+```
+
+![ssti 10](../../../images/ssti_10.png)
+
+### RCE
+
+To achieve remote code execution, you can use a PHP built-in function such as ```system```. You can pass an argument to this function by using Twig's ```filter``` function.
+
+```twig
+{{ ['id'] | filter('system') }}
+```
+
+![ssti 11](../../../images/ssti_11.png)
 
