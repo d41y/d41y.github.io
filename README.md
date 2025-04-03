@@ -50,30 +50,30 @@ _to-Do's_:
 
 ### 0x00
 
-- [Fuzzing](./attack/fundamentals/fuzzing_fundamentals.md)
-- [HTTP/HTTPs](./attack/fundamentals/http_https_fundamentals.md)
-- [Proxies](./attack/fundamentals/web_proxy_fundamentals.md)
-- [Reconnaissance](./attack/fundamentals/web_recon_fundamentals.md)
-- [Web Applications](./attack/fundamentals/web_applications_fundamentals.md)
+- [Fuzzing](./attack/web/fundamentals/fuzzing_fundamentals.md)
+- [HTTP/HTTPs](./attack/web/fundamentals/http_https_fundamentals.md)
+- [Proxies](./attack/web/fundamentals/web_proxy_fundamentals.md)
+- [Reconnaissance](./attack/web/fundamentals/web_recon_fundamentals.md)
+- [Web Applications](./attack/web/fundamentals/web_applications_fundamentals.md)
 
 ### Attacks
 
 Client-side
-  - [XSS](./attack/web_attacks/client_side/xss.md)
+  - [XSS](./attack/web/web_attacks/client_side/xss.md)
 
 Injections
-  - [Command Injections](./attack/web_attacks/injection_attacks/command_injections.md)
-  - [SQLi](./attack/web_attacks/injection_attacks/sqli.md)
-    - [SQLMap](./attack/web_attacks/injection_attacks/sqli.md#sqlmap)
+  - [Command Injections](./attack/web/web_attacks/injection_attacks/command_injections.md)
+  - [SQLi](./attack/web/web_attacks/injection_attacks/sqli.md)
+    - [SQLMap](./attack/web/web_attacks/injection_attacks/sqli.md#sqlmap)
 
 Server-side
   - [File Inclusion]()
-  - [File Upload Attack](./attack/web_attacks/server_side/file_upload_attacks.md)
-  - [SSI](./attack/web_attacks/server_side/ssi.md)
-  - [SSRF](./attack/web_attacks/server_side/ssrf.md)
-  - [SSTI](./attack/web_attacks/server_side/ssti.md)
-  - [SSRF](./attack/web_attacks/server_side/ssrf.md)
-  - [XLST](./attack/web_attacks/server_side/xlst.md)
+  - [File Upload Attack](./attack/web/web_attacks/server_side/file_upload_attacks.md)
+  - [SSI](./attack/web/web_attacks/server_side/ssi.md)
+  - [SSRF](./attack/web/web_attacks/server_side/ssrf.md)
+  - [SSTI](./attack/web/web_attacks/server_side/ssti.md)
+  - [SSRF](./attack/web/web_attacks/server_side/ssrf.md)
+  - [XLST](./attack/web/web_attacks/server_side/xlst.md)
 
 Web Service & API
 
@@ -88,7 +88,7 @@ Web Service & API
 
 ### Web Security
 
-- [JavaScript (De-)Obfuscation](./attack/web_security_techniques/javascript_deobfuscation.md)
+- [JavaScript (De-)Obfuscation](./attack/web/web_security_techniques/javascript_deobfuscation.md)
 - [Session Security]()
 
 ## Windows
