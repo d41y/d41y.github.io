@@ -28,17 +28,17 @@ Furthermore, if the web application relies on a user-supplied URL scheme or prot
 
 ## Identifying SSRF
 
-![website](../../../images/ssrf_1.png)
+![website](../../../../images/ssrf_1.png)
 
 In Burp:
 
-![website with burp](../../../images/ssrf_2.png)
+![website with burp](../../../../images/ssrf_2.png)
 
 The request contains the chosen date and a URL in the parameter ```dateserver```. This indicates that the web server fetches the availibility information from a separate system determined by the URL passed in this POST parameter.
 
 To confirm:
 
-![listener](../../../images/ssrf_3.png)
+![listener](../../../../images/ssrf_3.png)
 
 And:
 
@@ -54,7 +54,7 @@ Accept: */*
 
 Now, to determine whether the HTTP response reflects the SSRF response to you, point the web application to itself by providing ```http://127.0.0.1/index.php```:
 
-![point to self](../../../images/ssrf_4.png)
+![point to self](../../../../images/ssrf_4.png)
 
 Since the response contains the web application's HTML code, the SSRF vuln is not blind.
 
@@ -62,7 +62,7 @@ Since the response contains the web application's HTML code, the SSRF vuln is no
 
 You can use the SSRF vulnerability to conduct a port scan of the system to enumerate running services. To achieve this, you need to be able to infer whether a port is open or not from the response to your SSRF payload.
 
-![enumerate](../../../images/ssrf_5.png)
+![enumerate](../../../../images/ssrf_5.png)
 
 This enables you to conduct an internal port scan of the web server through the SSRF vulnerability. You can do this using a fuzzer like ```ffuf```.
 
@@ -81,7 +81,7 @@ d41y@htb[/htb]$ ffuf -w ./ports.txt -u http://172.17.0.2/index.php -X POST -H "C
 
 You can access and enumerate the domain through the SSRF vulnerability. For instance, you can conduct a directory brute-force attack to enumerate additional endpoints using ```ffuf```.
 
-![accessing restricted endpoints](../../../images/ssrf_6.png)
+![accessing restricted endpoints](../../../../images/ssrf_6.png)
 
 You can see, the web server respons with the default Apache 404 response. To also filter out any HTTP 403 responses, you will filter your results based on the string ```Server at dataserver.htb Port 80```, which is contained in default Apache error pages. Since the web application runs PHP, you can specify the ```.php``` extension.
 
@@ -100,13 +100,13 @@ d41y@htb[/htb]$ ffuf -w /opt/SecLists/Discovery/Web-Content/raft-small-words.txt
 
 You can manipulate the URL scheme to provoke further unexpected behavior. Since the URL scheme is part of the URL supplied to the web application, you can attempt to read local files from the file system using the ```file://``` URL scheme. You can achieve this by supplying the URL ```file:///etc/passwd```.
 
-![lfi](../../../images/ssrf_7.png)
+![lfi](../../../../images/ssrf_7.png)
 
 ## gopher Protocol
 
 You can use SSRF to access restricted internal endpoints. However, you are restricted to GET requests as there is no way to send a POST request with the ```http://``` URL scheme. For instance, consider a different version of the previous web application. Assuming you identified the internal endpoint ```admin.php``` just like before, however, this time the response looks like this:
 
-![gopher 1](../../../images/ssrf_8.png)
+![gopher 1](../../../../images/ssrf_8.png)
 
 You can see that the admin endpoint is password protected by a login prompt. From the HTML form, you can deduce that you need to send a POST request to ```/admin.php``` containing the password in the ```adminpw``` POST parameter. However, there is no way to send this POST request using the ```http://``` URL scheme.
 
@@ -142,7 +142,7 @@ dateserver=gopher%3a//dateserver.htb%3a80/_POST%2520/admin.php%2520HTTP%252F1.1%
 
 ... results in:
 
-![gopher 2](../../../images/ssrf_9.png)
+![gopher 2](../../../../images/ssrf_9.png)
 
 The internal admin endpoint accepts the provided password, and you can access the admin dashboard.
 
@@ -180,7 +180,7 @@ Instances in which the response is not directly displayed to you are called blin
 
 This time, the response looks different:
 
-![blind 1](../../../images/ssrf_10.png)
+![blind 1](../../../../images/ssrf_10.png)
 
 The response does not contain the HTML response of the coerced request; instead, it simply tells you that the date is unvailable
 
@@ -190,11 +190,11 @@ The response does not contain the HTML response of the coerced request; instead,
 
 Compare this:
 
-![ssrf 2](../../../images/ssrf_11.png)
+![ssrf 2](../../../../images/ssrf_11.png)
 
 ... to:
 
-![ssrf 3](../../../images/ssrf_12.png)
+![ssrf 3](../../../../images/ssrf_12.png)
 
 Furthermore, while you cannot read **local files** on the system, you can use the same technique to identify existing files on the filesystem. That is because the error message is different for existing and non-existing files, just like it differs for open and closed ports.
 

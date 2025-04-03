@@ -27,7 +27,7 @@ Most internet communications are made with web requests through the HTTP protoco
 
 ## Uniform Resource Locator (URL)
 
-![URL structure](../images/url_structure.png)
+![URL structure](../../../images/url_structure.png)
 
 | Structure-Element | Example | Description |
 | ------ | ------ | ------ |
@@ -41,7 +41,7 @@ Most internet communications are made with web requests through the HTTP protoco
 
 ## HTTP Flow
 
-![HTTP flow](../images/http_flow.png)
+![HTTP flow](../../../images/http_flow.png)
 
 ## cURL
 
@@ -63,7 +63,7 @@ One significant drawback of HTTP is that all data is transferred in clear-text. 
 
 ## HTTPs Flow
 
-![HTTPs flow](../images/https_flow.png)
+![HTTPs flow](../../../images/https_flow.png)
 
 ## cURL with HTTPs
 
@@ -89,7 +89,7 @@ d41y@htb[/htb]$ curl -k https://inlanefreight.com
 
 HTTP communications mainly consists of an HTTP request and an HTP response. An HTTP request is made by the client and is processed by the server. The request contains all of the details we require from the server, including the resource, and many other options.
 
-![HTTP Request](../images/http_request.png)
+![HTTP Request](../../../images/http_request.png)
 
 | Field | Example | Description |
 | ----- | ------- | ----------- |
@@ -99,7 +99,7 @@ HTTP communications mainly consists of an HTTP request and an HTP response. An H
 
 ## Response
 
-![HTTP response](../images/http_response.png)
+![HTTP response](../../../images/http_response.png)
 
 | Field | Example | Description |
 | ----- | ------- | ----------- |

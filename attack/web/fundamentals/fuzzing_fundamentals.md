@@ -343,7 +343,7 @@ admin                   [Status: 200, Size: 0, Words: 1, Lines: 1]
 
 If you try to access a page, and see this:
 
-![Ffuf GET](../images/fuzzing_ffuf_get.png)
+![Ffuf GET](../../../images/fuzzing_ffuf_get.png)
 
 That indicates that there must be something that identifies users to verify whether they have access to read the flag. There was no login, nor any cookie that can be verified at the backend. So, perhaps there is a key that you can pass to the page to read the flag. Such keys would usually be passed as a parameter, using either a ```GET``` or a ```POST``` HTTP request.
 
@@ -385,7 +385,7 @@ ________________________________________________
 
 Once you get a hit and try the result, it might look like this:
 
-![Ffuf GET 2](../images/fuzzing_ffuf_get2.png)
+![Ffuf GET 2](../../../images/fuzzing_ffuf_get2.png)
 
 ## Parameter Fuzzing - POST
 

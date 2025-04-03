@@ -38,7 +38,7 @@
 
 ---
 
-[Cheatsheet File Upload Attacks](../../../cheatsheets/File_Upload_Attacks_Module_Cheat_Sheet.pdf)
+[Cheatsheet File Upload Attacks](../../../../cheatsheets/File_Upload_Attacks_Module_Cheat_Sheet.pdf)
 
 # File Upload Attacks
 
@@ -58,7 +58,7 @@ With these types of vulnerable web apps, you may directly upload your web shell 
 
 The following web app allows you to upload personal files. The web app does not mention anythin about what file types are allowed, and you can drag and drop any file you want. Furthermore, if you click on the form to select a file, the file selector dialog does not specify any file type, as it says ```All Files``` for the file type, which may also suggest that no type of restrictions or limitations are specified for the web application.
 
-![upload](../../../images/file_upload1.png)
+![upload](../../../../images/file_upload1.png)
 
 All of this tells you that the programm appears to have no file type restrictions on the front-end, and if no restrictions were specified on the back-end, you might be able to upload arbitrary file type to the back-end server to gain complete control over it.
 
@@ -84,7 +84,7 @@ To identify whether you can upload arbitrary files (_PHP in this case_), you can
 
 To verify that it worked:
 
-![hello htb](../../../images/file_upload2.png)
+![hello htb](../../../../images/file_upload2.png)
 
 ## Upload Exploitation
 
@@ -104,7 +104,7 @@ With PHP web app, you can use the ```system()``` function that executes system c
 
 If you write the above script to ```shell.php``` and upload it to your web application, you can execute system commands with the ```?cmd=``` GET parameter:
 
-![uid](../../../images/file_upload3.png)
+![uid](../../../../images/file_upload3.png)
 
 ### Reverse Shell
 
@@ -141,7 +141,7 @@ However, as the file format validation is happening on the client-side, you can 
 
 This time, when trying to upload a file, you cannot see your PHP scripts, as the dialog appears to be limited to image formats only.
 
-![limited](../../../images/file_upload4.png)
+![limited](../../../../images/file_upload4.png)
 
 You may still select the ```All Files``` option to select your PHP script anyway, but when you do so, you get an error message saying "Only images are allowed!", and the "Upload" button gets disabled.
 
@@ -153,7 +153,7 @@ Any code that runs on the client-side is under your control. While the web serve
 
 Start by examining a normal request through Burp. When you select an image, you see that it gets reflected as your profile image, and when you click on ```Upload```, your profile image gets updated and persists through refreshes. This indicates that your image was uploaded to the server, which is now displaying it back to you.
 
-![png](../../../images/file_upload5.png)
+![png](../../../../images/file_upload5.png)
 
 The web app appears to be sending a standard HTTP upload request to ```upload.php```. This way, you can now modify the request to meet your needs without having the front-end type validation restrictions. If the back-end server does not validate the uploaded file, then you should theoretically be able to send any file type/content, and it would be uploaded to the server.
 
@@ -162,7 +162,7 @@ The web app appears to be sending a standard HTTP upload request to ```upload.ph
 - Content
   - modify to the web shell used before
 
-![burp](../../../images/file_upload6.png)
+![burp](../../../../images/file_upload6.png)
 
 ### Disabling Front-End Validation
 
@@ -232,11 +232,11 @@ The code is taking the file extension from the uploaded file name and then compa
 
 If a web app seems to be testing the file extensions, your first step is to fuzz the upload functionality with a list of potential extensions and see which of them return the previous error message. Any upload requests that do not return an error message, return a differetn message, or succeed in uploading the file, may indicate an allowed file extension.
 
-![fuzzing](../../../images/file_upload7.png)
+![fuzzing](../../../../images/file_upload7.png)
 
 You should keep the file content for this attack, as you are only interested in fuzzing file extensions. You can use this [list](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Upload%20Insecure%20Files/Extension%20PHP/extensions.lst) to test for possible php extensions.
 
-![success](../../../images/file_upload8.png)
+![success](../../../../images/file_upload8.png)
 
 You can sort the result by length, and you will see that all requests with the Content-Length of 193 passed the extension validation, as they all responded with ```File successfully uploaded```. In contrast, the rest responded with an error message saying ```Extension not allowed```.
 
@@ -250,7 +250,7 @@ You can sort the result by length, and you will see that all requests with the C
 
 If you try the same approach you did before, you will now get ```Only Images are allowed```, which may be more common in web apps than seeing a blocked extension type. However, error messages do not always reflect which form of validation is being utilized.
 
-![only images](../../../images/file_upload9.png)
+![only images](../../../../images/file_upload9.png)
 
 All variations of PHP extensions are blocked. However, the wordlist you used also contained other 'malicious' extensions that were not blocked and were successfully uploaded.
 
@@ -269,7 +269,7 @@ You see that the script uses a regex to test whether the filename contains any w
 
 A straightforward method of passing the regex test is through Double Extensions. For example, if the ```.jpg``` extension was allowed, you can add it in your uploaded file name and still end your filename with ```.php```, in which case you should be able to pass the whitelist test, while still uploading a PHP script that can execute PHP code.
 
-![whitelist](../../../images/file_upload10.png)
+![whitelist](../../../../images/file_upload10.png)
 
 However, this may not always work, as some web applications may use a strict regex pattern.
 
@@ -293,7 +293,7 @@ For example, the ```/etc/apache2/mods-enabled/php7.4.conf``` for the Apache2 web
 
 The above configuration is how the web server determines which files to allow PHP code execution. It specifies a whitelist with a regex pattern that matches ```.phar```, ```.php```, and ```phtml```. However, this regex pattern can have the same mistake you saw earlier if you forgot to end it with ```$```. In such cases, any file that contains the above extensions will be allowed PHP code execution, even if it does not end with the PHP extension. For example, ```shell.php.jpg``` should pass the earlier whitelist test as it ends with ```.jpg```, and it would be able to execute PHP code due to the above misconfiguration, as it contains ```.php``` in its name.
 
-![php.jpg](../../../images/file_upload11.png)
+![php.jpg](../../../../images/file_upload11.png)
 
 ### Character Injection
 
@@ -334,7 +334,7 @@ While extension filters may accept several extensions, content filters usually s
 
 ### Content-Type
 
-![only images](../../../images/file_upload12.png)
+![only images](../../../../images/file_upload12.png)
 
 You get a message saying ```Only images are allowed```. The error message persists, and your file fails to upload. If you change the file name to ```shell.jpg.phtml``` or ```shell.php.jpg```, or even if you use ```shell.jpg``` with a web shell content, your upload will fail. As the file extension does not affect the error message, the web application muste be testing the file content for type validation.
 
@@ -352,7 +352,7 @@ The code sets the ```$type``` variable from the uploaded file's ```Content-Type`
 
 You may start by fuzzing the Content-Type header with [Content-Type Wordlist](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-all-content-types.txt) through Burp Intruder, to see which types are allowed. However, the message tells you that only images are allowed, so you can limit your scan to image types, which reduces the wordlist to 45 types only.
 
-![content type](../../../images/file_upload13.png)
+![content type](../../../../images/file_upload13.png)
 
 Now you get a ```File successfully uploaded```.
 
@@ -392,7 +392,7 @@ if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))
 
 Burp example:
 
-![mime](../../../images/file_upload14.png)
+![mime](../../../../images/file_upload14.png)
 
 You can use a combination of the two methods, which may help bypass some more robust content filters.
 

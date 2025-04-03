@@ -71,11 +71,11 @@ Since the above test string should almost certainly violate the template syntax,
 
 Legit string:
 
-![ssti 1](../../../images/ssti_1.png)
+![ssti 1](../../../../images/ssti_1.png)
 
 Using the test string:
 
-![ssti 2](../../../images/ssti_2.png)
+![ssti 2](../../../../images/ssti_2.png)
 
 While this does not confirm that the web application is vulnerable to SSTI, it should increase your suspicion that the parameter might be vulnerable.
 
@@ -131,11 +131,11 @@ flowchart LR
 
 Example:
 
-![ssti 3](../../../images/ssti_3.png)
+![ssti 3](../../../../images/ssti_3.png)
 
 Since the payload was not executed, you follow the red arrow and now inject the payload ```{{7*7}}```.
 
-![ssti4](../../../images/ssti_4.png)
+![ssti4](../../../../images/ssti_4.png)
 
 This time, the payload was executed by the template engine. Therefore, you follow the green arrow and inject the payload ```{{7*'7'}}```.
 
@@ -153,7 +153,7 @@ You can exploit the SSTI vulnerability to obtain internal information about the 
 {{ config.items() }}
 ```
 
-![ssti 5](../../../images/ssti_5.png)
+![ssti 5](../../../../images/ssti_5.png)
 
 Since this payload dumps the entire web application configuration, including any used secret keys, you can prepare further attacks using the obtained information. You can also execute Python code to obtain information about the web application's source code. You can use the following payload to dump all available built-in functions:
 
@@ -161,7 +161,7 @@ Since this payload dumps the entire web application configuration, including any
 {{ self.__init__.__globals__.__builtins__ }}
 ```
 
-![ssti 6](../../../images/ssti_6.png)
+![ssti 6](../../../../images/ssti_6.png)
 
 ### LFI
 
@@ -171,7 +171,7 @@ You can use Python's built-in function ```open``` to include a local file. Howev
 {{ self.__init__.__globals__.__builtins__.open("/etc/passwd").read() }}
 ```
 
-![ssti 7](../../../images/ssti_7.png)
+![ssti 7](../../../../images/ssti_7.png)
 
 ### RCE
 
@@ -181,7 +181,7 @@ To achieve remote code execution in Python, you can use functions provided by th
 {{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
 ```
 
-![ssti 8](../../../images/ssti_8.png)
+![ssti 8](../../../../images/ssti_8.png)
 
 ## Exploiting Twig
 
@@ -193,7 +193,7 @@ In Twig, you can use the ```_self``` keyword to obtain a little information abou
 {{ _self }}
 ```
 
-![ssti 9](../../../images/ssti_9.png)
+![ssti 9](../../../../images/ssti_9.png)
 
 However, the amount of information is limited compared to Jinja.
 
@@ -205,7 +205,7 @@ Reading local files is not possible using internal functions directly provided b
 {{ "/etc/passwd"|file_excerpt(1,-1) }}
 ```
 
-![ssti 10](../../../images/ssti_10.png)
+![ssti 10](../../../../images/ssti_10.png)
 
 ### RCE
 
@@ -215,7 +215,7 @@ To achieve remote code execution, you can use a PHP built-in function such as ``
 {{ ['id'] | filter('system') }}
 ```
 
-![ssti 11](../../../images/ssti_11.png)
+![ssti 11](../../../../images/ssti_11.png)
 
 ## SSTI Tools
 

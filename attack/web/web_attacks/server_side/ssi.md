@@ -80,13 +80,13 @@ An SSI directive has the following syntax:
 
 ## Exploitation
 
-![ssi 1](../../../images/ssi_1.png)
+![ssi 1](../../../../images/ssi_1.png)
 
 If you enter your name, you are redirected to ```/page.shtml```, which displays some general information. You can guess that the page supports SSI based on the file extension. If your username is inserted into the page without prior sanitization, it might be vulnerable to SSI injection.
 
 ```<!--#printenv -->``` Example:
 
-![ssi 2](../../../images/ssi_2.png)
+![ssi 2](../../../../images/ssi_2.png)
 
 The environment variables are printed and thus you have successfully confirmed an SSI injection vulnerability.
 

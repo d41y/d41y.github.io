@@ -102,13 +102,13 @@ XSLT injection occurs whenever user input is inserted into XSL data before outpu
 
 ### Identifying XSLT Injection
 
-![xslt 1](../../../images/xslt_1.png)
+![xslt 1](../../../../images/xslt_1.png)
 
 At the bottom of the page, you can provide a username that is inserted into the headline at the top of the list.
 
 As you can see, the name you provide is reflected on the page. Suppose the web application stores the module information in an XML document and displays the data using XSLT processing. In that case, it might suffer from XSLT injection if your name is inserted without sanitization before processing. To confirm that, try to inject a broken XML tag to try to provoke an error in the web application. You can achieve this by providing the username ```<```.
 
-![xslt 2](../../../images/xslt_2.png)
+![xslt 2](../../../../images/xslt_2.png)
 
 As you can see the web app responds with a server error. While this does not confirm that an XSLT injection vuln is present, it might indicate the presence of a security issue.
 
@@ -130,7 +130,7 @@ Product Version: <xsl:value-of select="system-property('xsl:product-version')" /
 
 Since the web app interpreted the XSLT elements you provided, this confirms an XSLT injection vulnerability. Furthermore, you can deduce that the web application seems to rely on the ```libxslt``` library and supports XSLT version 1.0.
 
-![xslt 3](../../../images/xslt_3.png)
+![xslt 3](../../../../images/xslt_3.png)
 
 ## Exploitation
 

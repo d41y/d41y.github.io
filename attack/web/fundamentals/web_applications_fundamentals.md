@@ -68,25 +68,25 @@ Most websites run web applications (_Web 2.0_) presenting dynamic content based 
 
 A server hosts the web app in a client-server model and distributes it to any clients to access it. In this model, web applications have two types of components, those in the front end, which are usually interpreted and executed on the client-side, and components in the back end, usually compiled, interpreted, and executed by the hosting server.
 
-![Client-Server](../images/client_server.png)
+![Client-Server](../../../images/client_server.png)
 
 ### One Server
 
 If any web application hosted on this server is compromised in this architecture, then all web applications' data will be compromised. This design represents an "all eggs in one basket" approach since any of the hosted web applications are vulnerable, the entire webserver becomes vulnerable.
 
-![One Server](../images/one_server.png)
+![One Server](../../../images/one_server.png)
 
 ### Many Servers - One Database
 
 This model separates the database onto its own database server and allows the applications' hosting server to access the database server to store and retrieve data. It can be seen as many-servers to one-database and one-server to one-database, as long as the database is separated on its own database server. 
 
-![Many Servers - One Database](../images/many_servers_one_database.png)
+![Many Servers - One Database](../../../images/many_servers_one_database.png)
 
 ### Many Servers - Many Databases
 
 This model builds upon the Many Servers, One Database model. However, within the database server, each web application's data is hosted in a separate database. The web application can only access private data and only common data that is shared across the web applications. It is also possible to host each web application's database on its separate database server.
 
-![Many Servers - Many Databases](../images/many_servers_many_databases.png)
+![Many Servers - Many Databases](../../../images/many_servers_many_databases.png)
 
 ## Web Application Components
 

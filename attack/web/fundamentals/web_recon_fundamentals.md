@@ -265,7 +265,7 @@ This file defines the authoritative name server (_NS records_), mail server (_MX
 
 ### DNS Zone Transfer
 
-![DNS Zone Transfer](../images/web_recon_zone_tranfer.png)
+![DNS Zone Transfer](../../../images/web_recon_zone_tranfer.png)
 
 1. Zone Transfer Request (AXFR)
 2. SOA Record Transfer
@@ -407,7 +407,7 @@ VHosts can also be configured to use different domains, not just subdomains:
 
 ### Server VHost Lookup
 
-![VHost workflow](../images/web_recon_vhosts.png)
+![VHost workflow](../../../images/web_recon_vhosts.png)
 
 1. Browser Requests a Website
 2. Host Header Reveals the Domain

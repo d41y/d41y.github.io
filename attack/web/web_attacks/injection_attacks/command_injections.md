@@ -44,7 +44,7 @@
 
 ---
 
-[Cheatsheet Command Injections](../../../cheatsheets/Command_Injections_Module_Cheat_Sheet.pdf)
+[Cheatsheet Command Injections](../../../../cheatsheets/Command_Injections_Module_Cheat_Sheet.pdf)
 
 # Command Injections
 
@@ -56,11 +56,11 @@ When it comes to OS Command Injections, the user input you control must directly
 
 When you visit the web application, you see a "Host Checker" utility that appears to ask you for an IP to check whether it is alive or not.
 
-![Host Checker](../../../images/command_injection1.png)
+![Host Checker](../../../../images/command_injection1.png)
 
 You can try entering the localhost IP ```127.0.0.1``` to check the functionality, and it returns the output of the ```ping``` command telling you that the localhost is alive.
 
-![Localhost alive](../../../images/command_injection2.png)
+![Localhost alive](../../../../images/command_injection2.png)
 
 You can confidently guess that the IP you entered is going into a ```ping``` command since the output you receive suggests that. The command used may be:
 
@@ -111,7 +111,7 @@ ping -c 1 127.0.0.1; whoami
 
 The easiest method to customize the HTTP requests being sent to the back-end server is to use a web proxy that can intercept the HTTP requests being sent by the application.
 
-![Burp](../../../images/command_injection3.png)
+![Burp](../../../../images/command_injection3.png)
 
 ## Other Injection Operators
 
@@ -155,7 +155,7 @@ ping: usage error: Destination address required
 
 ### Filter/WAF Detection
 
-![Filter](../../../images/command_injection4.png)
+![Filter](../../../../images/command_injection4.png)
 
 This indicates that something you sent triggered a security mechanism in place that denied your request. This error message can be displayed in various ways. In this case, you see it in the field where the output is displayed, meaning that is was detected and prevented by the PHP web application itself. If the error message displayed a different page, with information like your IP and your request, this may indicate that it was denied by a WAF.
 
@@ -178,7 +178,7 @@ If any character in the string you sent matches a character in the blacklist, yo
 
 One way to identify a blackliste character is to just reduce the command part by part. If you can clearly say, that it's the injection operator which is blacklisted, you should start trying other operators
 
-![blacklist](../../../images/command_injection5.png)
+![blacklist](../../../../images/command_injection5.png)
 
 > [!NOTE]
 > The new-line character is usually not blacklisted, as it may be needed in the payload itseld. It in appending your commands both in Linux and Windows.
@@ -187,13 +187,13 @@ One way to identify a blackliste character is to just reduce the command part by
 
 A space is a common blacklisted character, especially if the input should not contain any spaces, like an IP. Still, there are many ways to add a space character without actually using the space character.
 
-![Space filter](../../../images/command_injection6.png)
+![Space filter](../../../../images/command_injection6.png)
 
 ### Using Tabs
 
 Using Tabs (_%09_) instead of spaces is a technique that may work, as both Linux and Windows accept commands with tabs between arguments, and they are executed the same.
 
-![tab](../../../images/command_injection7.png)
+![tab](../../../../images/command_injection7.png)
 
 ### Using $IFS
 
@@ -202,7 +202,7 @@ Using Tabs (_%09_) instead of spaces is a technique that may work, as both Linux
 
 Using the (\$IFS) Linux Environment Variable may also work since its default value is a space and a tab, which would work between command arguments. So, if you use ```${IFS}``` where the spaces should be, the variable should be automatically replaced with a space, and your command should work.
 
-![ifs](../../../images/command_injection8.png)
+![ifs](../../../../images/command_injection8.png)
 
 ### Using Brace Expansion
 
@@ -250,7 +250,7 @@ d41y@htb[/htb]$ echo ${LS_COLORS:10:1}
 ;
 ```
 
-![env](../../../images/command_injection9.png)
+![env](../../../../images/command_injection9.png)
 
 ### Windows
 

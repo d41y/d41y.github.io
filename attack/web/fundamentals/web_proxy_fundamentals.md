@@ -314,7 +314,7 @@ After starting a spider scan, the scan spiders the website by looking for links 
 
 A possible outcome:
 
-![Sites Tree](../images/proxy_zap_spider.png)
+![Sites Tree](../../../images/proxy_zap_spider.png)
 
 #### ZAP Passive Scanner
 
@@ -330,4 +330,4 @@ You can generate a report with all of the findings identified by ZAP through its
 
 Looks like:
 
-![ZAP Reporting](../images/proxy_zap_report.png)
+![ZAP Reporting](../../../images/proxy_zap_report.png)
