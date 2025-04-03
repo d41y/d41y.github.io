@@ -85,6 +85,9 @@ To inject an additional command to the intended one:
 | Sub-Shell | ``` `` ``` | %60%60 | Both (_Linux-only_) |
 | Sub-Shell | ```$()``` | %24%28%29 | Both (_Linux-only_) |
 
+> [!TIP]
+> While expressions like ```%20``` might work when used in URLs, you may face problems when you try to use it inside commands which execute the command directly inside a shell context.<br>Inside shells you can use ```\x20```, which is the hexadecimal escape sequence for a space.<br>```bash "$(printf 'cat\x20/flag.txt')"``` will execute ```cat /flag.txt```.<br><br>[HTML Codes](https://ascii.cl/htmlcodes.htm)<br>[ANSI Escape Sequences](https://gist.github.com/ConnerWill/d4b6c776b509add763e17f9f113fd25b)
+
 You can use any of these operators to inject another command so both or either of the commands get executed. You would
 
 1. write your expected input,
