@@ -79,8 +79,8 @@ Web Service & API
 
 ### Authentication
 
-- [Broken Authentication]()
-- [Login Brute Forcing]()
+- [Broken Authentication](./attack/web/authentication/broken_authentication.md)
+- [Login Brute Forcing](./attack/web/authentication/login_brute_forcing.md)
 
 ### CMS
 
