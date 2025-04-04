@@ -4,6 +4,10 @@
 
 _to-Do's_:
 
+- Doku für:
+  - Linux Fundamentals
+  - Windwos Fundamentals
+
 - Attack cycle / workflow with clickable links
   - Cyber Kill Chain / MITRE Attack Chain
 
