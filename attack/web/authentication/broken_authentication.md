@@ -24,6 +24,12 @@
     - [Vulnerable Password Reset](#vulnerable-password-reset)
       - [Guessable Password Reset Questions](#guessable-password-reset-questions)
       - [Manipulating the Reset Request](#manipulating-the-reset-request)
+  - [Authentication Bypasses](#authentication-bypasses)
+    - [via Direct Access](#via-direct-access)
+    - [via Parameter Modification](#via-parameter-modification)
+  - [Session (Token) Attacks](#session-token-attacks)
+    - [Brute-Force Attack](#brute-force-attack)
+    - [Attacking Predictable Session Tokens](#attacking-predictable-session-tokens)
 
 ---
 
@@ -361,3 +367,145 @@ password=P@$$w0rd&username=admin
 ```
 
 To prevent this vuln, keeping a consistent state during the entire password reset process is essential. Resetting an account's password is a sensitive process where minor implementation flaws or logic bugs can enable an attacker to take over other user's accounts. As such, you should investigate the password reset functionality of any web app closely and keep an eye out for potential security issues.
+
+## Authentication Bypasses
+
+### via Direct Access
+
+The most straightforwarded way of bypassing authentication checks is to request the protected resource from an unauthenticated context. An unauthenticated attacker can access protected information if the web app does not properly verify that the request is authenticated.
+
+For instance, assume that you know that the web app redirects to the ```/admin.php``` endpoint after successful authentication, providing protected information only to authenticated users. If the web application relies solely on the login page to authenticate users, you can access the protected resource directly by accessing the ```/admin.php``` endpoint.
+
+While this scenario is uncommon in the real world, a slight variant occasionally happens in vulnerable web applications.
+
+Example:
+
+```php
+if(!$_SESSION['active']) {
+	header("Location: index.php");
+}
+```
+
+This code redirects the user to ```/index.php``` if the session is not active, i.e., if the user is not authenticated. However, the PHP script does not stop execution, resulting in protected information within the page being sent in the response body.
+
+![broken authentication](../../../images/broken_authentication_12.png)
+
+You can see, the entire admin page is contained in the response body. However, if you attempt to access the page in your web browser, the browser follows the redirect and display the login prompt instead of the protected admin page. You can easily trick the browser into displaying the admin page by intercepting the response and changing the status code from ```302``` to ```200```.
+
+![broken authentication 13](../../../images/broken_authentication_13.png)
+
+Afterward, forward the request by clicking on ```Forward```. Since you intercepted the response, you can now edit it. To force the browser to display the content, you need to change the status code from ```302``` to ```200```.
+
+![broken authentication 14](../../../images/broken_authentication_14.png)
+
+Afterward, you can forward the response. If you switch back to your browser window, you can see that the protected information is rendered.
+
+To prevent the protected information from being returned in the body of the redirect response, the PHP script needs to exit after issuing the redirect.
+
+```php
+if(!$_SESSION['active']) {
+	header("Location: index.php");
+	exit;
+}
+```
+### via Parameter Modification
+
+An authentication implementation can be flawed if it depends on the presence or value of an HTTP parameter, introducing authentication vulnerabilities.
+
+This type of vulnerability is closely related to authorization issues such as **Insecure Direct Object Reference (IDOR)** vulns.
+
+In this example you are provided with credentials. After loggnig in, you are being redirected to ```/admin.php?user_id=183```.
+
+![broken authentication 15](../../../images/broken_authentication_15.png)
+
+In your web browser, you can see that you seem to be lacking privileges, as you can only see a part of the available data.
+
+![broken authentication 16](../../../images/broken_authentication_16.png)
+
+To investigate the purpose of the ```user_id``` parameter, remove it from your request to ```/admin.php```. When doing so, you are redirected back to the login screen at ```/index.php```, even though your session provided in the ```PHPSESSID``` cookie is still valid.
+
+Thus, you can assume that the parameter ```user_id``` is related to authentication. You can bypass authentication entirely by accessing the URL ```/admin.php?user_id=183``` directly.
+
+![broken authentication 17](../../../images/broken_authentication_17.png)
+
+Based on the parameter name ```user_id```, you can infer that the parameter specifies the ID of the user accessing the page. If you can guess or brute-force the user ID of an administrator, you might be able to access the page with administrative privileges, thus revealing the admin information.
+
+## Session (Token) Attacks
+
+Session Tokens are unique identifiers a web app uses to identify a user. More specifically, the session token is tied to the user's session. If an attacker can obtain a valid session token of another user, the attacker can impersonate the user to the web app, thus taking over their session.
+
+### Brute-Force Attack
+
+Suppose a session token does not provide sufficient randomness and is cryptographically weak. In that case, you can brute-force valid session tokens. This can happen if a session token is too short or contains static data that does not provide randomness to the token, i.e., the token provides insufficient entropy.
+
+For instance, consider a web app that assigns a four-character session token. A four-character string can easily be brute-forced.
+
+This scenario is relatively uncommon in the real world. In a slightly more common variant, the session token itself provides sufficient lenght; however, the token consists of hardcoded prepended and appended values, while only a small part of the session token is dynamic to provide randomness. For instance, consider the following token assigned by a web app:
+
+![broken authentication 18](../../../images/broken_authentication_18.png)
+
+The session token is 32 characters long; thus, it seems infeasible to enumerate other users' valid sessions. However, send the login request multiple times and take note of the session tokens assigned by the web application. This results in the following session tokens:
+
+```
+2c0c58b27c71a2ec5bf2b4b6e892b9f9
+2c0c58b27c71a2ec5bf2b4546092b9f9
+2c0c58b27c71a2ec5bf2b497f592b9f9
+2c0c58b27c71a2ec5bf2b48bcf92b9f9
+2c0c58b27c71a2ec5bf2b4735e92b9f9
+```
+
+All session tokens are very similar. In fact, of the 32 chars, 28 are the same for all five captured sessions. The session tokens consist of the static string ```2c0c58b27c71a2ec5bf2b4``` followed by four random chars and the static string ```92b9f9```. This reduces the effective randomness of the session tokens. Since 28 out of the 32 chars are static, there are only four chars you need to enumerate to brute-force all existing active sessions, enabling you to hijack all active sessions.
+
+Another vulnerable example would be an incrementing session identifier. For instance, consider the following capture of successive session tokens:
+
+```
+141233
+141234
+141237
+141238
+141240
+```
+
+The session tokens seem to be incrementing numbers. This makes enumeration of all past and future sessions trivial, as you simply need to increment or decrement your session token to obtain active sessions and hijack other users' accounts.
+
+As such, it is crucial to capture multiple session tokens and analyze them to ensure that session tokens provide sufficient randomness to disallow brute-force attacks against them.
+
+### Attacking Predictable Session Tokens
+
+In a more realistic scenario, the session token does provide sufficient randomness on the surface. However, the generation of session tokens is not truly random, it can be predicted by an attacker with insight into the session token generation logic.
+
+ The simplest form of predictable tokens contains encoded data you can tamper with. For instance, consider the following session token:
+
+ ```
+ dXNlcj1odGItc3RkbnQ7cm9sZT11c2Vy
+ ```
+
+ While this session might seem random at first, a simple analysis reveals that is is base64 encoded data:
+
+ ```bash
+ d41y@htb[/htb]$ echo -n dXNlcj1odGItc3RkbnQ7cm9sZT11c2Vy | base64 -d
+
+user=htb-stdnt;role=user
+```
+
+The cookie contains information about the user and the role tied to the session. However, there is no security measure in place that prevents you from tampering with the data. You can forge your own session token by manipulating the data and base64-encoding it to match the expected format. This enables you to forge an admin cookie.
+
+```bash
+d41y@htb[/htb]$ echo -n 'user=htb-stdnt;role=admin' | base64
+
+dXNlcj1odGItc3RkbnQ7cm9sZT1hZG1pbg==
+```
+
+You can send this cookie to the web app to obtain administrative access.
+
+The same exploit works for cookies containing differently encoded data. You should also keep an eye out for data in hex-encoding or URL-encoding.
+
+Hex example:
+
+```bash
+d41y@htb[/htb]$ echo -n 'user=htb-stdnt;role=admin' | xxd -p
+
+757365723d6874622d7374646e743b726f6c653d61646d696e
+```
+
+Another variant of session tokens contains the result of an encryption of a data sequence. A weak cryptographic algorithm could lead to privilege escalation or authentication bypass, just like plain encoding. Improper handling of cryptographic algorithms or injection of user-provided data into the input of an encryption function can lead to vulnerabilities in the session token generation. However, it is often challenging to attack encryption-based session tokens in a black box approach without access to the source code responsible for session token generation.
