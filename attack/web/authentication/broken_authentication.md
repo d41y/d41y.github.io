@@ -30,6 +30,9 @@
   - [Session (Token) Attacks](#session-token-attacks)
     - [Brute-Force Attack](#brute-force-attack)
     - [Attacking Predictable Session Tokens](#attacking-predictable-session-tokens)
+  - [Further Session Attacks](#further-session-attacks)
+    - [Session Fixation](#session-fixation)
+    - [Improper Session Timeout](#improper-session-timeout)
 
 ---
 
@@ -509,3 +512,32 @@ d41y@htb[/htb]$ echo -n 'user=htb-stdnt;role=admin' | xxd -p
 ```
 
 Another variant of session tokens contains the result of an encryption of a data sequence. A weak cryptographic algorithm could lead to privilege escalation or authentication bypass, just like plain encoding. Improper handling of cryptographic algorithms or injection of user-provided data into the input of an encryption function can lead to vulnerabilities in the session token generation. However, it is often challenging to attack encryption-based session tokens in a black box approach without access to the source code responsible for session token generation.
+
+## Further Session Attacks
+
+### Session Fixation
+
+... is an attack that enables an attacker to obtain a victim's valid session. A web app vulnerable to session fixation does not assign a new session token after a successful authentication. If an attacker can coerce the victim into using a session token chosen by the attacker, session fixation enables an attacker to steal the victim's session and access their account.
+
+For instance, assume a web app vulnerable to session fixation uses a session token in the HTTP cookie ```session```. Furthermore, the web app sets the user's session cookie to a value provided in the ```sid``` GET parameter. Under these circumstances, a session fixation attack could look like this.
+
+1. An attacker obtains a valid session token by authenticating to the web app. For instance, assume the session token is ```a1b2c3d4e5f6```. Afterward, the attacker invalidates their session by logging out.
+2. The attacker tricks the victim to use the known session token by sending the following link: ```http://vulnerable.htb/?sid=a1b2c3d4e5f6```. When the victim clicks that link, the web app sets the ```session``` cookie to the provided value.
+
+```bash
+HTTP/1.1 200 OK
+[...]
+Set-Cookie: session=a1b2c3d4e5f6
+[...]
+```
+
+3. The victim authenticates to the vulnerable web application. The victim's browser already stores the attacker-provided session cookie, so it is sent along with the login request. The victim uses the attacker-provided session token since the web app does not assign a new one.
+4. Since the attacker knows the victim's session token ```a1b2c3d4e5f6```, they can hijack the victim's session.
+
+A web app must assign a new randomly generated session token after successful authentication to prevent fixation attacks.
+
+### Improper Session Timeout
+
+A web app must define a proper Session Timeout for a session token. After the time interval defined in the session timeout has passed, the session will expire, and the session token is no longer accepted. If a web application does not define a session timeout, the session token would be valid infinitely, enabling an attacker to use hijacked session effectively forever.
+
+For the security of a web app, the session timeout must be appropriately set. Because each web app has different business requirements, there is no universal session timeout value. For instance, a web app dealing with sensitive health data should probably set a session timeout in the range of minutes. In contrast, a social media app might set a session timeout of multiple hours.
