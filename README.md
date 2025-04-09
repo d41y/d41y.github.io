@@ -74,6 +74,7 @@ Server-side
   - [File Inclusion]()
   - [File Upload Attack](./attack/web/web_attacks/server_side/file_upload_attacks.md)
   - [HTTP Verb Tampering](./attack/web/web_attacks/server_side/http_verb_tampering.md)
+  - [IDOR](./attack/web/web_attacks/server_side/idor.md)
   - [SSI](./attack/web/web_attacks/server_side/ssi.md)
   - [SSRF](./attack/web/web_attacks/server_side/ssrf.md)
   - [SSTI](./attack/web/web_attacks/server_side/ssti.md)
