@@ -9,6 +9,9 @@
   - [Bypassing Security Filters](#bypassing-security-filters)
     - [Identify](#identify-1)
     - [Exploit](#exploit-1)
+  - [Verb Tampering Prevention](#verb-tampering-prevention)
+    - [Insecure Configuration](#insecure-configuration)
+    - [Insecure Coding](#insecure-coding-1)
 
 ---
 
@@ -127,3 +130,85 @@ file1; touch file2;
 3. Change the HTTP Verb
 4. Forward the request
 5. Refresh the website
+
+## Verb Tampering Prevention
+
+### Insecure Configuration
+
+HTTP Verb Tampering vulns can occur in most modern web servers, including Apache, Tomcat, and ASP.Net. The vulnerability usually happens when you limit a page's authorization to a particular set of HTTP verbs/methods, which leaves the other remaining methods unprotected.
+
+The following is an example of a vulnerable config for an Apache web server, which is located in the site configuration file, or in a ```.htaccess``` web page configuration.
+
+```xml
+<Directory "/var/www/html/admin">
+    AuthType Basic
+    AuthName "Admin Panel"
+    AuthUserFile /etc/apache2/.htpasswd
+    <Limit GET>
+        Require valid-user
+    </Limit>
+</Directory>
+```
+
+This configuration is setting the authorizations for the admin web directory. However, as the ```<Limit GET>``` keyword is being used, the ```Require valid-user>``` setting will only apply to GET requests, leaving the page accessible through POST requests. Even if both GET and POST were specified, this would leave the page accessbile through other methods, like HEAD or OPTIONS.
+
+The following example shows the same vuln for a Tomcat web server configuration, which can be found in the ```web.xml``` file for a certain Java web app.
+
+```xml
+<security-constraint>
+    <web-resource-collection>
+        <url-pattern>/admin/*</url-pattern>
+        <http-method>GET</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+        <role-name>admin</role-name>
+    </auth-constraint>
+</security-constraint>
+```
+
+The authorization is being limited only to the GET method with ```http-method```, which leaves the page accessible through other HTTP methods.
+
+The following is an example for an ASP.Net config found in the ```web.config``` file of a web app.
+
+```xml
+<system.web>
+    <authorization>
+        <allow verbs="GET" roles="admin">
+            <deny verbs="GET" users="*">
+        </deny>
+        </allow>
+    </authorization>
+</system.web>
+```
+
+The ```allow``` and ```deny``` scope is limited to the GET method, which leaves the web app accessible through other HTTP methods.
+
+It's not secure to limit the authorization configuration to a specific HTTP verb. This is why you should always avoid restricting authorization to a particular HTTP method and always allow/deny all HTTP verbs and methods.
+
+If you want to specify a single method, you can use safe keywords, like ```LimitExcept``` in Apache, ```http-method-omission``` in Tomcat, and ```add/remove``` in ASP.Net, which cover all verbs except the specified ones.
+
+### Insecure Coding
+
+Consider the following PHP code from the File Manager exercise:
+
+```php
+if (isset($_REQUEST['filename'])) {
+    if (!preg_match('/[^A-Za-z0-9. _-]/', $_POST['filename'])) {
+        system("touch " . $_REQUEST['filename']);
+    } else {
+        echo "Malicious Request Denied!";
+    }
+}
+```
+
+If you were only considering Command Injection vulns, you would say that this is securely coded. The ```preg_match``` function properly looks for unwanted special characters and does not allow the input to go into the command if any special chars are found. However, the fatal error made in this case is not due to Command Injections but due to the inconsistent use of HTTP methods.
+
+You can see that the ```preg_match``` filter only checks for special chars in POST parameters with ```$_POST['filename']```. However, the final system command uses the ```$_REQUEST['filename']``` variable, which covers both GET and POST parameters. So, in the previous section, when you were sending your malicious input through a GET request, it did not get stopped by the ```preg_match``` function, as the POST parameters were empty and hence did not contain any special chars. Once you reach the system function, however, it used any parameters found in the request, and your GET parameters were used in the command, eventually leading to Command Injection.
+
+To avoid HTTP Verb Tampering vulns in your code, you must be consistent with your use of HTTP and ensure that the same method is always used for any specific functionality across the web app. It is always advised to expand the scope of testing in security filters by testing all request parameters. This can be done with the following functions and variables:
+
+| Language | Function |
+| -------- | -------- |
+| **PHP** | ```$_REQUEST['param']``` |
+| **Java** | ```request.getParameter('param')``` |
+| **C#** | ```Request['param']``` |
