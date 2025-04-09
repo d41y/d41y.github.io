@@ -6,6 +6,9 @@
   - [Bypassing Basic Authentication](#bypassing-basic-authentication)
     - [Identify](#identify)
     - [Exploit](#exploit)
+  - [Bypassing Security Filters](#bypassing-security-filters)
+    - [Identify](#identify-1)
+    - [Exploit](#exploit-1)
 
 ---
 
@@ -100,3 +103,27 @@ You can see, the response shows ```Allow: POST, OPTIONS, HEAD, GET```, which mea
 ![http verb tampering 3](../../../../images/http_verb_tampering_3.png)
 
 Once you change POST to HEAD and forward the request, you will see that you no longer get a login prompt or a ```401 Unauthorized``` page and get an empty output instead, as expected with a HEAD request. If you go back to the file manager web app, you will see that all files have indeed been deleted, meaning that you successfully triggered the Reset functionality without having admin access or any creds.
+
+## Bypassing Security Filters
+
+### Identify
+
+![http verb tampering](../../../../images/http_verb_tampering_4.png)
+
+In this example, if you try to create a new file with special characters in its name, you get this message.
+
+It shows that the web app uses certain filters on the back-end to identify injection attempts and then blocks any malicious requests. No matter what you try, the web app properly blocks your request and is secured against injection attempts. However, you may try an HTTP Verb Tampering attack to see if you cann bypass the security filter altogether.
+
+### Exploit
+
+Intercept your request and change it to another method. Using GET you did not get a ```Malicious Request Denied!``` response back, which means the file was successfully created. To confirm whether you bypassed the security filter, you need to attempt exploiting the vuln the filter is protecting: a command injection, in this case. So, you can inject a command that creates two files and then check whether both files were created. To do so, you can use the following file name in your attack:
+
+```bash
+file1; touch file2;
+```
+
+1. Send the request
+2. Intercept it
+3. Change the HTTP Verb
+4. Forward the request
+5. Refresh the website
