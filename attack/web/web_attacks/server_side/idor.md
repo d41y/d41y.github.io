@@ -7,6 +7,9 @@
   - [Mass IDOR Enumeration](#mass-idor-enumeration)
     - [Insecure Parameters](#insecure-parameters)
     - [Mass Enumeration](#mass-enumeration)
+  - [Bypassing Encoded References](#bypassing-encoded-references)
+    - [Function Disclosure](#function-disclosure)
+    - [Mass Enumeration](#mass-enumeration-1)
 
 ---
 
@@ -169,3 +172,76 @@ done
 ```
 
 When you run the script, it will download all documents from all employees with uids between 1-10, thus successfully exploiting the IDOR vuln to mass enumerate the documents of all employees.
+
+## Bypassing Encoded References
+
+In some cases, web apps make hashes or encode their object reference, making enumeration more difficult, but it may still be possible.
+
+![idor 4](../../../../images/IDOR_4.png)
+
+If you click on the ```Employment_contract.pdf``` file, it starts downloading the file. The intercepted request in Burp looks as follows:
+
+![idor 5](../../../../images/IDOR_5.png)
+
+You see that it is sending a POST request to download.php with the following data:
+
+```php
+contract=cdd96d3cc73d1dbdaffa03cc6cd7339b
+```
+
+The web app is not sending the direct reference in cleartext but it appears to be hashed in an md5 format.
+
+You can attempt to hash various values, like ```uid```, ```username```, ```filename```, and many others, and see if any of their md5 hashes match the above value. If you find a match, then you can replicate it for other users and collect their files. For example, try to compare the md5 of your ```uid```, and see if it matches the above hash.
+
+```bash
+d41y@htb[/htb]$ echo -n 1 | md5sum
+
+c4ca4238a0b923820dcc509a6f75849b -
+```
+
+Unfortunately, the hashes do not match. You can attempt this with various other fields, but none of them matches the hash. In advanced cases, you may also utilize Burp Comparer and fuzz various values and then compare each to your hash to see if you find any matches. In this case, the md5 hash could be for a unique value or combination of values, which would be very difficult to predict, making this direct reference a Secure Direct Object Reference.
+
+### Function Disclosure
+
+As most modern web apps are developed using JS frameworks, like Angular, React, or Vue.js, many web devs may make the mistake or performing sensitive functions on the front-end, which would expose them to attackers. For example, if the above hash was being calculated on the front-end, you can study the function and then replicate what it's doing to calculate the same hash.
+
+If you take a look at the link in the source code, you see that it is calling a JS function with ```javascript:downloadContract('1')```. Looking at the ```downloadContract()``` function in the source code, you see the following:
+
+```javascript
+function downloadContract(uid) {
+    $.redirect("/download.php", {
+        contract: CryptoJS.MD5(btoa(uid)).toString(),
+    }, "POST", "_self");
+}
+```
+
+This function appears to be sending a POST request with the ```contract``` parameter, which is what you saw above. The value it is sending is an md5 hash using the CryptoJS library, which also matches the request you saw earlier. So, the only thing left to see is what value is being hashed.
+
+In this case, the value being hashed is ```btoa(uid)```, which is the base64 encoded string of the ```uid``` variable, which is an input argument for the function. Going back to the earlier link where the function was called, you see it calling ```downloadContract('1')```. So, the final value being used in the POST request is the base64 encoded string of 1, which was then md5 hashed.
+
+You can test this by base64 encoding your ```uid=1```, and then hashing it with md5:
+
+```bash
+d41y@htb[/htb]$ echo -n 1 | base64 -w 0 | md5sum
+
+cdd96d3cc73d1dbdaffa03cc6cd7339b -
+```
+
+> [!TIP]
+> Use ```-n``` with ```echo```, and ```-w 0``` with ```base64``` to avoid adding newlines.<br><br>_Adding newlines would change the final md5 hash._
+
+As you can see, this hash matches the hash in your request, meaning that you have successfully reversed the hashing technique used on the object reference, turning them into IDORs. With that, you can begin enumerating other employees' contracts using the same hashing method you used above.
+
+### Mass Enumeration
+
+Write a little script to retrieve all employee contracts more efficiently.
+
+```bash
+#!/bin/bash
+
+for i in {1..10}; do
+    for hash in $(echo -n $i | base64 -w 0 | md5sum | tr -d ' -'); do
+        curl -sOJ -X POST -d "contract=$hash" http://SERVER_IP:PORT/download.php
+    done
+done
+```
