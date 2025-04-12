@@ -23,6 +23,8 @@ _to-Do's_:
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
+## Binary Exploitation
+
 ## Cloud
 
 ## Crypto
@@ -141,6 +143,11 @@ Non-Relational
 ## Processes
 
 - [Bug Bounty Hunting Process]()
+
+## Programming
+
+- [Assembly](./general/programming/assembly.md)
+- [Python](./general/programming/python.md)
 
 ## RegEx
 
