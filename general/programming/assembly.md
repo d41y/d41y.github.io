@@ -9,6 +9,10 @@
       - [RAM](#ram)
     - [IO/Storage](#iostorage)
     - [Speed](#speed)
+  - [CPU Architecture](#cpu-architecture)
+    - [Clock Speed \& Clock Cycle](#clock-speed--clock-cycle)
+    - [Instruction Cycle](#instruction-cycle)
+    - [Processor Specific](#processor-specific)
 
 ---
 
@@ -128,3 +132,73 @@ SSDs utilize a similar design to RAMs, using non-volatile circuitry that retains
 | L3 Caches | fast, but slower than the above | Megabytes |
 | RAM | much slower than all of the above | Gigabytes-Terabytes |
 | Storage | slowest | Terabytes and more |
+
+## CPU Architecture
+
+The CPU is the main processing unit wihtin a computer. The CPU contains both the Control Unit, which is in charge of moving and controlling data, and the Arithmetic/Logic Unit, which is in charge of performing various arithmetics and logical calculations as requested by a program through the assembly instructions.
+
+The manner in which and how efficiently a CPU processes its instructions depends on its Instruction Set Architecture (_ISA_). There are multiple ISAs in the industry, each having its way of processing data. RISC architecture is based on processing more simple instructions, which takes more cycles, but each cycle is shorter and takes less power. The CISC architecture is based on fewer, more complex instructions, which can finish the requested instructions in fewer cycles, but each instruction takes more time and power to be processed.
+
+### Clock Speed & Clock Cycle
+
+Each CPU has a clock speed that indicates its overall speed. Every tick of the clock runs a clock cycle that processes a basic instruction, such as fetching an address or storing an address. Specifically, this is done by the CU or ALU.
+
+The frequency in which the cycles occur is counted is cycles per second (_Hertz_). If a CPU has a speed of 3.0 GHz, it can run 3 billion cycles every second (_per core_).
+
+![assembly 3](../../images/assembly_3.png)
+
+Modern processors have a multi-core design, allowing them to have multiple cycles at the same time.
+
+### Instruction Cycle
+
+... is the cycle it takes the CPU to process a single machine instruction.
+
+![assembly 4](../../images/assembly_4.png)
+
+An instruction cycle consists of four stages: **fetch**, **decode**, **execute**, and **store**:
+
+| Instruction | Description |
+| ----------- | ----------- |
+| 1. Fetch | takes the next instruction's address from the Instruction Address Register (_IRA_), which tells it where the next instruction is located |
+| 2. Decode | takes the instruction from the IAR, and decodes it from binary to see what is required to be executed |
+| 3. Execute | fetch instruction operands from register/memory, and process the instruction in the ALU or CU |
+| 4. Store | Store the new value in the destination operand |
+
+Each Instruction Cycle takes multiple clock cycles to finish, depending on the CPU architecture and the complexity of the instruction. Once a single instruction cycle ends, the CU increments to the next instruction and runs the same cycle on it, and so on.
+
+![assembly 5](../../images/assembly_5.png)
+
+For example, if you were to execute the assembly instruction ```add rax, 1```, it would run through an instruction cycle:
+
+1. Fetch the instruction from the ```rip``` register, ```48 83 C0 01``` (_in binary_).
+2. Decode '```48 83 C0 01```' to know it needs to perform an ```add``` of ```1``` to the value at ```rax```.
+3. Get the current value at ```rax``` (_by ```CU```_), add ```1``` to it (_by the ```ALU```_).
+4. Store the new value back to ```rax```.
+
+In the past, processors used to process instructions sequentially, so they had to wait for one instruction to finish to start the next. On the other hand, modern processors can process multiple instructions in parallel by having multiple instruction/clock cycles running at the same time. This is made possible by having a multi-thread and multi-core design.
+
+![assembly 6](../../images/assembly_6.png)
+
+### Processor Specific
+
+Each processor understands a different set of instructions. For example, while an Intel processor based on the 64-bit x86 architecture may interpret the machine code ```4883C001``` as ```add rax, 1```, ARM processor translates the same machine code as the ```biceq r8, r0, r8, asr #6``` instruction.
+
+This is because each processor type has a different low-level assembly language architecture known as Instruction Set Architectures (_ISA_). For example, the add instruction seen above, ```add rax, 1```, is for Intel x86 64-bit processors. The same instruction written for the ARM processor assembly language is represented as ```add r1, r1, 1```.
+
+It is important to understand that each processor has its own set of instructions and corresponding machine code.
+
+Furthermore, a single Instruction Set Architecture may have several syntax interpretations for the same assembly code. For example, the above ```add``` instruction is based on the x86 architecture, which is supported by multiple processors like Intel, AMD, and legacy AT&T processors. The instruction is written as ```add rax, 1``` with intel syntax, and written as ```addb $0x1, %rax``` with AT&T syntax.
+
+Even though you can tell that both instructions are similar and do the same thing, their syntax is different, and the location of the source and destination operands are swapped as well. Still, both codes assemble the same machine code and perform the same instruction.
+
+If you want to know whether your Linux system supports ```x86_64``` architecture, you can use the ```lscpu``` command:
+
+```bash
+d41y@htb[/htb]$ lscpu
+
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+
+<SNIP>
+```
