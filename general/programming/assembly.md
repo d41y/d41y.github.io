@@ -574,3 +574,4 @@ Contents of section .data:
  402010 7921                                 y!
 ```
 
+As you can see, the ```.data``` section indeed contains the message variable with the string "Hello HTB Academy!".
