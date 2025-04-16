@@ -31,6 +31,23 @@
     - [Assembling](#assembling)
     - [Linking](#linking)
     - [Disassembling](#disassembling)
+    - [GNU Debugger (GDB)](#gnu-debugger-gdb)
+      - [Installation](#installation)
+      - [Getting Started](#getting-started)
+      - [Disassemble](#disassemble)
+    - [Debugging with GDB](#debugging-with-gdb)
+      - [Break](#break)
+      - [Examine](#examine)
+        - [Instructions](#instructions)
+        - [Strings](#strings)
+        - [Addresses](#addresses)
+      - [Step](#step)
+        - [Step Instruction](#step-instruction)
+        - [Step Count](#step-count)
+        - [Step](#step-1)
+      - [Modify](#modify)
+        - [Addresses](#addresses-1)
+        - [Registers](#registers-1)
 
 ---
 
@@ -575,3 +592,344 @@ Contents of section .data:
 ```
 
 As you can see, the ```.data``` section indeed contains the message variable with the string "Hello HTB Academy!".
+
+### GNU Debugger (GDB)
+
+> [!NOTE]
+> Debugging is a term used for finding and removing issues from your code. When you develop a program, you will very frequently run into bugs in your code. It is not efficient to keep changing your code until it does what you expect of it. Instead, you perform debugging by setting breakpoints and seeing how your program acts on each of them and how your input changes between them, which should give you a clear idea of what is causing the bug.<br>
+> Programs written in high-level languages can set breakpoints on specific lines and run the program through a debugger to monitor how they act. With Assembly, you deal with machine code represented as Assembly instructions, so your breakpoints are set in the memory location in which your machine code is loaded.
+
+#### Installation
+
+```bash
+d41y@htb[/htb]$ sudo apt-get update
+d41y@htb[/htb]$ sudo apt-get install gdb
+```
+
+An excellent plugin that is well maintained and has good documentation is GEF. To add GEF:
+
+```bash
+d41y@htb[/htb]$ wget -O ~/.gdbinit-gef.py -q https://gef.blah.cat/py
+d41y@htb[/htb]$ echo source ~/.gdbinit-gef.py >> ~/.gdbinit
+```
+
+#### Getting Started
+
+To debug your HelloWorld binary:
+
+```bash
+d41y@htb[/htb]$ gdb -q ./helloWorld
+...SNIP...
+gef➤
+```
+
+Once GDB is started, you can use the ```info``` command to view general information about the program, like its functions or variables.
+
+```bash
+gef➤  info functions
+
+All defined functions:
+
+Non-debugging symbols:
+0x0000000000401000  _start
+
+...
+
+gef➤  info variables
+
+All defined variables:
+
+Non-debugging symbols:
+0x0000000000402000  message
+0x0000000000402012  __bss_start
+0x0000000000402012  _edata
+0x0000000000402018  _end
+```
+
+You found the main ```_start``` function, and the ```message```, along with some other default variables that define memory segments.
+
+#### Disassemble
+
+To view the instructions within a specific function, you can use the ```disassemble``` or ```disas``` command along with the function name:
+
+```bash
+gef➤  disas _start
+
+Dump of assembler code for function _start:
+   0x0000000000401000 <+0>:	mov    eax,0x1
+   0x0000000000401005 <+5>:	mov    edi,0x1
+   0x000000000040100a <+10>:	movabs rsi,0x402000
+   0x0000000000401014 <+20>:	mov    edx,0x12
+   0x0000000000401019 <+25>:	syscall
+   0x000000000040101b <+27>:	mov    eax,0x3c
+   0x0000000000401020 <+32>:	mov    edi,0x0
+   0x0000000000401025 <+37>:	syscall
+End of assembler dump.
+```
+
+The output closely resembles your Assembly code and the disassembly output you got from ```objdump```.
+
+Having the memory address is critical for examning the variables/operands and setting breakpoints for a certain instruction.
+
+### Debugging with GDB
+
+Debugging mainly consists of four steps:
+
+1. **Break**
+   - setting breakpoints at various points of interest
+2. **Examine**
+   - running the program and examining the state of the program at these points
+3. **Step**
+   - moving through the program to examine how it acts with each instruction and with user input
+4. **Modify**
+   - modify values in specific registers or addresses at specific breakpoints, to study how it would affect the execution
+
+#### Break
+
+The first step of debugging is setting breakpoints to stop the execution at a specific location when a particular condition is met. This helps in examining the state of the program and the value of registers at that point. Breakpoints also allow you to stop the program's execution at that point so that you can step into each instruction and examine how it changes the program and values.
+
+You can set breakpoints at a specific address or for a particular function. To set a breakpoint, you can use the ```break``` or ```b``` command along with the address or function name you want to break at. For example, to follow all instructions run by your program, break at the ```_start``` function:
+
+```bash
+gef➤  b _start
+
+Breakpoint 1 at 0x401000
+```
+
+Now, in order to start your program, you can use the ```run``` or ```r``` command:
+
+```bash
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+Starting program: ./helloWorld 
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+[ Legend: Modified register | Code | Heap | Stack | String ]
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x0               
+$rcx   : 0x0               
+$rdx   : 0x0               
+$rsp   : 0x00007fffffffe310  →  0x0000000000000001
+$rbp   : 0x0               
+$rsi   : 0x0               
+$rdi   : 0x0               
+$rip   : 0x0000000000401000  →  <_start+0> mov eax, 0x1
+...SNIP...
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe310│+0x0000: 0x0000000000000001	 ← $rsp
+0x00007fffffffe318│+0x0008: 0x00007fffffffe5a0  →  "./helloWorld"
+...SNIP...
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x400ffa                  add    BYTE PTR [rax], al
+     0x400ffc                  add    BYTE PTR [rax], al
+     0x400ffe                  add    BYTE PTR [rax], al
+ →   0x401000 <_start+0>       mov    eax, 0x1
+     0x401005 <_start+5>       mov    edi, 0x1
+     0x40100a <_start+10>      movabs rsi, 0x402000
+     0x401014 <_start+20>      mov    edx, 0x12
+     0x401019 <_start+25>      syscall 
+     0x40101b <_start+27>      mov    eax, 0x3c
+─────────────────────────────────────────────────────────────────────────────────────── threads ────
+[#0] Id 1, Name: "helloWorld", stopped 0x401000 in _start (), reason: BREAKPOINT
+───────────────────────────────────────────────────────────────────────────────────────── trace ────
+[#0] 0x401000 → _start()
+```
+
+If you want to set a breakpoint at a certain address, like ```_start+10```, you can either ```b *_start+10``` or ```b *0x40100a```:
+
+```bash
+gef➤  b *0x40100a
+Breakpoint 1 at 0x40100a
+```
+
+> [!NOTE]
+> To continue the execution of your programm, you can use ```continue``` or ```c```. If you use ```run``` or ```r``` again, it will run the program frm the start.
+
+If you want to see what breakpoints you have at any point of the execution, you can use the ```info breakpoint``` comman. You can also ```disable```, ```enable```, or ```delete``` any breakpoint. Furthermore, GDB also supports setting conditional breaks that stop the execution when a specific condition is met.
+
+#### Examine
+
+The next step of debugging is examinig the values in registers and addresses. GEF automatically gives you a lot of helpful information when you hit your breakpoint.
+
+To manually examine any of the addresses or registers or examine any other, you can use the ```x``` command in the format of ```x/FMT ADDRESS```, as ```help x``` would tell you. The ```ADDRESS``` is the address or register you want to examine, while ```FMT``` is the examine format. The examine format ```FMT``` can have three parts:
+
+| Argument | Description | Example |
+| -------- | ----------- | ------- |
+| **Count** | the number of times you want to repeat the examine | ```2```, ```3```, ```10``` |
+| **Format** | the format you want the result to be represented in | ```x(hex)```, ```s(string)```, ```i(instruction)``` |
+| **Size** | the size of memory you want to examine | ```b(byte)```, ```h(halfword)```, ```w(word)```, ```g(giant, 8 bytes)``` |
+
+##### Instructions
+
+If you wanted to examine the next four instructions in line, you will have to examine the ```$rip``` register, and use ```4``` for the count, ```i``` for the format, and ```g``` for the size as follows:
+
+```bash
+gef➤  x/4ig $rip
+
+=> 0x401000 <_start>:	mov    eax,0x1
+   0x401005 <_start+5>:	mov    edi,0x1
+   0x40100a <_start+10>:	movabs rsi,0x402000
+   0x401014 <_start+20>:	mov    edx,0x12
+```
+
+##### Strings
+
+You can also examine variables stored at a specific memory address. You know that your ```message``` variable is stored at the ```.data``` section on address ```0x402000```. You also see the upcoming command ```movabs rsi, 0x402000```, so you may want to examine what is being moved from ```0x402000```. 
+
+```bash
+gef➤  x/s 0x402000
+
+0x402000:	"Hello HTB Academy!"
+```
+
+##### Addresses
+
+The most common format of examining is hex ```x```. You often need to examine addresses and registers containing hex data, such as memory addresses, instructions, or binary data.
+
+```bash
+gef➤  x/wx 0x401000
+
+0x401000 <_start>:	0x000001b8
+```
+
+You see instead of ```mov eax,0x1```, you get ```0x000001b8```, which is the hex representation of the ```mov eax,0x1``` machine command in little-endian formatting:
+
+- it is read as: **b8 01 00 00**
+
+You can also use GEF features to examine certain addresses. For example, at any point you can use the ```registers``` command to print out the current value of all registers:
+
+```bash
+gef➤  registers
+$rax   : 0x0               
+$rbx   : 0x0               
+$rcx   : 0x0               
+$rdx   : 0x0               
+$rsp   : 0x00007fffffffe310  →  0x0000000000000001
+$rbp   : 0x0               
+$rsi   : 0x0               
+$rdi   : 0x0               
+$rip   : 0x0000000000401000  →  <_start+0> mov eax, 0x1
+...SNIP...
+```
+
+#### Step
+
+The third step of debugging is stepping through the program one instruction or line of code at a time. You are currently at the very first instruction in your helloWorld program:
+
+```bash
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x400ffe                  add    BYTE PTR [rax], al
+ →   0x401000 <_start+0>       mov    eax, 0x1
+     0x401005 <_start+5>       mov    edi, 0x1
+```
+
+To move through the program, there are different commands you can use: ```stepi``` or ```step```.
+
+##### Step Instruction
+
+The ```stepi``` or ```si``` command will step through the Assembly instruction one by one, which is the smallest level of steps possible while debugging:
+
+```bash
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+gef➤  si
+0x0000000000401005 in _start ()
+   0x400fff                  add    BYTE PTR [rax+0x1], bh
+ →   0x401005 <_start+5>       mov    edi, 0x1
+     0x40100a <_start+10>      movabs rsi, 0x402000
+     0x401014 <_start+20>      mov    edx, 0x12
+     0x401019 <_start+25>      syscall 
+─────────────────────────────────────────────────────────────────────────────────────── threads ────
+     [#0] Id 1, Name: "helloWorld", stopped 0x401005 in _start (), reason: SINGLE STEP
+```
+
+##### Step Count
+
+Similarliy to examine, you can repeat the ```si``` command by adding a number after it. If you wanted to move 3 steps to reach the ```syscall``` instruction, you can do as follows:
+
+```bash
+gef➤  si 3
+0x0000000000401019 in _start ()
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x401004 <_start+4>       add    BYTE PTR [rdi+0x1], bh
+     0x40100a <_start+10>      movabs rsi, 0x402000
+     0x401014 <_start+20>      mov    edx, 0x12
+ →   0x401019 <_start+25>      syscall 
+     0x40101b <_start+27>      mov    eax, 0x3c
+     0x401020 <_start+32>      mov    edi, 0x0
+     0x401025 <_start+37>      syscall 
+─────────────────────────────────────────────────────────────────────────────────────── threads ────
+[#0] Id 1, Name: "helloWorld", stopped 0x401019 in _start (), reason: SINGLE STEP
+```
+
+##### Step
+
+The ```step``` or ```s``` command will continue until the following line of code is reached or until it exits from the current function. If you run an Assembly code, it will break when you exit the current function ```_start```.
+
+If there's a call to another function within this function, it'll break at the beginning of that function. Otherwise, it'll break after you exit this function after the program's end.
+
+```bash
+gef➤  step
+
+Single stepping until exit from function _start,
+which has no line number information.
+Hello HTB Academy!
+[Inferior 1 (process 14732) exited normally]
+```
+
+You see that the execution continued until you reached the exit from the ```_start``` function, so you reached the end of the program and ```exited normally``` without any errors. You also see that GDB printed the program's output ```Hello HTB Academy!``` as well.
+
+> [!NOTE]
+> There's also the ```next``` or ```n``` command, which will also continue until the next line, but will skip any functions called in the same line of code, instead of breaking at them like ```step```. There's also the ```nexti``` or ```ni```, which is similar to ```si```, but skips function calls.
+
+#### Modify
+
+The final step of debugging is modifying values in registers and addresses at a certain point of execution. This helps ypu in seeing how this would affect the execution of the program.
+
+##### Addresses
+
+To modify values in GDB, you can use the ```set``` command. However, you will utiliue the ```patch``` command in GEF to make this step much easier.
+
+```bash
+gef➤  help patch
+
+Write specified values to the specified address.
+Syntax: patch (qword|dword|word|byte) LOCATION VALUES
+patch string LOCATION "double-escaped string"
+...SNIP...
+```
+
+You have to provide the type/size of the new value, the location to be storedm and the value you want to use. Changing the string stored in the ```.data``` section to the string ```Patched!\n``` looks like this:
+
+```bash
+gef➤  break *0x401019
+
+Breakpoint 1 at 0x401019
+gef➤  r
+gef➤  patch string 0x402000 "Patched!\\x0a"
+gef➤  c
+
+Continuing.
+Patched!
+ Academy!
+```
+
+##### Registers
+
+You note that you did not replace the entire string. This is because you only modified the chars up to the length of your string and left the remainder of the old string. Finally, the ```write``` system call specified a length of ```ox12``` of bytes to be printed.
+
+To fix this, modify the value stored in ```$rdx``` to the length of your string, which is ```0x9```. You will only patch a size of one byte.
+
+```bash
+gef➤  break *0x401019
+
+Breakpoint 1 at 0x401019
+gef➤  r
+gef➤  patch string 0x402000 "Patched!\\x0a"
+gef➤  set $rdx=0x9
+gef➤  c
+
+Continuing.
+Patched!
+```
