@@ -23,6 +23,14 @@
     - [Memory Addresses](#memory-addresses)
     - [Address Endianness](#address-endianness)
     - [Data Types](#data-types)
+  - [Assembling \& Debugging](#assembling--debugging)
+    - [Assembly File Structure](#assembly-file-structure)
+    - [Directives](#directives)
+    - [Variables](#variables)
+    - [Code](#code)
+    - [Assembling](#assembling)
+    - [Linking](#linking)
+    - [Disassembling](#disassembling)
 
 ---
 
@@ -385,3 +393,184 @@ For example, you can't use a variable defined as byte with ```rax```, as ```rax`
 | ```ax``` | word |
 | ```eax``` | dword |
 | ```rax``` | qword |
+
+## Assembling & Debugging
+
+### Assembly File Structure
+
+```x86asm
+         global  _start
+
+         section .data
+message: db      "Hello HTB Academy!"
+
+         section .text
+_start:
+         mov     rax, 1
+         mov     rdi, 1
+         mov     rsi, message
+         mov     rdx, 18
+         syscall
+
+         mov     rax, 60
+         mov     rdi, 0
+         syscall
+```
+
+This Assembly code should print the string "Hello HTB Academy!" to the screen.
+
+First, examine the way the code is distributed:
+
+![assembly 9](../../images/assembly_9.png)
+
+Looking at the vertical parts of the code, each line can have three elements:
+
+1. Labels
+  - each label can be referred to by instructions or by directives
+2. Instructions
+3. Operands
+
+Next, if you look at the code line-by-line, you see three main parts:
+
+1. ```global _start```
+   - is a directive that directs the code to start executing at the ```_start``` label defined below
+2. ```section .data```
+   - is the data section, which should contain all of the variables
+3. ```section .text```
+   - is the text section containing all of the code to be executed
+
+Both the ```.data``` and ```.text``` sections refer to the data and text memory segments, in which these instructions will be stored.
+
+
+### Directives
+
+An Assembly code is line-based, which means that the file is processed line-by-line, executing the instruction of each line. You see at the first line a directive ```global _start```, which instructs the machine to start processing the instructions after the ```_start``` label. So, the machine goes to the ```_start``` label and starts executing the instructions there, which will print the message on the screen.
+
+### Variables
+
+The data section holds your variable to make it easier for you to define variables and reuse them without writing them multiple times. Once you run your program, all of your variables will be loaded into memory in the data segment.
+
+When you run the program, it will load any variables you have defined into memory so that they will be ready for usage when you call them.
+
+You can define variables using ```db``` for a list of bytes, ```dw``` for a list of words, ```dd``` for a list of digits, and so on. You can also label any of your variables so you can call it or reference it later. The following are some examples of defining veriables:
+
+| Instruction | Description |
+| ----------- | ----------- |
+| ```db 0x0a``` | defines the byte ```0x0a```, which is a new line |
+| ```message db 0x41, 0x42, 0x43, 0x0a``` | defines the label ```message => abc\n``` |
+| ```message db "Hello World!", 0x0a``` | defines the label ```message => Hello World!\n``` |
+
+Furthermore, you can use the ```equ``` instruction with the ```$``` token to evaluate an expression, like the length of a defined variable's string. However, the labels defined with the ```equ``` instruction are constants, and they cannot be changed later.
+
+For example, the following code defines a variable and then defines a constant for its length.
+
+```x86asm
+section .data
+    message db "Hello World!", 0x0a
+    length  equ $-message
+```
+
+### Code
+
+The second section is the ```.text``` section. This section holds all of the Assembly instructions and loads them to the text memory segment. Once all instructions are loaded into the text segment, the processor starts executing them one after another.
+
+The default convention is to have the ```_start``` label at the beginning of the ```.text``` section, which starts the main code that will be executed as the program runs.
+
+The text segment within the memory is read-only, so you cannot write any variables within it. The data section, on the other hand, is read/write, which is why we write your variables to it. However, the data segment within the memory is not executable, so any code you write to it cannot be executed. This separation is part of memory protections to mitigate things like buffer overflows and other types of binary exploitation.
+
+> [!NOTE]
+> You can add comments to your Assembly code with a ```;```.
+
+### Assembling
+
+First, you copy the code below into a file called ```helloWorld.s```.
+
+```x86asm
+global _start
+
+section .data
+    message db "Hello HTB Academy!"
+    length equ $-message
+
+section .text
+_start:
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, message
+    mov rdx, length
+    syscall
+
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+Note the usage of ```equ``` to dynamically calculate the length of message, instead of using a static 18. Assemble the file using ```nasm```:
+
+```bash
+d41y@htb[/htb]$ nasm -f elf64 helloWorld.s
+```
+
+> [!NOTE]
+> The ```-f elf64``` flag is used to note that you want to assemble a 64-bit Assembly code. If you wanted to assemble a 32-bit code, you would use ```-f elf```.
+
+This should output a ```helloWorld.o``` object file, which is then assembled into machine code, along with the details of all variables and sections. This file is not executable just yet.
+
+### Linking
+
+The final step is to link your file using ```ld```. The ```helloWorld.o``` object file, though assembled, still cannot be executed. This is because many references and labels used by nasm need to be resolved into actual addresses, along with linking the file with various OS libraries that may be needed.
+
+This is why a Linux binary is called ELF, which stands for an Executable and Linkable Format. To link a file using ```ld```, you can use the following command:
+
+```bash
+d41y@htb[/htb]$ ld -o helloWorld helloWorld.o
+```
+
+> [!NOTE]
+> To assemble a 32-bit binary, you need to add the ```-m elf_i386```.
+
+Once you link the file with ```ld```, you should have the final executable file:
+
+```bash
+d41y@htb[/htb]$ ./helloWorld
+Hello HTB Academy!
+```
+
+### Disassembling
+
+To disassemble a file, you can use the ```objdump``` tool, which dumps machine code from a file and interprets the Assembly instruction of each hex code. You can disassemble a binary using the ```-D``` flag.
+
+> [!NOTE]
+> You can use the ```-M intel``` flag, so that ```objdump``` would write the instructions in the Intel syntax.
+
+```bash
+d41y@htb[/htb]$ objdump -M intel -d helloWorld
+
+helloWorld:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000401000 <_start>:
+  401000:	b8 01 00 00 00       	mov    eax,0x1
+  401005:	bf 01 00 00 00       	mov    edi,0x1
+  40100a:	48 be 00 20 40 00 00 	movabs rsi,0x402000
+  401011:	00 00 00
+  401014:	ba 12 00 00 00       	mov    edx,0x12
+  401019:	0f 05                	syscall
+  40101b:	b8 3c 00 00 00       	mov    eax,0x3c
+  401020:	bf 00 00 00 00       	mov    edi,0x0
+  401025:	0f 05                	syscall
+```
+
+The ```-d``` flag will only disassemble the ```.text``` section of your code. To dump any strings, you can use the ```-s``` flag, and add ```-j .data``` to only examine the ```.data``` section. This means that you also do not need to add ```-M intel```. The final command is as follows:
+
+```bash
+d41y@htb[/htb]$ objdump -sj .data helloWorld
+
+helloWorld:     file format elf64-x86-64
+
+Contents of section .data:
+ 402000 48656c6c 6f204854 42204163 6164656d  Hello HTB Academ
+ 402010 7921                                 y!
+```
+
