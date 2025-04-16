@@ -168,6 +168,6 @@ Non-Relational
 
 ## GitHub
 
-[Cloning GitHub, committing and pushing](./attack/infra_misc/github_cloning_enabling.md)
+[Cloning GitHub, committing and pushing](./infra_misc/github_cloning_enabling.md)
 
 ## VPS
