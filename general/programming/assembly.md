@@ -22,6 +22,7 @@
     - [Sub-Registers](#sub-registers)
     - [Memory Addresses](#memory-addresses)
     - [Address Endianness](#address-endianness)
+    - [Data Types](#data-types)
 
 ---
 
@@ -349,4 +350,38 @@ Whenever an instruction goes through the Instruction Cycle to be executed, the f
 
 ### Address Endianness
 
-... is the order of its bytes in which they are stored or retrieved from memory. There are two types of endianness: **Little-Endian** 
+... is the order of its bytes in which they are stored or retrieved from memory. There are two types of endianness: **Little-Endian** and **Big-Endian**. With Little-Endian processors, the little-end byte of the address is filled/retrieved first right-to-left, while with Big-Endian processors, the big-end byte is filled/retrieved first left-to-right.
+
+If you have the address ```0x0011223344556677``` to be stored in memory, little-endian processors would store the ```0x00``` byte on the right-most bytes, and then the ```0x11``` byte would be filled after it, so it becomes ```0x1100```, and then the ```0x22``` byte, so it becomes ```0x221100```, and so on. Once all bytes are in place, they would look like ```0x7766554433221100```, which is the reverse of the original value. Of course, when retrieving the value back, the processor will also use little-endian retrieval, so the value retrieved would be the same as the original value.
+
+Another example that shows how this can affect the stored values in binary. If you had the 2-byte integer ```426```, its binary representation is ```00000001 10101010```. The order in which these two bytes are stored would change its value. If you stored it in reverse as ```10101010 00000001```, its value becomes ```43521```.
+
+The big-endian processors would store these bytes as ```00000001 10101010``` left-to-right, while little-endian processors store them as ```10101010 00000001``` right-to-left. When retrieving the value, the processor has to use the same endianness used when storing them, or it will get the wrong value. This indicates that the order in which the bytes are stored/retrieved makes a big difference.
+
+![assembly 8](../../images/assembly_8.png)
+
+> [!NOTE]
+> Little-endian byte order is used with Intel/AMD x86 in most modern OS, so the shellcode is always represented right-to-left.
+
+### Data Types
+
+The x86 architecture supports many types of data sizes, which can be used with various instructions. The following are the most common data types:
+
+| Component | Length | Example |
+| --------- | ------ | ------- |
+| byte | 8 bits | ```0xab``` |
+| word | 16 bits - 2 bytes | ```0xabcd``` |
+| double word (dword) | 32 bits - 4 bytes | ```0xabcdef12``` |
+| quad word (qword) | 64 bits - 8 bytes | ```0xabcdef1234567890``` |
+
+> [!IMPORTANT]
+> Whenever you use a variable with a certain data type or use a data type with an instruction, both operands should be of the same size.
+
+For example, you can't use a variable defined as byte with ```rax```, as ```rax``` has a size of 8 bytes. In this case, you would have to use ```al```, which has the same size of 1 byte.
+
+| Sub-Register | Data Type |
+| ------------ | --------- |
+| ```al``` | byte |
+| ```ax``` | word |
+| ```eax``` | dword |
+| ```rax``` | qword |
