@@ -13,6 +13,15 @@
     - [Clock Speed \& Clock Cycle](#clock-speed--clock-cycle)
     - [Instruction Cycle](#instruction-cycle)
     - [Processor Specific](#processor-specific)
+  - [Instruction Set Architecture (ISA)](#instruction-set-architecture-isa)
+    - [CISC](#cisc)
+    - [RISC](#risc)
+    - [CISC vs RISC](#cisc-vs-risc)
+  - [Registers, Addresses, and Data Types](#registers-addresses-and-data-types)
+    - [Registers](#registers)
+    - [Sub-Registers](#sub-registers)
+    - [Memory Addresses](#memory-addresses)
+    - [Address Endianness](#address-endianness)
 
 ---
 
@@ -202,3 +211,142 @@ Byte Order:                      Little Endian
 
 <SNIP>
 ```
+
+## Instruction Set Architecture (ISA)
+
+... specifies the syntax and semantics of the assembly language on each architecture. It is not just a different syntax but is built in the core of a processor, as it affects the way and order instructions are executed and their level of complexity. ISA mainly consists of the following components:
+
+- Instructions
+- Registers
+- Memory Addresses
+- Data Types
+
+| Component | Example | Description |
+| --------- | ------- | ----------- |
+| Instructions | ```add rax, 1```, ```mov rsp, rax```, ```push rax``` | the instruction to be processed in the ```opcode operand_list``` format; there are usually 1, 2, or 3 comma-separated operands |
+| Registers | ```rax```, ```rsp```, ```rip``` | used to store operands, addresses, or instructions temporarily |
+| Memory Addresses | ```0xffffffffaa8a25ff```, ```0x44d0```, ```$rax``` | the address in which data or instructions are atored; may point to memory or registers |
+| Data Types | _byte, word, double word_ | the type of data stored |
+
+There are two main Instruction Set Architectures:
+
+1. Complex Instruction Set Computer (_CISC_)
+   - used in Intel and AMD processors in most computers and servers
+2. Reduced Instruction Set Computer (_RISC_)
+   - used in ARM and Apple processors, in most smartphones, and some laptops
+
+### CISC
+
+... architecture was one of the earliest ISA's ever developed. It favors more complex instructions to be run at a time to reduce the overall number of instructions. This is done to rely as much as possible on the CPU by combining minor instructions into more complex ones.
+
+Suppose you were to add two registers with the ```add rax, rbx``` instruction. In that case, a CISC processor can do this in a single 'Fetch-Decode-Execute-Store' cycle, without having to split into multiple instructions to fetch ```rax```, then fetch ```rbx```, then add them, and then store them in ```rax```, each of which would take its own 'Fetch-Decode-Execute-Store' cycle.
+
+Two main reasons:
+
+1. To enable more instructions to be executed at once by designing the processor to run more advanced instructions in its core.
+2. In the past, memory and transistors were limited, so it was preferred to write shorter programs by combining multiple instructions into one.
+
+To enable the processors to execute complex instructions, the processor's design becomes more complicated, as it is designed to execute a vast amount of different complex instructions, each of which has its own unit to execute it.
+
+Furthermore, even though it takes a single instruction cycle to execute a single instruction, as the instructions are more complex, each instruction cycle takes more clock cycles. This fact leads to more power consumption and heat to execute each instruction.
+
+### RISC
+
+... favors splittin instructions into minor instructions, and so the CPU is designed only to handle simple instructions. This is done to relay the optimization to the software by writing the most optimized Assembly code.
+
+The same previous ```add r1, r2, r3``` instruction on a RISC processor would fetch ```r2```, then fetch ```r3```, add them, and finally store them in ```r1```. Every instruction of these takes an entire 'Fetch-Decode-Execute-Store' instruction cycle, which leads to a larger number of total instructions per program, and hence a longer Assembly code.
+
+By not supporting various types of complex instructions, RISC processors only support a limited number of instructions (~200) compared to CISC processors (~1500). So, to execute complex instructions, this has to be done through a combination of minor instructions through Assembly.
+
+An advantage of splitting complex instructions into minor ones is having all instructions of the same length either 32-bit or 64-bit long. This enables designing the CPU clock speed around the instruction length so that executing each stage in the instruction cycle would always take precisely one machine clock cycle.
+
+Executing each instruction stage in a single clock cycle and only executing simple instructions leads to RISC processors consuming a fraction of the power consumed by CISC processors, which makes these processors ideal for devices that run on batteries, like smartphones or laptops.
+
+### CISC vs RISC
+
+| Area | CISC | RISC |
+| ---- | ---- | ---- |
+| **Complexity** | favors complex instructions  | favors simple instructions |
+| **Length of instructions** | longer instructions - variable length 'mulitple of 8 bits' | shorter instructions - fixed length '32-bit/64-bit' |
+| **Total instructions per program** | fewer total instructions - shorter code | more total instructions - longer code |
+| **Optimization** | relies on hardware optimization (_in CPU_) | relies on software optimization (_in Assembly_) |
+| **Instruction Execution Time** | variable - mulitple of clock cycles | fixed - one clock cycle |
+| **Instructions supported by CPU** | many instructiosn (~1500) | fewer instructions (~200) |
+| **Power Consumption** | high | very low |
+| **Examples** | Intel, AMD | ARM, Apple |
+
+## Registers, Addresses, and Data Types
+
+### Registers
+
+Each CPU has a set of registers. The registers are the fastest components in any computer, as they are built within the CPU core. However, registers are very limited in size and can only hold a few bytes of data at a time.
+
+There are two main types of registers:
+
+| Data Registers | Pointer Registers |
+| -------------- | ----------------- |
+| ```rax``` | ```rbp``` |
+| ```rbx``` | ```rsp``` |
+| ```rcx``` | ```rip``` |
+| ```rdx``` | |
+| ```r8``` | |
+| ```r9``` | |
+| ```r10``` | |
+
+- Data Registers
+  - are usually used for storing instructions/syscall arguments
+  - primary data registers are:
+    - ```rax```
+    - ```rbx```
+    - ```rcx```
+    - ```rdx```
+    - ```rdi```, but usually for the instruction destination
+    - ```rsi```, but usually for the instruction source
+  - secondary registers, that can be used when all previous registers are in use:
+    - ```r8```
+    - ```r9```
+    - ```r10```
+- Pointer Registers
+  - used to store specific important address pointers
+  - main pointer registers:
+    - Base Stack Pointer ```rbp```, which points to the beginning of the Stack
+    - Current Stack Pointer ```rsp```, which points to the current location within the Stack
+    - Instruction Pointer ```rip```, which holds the address of the next instruction
+
+### Sub-Registers
+
+Each 64-bit register can be further divided into smaller sub-registers containing the lower bits, at ony byte 8-bits, 2 bytes 16 bits, and 4 bytes 32 bits. Each sub-register can be used and accessed on its own, so you don't have to consume the full 64-bits if you have a smaller amount of data.
+
+![assembly 7](../../images/assembly_7.png)
+
+Sub-registers can be accessed as:
+
+| Size in bits | Size in bytes | Name | Example |
+| ------------ | ------------- | ---- | ------- |
+| 16-bit | 2 byte | the base name | ```ax``` |
+| 8-bit | 1 byte | base name and/or ends with 'l' | ```ax``` |
+| 32-bit | 4 byte | base name + starts with the 'e' prefix | ```eax``` |
+| 64-bit | 8 byte | base name + starts with the 'r' prefix | ```rax``` |
+
+Take a look: [All Sub-Registers for all the essential registers in an x86_64 architecture](./assembly_x86_64_sub_registers.md)
+
+### Memory Addresses
+
+x86 64-bit processors have 64-bit wide addresses that range from ```0x0``` to ```0xffffffffffffffff```, so you expect the addresses to be in this range. However, RAM is segmented into various regions, like the Stack, the heap, and other program and kernel-specific regions. Each memory region has specific read, write, execute permissions that specify whether you can read from it, write to it, or call an address in it.
+
+Whenever an instruction goes through the Instruction Cycle to be executed, the first step is to fetch the instruction from the address it's located at. There are several types of address fetching in the x86 architecture.
+
+| Addressing Mode | Description | Example |
+| --------------- | ----------- | ------- |
+| **Immediate** | the value is given within the instruction | ```add 2``` |
+| **Register** | the register name that holds the value is given in the instruction | ```add rax``` |
+| **Direct** | the direct full address is given in the instruction | ```call 0xffffffffaa8a25ff``` |
+| **Indirect** | a reference pointer is given in the instruction | ```call 0x44d000``` or ```call [rax]``` |
+| **Stack** | address is on top of the stack | ```add rsp``` |
+
+> [!NOTE]
+> The less immediate the value is, the slower it is to fetch!
+
+### Address Endianness
+
+... is the order of its bytes in which they are stored or retrieved from memory. There are two types of endianness: **Little-Endian** 
