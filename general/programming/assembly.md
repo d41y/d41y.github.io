@@ -54,6 +54,9 @@
     - [Address Pointers](#address-pointers)
     - [Moving Pointer Values](#moving-pointer-values)
     - [Loading Value Pointer](#loading-value-pointer)
+    - [Unary Instructions](#unary-instructions)
+    - [Binary Instructions](#binary-instructions)
+    - [Bitwise Instructions](#bitwise-instructions)
 
 ---
 
@@ -1142,5 +1145,137 @@ You see that ```lea rax, [rsp+10]``` loaded the address that is 10 addresses awa
 ───────────────────────────────────────────────────────────────────────────────────── registers ────
 $rax   : 0x7fffffff        
 $rsp   : 0x00007fffffffe490  →  0x0000000000000001
+```
+
+### Unary Instructions
+
+The following are the main Unary Arithmetic Instructions:
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```inc``` | increment by 1 | ```inc rax``` -> ```rax++``` -> ```rax=2``` |
+| ```dec``` | decrement by 1 | ```dec rax``` -> ```rax--``` -> ```rax=0``` |
+
+```fib.s``` example:
+
+```x86asm
+global  _start
+section .text
+_start:
+    mov al, 0
+    mov bl, 0
+    inc bl
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh fib.s -g
+...SNIP...
+
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401005 <_start+5>      mov    al, 0x0
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rbx   : 0x0
+
+...SNIP...
+
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x40100a <_start+10>      inc    bl
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rbx   : 0x1
+```
+
+### Binary Instructions
+
+The main ones are (_assuming that both ```rax``` and ```rbx``` start as 1_):
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```add``` | add both operands | ```add rax, rbx``` -> ```rax = 1 + 1``` -> 2 |
+| ```sub``` | subtract source from destination | ```sub rax, rbx``` -> ```rax = 1 - 1``` -> 0 |
+| ```imul``` | multiply both operands | ```imul rax, rbx``` -> ```rax = 1 * 1``` -> 1 |
+
+Adding to ```fib.s```:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+   mov al, 0
+   mov bl, 0
+   inc bl
+   add rax, rbx
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+...SNIP...
+
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x401004 <_start+4>       inc    bl
+ →   0x401006 <_start+6>       add    rax, rbx
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1
+$rbx   : 0x1
+```
+
+### Bitwise Instructions
+
+... are instructions that work on the bit level.
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```not``` | bitwise NOT (_inverts all bits_) | ```not rax``` -> ```NOT 00000001``` -> ```11111110``` |
+| ```and``` | bitwise AND (_if both bis are 1 -> 1_) | ```and rax, rbx``` -> ```00000001 AND 00000010``` -> ```00000000``` |
+| ```or``` | bitwise OR (_if either bit is 1 -> 1_) | ```or rax, rbx``` -> ```00000001 OR 00000010``` -> ```00000011``` |
+| ```xor``` | bitwise XOR (_if bits are the same -> 0_) | ```xor rax, rbx``` -> ```00000001 XOR 00000010``` -> ```00000011``` |
+
+The instruction you will using the most is ```xor```. It has various use cases, but since it zeros similar bits, you can use it to turn any value to 0 by xoring a value with itself.
+
+If you want to turn the ```rax``` register to 0, the most efficient way to do it is ```xor rax, rax```, which will make ```rax = 0```. This is simply because all bits of ```rax``` are the similar, and so ```xor``` will turn all of them to 0.
+
+```fib.s``` example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    xor rax, rax
+    xor rbx, rbx
+    inc rbx
+    add rax, rbx
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+...SNIP...
+
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401001 <_start+1>       xor    eax, eax
+     0x401003 <_start+3>       xor    ebx, ebx
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0
+$rbx   : 0x0
+
+...SNIP...
+
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x40100c                  add    BYTE PTR [rax], al
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1
+$rbx   : 0x1
 ```
 
