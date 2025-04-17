@@ -48,6 +48,12 @@
       - [Modify](#modify)
         - [Addresses](#addresses-1)
         - [Registers](#registers-1)
+  - [Basic Instructions](#basic-instructions)
+    - [Moving Data](#moving-data)
+    - [Loading Data](#loading-data)
+    - [Address Pointers](#address-pointers)
+    - [Moving Pointer Values](#moving-pointer-values)
+    - [Loading Value Pointer](#loading-value-pointer)
 
 ---
 
@@ -933,3 +939,208 @@ gef➤  c
 Continuing.
 Patched!
 ```
+
+## Basic Instructions
+
+### Moving Data
+
+The main data movement instructions are:
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```mov``` | move data or load immediate | ```mov rax, 1``` -> ```rax = 1``` |
+| ```lea``` | load an address pointing to the value | ```lea rax, [rsp+5]``` -> ```rax = rsp+5``` |
+| ```xchg``` | swap data between two registers or addresses | ```xchg rax, rbx``` -> ```rax = rbx, rbx = rax``` |
+
+To load initial values into ```rax``` and ```rbx``` (_file = fib.s_):
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    mov rax, 0
+    mov rbx, 1
+```
+
+Assembling this code and running it with GDB to see how the ```mov``` instruction works in action:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401000 <_start+0>       mov    eax, 0x0
+     0x401005 <_start+5>       mov    ebx, 0x1
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0
+$rbx   : 0x0
+
+...SNIP...
+
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x401000 <_start+0>       mov    eax, 0x0
+ →   0x401005 <_start+5>       mov    ebx, 0x1
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0
+$rbx   : 0x1
+```
+
+### Loading Data
+
+You can load immediate data using the ```mov``` instruction. You can load the value of 1 into the ```rax``` register using the ```mov rax, 1``` instruction. You have to remember here that the size of the loaded data depends on the size of the destination register. For example, in the above ```mov rax, 1``` instruction, since you used the 64-bit register ```rax```, it will be moving a 64-bit representation of the number 1 (_0x00000001_), which is not very efficient.
+
+This is why it is more efficient to use a register size that matches your data size. For example, you will get the same result as the above example if you use the ```mov al, 1```, since you are moving 1-byte into a 1-byte register, which is much more efficient. This is evident when you look at the disassembly of both instructions in ```objdump```.
+
+Assembly code:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    mov rax, 0
+	mov rbx, 1
+    mov bl, 1
+```
+
+```objdump```:
+
+```bash
+d41y@htb[/htb]$ nasm -f elf64 fib.s && objdump -M intel -d fib.o
+...SNIP...
+0000000000000000 <_start>:
+   0:	b8 00 00 00 00       	mov    eax,0x0
+   5:	bb 01 00 00 00       	mov    ebx,0x1
+   a:	b3 01                	mov    bl,0x1
+```
+
+Modifying the code and using sub-registers to make it more efficient:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    mov al, 0
+    mov bl, 1
+```
+
+> [!NOTE]
+> The ```xchg``` instruction will swap the data between the two registers when using ```xchg rax, rbx```.
+
+### Address Pointers
+
+In many cases, you would see that the first register or address you are using does not immediately contain the final value but contains another address that poits to the final value. This is always the case with pointer registers, but is also used with any other register or memory address.
+
+```bash
+gdb -q ./fib
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+...SNIP...
+$rsp   : 0x00007fffffffe490  →  0x0000000000000001
+$rip   : 0x0000000000401000  →  <_start+0> mov eax, 0x0
+```
+
+You see that both registers contain pointer addresses to other locations. GEF does an excellent job of showing you the final destination value.
+
+### Moving Pointer Values
+
+You can see that the ```rsp``` register holds the final value of ```0x1```, and its immediate value is a pointer address to to ```0x1```. So, if you were to use ```mov rax, rsp```, you won't be moving the value ```0x1``` to ```rax```, but you will be moving the pointer address ```0x00007fffffffe490``` to ```rax```.
+
+To move the actual value, you will have to use square brackets, which in x85_64 Assembly and Intel syntax means "load value at address". So, in the same above example, if you wanted to move the final value ```rsp``` is pointing to, you can wrap ```rsp``` in square brackets, like ```mov rax, [rsp]```, and this ```mov``` instruction will move the final value rather than the immediate value.
+
+> [!TIP]
+> You can use square brackets to compute an address offset relative to a register or another address. For example, you can do ```mov rax, [rsp+10]``` to move the value stored 10 addresses away from ```rsp```.
+
+Example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    mov rax, rsp
+    mov rax, [rsp]
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh rsp.s -g
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+...SNIP...
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401000 <_start+0>       mov    rax, rsp
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x00007fffffffe490  →  0x0000000000000001
+$rsp   : 0x00007fffffffe490  →  0x0000000000000001
+```
+
+As you can see, the ```mov rax, rsp``` moved the immediate value stored at ```rsp``` to the ```rax``` register. Pressing ```si``` and checking how ```rax``` will look after the second instruction:
+
+```bash
+$ ./assembler.sh rsp.s -g
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+...SNIP...
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401003 <_start+3>       mov    rax, QWORD PTR [rsp]
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rsp   : 0x00007fffffffe490  →  0x0000000000000001
+```
+
+### Loading Value Pointer
+
+Finally, you need to understand how to load a pointer address to a value, using the ```lea``` (_Load Effective Address_) instruction, which loads a pointer to the specified value, as in ```lea rax, [rsp]```.
+
+In some instances, you need to load the address of a value to a certain register rather than directly load the value in that register. This is usually done when the data is large and would not fit in one register, so the data is placed on the stack or in the heap, and a pointer to its location is stored in the register.
+
+For example, the ```write``` syscall you used in your HelloWorld program requires a pointer to the text to be printed, instead of directly providing the text, which may not fit in its entirety in the register, as the register is only 64-bits or 8 bytes.
+
+First, if you wanted to load a direct pointer to a variable or a label, you can still use the ```mov``` instructions. Since the variable name is a pointer to where it is located in memory, ```mov``` will store this pointer to the destination address. For example, both ```mov rax, rsp``` and ```lea rax, [rsp]``` will do the same thing of storing the pointer to ```message``` at ```rax```.
+
+However, if you wanted to load a pointer with an offset, you should use ```lea```. This is why with ```lea``` the source operand is usually a variable, a label, or an address wrapped in square brackets, as in ```lea rax, [rsp+10]```. This enables using offsets.
+
+Example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    lea rax, [rsp+10]
+    mov rax, [rsp+10]
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh lea.s -g
+gef➤  b _start
+Breakpoint 1 at 0x401000
+gef➤  r
+...SNIP...
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401003 <_start+0>       lea    rax, [rsp+0xa]
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x00007fffffffe49a  →  0x000000007fffffff
+$rsp   : 0x00007fffffffe490  →  0x0000000000000001
+```
+
+You see that ```lea rax, [rsp+10]``` loaded the address that is 10 addresses away from ```rsp```. Using ```si```:
+
+```bash
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x401008 <_start+8>       mov    rax, QWORD PTR [rsp+0xa]
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x7fffffff        
+$rsp   : 0x00007fffffffe490  →  0x0000000000000001
+```
+
