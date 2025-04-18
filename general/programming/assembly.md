@@ -57,6 +57,8 @@
     - [Unary Instructions](#unary-instructions)
     - [Binary Instructions](#binary-instructions)
     - [Bitwise Instructions](#bitwise-instructions)
+  - [Control Instructions](#control-instructions)
+    - [Loops](#loops)
 
 ---
 
@@ -1277,5 +1279,99 @@ $rbx   : 0x0
 ───────────────────────────────────────────────────────────────────────────────────── registers ────
 $rax   : 0x1
 $rbx   : 0x1
+```
+
+## Control Instructions
+
+... allow you to change the flow of the program and direct it to another line.
+
+### Loops
+
+A loop in Assembly is a set of instructions that repeat for ```rcx``` times.
+
+```x86asm
+exampleLoop:
+    instruction 1
+    instruction 2
+    instruction 3
+    instruction 4
+    instruction 5
+    loop exampleLoop
+```
+
+Once the Assembly code reaches ```exampleLoop```, it will start the instructions under it. You should set the number of iterations you want the loop to go through in the ```rcx``` register. Every time the loop reaches the loop instruction, it will decrease ```rcx``` by 1 and jump back to the specified label, ```exampleLoop``` in that case. So, before you enter any loop, you should ```mov``` the number of loop iterations you want to the ```rcx``` register.
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```mov rcx, x``` | sets loop counter to x | ```mov rcx, 3``` |
+| ```loop``` | jumps back to the start of ```loop``` until counter reaches 0 | ```loop exampleLoop``` |
+
+```fib.s``` example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+global  _start
+
+section .text
+_start:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+    mov rcx, 10     ; set to the count you want
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    loop loopFib
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b loopFib
+Breakpoint 1 at 0x40100e
+gef➤  r
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0
+$rbx   : 0x1
+$rcx   : 0xa
+
+...
+
+$rax   : 0x1
+$rbx   : 0x2
+$rcx   : 0x8
+
+...
+
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x2
+$rbx   : 0x3
+$rcx   : 0x7
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x3
+$rbx   : 0x5
+$rcx   : 0x6
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x5
+$rbx   : 0x8
+$rcx   : 0x5
+
+...
+
+$rax   : 0x22
+$rbx   : 0x37
+$rcx   : 0x1
+```
+
+... to verify:
+
+```bash
+gef➤  p/d $rbx
+
+$3 = 55
 ```
 
