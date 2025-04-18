@@ -59,6 +59,7 @@
     - [Bitwise Instructions](#bitwise-instructions)
   - [Control Instructions](#control-instructions)
     - [Loops](#loops)
+    - [Uncoditional Branching](#uncoditional-branching)
 
 ---
 
@@ -1374,4 +1375,90 @@ gef➤  p/d $rbx
 
 $3 = 55
 ```
+
+### Uncoditional Branching
+
+... is a general instruction that allows you to jump to any point in the program if a specific condition is met.
+
+The ```jmp``` instruction jumps the program to the label or specified location in its operand so that the program's execution is continued here. Once a program's execution is directed to another location, it will continue processing instructions from that point.
+
+The basic ```jmp``` instruction is uncoditional, which means that it will always jump to the specified location, regardless of the conditions. This contrasts with Conditional Branching instructions that only jump if a specific condition is met.
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```jmp``` | jumps to specified label, address, or location | ```jmp loop``` |
+
+```fib.s``` example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+    mov rcx, 10
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    jmp loopFib
+```
+
+After assembling and running it, you can see its changes:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b loopFib
+Breakpoint 1 at 0x40100e
+gef➤  r
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rbx   : 0x1               
+$rcx   : 0xa               
+$rcx   : 0xa               
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x1               
+$rcx   : 0xa               
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x2               
+$rcx   : 0xa               
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x2               
+$rbx   : 0x3               
+$rcx   : 0xa               
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x3               
+$rbx   : 0x5               
+$rcx   : 0xa               
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x5               
+$rbx   : 0x8               
+$rcx   : 0xa               
+```
+
+> [!NOTE]
+> ```jmp``` does not consider ```rcx``` as a counter, and so it will not automatically decrement it.
+
+... leads to:
+
+```bash
+gef➤  info break
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x000000000040100e <loopFib>
+	breakpoint already hit 6 times
+gef➤  del 1
+gef➤  c
+Continuing.
+
+Program received signal SIGINT, Interrupt.
+0x000000000040100e in loopFib ()
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x2e02a93188557fa9
+$rbx   : 0x903b4b15ce8cedf0
+$rcx   : 0xa               
+```
+
+After killing the program after a couple of seconds, you can see it reached ```0x903b4b15ce8cedf0```, which is a really big number. This is because ```jmp``` is unconditional and thus keeps on repeating forever (_like while-loop_).
 
