@@ -60,6 +60,9 @@
   - [Control Instructions](#control-instructions)
     - [Loops](#loops)
     - [Uncoditional Branching](#uncoditional-branching)
+    - [Conditional Branching](#conditional-branching)
+      - [REFLAGS Register](#reflags-register)
+      - [CMP](#cmp)
 
 ---
 
@@ -1461,4 +1464,164 @@ $rcx   : 0xa
 ```
 
 After killing the program after a couple of seconds, you can see it reached ```0x903b4b15ce8cedf0```, which is a really big number. This is because ```jmp``` is unconditional and thus keeps on repeating forever (_like while-loop_).
+
+### Conditional Branching
+
+... instructions are only processed when a specific condition is met, based on the destination and source operands. A conditional jump instruction has multiple varities as ```Jcc```, where ```cc``` represents the condition code. The following are some of the main condition codes:
+
+| Instruction | Condition | Description |
+| ----------- | --------- | ----------- |
+| ```jz``` | ```D = 0``` | destination equal to zero |
+| ```jnz``` | ```D != 0``` | destination not equal to zero |
+| ```js``` | ```D < 0``` | destination is negative |
+| ```jns``` | ```D >= 0``` | destination is not negative (_0 or positive_) |
+| ```jg``` | ```D > s``` | destination greater than source |
+| ```jge``` | ```D >= s``` | destination greater than or equal source |
+| ```jl``` | ```D < s``` | destination less than source |
+| ```jle``` | ```D <= s``` | destination less than or equal source |
+
+#### REFLAGS Register
+
+... consists of 64-bits like any other register. However, this register does not hold values but holds flag bits instead. Each bit or set of bits turns to 1 or 0 depending on the vale of the last instruction.
+
+Arithmetic instructions set the necessary 'RFLAG' bits depending on their outcome. For example, if a ```dec``` instruction resulted in a 0, then bit ```#6```, the Zero Flag, turns to 1. Likewise, whenever the bit ```#6``` is 0, it means that the Zero Flag is off. Similarly, if a division instruction results in a float number, then the Carry Flag ```CF``` bit is turned on, or if a ```sub``` instruction resulted in a negative value, then the Sign Flag ```SF``` is turned on, and so on.
+
+There are many flags within an Assembly program, and each of them has its own bit(s) in the RFLAGS register. The following table shows the different flags in the RFLAGS register:
+
+| Bit(s) | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| ------ | - | - | - | - | - | - | - | - | - | - | -- |
+| **Label** | ```CF```<br>(```CF```/```NC```) | 1 | ```PF```<br>(```PE```/```PO```) | 0 | ```AF```<br>(```AC```/```NA```) | 0 | ```ZF```<br>(```ZR```/```NZ```) | ```SF```<br>(```NC```/```PL```) | ```TF``` | ```IF```<br>(```EL```/```DI```) | ```DF```<br>(```DN```/```UP```) |
+| **Description** | Carry Flag | reserved | Parity Flag | reserved | Auxiliary Carry Flag | reserved | Zero Flag | Sign Flag | Trap Flag | Interrupt Flag | Direction Flag |
+
+Just like other registers, the 64-bit RFLAGS register has a 32-bit sub-register called EFLAGS, and a 16-bit sub-register called FLAGS, which holds the most significant flags you may encounter.
+
+- Carry Flag ```CF```: _indicates whether you have a float_
+- Parity Flag ```PF```: _indicates whether a number is odd or even_
+- Zero Flag ```ZF```: _indicates whether a number is zero_
+- Sign Flag ```SF```: _indicates whether a register is negative_
+
+```fib.s``` example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+    mov rcx, 10
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    dec rcx			; decrement rcx counter
+    jnz loopFib		; jump to loopFib until rcx is 0
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b loopFib
+Breakpoint 1 at 0x40100e
+gef➤  r
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x1               
+$rcx   : 0xa               
+$eflags: [zero carry parity adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x1               
+$rcx   : 0x9               
+$eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x2               
+$rcx   : 0x8               
+$eflags: [zero carry parity adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]
+
+...
+
+gef➤  
+Continuing.
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x37              
+$rbx   : 0x59              
+$rcx   : 0x0               
+$eflags: [ZERO carry PARITY adjust sign trap INTERRUPT direction overflow RESUME virtualx86 identification]
+```
+
+#### CMP
+
+There are other cases where you may want to use a conditional jump instruction within your module project. You may want to stop the program when the Fibonacci number is more than 10. You can do so by using the ```js loopFib``` instruction, which would jump back to ```loopFib``` as long as the last arithmetic instruction resulted in a negative number.
+
+In this case, you will not use the ```jnz``` instruction or the ```rcx``` register but will use ```js``` instead directly after calculating the current Fibonacci number. But how would you test if the current Fibonacci number is less than 10? This is where you come to the Compare instruction ```cmp```.
+
+The Compare instruction simply compares the two operands, by subtracting the second operand from the first operand, and then sets the necessary flags in the RFLAGS register. For example, if you use ```cmp rbx, 10```, then the compare instruction would do ```rbx - 10```, and set the flags based on the result.
+
+| Instruction | Description | Example |
+| ----------- | ----------- | ------- |
+| ```cmp``` | sets RFLAGS by subtracting second operand from the first operand | ```cmp rax, rbx``` -> ```rax - rbx``` |
+
+The main advantage of ```cmp``` is that it does not affect the operands.
+
+```fib.s``` example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+```
+
+... leads to:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b loopFib
+Breakpoint 1 at 0x401009
+gef➤  r
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x1               
+$eflags: [zero CARRY parity ADJUST SIGN trap INTERRUPT direction overflow resume virtualx86 identification]
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x401009 <loopFib+0>      add    rax, rbx
+     0x40100c <loopFib+3>      xchg   rbx, rax
+     0x40100e <loopFib+5>      cmp    rbx, 0xa
+ →   0x401012 <loopFib+9>      js     0x401009 <loopFib>	TAKEN [Reason: S]
+
+ ...
+
+
+
+gef➤  del 1
+gef➤  disas loopFib
+Dump of assembler code for function loopFib:
+..SNIP...
+0x0000000000401012 <+9>:	js     0x401009  
+gef➤  b *loopFib+9 if $rbx > 10
+Breakpoint 2 at 0x401012
+gef➤  c
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x8               
+$rbx   : 0xd               
+$eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume virtualx86 identification]
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x401009 <loopFib+0>      add    rax, rbx
+     0x40100c <loopFib+3>      xchg   rbx, rax
+     0x40100e <loopFib+5>      cmp    rbx, 0xa
+ →   0x401012 <loopFib+9>      js     0x401009 <loopFib>	NOT taken [Reason: !(S)]
+```
+
+You see now that the last arithmetic instruction ```13 - 10``` resulted in a positive number, the ```sign``` flag is no longer set, so GEF tells you that this jump is ```NOT TAKEN```, with the reason ```!(S)```, meaning the ```sign``` flag is not set.
 
