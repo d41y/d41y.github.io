@@ -63,6 +63,10 @@
     - [Conditional Branching](#conditional-branching)
       - [REFLAGS Register](#reflags-register)
       - [CMP](#cmp)
+  - [Functions](#functions)
+    - [Using the Stack](#using-the-stack)
+      - [Usage with Functions/Syscalls](#usage-with-functionssyscalls)
+      - [PUSH/POP](#pushpop)
 
 ---
 
@@ -1624,4 +1628,193 @@ $eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume
 ```
 
 You see now that the last arithmetic instruction ```13 - 10``` resulted in a positive number, the ```sign``` flag is no longer set, so GEF tells you that this jump is ```NOT TAKEN```, with the reason ```!(S)```, meaning the ```sign``` flag is not set.
+
+## Functions
+
+### Using the Stack
+
+The stack is a segment of memory allocated for the program to store data in it, and it is usually used to store data and then retrieve them back temporarily. The top of the stack is referred to by the Top Stack Pointer ```rsp```, while the bottom is referred to by the Base Stack Pointer ```rbp```.
+
+You can push data into the stack, and it will be at the top of the stack, and then you can pop data out of the stack into a register or a memory address, and it will be removed from the top of the stack.
+
+| Instruction | Description | Example |
+| **push** | copies the specified register/address to the top of the stack | ```push rax``` |
+| **pop** | moves the item at the top of the stack to the specified register/address | ```pop rax```
+
+The stack has the last-in-first-out design, which means you can only pop out the last element pushed into the stack. For example, if you ```push rax``` into the stack, the top of the stack would now be the value of ```rax``` you just pushed. If you push anything on top of it, you would have to pop them out of the stack until that value of ```rax``` reaches the top of the stack, then you can pop that value back to ```rax```.
+
+#### Usage with Functions/Syscalls
+
+You will primarily be pushing data from registers into the stack before you call a function or call a syscall, and then restore them after the function and the syscall. This is because functions and syscalls ususally use the registers for their processing, and so if the values stored in the registers will get changed after a function call or a syscall, you will lose them.
+
+For example, if you wanted to call a syscall to print "Hello World" to the screen and retain the current value stored in ```rax```, you would ```push rax``` into the stack. Then you can execute the syscall and afterward ```pop``` the value back to ```rax```. This way, you would be able to both execute the syscall and retain the value of ```rax```.
+
+#### PUSH/POP
+
+This is your current code:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+```
+
+Let's assume you wanted to call a function or a syscall before entering the loop. To preseve your registers, you will need to ```push``` to the stack all of the registers you are using and then pop them back after the syscall.
+
+To ```push``` value into the stack, you can use its name as the operand, as in ```push rax```, and the value will be copied to the top of the stack. When you want to retrieve that value, you first need to be sure that is is on the top of the stack, and then you can specify the storage location as the operand, as in ```pop rax```, after which the value will be moved to ```rax```, and will be removed from the top of the stack. The value below it will now be on the top of the stack.
+
+Example:
+
+```x86asm
+global  _start
+
+section .text
+_start:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+    push rax        ; push registers to stack
+    push rbx
+    ; call function
+    pop rbx         ; restore registers from stack
+    pop rax
+...SNIP...
+```
+
+What it looks like with GBD:
+
+```bash
+$ ./assembler.sh fib.s -g
+gef➤  b _start
+gef➤  r
+...SNIP...
+gef➤  si
+gef➤  si
+gef➤  si
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x1               
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe410│+0x0000: 0x0000000000000001	 ← $rsp
+0x00007fffffffe418│+0x0008: 0x0000000000000000
+0x00007fffffffe420│+0x0010: 0x0000000000000000
+0x00007fffffffe428│+0x0018: 0x0000000000000000
+0x00007fffffffe430│+0x0020: 0x0000000000000000
+0x00007fffffffe438│+0x0028: 0x0000000000000000
+0x00007fffffffe440│+0x0030: 0x0000000000000000
+0x00007fffffffe448│+0x0038: 0x0000000000000000
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+ →   0x40100e <_start+9>      push   rax
+     0x40100f <_start+10>      push   rbx
+     0x401010 <_start+11>      pop    rbx
+     0x401011 <_start+12>      pop    rax
+────────────────────────────────────────────────────────────────────────────────────────────────────
+```
+
+Let's push both ```rax``` and ```rbx```:
+
+```bash
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x1               
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe408│+0x0000: 0x0000000000000000	 ← $rsp
+0x00007fffffffe410│+0x0008: 0x0000000000000001
+0x00007fffffffe418│+0x0010: 0x0000000000000000
+0x00007fffffffe420│+0x0018: 0x0000000000000000
+0x00007fffffffe428│+0x0020: 0x0000000000000000
+0x00007fffffffe430│+0x0028: 0x0000000000000000
+0x00007fffffffe438│+0x0030: 0x0000000000000000
+0x00007fffffffe440│+0x0038: 0x0000000000000000
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x40100e <loopFib+9>      push   rax
+ →   0x40100f <_start+10>      push   rbx
+     0x401010 <_start+11>      pop    rbx
+     0x401011 <_start+12>      pop    rax
+────────────────────────────────────────────────────────────────────────────────────────────────────
+...SNIP...
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x1               
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe400│+0x0000: 0x0000000000000001	 ← $rsp
+0x00007fffffffe408│+0x0008: 0x0000000000000000
+0x00007fffffffe410│+0x0010: 0x0000000000000001
+0x00007fffffffe418│+0x0018: 0x0000000000000000
+0x00007fffffffe420│+0x0020: 0x0000000000000000
+0x00007fffffffe428│+0x0028: 0x0000000000000000
+0x00007fffffffe430│+0x0030: 0x0000000000000000
+0x00007fffffffe438│+0x0038: 0x0000000000000000
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x40100e <_start+9>      push   rax
+     0x40100f <_start+10>      push   rbx
+ →   0x401010 <_start+11>      pop    rbx
+     0x401011 <_start+12>      pop    rax
+────────────────────────────────────────────────────────────────────────────────────────────────────
+```
+
+You can see that now you have both ```rax``` and ```rbx``` on the top of the stack:
+
+```bash
+0x00007fffffffe408│+0x0000: 0x0000000000000001	 ← $rsp
+0x00007fffffffe410│+0x0008: 0x0000000000000000
+```
+
+You also notive that after you pushed your values, they remained in the registers, meaning a push is, in fact, a copy to stack.
+
+Now, let's assume that you finished executing a print function, and want to retrieve your values back, so you continue with the ```pop``` instructions:
+
+```bash
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x1               
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe408│+0x0000: 0x0000000000000000	 ← $rsp
+0x00007fffffffe410│+0x0008: 0x0000000000000001
+0x00007fffffffe418│+0x0010: 0x0000000000000000
+0x00007fffffffe420│+0x0018: 0x0000000000000000
+0x00007fffffffe428│+0x0020: 0x0000000000000000
+0x00007fffffffe430│+0x0028: 0x0000000000000000
+0x00007fffffffe438│+0x0030: 0x0000000000000000
+0x00007fffffffe440│+0x0038: 0x0000000000000000
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x40100e <_start+9>      push   rax
+     0x40100f <_start+10>      push   rbx
+     0x401010 <_start+11>      pop    rbx
+ →   0x401011 <_start+12>      pop    rax
+────────────────────────────────────────────────────────────────────────────────────────────────────
+...SNIP...
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x0               
+$rbx   : 0x1               
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe410│+0x0000: 0x0000000000000001	 ← $rsp
+0x00007fffffffe418│+0x0008: 0x0000000000000000
+0x00007fffffffe420│+0x0010: 0x0000000000000000
+0x00007fffffffe428│+0x0018: 0x0000000000000000
+0x00007fffffffe430│+0x0020: 0x0000000000000000
+0x00007fffffffe438│+0x0028: 0x0000000000000000
+0x00007fffffffe440│+0x0030: 0x0000000000000000
+0x00007fffffffe448│+0x0038: 0x0000000000000000
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x40100f <_start+9>      push   rax
+     0x40100f <_start+10>      push   rbx
+     0x401010 <_start+11>      pop    rbx
+     0x401011 <_start+12>      pop    rax
+ →   0x401011 <loopFib+0>      add rax, rbx
+────────────────────────────────────────────────────────────────────────────────────────────────────
+```
+
+You can see that after ```pop```ing two values from the top of the stack, they were removed from the stack, and the stack now looks exactly like as when you first started. Both values were placed back in ```rbx``` and ```rax```. You may not have seen any differences since they were not changed in the registers in this case.
+
+Using the stack is very simple. The only thing you should keep in mind is the order you push your registers and the state of the stack to safely restore your data and not restore a different value by ```pop``` when a different value is at the top of the stack.
 
