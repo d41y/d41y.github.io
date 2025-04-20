@@ -73,7 +73,10 @@
       - [Syscall Calling Convention](#syscall-calling-convention)
         - [Syscall Arguments](#syscall-arguments)
         - [Callig a Syscall](#callig-a-syscall)
-        - [Exit Syscall](#exit-syscall)
+      - [Exit Syscall](#exit-syscall)
+    - [Procdures](#procdures)
+      - [Defining Procedures](#defining-procedures)
+      - [CALL/RET](#callret)
 
 ---
 
@@ -1986,7 +1989,7 @@ gef➤  si
 Fibonacci Sequence:
 ```
 
-##### Exit Syscall
+#### Exit Syscall
 
 You may have noticed that so far, whenever your program finishes, it exits with a segmentation fault. This is because you are ending your program abruptly, without going through the proper procedure of exiting programs in Linux, by calling the ```exit syscall``` and passing an exit code.
 
@@ -2055,3 +2058,132 @@ d41y@htb[/htb]$ echo $?
 
 0
 ```
+
+### Procdures
+
+A common way to make your code more efficient and make it easier to read and understand is through the use of functions and procedures.
+
+A procedure is usually a set of instructions you want to execute at specific points in the program. So instead of reusing the same code, you define it under a procedure label and call it whenever you need to use it. This way, you only need to write the code once but can use it multiple times. Furthermore, you can use procedures to split a larger and more complex code into smaller, simpler segments.
+
+#### Defining Procedures
+
+Changing from:
+
+```x86asm
+global  _start
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+
+section .text
+_start:
+    mov rax, 1       ; rax: syscall number 1
+    mov rdi, 1      ; rdi: fd 1 for stdout
+    mov rsi,message ; rsi: pointer to message
+    mov rdx, 20      ; rdx: print length of 20 bytes
+    syscall         ; call write syscall to the intro message
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+... to:
+
+```x86asm
+global  _start
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+
+section .text
+_start:
+
+printMessage:
+    mov rax, 1       ; rax: syscall number 1
+    mov rdi, 1      ; rdi: fd 1 for stdout
+    mov rsi,message ; rsi: pointer to message
+    mov rdx, 20      ; rdx: print length of 20 bytes
+    syscall         ; call write syscall to the intro message
+
+initFib:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+
+Exit:
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+Even though the code looks better now, this is not any more efficient than it was, as you could have achieved the same by using comments. So, your next step is to use ```calls``` to direct the program to each of your procedures.
+
+#### CALL/RET
+
+When you want to start executing a procedure, you can ```call``` it, and it will go through its instructions. The ```call``` instruction pushes the next instruction pointer ```rip``` to the stack and then jumps to the specified procedure.
+
+Once the procedure is executed, you should end it with a ```ret``` instruction to return to the point you were at before jumping to the procedure. The ```ret``` instruction pops the address at the top of the stack into ```rip```, so the program's next instruction is restored to what it was before jumping to the procedure.
+
+| Instruction | Description | Exmaple |
+| ----------- | ----------- | ------- |
+| ```call``` | push the instruction pointer ```rip``` to the stack, then jumps to the specified procedure | ```call printMessage``` |
+| ```ret``` | pop the address at ```rsp``` into ```rip```, then jumping to it | ```ret``` |
+
+```fib.s ``` example:
+
+```x86asm
+global  _start
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+
+section .text
+_start:
+    call printMessage   ; print intro message
+    call initFib        ; set initial Fib values
+    call loopFib        ; calculate Fib numbers
+    call Exit           ; Exit the program
+
+printMessage:
+    mov rax, 1      ; rax: syscall number 1
+    mov rdi, 1      ; rdi: fd 1 for stdout
+    mov rsi,message ; rsi: pointer to message
+    mov rdx, 20     ; rdx: print length of 20 bytes
+    syscall         ; call write syscall to the intro message
+    ret
+
+initFib:
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+    ret
+
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+    ret
+
+Exit:
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+This way your code should execute the same instructions as before while having your code cleaner and more efficient. From now on, if you need to edit a specific procedure, you won't have to display the entire code, but only that procedure. You can also see that you did not use ```ret``` in your ```Exit``` procedure, as you don't want to return to where you were. You want to exit the code. You will almost always use a ```ret```, and the ```Exit``` function is one of the few exceptions.
