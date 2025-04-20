@@ -67,6 +67,13 @@
     - [Using the Stack](#using-the-stack)
       - [Usage with Functions/Syscalls](#usage-with-functionssyscalls)
       - [PUSH/POP](#pushpop)
+    - [Syscalls](#syscalls)
+      - [Linux Syscalls](#linux-syscalls)
+      - [Syscall Function Arguments](#syscall-function-arguments)
+      - [Syscall Calling Convention](#syscall-calling-convention)
+        - [Syscall Arguments](#syscall-arguments)
+        - [Callig a Syscall](#callig-a-syscall)
+        - [Exit Syscall](#exit-syscall)
 
 ---
 
@@ -1818,3 +1825,233 @@ You can see that after ```pop```ing two values from the top of the stack, they w
 
 Using the stack is very simple. The only thing you should keep in mind is the order you push your registers and the state of the stack to safely restore your data and not restore a different value by ```pop``` when a different value is at the top of the stack.
 
+### Syscalls
+
+Even though you are talking directly to the CPU through machine instructions in Assembly, you do not have to invoke every type of command using basic machine instructions only. Programs regularly use many kinds of operations. The OS can help you through syscalls to not have to execute these operations every time manually.
+
+For example, suppose you need to write something on the screen, without syscalls. In that case, you will need to talk to the Video Memory and Video I/O, resolve any enconding required, send your input to be printed, and wait for the confirmation that it has been printed. As expected, if you had to do all this to print a single char, it would make Assembly codes much longer.
+
+#### Linux Syscalls
+
+A syscall is like a globally available function written in C, provided by the OS Kernel. A syscall takes the required arguments in the registers and executes the function with the provided arguments. For example, if you wanted to write something to the screen, you can use the ```write``` syscall, provide the string to be printed and other required arguments, and then call the syscall to issue the print.
+
+There are many available syscalls provided by the Linux Kernel, and you can find a list of them at the syscall number of each one by reading the ```unistd_64.h```.
+
+```bash
+d41y@htb[/htb]$ cat /usr/include/x86_64-linux-gnu/asm/unistd_64.h
+#ifndef _ASM_X86_UNISTD_64_H
+#define _ASM_X86_UNISTD_64_H 1
+
+#define __NR_read 0
+#define __NR_write 1
+#define __NR_open 2
+#define __NR_close 3
+#define __NR_stat 4
+#define __NR_fstat 5
+```
+
+#### Syscall Function Arguments
+
+To use the ```write``` syscall, you must first know what arguments it accepts. To find the arguments accepted by a syscall, you can use the ```man -s 2 write``` command with the syscall name from the above list:
+
+```bash
+d41y@htb[/htb]$ man -s 2 write
+...SNIP...
+       ssize_t write(int fd, const void *buf, size_t count);
+```
+
+You see that the function expects 3 arguments:
+
+1. file desrciptor ```fd``` to be printed to (_usually 1 for ```stdout```_)
+2. the address pointer to the string to be printed
+3. the length you want to print
+
+Once you provided these arguments, you can use the syscall instruction to execute the function and print to screen. In addition to these manual methods of locating syscalls and functions arguments, there are online resources you can use to quickly look for syscalls, their numbers, and the arguments they expect. [Take a look!](https://filippo.io/linux-syscall-table/)
+
+
+#### Syscall Calling Convention
+
+To call a syscall, you have to:
+
+1. save registers to stack
+2. set its syscall number in ```rax```
+3. set its arguments in the registers
+4. use the syscall Assembly instruction to call it
+
+Example moving the syscall number to the ```rax``` register:
+
+```x86asm
+mov rax, 1
+```
+
+Now, if you reach the syscall instruction, the Kernel would know which syscall you are calling.
+
+##### Syscall Arguments
+
+| Description | 64-bit Register | 8-bit Register |
+| ----------- | --------------- | -------------- |
+| Syscall Number / Return Value | ```rax``` | ```al``` |
+| Callee Saved | ```rbx``` | ```bl``` |
+| 1st arg | ```rdi``` | ```dil``` |
+| 2nd arg | ```rsi``` | ```sil``` |
+| 3rd arg | ```rdx``` | ```dl``` |
+| 4th arg | ```rcx``` | ```cl``` |
+| 5th arg | ```r8``` | ```r8b``` |
+| 6th arg | ```r9``` | ```r9b``` |
+
+As you can see, you have a register for each of the first 6 arguments. Any additional arguments can be stored in the stack.
+
+For the ```print``` example:
+
+1. ```rdi```
+   - 1
+2. ```rsi```
+   - ```'Fibonacci Sequence:\n'```
+3. ```rdx```
+   - 20
+
+You could use ```mov rcx, 'string'```. However, you can only store up to 16 chars in a register, so your intro string would not fit. Instead, create a variable with your string:
+
+```x86asm
+global  _start
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+
+...
+
+mov rax, 1       ; rax: syscall number 1
+mov rdi, 1      ; rdi: fd 1 for stdout
+mov rsi,message ; rsi: pointer to message
+mov rdx, 20      ; rdx: print length of 20 bytes
+```
+
+##### Callig a Syscall
+
+... should look like this:
+
+```x86asm
+global  _start
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+
+section .text
+_start:
+    mov rax, 1       ; rax: syscall number 1
+    mov rdi, 1      ; rdi: fd 1 for stdout
+    mov rsi,message ; rsi: pointer to message
+    mov rdx, 20      ; rdx: print length of 20 bytes
+    syscall         ; call write syscall to the intro message
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+```
+
+... leads to:
+
+```bash
+d41y@htb[/htb]$ ./assembler.sh fib.s
+
+Fibonacci Sequence:
+[1]    107348 segmentation fault  ./fib
+
+...
+
+$ gdb -q ./fib
+gef➤  disas _start
+Dump of assembler code for function _start:
+..SNIP...
+0x0000000000401011 <+17>:	syscall 
+gef➤  b *_start+17
+Breakpoint 1 at 0x401011
+gef➤  r
+───────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x0               
+$rcx   : 0x0               
+$rdx   : 0x14              
+$rsp   : 0x00007fffffffe410  →  0x0000000000000001
+$rbp   : 0x0               
+$rsi   : 0x0000000000402000  →  "Fibonacci Sequence:\n"
+$rdi   : 0x1 
+              
+gef➤  si
+              
+Fibonacci Sequence:
+```
+
+##### Exit Syscall
+
+You may have noticed that so far, whenever your program finishes, it exits with a segmentation fault. This is because you are ending your program abruptly, without going through the proper procedure of exiting programs in Linux, by calling the ```exit syscall``` and passing an exit code.
+
+Add this to the end of your code. First, you need to find the ```exit syscall``` number:
+
+```bash
+d41y@htb[/htb]$ grep exit /usr/include/x86_64-linux-gnu/asm/unistd_64.h
+
+#define __NR_exit 60
+#define __NR_exit_group 231
+```
+
+You need to use the first one:
+
+```bash
+d41y@htb[/htb]$ man -s 2 exit
+
+...SNIP...
+void _exit(int status);
+```
+
+You see that it only needs one integer argument, ```status```, which is explained to be the exit code. In Linux, whenever a program exits without any errors, it passes an exit code of 0. Otherwise, the exit code is a different number, usually 1. In your case, as everything went as expected, you'll pass the exit code of 0:
+
+```x86asm
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+Adding this to the previous code:
+
+```x86asm
+global  _start
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+
+section .text
+_start:
+    mov rax, 1       ; rax: syscall number 1
+    mov rdi, 1      ; rdi: fd 1 for stdout
+    mov rsi,message ; rsi: pointer to message
+    mov rdx, 20      ; rdx: print length of 20 bytes
+    syscall         ; call write syscall to the intro message
+    xor rax, rax    ; initialize rax to 0
+    xor rbx, rbx    ; initialize rbx to 0
+    inc rbx         ; increment rbx to 1
+loopFib:
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+Looks like this when run:
+
+```bash
+d41y@htb[/htb]$ ./assembler.sh fib.s
+
+Fibonacci Sequence:
+
+d41y@htb[/htb]$ echo $?
+
+0
+```
