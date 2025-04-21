@@ -29,6 +29,8 @@ _to-Do's_:
 
 ## Binary Exploitation
 
+- [Stack-Based Buffer Overflows on Linux x86](./attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.md)
+
 ## Cloud
 
 ## Crypto
