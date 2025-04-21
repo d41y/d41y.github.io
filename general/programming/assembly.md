@@ -74,9 +74,18 @@
         - [Syscall Arguments](#syscall-arguments)
         - [Callig a Syscall](#callig-a-syscall)
       - [Exit Syscall](#exit-syscall)
-    - [Procdures](#procdures)
+    - [Procedures](#procedures)
       - [Defining Procedures](#defining-procedures)
       - [CALL/RET](#callret)
+    - [Functions](#functions-1)
+      - [Functions Calling Convetion](#functions-calling-convetion)
+      - [Using External Functions](#using-external-functions)
+      - [Importing lib Functions](#importing-lib-functions)
+      - [Saving Registers](#saving-registers)
+      - [Function Arguments](#function-arguments)
+      - [Stack Alignment](#stack-alignment)
+      - [Function Call](#function-call)
+      - [Dynamic Linker](#dynamic-linker)
 
 ---
 
@@ -2059,7 +2068,7 @@ d41y@htb[/htb]$ echo $?
 0
 ```
 
-### Procdures
+### Procedures
 
 A common way to make your code more efficient and make it easier to read and understand is through the use of functions and procedures.
 
@@ -2187,3 +2196,230 @@ Exit:
 ```
 
 This way your code should execute the same instructions as before while having your code cleaner and more efficient. From now on, if you need to edit a specific procedure, you won't have to display the entire code, but only that procedure. You can also see that you did not use ```ret``` in your ```Exit``` procedure, as you don't want to return to where you were. You want to exit the code. You will almost always use a ```ret```, and the ```Exit``` function is one of the few exceptions.
+
+### Functions
+
+#### Functions Calling Convetion
+
+Functions are a form of procedures. However, functions tend to be more complex and should be expected to use the stack and all registers fully. So, you can't simply call a function. Instead, functions have a Calling Convention to properly set up before being called.
+
+Four main things you need to consider
+
+... before calling a function:
+
+1. save registers on the stack (_Caller Saved_)
+2. pass function args (_like syscalls_)
+3. fix stack alignment
+4. get funtion's Return Value (_in ```rax```_)
+
+... when it comes to writing a function:
+
+1. saving Callee Saved registers (_```rbx``` and ```rbp```_)
+2. get args from registers
+3. align the stack
+4. return value in ```rax```
+
+> [!NOTE]
+> The caller is setting up things, and then the callee should retrieve those things and use them. These points are usually made at the beginning, and the end of the function and are called a function's prologue and epilogue. They allow functions to be called without worrying about the current state of the stack or the registers.
+
+#### Using External Functions
+
+There are external functions you can use. The ```libc``` library of functions used for ```C``` programs provides many functionalities that you can utilize without rewriting everything from scratch. Before you can use a function from ```libc```, you have to import it first and then specify the ```libc``` library for dynamic linking when linking your code with ```ld```.
+
+#### Importing lib Functions
+
+First, to import an external ```libc``` function, you can use the ```extern``` instruction at the beginning of your code:
+
+```x86asm
+global  _start
+extern  printf
+```
+
+Once this is done, you should be able to call the ```printf``` function.
+
+#### Saving Registers
+
+When defining a new procedure, ```printFib```, to hold your function call instructions. The very first step is to save to the stack any registers you are using, which are ```rax``` and ```rbx```:
+
+```x86asm
+printFib:
+    push rax        ; push registers to stack
+    push rbx
+    ; function call
+    pop rbx         ; restore registers from stack
+    pop rax
+    ret
+```
+
+#### Function Arguments
+
+First, you need to find out what arguments are accepted by the ```printf``` function by using ```man -s 3``` for library functions manual:
+
+```bash
+d41y@htb[/htb]$ man -s 3 printf
+
+...SNIP...
+       int printf(const char *format, ...);
+```
+
+Now, you can create a variable that contains the output format to pass it as the first argument. The ```printf``` man page also details various print formats. You want to print an integer, so you can use the ```%d``` format:
+
+```x86asm
+global  _start
+extern  printf
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+    outFormat db  "%d", 0x0a, 0x00
+```
+
+... and then:
+
+```x86asm
+printFib:
+    push rax            ; push registers to stack
+    push rbx
+    mov rdi, outFormat  ; set 1st argument (Print Format)
+    mov rsi, rbx        ; set 2nd argument (Fib Number)
+    pop rbx             ; restore registers from stack
+    pop rax
+    ret
+```
+
+#### Stack Alignment
+
+Whenever you want to make a call to a function, you must ensure that the top stack pointer (```rsp```) is aligned by the 16-byte boundary from the ```_start``` function stack.
+
+This means that you have to push at least 16-bytes to the stack before making a call to ensure functions have enough stack space to execute correctly. This requirement is mainly there for processor performance efficiency. Some functions are programmed to crash if this boundary is not fixed to ensure performance efficieny. If you assemble your code and break right after the second ```push```, this is what you will see:
+
+```bash
+───────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe3a0│+0x0000: 0x0000000000000001	 ← $rsp
+0x00007fffffffe3a8│+0x0008: 0x0000000000000000
+0x00007fffffffe3b0│+0x0010: 0x00000000004010ad  →  <loopFib+5> add rax, rbx
+0x00007fffffffe3b8│+0x0018: 0x0000000000401044  →  <_start+20> call 0x4010bd <Exit>
+0x00007fffffffe3c0│+0x0020: 0x0000000000000001	 ← $r13
+─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+     0x401090 <initFib+9>      ret    
+     0x401091 <printFib+0>     push   rax
+     0x401092 <printFib+1>     push   rbx
+ →   0x40100e <printFib+2>     movabs rdi, 0x403039
+```
+
+You see that you have four 8-bytes pushed to the stack, making a total boundary of 32-bytes. This is due to two things:
+
+1. each procedure call adds an 8-byte address to the stack, which is then removed with ```ret```
+2. each push adds 8-bytes to the stack as well
+
+So, you are inside ```printFib``` and inside ```loopFib```, and have pushed ```rax``` and ```rbx```, for a total of a 32-byte boundary. Since the boundary is a multiple of 16, your stack is already aligned, and you don't have to fix anything.
+
+If you were in a case where you wanted to bring the boundary up to 16, you can substract bytes from ```rsp``` as follows:
+
+```x86asm
+    sub rsp, 16
+    call function
+    add rsp, 16
+```
+
+This way, you are adding an extra 16-bytes to the top of the stack and then removing them after the call. If you had 8 bytes pushed, you can bring the boundary up to 16 by subtracting 8 from ```rsp```.
+
+The critical thing to remember is that you should have 16-bytes on top of the stack before making a call. You can count the number of push instructions and call instructions, and you will get how many 8-bytes have been pushed to the stack.
+
+#### Function Call
+
+Exmaple: 
+
+```x86asm
+printFib:
+    push rax            ; push registers to stack
+    push rbx
+    mov rdi, outFormat  ; set 1st argument (Print Format)
+    mov rsi, rbx        ; set 2nd argument (Fib Number)
+    call printf         ; printf(outFormat, rbx)
+    pop rbx             ; restore registers from stack
+    pop rax
+    ret
+```
+
+Now you can add your ```printFib``` procedure to the beginning of ```loopFib```, such that it prints the current Fibonacci number at the beginning of each loop:
+
+```x86asm
+loopFib:
+    call printFib   ; print current Fib number
+    add rax, rbx    ; get the next number
+    xchg rax, rbx   ; swap values
+    cmp rbx, 10		; do rbx - 10
+    js loopFib		; jump if result is <0
+    ret
+```
+
+The final code:
+
+```x86asm
+global  _start
+extern  printf
+
+section .data
+    message db "Fibonacci Sequence:", 0x0a
+    outFormat db  "%d", 0x0a, 0x00
+
+section .text
+_start:
+    call printMessage   ; print intro message
+    call initFib        ; set initial Fib values
+    call loopFib        ; calculate Fib numbers
+    call Exit           ; Exit the program
+
+printMessage:
+    mov rax, 1           ; rax: syscall number 1
+    mov rdi, 1          ; rdi: fd 1 for stdout
+    mov rsi, message    ; rsi: pointer to message
+    mov rdx, 20          ; rdx: print length of 20 bytes
+    syscall             ; call write syscall to the intro message
+    ret
+
+initFib:
+    xor rax, rax        ; initialize rax to 0
+    xor rbx, rbx        ; initialize rbx to 0
+    inc rbx             ; increment rbx to 1
+    ret
+
+printFib:
+    push rax            ; push registers to stack
+    push rbx
+    mov rdi, outFormat  ; set 1st argument (Print Format)
+    mov rsi, rbx        ; set 2nd argument (Fib Number)
+    call printf         ; printf(outFormat, rbx)
+    pop rbx             ; restore registers from stack
+    pop rax
+    ret
+
+loopFib:
+    call printFib       ; print current Fib number
+    add rax, rbx        ; get the next number
+    xchg rax, rbx       ; swap values
+    cmp rbx, 10		    ; do rbx - 10
+    js loopFib		    ; jump if result is <0
+    ret
+
+Exit:
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+#### Dynamic Linker
+
+When you link your code with ```ld```, you should tell it to do dynamic linking with the ```libc``` library. Otherwise, it would not know how to fetch the imported ```printf``` function. You can do it as follows:
+
+```bash
+d41y@htb[/htb]$ nasm -f elf64 fib.s &&  ld fib.o -o fib -lc --dynamic-linker /lib64/ld-linux-x86-64.so.2 && ./fib
+
+1
+1
+2
+3
+5
+8
+```
+
