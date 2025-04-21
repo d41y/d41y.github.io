@@ -86,6 +86,12 @@
       - [Stack Alignment](#stack-alignment)
       - [Function Call](#function-call)
       - [Dynamic Linker](#dynamic-linker)
+    - [Libc Functions](#libc-functions)
+      - [Importing libc Functions](#importing-libc-functions)
+      - [Saving Registers](#saving-registers-1)
+      - [Function Arguments](#function-arguments-1)
+      - [Stack Alignment](#stack-alignment-1)
+      - [Function Call](#function-call-1)
 
 ---
 
@@ -2421,5 +2427,184 @@ d41y@htb[/htb]$ nasm -f elf64 fib.s &&  ld fib.o -o fib -lc --dynamic-linker /li
 3
 5
 8
+```
+
+### Libc Functions
+
+In order to make the programm more dynamic you could ask the user for the max Fibonacci number they want to print.
+
+#### Importing libc Functions
+
+To do so, you can use the ```scanf``` function from ```libc``` to take user input and have it properly converted to an integer.
+
+```x86asm
+global  _start
+extern  printf, scanf
+```
+
+You can now start writing a new procedure, ```getInput```:
+
+```x86asm
+getInput:
+    ; call scanf
+```
+
+#### Saving Registers
+
+As you are at the beginning of your programm and have not yet used any register, you don't have to worry about saving registers to the stack.
+
+#### Function Arguments
+
+Next, you need to know what arguments are accepted by ```scanf```:
+
+```bash
+d41y@htb[/htb]$ man -s 3 scanf
+
+...SNIP...
+int scanf(const char *format, ...);
+```
+
+... leads to:
+
+```x86asm
+section .data
+    message db "Please input max Fn", 0x0a
+    outFormat db  "%d", 0x0a, 0x00
+    inFormat db  "%d", 0x00
+```
+
+You also changed your intro message to 'Please input max Fn', to tell the user what input is expected from them.
+
+Next, you must set a buffer space for the input storage. Uninitialized buffer space must be stored in the ```.bss``` label, and use ```resb 1``` to tell nasm to reserver it 1 byte of buffer space:
+
+```x86asm
+section .bss
+    userInput resb 1
+```
+
+You can now set your function args under your ```getInput``` procedure:
+
+```x86asm
+getInput:
+    mov rdi, inFormat   ; set 1st parameter (inFormat)
+    mov rsi, userInput  ; set 2nd parameter (userInput)
+```
+
+#### Stack Alignment
+
+Next, you have to ensure that a 16-byte boundary aligns your stack. You are currently inside the ```getInput``` procedure, so you have 1 call instruction and no push instructions, so you have an 8-byte boundary. So, you can use ```sub``` to fix ```rsp```:
+
+```x86asm
+getInput:
+    sub rsp, 8
+    ; call scanf
+    add rsp, 8
+```
+
+You can ```push rax``` instead, and this will properly align the stack as well. This way, your stack should be perfectly aligned with a 16-byte boundary.
+
+#### Function Call
+
+Now, you set the function arguments and ```call scanf```:
+
+```x86asm
+getInput:
+    sub rsp, 8          ; align stack to 16-bytes
+    mov rdi, inFormat   ; set 1st parameter (inFormat)
+    mov rsi, userInput  ; set 2nd parameter (userInput)
+    call scanf          ; scanf(inFormat, userInput)
+    add rsp, 8          ; restore stack alignment
+    ret
+```
+
+You will also add ```call getInput``` at ```_start```, so that you go to this procedure right after printing the intro message:
+
+```x86asm
+section .text
+_start:
+    call printMessage   ; print intro message
+    call getInput       ; get max number
+    call initFib        ; set initial Fib values
+    call loopFib        ; calculate Fib numbers
+    call Exit           ; Exit the program
+```
+
+Finally, you have to make use of the user input. To do so, instead of using a static 10 when comparing in ```cmp rbx, 10```, you will change it to ```cmp rbx [userInput]```:
+
+```x86asm
+loopFib:
+    ...SNIP...
+    cmp rbx,[userInput] ; do rbx - userInput
+    js loopFib		    ; jump if result is <0
+    ret
+```
+
+Complete code:
+
+```x86asm
+global  _start
+extern  printf, scanf
+
+section .data
+    message db "Please input max Fn", 0x0a
+    outFormat db  "%d", 0x0a, 0x00
+    inFormat db  "%d", 0x00
+
+section .bss
+    userInput resb 1
+
+section .text
+_start:
+    call printMessage   ; print intro message
+    call getInput       ; get max number
+    call initFib        ; set initial Fib values
+    call loopFib        ; calculate Fib numbers
+    call Exit           ; Exit the program
+
+printMessage:
+    ...SNIP...
+
+getInput:
+    sub rsp, 8          ; align stack to 16-bytes
+    mov rdi, inFormat   ; set 1st parameter (inFormat)
+    mov rsi, userInput  ; set 2nd parameter (userInput)
+    call scanf          ; scanf(inFormat, userInput)
+    add rsp, 8          ; restore stack alignment
+    ret
+
+initFib:
+    ...SNIP...
+
+printFib:
+    ...SNIP...
+
+loopFib:
+    ...SNIP...
+    cmp rbx,[userInput] ; do rbx - userInput
+    js loopFib		    ; jump if result is <0
+    ret
+
+Exit:
+    ...SNIP...
+```
+
+Output example:
+
+```bash
+d41y@htb[/htb]$ nasm -f elf64 fib.s &&  ld fib.o -o fib -lc --dynamic-linker /lib64/ld-linux-x86-64.so.2 && ./fib
+
+Please input max Fn:
+100
+1
+1
+2
+3
+5
+8
+13
+21
+34
+55
+89
 ```
 
