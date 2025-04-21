@@ -92,6 +92,14 @@
       - [Function Arguments](#function-arguments-1)
       - [Stack Alignment](#stack-alignment-1)
       - [Function Call](#function-call-1)
+  - [Shellcodes](#shellcodes)
+    - [Use in Pentesting](#use-in-pentesting)
+    - [Assembly to Machine Code](#assembly-to-machine-code)
+    - [Extract Shellcode](#extract-shellcode)
+    - [Loading Shell code](#loading-shell-code)
+    - [Debugging Shellcode](#debugging-shellcode)
+      - [pwntools](#pwntools)
+      - [GCC](#gcc)
 
 ---
 
@@ -2606,5 +2614,237 @@ Please input max Fn:
 34
 55
 89
+```
+
+## Shellcodes
+
+... are a hex representation of a binary's executable machine code:
+
+```x86asm
+global _start
+
+section .data
+    message db "Hello HTB Academy!"
+
+section .text
+_start:
+    mov rsi, message
+    mov rdi, 1
+    mov rdx, 18
+    mov rax, 1
+    syscall
+
+    mov rax, 60
+    mov rdi, 0
+    syscall
+```
+
+... assembles to the following shellcode:
+
+```
+48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05
+```
+
+This shellcode should properly represent the machine instructions, and if passed to the processor memory, it should understand it and execute it properly.
+
+### Use in Pentesting
+
+Having the ability to pass a shellcode directly to the processor memory and have it executed plays an essential role in Binary Exploitation. For example, with a buffer overflow exploit, you can pass a reverse shell shellcode, have it executed, and receive a reverse shell.
+
+Modern x86_64 systems may have protections against loading shellcodes into memory. This is why x86_64 binary exploitation usually relies on Return Oriented Programming.
+
+Furthermore, some attack techniques rely on infecting existing executables or libraries with shellcode, such that this shellcode is loaded into memory and executed once these files are run. Another advantage of using shellcodes in pentesting is the ability of directly execute code into memory without writing anything to the disk, which is very important for reducing your visibility and footprint on the remote server.
+
+### Assembly to Machine Code
+
+Each x86 instruction and each register has its own binary machine code, which represents the binary code passed directly to the processor to tell it what instruction to execute.
+
+Furthermore, common combinations of instructions and registers have their own machine code as well. For example, the ```pus rax``` instruction has the machine code 50, while ```push rbx``` has the machine code 53, and so on. When you assemble your code with nasm, it converts your Assembly instructions to their respective machine code so that the processor can understand them.
+
+You can use ```pwntools``` to assemble and disassemble your machine code:
+
+```bash
+d41y@htb[/htb]$ sudo pip3 install pwntools
+
+d41y@htb[/htb]$ pwn asm 'push rax'  -c 'amd64'
+   0:    50                       push   eax
+```
+
+As you can see, you get 50, which is the same machine code for ```push rax```. Likewise, you can convert hex machine code or shellcode into its corresponding Assembly code:
+
+```bash
+d41y@htb[/htb]$ pwn disasm '50' -c 'amd64'
+   0:    50                       push   eax
+```
+
+### Extract Shellcode
+
+A binary's shellcode represents its executable ```.text``` section only, as shellcodes are meant to be directly executable. To extract the ```.text``` section with pwntools, you can use the ```ELF``` library to load an ```elf``` binary, which would allow you to run various functions on it.
+
+```bash
+d41y@htb[/htb]$ python3
+
+>>> from pwn import *
+>>> file = ELF('helloworld')
+```
+
+Now, you can run various pwntools functions on it. You need to dump machine code from the executable ```.text``` section, which you can do with the ```section()``` function:
+
+```bash
+>>> file.section(".text").hex()
+'48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05'
+```
+
+> [!NOTE]
+> You can add ```hex()``` to encode the shellcode, instead of printing the raw bytes.
+
+The following is an example Python3 script that extracts the shellcode of a given binary:
+
+```python
+#!/usr/bin/python3
+
+import sys
+from pwn import *
+
+context(os="linux", arch="amd64", log_level="error")
+
+file = ELF(sys.argv[1])
+shellcode = file.section(".text")
+print(shellcode.hex())
+```
+
+Example:
+
+```bash
+d41y@htb[/htb]$ python3 shellcoder.py helloworld
+
+48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05
+```
+
+You could also use ```objdump``` for that:
+
+```bash
+#!/bin/bash
+
+for i in $(objdump -d $1 |grep "^ " |cut -f2); do echo -n $i; done; echo;
+```
+
+... leads to:
+
+```bash
+d41y@htb[/htb]$ ./shellcoder.sh helloworld
+
+48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05
+```
+
+### Loading Shell code
+
+To demonstrate how to run shellcodes, you can use the following shellcode, that meets all Shellcoding Requirements:
+
+```
+4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05
+```
+
+To run the shellcode with pwntools, you can use the ```run_shellcode``` function:
+
+```bash
+d41y@htb[/htb]$ python3
+
+>>> from pwn import *
+>>> context(os="linux", arch="amd64", log_level="error")
+>>> run_shellcode(unhex('4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05')).interactive()
+
+Hello HTB Academy!
+```
+
+An example Python script for this would be:
+
+```python
+#!/usr/bin/python3
+
+import sys
+from pwn import *
+
+context(os="linux", arch="amd64", log_level="error")
+
+run_shellcode(unhex(sys.argv[1])).interactive()
+```
+
+### Debugging Shellcode
+
+#### pwntools
+
+You can use pwntools to build an elf binary from your shellcode using the ```ELF``` library, and the ```save``` function to save it to a file.
+
+```python
+ELF.from_bytes(unhex('4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05')).save('helloworld')
+```
+
+... or as a script:
+
+```python
+#!/usr/bin/python3
+
+import sys, os, stat
+from pwn import *
+
+context(os="linux", arch="amd64", log_level="error")
+
+ELF.from_bytes(unhex(sys.argv[1])).save(sys.argv[2])
+os.chmod(sys.argv[2], stat.S_IEXEC)
+```
+
+Using it:
+
+```python
+d41y@htb[/htb]$ python assembler.py '4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05' 'helloworld'
+
+d41y@htb[/htb]$ ./helloworld
+
+Hello HTB Academy!
+```
+
+You can now run it with gdb:
+
+```bash
+$ gdb -q helloworld
+gef➤  b *0x401000
+gef➤  r
+Breakpoint 1, 0x0000000000401000 in ?? ()
+...SNIP...
+─────────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
+●→   0x401000                  xor    rbx, rbx
+     0x401003                  mov    bx, 0x2179
+     0x401007                  push   rbx
+```
+
+#### GCC
+
+There are other methods to build your shellcode into an elf executable. You can add your shellcode to the following C code, write it to a ```helloworld.c```, and then build it with ```gcc```:
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    int (*ret)() = (int (*)()) "\x48\x31\xdb\x66\xbb\...SNIP...\x3c\x40\x30\xff\x0f\x05";
+    ret();
+}
+```
+
+... compiling:
+
+```bash
+d41y@htb[/htb]$ gcc helloworld.c -o helloworld
+d41y@htb[/htb]$ gdb -q helloworld
+```
+
+However, this method is not very reliable for a few reasons. First, it will wrap the entire binary in C code, so the binary will not contain your shellcode, but will contain various other C functions and libraries. This method may also not always compile, depending on the existing memory protections, so you may have to add flags to bypass memory protections:
+
+```bash
+d41y@htb[/htb]$ gcc helloworld.c -o helloworld -fno-stack-protector -z execstack -Wl,--omagic -g --static
+d41y@htb[/htb]$ ./helloworld
+
+Hello HTB Academy!
 ```
 
