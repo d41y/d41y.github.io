@@ -13,6 +13,10 @@
   - [IDOR in Insecure APIs](#idor-in-insecure-apis)
     - [Identifying Insecure APIs](#identifying-insecure-apis)
     - [Exploiting Insecure APIs](#exploiting-insecure-apis)
+  - [Chaining IDOR Vulnerabilities](#chaining-idor-vulnerabilities)
+    - [Information Disclosure](#information-disclosure)
+    - [Modifying Other Users' Details](#modifying-other-users-details)
+    - [Chaining Two IDOR Vulnerabilites](#chaining-two-idor-vulnerabilites)
 
 ---
 
@@ -317,4 +321,87 @@ Finally, let's try to change your ```role``` to admin/administrator to gain high
 
 So, all of your attempts appear to have failed. You cannot create or delete users as you cannot change your ```role```. You cannot change your own ```uid```, as there are preventive measures on the back-end that you cannot control, nor change another user's details for the same reason. So, is the web application secure against IDOR attacks?
 
-So far, you have only been testing IDOR Insecure Function Calls. However, you have not tested the API's GET request for IDOR Information Disclosure Vulnerabilites. If there was no robust access control system in place, you might be able to read other users' details, which may help you with the previous attacks you attempted
+So far, you have only been testing IDOR Insecure Function Calls. However, you have not tested the API's GET request for IDOR Information Disclosure Vulnerabilites. If there was no robust access control system in place, you might be able to read other users' details, which may help you with the previous attacks you attempted.
+
+## Chaining IDOR Vulnerabilities
+
+Usually, a GET request to the API endpoint should return the details of the requested user, so you may try calling it to see if you can retrieve your user's details. You also notice that after the page loads, it fetches the user details with a GET request to the same API endpoint:
+
+![idor 12](../../../../images/IDOR_12.png)
+
+### Information Disclosure
+
+Let's send a GET request with another ```uid```:
+
+![idor 13](../../../../images/IDOR_13.png)
+
+As you can see, this returned the details of another user, with their own ```uuid``` and ```role```, confirming an IDOR Information Disclosure Vulnerability.
+
+```json
+{
+    "uid": "2",
+    "uuid": "4a9bd19b3b8676199592a346051f950c",
+    "role": "employee",
+    "full_name": "Iona Franklyn",
+    "email": "i_franklyn@employees.htb",
+    "about": "It takes 20 years to build a reputation and few minutes of cyber-incident to ruin it."
+}
+```
+
+This provides you with new details, most notably the ```uuid```, which you could not calculate before, and thus could not change other users' details.
+
+### Modifying Other Users' Details
+
+Now, with the user's ```uid``` at hand, you can change this user's details by sending a PUT request to ```/profile/api.php/profile/2``` with the above details along with any modifications you made, as follows:
+
+![idor 14](../../../../images/IDOR_14.png)
+
+You don't get any access control error messages this time, and when trying to GET the user details again, you see that you did indeed update their details:
+
+![idor 15](../../../../images/IDOR_15.png)
+
+In addition to allowing you to view potentially sensitive details, the ability to modify another user's details also enables you to perform several other attacks. One type of attack is modifying a user's email address and then requesting a password reset link, which will be sent to the email address you specified, thus allowing you to take control over their account. Another potential attack is placing an XSS payload in the ```about``` field, which would get executed once the user visits their ```Edit profile``` page, enabling you to attack the user in different ways.
+
+### Chaining Two IDOR Vulnerabilites
+
+Since you have identified an IDOR Information Disclosure Vulnerability, you may also enumerate all users and look for other roles, ideally an admin role.
+
+```json
+{
+    "uid": "X",
+    "uuid": "a36fa9e66e85f2dd6f5e13cad45248ae",
+    "role": "web_admin",
+    "full_name": "administrator",
+    "email": "webadmin@employees.htb",
+    "about": "HTB{FLAG}"
+}
+```
+
+You may modify the admin's details and then perform one of the above attacks to take over their account. However, as you know the admin role name, you can set it to your user so you can create new users or delete current users. To do so, you will intercept the request when you click on the ```Update profile``` button and change your role to ```web_admin```.
+
+![idor 16](../../../../images/IDOR_16.png)
+
+This time, you don't get the "Invalid role" error message, nor do you get any access control error messages, meaning that there are no back-end access control measures to what roles you can set for your user. If you GET your user details, you see that your ```role``` has indeed been set to ```web_admin```.
+
+```json
+{
+    "uid": "1",
+    "uuid": "40f5888b67c748df7efba008e7c2f9d2",
+    "role": "web_admin",
+    "full_name": "Amy Lindon",
+    "email": "a_lindon@employees.htb",
+    "about": "A Release is like a boat. 80% of the holes plugged is not good enough."
+}
+```
+
+Now, you can refresh the page to update your cookie, or manually set it as ```Cookie: role=web_admin```, and then intercept the ```Update``` request to create a new user and see if you'd be allowed to do so.
+
+![idor 17](../../../../images/IDOR_17.png)
+
+You did not get an error message this time. If you send a GET request for the new user, you see that it has been successfully created.
+
+![idor 18](../../../../images/IDOR_18.png)
+
+By combining the information you gained from the IDOR Information Disclosure Vulnerability with and IDOR Insecure Function Calls attack on an API endpoint, you could modify other users' details and create/delete users while bypassing various access control checks in place. On many occasions, the information you leak through IDOR vulnerabilites can be utilized in other attacks, like IDOR or XSS, leading to more sophisticated attacks or bypassing existing security mechanisms.
+
+With your new role, you may also perform mass assignments to change specific fields for all users, like placing XSS payloads in their profiles or changing their email to an email you specify.
