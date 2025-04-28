@@ -88,6 +88,7 @@ Server-side
   - [SSTI](./attack/web/web_attacks/server_side/ssti.md)
   - [SSRF](./attack/web/web_attacks/server_side/ssrf.md)
   - [XLST](./attack/web/web_attacks/server_side/xlst.md)
+  - [XXE](./attack/web/web_attacks/server_side/xxe.md)
 
 Web Service & API
 
