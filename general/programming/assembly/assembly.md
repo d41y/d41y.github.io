@@ -137,7 +137,7 @@ Later on, interpreted languages were developed, which are usually not compiled b
 
 ### Compilation Stages
 
-![assembly 1](../../images/assembly_1.png)
+![assembly 1](../../../images/assembly_1.png)
 
 ## Computer Architecture
 
@@ -196,7 +196,7 @@ When a program is run, all of its data and instructions are moved from the stora
 
 The RAM is split into four main segments:
 
-![assembly 1](../../images/assembly_2.png)
+![assembly 1](../../../images/assembly_2.png)
 
 | Segment | Description |
 | ------- | ----------- |
@@ -242,7 +242,7 @@ Each CPU has a clock speed that indicates its overall speed. Every tick of the c
 
 The frequency in which the cycles occur is counted is cycles per second (_Hertz_). If a CPU has a speed of 3.0 GHz, it can run 3 billion cycles every second (_per core_).
 
-![assembly 3](../../images/assembly_3.png)
+![assembly 3](../../../images/assembly_3.png)
 
 Modern processors have a multi-core design, allowing them to have multiple cycles at the same time.
 
@@ -250,7 +250,7 @@ Modern processors have a multi-core design, allowing them to have multiple cycle
 
 ... is the cycle it takes the CPU to process a single machine instruction.
 
-![assembly 4](../../images/assembly_4.png)
+![assembly 4](../../../images/assembly_4.png)
 
 An instruction cycle consists of four stages: **fetch**, **decode**, **execute**, and **store**:
 
@@ -263,7 +263,7 @@ An instruction cycle consists of four stages: **fetch**, **decode**, **execute**
 
 Each Instruction Cycle takes multiple clock cycles to finish, depending on the CPU architecture and the complexity of the instruction. Once a single instruction cycle ends, the CU increments to the next instruction and runs the same cycle on it, and so on.
 
-![assembly 5](../../images/assembly_5.png)
+![assembly 5](../../../images/assembly_5.png)
 
 For example, if you were to execute the assembly instruction ```add rax, 1```, it would run through an instruction cycle:
 
@@ -274,7 +274,7 @@ For example, if you were to execute the assembly instruction ```add rax, 1```, i
 
 In the past, processors used to process instructions sequentially, so they had to wait for one instruction to finish to start the next. On the other hand, modern processors can process multiple instructions in parallel by having multiple instruction/clock cycles running at the same time. This is made possible by having a multi-thread and multi-core design.
 
-![assembly 6](../../images/assembly_6.png)
+![assembly 6](../../../images/assembly_6.png)
 
 ### Processor Specific
 
@@ -405,7 +405,7 @@ There are two main types of registers:
 
 Each 64-bit register can be further divided into smaller sub-registers containing the lower bits, at ony byte 8-bits, 2 bytes 16 bits, and 4 bytes 32 bits. Each sub-register can be used and accessed on its own, so you don't have to consume the full 64-bits if you have a smaller amount of data.
 
-![assembly 7](../../images/assembly_7.png)
+![assembly 7](../../../images/assembly_7.png)
 
 Sub-registers can be accessed as:
 
@@ -445,7 +445,7 @@ Another example that shows how this can affect the stored values in binary. If y
 
 The big-endian processors would store these bytes as ```00000001 10101010``` left-to-right, while little-endian processors store them as ```10101010 00000001``` right-to-left. When retrieving the value, the processor has to use the same endianness used when storing them, or it will get the wrong value. This indicates that the order in which the bytes are stored/retrieved makes a big difference.
 
-![assembly 8](../../images/assembly_8.png)
+![assembly 8](../../../images/assembly_8.png)
 
 > [!NOTE]
 > Little-endian byte order is used with Intel/AMD x86 in most modern OS, so the shellcode is always represented right-to-left.
@@ -500,7 +500,7 @@ This Assembly code should print the string "Hello HTB Academy!" to the screen.
 
 First, examine the way the code is distributed:
 
-![assembly 9](../../images/assembly_9.png)
+![assembly 9](../../../images/assembly_9.png)
 
 Looking at the vertical parts of the code, each line can have three elements:
 

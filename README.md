@@ -153,8 +153,8 @@ Non-Relational
 
 ## Programming
 
-- [Assembly](./general/programming/assembly.md)
-- [Python](./general/programming/python.md)
+- [Assembly](./general/programming/assembly/assembly.md)
+- [Python](./general/programming/python/python.md)
 
 ## RegEx
 
