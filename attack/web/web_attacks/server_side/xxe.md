@@ -15,6 +15,9 @@
   - [Blind Data Exfiltration](#blind-data-exfiltration)
     - [Out-of-band Data Exfiltration](#out-of-band-data-exfiltration)
     - [Automated OOB Exfiltration](#automated-oob-exfiltration)
+  - [XXE Prevention](#xxe-prevention)
+    - [Avoiding Outdated Components](#avoiding-outdated-components)
+    - [Using Safe XML Configs](#using-safe-xml-configs)
 
 ---
 
@@ -459,3 +462,31 @@ root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
 ...SNIP..
 ```
+
+## XXE Prevention
+
+### Avoiding Outdated Components
+
+While other input validation web vulns are usually prevented through secure coding practices, this is not entirely necessary to prevent XXE vulns. This is because XML input is usually not handled manually by the web developers but by the built-in XML libraries instead. So, if a web app is vulnerable to XXE, this is very likely due to an outdated library that parses the the XML data.
+
+In addition to updating the XML libraries, you should also update any components that parse XML input, such as API libraries like SOAP. Furthermore, any document or file processors that may perform XML parsing, like SVG image processors or PDF document processors, may also be vulnerable to XXE vulns, and you should update them as well.
+
+These issues are not exclusive to XML libraries only, as the same applies to all other web components. In addition to common package managers, common code editors will notify web devs of the use of outdated components and suggest other alternatives. In the end, using the latest XML libraries and web development components can greatly help reduce various web vulns.
+
+### Using Safe XML Configs
+
+Other than using the latest XML libraries, certain XML configs for web apps can help reduce the possibility of XXE exploitation. These include:
+
+- disable referencing custom Document Type Definitions
+- disable referencing External XML Entities
+- disable Parameter Entity processing
+- disable support for XInclude
+- prevent Entity Reference Logs
+
+Another thing you saw was Error-based XXE exploitation. So you should always have proper exception handling in your web apps and should always disable displaying runtime errors in web servers.
+
+Such configs should be another layer of protection if you miss updating some XML libraries and should also prevent XXE exploitation. However, you may still be using vulnerable libraries in such cases and only applying workarounds against exploitation, which is not ideal.
+
+With the various issues and vulnerabilities introduced by XML data, many also recommend using other formats, such as JSON or YAML. This also includes avoiding API standards that rely on XML and using JSON-based APIs instead.
+
+Finally, using WAFs is another layer of protection against XXE exploitation. However, you should never entirely rely on WAFs and leave the back-end vulnerable, as WAFs can always be bypassed.
