@@ -107,3 +107,84 @@ Finally, the ```include``` function may be used to render local files or remote 
 | ```@Html.RemotePartial()``` | YES | NO | YES |
 | ```Response.WriteFile()``` | YES | NO | NO |
 | ```include()``` | YES | YES | YES |
+
+## Local File Inclusion
+
+### Basic LFI
+
+Exmaple of a webpage:
+
+![lfi 1](../../../../images/lfi1.png)
+
+If you select a language by clicking on it, you see that the content text changes to it.
+
+![lfi 2](../../../../images/lfi2.png)
+
+You also notice that the URL includes a ```language``` parameter that is now set to the language you selected. There are several ways the content could be changed to match the language you specified. It may be pulling the content from a different database table based on the specified parameter, or it may be loading an entirely different version of the web app. However, as previously disccused, loading part of the page using template engines is the easiest and most common method utilized.
+
+So, if the web app is indeed pulling a file that is now being included in the page, you may be able to change file being pulled to read the content of a different local file. Two common readable files that are available on most back-end servers are ```/etc/passwd``` on Linux and ```C:\Windows\boot.ini``` on Windows.
+
+![lfi 3](../../../../images/lfi3.png)
+
+As you can see, the page is indeed vulnerable, and you are able to read the content of the ```passwd``` file.
+
+### Path Traversal
+
+In the earlier example, you read a file by specifying its absolute path. This would work if the whole input was used within the ```include()``` function without any additions, like the following example:
+
+```php
+include($_GET['language']);
+```
+
+In this case, if you try to read ```/etc/passwd```, then the include function would fetch that file directly. However, in many occasions, web devs may append or prepend a string to the ```language``` parameter. For example, the ```language``` parameter may be used for the filename, and may be added after a directory:
+
+```php
+include("./languages/" . $_GET['language']);
+```
+
+In this case, if you attempt to read ```/etc/passwd```, then the path passed to ```include()``` would be ```.languages//etc/passwd```, and as this file does not exist, you will not be able to read anything.
+
+You can easily, bypass this restriction by traversing directories using relative paths. To do so, you can add ```../``` before your file name, which refers to the parent directory. For example, if the full path of the language directory is ```/var/wwww/html/language```, then using ```../index.php``` would refer to the ```index.php``` file on the parent directory.
+
+So, you can sue this trick to go back several directories until you reach the root path, and then specify your absolute file path, and the file should exist.
+
+![lfi 4](../../../../images/lfi4.png)
+
+As you can see, this time you were able to read the file regardless of the directory you were in. This trick would work even if the entire parameter was used in the ```include()``` function, so you can default to this technique, and it should work in both cases. Furthermore, if you were at the root path and used ```../``` then you would still remain in the root path. So, if you were not sure if the directory the app is in, you can add ```../``` many times, and it should not break the path.
+
+### Filename Prefix
+
+In the previous example, you used the ```language``` parameter after the directory, so you could traverse the path to read the ```passwd```. On some occasions, you input may be appended after a different string. For example, it may be used with a prefix to get the full filename:
+
+```php
+include("lang_" . $_GET['language']);
+```
+
+In this case, if you try to traverse the directory with ```../../../etc/passwd```, the final string would be ```lang_../../../etc/passwd```, which is invalid.
+
+Instead, you can prefix a ```/``` before your payload, and this should consider the prefix as a directory, and then you should bypass the filename and be able to traverse directories:
+
+![lfi 5](../../../../images/lfi5.png)
+
+> [!NOTE]
+> This may not always work, as in this example a directory named ```lang_``` may not exist, so your relative path may not be correct. Furthermore, any prefix appended to your input may break some file inclusion techniques, like using PHP wrappers and filters or RFI.
+
+### Appended Extensions
+
+Another very common example, is when an extension is appended to the ```language``` parameter:
+
+```php
+include($_GET['language'] . ".php");
+```
+
+This is quite common, as in this case, you would not have to write the extension every time you need to change the language. This may also be safer as it may restrict you to only including PHP files. In this case, if you try to read ```/etc/passwd```, then the file included would be ```/etc/passwd.php```, which does not exist.
+
+### Second Order Attacks
+
+Another common LFI attack is a Second Order Attack. This occurs because many web application functionalities may be insecurely pulling files from the back-end server based on user-controlled parameters.
+
+For example, a web app may allow you to download your avatar through a URL like ```/profile/$username/avatar.png```. If you craft a malicious LFI username, then it may be possible to change the file being pulled to another local file on the server and grab it instead of your avatar.
+
+In this case, you could be poisining a database entry with a malicious LFI payload in your username. Then, another web application functionality would utilize this poisened entry to perform your attack. This is why this attack is called Second Order Attack.
+
+Devs often overlook these vulnerabilities, as they may protect against direct user input, but they may trust values pulled from their database, like your username in this case. If you managed to poison your username during your registration, then the attack would be possible.
