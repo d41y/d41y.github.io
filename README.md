@@ -79,7 +79,7 @@ Injections
     - [SQLMap](./attack/web/web_attacks/injection_attacks/sqli.md#sqlmap)
 
 Server-side
-  - [File Inclusion]()
+  - [File Inclusion](./attack/web/web_attacks/server_side/file_inclusion.md)
   - [File Upload Attack](./attack/web/web_attacks/server_side/file_upload_attacks.md)
   - [HTTP Verb Tampering](./attack/web/web_attacks/server_side/http_verb_tampering.md)
   - [IDOR](./attack/web/web_attacks/server_side/idor.md)
