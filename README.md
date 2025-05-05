@@ -145,7 +145,7 @@ Relational
 
 Non-Relational
 
-- [Neo4J]()k
+- [Neo4J]()
 
 ## Processes
 
