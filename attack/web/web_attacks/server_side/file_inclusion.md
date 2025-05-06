@@ -1,5 +1,22 @@
 - [File Inclusion](#file-inclusion)
   - [Intro](#intro)
+    - [Examples of Vulnerable Code - PHP](#examples-of-vulnerable-code---php)
+    - [Examples of Vulnerable Code - NodeJS](#examples-of-vulnerable-code---nodejs)
+    - [Examples of Vulnerable Code - Java](#examples-of-vulnerable-code---java)
+    - [Examples of Vulnerable Code - .NET](#examples-of-vulnerable-code---net)
+  - [Local File Inclusion](#local-file-inclusion)
+    - [Basic LFI](#basic-lfi)
+    - [Path Traversal](#path-traversal)
+    - [Filename Prefix](#filename-prefix)
+    - [Appended Extensions](#appended-extensions)
+    - [Second Order Attacks](#second-order-attacks)
+  - [Basic Bypasses](#basic-bypasses)
+    - [Non-Recursive Path Traversal Filters](#non-recursive-path-traversal-filters)
+    - [Encoding](#encoding)
+    - [Approved Paths](#approved-paths)
+    - [Appended Extension](#appended-extension)
+      - [Path Truncation](#path-truncation)
+      - [Null Bytes](#null-bytes)
 
 ---
 
@@ -188,3 +205,82 @@ For example, a web app may allow you to download your avatar through a URL like 
 In this case, you could be poisining a database entry with a malicious LFI payload in your username. Then, another web application functionality would utilize this poisened entry to perform your attack. This is why this attack is called Second Order Attack.
 
 Devs often overlook these vulnerabilities, as they may protect against direct user input, but they may trust values pulled from their database, like your username in this case. If you managed to poison your username during your registration, then the attack would be possible.
+
+## Basic Bypasses
+
+### Non-Recursive Path Traversal Filters
+
+One of the most basic filters against LFI is a search and replace filter, where it simply deletes substrings of ```../``` to avoid path traversals:
+
+```php
+$language = str_replace('../', '', $_GET['language']);
+```
+
+The above code is supposed to prevent path traversal, and hece renders LFI useless.
+
+![lfi 6](../../../../images/lfi6.png)
+
+You see that all ```../``` substrings were removed, which resulted in a final path being ```./languages/etc/passwd```. However, this filter is very insecure, as it is not recursively removing the substring, as it runs a single time on the input string and does not apply the filter on the output string. For example, if you use ```....//``` as your payload, then the filter would remove ```../``` and the output string would be ```../```, which means you may still perform path traversal.
+
+![lfi 7](../../../../images/lfi7.png)
+
+The inclusion was successful this time, you're able to read ```/etc/passwd``` successfully. The ```....//``` substring is not the only bypass you can use, as you may use ```..././``` or ```....\/``` and several other recursive LFI payloads. Furthermore, in some cases, escaping the forward slash char may also work to avoid path traversal filters, or adding extra forward slashes.
+
+### Encoding
+
+Some web filters may prevent input filters that include certain LFI-related chars, like a ```.``` or a ```/``` used for path traversals. However, some of these filters may be bypassed by URL encoding your input, such that it would no longer include these bad characters, but would still be decoded back to your path traversal string once it reaches the vulnerable function. Core PHP filters on versions 5.3.4 and earlier were specifically vulnerable to this bypass, but even on newer versions you may find custom filters that may be bypassed through URL encoding.
+
+If the target web app did not allow ```.``` and ```/``` in your input, you can URL encode ```../``` into ```%2e%2e%2f```, which may bypass the filter.
+
+![lfi 8](../../../../images/lfi8.png)
+
+As you can see, you were also able to successfully bypass the filter and use path traversal to read ```/etc/passwd```.
+
+### Approved Paths
+
+Some web apps may also use Regex to ensure that the file being included is under a specific path. For example, the web app you have been dealing with may only accept paths that are under the ```./language``` directory:
+
+```php
+if(preg_match('/^\.\/languages\/.+$/', $_GET['language'])) {
+    include($_GET['language']);
+} else {
+    echo 'Illegal path specified!';
+}
+```
+
+To find the approved path, you can examine the requests sent by the existing forms, and see what path they use for the normal web functionality. Furthermore, you can fuzz web directories under the same path, and try different ones until you get a match. To bypass this, you may use path traversal and start your payload with the approved path, and then use ```../``` to go back to the root directory and read the file you specify.
+
+![lfi 9](../../../../images/lfi9.png)
+
+Some web apps may apply this filter along with one of the earlier filters, so you may combine both techniques by starting your payload with the approved path, and then URL encode your payload or use recursive payload.
+
+### Appended Extension
+
+There are a couple of techniques you may use, but they are obsolete with modern versions of PHP and only work with PHP versions before 5.3/5.4.
+
+#### Path Truncation
+
+In earlier versions of PHP, defined strings have a maximum length of 4096 chars, likely due to the limitation of 32-bit systems. If a longer string is passed, it will simply be truncated, and any chars after the maximum length will be ignored. Furthermore, PHP also used to remove trailing slashes and single dots in path names, so if you call ```/etc/passwd/.``` then the ```./``` would also be truncated, and PHP would call ```/etc/passwd```. PHP, and Linux systems in general, also disregard multiple slashes in the path. Similarly, a current directory shortcut ```.``` in the middle of the path would also be disregarded.
+
+If you combine both of these techniques of the PHP limitations together, you can create very long strings that evaluate to a correct path. Whenever you reach th 4096 char limitation, the appended extension ```.php``` would be truncated, and you would have a path without an appended extension. Finally, it is also important to note that you would also need to start the path with a non-existing directory for this technique to work.
+
+Example:
+
+```
+?language=non_existing_directory/../../../etc/passwd/./././././ [REPEATED ~2048 times]
+```
+
+Command to automate the creation of this string:
+
+```bash
+d41y@htb[/htb]$ echo -n "non_existing_directory/../../../etc/passwd/" && for i in {1..2048}; do echo -n "./"; done
+non_existing_directory/../../../etc/passwd/./././<SNIP>././././
+```
+
+You may also increase the count of ```../```, as adding more would still land you in the root directory, as explained in the previous section. However, if you use this method, you should calculate the full length of the string to ensure only ```.php``` gets truncated and not your requested file at the end of the string. This is why it would be easier to use the first method.
+
+#### Null Bytes
+
+PHP versions before 5.5 were vulnerable to null byte injection, which means that adding a ```%00``` at the end of the string would terminate the string and not consider anything after it. This is due to how strings are stored in low-level memory, where strings in memory must use a null byte to indicate the end of the string, as seen in Assembly, C, or C++ languages.
+
+To exploit this vuln, you can end your payload with a null byte ```/etc/passwd%00```, such that the final path passed to ```include()``` would be ```/etc/passwd%00.php```. This way, even though ```.php``` is appended to your string, anything after the null byte would be truncated, and so the path used would actually be ```/etc/passwd```, leading you to bypass the appended extension.
