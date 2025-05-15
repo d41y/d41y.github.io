@@ -43,6 +43,9 @@
         - [Uploaded File Path](#uploaded-file-path)
       - [Zip Upload](#zip-upload)
       - [Phar Uploads](#phar-uploads)
+    - [Log Poisoning](#log-poisoning)
+      - [PHP Session Poisoning](#php-session-poisoning)
+      - [Server Log Poisoning](#server-log-poisoning)
 
 ---
 
@@ -676,3 +679,101 @@ d41y@htb[/htb]$ php --define phar.readonly=0 shell.php && mv shell.phar shell.jp
 Now, you would have a phar file called ```shell.jpg```. Once you upload it to the web app, you can simply call it with ```phar://``` and provide its URL path, and then specify the phar sub-file with ```/shell.txt``` (_URL encoded_) to get the output of the command you specify.
 
 ![lfi 20](../../../../images/lfi20.png)
+
+### Log Poisoning
+
+These attacks rely on written PHP code that gets logged into a log file, and then including that log file to execute PHP code.
+
+Any of the following functions with ```Execute``` privileges should be vulnerable to these attacks:
+
+| Function | Read Content | Execute | Remote URL |
+| -------- | ------------ | ------- | ---------- |
+| **PHP** |||
+| ```include()``` / ```include_once()``` | YES | YES | YES |
+| ```require()``` / ```require_once()``` | YES | YES | NO |
+| **NodeJS** |||
+| ```res.render()``` | YES | YES | NO |
+| **Java** |||
+| ```import``` | YES | YES | YES |
+| **.NET** |||
+| ```include``` | YES | YES | YES |
+
+#### PHP Session Poisoning
+
+Most PHP web apps utilize ```PHPSESSID``` cookies, which can hold specific user-related data on the back-end, so the web app can keep track of user details through their cookies. These details are stored in session files on the back-end, and saved in ```/var/lib/php/sessions/``` on Linux and in ```C:\Windows\Temp``` on Windows. The name of the file that contains your user's data matches the name of your ```PHPSESSID``` cookie with the ```sess_``` prefix like ```/var/lib/php/sessions/sess_el4ukv0kqbvoirg7nkp4dncpk3```.
+
+The first thing you need to do in a PHP Session Poisoning Attack is to examine your PHPSESSID file and see if it contains any data you can control and poison.
+
+![lfi 21](../../../../images/lfi21.png)
+
+As you can see, your PHPSESSID cookie value is ```nhhv8i0o6ua4g88bkdl9u1fdsd```, so it should be stored at ```/var/lib/php/sessions/sess_nhhv8i0o6ua4g88bkdl9u1fdsd```. When trying to include:
+
+![lfi 22](../../../../images/lfi22.png)
+
+You can see that the session file contains two values: ```page```, which shows the selected language page, and ```preference```, which shows the selected language. The ```preference``` value is not under your control, as you did not specify it anywhere and must be automatically specified. However, the ```page``` value is under your control, as you can control it through the ```?language=``` parameter.
+
+Try setting the value of ```page``` a custom value and see if it changes in the session file. You can do so by simply visiting the page with ```?language=session_poisoning```.
+
+```
+http://<SERVER_IP>:<PORT>/index.php?language=session_poisoning
+```
+
+When including again:
+
+![lfi 23](../../../../images/lfi23.png)
+
+This time, the session file contains ```session_poisoning``` instead of ```es.php```, which confirms your ability to control the value of ```page``` in the session file. Your next step is to perform the ```poisoning``` step by writing PHP code to the session file. You can write a basic PHP web shell by changing the ```?language=``` parameter to a URL encoded web shell:
+
+```
+http://<SERVER_IP>:<PORT>/index.php?language=%3C%3Fphp%20system%28%24_GET%5B%22cmd%22%5D%29%3B%3F%3E
+```
+
+Finally, you can include the session file and use the ```&cmd=id``` to execute commands:
+
+![lfi 24](../../../../images/lfi24.png)
+
+#### Server Log Poisoning
+
+Both Apache and Nginx maintain various log files, such as ```access.log``` and ```error.log```. The ```access.log``` file contains varios information about all requests made to the server, including each request's User-Agent header. As you can control the User-Agent in your requests, you can use it to poison the server logs as you did above.
+
+Once poisoned, you need to include the logs through the LFI vuln, and for that you need to have read-access over the logs. Nginx logs are readable by low privileged users by default, while the Apache logs are only readable by users with high privileges. However, in older or misconfigured Apache servers, these logs may be readable by low-privileged users.
+
+By default, Apache logs are located in ```/var/log/apache2/``` on Linux and in ```C:\xampp\apache\logs\``` on Windows, while Nginx logs are located in ```/var/log/nginx/``` on Linux and in ```C:\nginx\log\``` on Windows. However, the logs may be in a different location in some cases, so you may use a LFI wordlist to fuzz for their locations.
+
+Try including the Apache access log:
+
+![lfi 25](../../../../images/lfi25.png)
+
+As you can see, you can the read the log. The log contains the remote IP address, request page, response code, and the User-Agent header. As mentioned earlier, the User-Agent header is controlled by you through th HTTP request headers, so you should be able to poison this value.
+
+To do so, you can use Burp:
+
+![lfi 26](../../../../images/lfi26.png)
+
+As expected, you custom User-Agent value is visible in the included log file. Now, you can poison the User-Agent header by setting it to a basic PHP web shell.
+
+![lfi 27](../../../../images/lfi27.png)
+
+You may also poison the log by sending a request through cURL.
+
+```bash
+d41y@htb[/htb]$ echo -n "User-Agent: <?php system(\$_GET['cmd']); ?>" > Poison
+d41y@htb[/htb]$ curl -s "http://<SERVER_IP>:<PORT>/index.php" -H @Poison
+```
+
+As the log should now contain PHP code, the LFI vuln should execute this code, and you should be able to gain RCE.
+
+![lfi 28](../../../../images/lfi28.png)
+
+You see that you successfully executed the command. The exact same attack can be carried out on Nginx logs as well.
+
+> [!TIP]
+> The ```User-Agent``` header is also shown on process files under the Linux ```/proc/``` directory. So, you can try including the ```/proc/self/environ``` or ```/proc/self/fd/N```  files (_where N is a PID usually between 0-50_), and you may be able to perform the same attack on these files. This may become handy in case you did not have read access over the server logs, however, these files may only be readable by privileged users as well.
+
+Finally, there are other similar log poisoning techniques that you ma utilize on various system logs, depending on which logs you have read access over. The following are some of the service logs you may be able to read:
+
+- ```/var/log/sshd.log```
+- ``` /var/log/mail ```
+- ``` /var/log/vsftpd.log ```
+
+You should first attempt reading these logs through LFI, and if you do have access to them, you can try to poison them as you did above. For example, if the ssh of ftp services are exposed to you, you can read their logs through LFI, then you can try logging into them and set the username to PHP code, and upon including their logs, the PHP code would execute. The same applies to the mail services, as you can send an email containing PHP code, and upon its log inclusion, the PHP code would execute. You can generalize this technique to any logs that log a parameter you control and that you can read through the LFI vuln.
