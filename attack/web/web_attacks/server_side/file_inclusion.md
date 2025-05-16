@@ -53,6 +53,11 @@
       - [Server Webroot](#server-webroot)
       - [Server Logs/Configs](#server-logsconfigs)
     - [LFI Tools](#lfi-tools)
+    - [Prevention](#prevention)
+      - [File Inclusion Prevention](#file-inclusion-prevention)
+      - [Preventing Directory Traversal](#preventing-directory-traversal)
+      - [Web Server Configuration](#web-server-configuration)
+      - [WAF](#waf)
 
 ---
 
@@ -957,3 +962,45 @@ As you can see, the ```APACHE_LOG_DIR``` variable is set to ```/var/log/apache2`
 ### LFI Tools
 
 Finally, you can utilize a number of LFI tools to automate much of the process, which may save some time in some cases, but may also miss many vulnerabilities and files you may otherwise identify through manual testing. The most common LFI tools are [LFISuite](https://github.com/D35m0nd142/LFISuite), [LFiFreak](https://github.com/OsandaMalith/LFiFreak), and [liffy](https://github.com/mzfr/liffy). You can also search GitHub for various other LFI tools and scripts.
+
+### Prevention
+
+#### File Inclusion Prevention
+
+The most effective thing you can do to reduce file inclusion vulns is to avoid passing any user-controlled inputs into any file inclusion function or APIs. The page should be able to dynamically load assets on the back-end, with no user interaction whatsoever. Furthermore, whenever one of the above potentially vulnerable functions is used, you should ensure that no user input is directly going into them. You should therefore generally consider any function that can read files. In some cases, this may not be feasible, as it may require changing the whole architecture of an existing web app. In such cases, you should utilize a limited whitelist of allowed user inputs, and match each input to the file to be loaded, while having a default value for all other inputs. If you are dealing with an existing app, you can create a whitelist that contains all existing paths in the front-end, and then utilize this list to match the user input. Such a whitelist can have many can have many shapes, like a database table that matches IDs to files, a case-match script that matches names to files, or even a static json map with names and files that can be matched.
+
+Once this is implemented, the user input is not going into the function, but the matched files are used in the function, which avoids file inclusion vulns.
+
+#### Preventing Directory Traversal
+
+If attackers can control the directory, they can escape the web app and attack something they are more familiar with or use an universal attack chain.
+
+The best way to prevent directory traversals is to use your programming language's built-in tool to pull only the filename. For example, PHP has ```basename()```, which will read the path and only return the filename portion. If only a filename is given, then it will return just the filename. if just the path is given, it will treat whatever is after the final ```/``` as the filename. The downside to this method is that if the app needs to enter any directory, it will not be able to do so.
+
+If you create your own function to do this method, it is possible you are not accounting for a weird edge case. For example, in your bash terminal, if you go into your home directory and run the command ```cat .?/.*/.?/etc/passwd```. You will see Bash allows for the ```?``` and ```*``` wildcards to be used as a ```.```. Now if you type ```php -a``` to enter the PHP Command Line interpreter and run ```echo file_get_contents('.?/.*/.?/etc/passwd');```, you will see PHP does not have the same behaviour with the wildcards. If you replace ```?``` and ```*``` with ```.```, the command will work as expected. This demonstrates there is an edge case with the above function. If you have PHP execute bash with the ```system()``` function, the attacker would be able to bypass your directory traversal prevention. If you use native functions to the framework you are in, there is a chance other users would catch edge cases like this and fix it before it gets exploited in your web app.
+
+Furthermore, you can sanitize the user input to recursively remove any attempts of traversing directories:
+
+```php
+while(substr_count($input, '../', 0)) {
+    $input = str_replace('../', '', $input);
+};
+```
+
+As you can see, this code recursively removes ```../``` sub-strings, so even if the resulting string contains ```../``` it would still remove it, which would prevent some of the bypasses.
+
+#### Web Server Configuration
+
+Several configs may also be utilized to reduce the impact of file inclusion vulns in case they occur. For example, you should globally disable the inclusion of remote files. In PHP this can be done by setting ```allow_url_fopen``` and ```allow_url_include``` to Off.
+
+It's also often possible to lock web apps to their web root directory, preventing them from accessing non-web related files. The most common way to do this is by running the app within Docker. However, if that is not an option, many languages often have a way to prevent accessing files outside of the web directory. In PHP that can be done by adding ```open_basedir = /var/www``` in the php.ini file. Furthermore, you should ensure that certain potentially dangerous modules are disabled, like the PHP ```expect://``` wrapper and the PHP module ```mod_userdir```.
+
+If these configs are applied, it should prevent accessing files outside the web application folder, so even if an LFI vuln is identified, its impact would be reduced.
+
+#### WAF
+
+The universal way to harden apps is to utilize WAFs, such as ModSecurity. When dealing with WAFs, the most important thing to avoid is false positives and blocking non-malicious requests. ModSecurity minimizes false positives by offering a permissive mode, which will only report things it would have blocked. This lets defenders tune the rules to make sure no legitimate request is blocked. Even if the organization never wants to turn the WAF to "blocking mode", just having it in permissive mode can be an early warning sign that your application is being attacked.
+
+Finally, it is important to remember that the purpose of hardening is to give the application a stronger exterior shell, so when an attack does happen, the defenders have time to defend. According to the FireEye M-Trends Report of 2020, the average time it took a company to detect hackers was 30 days. With proper hardening, attackers will leave many more signs, and the organization will hopefully detect these events even quicker.
+
+It is important to understand the goal of hardening is not to make your system un-hackable, meaning you cannot neglect watching logs over a hardened system because it is "secure". Hardened systems should be continually tested, especially after a zero-day is released for a relatedd application to your system. In most cases, the zero-day would work, but thanks to hardening, it may generate unique logs, which made it possible to confirm the exploit was used against the system or not.
