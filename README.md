@@ -160,6 +160,8 @@ Non-Relational
 
 ## Reporting
 
+- [Bug Bounty Report]()
+
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
