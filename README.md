@@ -91,6 +91,8 @@ Server-side
   - [XXE](./attack/web/web_attacks/server_side/xxe.md)
 
 Web Service & API
+- [Web Service]()
+- [APIs]()
 
 ### Authentication
 
