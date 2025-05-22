@@ -23,6 +23,16 @@
       - [Install Modules in venv](#install-modules-in-venv)
       - [Automatically Activating venv](#automatically-activating-venv)
       - [Executind and Deactivating](#executind-and-deactivating)
+    - [Lists](#lists)
+      - [List Methods](#list-methods)
+      - [Making Copies of Lists](#making-copies-of-lists)
+      - [Convert Strings to Lists with .split()](#convert-strings-to-lists-with-split)
+      - [Convert Lists to Strings](#convert-lists-to-strings)
+      - [Useful functions that work on Lists](#useful-functions-that-work-on-lists)
+      - [map()](#map)
+      - [Sorting Lists](#sorting-lists)
+      - [Sorting Lists - Example](#sorting-lists---example)
+    - [For and While Loops](#for-and-while-loops)
 
 
 ---
@@ -351,3 +361,153 @@ from freq.py import Freq
 # points to the python interpreter in venv, and will be able to find the modules that are part of that venv
 ```
 
+### Lists
+
+#### List Methods
+
+```python
+>>> movies = ["life of brian", "meaning of life"]
+>>> movies.index("meaning of life")
+1
+# finds item in list
+>>> movies.insert(1, "holy grail")
+# puts at position 1
+>>> movies.index("meaning of life")
+2
+>>> movies.append("free willie")
+# add to the end
+>>> movies
+['life of brian', 'holy grail', 'meaning of life', 'free willie']
+>>> movies.remove("free willie")
+# removes item
+>>> movies
+['life of brian', 'holy grail', 'meaning of life']
+>>> movies.insert(0, "secret policemans ball")
+# adds new element at position zero
+>>> movies
+['secret policemans ball', 'life of brian', 'holy grail', 'meaning of life']
+>>> movies.remove("secret policemans ball")
+>>> movies
+['life of brian', 'holy grail', 'meaning of life']
+>>> movies.reverse()
+# reverses the list
+>>> movies
+['meaning of life', 'holy grail', 'life of brian']
+>>> del movies[0]
+# removes item (use when item's position is known)
+>>> movies
+['holy grail', 'life of brian']
+```
+
+#### Making Copies of Lists
+
+```python
+>>> alist = ["elements", "in a list", 500, 4.299999998]
+>>> blist = alist
+# makes a pointer, not a copy
+>>> blist.append("add this to the list")
+>>> blist
+['elements', 'in a list', 500, 4.299999998, 'add this to the list']
+>>> alist
+['elements', 'in a list', 500, 4.299999998, 'add this to the list']
+>>> clist = list(alist)
+# makes a copy, not a pointer
+>>> clist.remove(500)
+>>> clist
+['elements', 'in a list', 4.299999998, 'add this to the list']
+>>> alist
+['elements', 'in a list', 500, 4.299999998, 'add this to the list']
+```
+
+#### Convert Strings to Lists with .split()
+
+```python
+>>> "this is a string converted to a list".split()
+['this', 'is', 'a', 'string', 'converted', 'to', 'a', 'list']
+>>> "'comma', 'delimited', '1.2'".split(",")
+["'comma'", " 'delimited'", " '1.2'"]
+>>> "this is a list with is in it".split("is")
+['th', ' ', ' a l', 't with ', ' in it']
+# no arguments -> splits on white space
+# argument given -> splits on that string
+```
+
+#### Convert Lists to Strings
+
+```python
+>>> " ".join(["SEC573", "is", "awesome!"])
+'SEC573 is awesome!'
+>>> ",".join(["Make","a","csv"])
+'Make,a,csv'
+>>> "".join(["SEC573", "is", "awesome!"])
+'SEC573isawesome!'
+# the string whose method is being called is used as a separator
+```
+
+#### Useful functions that work on Lists
+
+```python
+>>> sum([2,4,6])
+12
+# adds all integers
+>>> list(zip([1,2],['a','b']))
+[(1, 'a'), (2, 'b')]
+# groups together items at position 0 from each input list followed by the items at position 1, and so on
+>>> list(zip([1,2],['a','b'],[4,5,6]))
+[(1, 'a', 4), (2, 'b', 5)]
+# only works if there is a value in the given position for each of the feeder lists
+```
+
+#### map()
+
+```python
+>>> list(map(ord,["A","B","C"]))
+[65, 66, 67]
+# run function on list
+>>> list(map(ord,"ABC"))
+[65, 66, 67]
+# run function on iterable
+>>> def addint(x,y): return int(x)+int(y) 
+>>> list(map(addint, [1,'2',3],['4',5,6]))
+[5, 7, 9]
+# can act as a custom zipper
+```
+
+#### Sorting Lists
+
+```python
+>>> a = [2,1,4,5,6]
+>>> a
+[2, 1, 4, 5, 6]
+>>> a.sort()
+>>> a
+[1, 2, 4, 5, 6]
+>>> a = [2,1,4,5,6]
+>>> a.sort(reverse=True)
+>>> a
+[6, 5, 4, 2, 1]
+```
+
+#### Sorting Lists - Example
+
+```python
+>>> customers = ["Mike Passel", "alice Passel", "danielle Clayton"]
+>>> sorted(customers)
+['Mike Passel', 'alice Passel', 'danielle Clayton']
+>>> def lowercase(fullname):
+...     return fullname.lower()
+...
+# creates a function to lowercase the name
+>>> sorted(customers, key=lowercase)
+['alice Passel', 'danielle Clayton', 'Mike Passel']
+>>> def lastfirst(fullname):
+...     return (fullname.split() [1] + fullname.split() [0]).lower()
+...     
+# creates a function for right order and lowercase on interpretation
+>>> lastfirst("FNAME LNAME")
+'lnamefname'
+>>> sorted(customers, key=lastfirst)
+['danielle Clayton', 'alice Passel', 'Mike Passel']
+```
+
+### For and While Loops
