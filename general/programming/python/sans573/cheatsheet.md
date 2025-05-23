@@ -33,6 +33,16 @@
       - [Sorting Lists](#sorting-lists)
       - [Sorting Lists - Example](#sorting-lists---example)
     - [For and While Loops](#for-and-while-loops)
+      - [enumerate()](#enumerate)
+      - [Tuples](#tuples)
+    - [Dictionaries](#dictionaries)
+      - [Assigning/Retrieving Data from a Dictionary](#assigningretrieving-data-from-a-dictionary)
+      - [Copies of Dictionaries](#copies-of-dictionaries)
+      - [Common Methods](#common-methods)
+      - [Determine if Data is in a Dictionary](#determine-if-data-is-in-a-dictionary)
+      - [Looping through Dictionary Items](#looping-through-dictionary-items)
+      - [defaultdict()](#defaultdict)
+      - [Counter](#counter)
 
 
 ---
@@ -511,3 +521,166 @@ from freq.py import Freq
 ```
 
 ### For and While Loops
+
+#### enumerate()
+
+```python
+>>> movies = ["Life of Brian", "Holy Grail", "Meaning of Life"]
+>>> list(enumerate(movies))
+[(0, 'Life of Brian'), (1, 'Holy Grail'), (2, 'Meaning of Life')]
+>>> for index, value in enumerate(movies):
+...     print(f"{value} is in position {index}")
+...     
+Life of Brian is in position 0
+Holy Grail is in position 1
+Meaning of Life is in position 2
+# enumerate() returns an iterable object that will produce a list of tuples
+# first element is the index, second element is the value
+```
+
+#### Tuples
+
+```python
+>>> movie = ("Meaning of Life", "R")
+>>> movie
+('Meaning of Life', 'R')
+# lightweight lists
+# elements cannot be changed
+# like sticking multiple variables together into a single variable
+```
+
+### Dictionaries
+
+#### Assigning/Retrieving Data from a Dictionary
+
+```python
+>>> d = {}
+>>> d['a'] = 'alpha'
+>>> d['b'] = 'bravo'
+>>> d['c'] = 'charlie'
+>>> d['d'] = 'delta'
+>>> d['a']
+'alpha'
+>>> d['whatever']
+Traceback (most recent call last):
+  File "<python-input-11>", line 1, in <module>
+    d['whatever']
+    ~^^^^^^^^^^^^
+KeyError: 'whatever'
+# dicts can be accessed like a list with the key as the index
+>>> d.get("a", "not found")
+'alpha'
+>>> d.get("whatever", "not found")
+'not found'
+# .get() method for retrieving data
+```
+
+#### Copies of Dictionaries
+
+```python
+>>> dict1 = {1: 'c', 2: 'b', 3:'a'}
+>>> dict2 = dict1
+>>> dict2
+{1: 'c', 2: 'b', 3: 'a'}
+>>> dict2[4] = 'd'
+>>> dict1
+{1: 'c', 2: 'b', 3: 'a', 4: 'd'}
+# WRONG
+>>> dict1 = {1: 'c', 2: 'b', 3:'a'}
+>>> dict2 = dict(dict1)
+>>> dict2[4] = 'z'
+>>> dict2
+{1: 'c', 2: 'b', 3: 'a', 4: 'z'}
+>>> dict1
+{1: 'c', 2: 'b', 3: 'a'}
+# RIGHT
+```
+
+#### Common Methods
+
+```python
+>>> d
+{'a': 'alpha', 'b': 'bravo', 'c': 'charlie', 'd': 'delta'}
+>>> d.keys()
+dict_keys(['a', 'b', 'c', 'd'])
+# returns a view of the keys
+>>> d.values()
+dict_values(['alpha', 'bravo', 'charlie', 'delta'])
+# returns a view of the values
+>>> d.items()
+dict_items([('a', 'alpha'), ('b', 'bravo'), ('c', 'charlie'), ('d', 'delta')])
+# returns a view of tuples containing key and value
+
+# views can be iterated with a for loop like a list
+# a variabel assigned to a view will automatically be updated with any changes to the dict
+# cannot delete keys while stepping through views
+```
+
+#### Determine if Data is in a Dictionary
+
+```python
+>>> d
+{'a': 'alpha', 'b': 'bravo', 'c': 'charlie', 'd': 'delta'}
+>>> d.get("e")
+# bad key -> returns nothing
+>>> d["e"]
+Traceback (most recent call last):
+  File "<python-input-32>", line 1, in <module>
+    d["e"]
+    ~^^^^^
+KeyError: 'e'
+# bad key -> raises KeyError
+>>> "a" in d
+True
+>>> "alpha" in d
+False
+# 'in' searches keys
+>>> "alpha" in d.values()
+True
+# to search values use .values()
+```
+
+#### Looping through Dictionary Items
+
+```python
+>>> d
+{'a': 'alpha', 'b': 'bravo', 'c': 'charlie', 'd': 'delta'}
+>>> for eachkey, eachvalue in d.items():
+...     print(eachkey, eachvalue)
+...     
+a alpha
+b bravo
+c charlie
+d delta
+```
+
+#### defaultdict()
+
+```python
+>>> def new_val():
+...     return []
+...     
+>>> from collections import defaultdict
+>>> list_of_ips = defaultdict(new_val)
+>>> list_of_ips['scr#1'].append('dst')
+>>> list_of_ips['scr#2']
+[]
+>>> list_of_ips
+defaultdict(<function new_val at 0x7f03729afce0>, {'scr#1': ['dst'], 'scr#2': []})
+# defaultdict() calls the function you specify and returns that value instead of generating a key error
+```
+
+#### Counter
+
+```python
+>>> from collections import Counter
+>>> word_count = Counter()
+>>> word_count.update( open("mobydick.txt").read().lower().split())
+>>> word_count.most_common(10)
+[('the', 7018), ('of', 3500), ('and', 3155), ('a', 2539), ('to', 2375), ('in', 2100), (';', 1949), ('that', 1478), ('his', 1317), ('i', 1185)]
+>>> word_count["was"]
+852
+>>> word_count.update(["was", "is", "was", "am"])
+>>> word_count["was"]
+854
+```
