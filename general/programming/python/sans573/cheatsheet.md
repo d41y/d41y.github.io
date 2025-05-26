@@ -70,6 +70,11 @@
       - [RegEx Flags and Modifiers](#regex-flags-and-modifiers)
       - [Greedy Matching](#greedy-matching)
       - [NOT Custom Set](#not-custom-set)
+    - [RegEx Groups](#regex-groups)
+      - [Why Use Capture Groups](#why-use-capture-groups)
+      - [Capture Groups vs. Non Capture Groups](#capture-groups-vs-non-capture-groups)
+      - [search() and match() Groups](#search-and-match-groups)
+      - [Python Capturing Named Groups](#python-capturing-named-groups)
 
 
 ---
@@ -1141,5 +1146,59 @@ AttributeError: 'NoneType' object has no attribute 'group'
 >>> re.findall(r"[A-Z][^?.!]+", "Find. The sentences? Yes!")
 ['Find', 'The sentences', 'Yes']
 # [^"] in first position negates the set
+```
+
+### RegEx Groups
+
+#### Why Use Capture Groups
+
+```python
+>>> data = open("data", "r").read()
+>>> data
+'client 103.4.22.120#121212\nclient 103.1.22.120#121212\nclient 103.2.22.120#121212\nclient 103.3.22.120#121212\nclient 103.4.22.120#121212\n'
+>>> re.findall("client .*?#", data)
+['client 103.4.22.120#', 'client 103.1.22.120#', 'client 103.2.22.120#', 'client 103.3.22.120#', 'client 103.4.22.120#']
+# included things you don't want
+>>> re.findall("client (.*?)#", data)
+['103.4.22.120', '103.1.22.120', '103.2.22.120', '103.3.22.120', '103.4.22.120']
+# () generates a capture group
+```
+
+#### Capture Groups vs. Non Capture Groups
+
+```python
+>>> re.findall(r"(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[01])/\d\d", "13/31/99 12/32/50 01/19/00")
+[('01', '19')]
+# as soon as parantheses are added, you only get back what's inside the parantheses
+>>> re.findall(r"(?:0[1-9]|1[0-2])/(?:0[1-9]|[1-2][0-9]|3[01])/\d\d", "13/31/99 12/32/50 01/19/00")
+['01/19/00']
+# non capture groups group together parts of the regex without capturing
+```
+
+#### search() and match() Groups
+
+```python
+>>> srchstr = r"192.168.100.100-123.123.123.123-234.131.234.123"
+>>> result = re.search(r"(\d\d\d)\.(\d\d\d)\.(\d\d\d)\.(\d\d\d)", srchstr)
+>>> result.group()
+'192.168.100.100'
+>>> result.group(2)
+'168'
+# search() and match() return an object with a group() method that provides you with the result
+# .group() with no arguments returns the entire match, ignoring the groups if any were detected
+# .group(#) will return the information in a specific group
+# RegEx group numbers begin counting at 1
+```
+
+#### Python Capturing Named Groups
+
+```python
+>>> a = re.search(r"(?P<areacode>\d\d\d)-\d\d\d-\d\d\d\d", "814-422-5632")
+>>> a.group("areacode")
+'814'
+>>> a.group()
+'814-422-5632'
+# create a named group (?P<groupname>['\"])
+# use search or match.group("<groupname>") to retrieve the data
 ```
 
