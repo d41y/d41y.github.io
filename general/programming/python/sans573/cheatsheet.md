@@ -75,6 +75,31 @@
       - [Capture Groups vs. Non Capture Groups](#capture-groups-vs-non-capture-groups)
       - [search() and match() Groups](#search-and-match-groups)
       - [Python Capturing Named Groups](#python-capturing-named-groups)
+    - [RegEx Back References](#regex-back-references)
+    - [Sets](#sets)
+      - [Python Sets](#python-sets)
+      - [Useful Methods](#useful-methods)
+      - [Operators Automatically Call Methods](#operators-automatically-call-methods)
+      - [Making Copies of Sets](#making-copies-of-sets)
+    - [Analysis Techniques](#analysis-techniques)
+      - [geoip2 IP - Location Lookup](#geoip2-ip---location-lookup)
+      - [geoIP2 - Retrieving Record Details 1](#geoip2---retrieving-record-details-1)
+      - [geoIP2 - Retrieving Record Details 2](#geoip2---retrieving-record-details-2)
+      - [Detecting Randomness by Character Frequency](#detecting-randomness-by-character-frequency)
+      - [Build your own Frequency Table](#build-your-own-frequency-table)
+    - [Introduction to Scapy](#introduction-to-scapy)
+      - [Reading and Writing PacketLists](#reading-and-writing-packetlists)
+      - [sniff()'s Callback Functions](#sniffs-callback-functions)
+      - [Save Memory with PcapReader](#save-memory-with-pcapreader)
+      - [scapy.plist.PacketList](#scapyplistpacketlist)
+    - [Scapy Data Structures](#scapy-data-structures)
+      - [Following TCP Streams](#following-tcp-streams)
+      - [PacketLists have Packets, Packets have Layers](#packetlists-have-packets-packets-have-layers)
+      - [Packet Layers have Fields](#packet-layers-have-fields)
+    - [Packet Reassembly Issues](#packet-reassembly-issues)
+      - [Sorting Packets](#sorting-packets)
+      - [Eliminating Duplicate Packages](#eliminating-duplicate-packages)
+      - [Eliminating Bad Checksums](#eliminating-bad-checksums)
 
 
 ---
@@ -1202,3 +1227,357 @@ AttributeError: 'NoneType' object has no attribute 'group'
 # use search or match.group("<groupname>") to retrieve the data
 ```
 
+### RegEx Back References
+
+```python
+>>> data = r"<tag1>data1</tag1><tag8>data2</tag8>"
+>>> re.findall(r"<\w+>(.*?)</\w+>", data)
+['data1', 'data2']
+>>> data = r"<tag1><tag8>data1</tag8></tag1><tag2>data2</tag2>"
+>>> re.findall(r"<\w+>(.*?)</\w+>", data)
+['<tag8>data1', 'data2']
+# when nested, system falls apart
+>>> re.findall(r"<(\w+)>(.*?)</\1>", data)
+[('tag1', '<tag8>data1</tag8>'), ('tag2', 'data2')]
+# "\1" will let you refer back to the contents of capture group one
+# named groups can also be used
+# r"<(?<TAG>\w+)>(.*?)</(?P=TAG)>", data")
+```
+
+### Sets
+
+#### Python Sets
+
+```python
+>>> emptyset = set()
+>>> myset = set([1,2,3])
+>>> myset = {1,2,3}
+# create a set by calling set() or assigning {} with commas
+>>> myset
+{1, 2, 3}
+>>> myset = set([1,2,3])
+>>> myset.update([4,5,6])
+# can add everything from another list
+>>> myset.add("A")
+# adds one item
+>>> myset
+{1, 2, 3, 4, 5, 6, 'A'}
+>>> myset.remove(4)
+# removes a single item
+>>> myset.difference_update([2,5])
+# used to remove a list of items from a set
+>>> myset
+{1, 3, 6, 'A'}
+```
+
+#### Useful Methods
+
+```python
+>>> a = set([1,2,3])
+>>> b = set([3,4,5,])
+>>> a.union(b)
+{1, 2, 3, 4, 5}
+# adds the two sets together
+>>> a.difference(b)
+{1, 2}
+# returns the items that are in your set but in the set you are comparing it to
+>>> b.difference(a)
+{4, 5}
+>>> a.intersection(b)
+{3}
+# finds the overlap between the two sets
+>>> a.symmetric_difference(b)
+{1, 2, 4, 5}
+# returns all the items in the sets an removes the intersection from them
+```
+
+#### Operators Automatically Call Methods
+
+```python
+>>> a = set([1,2,3])
+>>> b = set([3,4,5,])
+>>> a ^ b
+{1, 2, 4, 5}
+# symmetric_difference
+>>> a | b
+{1, 2, 3, 4, 5}
+# union
+>>> a - b
+{1, 2}
+# difference
+>>> a & b
+{3}
+# intersection
+>>> a.__and__(b)
+{3}
+# intersection
+```
+
+#### Making Copies of Sets
+
+```python
+>>> a = set([1,2,3])
+>>> c = a
+>>> c is a
+True
+>>> id(c)
+140651297499040
+>>> id(a)
+140651297499040
+# wrong
+>>> a = set([1,2,3])
+>>> c = set(a)
+>>> c is a
+False
+>>> id(c)
+140651297499488
+>>> id(a)
+140651297500608
+# right
+```
+
+### Analysis Techniques
+
+#### geoip2 IP - Location Lookup
+
+```bash
+# http://dev.maxmind.com
+# free db to look up IP addresses
+
+# the extension must be installed before the geoip2 module is installed
+sudo add-apt-repository ppa:maxmind/ppa
+sudo apt install libmaxminddb0 libmaxminddb0-dev mmdb-bin
+```
+
+#### geoIP2 - Retrieving Record Details 1
+
+```python
+>>> import geoip2.database
+>>> reader = geoip2.database.Reader("GeoLite2-City.mmdb")
+>>> def get_geoip2_record(database, ip_address):
+...     try:
+...         record = database.city(ip_address)
+...     except geoip2.errors.AddressNotFoundError:
+...         pritn("Record not found.")
+...         record = None
+...     return record
+... 
+>>> rec = get_geoip2_record(reader, "66.35.59.202")
+>>> if rec:
+...     print("The country is", rec.country.name)
+...     
+The country is United States
+```
+
+#### geoIP2 - Retrieving Record Details 2
+
+```python
+>>> rec.continent.name
+'North America'
+>>> rec.country.name
+'United States'
+>>> rec.subdivisions.most_specific.name
+'Colorado'
+>>> rec.city.name
+'Erie'
+>>> rec.postal.code
+'80516'
+>>> rec.location.longitude, rec.location.latitude
+(-105.05, 40.0503)
+```
+
+#### Detecting Randomness by Character Frequency
+
+```python
+>>> from freq import *
+>>> fc = FreqCounter()
+>>> fc.load("freqtable2018.freq")
+>>> fc.probability("normaltext")
+(8.0669, 5.8602)
+>>> fc.probability("vojervonrew")
+(9.1246, 7.2307)
+>>> fc.probability("987zt2637g")
+(1.6787, 0.0146)
+# .load() reads a file with character frequency data
+# .probability() measures a string based on the table and returns the "average probability" and the "word probability"
+```
+
+#### Build your own Frequency Table
+
+```python
+>>> from freq import *
+>>> fc = FreqCounter()
+>>> fc.tally_str(open("hamlet.txt", "rt").read())
+>>> fc.probability("987zt2637g")
+(0.0, 0.0)
+>>> fc.probability("normaltext")
+(6.7105, 5.8932)
+>>> fc.probability("love")
+(29.8657, 10.2661)
+# general rule: any value < 5% is probably not worth looking at
+>>> fc.ignorechars -= "."
+# to ignore certain characters
+```
+
+### Introduction to Scapy
+
+#### Reading and Writing PacketLists
+
+```python
+>>> from scapy.all import *
+>>> packetlist = rdpcap("test.pcap")
+# reads a file containing pcaps into a scapy.PacketList Data structure
+>>> wrpcap("newpacketcapture.pcap", packetlist)
+# writes a PacketList to a pcap file
+>>> sniff(iface="eth0", store=0, lfilter=filterer, prn=analyze, stop_filter=stopper)
+# to capture all packets filtered by a filterer() until some event determined by stopper(), passes them to function analyze()
+>>> sniff(iface="eth0", lfilter=selectpackets, count=100)
+# to capture 100 packets that are selected by the selectpackets() function
+>>> sniff(offline="test.pcap", filter="TCP PORT 80")
+# to read a pcap and apply a BPF (Berkely Packet Filter)
+```
+
+#### sniff()'s Callback Functions
+
+```python
+>>> from scapy.all import * 
+>>> import time
+>>> def stopper(packetin):
+...      return (time.time() - start_time) > 60
+...      
+>>> def filterer(packetin):
+...      return packetin.haslayer(Raw)
+...      
+>>> def processor(packetin):
+...      print("I got a packet from", packetin[IP].src)
+...      
+>>> start_time = time.time()
+>>> sniff(iface="lo", store=0, prn=processor, lfilter=filterer, stop_filter=stopper)
+I got a packet from 127.0.0.1
+I got a packet from 127.0.0.1
+I got a packet from 127.0.0.1
+# callback functions define how it will behave and are called for every packet
+# prn is called to process every packet that gets past lfilter
+# lfilter returns False for every packet that should be ignored by the sniffer
+# stop_filter returns True when the sniffer should stop sniffing packets
+```
+
+#### Save Memory with PcapReader
+
+```python
+>>> dir(PcapReader)
+['PacketMetadata', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__enter__', '__eq__', '__exit__', '__firstlineno__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__next__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__static_attributes__', '__str__', '__subclasshook__', '__weakref__', '_read_all', '_read_packet', 'alternative', 'close', 'dispatch', 'fileno', 'nonblocking_socket', 'read_all', 'read_packet', 'recv', 'select']
+>>> for pkt in PcapReader("test.pcap"):
+...      print(pkt.dport)
+...      
+443
+443
+64565
+443
+64565
+443
+64565
+443
+64565
+# can be used to step through packets with a for loop instead of loading the entire thing into memory
+```
+
+#### scapy.plist.PacketList
+
+```python
+>>> packetlist = rdpcap("test.pcap")
+>>> packetlist.__class__
+<class 'scapy.plist.PacketList'>
+>>> dir(packetlist)
+['_T', '__add__', '__class__', '__class_getitem__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__firstlineno__', '__format__', '__ge__', '__getattr__', '__getattribute__', '__getitem__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__iterlen__', '__le__', '__len__', '__lt__', '__module__', '__ne__', '__new__', '__orig_bases__', '__parameters__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setstate__', '__sizeof__', '__slots__', '__static_attributes__', '__str__', '__subclasshook__', '__weakref__', '_elt2pkt', '_elt2show', '_elt2sum', 'afterglow', 'canvas_dump', 'conversations', 'diffplot', 'filter', 'getlayer', 'hexdump', 'hexraw', 'listname', 'make_lined_table', 'make_table', 'make_tex_table', 'multiplot', 'nsummary', 'nzpadding', 'padding', 'pdfdump', 'plot', 'psdump', 'rawhexdump', 'replace', 'res', 'sessions', 'show', 'sr', 'stats', 'summary', 'svgdump', 'timeskew_graph']
+```
+
+### Scapy Data Structures
+
+#### Following TCP Streams
+
+```python
+>>> scapy.plist.PacketList.sessions(packetlist)
+{'TCP 172.16.11.12:64565 > 74.125.19.17:443': <PacketList: TCP:5 UDP:0 ICMP:0 Other:0>, 'TCP 74.125.19.17:443 > 172.16.11.12:64565': <PacketList: TCP:4 UDP:0 ICMP:0 Other:0>, 'ARP 172.16.11.1 > 172.16.11.194': <PacketList: TCP:0 UDP:0 ICMP:0 Other:1>, 'TCP 172.16.11.12:64581 > 216.34.181.45:80': <PacketList: TCP:21 UDP:0 ICMP:0 Other:0>, 'TCP 216.34.181.45:80 > 172.16.11.12:64581': <PacketList: TCP:33 UDP:0 ICMP:0 Other:0>, 'UDP 172.16.11.12:54639 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:59368 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:54639': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'TCP 172.16.11.12:64582 > 96.17.211.172:80': <PacketList: TCP:5 UDP:0 ICMP:0 Other:0>, 'TCP 172.16.11.12:64583 > 96.17.211.172:80': <PacketList: TCP:6 UDP:0 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59368': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'ICMP 172.16.11.12 > 172.16.11.1 type=3 code=3 id=0x0': <PacketList: TCP:0 UDP:0 ICMP:6 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64582': <PacketList: TCP:4 UDP:0 ICMP:0 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64583': <PacketList: TCP:5 UDP:0 ICMP:0 Other:0>, 'TCP 172.16.11.12:64584 > 96.17.211.172:80': <PacketList: TCP:7 UDP:0 ICMP:0 Other:0>, 'TCP 172.16.11.12:64585 > 96.17.211.172:80': <PacketList: TCP:6 UDP:0 ICMP:0 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64584': <PacketList: TCP:6 UDP:0 ICMP:0 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64585': <PacketList: TCP:4 UDP:0 ICMP:0 Other:0>, 'UDP 172.16.11.12:60392 > 172.16.11.1:53': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:60392': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.12:59222 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:59925 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59222': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:50282 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:50282': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59925': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:57238 > 172.16.11.1:53': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.12:59785 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:57238': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.12:51370 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:57360 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59785': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:56758 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:51370': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:51145 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:56758': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:51145': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:57360': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>}
+# or
+>>> packetlist.sessions()
+{'TCP 172.16.11.12:64565 > 74.125.19.17:443': <PacketList: TCP:5 UDP:0 ICMP:0 Other:0>, 'TCP 74.125.19.17:443 > 172.16.11.12:64565': <PacketList: TCP:4 UDP:0 ICMP:0 Other:0>, 'ARP 172.16.11.1 > 172.16.11.194': <PacketList: TCP:0 UDP:0 ICMP:0 Other:1>, 'TCP 172.16.11.12:64581 > 216.34.181.45:80': <PacketList: TCP:21 UDP:0 ICMP:0 Other:0>, 'TCP 216.34.181.45:80 > 172.16.11.12:64581': <PacketList: TCP:33 UDP:0 ICMP:0 Other:0>, 'UDP 172.16.11.12:54639 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:59368 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:54639': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'TCP 172.16.11.12:64582 > 96.17.211.172:80': <PacketList: TCP:5 UDP:0 ICMP:0 Other:0>, 'TCP 172.16.11.12:64583 > 96.17.211.172:80': <PacketList: TCP:6 UDP:0 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59368': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'ICMP 172.16.11.12 > 172.16.11.1 type=3 code=3 id=0x0': <PacketList: TCP:0 UDP:0 ICMP:6 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64582': <PacketList: TCP:4 UDP:0 ICMP:0 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64583': <PacketList: TCP:5 UDP:0 ICMP:0 Other:0>, 'TCP 172.16.11.12:64584 > 96.17.211.172:80': <PacketList: TCP:7 UDP:0 ICMP:0 Other:0>, 'TCP 172.16.11.12:64585 > 96.17.211.172:80': <PacketList: TCP:6 UDP:0 ICMP:0 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64584': <PacketList: TCP:6 UDP:0 ICMP:0 Other:0>, 'TCP 96.17.211.172:80 > 172.16.11.12:64585': <PacketList: TCP:4 UDP:0 ICMP:0 Other:0>, 'UDP 172.16.11.12:60392 > 172.16.11.1:53': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:60392': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.12:59222 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:59925 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59222': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:50282 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:50282': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59925': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:57238 > 172.16.11.1:53': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.12:59785 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:57238': <PacketList: TCP:0 UDP:2 ICMP:0 Other:0>, 'UDP 172.16.11.12:51370 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:57360 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:59785': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:56758 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:51370': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.12:51145 > 172.16.11.1:53': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:56758': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:51145': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>, 'UDP 172.16.11.1:53 > 172.16.11.12:57360': <PacketList: TCP:0 UDP:1 ICMP:0 Other:0>}
+# session() gives you back a dictionary of streams
+# key is a string
+# value is another scapy.plist.Packetlist
+```
+
+#### PacketLists have Packets, Packets have Layers
+
+```python
+>>> packetlist[2][TCP]
+<TCP  sport=https dport=64565 seq=3307089343 ack=3336115435 dataofs=8 reserved=0 flags=A window=283 chksum=0x7dce urgptr=0 options=[('NOP', None), ('NOP', None), ('Timestamp', (935804965, 444433452))] |>
+>>> packetlist[2]
+<Ether  dst=f8:1e:df:e5:84:3a src=00:1f:f3:3c:e1:13 type=IPv4 |<IP  version=4 ihl=5 tos=0x20 len=52 id=43855 flags= frag=0 ttl=54 proto=tcp chksum=0xc4aa src=74.125.19.17 dst=172.16.11.12 |<TCP  sport=https dport=64565 seq=3307089343 ack=3336115435 dataofs=8 reserved=0 flags=A window=283 chksum=0x7dce urgptr=0 options=[('NOP', None), ('NOP', None), ('Timestamp', (935804965, 444433452))] |>>>
+>>> packetlist[2].haslayer(TCP)
+True
+>>> packetlist[2].haslayer(UDP)
+0
+# haslayer() can be used to determine if a packet has a specified layer
+```
+
+#### Packet Layers have Fields
+
+```python
+>>> dir(packetlist[2][TCP])
+['_PickleType', '__all_slots__', '__bool__', '__bytes__', '__class__', '__class_getitem__', '__contains__', '__deepcopy__', '__delattr__', '__delitem__', '__dict__', '__dir__', '__div__', '__doc__', '__eq__', '__firstlineno__', '__format__', '__ge__', '__getattr__', '__getattribute__', '__getitem__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__iterlen__', '__le__', '__len__', '__lt__', '__module__', '__mul__', '__ne__', '__new__', '__nonzero__', '__orig_bases__', '__parameters__', '__rdiv__', '__reduce__', '__reduce_ex__', '__repr__', '__rmul__', '__rtruediv__', '__setattr__', '__setitem__', '__setstate__', '__signature__', '__sizeof__', '__slots__', '__static_attributes__', '__str__', '__subclasshook__', '__truediv__', '__weakref__', '_answered', '_command', '_do_summary', '_name', '_overload_fields', '_pkt', '_raw_packet_cache_field_value', '_resolve_alias', '_show_or_dump', '_superdir', 'ack', 'add_parent', 'add_payload', 'add_underlayer', 'aliastypes', 'answers', 'build', 'build_done', 'build_padding', 'build_ps', 'canvas_dump', 'chksum', 'class_default_fields', 'class_default_fields_ref', 'class_dont_cache', 'class_fieldtype', 'class_packetfields', 'clear_cache', 'clone_with', 'command', 'comment', 'copy', 'copy_field_value', 'copy_fields_dict', 'dataofs', 'decode_payload_as', 'default_fields', 'default_payload_class', 'delfieldval', 'deprecated_fields', 'direction', 'display', 'dissect', 'dissection_done', 'do_build', 'do_build_payload', 'do_build_ps', 'do_dissect', 'do_dissect_payload', 'do_init_cached_fields', 'do_init_fields', 'dport', 'explicit', 'extract_padding', 'fields', 'fields_desc', 'fieldtype', 'firstlayer', 'flags', 'fragment', 'from_hexcap', 'get_field', 'getfield_and_val', 'getfieldval', 'getlayer', 'guess_payload_class', 'hashret', 'haslayer', 'hide_defaults', 'init_fields', 'iterpayloads', 'json', 'lastlayer', 'layers', 'lower_bonds', 'match_subclass', 'mysummary', 'name', 'options', 'original', 'overload_fields', 'overloaded_fields', 'packetfields', 'parent', 'payload', 'payload_guess', 'pdfdump', 'post_build', 'post_dissect', 'post_dissection', 'post_transforms', 'pre_dissect', 'prepare_cached_fields', 'process_information', 'psdump', 'raw_packet_cache', 'raw_packet_cache_fields', 'remove_parent', 'remove_payload', 'remove_underlayer', 'reserved', 'route', 'self_build', 'sent_time', 'seq', 'setfieldval', 'show', 'show2', 'show_indent', 'show_summary', 'sniffed_on', 'sport', 'sprintf', 'stop_dissection_after', 'summary', 'svgdump', 'time', 'underlayer', 'upper_bonds', 'urgptr', 'window', 'wirelen']
+```
+
+### Packet Reassembly Issues
+
+#### Sorting Packets
+
+```python
+>>> def sortorder(apacket):
+...      return apacket[TCP].seq
+...
+# or sortedpackets = sorted(packets, key = lambda x:x[TCP].seq)
+>>> packetlist = rdpcap("test.pcap")
+>>> packets = packetlist[0][TCP]
+>>> sortedpackets = sorted(packets,key=sortorder)
+# returns a list
+>>> sortedpackets.__class__
+<class 'list'>
+>>> packets.__class__
+<class 'scapy.layers.inet.TCP'>
+```
+
+#### Eliminating Duplicate Packages
+
+```python
+>>> duplicates = [1,1,1,2,2,2,2,3,4,5,5,6,7,7,7,7,7,8,8,8,8,8,8,8,9,0]
+>>> dict1 = {}
+>>> for entry in duplicates:
+...      dict1[entry] = ""
+...      
+>>> list(dict1.keys())
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+# fast way
+>>> def eliminate_duplicates(packets):
+...      uniqs = {}
+...      for packet in packets:
+...           seq = packet[TCP].seq
+...           uniqs[seq] = packet
+...      return list(uniqs.values())
+# for pcaps
+```
+
+#### Eliminating Bad Checksums
+
+```python
+>>> def verify_checksum(packet):
+...      originalChecksum = packet["TCP"].chksum
+...      del packet["TCP"].chksum
+...      packet = IP(bytes(packet[IP]))
+...      recomputedChecksum = packet["TCP"].chksum
+...      return originalChecksum == recomputedChecksum
+# 1. Record the oiginal checksum in a variable
+# 2. Delete the existing checksum
+# 3. Create a new packet from the original by casting the packet to bytes and then back to a packet
+# 4. Compare the newly calculated checksum to the original you recorded
+```
