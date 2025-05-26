@@ -58,8 +58,18 @@
       - [Files and Subdirectories](#files-and-subdirectories)
       - [Supporting Wildcards with glob](#supporting-wildcards-with-glob)
       - [Finding files with os.walk()](#finding-files-with-oswalk)
-    - [os.walk() Example](#oswalk-example)
+      - [os.walk() Example](#oswalk-example)
       - [Reading gzip Compressed Files](#reading-gzip-compressed-files)
+    - [Regular Expressions](#regular-expressions)
+      - [re functions()](#re-functions)
+      - [RegEx Rules 1](#regex-rules-1)
+      - [RegEx Rules 2](#regex-rules-2)
+      - [Custom Sets](#custom-sets)
+      - [Logical OR Statement](#logical-or-statement)
+      - [Repeating Chars](#repeating-chars)
+      - [RegEx Flags and Modifiers](#regex-flags-and-modifiers)
+      - [Greedy Matching](#greedy-matching)
+      - [NOT Custom Set](#not-custom-set)
 
 
 ---
@@ -947,7 +957,7 @@ b'#!/usr/bin/vmware\n.e'
 # os.walk() gives you back a tuple containing the current dir, a list of dirs in that dir, and a list of files in that dir
 ```
 
-### os.walk() Example
+#### os.walk() Example
 
 ```python
 >>> for currentdir,subdirs,allfiles in os.walk("/home/d41y/ctf/hacktoria"):
@@ -983,5 +993,153 @@ uebungsklausur_ws_21_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n46 0 obj\n<< /Li
 uebungsklausur_2_ml.pdf.gz - b'%PDF-1.5\n%\xd0\xd4\xc5\xd8\n6 0 obj\n<<\n/Length 1205  '
 uebungsklausur_ss_20_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n44 0 obj\n<< /Linearized 1'
 # for multiple files
+```
+
+### Regular Expressions
+
+#### re functions()
+
+```python
+>>> import re
+>>> re.findall(b"my pattern", b"search this for my pattern")
+[b'my pattern']
+>>> re.findall("my pattern", "search this for my pattern")
+['my pattern']
+# find all occurences of the pattern in the data
+>>> x = re.match("th", "this is the test")
+>>> x.group()
+'th'
+>>> x = re.match("is", "this is the test")
+>>> x.group()
+Traceback (most recent call last):
+  File "<python-input-6>", line 1, in <module>
+    x.group()
+    ^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'group'
+# match() -> start at the beginning of data searching for pattern
+>>> x = re.search("is", "this is the test")
+>>> x.group()
+'is'
+# search() -> match pattern anywhere in data
+```
+
+#### RegEx Rules 1
+
+```python
+>>> re.findall("SANS", "The SANS Python class rocks")
+['SANS']
+>>> re.findall(".ython", "I Python, you python. We all python.")
+['Python', 'python', 'python']
+# . as wildcard
+>>> re.findall(r"\w\w\w\w\w\w\w\w","(*&$H@$password(*$@BK#@TF")
+['password']
+# \w -> any text char (azAZ09 and _)
+>>> re.findall(r"\w\W", "Get the last letters.")
+['t ', 'e ', 't ', 's.']
+# \W -> opposite of \w
+>>> re.findall(r".\W", "Moves! left$ to{ right.")
+['s!', 't$', 'o{', 't.']
+>>> re.findall(r".\W", "! left$ to{ right.")
+['! ', 't$', 'o{', 't.']
+```
+
+#### RegEx Rules 2
+
+```python
+>>> re.findall(r"\(\d\d\d\)\d\d\d-\d\d\d\d", "Jenny Tutone (800)867-5309")
+['(800)867-5309']
+>>> re.findall(r"\S\S\s", "Find Two ANYTHING )( 09 and space. ")
+['nd ', 'wo ', 'NG ', ')( ', '09 ', 'nd ', 'e. ']
+# \d matches digits
+# \D opposite of \d
+# \s matches any white-space chars
+# \S non white-space
+# [set of chars] can be defined
+# \b border of a word
+# ^ matches from the start
+# $ matches to the end
+# \ escapes special chars
+```
+
+#### Custom Sets
+
+```python
+>>> re.findall(r"\d\d/\d\d/\d\d", "12/25/00 99/99/99")
+['12/25/00', '99/99/99']
+# 99/99/99 is not a valid date
+>>> re.findall(r"[01]\d/[0-3]\d/\d\d", "12/25/00 99/99/99")
+['12/25/00']
+# [A-Z] for uppercase letters
+# [a-z] for lowercase letters
+# [0-9] for digits
+# [a-f] for a subset of chars
+# [!-~] for ASCII values range
+# [\w] for any text char
+```
+
+#### Logical OR Statement
+
+```python
+>>> re.findall(r"(0[1-9]|1[0-2])", "12/25/00 13/09/99")
+['12', '09']
+>>> re.findall(r"(0[1-9]|[1-2][0-9]|3[0-1])", "13/32/31 01/19/00")
+['13', '31', '01', '19']
+>>> re.findall(r"(?:0[1-9]|1[0-2])/(?:0[1-9]|[1-2][0-9]|3]0-1])/\d\d", "13/31/99 12/32/50 01/19/00")
+['01/19/00']
+# (?:regex1|regex2|regex3) match regex1 or regex2 or regex3
+```
+
+#### Repeating Chars
+
+```python
+>>> re.findall(r"http://[\w.\\/]+", "<img src=http://url.com/image.jpg>")
+['http://url.com/image.jpg']
+>>> re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}", "http://127.23.9.120:80/")
+['127.23.9']
+# {x} -> match exactly x copies of the previous character characters
+# {x,[y]} -> match between x and y of the previous character, if y is omitted, it finds x or more matches
+# + -> one or more of the previous
+# * -> zero or more of the previous (\d{0,})
+# ? -> the previous character is optional (\d{0,1})
+```
+
+#### RegEx Flags and Modifiers
+
+```python
+>>> re.findall(r"sec573", "sec573,SEC573,Sec573")
+['sec573']
+>>> re.findall(r"(?i)sec573", "sec573,SEC573,Sec573")
+['sec573', 'SEC573', 'Sec573']
+>>> re.findall(r"sec573", "sec573,SEC573,Sec573", re.IGNORECASE)
+['sec573', 'SEC573', 'Sec573']
+# re.IGNORECASE or(?i) will ignore the case and make the search case insensitive
+>>> re.findall(r"^sec573", "\nsec573\nsec573 is excellent!")
+[]
+>>> re.findall(r"(?m)^sec573", "\nsec573\nsec573 is excellent!")
+['sec573', 'sec573']
+>>> re.findall(r"^sec573", "\nsec573\nsec573 is excellent!", re.MULTILINE)
+['sec573', 'sec573']
+# re.MULTILINE or (?m) will turn on multiline matching
+```
+
+#### Greedy Matching
+
+```python
+>>> re.findall(r"[A-Z].+\.", "Hello. Hi. Python rocks. I know.")
+['Hello. Hi. Python rocks. I know.']
+# * and + are greedy, they match as much as they can
+>>> re.findall(r"[A-Z].+?\.", "Hello. Hi. Python rocks. I know.")
+['Hello.', 'Hi.', 'Python rocks.', 'I know.']
+# *? and +? turns off greedy matching
+```
+
+#### NOT Custom Set
+
+```python
+>>> re.findall(r"[A-Z][^A-Z]", "Things That start with Caps")
+['Th', 'Th', 'Ca']
+>>> re.findall(r"[A-Z][^?.!]+", "Find. The sentences? Yes!")
+['Find', 'The sentences', 'Yes']
+# [^"] in first position negates the set
 ```
 
