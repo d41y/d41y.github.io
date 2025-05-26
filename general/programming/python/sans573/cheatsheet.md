@@ -100,6 +100,9 @@
       - [Sorting Packets](#sorting-packets)
       - [Eliminating Duplicate Packages](#eliminating-duplicate-packages)
       - [Eliminating Bad Checksums](#eliminating-bad-checksums)
+  - [573.4 - Automated Forensics](#5734---automated-forensics)
+    - [The STRUCT Module: Four-Step File-Carving Process](#the-struct-module-four-step-file-carving-process)
+      - [Live Hard-Drive Carving](#live-hard-drive-carving)
 
 
 ---
@@ -1580,4 +1583,26 @@ True
 # 2. Delete the existing checksum
 # 3. Create a new packet from the original by casting the packet to bytes and then back to a packet
 # 4. Compare the newly calculated checksum to the original you recorded
+```
+
+## 573.4 - Automated Forensics
+
+### The STRUCT Module: Four-Step File-Carving Process
+
+```python
+# Step 1: Get read access to the data
+# Step 2: Understand the "Metadata" structure that organizes/breaks up your target data and extracts your data
+# Step 3: Extract relevant parts with a RegEx
+# Step 4: Analyze the data
+```
+
+#### Live Hard-Drive Carving
+
+```python
+>>> fh = open("/dev/sda", "rb")
+>>> fh.read(80)
+# Linux
+>>> fh = open(r"\\.\PhysicalDrive0", "rb")
+>>> fh.read(80)
+# Windows
 ```
