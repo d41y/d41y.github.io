@@ -43,6 +43,23 @@
       - [Looping through Dictionary Items](#looping-through-dictionary-items)
       - [defaultdict()](#defaultdict)
       - [Counter](#counter)
+  - [573.3 - Automated Defense](#5733---automated-defense)
+    - [File Input/Output Operations](#file-inputoutput-operations)
+      - [File Operations](#file-operations)
+      - [File Object Methods](#file-object-methods)
+      - [Reading Files from the Filesystem](#reading-files-from-the-filesystem)
+      - [Write Files to the System](#write-files-to-the-system)
+      - [Reading Binary Data from a File](#reading-binary-data-from-a-file)
+      - [Working with File Paths](#working-with-file-paths)
+      - [Accessing Files with pathlib.Path()](#accessing-files-with-pathlibpath)
+      - [Check for Existence of Path](#check-for-existence-of-path)
+      - [Obtain a Listing of a Directory 1](#obtain-a-listing-of-a-directory-1)
+      - [Obtain a Listing of a Directory 2](#obtain-a-listing-of-a-directory-2)
+      - [Files and Subdirectories](#files-and-subdirectories)
+      - [Supporting Wildcards with glob](#supporting-wildcards-with-glob)
+      - [Finding files with os.walk()](#finding-files-with-oswalk)
+    - [os.walk() Example](#oswalk-example)
+      - [Reading gzip Compressed Files](#reading-gzip-compressed-files)
 
 
 ---
@@ -684,3 +701,287 @@ defaultdict(<function new_val at 0x7f03729afce0>, {'scr#1': ['dst'], 'scr#2': []
 >>> word_count["was"]
 854
 ```
+
+## 573.3 - Automated Defense
+
+### File Input/Output Operations
+
+#### File Operations
+
+```python
+>>> filehandle = open("hamlet.txt", "r")
+>>> 
+>>> with open("hamlet.txt", "r") as file_handle:
+...     ...
+# using the open() command
+```
+
+#### File Object Methods
+
+```python
+>>> type(filehandle)
+<class '_io.TextIOWrapper'>
+>>> dir(filehandle)
+['_CHUNK_SIZE', '__class__', '__del__', '__delattr__', '__dict__', '__dir__', '__doc__', '__enter__', '__eq__', '__exit__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__next__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '_checkClosed', '_checkReadable', '_checkSeekable', '_checkWritable', '_finalizing', 'buffer', 'close', 'closed', 'detach', 'encoding', 'errors', 'fileno', 'flush', 'isatty', 'line_buffering', 'mode', 'name', 'newlines', 'read', 'readable', 'readline', 'readlines', 'reconfigure', 'seek', 'seekable', 'tell', 'truncate', 'writable', 'write', 'write_through', 'writelines']
+# seek() sets the file pointer
+# tell() returns its current value
+# read(), readlines() read the contents of a file as string or list
+# write(), writelines() write the contents to a file
+# close() closes the file
+```
+
+#### Reading Files from the Filesystem
+
+```python
+>>> filehandle = open("hamlet_head.txt", "r")
+>>> for oneline in filehandle:
+...     print(oneline, end = "")
+...     
+THE TRAGEDY OF HAMLET, PRINCE OF DENMARK
+
+
+by William Shakespeare
+
+
+
+Dramatis Personae
+
+  Claudius, King of Denmark.
+>>> filehandle.close()
+# iterable object
+# can be accessed within a loop
+# consumes less memory
+>>> filehandle = open("hamlet_head.txt", "r")
+>>> listoflines = filehandle.readlines()
+>>> filehandle.close()
+# reads all of the lines in a file into a list
+>>> filehandle = open("hamlet_head.txt", "r")
+>>> content = filehandle.read()
+>>> filehandle.close()
+# reads the entire file into a single string
+```
+
+#### Write Files to the System
+
+```python
+>>> filehandle = open("hamlet_head.txt", "w")
+>>> filehandle.write("Write this one line.\n")
+21
+>>> filehandle.write("Write these\nTwo Lines.\n")
+23
+>>> filehandle.close()
+# overwrites the content
+>>> filehandle = open("hamlet_head.txt", "a")
+>>> filehandle.write("add this to the file")
+20
+>>> filehandle.close()
+# appends to the file
+```
+
+#### Reading Binary Data from a File
+
+```python
+>>> x = open("bash", "rb").read()
+>>> x[:20]
+b'\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00>\x00'
+# process as bytes()
+>>> x = open("bash", encoding="latin-1").read()
+>>> x[:20]
+'\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00>\x00'
+# process as str()
+```
+
+#### Working with File Paths
+
+```python
+>>> import pathlib
+>>> pathlib.Path.cwd()
+PosixPath('/home/d41y/learn/SANS/573/misc')
+# current working directory
+>>> pathlib.Path.home()
+PosixPath('/home/d41y')
+# current user's home directory
+>>> x = pathlib.Path("/home/d41y/")
+>>> x = x / "non_existing_file.txt"
+# builds a path
+>>> x
+PosixPath('/home/d41y/non_existing_file.txt')
+>>> x.parts
+('/', 'home', 'd41y', 'non_existing_file.txt')
+>>> x.name
+'non_existing_file.txt'
+>>> x.anchor
+'/'
+>>> x.parent
+PosixPath('/home/d41y')
+>>> str(x)
+'/home/d41y/non_existing_file.txt'
+>>> x.exists()
+False
+>>> x.is_file()
+False
+>>> x.is_dir()
+False
+```
+
+#### Accessing Files with pathlib.Path()
+
+```python
+# pathlib.Path can be used to read and write files
+>>> file_path = pathlib.Path.home() / "file.txt"
+>>> file_path.write_text("Create text file!")
+17
+>>> file_path.read_text()
+'Create text file!'
+>>> file_path.write_bytes(b"Create text file!")
+17
+>>> file_path.read_bytes()
+b'Create text file!'
+# or use the open() method of pathlib.Path()
+>>> with pathlib.Path("/home/d41y/file.txt").open("rb") as fh:
+...     print(fh.read())
+...     
+b'Create text file!'
+```
+
+#### Check for Existence of Path
+
+```python
+>>> x = pathlib.Path("/etc/passwd")
+>>> x.exists()
+True
+>>> x.is_file()
+True
+>>> x.is_dir()
+False
+>>> x = pathlib.Path("/root/test.txt").exists()
+Traceback (most recent call last):
+  File "<python-input-28>", line 1, in <module>
+    x = pathlib.Path("/root/test.txt").exists()
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 450, in exists
+    self.stat(follow_symlinks=follow_symlinks)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 517, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/root/test.txt'
+# returns true if the file exists or is a directory AND you have permissions to access it
+```
+
+#### Obtain a Listing of a Directory 1
+
+```python
+>>> import pathlib
+>>> xpath = pathlib.Path("/home/d41y/learn/SANS/573/misc/")
+>>> list(xpath.glob("*.txt"))
+[PosixPath('/home/d41y/learn/SANS/573/misc/hamlet.txt'), PosixPath('/home/d41y/learn/SANS/573/misc/hamlet_head.txt')]
+# glob() expends wildcards
+>>> [str(eachpath) for eachpath in xpath.glob("*") if eachpath.is_file()]
+['/home/d41y/learn/SANS/573/misc/hamlet.txt', '/home/d41y/learn/SANS/573/misc/bash', '/home/d41y/learn/SANS/573/misc/hamlet_head.txt']
+# list comprehension can be used
+```
+
+#### Obtain a Listing of a Directory 2
+
+```python
+>>> os.listdir(xpath)
+['hamlet.txt', 'bash', 'hamlet_head.txt']
+>>> os.listdir(bytes(xpath))
+[b'hamlet.txt', b'bash', b'hamlet_head.txt']
+# backward compatibilty prior to version 3.4
+# can be used with string or bytes of a path
+```
+
+#### Files and Subdirectories
+
+```python
+>>> logpath = pathlib.Path.home() / "learn/SANS/"
+>>> for eachfile in logpath.rglob("*"):
+...     if not eachfile.is_file():
+...         continue
+...     file_content = eachfile.read_bytes()
+...     print(file_content[:20])
+...     
+b']UyH`B&$,;uJwjwYe7P,'
+b'THE TRAGEDY OF HAMLE'
+b'\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00>\x00'
+b'Write this one line.'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'%PDF-1.7\n%\xe4\xe3\xcf\xd2\n5 0 o'
+b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+b'#!/usr/bin/vmware\n.e'
+# rglob() recursively goes through all the subdirectories and finds all files that match the file mask
+```
+
+#### Supporting Wildcards with glob
+
+```python
+>>> import glob
+>>> glob.glob(r"/home/d41y/*/*/*/*.ovpn")
+['/home/d41y/ctf/thm/vpns/d41y-lateralmovementandpivoting.ovpn', '/home/d41y/ctf/thm/vpns/d41y-breachingad.ovpn', '/home/d41y/ctf/thm/vpns/d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/fortresses_d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/academy-regular.ovpn', '/home/d41y/ctf/htb/00_vpns/lab_d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/competitive_d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/starting_point_d41y.ovpn']
+>>> import pathlib
+>>> list(pathlib.Path("/home/").glob("d41y/*/*/*/*.ovpn"))
+[PosixPath('/home/d41y/ctf/thm/vpns/d41y-lateralmovementandpivoting.ovpn'), PosixPath('/home/d41y/ctf/thm/vpns/d41y-breachingad.ovpn'), PosixPath('/home/d41y/ctf/thm/vpns/d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/fortresses_d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/academy-regular.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/lab_d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/competitive_d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/starting_point_d41y.ovpn')]
+# with glob and pathlib.Path().glob(), the asterisk can be part of a path
+```
+
+#### Finding files with os.walk()
+
+```python
+>>> import os
+>>> drv = list(os.walk("/home/d41y/ctf/"))
+>>> drv[0]
+('/home/d41y/ctf/', ['thm', 'certified_secure', 'hackosint25', '.obsidian', 'htb', 'hacktoria'], [])
+>>> drv[1]
+('/home/d41y/ctf/thm', ['writeups', 'vpns', '.obsidian'], [])
+>>> drv[2]
+('/home/d41y/ctf/thm/writeups', ['99_screenshots', '.git', 'machines'], ['README.md'])
+>>> drv[3]
+('/home/d41y/ctf/thm/writeups/99_screenshots', [], ['grep_leak.png', 'whiterose_link.png', 'team_sshkey.png', 'rev_shell_chocolate.png', 'cyborg_passwd.png', 'grep_key.png', 'grep_burp_key.png', 'whiterose_burp.png', 'team_website.png', 'index_of.png', 'team_pathtraversal.png', 'whiterose_accounts.png', 'charlie_key_chocolate.png', 'team_placeholder.png', 'valley_dev.png', 'sweetrice_content.png', 'catpictures_revshell.png', 'command-execute_chocolate_facto.png', 'phphbb.png', 'grep_login.png', 'whiterose_login_olivia.png', 'whiterose_cyprusbank_white.png', 'valley_static_00.png', 'link_chocolate_facto.png', 'affine.png', 'valley_note_txt.png', 'phpbb_user.png', 'valley_siemdev_notes.png', 'team_sshconfig.png', 'grep_pass.png', 'valley_wireshark_pass.png', 'billing_1.png', 'grep_hexupload.png', 'admin_konsole.png', 'grep_test.png', 'whiterose_error.png', 'creds_pokemon.png'])
+# os.walk() gives you back a tuple containing the current dir, a list of dirs in that dir, and a list of files in that dir
+```
+
+### os.walk() Example
+
+```python
+>>> for currentdir,subdirs,allfiles in os.walk("/home/d41y/ctf/hacktoria"):
+...     print(f"I am in directory {currentdir}")
+...     print(f"It contains directories {subdirs}")
+...     for eachfile in allfiles:
+...         fullpath = os.path.join(currentdir,eachfile)
+...         print(f"----- File: {fullpath}")
+...         
+I am in directory /home/d41y/ctf/hacktoria
+It contains directories []
+----- File: /home/d41y/ctf/hacktoria/badge friendly fire.png
+----- File: /home/d41y/ctf/hacktoria/Badge-Naval-Intrusion.png
+----- File: /home/d41y/ctf/hacktoria/Badge Alien Abduction.png
+```
+
+#### Reading gzip Compressed Files
+
+```python
+>>> import gzip
+>>> gz = gzip.open("uebungsklausur_1_ml.pdf.gz", "rb")
+>>> list_of_lines = gz.readlines()
+>>> list_of_lines[2][:40]
+b'6 0 obj\n'
+# for one file
+>>> for eachfile in pathlib.Path("/home/d41y/learn/SANS/573/misc/").glob("*.gz"):
+...     content = gzip.open(eachfile, "rb").read()
+...     print(eachfile.name,"-",content[:40])
+...     
+uebungsklausur_ss_22_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n52 0 obj\n<< /Linearized 1'
+uebungsklausur_1_ml.pdf.gz - b'%PDF-1.5\n%\xd0\xd4\xc5\xd8\n6 0 obj\n<<\n/Length 1704  '
+uebungsklausur_ws_21_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n46 0 obj\n<< /Linearized 1'
+uebungsklausur_2_ml.pdf.gz - b'%PDF-1.5\n%\xd0\xd4\xc5\xd8\n6 0 obj\n<<\n/Length 1205  '
+uebungsklausur_ss_20_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n44 0 obj\n<< /Linearized 1'
+# for multiple files
+```
+
