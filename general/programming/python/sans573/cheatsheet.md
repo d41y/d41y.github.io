@@ -102,7 +102,24 @@
       - [Eliminating Bad Checksums](#eliminating-bad-checksums)
   - [573.4 - Automated Forensics](#5734---automated-forensics)
     - [The STRUCT Module: Four-Step File-Carving Process](#the-struct-module-four-step-file-carving-process)
-      - [Live Hard-Drive Carving](#live-hard-drive-carving)
+      - [Step 1 - Live Hard-Drive Carving](#step-1---live-hard-drive-carving)
+      - [Step 1 - Live Memory Carving](#step-1---live-memory-carving)
+      - [Step 1 - Windows Live Network Capture](#step-1---windows-live-network-capture)
+      - [Step 1 - Linux Live Network Capture](#step-1---linux-live-network-capture)
+      - [Step 1 - Analyzing Dead/Static Images](#step-1---analyzing-deadstatic-images)
+      - [Step 2 - Understanding the Structure](#step-2---understanding-the-structure)
+      - [Step 2 - Third-Party Modules that understand Encapsulated Structures](#step-2---third-party-modules-that-understand-encapsulated-structures)
+      - [Step 2 - THe STRUCT Module](#step-2---the-struct-module)
+      - [Step 2 - Struckt Unpack](#step-2---struckt-unpack)
+      - [Step 2 - Unpacking Bits as Flags](#step-2---unpacking-bits-as-flags)
+      - [Step 2 - Struct Pack](#step-2---struct-pack)
+      - [Step 2 - Ether Header Struct](#step-2---ether-header-struct)
+      - [Step 2 - IP Header Struct](#step-2---ip-header-struct)
+      - [Step 2 - TCP Header Struct](#step-2---tcp-header-struct)
+      - [Step 2 - UDP Header Struct](#step-2---udp-header-struct)
+      - [Step 2 - ICMP Header Struct](#step-2---icmp-header-struct)
+      - [Step 3 - Use RegEx on Binary Data](#step-3---use-regex-on-binary-data)
+      - [Step 4 - Analyzing the Data](#step-4---analyzing-the-data)
 
 
 ---
@@ -1596,7 +1613,7 @@ True
 # Step 4: Analyze the data
 ```
 
-#### Live Hard-Drive Carving
+#### Step 1 - Live Hard-Drive Carving
 
 ```python
 >>> fh = open("/dev/sda", "rb")
@@ -1605,4 +1622,247 @@ True
 >>> fh = open(r"\\.\PhysicalDrive0", "rb")
 >>> fh.read(80)
 # Windows
+```
+
+#### Step 1 - Live Memory Carving
+
+```python
+>>> import memprocfs
+>>> vmm = memprocfs.Vmm(['-device', 'pmem://winpmem_64.sys'])
+>>> python_process = vmm.process("python.exe")
+>>> python_process.memory.read(python_process.peb, 0x10)
+>>> vmm.memory.read(process_module.base, 0x10)
+# on windows you can access live memory using the memprocfs module
+>>> fh = open("/dev/fmem", "rb")
+>>> fh.read(100)
+# for linux
+```
+
+#### Step 1 - Windows Live Network Capture
+
+```python
+>>> from winpcapy import WinPcapDevices, WinPcapUtils
+>>> print(WinPcapDevices.list_devices())
+>>> WinPcapUtils.capture_on("*Gigabit*", lambda x:print(x[0]))
+# wincapy will allow sniffing if the NPCAP drivers are installed
+>>> import socket
+>>> s = socket.socket(socket.AF_INET, socket.SOCK_RAW)
+>>> s.bind(("192.168.1.1",0))
+>>> s.ioctl(socket.SIO_RCVALL,socket.RCVALL_ON)
+>>> while True:
+...     print(s.recv(65535([:20])
+# socket module provides "raw sockets" that can be used to capture live packets from the network with admin permission
+```
+
+#### Step 1 - Linux Live Network Capture
+
+```python
+>>> import socket
+>>> s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
+>>> while True:
+...     print(s.recv(65535))
+...     
+b'\xff\xff\xff\xff\xff\xff\x04\xb4\xfe\x04\x9b\x83\x88\xe1\x00\x00\xa0\x00\xb0R\x1c \xf2\xb6\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+```
+
+#### Step 1 - Analyzing Dead/Static Images
+
+```python
+# because data comes in chunks, it could be like this:
+# FIND THE WORD WA | LDO IN THESE CHUNKS
+>>> previous_chunk = ""
+>>> for each_chunk in all_chunks:
+...     if "WALDO" in previous_chunk + each_chunk:
+...         print("Found him!")
+...     previous_chunk = each_chunk[-len("WALDO"):]
+```
+
+#### Step 2 - Understanding the Structure
+
+```python
+>>> open("test.pcap", "rb").read()[:100]
+b'\xd4\xc3\xb2\xa1\x02\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\x01\x00\x00\x00\x83\xf13L7\x1f\x07\x00]\x00\x00\x00]\x00\x00\x00\x00\x1f\xf3<\xe1\x13\xf8\x1e\xdf\xe5\x84:\x08\x00E\x00\x00O\xdeS@\x00@\x06G\xab\xac\x10\x0b\x0cJ}\x13\x11\xfc5\x01\xbb\xc6\xd9\x14\xd0\xc5\x1e-\xbf\x80\x18\xff\xff\xcb\x8c\x00\x00\x01\x01\x08\n\x1a}'
+# when not using scapy, you have to know where the data is in the bytes
+```
+
+#### Step 2 - Third-Party Modules that understand Encapsulated Structures
+
+```python
+# Hard Drives: Plaso, GRR, AnalyzeMFT
+# Memory: Volatility, memprocfs
+# Networking: DPKT, Scapy
+# Documents: pyPDF, zipfile
+```
+
+#### Step 2 - THe STRUCT Module
+
+```python
+>>> import struct
+>>> struct.unpack("!BBBB", b"\xc0\xa8\x80\xc2")
+(192, 168, 128, 194)
+>>> struct.unpack("!HH", b"\xc0\xa8\x80\xc2")
+(49320, 32962)
+>>> struct.unpack("<HH", b"\xc0\xa8\x80\xc2")
+(43200, 49792)
+>>> struct.unpack("!bbbb", b"\xc0\xa8\x80\xc2")
+(-64, -88, -128, -62)
+# ! or > indicates to interpret data as big-endian
+# < indicates to interpret data as little-endian
+# = or @ indicates to interpret data based on the system its script is running on
+# format chararcters: https://docs.python.org/3/library/struct.html
+```
+
+#### Step 2 - Struckt Unpack
+
+```python
+>>> struct.unpack(">BB", b"\xff\x00")
+(255, 0)
+# big-endian to extract two bytes into a tuple
+>>> struct.unpack("<BB", b"\xff\x00")
+(255, 0)
+# for single bytes of data the endianness does not matter
+>>> struct.unpack("<bB", b"\xff\x00")
+(-1, 0)
+# treat it as a signed integer
+>>> struct.unpack("<H", b"\xff\x00")
+(255,)
+# H interprets 2 bytes so endianness matters
+>>> struct.unpack(">H", b"\xff\x00")
+(65280,)
+# big-endian
+>>> struct.unpack(">h", b"\xff\x00")
+(-256,)
+# big-endian but it is a signed integer
+>>> struct.unpack(">3s", b"\xff\x00\x41")
+(b'\xff\x00A',)
+# s for string but it really collects bytes
+>>> struct.unpack("<cccc", b"\x01\x41\x42\x43")
+(b'\x01', b'A', b'B', b'C')
+# extract 4 bytes as 4 chars
+>>> struct.unpack("<4c", b"\x01\x41\x42\x43")
+(b'\x01', b'A', b'B', b'C')
+>>> struct.unpack("<4B", b"\x01\x41\x42\x43")
+(1, 65, 66, 67)
+# extract 4 bytes as 4 single byte integers
+>>> struct.unpack("<BxxB", b"\x01\x41\x42\x43")
+(1, 67)
+# extract a byte, ignore a byte, ignore another byte, extract a byte
+>>> struct.unpack("<B2xB", b"\x01\x41\x42\x43")
+(1, 67)
+# extract a byte, ignore two bytes, extract a byte
+>>> struct.unpack("<I", b"\x01\x41\x42\x43")
+(1128415489,)
+# extract all 4 bytes as an unsigned integer
+>>> struct.unpack("<5c", b"\x48\x45\x4c\x4c\x4f")
+(b'H', b'E', b'L', b'L', b'O')
+>>> struct.unpack("<5s", b"\x48\x45\x4c\x4c\x4f")
+(b'HELLO',)
+```
+
+#### Step 2 - Unpacking Bits as Flags
+
+```python
+>>> list(itertools.compress(["BIT0","BIT1","BIT2"], [1,0,1]))
+['BIT0', 'BIT2']
+# takes to lists
+# anwhere there is a 1 in the second list, the value in the corresponding position in the first list is kept
+>>> format(147, "08b")
+'10010011'
+>>> list(map(int,format(147, "08b")))
+[1, 0, 0, 1, 0, 0, 1, 1]
+# to create a list of bits
+>>> def tcp_flags_as_str(flag):
+...     tcp_flags = ['CWR', 'ECE', 'URG', 'ACK', 'PSH', 'RST', 'SYN', 'FIN']
+...     return "|".join(list(itertools.compress(tcp.flags,map(int,format(flag,"08b")))))
+# combining both to converting byte flags to words
+```
+
+#### Step 2 - Struct Pack
+
+```python
+>>> struct.pack("<h", -5)
+b'\xfb\xff'
+>>> struct.pack("<h", 5)
+b'\x05\x00'
+>>> struct.pack(">h", 5)
+b'\x00\x05'
+>>> struct.pack(">I", 5)
+b'\x00\x00\x00\x05'
+>>> struct.pack(">Q", 5)
+b'\x00\x00\x00\x00\x00\x00\x00\x05'
+>>> struct.pack("<4B6sI", 1,2,0x41,0x42,b"SEC573",5)
+b'\x01\x02ABSEC573\x05\x00\x00\x00'
+# input values are comma-seperated arguments
+```
+
+#### Step 2 - Ether Header Struct
+
+```python
+>>> import socket, struct, codecs
+>>> while True:
+...     data = s.recv(65535)
+...     eth_dst,eth_src,eth_type = struct.unpack('!6s6sH', data[:14])
+...     print("ETH: SRC:{0} DST:{1} TYPE:{2}".format(codecs.encode(eth_src,"hex"), codecs.encode("eth_dst","hex"), \
+hex(eth_type)))
+# to capture ethernet header
+# all network traffic is big-endian, so it will start with a !
+```
+
+#### Step 2 - IP Header Struct
+
+```python
+>>> while True:
+...     iph = struct.unpack('!BBHHHBBHII', data[14:34])
+...     srcip = socket.inet_ntoa(struct.pack('I',iph[8]))
+...     dstip = socket.inet_ntoa(struct.pack('I',iph[9]))
+...     print(f"IP: SRC:{srcip} DST:{dstip} - {iph} ")
+```
+
+#### Step 2 - TCP Header Struct
+
+```python
+>>> while True:
+...     tcp = struct.unpack('!HHIIBBHHH', embedded_data[:20])
+...     print("TCP: ", tcp)
+```
+
+#### Step 2 - UDP Header Struct
+
+```python
+>>> print(struct.unpack('!HHHH', embedded_data[:8]))
+```
+
+#### Step 2 - ICMP Header Struct
+
+```python
+>>> (icmp_type,icmp_code,icmp_chksum) = struct.unpack(r'!BBH', embedded_data[:4])
+>>> if icmp_type == 0:
+...     print(f"ICMP - PING REPLY SRC:{srcip} DST:{DSTIP}")
+... elif icmp_type == 8:
+...     print(f"ICMP - PING REQUEST SRC:{srcip} DST:{dstip}")
+>>> else:
+...     print(f"ICMP - TYPE:{icmp_type} CODE:{icmp_code} - SRC:{srcip} DST: {dstip} DATA:{icmp_data}")
+```
+
+#### Step 3 - Use RegEx on Binary Data
+
+```python
+>>> def string2jpg(rawstring):
+...     if not b'\xff\xd8' in rawstring or not b'\xff\xd9' in rawstring:
+...         print("ERROR: Invalid or corrupt image!", rawstring[:10])
+...         return None
+...     jpg = re.findall(rb'\xff\xd8.*\xff\xd9', rawstring,re.DOTALL)[0]
+...     return jpg
+```
+
+#### Step 4 - Analyzing the Data
+
+```python
+# You can use a third-party module to analytze it
+# Zip: pyzip
+# Pdf: pypdf,pdf-parser.py, PDFMiner
+# Office Doc: PyWin32 and COM
+# Office Docx: Extract zip and XML
+# Media: PIL, PyMedia, OpenCV, pySWF
+# EXE, DLL: pefile
 ```
