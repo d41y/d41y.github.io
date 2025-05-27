@@ -157,6 +157,7 @@ Non-Relational
 
 - [Assembly](./general/programming/assembly/assembly.md)
 - [Python](./general/programming/python/python.md)
+  - [573 Cheatsheet](./general/programming/python/sans573/cheatsheet.md)
 
 ## RegEx
 
