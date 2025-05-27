@@ -120,6 +120,18 @@
       - [Step 2 - ICMP Header Struct](#step-2---icmp-header-struct)
       - [Step 3 - Use RegEx on Binary Data](#step-3---use-regex-on-binary-data)
       - [Step 4 - Analyzing the Data](#step-4---analyzing-the-data)
+    - [Python Image Library](#python-image-library)
+      - [Installing PIL Image Package](#installing-pil-image-package)
+      - [Opening Images with PIL](#opening-images-with-pil)
+      - [Key Functions in PIL.Image](#key-functions-in-pilimage)
+      - [Listing Metadata 1](#listing-metadata-1)
+      - [Listing Metadata 2](#listing-metadata-2)
+      - [Convert Exif GPS to Decimal Degrees](#convert-exif-gps-to-decimal-degrees)
+      - [What to do with GPS Data](#what-to-do-with-gps-data)
+    - [Python Database Operations](#python-database-operations)
+      - [Python SQL Database Modules](#python-sql-database-modules)
+      - [Sqlite3 Connect and Retrieve Table and Column Names](#sqlite3-connect-and-retrieve-table-and-column-names)
+      - [Sqlite3 Query the Records from the Database](#sqlite3-query-the-records-from-the-database)
 
 
 ---
@@ -1866,3 +1878,203 @@ hex(eth_type)))
 # Media: PIL, PyMedia, OpenCV, pySWF
 # EXE, DLL: pefile
 ```
+
+### Python Image Library
+
+#### Installing PIL Image Package
+
+```bash
+┌──(forensics)─(d41y㉿kali)-[~/learn/SANS/573/misc]
+└─$ pip install Pillow  
+Collecting Pillow
+  Downloading pillow-11.2.1-cp313-cp313-manylinux_2_28_x86_64.whl.metadata (8.9 kB)
+Downloading pillow-11.2.1-cp313-cp313-manylinux_2_28_x86_64.whl (4.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 12.6 MB/s eta 0:00:00
+Installing collected packages: Pillow
+Successfully installed Pillow-11.2.1
+# READ and WRITE images from disk
+# Crop, resize, rotate, recolor, and otherwise manipulate the images
+# Read / write image metadata
+# Supports multiple image formats, including JPG, BMP, TGA, and more
+```
+
+#### Opening Images with PIL
+
+```python
+>>> from PIL import Image
+>>> imagedata = Image.open("PIvfevco6UTNU69s-YaIUFqA.jpeg")
+>>> imagedata.show()
+# opens the image when saved on disk
+>>> from io import BytesIO
+>>> from PIL import Image
+>>> img = open("PIvfevco6UTNU69s-YaIUFqA.jpeg", "rb").read()
+>>> Image.open(BytesIO(img)).show()
+# opens the image when saved inside variable
+```
+
+#### Key Functions in PIL.Image
+
+```python
+# open()      - open an image
+# show()      - displays the image
+# thumbnail() - reduces image size, preserving aspect ratio
+# resize()    - returns a copy of the image with the exact given dimensions
+# size()      - a tuple containing the current image size
+# crop()      - crops the image
+# rotate()    - rotates the image
+# save()      - save the image to disk
+# _getexif()  - gets the metadata about the image
+```
+
+#### Listing Metadata 1
+
+```python
+>>> from PIL import Image
+>>> imgobj = Image.open("test.jpg")
+>>> info = imgobj._getexif()
+>>> print(info[272])
+Canon DIGITAL IXUS 400
+```
+
+#### Listing Metadata 2
+
+```python
+>>> from PIL.ExifTags import TAGS
+>>> def print_exif(imageobject):
+...     exifdict = imageobject._getexif()
+...     for exif_num, data in exifdict.items():
+...         tag_name = TAGS.get(exif_num, "Unknown Tag")
+...         print(f"TAG: {exif_num} ({tag_name}) is assigned {data}")
+...         
+>>> imgobj = Image.open("test.jpg")
+>>> print_exif(imgobj)
+TAG: 296 (ResolutionUnit) is assigned 2
+TAG: 34665 (ExifOffset) is assigned 200
+TAG: 271 (Make) is assigned Canon
+TAG: 272 (Model) is assigned Canon DIGITAL IXUS 400
+TAG: 305 (Software) is assigned GIMP 2.4.5
+TAG: 274 (Orientation) is assigned 1
+TAG: 306 (DateTime) is assigned 2008:07:31 17:15:01
+TAG: 531 (YCbCrPositioning) is assigned 1
+TAG: 282 (XResolution) is assigned 72.0
+TAG: 283 (YResolution) is assigned 72.0
+TAG: 36864 (ExifVersion) is assigned b'0220'
+TAG: 37121 (ComponentsConfiguration) is assigned b'\x01\x02\x03\x00'
+TAG: 37122 (CompressedBitsPerPixel) is assigned 3.0
+TAG: 36867 (DateTimeOriginal) is assigned 2004:08:27 13:52:55
+TAG: 36868 (DateTimeDigitized) is assigned 2004:08:27 13:52:55
+TAG: 37377 (ShutterSpeedValue) is assigned 7.65625
+TAG: 37378 (ApertureValue) is assigned 6.65625
+TAG: 37380 (ExposureBiasValue) is assigned 0.0
+TAG: 37381 (MaxApertureValue) is assigned 4.0
+TAG: 37383 (MeteringMode) is assigned 5
+TAG: 37385 (Flash) is assigned 24
+TAG: 37386 (FocalLength) is assigned 15.4375
+TAG: 40961 (ColorSpace) is assigned 1
+TAG: 40962 (ExifImageWidth) is assigned 100
+TAG: 40965 (ExifInteroperabilityOffset) is assigned 1284
+TAG: 41486 (FocalPlaneXResolution) is assigned 8114.285714285715
+TAG: 40963 (ExifImageHeight) is assigned 75
+TAG: 41487 (FocalPlaneYResolution) is assigned 8114.285714285715
+TAG: 41488 (FocalPlaneResolutionUnit) is assigned 2
+TAG: 41495 (SensingMethod) is assigned 2
+TAG: 41728 (FileSource) is assigned b'\x03'
+TAG: 33434 (ExposureTime) is assigned 0.005
+TAG: 33437 (FNumber) is assigned 10.0
+TAG: 41985 (CustomRendered) is assigned 1
+TAG: 41986 (ExposureMode) is assigned 0
+TAG: 40960 (FlashPixVersion) is assigned b'0100'
+TAG: 41987 (WhiteBalance) is assigned 0
+TAG: 41988 (DigitalZoomRatio) is assigned 1.0
+TAG: 37500 (MakerNote) is assigned b'\x0e\x00\x00\x00\x03\x00\x06\x00\x00\x00L\x03\x00\x00\x00\x00\x03\x00\x04\x00\x00\x00X\x03\x00\x00\x01\x00\x03\x00.\x00\x00\x00`\x03\x00\x00\x02\x00\x03\x00\x04\x00\x00\x00\xbc\x03\x00\x00\x03\x00\x03\x00\x04\x00\x00\x00\xc4\x03\x00\x00\x04\x00\x03\x00"\x00\x00\x00\xcc\x03\x00\x00\x06\x00\x02\x00 \x00\x00\x00\x10\x04\x00\x00\x07\x00\x02\x00\x18\x00\x00\x000\x04\x00\x00\x08\x00\x04\x00\x01\x00\x00\x00y\xf5\x12\x00\t\x00\x02\x00 \x00\x00\x00H\x04\x00\x00\r\x00\x03\x00"\x00\x00\x00h\x04\x00\x00\x10\x00\x04\x00\x01\x00\x00\x00\x00\x00\'\x01\x12\x00\x03\x00\x1c\x00\x00\x00\xac\x04\x00\x00\x13\x00\x03\x00\x04\x00\x00\x00\xe4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\\\x00\x02\x00\x00\x00\x03\x00\x01\x00\x00\x00\x00\x00\x04\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0f\x00\x03\x00\x01\x00\x01@\x00\x00\xff\xff\xff\xff\xc7\x02\xed\x00 \x00\x82\x00\xd7\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\xe0\x08\xe0\x08\x00\x00\x01\x00\x00\x00\x00\x00\xff\x7f\x00\x00\x00\x00\x00\x00\x02\x00\xee\x01\x1e\x01\xd7\x00\x00\x04\x00\x00\x00\x00\x00\x00D\x00\x00\x00\x80\x00O\x01\xd5\x00\xf5\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\xd8\x00\x00\x00\xd7\x00\xf3\x00\x00\x00\x00\x00\x00\x00\xfa\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00IMG:DIGITAL IXUS 400 JPEG\x00\x00\x00\x00\x00\x00\x00Firmware Version 1.00\x00\x00\x00Jean-Pierre Grignon\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00D\x00\t\x00\xf8\x00\xf7\x00\xfa\x00\xfb\x00\xf9\x00\xf9\x00\xfa\x00\xf7\x00\xfa\x00@\x00\x00\x00\x00\x00q\x00\x00\x00\x00\x00\n\x00\x05\x00\x01\x00\n\x00Y\x00K\x01\x07\x00\xfb\xff\xfb\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\t\x00\t\x00\xe0\x08\xa8\x06\xe0\x08\xd4\x00\x99\x01&\x00f\xfe\x00\x00\x9a\x01f\xfe\x00\x00\x9a\x01f\xfe\x00\x00\x9a\x01\xd7\xff\xd7\xff\xd7\xff\x00\x00\x00\x00\x00\x00)\x00)\x00)\x00\x08\x00\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+TAG: 41990 (SceneCaptureType) is assigned 0
+```
+
+#### Convert Exif GPS to Decimal Degrees
+
+```python
+>>> imgobj = Image.open("DSCN0021.jpg")
+>>> def coordinates(ImageObject):
+...     info = ImageObject._getexif()
+...     if not info or not info.get(34853):
+...         return 0, 0
+...     latDegrees = float(info[34853][2][0])
+...     latMinutes = float(info[34853][2][1])/60
+...     latSeconds = float(info[34853][2][2])/3600
+...     lonDegrees = float(info[34853][4][0])
+...     lonMinutes = float(info[34853][4][1])/60
+...     lonSeconds = float(info[34853][4][2])/3600
+...     latitude = latDegrees + latMinutes + latSeconds
+...     if info[34853][1] == 'S':
+...         latitude *= -1
+...     longitude = lonDegrees + lonMinutes + lonSeconds
+...     if info[34853][3] == 'W':
+...         longitude *= -1
+...     return latitude, longitude
+...     
+>>> print(coordinates(imgobj))
+(43.467081666663894, 11.884538333330555)
+```
+
+#### What to do with GPS Data
+
+```python
+# generate URL to google maps
+# https://maps.google.com/maps?q=lat,long&z=15
+>>> lat, lon = coordinates(imgobj)
+>>> print(f"https://maps.google.com/maps?q={lat},{lon}&z=15")
+https://maps.google.com/maps?q=43.467081666663894,11.884538333330555&z=15
+```
+
+### Python Database Operations
+
+
+#### Python SQL Database Modules
+
+```python
+# Mysql: mysql-connector-python, pyMySql, MySQL-Python, pyodbc
+# MiriaDB: all above, miriadb, pyodbc
+# MSSQL: pymssql, pyodbc
+# Oracle: python-oracledb, cx_Oracle, pyodbc
+# SQLITE: sqlite3 is bubilt into python, pyodbc
+>>> import pyodbc
+>>> connection = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
+... "Server = server_name;"
+... "Database = db_name;"
+... "Trusted_Connection = yes;")
+>>> cursor = connection.cursor()
+>>> cursor.execute('SELECT * FROM Table')
+>>> for row in cursor:
+...     print(f"row = {row}")
+```
+
+#### Sqlite3 Connect and Retrieve Table and Column Names
+
+```python
+>>> import sqlite3
+>>> db = sqlite3.connect("chinook.db")
+>>> list(db.execute("select name from sqlite_master where type='table';"))
+[('albums',), ('sqlite_sequence',), ('artists',), ('customers',), ('employees',), ('genres',), ('invoices',), ('invoice_items',), ('media_types',), ('playlists',), ('playlist_track',), ('tracks',), ('sqlite_stat1',)]
+>>> list(db.execute("select sql from sqlite_master where name='invoices';"))
+[('CREATE TABLE "invoices"\r\n(\r\n    [InvoiceId] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\r\n    [CustomerId] INTEGER  NOT NULL,\r\n    [InvoiceDate] DATETIME  NOT NULL,\r\n    [BillingAddress] NVARCHAR(70),\r\n    [BillingCity] NVARCHAR(40),\r\n    [BillingState] NVARCHAR(40),\r\n    [BillingCountry] NVARCHAR(40),\r\n    [BillingPostalCode] NVARCHAR(10),\r\n    [Total] NUMERIC(10,2)  NOT NULL,\r\n    FOREIGN KEY ([CustomerId]) REFERENCES "customers" ([CustomerId]) \r\n\t\tON DELETE NO ACTION ON UPDATE NO ACTION\r\n)',)]
+```
+
+#### Sqlite3 Query the Records from the Database
+
+```python
+>>> import sqlite3
+>>> db = sqlite3.connect("chinook.db")
+>>> for eachrow in db.execute("SELECT invoices.InvoiceId, invoices.CustomerId, invoices.InvoiceDate, invoices.Billi\
+ngAddress from invoices;"):
+...     print(eachrow)
+...     
+(1, 2, '2009-01-01 00:00:00', 'Theodor-Heuss-Straße 34')
+(2, 4, '2009-01-02 00:00:00', 'Ullevålsveien 14')
+(3, 8, '2009-01-03 00:00:00', 'Grétrystraat 63')
+(4, 14, '2009-01-06 00:00:00', '8210 111 ST NW')
+(5, 23, '2009-01-11 00:00:00', '69 Salem Street')
+(6, 37, '2009-01-19 00:00:00', 'Berger Straße 10')
+(7, 38, '2009-02-01 00:00:00', 'Barbarossastraße 19')
+(8, 40, '2009-02-01 00:00:00', '8, Rue Hanovre')
+```
+
