@@ -132,6 +132,16 @@
       - [Python SQL Database Modules](#python-sql-database-modules)
       - [Sqlite3 Connect and Retrieve Table and Column Names](#sqlite3-connect-and-retrieve-table-and-column-names)
       - [Sqlite3 Query the Records from the Database](#sqlite3-query-the-records-from-the-database)
+    - [Windows Registry Forensics](#windows-registry-forensics)
+      - [The Windows Registry](#the-windows-registry)
+      - [Components of Registry](#components-of-registry)
+      - [Retrieving one specific Value with .value() or Key with .subkey()](#retrieving-one-specific-value-with-value-or-key-with-subkey)
+      - [A list of Values with .values() or Keys with .subkeys()](#a-list-of-values-with-values-or-keys-with-subkeys)
+      - [Keys .path() Attribute prints the Keys Path](#keys-path-attribute-prints-the-keys-path)
+    - [urllib](#urllib)
+      - [Web Encoding in Python3](#web-encoding-in-python3)
+      - [GET Requests with urllib](#get-requests-with-urllib)
+      - [POST Request with urllib](#post-request-with-urllib)
 
 
 ---
@@ -2076,5 +2086,173 @@ ngAddress from invoices;"):
 (6, 37, '2009-01-19 00:00:00', 'Berger Straße 10')
 (7, 38, '2009-02-01 00:00:00', 'Barbarossastraße 19')
 (8, 40, '2009-02-01 00:00:00', '8, Rue Hanovre')
+```
+
+### Windows Registry Forensics
+
+#### The Windows Registry
+
+```python
+(sans) C:\Users\melvi\Desktop\sans\Scripts>pip install python-registry
+Collecting python-registry
+  Downloading python_registry-1.3.1-py3-none-any.whl (23 kB)
+Collecting enum-compat
+  Downloading enum_compat-0.0.3-py3-none-any.whl (1.3 kB)
+Collecting unicodecsv
+  Downloading unicodecsv-0.14.1.tar.gz (10 kB)
+Using legacy setup.py install for unicodecsv, since package 'wheel' is not installed.
+Installing collected packages: enum-compat, unicodecsv, python-registry
+    Running setup.py install for unicodecsv ... done
+Successfully installed enum-compat-0.0.3 python-registry-1.3.1 unicodecsv-0.14.1
+WARNING: You are using pip version 20.1.1; however, version 24.0 is available.
+You should consider upgrading via the 'c:\users\melvi\desktop\sans\scripts\python.exe -m pip install --upgrade pip' command.
+
+(sans) C:\Users\melvi\Desktop\sans\Scripts>python
+Python 3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from Registry.Registry import Registry
+```
+
+#### Components of Registry
+
+```python
+handle = Registry(r"path to registry file")
+regkey = handle.open(r"raw str-path to key")
+# key methods:
+# .path(), .value(), .subkey(), .subkeys()
+# value methods:
+# .name(), .value(), .value_type_str()
+```
+
+#### Retrieving one specific Value with .value() or Key with .subkey()
+
+```python
+# first open the registry file
+>>> from Registry.Registry import Registry
+>>> reg_hive = Registry("SOFTWARE_COPY")
+# then open the key that contains the value
+>>> reg_key = reg_hive.open(r"Microsoft\Windows NT\CurrentVersion")
+# then pass the name of the value you want to retrieve to .value()
+>>> reg_value = reg_key.value("ProductName")
+>>> reg_value.name()
+'ProductName'
+>>> reg_value.value()
+'Windows 10 Pro'
+>>> reg_value.value_type_str()
+'RegSZ'
+>>> reg_key.value("ProductName").value()
+'Windows 10 Pro'
+# you can also open a specific subkey with .subkey()
+>>> reg_key = reg_hive.open(r"Microsoft\Windows NT")
+>>> cur_ver_key = reg_key.subkey("CurrentVersion")
+>>> cur_ver_key.name()
+'CurrentVersion'
+```
+
+#### A list of Values with .values() or Keys with .subkeys()
+
+```python
+# once you have opnened a key, you can retrieve a list of its values with .values()
+>>> reg_hive = Registry("SOFTWARE_COPY")
+>>> reg_key = reg_hive.open(r"Microsoft\Windows\CurrentVersion\Run")
+>>> for eachkey in reg_key.values():
+...     print(eachkey.name(), eachkey.value(), eachkey.value_type_str())
+...
+SecurityHealth %windir%\system32\SecurityHealthSystray.exe RegExpandSZ
+RtkAudUService "C:\Windows\System32\DriverStore\FileRepository\realtekservice.inf_amd64_9366beb5d0043df3\RtkAudUService64.exe" -background RegSZ
+# or you can retrieve a list of subkeys with .subkeys()
+>>> reg_key = reg_hive.open(r"Microsoft\Windows\CurrentVersion")
+>>> for eachsubkey in reg_key.subkeys():
+...     print(eachsubkey.name(), end=", ")
+...
+AccountPicture, ActionCenter, AdvertisingInfo, App Management, App Paths, AppHost, Applets, ApplicationAssociationToasts, ApplicationFrame, AppModel, AppModelUnlock, AppReadiness, Appx, Audio, Authentication, AutoRotation, BackupAndRestoreSettings, BitLocker, BITS, Bluetooth, CapabilityAccessManager, Capture, Casting, Census, ClickNote, ClosedCaptioning, CloudDesktop, CloudExperienceHost, CloudStore, COAWOS, Communications, Component Based Servicing, ConnectedSearch, ContainerMappedPaths, Control Panel, Controls Folder, CPSS, DateTime, Device Installer, Device Metadata, DeviceAccess, DevicePicker, DeviceSetup, Diagnostics, DIFx, DIFxApp, DPX, DriverConfiguration, DriverSearching, EditionOverrides, EventCollector, EventForwarding, Explorer, Ext, Fcon, FileExplorer, FileHistory, FilePicker, FlightedFeatures, Flighting, GameInput, GameInstaller, Group Policy, HardwareIdentification, HelpAndSupport, Hints, Holographic, HoloSI, IME, ImmersiveShell, Installer, InstallService, Internet Settings, LanguageComponentsInstaller, LAPS, Lock Screen, Lxss, Management Infrastructure, Media Center, MicrosoftEdge, MMDevices, NcdAutoSetup, NetCache, NetworkServiceTriggers, Notifications, OEMInformation, OneSettings, OOBE, OpenWith, OptimalLayout, Parental Controls, PerceptionSimulationExtensions, Personalization, PhotoPropertyHandler, PlayReady, Policies, PowerEfficiencyDiagnostics, PrecisionTouchPad, PreviewHandlers, Privacy, PropertySystem, Proximity, PushNotifications, Reliability, rempl, ReserveManager, RetailDemo, Run, RunOnce, SearchBoxEventArgsProvider, SecondaryAuthFactor, SecureAssessment, SecureBoot, Security and Maintenance, SettingSync, Setup, SharedAccess, SharedDLLs, SharedPC, Shell, Shell Extensions, ShellCompatibility, ShellServiceObjectDelayLoad, SHUTDOWN, SideBySide, SignalManager, SmartGlass, SMDEn, SMI, Spectrum, SpeechGestures, StillImage, StorageSense, Store, StructuredQuery, Syncmgr, SysPrepTapi, SystemProtectedUserData, Tablet PC, Telephony, ThemeManager, Themes, TouchKeyboard, UFH, Uninstall, UpdateHealthTools, UpdatePlatform, URL, UserPictureChange, UserState, Utilman, VFUProvider, WaaSAssessment, WebCheck, WinBio, Windows Block Level Backup, Windows To Go, WindowsAnytimeUpgrade, WindowsBackup, WindowsBackupAndRestore, WindowsUpdate, WindowTabManager, WINEVT, Wordpad, Wosc, WSMAN, WSX, WTDS, XboxGaming, XWiz
+```
+
+#### Keys .path() Attribute prints the Keys Path
+
+```python
+>>> reghandle = Registry("SOFTWARE_COPY")
+>>> akey = reghandle.open(r"Microsoft\Windows NT\CurrentVersion\NetworkList")
+>>> for eachsubkey in akey.subkeys():
+...     print(eachsubkey.path())
+...
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\DefaultMediaCost
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\NewNetworks
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\Nla
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\Permissions
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\Policies
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles
+ROOT\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures
+# ROOT = path-root
+```
+
+### urllib
+
+#### Web Encoding in Python3
+
+```python
+(sans) C:\Users\melvi\Desktop>pip install requests
+Collecting requests
+  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+     |████████████████████████████████| 62 kB 2.3 MB/s
+Collecting charset-normalizer<4,>=2
+  Downloading charset_normalizer-3.4.2-cp37-cp37m-win_amd64.whl (103 kB)
+     |████████████████████████████████| 103 kB 2.2 MB/s
+Collecting certifi>=2017.4.17
+  Downloading certifi-2025.4.26-py3-none-any.whl (159 kB)
+     |████████████████████████████████| 159 kB 2.2 MB/s
+Collecting idna<4,>=2.5
+  Downloading idna-3.10-py3-none-any.whl (70 kB)
+     |████████████████████████████████| 70 kB 2.3 MB/s
+Collecting urllib3<3,>=1.21.1
+  Downloading urllib3-2.0.7-py3-none-any.whl (124 kB)
+     |████████████████████████████████| 124 kB 2.2 MB/s
+Installing collected packages: charset-normalizer, certifi, idna, urllib3, requests
+Successfully installed certifi-2025.4.26 charset-normalizer-3.4.2 idna-3.10 requests-2.31.0 urllib3-2.0.7
+WARNING: You are using pip version 20.1.1; however, version 24.0 is available.
+You should consider upgrading via the 'c:\users\melvi\desktop\sans\scripts\python.exe -m pip install --upgrade pip' command.
+
+(sans) C:\Users\melvi\Desktop>python3
+Python 3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import html
+>>> html.escape("< > \" ' &")
+'&lt; &gt; &quot; &#x27; &amp;'
+>>> html.unescape("&lt;&gt; &quot; &apos; %41 &#65;&#66;")
+'<> " \' %41 AB'
+>>> import urllib.parse
+>>> urllib.parse.quote("< > \" ' & : ? + : /")
+'%3C%20%3E%20%22%20%27%20%26%20%3A%20%3F%20%2B%20%3A%20/'
+>>> urllib.parse.quote("< > \" ' & : ? + : /", safe=" ")
+'%3C %3E %22 %27 %26 %3A %3F %2B %3A %2F'
+>>> urllib.parse.unquote("%3C %3E %26 %41 &#65;")
+'< > & A &#65;'
+```
+
+#### GET Requests with urllib
+
+```python
+# should always quote your URL with urllib.parse.quote
+(sans) C:\Users\melvi\Desktop>python
+Python 3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import urllib.parse
+>>> import urllib.request
+>>> urldata = urllib.parse.quote("http://web.com", safe="/\\:?=+")
+>>> webcontent = urllib.request.urlopen(urldata).read()
+# can use read() to read the entire contents of the website into a single string
+# can use readlines() to read the contents into a list of lines
+```
+
+#### POST Request with urllib
+
+```python
+>>> import urllib.parse
+>>> import urllib.request
+>>> url = 'http://httpbin.org/post'
+>>> url = urllib.parse.quote(url, safe="/\\:?=+")
+>>> data = {"username":"mikem","password":"codeforensics"}
+>>> data = urllib.parse.urlencode(data).encode()
+>>> content = urllib.request.urlopen(url,data).read()
 ```
 
