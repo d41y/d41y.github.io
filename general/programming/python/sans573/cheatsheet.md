@@ -142,6 +142,23 @@
       - [Web Encoding in Python3](#web-encoding-in-python3)
       - [GET Requests with urllib](#get-requests-with-urllib)
       - [POST Request with urllib](#post-request-with-urllib)
+    - [Requests](#requests)
+      - [Requests Module](#requests-module)
+      - [One Request at a Time](#one-request-at-a-time)
+      - [Response Objects](#response-objects)
+      - [Multiple Requests with Sessions](#multiple-requests-with-sessions)
+      - [Browser GET/POST Requests](#browser-getpost-requests)
+      - [A Password Guesser](#a-password-guesser)
+      - [GET/POST Requests Proxies](#getpost-requests-proxies)
+      - [GET/POST Requests Cookies](#getpost-requests-cookies)
+      - [Access Cookies in the Cookiejar](#access-cookies-in-the-cookiejar)
+      - [Example Full Cookie Access](#example-full-cookie-access)
+      - [Add Cookies to the Cookiejar](#add-cookies-to-the-cookiejar)
+      - [Erase Cookies in the Cookiejar](#erase-cookies-in-the-cookiejar)
+      - [GET/POST Request Authentication](#getpost-request-authentication)
+      - [Other Auth Types](#other-auth-types)
+      - [SSL/TLS Support](#ssltls-support)
+      - [Handling Captchas](#handling-captchas)
 
 
 ---
@@ -2254,5 +2271,243 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> data = {"username":"mikem","password":"codeforensics"}
 >>> data = urllib.parse.urlencode(data).encode()
 >>> content = urllib.request.urlopen(url,data).read()
+```
+
+### Requests
+
+#### Requests Module
+
+```python
+(sans) C:\Users\melvi\Desktop>pip install requests
+Requirement already satisfied: requests in c:\users\melvi\desktop\sans\lib\site-packages (2.31.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\melvi\desktop\sans\lib\site-packages (from requests) (3.4.2)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\melvi\desktop\sans\lib\site-packages (from requests) (3.10)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\melvi\desktop\sans\lib\site-packages (from requests) (2025.4.26)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\melvi\desktop\sans\lib\site-packages (from requests) (2.0.7)
+WARNING: You are using pip version 20.1.1; however, version 24.0 is available.
+You should consider upgrading via the 'c:\users\melvi\desktop\sans\scripts\python.exe -m pip install --upgrade pip' command.
+```
+
+#### One Request at a Time
+
+```python
+>>> import requests
+>>> webdata = requests.get("http://sans.org").content
+>>> webdata[:70]
+b'<!doctype html>\n<html data-n-head-ssr>\n  <head>\n  <script>window.onloa'
+>>> url = "http://127.0.0.1/login.php"
+>>> formdata = {"username":"admin", "password":"ninja"}
+>>> webdata = requests.post(url, formdata).text
+>>> webdata[:45]
+b'<!doctype html>\n<html data-n-head-ssr>\n  <hea'
+# one request at a time with no relationship between requests
+# requests for all HTTP verbs
+```
+
+#### Response Objects
+
+```python
+>>> resp = requests.get("http://isc.sans.edu")
+>>> type(resp)
+<class 'requests.models.Response'>
+>>> dir(resp)
+['__attrs__', '__bool__', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__enter__', '__eq__', '__exit__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__nonzero__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setstate__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_content', '_content_consumed', '_next', 'apparent_encoding', 'close', 'connection', 'content', 'cookies', 'elapsed', 'encoding', 'headers', 'history', 'is_permanent_redirect', 'is_redirect', 'iter_content', 'iter_lines', 'json', 'links', 'next', 'ok', 'raise_for_status', 'raw', 'reason', 'request', 'status_code', 'text', 'url']
+>>> resp.status_code, resp.reason
+(200, 'OK')
+>>> resp.headers
+{'Content-Type': 'text/html', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Date': 'Fri, 30 May 2025 21:36:14 GMT', 'Last-Modified': 'Fri, 30 May 2025 21:35:26 GMT', 'Content-Encoding': 'gzip', 'x-amz-server-side-encryption': 'AES256', 'ETag': 'W/"91ed0e509a87f261f0b073308d0f976a"', 'Vary': 'accept-encoding', 'X-Cache': 'Hit from cloudfront', 'Via': '1.1 caaddf8ce46d2bfa1216d6fdd9c0393c.cloudfront.net (CloudFront)', 'X-Amz-Cf-Pop': 'IAD61-P4', 'X-Amz-Cf-Id': '5sOhxc5SVisxuo8PjwMlnvxsOAv1w40nlQkYo4YOQbDCf3E4LhPllQ==', 'Age': '192', 'Set-Cookie': 'visid_incap_2188750=8OZ+Akg8Tcap64w7885vxowlOmgAAAAAQUIPAAAAAAD70WuprZds/8xsHHWbWp6B; expires=Sat, 30 May 2026 06:54:40 GMT; HttpOnly; path=/; Domain=.sans.edu; Secure; SameSite=None, nlbi_2188750_2100128=CRItGe7sMSb+HyBRac18PgAAAABJHW2TVNSZVKpl0j+sOV0m; HttpOnly; path=/; Domain=.sans.edu; Secure; SameSite=None, incap_ses_1349_2188750=UuJeXVQTkADjCzB0sJy4Eo0lOmgAAAAADKeHi3Myq3QTe8I4qAztLw==; path=/; Domain=.sans.edu; Secure; SameSite=None', 'Strict-Transport-Security': 'max-age=31556926; includeSubDomains', 'X-CDN': 'Imperva', 'Server': 'nc -l -p 80', 'X-Do-Not-Hack': '18 U.S.C. Parag 1030', 'X-HeyJason': 'DEV522 rocks', 'Expect-CT': 'max-age=0, report-uri="https://isc.sans.edu/cspreport.html"', 'X-Content-Type-Options': 'nosniff', 'Permitted-Cross-Domain-Policies': 'none', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection': '1; mode=block', 'Referrer-Policy': 'same-origin', 'Content-Security-Policy': "default-src 'self'; script-src https://isc.sans.edu https://www.googletagmanager.com https://www.googleoptimize.com https://www.google-analytics.com https://cdn.jsdelivr.net https://cdn.cookielaw.org https://www.youtube.com https://snap.licdn.com/li.lms-analytics/insight.min.js 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://isc.sans.edu https://cdn.cookielaw.org https://px.ads.linkedin.com https://www.linkedin.com/px/li_sync https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com/ads/ga-audiences data:; font-src 'self' https://fonts.gstatic.com data:; connect-src https://geolocation.onetrust.com https://privacyportal-de.onetrust.com https://cdn.cookielaw.org https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.linkedin.oribi.io 'self'; media-src 'self' https://traffic.libsyn.com https://hwcdn.libsyn.com https://content.libsyn.com https://www.dshield.org ; object-src 'none'; child-src 'self' https://www.sans.org; frame-src 'self' https://www.sans.org https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'none'; frame-ancestors https://isc.sans.edu https://www.dshield.org https://www.sans.org; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; disown-opener; reflected-xss block; manifest-src 'self' https://isc.sans.edu; referrer origin-when-cross-origin; report-uri https://isc.sans.edu/cspreport.html;", 'X-Iinfo': '9-17469769-17469784 NNNN CT(1 13 0) RT(1748641165385 132) q(0 0 0 1) r(0 0) U12'}
+>>> resp.content[:70]
+b'<!doctype html><html lang="en"><head><title>SANS.edu Internet Storm Ce'
+# all those methods return a response object with access to full details about the webpage's response
+```
+
+#### Multiple Requests with Sessions
+
+```python
+>>> import requests
+>>> browser = requests.session()
+>>> browser.headers
+{'User-Agent': 'python-requests/2.31.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+>>> browser.headers["User-Agent"]
+'python-requests/2.31.0'
+>>> browser.headers["User-Agent"] = "Mozilla FutureBrowser 145.9"
+>>> browser.headers
+{'User-Agent': 'Mozilla FutureBrowser 145.9', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+# remembers settings and headers like User-Agent and maintains state via cookie
+```
+
+#### Browser GET/POST Requests
+
+```python
+>>> import requests
+>>> browser = requests.session()
+>>> resp = browser.get("http://www.bing.com")
+>>> resp.content[:60]
+# Make GET requests to retrieve data
+b'<!doctype html><html lang="de" dir="ltr"><head><meta name="t'
+>>> postdata = {"username":"markb", "password":"sec573"}
+>>> resp = browser.post("http://web.page/login.php", postdata)
+# make POST requests to submit data to forms
+```
+
+#### A Password Guesser
+
+```python
+>>> import requests
+>>> browser = requests.session()
+>>> passwords = open("/usr/share/john/password.lst", "r").readlines()
+>>> for pw in passwords:
+...     postdata = {"username":"admin", "password":pw.strip()}
+...     x = browser.post("http://127.0.0.1/login.php",postdata)
+...     if not "incorrect" in x.text:
+...             print(x.text, pw)
+```
+
+#### GET/POST Requests Proxies
+
+```python
+>>> browser = requests.session()
+>>> browser.proxies
+{}
+>>> browser.proxies["http"] = "http://127.0.0.1:8080"
+>>> browser.proxies
+{'http': 'http://127.0.0.1:8080'}
+>>> del browser.proxies["http"]
+>>> browser.proxies
+{}
+```
+
+#### GET/POST Requests Cookies
+
+```python
+>>> import requests
+>>> browser = requests.session()
+>>> browser.get("http://www.bing.com")
+<Response [200]>
+>>> type(browser.cookies)
+<class 'requests.cookies.RequestsCookieJar'>
+>>> dir(browser.cookies)
+['_MutableMapping__marker', '__abstractmethods__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__setattr__', '__setitem__', '__setstate__', '__sizeof__', '__slots__', '__str__', '__subclasshook__', '__weakref__', '_abc_impl', '_cookie_attrs', '_cookie_from_cookie_tuple', '_cookies', '_cookies_for_domain', '_cookies_for_request', '_cookies_from_attrs_set', '_cookies_lock', '_find', '_find_no_duplicates', '_normalized_cookie_tuples', '_now', '_policy', '_process_rfc2109_cookies', 'add_cookie_header', 'clear', 'clear_expired_cookies', 'clear_session_cookies', 'copy', 'domain_re', 'dots_re', 'extract_cookies', 'get', 'get_dict', 'get_policy', 'items', 'iteritems', 'iterkeys', 'itervalues', 'keys', 'list_domains', 'list_paths', 'magic_re', 'make_cookies', 'multiple_domains', 'non_word_re', 'pop', 'popitem', 'quote_re', 'set', 'set_cookie', 'set_cookie_if_ok', 'set_policy', 'setdefault', 'strict_domain_re', 'update', 'values']
+```
+
+#### Access Cookies in the Cookiejar
+
+```python
+>>> browser.cookies.keys()
+['MUID', 'SRCHD', 'SRCHHPGUSR', 'SRCHUID', 'SRCHUSR', '_EDGE_S', '_EDGE_V', '_HPVN', '_SS', 'MUIDB']
+>>> browser.cookies["MUID"]
+'28B80BBF788562A61AD81E4379E76310'
+>>> browser.cookies.set("MUID", "newvalue", domain="bing.com", path="/")
+Cookie(version=0, name='MUID', value='newvalue', port=None, port_specified=False, domain='bing.com', domain_specified=True, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+```
+
+#### Example Full Cookie Access
+
+```python
+>>> browser.cookies._cookies.keys()
+dict_keys(['.bing.com', 'www.bing.com', 'bing.com'])
+>>> browser.cookies._cookies[".bing.com"].keys()
+dict_keys(['/'])
+>>> browser.cookies._cookies[".bing.com"]["/"].keys()
+dict_keys(['MUID', '_EDGE_S', '_EDGE_V', 'SRCHD', 'SRCHUID', 'SRCHUSR', 'SRCHHPGUSR', '_SS', '_HPVN'])
+>>> browser.cookies._cookies[".bing.com"]["/"]["MUID"]
+Cookie(version=0, name='MUID', value='28B80BBF788562A61AD81E4379E76310', port=None, port_specified=False, domain='.bing.com', domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=1782338071, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False)
+>>> browser.cookies._cookies[".bing.com"]["/"]["MUID"].path
+'/'
+>>> browser.cookies._cookies[".bing.com"]["/"]["MUID"].secure
+False
+```
+
+#### Add Cookies to the Cookiejar
+
+```python
+>>> import http
+>>> newcookie = http.cookiejar.Cookie(version=0, name="session.id", value="sessionid", port=None, port_specified=False, domain="10.10.10.30", domain_specified=True, domain_initial_dot=True, path="/sessionhijack.php", path_specified=True, secure=False, expires=None, discard=False, comment=None, comment_url=None, rest={"HttpOnly":None})
+>>> browser.cookies.set_cookie(newcookie)
+```
+
+#### Erase Cookies in the Cookiejar
+
+```python
+>>> browser.cookies.clear()
+# erases all cookies in cookiejar
+>>> browser.cookies.clear_session_cookies()
+# clears session cookies
+>>> browser.cookies.clear(domain="www.bing.com")
+# clears cookie for specific domain
+>>> browser.cookies.keys()
+[]
+>>> del browser.cookies("MUID")
+# clears cookie based on its name
+```
+
+#### GET/POST Request Authentication
+
+```python
+# using auth argument
+>>> import requests
+>>> requests.get("http://httpbin.org/basic-auth/user/passwd", auth=("user","passwd"))
+<Response [200]>
+>>> requests.get("http://httpbin.org/basic-auth/user/passwd", auth=("user","notPasswd"))
+<Response [401]>
+# using auth attribute on browser object
+>>> import requests
+>>> browser = requests.session()
+>>> browser.auth = ("user", "password")
+>>> browser.get("http://httpbin.org/basic-auth/user/password")
+<Response [200]>
+>>> browser.auth = ("user", "notpassword")
+>>> browser.get("http://httpbin.org/basic-auth/user/password")
+<Response [401]>
+```
+
+#### Other Auth Types
+
+```bash
+(sans) C:\Users\melvi\Desktop>pip install requests_oauthlib
+
+(sans) C:\Users\melvi\Desktop>pip install requests_ntlm
+
+(sans) C:\Users\melvi\Desktop>pip install requests-kerberos
+```
+
+```python
+>>> import requests
+>>> from requests_oauthlib import OAuth1
+>>> browser = requests.session()
+>>> browser.auth = OAuth1("APP_KEY","APP_SECRET","USER_TOKEN", "USER_SECRET")
+>>> browser.get("http://api.oauth.site/api")
+
+...
+
+>>> from requests_ntlm import HttpNtlmAuth
+>>> browser = requests.session()
+>>> browser.auth = HttpNtlmAuth(r"domain\username","password")
+>>> browser.get("http://ntlm.site")
+
+...
+
+>>> from requests_kerberos import HTTPKerberosAuth
+>>> browser.auth = HTTPKerberosAuth()
+>>> browser.get("http://kerberos-authenticated-site.com")
+```
+
+#### SSL/TLS Support
+
+```python
+>>> browser.get("https://site.com", verify=False)
+# to see where your certificates are installed
+>>> import requests
+>>> requests.certs.where()
+'C:\\Users\\melvi\\Desktop\\sans\\lib\\site-packages\\certifi\\cacert.pem'
+```
+
+#### Handling Captchas
+
+```python
+# use a captcha-solving service
+# https://deathbycaptcha.com
+# has API
+# pip install deathbycaptcha-official
 ```
 
