@@ -10,6 +10,13 @@
     - [Session Fixation](#session-fixation)
       - [Example](#example-1)
       - [Example of vulnerable code](#example-of-vulnerable-code)
+    - [Obtaining Session Identifiers without User Interaction](#obtaining-session-identifiers-without-user-interaction)
+      - [Obtaining Session Identifiers via Traffic Sniffing](#obtaining-session-identifiers-via-traffic-sniffing)
+      - [Obtaining Session Identifiers Post-Exploitation](#obtaining-session-identifiers-post-exploitation)
+        - [PHP](#php)
+        - [Java](#java)
+        - [.NET](#net)
+      - [Obtaining Session Identifiers Post-Exploitation - Database Access](#obtaining-session-identifiers-post-exploitation---database-access)
 
 ---
 
@@ -128,3 +135,97 @@ Notice that the ```PHPSESSID``` cookie's value is ```IControlThisCookie```. You 
 ?>
 ```
 
+### Obtaining Session Identifiers without User Interaction
+
+#### Obtaining Session Identifiers via Traffic Sniffing
+
+Traffic Sniffing is something that most penetration testers do when asessing a network's security from the inside. It requires the attacker and the victim to be on the same local network. Then and only then can HTTP traffic be inspected by the attacker. It is impossible to perform traffic sniffing remotely.
+
+1. Obtain the victim's cookie through packet analysis
+   1. inside Wireshark, first, apply to see only HTTP traffic
+   2. now search within the Packet bytes for any ```auth-session``` cookies
+   3. navigate to ```Edit```, then to ```Find Packet```
+   4. left click on ```Packet List```, then on ```Packet bytes```
+   5. select string and specify ```auth-session```
+   6. click ```find```
+   7. copy the cookie by right-clicking on a row that contains it
+   8. click ```copy```, then ```Value```
+
+
+2. Hijack the victim's session
+   1. back on the browser and change the current cookie's value into the obtained value
+   2. refresh page
+
+#### Obtaining Session Identifiers Post-Exploitation
+
+During the post-exploitation phase, session identifiers and session data can be retrieved from either a web server's disk or memory.
+
+##### PHP
+
+The entry ```session.save_path``` in ```PHP.ini``` specifies where session data will be stored.
+
+```bash
+d41y@htb[/htb]$ locate php.ini
+d41y@htb[/htb]$ cat /etc/php/7.4/cli/php.ini | grep 'session.save_path'
+d41y@htb[/htb]$ cat /etc/php/7.4/apache2/php.ini | grep 'session.save_path'
+```
+
+A default config could store session data in ```/var/lib/php/sessions``` and could look like this:
+
+![session no interaction 1](../../../images/session_no_interaction_1.png)
+
+The same PHP session identifier could look like this on a local setup:
+
+```bash
+d41y@htb[/htb]$ ls /var/lib/php/sessions
+d41y@htb[/htb]$ cat //var/lib/php/sessions/sess_s6kitq8d3071rmlvbfitpim9mm
+```
+
+![session no interaction 2](../../../images/session_no_interaction_2.png)
+
+For a hacker to hijack the user session related to the session identifier above, a new cookie must be created in the web browser with the following values:
+
+- cookie name: PHPSESSID
+- cookie value: s6kitq8d3071rmlvbfitpim9mm
+
+##### Java
+
+"The Manager element represents the session manager that is used to create and maintain HTTP sessions of a web application.
+
+Tomcat provides two standard implementations of Manager. The default implementation stores active sessions, while the optional one stores active sessions that have been swapped out in a storage location that is selected via the use of an appropriate ```Store``` nested element. The filename of the default session data file is ```SESSIONS.ser```."
+
+[More info here!](https://tomcat.apache.org/tomcat-6.0-doc/config/manager.html)
+
+##### .NET
+
+Session data can be found in:
+
+- the application worker process (_```aspnet_wp.exe```_)
+- StateServer
+- SQL Server
+
+[More info here!](https://www.c-sharpcorner.com/UploadFile/225740/introduction-of-session-in-Asp-Net/)
+
+#### Obtaining Session Identifiers Post-Exploitation - Database Access
+
+In cases where you have direct access to a database, you should always check for any stored user sessions.
+
+```sql
+show databases;
+use project;
+show tables;
+select * from users;
+```
+
+![session no interaction 3](../../../images/session_no_interaction_3.png)
+
+Here you can see the user's passwords are hashed. You could spend time trying to crack these; however, there is also a "all_sessions" table.
+
+```sql
+select * from all_sessions;
+select * from all_sessions where id=3;
+```
+
+![session no interaction 4](../../../images/session_no_interaction_4.png)
+
+Here you have successfully extracted the sessions!
