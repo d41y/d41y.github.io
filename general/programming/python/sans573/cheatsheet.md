@@ -159,6 +159,15 @@
       - [Other Auth Types](#other-auth-types)
       - [SSL/TLS Support](#ssltls-support)
       - [Handling Captchas](#handling-captchas)
+  - [573.5 - Automated Offense](#5735---automated-offense)
+    - [Components of a Backdoor](#components-of-a-backdoor)
+      - [Python Backdoor](#python-backdoor)
+    - [Socket Communications](#socket-communications)
+      - [DNS Queries](#dns-queries)
+      - [UDP Sockets](#udp-sockets)
+      - [TCP Sockets](#tcp-sockets)
+      - [Establish Connections](#establish-connections)
+      - [Transmitting and Receiving](#transmitting-and-receiving)
 
 
 ---
@@ -2509,5 +2518,81 @@ False
 # https://deathbycaptcha.com
 # has API
 # pip install deathbycaptcha-official
+```
+
+## 573.5 - Automated Offense
+
+### Components of a Backdoor
+
+#### Python Backdoor
+
+```python
+# pseudo code
+>>> connect to attacker
+>>> while True:
+...     get command from remote connection
+...     execute the command locally
+...     send results over the connection
+```
+
+### Socket Communications
+
+#### DNS Queries
+
+```python
+>>> import socket
+>>> socket.gethostbyname("scanme.net")
+'15.197.148.33'
+# given a hostname, returns an IP
+>>> socket.gethostbyaddr("3.33.130.190")
+('a2aa9ff50de748dbe.awsglobalaccelerator.com', [], ['3.33.130.190'])
+# given an IP, returns a hostname
+```
+
+#### UDP Sockets
+
+```python
+>>> import socket
+>>> udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# AF_INET = IPv4, AF_INET6 = IPv6
+# socket.DGRAM = UDP protocol
+# a server uses bind(("<IP ADDRESS>", port))
+# client or server receives using udpsocket.recvfrom(<bytes>)
+# client or server sends usind udpsocket.sendto(<bytes>, ("<IP ADDRESS>", port))
+```
+
+#### TCP Sockets
+
+```python
+>>> import socket
+>>> udpsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# three-way handshake occurs when connect() is called
+```
+
+#### Establish Connections
+
+```python
+# create outbound connections
+>>> socket.connect(("<dest ip>", <dest port>))
+# accept inbound connections
+>>> socket.bind(("<ip>", <port>))
+>>> socket.listen(<number of connections>)
+>>> socket.accept()
+```
+
+#### Transmitting and Receiving
+
+```python
+# to send bytes across the socket
+>>> socket.send(b"bytes to send")
+>>> socket.send("string to send".encode())
+# to receive bytes from the socket
+>>> socket.revc(max num of bytes)
+>>> socket.recv(max num of bytes)
+>>> socket.recv(max num of bytes).decode()
+# possible responses:
+# 1. len(recv) == 0 when connection dropped
+# 2. recv() returns data when there is data in the TCP buffer
+# 3. recv() will sit and wait if there is no data to receive
 ```
 
