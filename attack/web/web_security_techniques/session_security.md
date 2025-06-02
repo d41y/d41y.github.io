@@ -8,6 +8,8 @@
         - [Part 1: Identify the session identifier](#part-1-identify-the-session-identifier)
         - [Part 2: Simulate an attacker](#part-2-simulate-an-attacker)
     - [Session Fixation](#session-fixation)
+      - [Example](#example-1)
+      - [Example of vulnerable code](#example-of-vulnerable-code)
 
 ---
 
@@ -88,3 +90,41 @@ An attacker can obtain a victim's session identifier using several methods, with
 ![session security 2](../../../images/session_security2.png)
 
 ### Session Fixation
+
+... occurs when an attacker can fixate a (_valid_) session identifier. The Attacker will then have to trick the victim into logging into the application using the aforementioned session identifier. If the victim does so, the attacker can proceed to a Session Hijacking attack.
+
+Such bugs usually occur when session identifiers are being accepted from URL Query Strings or Post Data.
+
+Such attacks are usually mounted in three stages:
+
+1. Attacker manages to obtain a valid session identifier
+2. Attacker manages to fixate a valid session identifier
+3. Attacke tricks the victim into establishing a session using the abovementioned session identifier
+
+#### Example
+
+1. Session fixation identification
+
+![session fixation 1](../../../images/session_fixation1.png)
+
+If any value or a valid session identifier specified in the ```token``` parameter on the URL is propagated to the ```PHPSESSID``` cookie's value, you are probably dealing with a session fixation vuln.
+
+2. Session fixation exploitation attempt
+
+![session fixation 2](../../../images/session_fixation2.png)
+
+Notice that the ```PHPSESSID``` cookie's value is ```IControlThisCookie```. You are dealing with a Session Fixation vuln. An attacker could send a URL similar to the above to a victim. If the victim logs into the application, the attacker could easily hijack their session since the session identifier is already known.
+
+#### Example of vulnerable code
+
+```php
+<?php
+    if (!isset($_GET["token"])) {
+        session_start();
+        header("Location: /?redirect_uri=/complete.html&token=" . session_id());
+    } else {
+        setcookie("PHPSESSID", $_GET["token"]);
+    }
+?>
+```
+
