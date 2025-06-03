@@ -15,6 +15,24 @@ _to-Do's_:
 - Attack cycle / workflow with clickable links
   - Cyber Kill Chain / MITRE Attack Chain
 
+_Certs_:
+
+Red:
+
+1. CBBH
+2. CPTS/OSCP
+3. CRTP
+4. CAPE
+5. CRTO
+6. CRTO 2
+7. OSEP
+
+Blue:
+
+1. BTL 1
+2. CDSA
+3. CCD
+
 <br>
 <br>
 <br>
