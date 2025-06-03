@@ -168,6 +168,11 @@
       - [TCP Sockets](#tcp-sockets)
       - [Establish Connections](#establish-connections)
       - [Transmitting and Receiving](#transmitting-and-receiving)
+    - [Exception/Error Handling](#exceptionerror-handling)
+      - [Exception Handling](#exception-handling)
+      - [try/except/else](#tryexceptelse)
+      - [Try until it works!](#try-until-it-works)
+      - [Try different Things until it works!](#try-different-things-until-it-works)
 
 
 ---
@@ -2594,5 +2599,81 @@ False
 # 1. len(recv) == 0 when connection dropped
 # 2. recv() returns data when there is data in the TCP buffer
 # 3. recv() will sit and wait if there is no data to receive
+```
+
+### Exception/Error Handling
+
+#### Exception Handling
+
+```python
+>>> try:
+... 	print(500/0)
+... except:
+... 	print("An error has occured")
+... 
+An error has occured
+
+...
+
+>>> try:
+...     print(50/0)
+... 	print("this line won't execute")
+... except ZeroDivisionError:
+... 	print("dude, you can't divide by zero")
+... except Exception as e:
+... 	print("Some other exception occured " + str(e))
+... 
+dude, you can't divide by zero
+```
+
+#### try/except/else
+
+```python
+# try to open url that does not exist
+>>> try:
+...     urllib.request.urlopen("http://doesntexist.tgt")
+# specific exception handler
+... except urllib.error.URLError:
+...     print("That URL doesn't exist")
+...     sys.exit(2)
+# generic exception handler
+... except Exception as e:
+...     print(f"{str(e)} occured")
+# do this if it worked
+... else:
+...     print("success without error")
+# do this whether it worked or not
+... finally:
+...     print("always do this")
+```
+
+#### Try until it works!
+
+```python
+>>> while True:
+...     try:
+...             print(50/0)
+...     except:
+...             continue
+...     else:
+...             break
+# loops forever
+# breaks, only when there is no exception happening
+```
+
+#### Try different Things until it works!
+
+```python
+>>> done = False
+>>> while not done:
+...     for thingtotry in ['list','of','things','to','try']:
+...             try:
+...                     print(thingtotry)
+...             except:
+...                     continue
+...             else:
+...                     done = True
+...                     break
+# loops through the for loop until it succeeds
 ```
 
