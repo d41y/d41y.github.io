@@ -179,6 +179,7 @@
       - [Popen.wait(), Buffers, and Popen.communicate()](#popenwait-buffers-and-popencommunicate)
       - [A simpler Alternative in .run()](#a-simpler-alternative-in-run)
       - [Shell Command Injection and shell=True](#shell-command-injection-and-shelltrue)
+    - [Creating a Python Executable](#creating-a-python-executable)
 
 
 ---
@@ -2747,4 +2748,6 @@ result.check_returncode()  result.stderr
 ip = input("What IP shall I ping?")
 subprocess.run(f"ping -c 1 {ip}".split(), capture_output=True).stdout
 ```
+
+### Creating a Python Executable
 

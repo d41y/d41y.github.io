@@ -68,6 +68,8 @@ Blue:
 ## OSINT
 
 ## Pivoting
+
+## Pivoting (alt)
 - [Chisel](./attack/pivoting/chisel.md)
 - [Ligolo](./attack/pivoting/ligolo.md)
 - [Socat](./attack/pivoting/socat.md)
