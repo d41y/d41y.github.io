@@ -173,6 +173,12 @@
       - [try/except/else](#tryexceptelse)
       - [Try until it works!](#try-until-it-works)
       - [Try different Things until it works!](#try-different-things-until-it-works)
+    - [Process Execution](#process-execution)
+      - [Interacting with Subprocesses](#interacting-with-subprocesses)
+      - [Capturing Process Execution](#capturing-process-execution)
+      - [Popen.wait(), Buffers, and Popen.communicate()](#popenwait-buffers-and-popencommunicate)
+      - [A simpler Alternative in .run()](#a-simpler-alternative-in-run)
+      - [Shell Command Injection and shell=True](#shell-command-injection-and-shelltrue)
 
 
 ---
@@ -2675,5 +2681,70 @@ dude, you can't divide by zero
 ...                     done = True
 ...                     break
 # loops through the for loop until it succeeds
+```
+
+### Process Execution
+
+#### Interacting with Subprocesses
+
+```python
+>>> processhandle = subprocess.Popen("run this command",
+...     shell = True,
+...     stdout = subprocess.PIPE,
+...     stderr = subprocess.PIPE,
+...     stdin = subprocess.PIPE)
+>>> procresult = processhandle.stdout.read()
+>>> procerrors = processhandle.stderr.read()
+```
+
+#### Capturing Process Execution
+
+```python
+>>> import subprocess
+>>> proc = subprocess.Popen("ls -l", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+>>> exit_code = proc.wait()
+# waits until it finishes and capture the exit code
+>>> results = proc.stdout.read()
+# reads the output of the command into a string
+>>> print(results)
+b'insgesamt 60\ndrwxrwxr-x  5 d41y d41y 4096 Jun  3 17:27 abschlussuebung\ndrwxrwxr-x  5 d41y d41y 4096 Jun  3 17:47 automated_offense\ndrwxr-xr-x  3 d41y d41y 4096 M\xc3\xa4r  6 11:07 Bilder\ndrwxr-xr-x  5 d41y d41y 4096 Mai 15 09:57 BurpSuiteCommunity\ndrwxrwxr-x  4 d41y d41y 4096 M\xc3\xa4r 21 12:08 ctf\ndrwxr-xr-x  2 d41y d41y 4096 Feb  7 11:48 Dokumente\ndrwxr-xr-x  4 d41y d41y 4096 Jun  3 17:27 Downloads\ndrwxrwxr-x  5 d41y d41y 4096 Apr 25 09:00 github\ndrwxr-xr-x  2 d41y d41y 4096 Nov  7  2024 Musik\ndrwxr-xr-x  2 d41y d41y 4096 Nov  7  2024 \xc3\x96ffentlich\n-rw-rw-r--  1 d41y d41y 2201 Apr 24 16:28 pattern.txt\ndrwxr-xr-x  3 d41y d41y 4096 Jun  2 16:23 Schreibtisch\n-rw-rw-r--  1 d41y d41y  425 Apr 24 16:55 shellcode\ndrwx------ 10 d41y d41y 4096 Mai 19 11:22 snap\ndrwxr-xr-x  2 d41y d41y 4096 Nov  7  2024 Videos\n'
+```
+
+#### Popen.wait(), Buffers, and Popen.communicate()
+
+```python
+>>> from subprocess import Popen, PIPE
+>>> ph = Popen("ls -laR /", shell=True, stdin=PIPE, stderr=PIPE, stdout=PIPE)
+>>> ph.wait()
+# wait locks up the program
+# wait only returns after the program is completely finished
+# Popen pauses execution when the stdout read buffer is full
+>>> from subprocess import Popen, PIPE
+>>> ph = Popen("ls -laR /", shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+>>> output, errors = ph.communicate()
+# communicate returns a tuple of bytes for both the output and errors
+```
+
+#### A simpler Alternative in .run()
+
+```python
+>>> import subprocess
+>>> result = subprocess.run("whoami", shell=True, capture_output=True)
+>>> result.stdout
+b'd41y\n'
+>>> result.
+result.args                result.returncode          result.stdout
+result.check_returncode()  result.stderr 
+# simplified interface that ends up being passed on to subprocess.Popen()
+```
+
+#### Shell Command Injection and shell=True
+
+```python
+# shell needs to be true
+# otherwise the shell injection won't work
+# you would have to split the command into a list
+ip = input("What IP shall I ping?")
+subprocess.run(f"ping -c 1 {ip}".split(), capture_output=True).stdout
 ```
 
