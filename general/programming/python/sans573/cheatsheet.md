@@ -180,6 +180,15 @@
       - [A simpler Alternative in .run()](#a-simpler-alternative-in-run)
       - [Shell Command Injection and shell=True](#shell-command-injection-and-shelltrue)
     - [Creating a Python Executable](#creating-a-python-executable)
+      - [Turn the .py into an .EXE](#turn-the-py-into-an-exe)
+      - [Create an Executable](#create-an-executable)
+    - [Techniques for recvall()](#techniques-for-recvall)
+      - [Fixed-Byte Recvall()](#fixed-byte-recvall)
+      - [Delimiter-Based recvall()](#delimiter-based-recvall)
+      - [Non-Blocking Socket](#non-blocking-socket)
+      - [Timeout-Based Non-Blocking Socket](#timeout-based-non-blocking-socket)
+      - [select.select() Based recvall](#selectselect-based-recvall)
+      - [select.select() recvall()](#selectselect-recvall)
 
 
 ---
@@ -2577,7 +2586,7 @@ False
 
 ```python
 >>> import socket
->>> udpsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+>>> tcpsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # three-way handshake occurs when connect() is called
 ```
 
@@ -2750,4 +2759,123 @@ subprocess.run(f"ping -c 1 {ip}".split(), capture_output=True).stdout
 ```
 
 ### Creating a Python Executable
+
+#### Turn the .py into an .EXE
+
+```python
+# you can use:
+# windows: PyInstaller, py2exe, nuitka, pyOxidizer, pynsist
+# linux: PyInstaller, freeze
+# Mac: PyInstaller, py2app
+```
+
+#### Create an Executable
+
+```bash
+┌──(automated_offense)─(d41y㉿user)-[~]
+└─$ pyinstaller --onefile --noconsole [file]
+```
+
+### Techniques for recvall()
+
+#### Fixed-Byte Recvall()
+
+```python
+# sender
+>>> def mysendall(thesocket, thedata):
+...     thesocket.send(f"{len(thedata):0>100}".encode())
+...     return thesocket.sendall(thedata)
+# receiver
+>>> def recvall(thesocket):
+...     datalen = int(thesocket.recv(100))
+...     data = b""
+...     while len(data)<datalen:
+...             data += thesocket.recv(4096)
+...     return data
+```
+
+#### Delimiter-Based recvall()
+
+```python
+# sender
+>>> def mysendall(thesocket, thedata, delimiter=b"!@#$%^&"):
+...     senddata = codecs.encode(thedata, "base64") + delimiter
+...     return thesocket.sendall(senddata)
+# receiver
+>>> def recvall(thesocket, delimiter=b"!@#$%^&"):
+...     data = b""
+...     while not data.endswith(delimiter):
+...             data += thesocket.recv(4096)
+...     return codecs.decode(data[:-len(delimiter)], "base64")
+```
+
+#### Non-Blocking Socket
+
+```python
+>>> mysocket.setblocking(0)
+>>> mysocket.recv(1024)
+# non-blocking sockets do not wait (regular socket does)
+# returns an exception if no data is ready when recv() is called
+```
+
+#### Timeout-Based Non-Blocking Socket
+
+```python
+>>> def recvall(thesocket, timeout=2):
+# waits to begin
+...     data = thesocket.recv(1)
+# don't wait anymore
+...     thesocket.setblocking(0)
+...     starttime = time.time()
+# receive until timeout
+...     while time.time() - starttime < timeout:
+...             try:
+...                     newdata = thesocket.recv(4096)
+# if len(data) is 0, the connection is dropped
+...                     if len(newdata) == 0:
+...                             break
+...             except socket.error:
+...                     pass
+...             else:
+# accumulate data
+...                     data += newdata
+# update timeout when you receive more data
+...                     starttime = time.time()
+# begin blocking again
+...     thesocket.setblocking(1)
+...     return data
+```
+
+#### select.select() Based recvall
+
+```python
+>>> import socket
+>>> thesocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+>>> import select
+>>> rtrecv,rtsend,err = select.select([thesocket],[thesocket],[thesocket])
+>>> rtrecv
+[<socket.socket fd=3, family=2, type=1, proto=0, laddr=('0.0.0.0', 0)>]
+>>> rtsend
+[<socket.socket fd=3, family=2, type=1, proto=0, laddr=('0.0.0.0', 0)>]
+>>> err
+[]
+# select.select() can be used to see when sockets are ready to recv or send or are in error
+# send it three lists of sockets
+# returns three lists of sockets that are ready to receive, ready to send, and in error
+```
+
+#### select.select() recvall()
+
+```python
+>>> def recvall(thesocket, pause=0.15):
+# wait for initial data
+...     data = thesocket.recv(1)
+...     rtr,rts,err = select.select([thesocket],[thesocket],[thesocket])
+...     while rtr:
+...             data += thesocket.recv(4096)
+# must have some delay
+...             time.sleep(pause)
+...             rtr,rts,err = select.select([thesocket],[thesocket],[thesocket])
+...     return data
+```
 
