@@ -200,6 +200,14 @@
       - [Accessing the variable](#accessing-the-variable)
       - [Adding Attributes](#adding-attributes)
       - [Calling the Parent init](#calling-the-parent-init)
+    - [Argument Packing/Unpacking](#argument-packingunpacking)
+      - [Packing into a Tuple with \* in def](#packing-into-a-tuple-with--in-def)
+      - [Unpacking Iterables with \* in Function Call](#unpacking-iterables-with--in-function-call)
+      - [Packing into a Dict with \*\* in def](#packing-into-a-dict-with--in-def)
+      - [Unpacking a Dict with \*\* in Function Call](#unpacking-a-dict-with--in-function-call)
+      - [def (\*arg,\*\*kwarg) I](#def-argkwarg-i)
+      - [def (\*arg,\*\*kwarg) II](#def-argkwarg-ii)
+      - [Pyterpreter stdio Control](#pyterpreter-stdio-control)
 
 
 ---
@@ -3081,4 +3089,113 @@ Hello variable  ['list', 'of', 'strings']
 'ListOfNumber'
 >>> x
 [1, 2, 3, 4, 5]
+```
+
+### Argument Packing/Unpacking
+
+#### Packing into a Tuple with * in def
+
+```python
+>>> def example(*unknown_number_of_arguments):
+...     print(unknown_number_of_arguments)
+... 
+>>> example(12123,123123,12,12442,23456)
+(12123, 123123, 12, 12442, 23456)
+# * in a definition will collect the items as a tuple
+```
+
+#### Unpacking Iterables with * in Function Call
+
+```python
+>>> print(*[4,5,6])
+4 5 6
+>>> print(*"murr")
+m u r r
+>>> print([[1,2,3],[4,5,6]])
+[[1, 2, 3], [4, 5, 6]]
+>>> print(*[[1,2,3],[4,5,6]])
+[1, 2, 3] [4, 5, 6]
+# * when calling a function unpacks the tuple or other iterable into individual items
+```
+
+#### Packing into a Dict with ** in def
+
+```python
+>>> def example(**named_args):
+...     print(str(named_args))
+... 
+>>> example(python="Rocks", sec573="awesome")
+{'python': 'Rocks', 'sec573': 'awesome'}
+>>> example(make_a="dict", any="length", a=1, b=3)
+{'make_a': 'dict', 'any': 'length', 'a': 1, 'b': 3}
+# ** in a function definition packs named argument items into a dictionary
+```
+
+#### Unpacking a Dict with ** in Function Call
+
+```python
+>>> def example(name,address):
+...     print(name, address)
+... 
+>>> example(address="123 street", name="Mike Murr")
+Mike Murr 123 street
+>>> example(**{"address":"123 street", "name":"Mike Murr"})
+Mike Murr 123 street
+# ** in front of a dict when calling a function will unpack the dict
+```
+
+#### def <function>(*arg,**kwarg) I
+
+```python
+>>> def example(*arg,**kwarg):
+...     print(str(arg), str(kwarg))
+... 
+>>> example()
+() {}
+>>> example(1,2,3,4)
+(1, 2, 3, 4) {}
+>>> example(python="rocks", sec573="Rocks")
+() {'python': 'rocks', 'sec573': 'Rocks'}
+>>> example(1,2,3,4, python="rocks", sec573="Rocks")
+(1, 2, 3, 4) {'python': 'rocks', 'sec573': 'Rocks'}
+# unnamed arguments must be first, named keyword arguments must be last
+```
+
+#### def <function>(*arg,**kwarg) II
+
+```python
+>>> def call_something(function_to_call, *args, **kwargs):
+...     return function_to_call(*args,**kwargs)
+... 
+>>> call_something(sum, [1,2,3])
+6
+>>> call_something(input, "what is your name? ")
+what is your name? peter
+'peter'
+>>> list(call_something(zip, [1,2,3],[4,5,6],"a b  c".split()))
+[(1, 4, 'a'), (2, 5, 'b'), (3, 6, 'c')]
+# by packing input and unpacking in function calls, you can call any function without knowing its arguments
+```
+
+#### Pyterpreter stdio Control
+
+```python
+>>> class MySocket(socket.socket):
+...     def __init__(self,*args,**kwargs):
+...             super().__init__(*args,**kwargs)
+...     def write(self, text):
+...             return self.send(text)
+...     def readline(self):
+...             return self.recv(2048)
+...     def flush(self):
+...             return
+# stdio must be a file and has to have a write, readline method
+```
+
+```python
+>>> import socket, sys, code
+>>> s = MySocket(socket.AF_INET, socket.SOCK_STREAM)
+>>> s.connect(("127.0.0.1", 9000))
+>>> sys.stdout = sys.stdin = sys.stderr = s
+>>> code.interact("BAM!! Shell", local = locals())
 ```
