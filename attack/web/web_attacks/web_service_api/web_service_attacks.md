@@ -364,7 +364,7 @@ d41y@htb[/htb]$ curl -X POST -d "<methodCall><methodName>wp.getUsersBlogs</metho
 
 Above, you can see a successful login attempt through ```xmlrpc.php```.
 
-You will receive a ```403 faulCode``` error if the creds are not valid.
+You will receive a ```403 faultCode``` error if the creds are not valid.
 
 ```bash
 d41y@htb[/htb]$ curl -X POST -d "<methodCall><methodName>wp.getUsersBlogs</methodName><params><param><value>admin</value></param><param><value>WRONG-PASSWORD</value></param></params></methodCall>" http://blog.inlanefreight.com/xmlrpc.php
