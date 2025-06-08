@@ -110,9 +110,9 @@ Server-side
   - [XLST](./attack/web/web_attacks/server_side/xlst.md)
   - [XXE](./attack/web/web_attacks/server_side/xxe.md)
 
-Web Service & API
-- [Web Service]()
-- [APIs]()
+[Web Service & API](./attack/web/web_attacks/web_service_api/web_service_api.md)
+- [Web Service](./attack/web/web_attacks/web_service_api/web_service_attacks.md)
+- [APIs](./attack/web/web_attacks/web_service_api/api_attacks.md)
 
 ### Authentication
 
