@@ -106,7 +106,6 @@ Server-side
   - [SSI](./attack/web/web_attacks/server_side/ssi.md)
   - [SSRF](./attack/web/web_attacks/server_side/ssrf.md)
   - [SSTI](./attack/web/web_attacks/server_side/ssti.md)
-  - [SSRF](./attack/web/web_attacks/server_side/ssrf.md)
   - [XLST](./attack/web/web_attacks/server_side/xlst.md)
   - [XXE](./attack/web/web_attacks/server_side/xxe.md)
 
@@ -121,12 +120,12 @@ Server-side
 
 ### CMS
 
-- [Wordpress]()
+- [Wordpress](./attack/web/cms/wordpress.md)
 
 ### Web Security
 
 - [JavaScript (De-)Obfuscation](./attack/web/web_security_techniques/javascript_deobfuscation.md)
-- [Session Security]()
+- [Session Security](./attack/web/web_security_techniques/session_security.md)
 
 ## Windows
 
