@@ -2,41 +2,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-_TO DELETE_:
-
-Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
-
-_to-Do's_:
-
-- Doku für:
-  - Linux Fundamentals
-  - Windwos Fundamentals
-
-- Attack cycle / workflow with clickable links
-  - Cyber Kill Chain / MITRE Attack Chain
-
-_Certs_:
-
-Red:
-
-1. CBBH
-2. CPTS/OSCP
-3. CRTP
-4. CAPE
-5. CRTO
-6. CRTO 2
-7. OSEP
-
-Blue:
-
-1. BTL 1
-2. CDSA
-3. CCD
-
-<br>
-<br>
-<br>
-
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
