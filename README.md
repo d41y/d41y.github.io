@@ -1,24 +1,7 @@
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    details > summary {
-      list-style-type: none;
-      cursor: default;
-    }
-  </style>
 </head>
 
-<!-- <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
-
-<h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
-  :crossed_swords: ATTACK
-</h3>
-
-<hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);"> -->
-
-<details>
-
-<summary>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
@@ -26,6 +9,11 @@
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
+
+<details>
+
+<summary>
+  Inhalt
 </summary>
 
 ## Binary Exploitation
@@ -130,6 +118,10 @@ Server-side
 
 <details>
 
+<summary>
+  Inhalt
+</summary>
+
 ## Forensics
 
 ## Malware Analysis
@@ -148,6 +140,10 @@ Server-side
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
 <details>
+
+<summary>
+  Inhalt
+</summary>
 
 ## [DBMS](./general/dbms/dbms_fundamentals.md)
 
@@ -192,6 +188,10 @@ Non-Relational
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
 <details>
+
+<summary>
+  Inhalt
+</summary>
 
 ## GitHub
 
