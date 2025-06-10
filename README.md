@@ -13,7 +13,6 @@
 <details>
 
 <summary>
-  Inhalt
 </summary>
 
 ## Binary Exploitation
