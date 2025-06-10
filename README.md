@@ -164,6 +164,11 @@ Non-Relational
 
 ## RegEx
 
+## Reporting
+
+- [Bug Bounty](./general/reporting/bbh_reporting.md)
+- [Penetration Test]()
+
 ## WebDev
 
 - [Sylius](./general/webdev/sylius.md)
