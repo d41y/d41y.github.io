@@ -31,3 +31,4 @@ Blue:
 
 **Gedachter Verlauf**:
 
+_insert mermaid_
