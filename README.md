@@ -5,7 +5,7 @@
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
-  ATTACK
+  :crossed_swords: ATTACK
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
