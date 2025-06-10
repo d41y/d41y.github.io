@@ -14,6 +14,34 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 - Templates
   - BBH
 
+- pt_process.md
+  - Anpassen von mermaid
+
+- Module für CPTS
+  - Linux Fund
+  - Wind Fund
+  - Introduction to Networking
+  - Introduction to Web Apps
+  - Web Requests
+  - Intro to AD
+  - Getting Started
+  - Network Enum with nmap
+  - Footprinting
+  - OSINT Corporate Recon
+  - Vuln Assessment
+  - File Transfers
+  - Shells & Payloads
+  - Using MSFCONSOLE
+  - Password Attacks
+  - Attacking Common Services
+  - Pivoting, Tunneling, Port Forwarding
+  - AD Enum & Attacks
+  - Attacking common apps
+  - linux privesc
+  - wind privesc
+  - documentation and reporting
+  - attacking enterprise networks
+
 # Certs
 
 **Gedachter Verlauf**:
