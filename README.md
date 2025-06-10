@@ -118,7 +118,6 @@ Server-side
 <details>
 
 <summary>
-  Inhalt
 </summary>
 
 ## Forensics
@@ -141,7 +140,6 @@ Server-side
 <details>
 
 <summary>
-  Inhalt
 </summary>
 
 ## [DBMS](./general/dbms/dbms_fundamentals.md)
@@ -189,7 +187,6 @@ Non-Relational
 <details>
 
 <summary>
-  Inhalt
 </summary>
 
 ## GitHub
