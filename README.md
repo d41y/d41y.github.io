@@ -164,10 +164,6 @@ Non-Relational
 
 ## RegEx
 
-## Reporting
-
-- [Bug Bounty Report]()
-
 ## WebDev
 
 - [Sylius](./general/webdev/sylius.md)
