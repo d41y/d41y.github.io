@@ -31,4 +31,36 @@ Blue:
 
 **Gedachter Verlauf**:
 
-_insert mermaid_
+```mermaid
+flowchart LR
+
+classDef attack stroke:red
+classDef defend stroke:blue
+
+0@{shape: circle, label: "Starting Point"}
+
+A1[CBBH]
+A2[CPTS]
+A3[CRTP]
+A4[CAPE]
+%%A5[CRTO 1]
+%%A6[CRTO 2]
+%%A7[OSEP]
+
+D1[BTL 1]
+D2[CDSA]
+%%D3[CCD]
+
+0 --> A1
+subgraph "Basics Attack/Defend"
+    direction TB
+        A1:::attack -.-> A2
+        A2:::attack -.-> D1
+        D1:::defend -.-> D2
+end
+subgraph "AD"
+    direction TB
+        D2:::defend -.-> A3
+        A3:::attack -.-> A4:::attack
+end
+```
