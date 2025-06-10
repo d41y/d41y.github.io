@@ -118,7 +118,7 @@ Server-side
 - [Broken Authentication](./attack/web/authentication/broken_authentication.md)
 - [Login Brute Forcing](./attack/web/authentication/login_brute_forcing.md)
 
-### CMS
+### [CMS](./attack/web/cms/cms.md)
 
 - [Wordpress](./attack/web/cms/wordpress.md)
 
