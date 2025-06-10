@@ -2,7 +2,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     details > summary {
-      list-style: none;
+      list-style-type: none;
       cursor: default;
     }
   </style>
