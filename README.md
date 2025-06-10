@@ -154,7 +154,8 @@ Non-Relational
 
 ## Processes
 
-- [Bug Bounty Hunting Process]()
+- [Bug Bounty Hunting Process](./general/processes/bbh_process.md)
+- [Penetration Testing Process](./general/processes/pt_process.md)
 
 ## Programming
 
