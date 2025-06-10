@@ -4,6 +4,7 @@
     - [CWE (_Common Weakness Enumeration_)](#cwe-common-weakness-enumeration)
     - [CVSS (_Common Vulnerability Scoring System_)](#cvss-common-vulnerability-scoring-system)
   - [CVSS Calculator](#cvss-calculator)
+  - [CVSS Structure](#cvss-structure)
     - [Attack Vector](#attack-vector)
     - [Attack Complexity](#attack-complexity)
     - [Privileges Required](#privileges-required)
@@ -12,7 +13,7 @@
     - [Confidentiality](#confidentiality)
     - [Integrity](#integrity)
     - [Availability](#availability)
-    - [Good Report Examples](#good-report-examples)
+  - [Good Report Examples](#good-report-examples)
 
 ---
 
@@ -42,6 +43,8 @@ When it comes to communicating the severity of an identified vuln, the CVSS shou
 ## CVSS Calculator
 
 Can be found [here](https://www.first.org/cvss/calculator/3-1).
+
+## CVSS Structure
 
 ### Attack Vector
 
@@ -127,7 +130,7 @@ _Shows how much the vulnerable component's availability is affected upon success
 - High (H)
   - The vulnerable component will experience total (_or sever_) availability loss upon successfully exploiting the vuln; the attacker has complete (_or significant_) control over the vulnerable component's availability and can deny the service to users; performance is significantly reduced
 
-### Good Report Examples
+## Good Report Examples
 
 - [Remote Code Execution in Slack desktop apps](https://hackerone.com/reports/783877)
 - [A staff member with no permissions can edit Store Customer Email](https://hackerone.com/reports/980511)
