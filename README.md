@@ -103,7 +103,7 @@ Server-side
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
-  DEFEND
+  :shield: DEFEND
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
@@ -118,7 +118,7 @@ Server-side
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
-  GENERAL
+  :computer: GENERAL
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
@@ -158,7 +158,7 @@ Non-Relational
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
 <h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
-  INFRA
+  :construction: INFRA
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
