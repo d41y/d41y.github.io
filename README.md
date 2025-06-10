@@ -10,6 +10,18 @@
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
+<details>
+
+<summary>
+<hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
+
+<h3 style="font-family: 'Roboto', sans-serif; text-align: center; color: rgb(152, 161, 158); margin-top: 20px; margin-bottom: 20px;">
+  :crossed_swords: ATTACK
+</h3>
+
+<hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
+</summary>
+
 ## Binary Exploitation
 
 - [Stack-Based Buffer Overflows on Linux x86](./attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.md)
@@ -99,6 +111,8 @@ Server-side
 ### Active Directory
 - [testlink]()
 
+</details>
+
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
@@ -108,11 +122,15 @@ Server-side
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
+<details>
+
 ## Forensics
 
 ## Malware Analysis
 
 ## Network Traffic Analysis
+
+</details>
 
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
@@ -122,6 +140,8 @@ Server-side
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
+
+<details>
 
 ## [DBMS](./general/dbms/dbms_fundamentals.md)
 
@@ -154,6 +174,8 @@ Non-Relational
 - [Sylius](./general/webdev/sylius.md)
 - [Symfony](./general/webdev/symfony.md)
 
+</details>
+
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
@@ -163,8 +185,12 @@ Non-Relational
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
+<details>
+
 ## GitHub
 
 [Cloning GitHub, committing and pushing](./infra_misc/github_cloning_enabling.md)
 
 ## VPS
+
+</details>
