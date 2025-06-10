@@ -11,6 +11,9 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 - Attack cycle / workflow with clickable links
   - Cyber Kill Chain / MITRE Attack Chain
 
+- Templates
+  - BBH
+
 # Certs
 
 **Gedachter Verlauf**:
