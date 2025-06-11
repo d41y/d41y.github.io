@@ -24,7 +24,11 @@
       - [Host Enumeration](#host-enumeration)
       - [Pillaging](#pillaging)
     - [Vulnerability Assessment](#vulnerability-assessment)
+      - [Vulnerability Research and Analysis](#vulnerability-research-and-analysis)
+      - [The Return](#the-return)
     - [Exploitation](#exploitation)
+      - [Priorization of Possible Attacks](#priorization-of-possible-attacks)
+      - [Preparation for the Attack](#preparation-for-the-attack)
     - [Post-Exploitation](#post-exploitation)
     - [Lateral Movement](#lateral-movement)
     - [PoC](#poc)
@@ -314,7 +318,71 @@ During internal host enumeration, which in most cases comes after the successful
 
 ### Vulnerability Assessment
 
+During the vulnerability assessment, you examine and analyze the information gathered during the information gathering phase. The vulnerability assessment phase is an analytical process based on the findings.
+
+An analysis is a detailed examination of an event or process, describing its origin and impact, that with the help of precautious and actions, can be triggered to support or prevent future occurences.
+
+Any analysis can very complicated, as many different factors and their interdependencies play a significant role. Apart from the fact that you work with the three different times during each analysis, the origin and destination play a significant role. There are four different types of analysis:
+
+- descriptive
+- diagnostic
+- predictive
+- prescriptive
+
+#### Vulnerability Research and Analysis
+
+Information gathering and vulnerability research can be considered a part of descriptive analysis. This is where you identify the individual network or system you are investigating. In vulnerability research, you look for known vulns, exploits, and security holes that have already been discovered and reported. Therefore, if you have identified a version of a service or application through information gathering and found a Common Vulnerabilities and Exposure, it is very likely that this vuln is still present.
+
+You can find vulnerability disclosures for each componenet using many different sources:
+
+- CVEdetails
+- Exploit DB
+- Vulners
+- Packet Storm Security
+- NIST
+
+This is where diagnostic analysis and predictive analysis is used. Once you have found a published vulnerability like this, you can diagnose it to determine what is causing or has caused the vuln. Here, you must understand the functionality of the PoC code or the application or service itself as best as possible, as many manual configs by admins will require some customization for the PoC. Each PoC is tailored to a specific case that you will also need to adapt to yours in most cases.
+
+#### The Return
+
+Suppose you are unable to detect or identify potential vulns from your analysis. In that case, you will return to the information gathering stage and look for more in-depth information that you have gathered so far.
+
 ### Exploitation
+
+During the exploitation phase, you look for ways that these weaknesses can be adapted to your case to obtain the desired role. If you want to get a revshell, you need to modify the PoC to execute the code, so the target system connects back to you over an encrypted connection to an IP address you specify. Therefore, the preparation of an exploit is mainly part of the exploitation stage.
+
+#### Priorization of Possible Attacks
+
+Once you have found one or two vulns during the vulnerability assessment stage that you can apply to your target network/system, you can prioritize those attacks. Which of those attacks you prioritize higher than the others depends on the following factors:
+
+- Probability of Success
+- Complexity
+- Probability of Damage
+
+First, you need to assess the probability of successfully executing a particular attack against the target. CVSS scoring can help you there, using the NCD calculator better to calculate the specific attacks and their probability of success.
+
+Complexity represents the effort of exploiting a specific vuln. This is used to estimate how much time, effort and research is required to execute the attack on the system successfully. Your experience plays an important role here because if you are to carry out an attack that you have never used before, this will logically require much more research and effort since you must understand the attack and the exploit structure in detail before applying it.
+
+Estimating the probability of damage caused by the execution of an exploit plays a critical role, as you must avoid any damage to the target systems. Generally, you do not perform DoS attacks unless your client requires them. Nevertheless, attacking running services live with exploits that can cause damage to the software or the OS is something that you must avoid at all times.
+
+In addition, you can assign these factors to a personal point system which will allow the evaluation to be more accurately calculated basen on your skills and knowledge:
+
+| Factor | Points |
+| ------ | ------ |
+| Probability of Success | 10 |
+| Complexity - Easy | 5 |
+| Complexity - Medium | 3 |
+| Complexity - Hard | 1 |
+| Probability of Damage | -5 |
+| **Summary** | **max. 15** |
+
+#### Preparation for the Attack
+
+Sometimes you will run into a situation where you can't find high-quality, known working PoC exploit code. Therefore, it may be necessary to reconstruct the exploit locally on a VM representing your target host to figure out precisely what needs to be adapted and changed. Once you have set up the system locally and installed known components to mirror the target environment as closely as possible, you can start preparing the exploit by following the steps described in the exploit. Then you test this on a locally hosted VM to ensure it works and does not damage significantly. In other situations, you will encounter misconfigurations and vulns that you see very often and know exactly which tool or exploit to use and whether the exploit or technique is "safe" or can cause instability.
+
+If ever in doubt before running an attack, it's always best to check with your client, providing them all necessary data so they can make an informed decision on whether they would like you to attempt exploitation or just mark the finding as an issue. If they opt for you but not to proceed with exploitation, you can note in the report that it was not confirmed actively but is likely an issue that needs to be addressed. You have a certain amount of leeway during pentests and should always use your best judgement if a particular attack seems too risky or could potentially cause a disruption. When in doubt, communicate. Your team lead/manager, the client, will almost certainly prefer extra communication that run into a situation where they are trying to bring a system back online after a failed exploit attempt.
+
+Once you have successfully exploited a target and have initial access, you'll move on to the post-exploitation and lateral movement stages.
 
 ### Post-Exploitation
 
