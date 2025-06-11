@@ -30,6 +30,13 @@
       - [Priorization of Possible Attacks](#priorization-of-possible-attacks)
       - [Preparation for the Attack](#preparation-for-the-attack)
     - [Post-Exploitation](#post-exploitation)
+      - [Evasive Testing](#evasive-testing)
+      - [Information Gathering](#information-gathering-1)
+      - [Pillaging](#pillaging-1)
+      - [Persistence](#persistence)
+      - [Vulnerability Assessment](#vulnerability-assessment-1)
+      - [PrivEsc](#privesc)
+      - [Data Exfiltration](#data-exfiltration)
     - [Lateral Movement](#lateral-movement)
     - [PoC](#poc)
     - [Post-Engagement](#post-engagement)
@@ -385,6 +392,76 @@ If ever in doubt before running an attack, it's always best to check with your c
 Once you have successfully exploited a target and have initial access, you'll move on to the post-exploitation and lateral movement stages.
 
 ### Post-Exploitation
+
+Assume you successfully exploited the target system during the exploitation stage. As with the exploitation stage, you must again consider whether or not to utilize evasive testing in the post-exploitation stage. You are already on the system in the post-exploitation phase, making it much more difficult to avoid an alert. The post-exploitation stage aims to obtain sensitive and security-relevant information from a local perspective and business-relevant information that, in most cases, requires higher privileges than a standard user. This stage includes:
+
+- Evasive Testing
+- Information Gathering
+- Pillaging
+- Vulnerability Assessment
+- PrivEsc
+- Persistence
+- Data Exfiltration
+
+#### Evasive Testing
+
+If a skilled admin monitors the system, any change or even a single command could trigger an alarm that will give you away. In many cases, you get kicked out of the network, and then threat hunting begins where you are the focus. You may also lose access to a host or a user account. This pentest would have failed but succeeded in some ways because the client could detect some actions. You can provide value to the client in this situation by still writing up an entire attack chain and helping them identify gaps in their monitoring and processes where they did not notice your actions. For you, you can study how and why the client detected you and work on improving your evasion skills. Perhaps you did not thoroughly test a payload, or you got careless and ran a command such as ```net user``` or ```whoami``` that is often monitored by EDR systems and flagged an anomalous activity.
+
+Evasive testing is divided into three different categories:
+
+- Evasive
+- Hybrid Evasive
+- Non-Evasive
+
+#### Information Gathering
+
+Since you have gained a new perspective on the system and the network of your target system in the exploitation stage, you are basically in a new environment. This means you first have to to reacquaint yourself with what you are working with and what options are available. Therefore, in the post-exploitation stage, you go through the information gathering and vulnerability assessment stages again, which you can consider as part of the current stage. This is because the information you had up to this point was gathered from an external perspective, not an internal one.
+
+From the inside (_local_) perspective, you have many more possibilities and alternatives to access certain information that is relevant to you. Therefore, the information gathering stage starts all over again from the local perspective. You search and gather as much information as you can. The difference here is that you also enumerate the local network and local services such as printers, database servers, virtualization services, etc. Often you will find shares intended for employees to use to exchange and share data and files. The investigation of these services and network components is called Pillaging.
+
+#### Pillaging
+
+... is the stage where you examine the role of the host in the corporate network. You analyze the network configurations, including but not limited to:
+
+- Interfaces
+- Routing
+- DNS
+- ARP
+- Services
+- VPN
+- IP Subnets
+- Shares
+- Network Traffic
+
+Understanding the role of the system you are on also gives you an excellent understanding of how it communicates with other network devices and its purpose. From this, you can find out, for example, what alternative subdomains exist, whether it has multiple network interfaces, whether there are other hosts with which this system communicates, if admins are connecting to other hosts from it, and if you can potentially reuse credentials or steal an SSH key to further access or establish persistence, etc. This helps, above all, to get an overview of the network's structure.
+
+For example, you can use the policies installed on this system to determine what other hosts are using on the network. Because admins often use particular schemas to secure their network and prevent users from changing anything on it. For example, suppose you discover that the password policy requires only eight chars but no special chars. In that case, you can conclude that you have a relatively high probability of guessing other users' passwords on this and other systems.
+
+During the pillaging stage, you will also hunt for sensitive data such as passwords on shares, local machines, in scripts, configurations files, password vaults, documents, and even email.
+
+Your main goals with pillaging are to show the impact of successful exploitation and, if you have not yet reached the goal of the assessment, to find additional data such as passwords that can be inputs to other stages such as lateral movement.
+
+#### Persistence
+
+Once you have an overview of the system, your immediate next step is maintaining access to the exploited host. This way, if the connection is interrupted, you can still access it. This step is essential and often used as the first step before the information gathering and pillaging stages.
+
+You should follow non-standardized sequences because each system is individually configured by a unique admin who brings their own preferences and knowledge. It is recommended that you work flexibly during this phase and adapt to the circumstances. For example, suppose you have used a buffer overflow attack on a service that is likely to crash it. In that case, you should establish persistence to the system asap to avoid having to attack the service multiple times and potentially causing a disruption. Often if you lose the connection, you will not be able to access the system in the same way.
+
+#### Vulnerability Assessment
+
+If you can maintain access and have good overview of the system, you can use the information about the system and its services and any other data stored on it to repeat the vulnerability assessment stage, but this time from inside the system. You analyze the information and prioritize it accordingly. The goal you pursue next is the escalation of privileges.
+
+Again, it is essential to distinguish between exploits that can harm the system and attacks against the services that do not cause any disruption. In doing so, you weigh the components you have already gone through in the first vulnerability assessment.
+
+#### PrivEsc
+
+... is significant, and in most cases, it represents a critical moment that can open many more new doors for you. Getting the highest privileges on the system or domain is often crucial. Therefore you want to get the privileges of the root or the domain administrator/local administrator/SYSTEM because this will often allow you to move through the entire network without any restrictions.
+
+However, it is essential to remember that the escalation of privileges does not always have to occur locally on the system. You can also obtain stored credentials during the information gathering stage from other users who are members of a higher privileged group. Exploiting these privileges to log in as another user is also part of PrivEsc because you have escalated your privileges using the new set of creds.
+
+#### Data Exfiltration
+
+During the data exfiltration and pillaging stage, you will often be able to find, among other things, considerable personal information and customer data. Some clients will want to check whether it is possible to exfiltrate these types of data. This means you try to transfer this information from the target system to your own. Security systems such as Data Loss Prevention (_DLP_) and Endpoint Detection Response (_EDR_) help detect and prevent data exfiltration. In addition to network monitoring, many companies use encryption on hard drives to prevent external parties from viewing such information. Before exfiltrating any actual data, you should check with the customer and your manager. It can often be enough to create some bogus data and exfiltrate it to your system. That way, the protection mechanisms that look for patterns in data leaving the network will be tested, but you will not be responsible for any live sensitive data on your testing machine.
 
 ### Lateral Movement
 
