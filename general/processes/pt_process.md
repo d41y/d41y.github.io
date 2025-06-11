@@ -38,8 +38,21 @@
       - [PrivEsc](#privesc)
       - [Data Exfiltration](#data-exfiltration)
     - [Lateral Movement](#lateral-movement)
+      - [Pivoting](#pivoting)
+      - [Evasive Testing](#evasive-testing-1)
+      - [Information Gathering](#information-gathering-2)
+      - [Vulnerability Assessment](#vulnerability-assessment-2)
+      - [PrivEsc](#privesc-1)
+      - [Post-Exploitation](#post-exploitation-1)
     - [PoC](#poc)
     - [Post-Engagement](#post-engagement)
+      - [Cleanup](#cleanup)
+      - [Documenting and Reporting](#documenting-and-reporting)
+      - [Report Review Meeting](#report-review-meeting)
+      - [Deliverable Acceptance](#deliverable-acceptance)
+      - [Post-Remediation Testing](#post-remediation-testing)
+      - [Data Retention](#data-retention)
+      - [Close Out](#close-out)
 
 ---
 
@@ -465,6 +478,98 @@ During the data exfiltration and pillaging stage, you will often be able to find
 
 ### Lateral Movement
 
+The goal is here that you test what an attacker could do within the network. After all, the main goal is not only to successfully exploit a publicly available system but also get sensitive data or find all ways that an attacker could render the network unusable. One of the most common examples is ransomware. If a system in the corporate network is infected with ransomware, it can spread across the entire network. It locks down all the systems using various encryption methods, making them unusable for the whole company until a decryption key is entered.
+
+In the most cases, the company is financially extorted to make a profit. Often, it is only at this moment that companies realize how important IT security is. If they had had a good pentester who tested things they probably could have prevented such a situation and the financial damage. It is often forgotten that in many countries, the CEOs are held liable for not securing their customer data appropriately.
+
+In this stage you want to test how far you can move manually in the entire network and what vulns you can find from the internal perspective that might be exploited. In doing so, you will again run through several phases:
+
+- Pivoting
+- Evasive Testing
+- Information Gathering
+- Vulnerability Assessment
+- PrivEsc
+- Post-Exploitation
+
+#### Pivoting
+
+In most cases, the system you use will not have the tools to enumerate the internal network efficiently. Some techniques allow you to use the exploited host as a proxy and perform all the scans from your attack machine or VM. In doing so, the exploited system represents and routes all your network requests sent from your attack machine to the internal network and its network components.
+
+In this way, you make sure that non-routable networks can still be reached. This allows you to scan them for vulns and penetrate deeper into the network. This process is also known as pivoting or tunneling.
+
+#### Evasive Testing
+
+Also, in this stage, you should consider whether evasive testing is part of the assessment scope. There are different procedures for each tactic, which support you in disguising these requests to not trigger an internal alarm among the admins and the blue team.
+
+There are many ways to protect against lateral movement, including network (_micro_) segmentation, threat monitoring, IPS/IDS, EDR, etc. To bypass these efficiently, you need to understand how they work and what they respond to. Then you can adapt and apply methods and strategies that help avoid detection.
+
+#### Information Gathering
+
+Before you target the internal network, you must first get an overview of which systems and how many can be reached from your system. This information may already be available to you from the last post-exploitation stage, where you took a closer look at the settings and configurations of the system.
+
+You return to the information gathering stage, but this time, you do it from inside the network with a different view of it. Once you have discovered all hosts and servers, you can enumerate them individually.
+
+#### Vulnerability Assessment
+
+... from the inside of the network differs from the previous procedures. This is because far more errors occur inside a network than on hosts and servers exposed to the internet. Here, the groups to which one has been assigned and the rights to different system components play an essential role. In addition, it is common for users to share information and documents and work on them together.
+
+This type of information is of particular interest to you when planning your attacks. For example, if you compromise a user account assigned to a dev group, you may gain access to most of the resources used by company devs. This will likely provide you with crucial internal information about the systems and could help you to identify flaws or further your access.
+
+#### PrivEsc
+
+Once you have found and prioritized these paths, you can jump to the step where you use these to access the other systems. You often find ways to crack passwords and hashes and gain higher privileges. Another standard method is to use your existing creds on other systems. There will also be situations where you do not even have to crack hashes but can use them directly. For example, you can use the tool Responder to intercept NTLMv2 hashes. If you can intercept a hash from an admin, then you can use the pass-the-hash technique to log in as that admin on multiple hosts and servers.
+
+After all, the lateral movement stage aims to move through the internal network. Existing data and information can be veratile and often used in many ways.
+
+#### Post-Exploitation
+
+Once you have reached one or more hosts or servers, you go through the steps of the post-exploitation stage again for each system. Here you again collect system information, data from created users, and business information that can be presented as evidence. However, you must again consider how this different information must be handled and the rules defined around sensitive data in the contract.
+
 ### PoC
 
+... is a project management term. In project management, it serves as proof that a project is feasible in principle. The criteria for this can lie in technical or business factors. Therefore, it is the basis for further work, in your case, the necessary steps to secure the corporate network by confirming the discovered vulns. In other words, it serves as a decision-making basis for the further course of action. At the same time, it enables risks to be identified and minimized.
+
+A PoC can have many different representations. For example, documentation of the vulns found can also consitute a PoC. The more practical version of a PoC is a script or code that automatically exploits the vulns found. This demonstrates the flawless exploitation of the vulnerabilities. This variant is straightforward for an admin or dev because they can see what steps your script takes to exploit the vuln.
+
 ### Post-Engagement
+
+#### Cleanup
+
+Once testing is complete, you should perform any necessary cleanup, such as deleting tools/scripts uploaded to target systems, reverting any (_minor_) configuration changes you may have made, etc. You should have detailed notes of all your activities, making any cleanup activities easy and efficient. If you cannot access a system where an artifact needs to be deleted, or another change reverted, you should alert the client and list these issues in the report appendices. Even if you can remove any uploaded files and revert changes, you should document these changes in your report appendices in case the client receives alerts that they need to follow up on and confirm that the activity in question was part of your sanctioned testing.
+
+#### Documenting and Reporting
+
+You must make sure to have adequate documentation for all findings that you plan to include in your report. This includes command output, screenshots, a listing of affected hosts, and anything else specific to the client environment or finding. You should also make sure that you have retrieved all scan and log output if the client hosted a VM in their infrastructure for an internal pentest and any other data that may be included as part of the report or as supplementary documentation. You should not keep any Personal Identifiable Information (_PII_), potentially incriminating info, or other sensitive data you came across throughout testing.
+
+You should already have a detailed list of the findings you will include in the report and all necessary details to tailor the findings to the client's environment. Your report deliverable should consist of the following:
+
+- An attack chain detailing steps taken to achieve compromise
+- A strong executive summary that a non-technical audience can understand
+- Detailed findings specific to the client's environment that include a risk rating, finding impact, remediation recommendations, and high-quality external references related to the issue
+- Adequate steps to reproduce each finding so the team responsible for remediation can understand and test the issue while putting fixes in place
+- Near, medium, and long-term recommendations specific to the environment
+- Appendices which include information such as the target scope, OSINT data, password cracking analysis, discovered ports/services, compromised hosts, compromised accounts, files transferred to client-owned systems, any account creation/system modifications, an Acitve Directory security analysis, relevant scan data/supplementary documentation, and any other information necessary to explain a specific finding or recommendation further
+
+#### Report Review Meeting
+
+Once the draft report is deliverd, and the client has had a chance to distribute it internally and review it in-depth, it is customary to hold a report review meeting to walk through the assessment results. The report review meeting typically includes the same folks from the client and the firm performing the assessment. Depending on the types of findings, the client may bring in additional technical subject matter experts if the finding is related to a system or app they are responsible for. Typically you will not read the entire report word for word but walk through each finding briefly and give an explanation from your own perspective/experience. The client will have the opportunity to ask questions about anything in the report, ask for clarifications, or point out issues that need to be corrected. Often the client will come with a list of questions about specific findings and will not want to cover every finding in detail.
+
+#### Deliverable Acceptance
+
+The scope of work should clearly define the acceptance of any project deliverables. In pentest assessments, generally, you deliver a report marked DRAFT and give the client a chance to review and comment. Once the client has submitted feedback either by email or during a report review meeting, you can issue them a new version of the report marked FINAL. Some audit firms that clients may be beholden to will not accept a pentest report with a DRAFT designation. Other companies will not care, but keeping a uniform approach all customers is best.
+
+#### Post-Remediation Testing
+
+Since a pentest is essentially an audit, you must remain impartial third parties and not perform remediation on your findings. You must maintain a degree of independence and can serve as trusted advisors by giving general remediation advice on how a specific issue could be fixed or be available to explain further/demonstrate a finding so the team assigned to remediate it has a better understanding. You should not be implementing changes yourself or even giving precise remediation advice. This will help maintain the assessment's integrity and not introduce any potential conflict of interest into the process.
+
+#### Data Retention
+
+After a pentest concludes, you will have a considerable amount of client-specific data such as scan results, log output, credentials, screenshots, and more. Data retention and destruction requirements may differ from county to country and firm to firm, and procedures surrounding each should be outlined clearly in the contract language of the scope of work and the RoE.
+
+You should retain evidence for some time after the penstest in case questions arise about specific findings or to assist with retesting "closed" findings after the client has performed remediation activities. Any data retained after the assessment should be stored in a secure location owned and controlled by the firm and encrypted at rest. All data should be wiped from tester systems at the conclusion of an assessment. A new virtual machine specific to the client in question should be created for any post-remediation testing or investigation of findings related to client inquiries.
+
+#### Close Out
+
+Once you have delivered the final report, assisted the client with questions regarding remediation, and performed post-remediation testing/issued a new report, you can finally close the project. At this stage, you should ensure that any systems used to connect to the client's systems or process data have been wiped or destroyed and that any artifacts leftover from the engagement are stored securely (_encrypted_) per your firm's policy and per contractual obligations to your client. The final steps would be invoicing the client and collecting payment for services rendered. Finally, it is always good to follow up with a post-assessment client satisfaction survey so the team and management, in particular, can see what went well during the engagement and what could be improved upon from a company process standpoint and the individual consultant assigned to the project. Discussions for follow-on work may arise in the weeks or months after if the client was pleased with your work and day-to-day interactions.
+
+As you continually grow your technical skillset, you should always look for ways to improve your soft skills and become more well-rounded professional consultants. In the end, the client will usually remember interactions during the assessment, communication, and how they were treated/valued by the firm they engage, not the fancy exploit chain the pentester pulled of to pwn their systems. Take time to self-reflect and work on continuous improvement in all aspects of your role as a professional pentester.
