@@ -6,7 +6,7 @@
   - [The Shell](#the-shell)
     - [Prompt Description](#prompt-description)
       - [Unprivileged](#unprivileged)
-      - [Privilged](#privilged)
+      - [Privileged](#privileged)
       - [PS1](#ps1)
     - [Getting Help](#getting-help)
       - [man](#man)
@@ -80,7 +80,7 @@ The bash prompt is simple to understand. By default, it shows information like y
 $
 ```
 
-#### Privilged
+#### Privileged
 
 ```bash
 #
