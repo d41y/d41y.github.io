@@ -19,6 +19,21 @@
   - [Workflow](#workflow)
     - [Editing Files](#editing-files)
       - [vimtutor](#vimtutor)
+    - [File Descriptors and Redirections](#file-descriptors-and-redirections)
+      - [STDIN and STDOUT](#stdin-and-stdout)
+      - [STDOUT and STDERR](#stdout-and-stderr)
+      - [Redirect STDERR to Null Device](#redirect-stderr-to-null-device)
+      - [Redirect STDOUT to a File](#redirect-stdout-to-a-file)
+      - [Redirect STDOUT and STDERR to Separate Files](#redirect-stdout-and-stderr-to-separate-files)
+      - [Redirect STDIN](#redirect-stdin)
+      - [Redirect STDIN Stream to a File](#redirect-stdin-stream-to-a-file)
+    - [Filter Contents](#filter-contents)
+    - [Service and Process Management](#service-and-process-management)
+      - [Systemctl](#systemctl)
+      - [Kill a Process](#kill-a-process)
+      - [Background a Process](#background-a-process)
+      - [Foreground a Process](#foreground-a-process)
+      - [Execute Multiple Commands](#execute-multiple-commands)
 
 ---
 
@@ -278,5 +293,299 @@ d41y@htb[/htb]$ vimtutor
      the   j   key enough times to move the cursor so that lesson 1.1
      completely fills the screen.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+### File Descriptors and Redirections
+
+By default, the first three file descriptors in Linux are:
+
+1. Data Stream for Input
+   1. STDIN - 0
+2. Data Stream for Output
+   1. STDOUT - 1
+3. Data Stream for Output that relates to an error occuring
+   1. STDERR - 2
+
+#### STDIN and STDOUT
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ cat                          
+Think Outside the Box # STDIN
+Think Outside the Box # STDOUT
+```
+
+#### STDOUT and STDERR
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ find /etc/ -name shadow                             
+/etc/shadow # STDOUT
+find: ‘/etc/cni/net.d’: Permission denied # STDERR
+```
+
+#### Redirect STDERR to Null Device
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ find /etc/ -name shadow 2>/dev/null
+/etc/shadow
+```
+
+#### Redirect STDOUT to a File
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ find /etc/ -name shadow 2>/dev/null > result.txt # to null device
+                                                                                
+┌──(d41y㉿kali)-[~]
+└─$ cat result.txt # got redirected to file
+/etc/shadow
+```
+
+#### Redirect STDOUT and STDERR to Separate Files
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ find /etc/ -name shadow 2>error.txt >result.txt 
+                                                                                
+┌──(d41y㉿kali)-[~]
+└─$ cat error.txt     
+find: ‘/etc/ipsec.d/private’: Permission denied
+find: ‘/etc/redis’: Permission denied
+find: ‘/etc/polkit-1/rules.d’: Permission denied
+find: ‘/etc/ssl/private’: Permission denied
+find: ‘/etc/credstore’: Permission denied
+find: ‘/etc/credstore.encrypted’: Permission denied
+find: ‘/etc/cni/net.d’: Permission denied
+find: ‘/etc/ldap/slapd.d/cn=config’: Permission denied
+find: ‘/etc/openvas/gnupg’: Permission denied
+find: ‘/etc/vpnc’: Permission denied
+                                                                                
+┌──(d41y㉿kali)-[~]
+└─$ cat result.txt 
+/etc/shadow
+```
+
+#### Redirect STDIN
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ cat < result.txt 
+/etc/shadow
+```
+
+#### Redirect STDIN Stream to a File
+
+```bash
+┌──(d41y㉿kali)-[~]
+└─$ cat << EOF > result.txt 
+heredoc> Hack
+heredoc> The                                           
+heredoc> Box
+heredoc> EOF
+                                                                                
+┌──(d41y㉿kali)-[~]
+└─$ cat result.txt         
+Hack
+The
+Box
+```
+
+### Filter Contents
+
+- more
+- less
+- head
+- tail
+- sort
+- grep
+- cut
+- tr
+- column
+- awk
+- sed
+- wc
+
+### Service and Process Management
+
+#### Systemctl
+
+```bash
+d41y@htb[/htb]$ systemctl start ssh
+
+d41y@htb[/htb]$ systemctl status ssh
+
+● ssh.service - OpenBSD Secure Shell server
+   Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2020-05-14 15:08:23 CEST; 24h ago
+   Main PID: 846 (sshd)
+   Tasks: 1 (limit: 4681)
+   CGroup: /system.slice/ssh.service
+           └─846 /usr/sbin/sshd -D
+
+Mai 14 15:08:22 inlane systemd[1]: Starting OpenBSD Secure Shell server...
+Mai 14 15:08:23 inlane sshd[846]: Server listening on 0.0.0.0 port 22.
+Mai 14 15:08:23 inlane sshd[846]: Server listening on :: port 22.
+Mai 14 15:08:23 inlane systemd[1]: Started OpenBSD Secure Shell server.
+Mai 14 15:08:30 inlane systemd[1]: Reloading OpenBSD Secure Shell server.
+Mai 14 15:08:31 inlane sshd[846]: Received SIGHUP; restarting.
+Mai 14 15:08:31 inlane sshd[846]: Server listening on 0.0.0.0 port 22.
+Mai 14 15:08:31 inlane sshd[846]: Server listening on :: port 22.
+
+d41y@htb[/htb]$ systemctl enable ssh
+
+Synchronizing state of ssh.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable ssh
+
+d41y@htb[/htb]$ systemctl list-units --type=service
+
+UNIT                                                       LOAD   ACTIVE SUB     DESCRIPTION              
+accounts-daemon.service                                    loaded active running Accounts Service         
+acpid.service                                              loaded active running ACPI event daemon        
+apache2.service                                            loaded active running The Apache HTTP Server   
+apparmor.service                                           loaded active exited  AppArmor initialization  
+apport.service                                             loaded active exited  LSB: automatic crash repor
+avahi-daemon.service                                       loaded active running Avahi mDNS/DNS-SD Stack  
+bolt.service                                               loaded active running Thunderbolt system service
+
+d41y@htb[/htb]$ journalctl -u ssh.service --no-pager
+
+-- Logs begin at Wed 2020-05-13 17:30:52 CEST, end at Fri 2020-05-15 16:00:14 CEST. --
+Mai 13 20:38:44 inlane systemd[1]: Starting OpenBSD Secure Shell server...
+Mai 13 20:38:44 inlane sshd[2722]: Server listening on 0.0.0.0 port 22.
+Mai 13 20:38:44 inlane sshd[2722]: Server listening on :: port 22.
+Mai 13 20:38:44 inlane systemd[1]: Started OpenBSD Secure Shell server.
+Mai 13 20:39:06 inlane sshd[3939]: Connection closed by 10.22.2.1 port 36444 [preauth]
+Mai 13 20:39:27 inlane sshd[3942]: Accepted password for master from 10.22.2.1 port 36452 ssh2
+Mai 13 20:39:27 inlane sshd[3942]: pam_unix(sshd:session): session opened for user master by (uid=0)
+Mai 13 20:39:28 inlane sshd[3942]: pam_unix(sshd:session): session closed for user master
+Mai 14 02:04:49 inlane sshd[2722]: Received signal 15; terminating.
+Mai 14 02:04:49 inlane systemd[1]: Stopping OpenBSD Secure Shell server...
+Mai 14 02:04:49 inlane systemd[1]: Stopped OpenBSD Secure Shell server.
+-- Reboot --
+```
+
+#### Kill a Process
+
+A process can be in the following states:
+
+- runnning
+- waiting
+- stopped
+- zombie
+
+Processes can be controlled using ```kill```, ```pkill```, ```pgrep```, and ```killall```. To interact with a process, you must send a signal to it. You can view all signals with the following command:
+
+```bash
+d41y@htb[/htb]$ kill -l
+
+ 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP
+ 2) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1
+1)  SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM
+2)  SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+3)  SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ
+4)  SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR
+5)  SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+6)  SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+7)  SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+8)  SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+9)  SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+10) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+11) SIGRTMAX-1  64) SIGRTMAX
+```
+
+Most commonly used signals are:
+
+| Signal | Description |
+| ------ | ----------- |
+| 1 | SIGHUP - is sent to a process when the terminal that controls it is closed |
+| 2 | SIGINT - sent when a user presses ```[Ctrl] + C``` in the controlling terminal to interrupt a process |
+| 3 | SIGQUIT - sent when a user presses ```[Ctrl] + D``` to quit |
+| 9 | SIGKILL - immediately kill a process with no clean-up operations |
+| 15 | SIGTERM - program termination |
+| 19 | SIGSTOP - stop the program; it cannot be handled anymore |
+| 20 | SIGTSTP - sent when a user presses ```[Ctrl] + Z``` to request for a service to suspend; the user can handle it afterward |
+
+To force a kill:
+
+```bash
+d41y@htb[/htb]$ kill 9 <PID> 
+```
+
+#### Background a Process
+
+```bash
+d41y@htb[/htb]$ ping -c 10 www.hackthebox.eu
+
+d41y@htb[/htb]$ vim tmpfile
+[Ctrl + Z]
+[2]+  Stopped                 vim tmpfile
+
+d41y@htb[/htb]$ jobs
+
+[1]+  Stopped                 ping -c 10 www.hackthebox.eu
+[2]+  Stopped                 vim tmpfile
+
+d41y@htb[/htb]$ bg
+
+d41y@htb[/htb]$ 
+--- www.hackthebox.eu ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 113482ms
+
+[ENTER]
+[1]+  Exit 1                  ping -c 10 www.hackthebox.eu
+```
+
+... or automatically set the process with an ```&``` at the end of the command:
+
+```bash
+d41y@htb[/htb]$ ping -c 10 www.hackthebox.eu &
+
+[1] 10825
+PING www.hackthebox.eu (172.67.1.1) 56(84) bytes of data.
+
+d41y@htb[/htb]$ 
+
+--- www.hackthebox.eu ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 9210ms
+
+[ENTER]
+[1]+  Exit 1                  ping -c 10 www.hackthebox.eu
+```
+
+#### Foreground a Process
+
+```bash
+d41y@htb[/htb]$ jobs
+
+[1]+  Running                 ping -c 10 www.hackthebox.eu &
+
+d41y@htb[/htb]$ fg 1
+ping -c 10 www.hackthebox.eu
+
+--- www.hackthebox.eu ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 9206ms
+```
+
+#### Execute Multiple Commands
+
+```bash
+d41y@htb[/htb]$ echo '1'; echo '2'; echo '3'
+
+1
+2
+3
+
+d41y@htb[/htb]$ echo '1'; ls MISSING_FILE; echo '3'
+
+1
+ls: cannot access 'MISSING_FILE': No such file or directory
+3
+
+d41y@htb[/htb]$ echo '1' && ls MISSING_FILE && echo '3'
+
+1
+ls: cannot access 'MISSING_FILE': No such file or directory
 ```
 
