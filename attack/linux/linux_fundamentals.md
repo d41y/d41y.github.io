@@ -28,12 +28,24 @@
       - [Redirect STDIN](#redirect-stdin)
       - [Redirect STDIN Stream to a File](#redirect-stdin-stream-to-a-file)
     - [Filter Contents](#filter-contents)
+  - [System Management](#system-management)
     - [Service and Process Management](#service-and-process-management)
       - [Systemctl](#systemctl)
       - [Kill a Process](#kill-a-process)
       - [Background a Process](#background-a-process)
       - [Foreground a Process](#foreground-a-process)
       - [Execute Multiple Commands](#execute-multiple-commands)
+    - [Task Scheduling](#task-scheduling)
+      - [systemd](#systemd)
+        - [Create a Timer](#create-a-timer)
+        - [Create a Service](#create-a-service)
+        - [Reload systemd](#reload-systemd)
+        - [Start the Timer \& Service](#start-the-timer--service)
+      - [cron](#cron)
+    - [Network Services](#network-services)
+      - [Network File System (_NFS_)](#network-file-system-nfs)
+- [create NFS share](#create-nfs-share)
+- [mount NFS share](#mount-nfs-share)
 
 ---
 
@@ -407,6 +419,8 @@ Box
 - sed
 - wc
 
+## System Management
+
 ### Service and Process Management
 
 #### Systemctl
@@ -589,3 +603,160 @@ d41y@htb[/htb]$ echo '1' && ls MISSING_FILE && echo '3'
 ls: cannot access 'MISSING_FILE': No such file or directory
 ```
 
+### Task Scheduling
+
+#### systemd
+
+... is a service used in Linux systems such as Ubuntu, Redhat Linux, and Solaris to start processes and scripts at a specifc time. With it, you can set up processes and scripts to run at a specific time or time interval and can also specify events and triggers that will trigger a specific task. To do this, you need to take some steps and precautions before your scripts or processes are automatically executed by the system.
+
+1. create a timer
+2. create a service
+3. activate the timer
+
+##### Create a Timer
+
+Create a dir and the timer-file.
+
+```bash
+d41y@htb[/htb]$ sudo mkdir /etc/systemd/system/mytimer.timer.d
+d41y@htb[/htb]$ sudo vim /etc/systemd/system/mytimer.timer
+```
+
+The timer file must contain "Unit", "Timer", and "Install".
+
+- **Unit**: specifies a description for the timer
+- **Timer**: specifies when to start the timer and when to activate it
+- **Install**: specifies where to install the timer
+
+```bash
+# mytimer.timer file
+[Unit]
+Description=My Timer
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1hour
+
+[Install]
+WantedBy=timers.target
+```
+
+Here it depends on how you want to use your script. For example, if you want to run your script only once after the system boot, you should use ```OnBootSec``` setting in ```Timer```.
+
+##### Create a Service
+
+```bash
+d41y@htb[/htb]$ sudo vim /etc/systemd/system/mytimer.service
+```
+
+Here you set a description and specify the full path to the script you want to run. The "multi-user.target" is the unit system that is activated when starting a normal multi-user mode. It defines the services that should be started on a normal system startup.
+
+```bash
+[Unit]
+Description=My Service
+
+[Service]
+ExecStart=/full/path/to/my/script.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+After that, you have to let systemd read the folders again to include the changes.
+
+##### Reload systemd
+
+```bash
+d41y@htb[/htb]$ sudo systemctl daemon-reload
+```
+
+After that, you can use ```systemctl``` to start the service manually and enable the autostart.
+
+##### Start the Timer & Service
+
+```bash
+d41y@htb[/htb]$ sudo systemctl start mytimer.timer
+d41y@htb[/htb]$ sudo systemctl enable mytimer.timer
+```
+
+This way mytimer.service will be launched according to the intervals you set in mytimer.timer.
+
+#### cron
+
+... is another tool that can be used in Linux systems to schedule and automate processes. It allows users and admins to execute tasks at a specific time or specific intervals. For the above examples, you can also use cron to automate the same tasks. You just need to create script and then tell the cron daemon to call it at a specific time.
+
+To set up the cron daemon, you need to store the tasks in a file called crontab and then tell the daemon when to run the tasks. Then you can schedule and automate the tasks by configuring the cron daemon accordingly.
+
+Example:
+
+```bash
+# System Update
+0 */6 * * * /path/to/update_software.sh
+
+# Execute scripts
+0 0 1 * * /path/to/scripts/run_scripts.sh
+
+# Cleanup DB
+0 0 * * 0 /path/to/scripts/clean_database.sh
+
+# Backups
+0 0 * * 7 /path/to/scripts/backup.sh
+```
+
+It is also possible to receive notifications when a task is executed successfully or unsuccessfully. In addition, you can create logs to monitor the execution of the tasks.
+
+### Network Services
+
+#### Network File System (_NFS_)
+
+... is a network protocol that allows you to store and manage files on remote systems as if they were stored on the local system. It enables easy and efficient management of file across networks. For example, admins use NFS to store and manage files centrally to enable easy collaboration of data. For Linux, there are several NFS servers, including NFS-UTILS, NFS-Ganesha, and OpenNFS.
+
+It can also be used to share and manage resources efficiently, e. g., to replicate file systems between servers. It also offers features such as access controls, real-time file transfer, and support for multiple users accessing data simultaneously. You can use this service just like FTP in case there is no FTP client installed on the target system, or NFS is running instead of FTP.
+
+```bash
+# installing
+d41y@htb[/htb]$ sudo apt install nfs-kernel-server -y
+# server status
+d41y@htb[/htb]$ systemctl status nfs-kernel-server
+
+● nfs-server.service - NFS server and services
+     Loaded: loaded (/lib/system/system/nfs-server.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Sun 2023-02-12 21:35:17 GMT; 13s ago
+    Process: 9234 ExecStartPre=/usr/sbin/exportfs -r (code=exited, status=0/SUCCESS)
+    Process: 9235 ExecStart=/usr/sbin/rpc.nfsd $RPCNFSDARGS (code=exited, status=0/SUCCESS)
+   Main PID: 9235 (code=exited, status=0/SUCCESS)
+        CPU: 10ms
+```
+
+You can configure NFS via the config file ```/etc/exports```. This file specifies which directories should be shared and the access rights for users and systems. It is also possible to configure settins such as the transfer speed and the use of encryption. NFS access rights determine which users and systems can access the shared directories and what actions they can perform. Here are some important access rights that can be configured in NFS:
+
+| Permission | Description |
+| ---------- | ----------- |
+| rw | gives users and systems read and write permissions to the shared directory |
+| ro | gives users and systems read-only access to the shared directory |
+| no_root_squash | prevents the root user on the client from being restricted to the rights of a normal user |
+| root_squash | restricts the rights of the root user on the client to the rights of a normal user |
+| sync | synchronizes the transfer of data to ensure that changes are only transferred after they have been saved on the file system |
+| async | transfers data asynchronously, which makes the transfer faster, but may cause inconsistencies in the file systemif changes have not been fully committed |
+
+```bash
+# create NFS share
+cry0l1t3@htb:~$ mkdir nfs_sharing
+cry0l1t3@htb:~$ echo '/home/cry0l1t3/nfs_sharing hostname(rw,sync,no_root_squash)' >> /etc/exports
+cry0l1t3@htb:~$ cat /etc/exports | grep -v "#"
+
+/home/cry0l1t3/nfs_sharing hostname(rw,sync,no_root_squash)
+
+# mount NFS share
+cry0l1t3@htb:~$ mkdir ~/target_nfs
+cry0l1t3@htb:~$ mount 10.129.12.17:/home/john/dev_scripts ~/target_nfs
+cry0l1t3@htb:~$ tree ~/target_nfs
+
+target_nfs/
+├── css.css
+├── html.html
+├── javascript.js
+├── php.php
+└── xml.xml
+
+0 directories, 5 files
