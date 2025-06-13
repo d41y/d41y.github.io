@@ -29,7 +29,7 @@
 
 ## Linux
 
-### 0x00
+### [0x00](./attack/linux/linux_fundamentals.md)
 
 ## MacOS
 
