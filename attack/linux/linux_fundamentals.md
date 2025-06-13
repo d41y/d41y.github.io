@@ -62,6 +62,35 @@
       - [Dockers](#dockers)
       - [Linux Containers (_LXC_)](#linux-containers-lxc)
         - [Securing LXC](#securing-lxc)
+  - [Networking](#networking)
+    - [Configuration](#configuration)
+      - [Configuring Network Interfaces](#configuring-network-interfaces)
+      - [Activate Network Interface](#activate-network-interface)
+      - [Assign IP Address to an Interface](#assign-ip-address-to-an-interface)
+      - [Assign a Netmask to an Interface](#assign-a-netmask-to-an-interface)
+      - [Assign the Route to an Interface](#assign-the-route-to-an-interface)
+      - [Editing DNS Settings](#editing-dns-settings)
+        - [/etc/resolv.conf](#etcresolvconf)
+      - [Editing Interfaces](#editing-interfaces)
+        - [/etc/network/interfaces](#etcnetworkinterfaces)
+      - [Restart Networking Service](#restart-networking-service)
+    - [Network Access Control (_NAC_)](#network-access-control-nac)
+      - [Discretionary Access Control](#discretionary-access-control)
+      - [Mandatory Access Control](#mandatory-access-control)
+      - [Role-Based Access Control](#role-based-access-control)
+    - [Monitoring](#monitoring)
+    - [Troubleshooting](#troubleshooting)
+    - [Hardening](#hardening)
+      - [SELinux](#selinux)
+      - [AppArmor](#apparmor)
+      - [TCP Wrappers](#tcp-wrappers)
+    - [Remote Desktop Protocols](#remote-desktop-protocols)
+      - [XServer](#xserver)
+      - [XDMCP](#xdmcp)
+      - [VNC](#vnc)
+  - [Hardening](#hardening-1)
+    - [Security](#security)
+      - [TCP Wrappers](#tcp-wrappers-1)
 
 ---
 
@@ -1218,3 +1247,359 @@ LXC uses namespaces to provide an isolated environment for processes, networks, 
 Namespaces are a crucial aspect of containerization as they provide a high degree of isolation for the container's processes, network interfaces, routing tables, and firewall rules. Each container is allocated a unique process id (_pid_) number space, isolated from the host system's process IDs. This ensures that the container's processes cannot interfere with the host system's processes, enhancing system stability and reliability. Additionally, each container has its own network interface, routing tables, and firewall rules, which are completely separate from the host system's network interfaces. Any network-related activity within the container is cordoned off from the host system's network, providing an extra layer of network security.
 
 Moreover, containers come with their own root file system, which is entirely different from the host system's root file system. This separation between the two ensures that any changes or modifications made within the container's file system do not affect the host system's file system. However, it's important to remember that while namespaces provide a high level of isolation, they do not provide complete security. Therefore, it is always advisable to implement additional security measures to further protect the container and the host system from potential security breaches.
+
+## Networking
+
+### Configuration
+
+#### Configuring Network Interfaces
+
+```bash
+cry0l1t3@htb:~$ ifconfig
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 178.62.32.126  netmask 255.255.192.0  broadcast 178.62.63.255
+        inet6 fe80::88d9:faff:fecf:797a  prefixlen 64  scopeid 0x20<link>
+        ether 8a:d9:fa:cf:79:7a  txqueuelen 1000  (Ethernet)
+        RX packets 7910  bytes 717102 (700.2 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 7072  bytes 24215666 (23.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.106.0.66  netmask 255.255.240.0  broadcast 10.106.15.255
+        inet6 fe80::b8ab:52ff:fe32:1f33  prefixlen 64  scopeid 0x20<link>
+        ether ba:ab:52:32:1f:33  txqueuelen 1000  (Ethernet)
+        RX packets 14  bytes 1574 (1.5 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 15  bytes 1700 (1.6 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 15948  bytes 24561302 (23.4 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 15948  bytes 24561302 (23.4 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+cry0l1t3@htb:~$ ip addr
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 8a:d9:fa:cf:79:7a brd ff:ff:ff:ff:ff:ff
+    altname enp0s3
+    altname ens3
+    inet 178.62.32.126/18 brd 178.62.63.255 scope global dynamic eth0
+       valid_lft 85274sec preferred_lft 85274sec
+    inet6 fe80::88d9:faff:fecf:797a/64 scope link 
+       valid_lft forever preferred_lft forever
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether ba:ab:52:32:1f:33 brd ff:ff:ff:ff:ff:ff
+    altname enp0s4
+    altname ens4
+    inet 10.106.0.66/20 brd 10.106.15.255 scope global dynamic eth1
+       valid_lft 85274sec preferred_lft 85274sec
+    inet6 fe80::b8ab:52ff:fe32:1f33/64 scope link 
+       valid_lft forever preferred_lft forever
+```
+
+#### Activate Network Interface
+
+```bash
+d41y@htb[/htb]$ sudo ifconfig eth0 up     # OR
+d41y@htb[/htb]$ sudo ip link set eth0 up
+```
+
+#### Assign IP Address to an Interface
+
+```bash
+d41y@htb[/htb]$ sudo ifconfig eth0 192.168.1.2
+```
+
+#### Assign a Netmask to an Interface
+
+```bash
+d41y@htb[/htb]$ sudo ifconfig eth0 netmask 255.255.255.0
+```
+
+#### Assign the Route to an Interface
+
+```bash
+d41y@htb[/htb]$ sudo route add default gw 192.168.1.1 eth0
+```
+
+#### Editing DNS Settings
+
+```bash
+d41y@htb[/htb]$ sudo vim /etc/resolv.conf
+```
+
+##### /etc/resolv.conf
+
+```
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+```
+
+> [!NOTE]
+> After completing the necessary modifications to the network configuration, it is essential to ensure that these changes are saved to persist across reboots. This can be achieved by editing the ```/etc/network/interfaces``` file, which defines network interfaces for Linux-based OS. Thus, it is vital to save any changes made to this file to avoid any potential issues with network connectivity.<br><br>
+> It's important to note that changes made directly to the ```/etc/resolv.conf``` file are not persistent across reboots or network configuration changes. This is because the file may be automatically overwritten by network management services like NetworkManageer or systemd-resolved. To make DNS changes permanent, you should configure DNS settings through the appropriate network management tool, such as editing network configuration files or using network management utilities that store persistent settings.
+
+#### Editing Interfaces
+
+```bash
+d41y@htb[/htb]$ sudo vim /etc/network/interfaces
+```
+
+##### /etc/network/interfaces
+
+```bash
+auto eth0
+iface eth0 inet static
+  address 192.168.1.2
+  netmask 255.255.255.0
+  gateway 192.168.1.1
+  dns-nameservers 8.8.8.8 8.8.4.4
+```
+
+#### Restart Networking Service
+
+```bash
+d41y@htb[/htb]$ sudo systemctl restart networking
+```
+
+### Network Access Control (_NAC_)
+
+| Type | Description |
+| ---- | ----------- |
+| Discretionary Access Control (_DAC_) | this model allows the owner of the resource to set permissions for who can access it |
+| Mandatory Access Control (_MAC_) | permissions are enforced by the OS, not the owner of the resource, making it more secure but less flexible |
+| Role-Based Access Control (_RBAC_) | permissions are assigned based on the roles within an organization, making it easier to manage user privileges |
+
+Configuring Linux network devices for NAC involves setting up security policies like SELinux, AppArmor profiles for application security, and using TCP wrappers to controll access to services based on IP addresses.
+
+Tools such as syslog, rsyslog, ss, lsof, and the ELK stack can be used to monitor and analyze network traffic. These tools help identify anomalies, potential information disclosure/expose, security breaches, and other critical network issues.
+
+#### Discretionary Access Control
+
+... is a crucial component of modern security systems as it helps organizations provide access to their resources while managing the associated risks of unauthorized access. It is a widely used access control system that enables users to manage acces to their resources by granting resource owners the responsibility of controlling access permissions to their resources. This means that users and groups who own a specific resource can decide who access to their resource and what actions they are authorized to perform. These permissions can be set for reading, writing, executing, or deleting the resource.
+
+#### Mandatory Access Control
+
+... is used in infrastructure that provides more fine-grained control over resource access than DAC systems. Those systems define rules that determine resource access based on the resource's security level and the user's security level or process requesting access. Each resource is assigned a security label that identifies its security level, and each user or process is assigend a security clearance that identifies its security level. Access to a resource is only granted if the user's or process's security level is equal to or greater than the security level of the resource. MAC is often used in OS and apps that require a high level of security, such as military or government systems, financial systems, and healthcare systems. MAC systems are designed to prevent unauthorized access to resources and minimize the impact of security breaches.
+
+#### Role-Based Access Control
+
+... assigns permissions to users based on their roles within an organization. Users are assigned roles based on their job responsibilities or other criteria, and each role is granted a set of permissions that determine the actions they can perform. RBAC simplifies the management of access permissions, reduces the risk of errors, and ensures that users can access only the resources necessary to perform their job functions. It can restrict access to sensitive resources and data, limit the impact of security breaches, and ensure compliance with regulatory requirements. Compared to DAC systems, RBAC provides a more flexible and scalable approach to managing resource access. In an RBAC system, each user is assigned one or more roles, and each role is assigned a set of permissions that define the user's action. Resource access it granted based on the user's assigned role rather than their identity or ownership of the resource. RBAC systems are typically used in environments with many users and resources, such as large organizations, government agencies, and financial institutions.
+
+### Monitoring
+
+Network monitoring involves capturing, analyzing, and interpreting network traffic to identify security threats, performance issues, and suspicious behavior. The primary goal of analyzing and monitoring network traffic is identifying security threats and vulns.
+
+### Troubleshooting
+
+Network troubleshooting is an essential process that involves diagnosing and resolving network issues that can adversely affect the performance and reliability of the network. Various tools can help you identify and resolve issues regarding network troubleshooting on Linux systems:
+
+- ping
+- traceroute
+- netstat
+- wireshark
+- tcpdump
+- nmap
+
+### Hardening
+
+By implementing the following security measures and ensuring that you set up corresponding protection against potential attackers, you can significantly reduce the risk of data leaks and ensure your system remains secure.
+
+#### SELinux
+
+... is a mandatory access control system integrated into the Linux kernel.
+
+#### AppArmor
+
+... is a MAC system that controls access to system resources and apps, but it operates in a simpler, more user-friendly manner.
+
+#### TCP Wrappers
+
+... are a host-based network access control tool that restricts access to network services based on the IP address of incoming connections.
+
+### Remote Desktop Protocols
+
+... are used in Windows, Linux, and MacOS to provide graphical remote access to a system. These protocols allow admins to manage, troubleshoot, and update systems remotely.
+
+#### XServer
+
+... is the user-side part of the X Window System network protocol (_X11 / X_). The X11 is a fixed system that consists of a collection of protocols and applications that allow you to call application windows on displays in a graphical user interface. X11 is predominant on Unix systems, but X servers are also available for other OS. Nowadays, the XServer is part of almost every desktop installation of Ubuntu and its derivatives and does not need to be installed.
+
+When a desktop is started on a Linux computer, the communication of the graphical user interface with the OS happens via an X server. The computer's internal network is used, even if the computer should not be in a network. The practical thing about the X protocol is network transparency. This protocol mainly uses TCP/IP as transport base but can also be used on pure Unix sockets. The ports that are utilized for X server are typically located in the range of TCP/6001-6009, allowing communication between the client and server. When starting a new desktop session via X server the TCP port 6000 would be opened for the first X display ```:0```. This range of ports enables the server to perform its tasks such as hosting apps, as well as providing services to clients. They are often used to provide remote access to a system, allowing users to access apps and data from anywhere in the world. Additionally, these ports are also essential for the secure sharing of files and data, making them an integral part of the Open X Server. Thus an X server is not dependent on the local computer, it can be used to access other computers, and other computers can use the local X server. Provided that both local and remote computers contain Unix/Linux systems, additional protocols such as VNC and RDP generate the graphical output on the remote computer and transport it over the network. Whereas with X11, it is rendered on the local computer. This saves traffic and a load on the remote computer. However, X11's significant disadvantage is the unencrypted data transmission. However, this can be overcome by tunneling the SSH protocol.
+
+For this, you have to allow X11 fowarding in the SSH config file ```/etc/ssh/sshd_config``` on the server that provides the application by changing this option to yes.
+
+```bash
+d41y@htb[/htb]$ cat /etc/ssh/sshd_config | grep X11Forwarding
+
+X11Forwarding yes
+```
+
+With this you can start the app from your client with the following command:
+
+```bash
+d41y@htb[/htb]$ ssh -X htb-student@10.129.23.11 /usr/bin/firefox
+
+htb-student@10.129.14.130's password: ********
+<SKIP>
+```
+
+X11 is not a secure protocol by default because its communication is unencrypted. As such, you should pay attention and look for those TCP ports when you deal with Linux-based targets.
+
+#### XDMCP
+
+The X Display Manager Control Protocol (_XDMCP_) protocol is used by the X Display Manager for communication through UDP port 177 bewteen X terminals and computers operating under Unix/Linux. It is used to manage remote X Window sessions on other machines and is often used by Linux system admins to provide access to remote desktops. XDMCP is an insecure protocol and should not be used in any environment that requires high level of security.
+
+#### VNC
+
+Virtual Network Computing (_VNC_) is a remote desktop sharing system based on the RFB protocol that allows users to control a computer remotely. It allows a user to view and interact with a desktop environment over a network connection. The user can control the remote computer as if sitting in front of it. This is also one of the most common protocols for remote graphical connections for linux hosts.
+
+VNC is generally considered to be secure. It uses encryption to ensure the data is safe while in transit and requires authentication before a user can gain access. Admins make use of VNC to access computers that are not physically accessible. This could be used to troubleshoot and maintain servers, access applications on other computers, or provide remote access to workstations. VNC can also be used for screen sharing, allowing multiple users to collaborate on a project or troubleshoot a problem.
+
+There are two different concepts for VNC servers. The usual server offers the actual screen of the host computer for user support. Because the keyboard and mouse remain usable at the remote computer, an arrangement is recommended. The second group of server programs allows user login to virtual sessions, similar to the terminal server concept.
+
+Server and viewer programs for VNC are available for all common OS. Therefore, many IT services are performed with VNC.
+
+Traditionally, the VNC server listens on TCP port 5900. So it offers its display 0 there. Other displays can be offered via additional ports, mostly 590[x], where x is the display number.
+
+For these VNC connections, many different tools are used. Some are:
+
+- TigerVNC
+- TightVNC
+- RealVNC
+- UltraVNC
+
+```bash
+### Configuration
+htb-student@ubuntu:~$ touch ~/.vnc/xstartup ~/.vnc/config
+htb-student@ubuntu:~$ cat <<EOT >> ~/.vnc/xstartup
+
+#!/bin/bash
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+/usr/bin/startxfce4
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+x-window-manager &
+EOT
+
+htb-student@ubuntu:~$ cat <<EOT >> ~/.vnc/config
+
+geometry=1920x1080
+dpi=96
+EOT
+
+htb-student@ubuntu:~$ chmod +x ~/.vnc/xstartup
+
+### start the VNC server
+htb-student@ubuntu:~$ vncserver
+
+New 'linux:1 (htb-student)' desktop at :1 on machine linux
+
+Starting applications specified in /home/htb-student/.vnc/xstartup
+Log file is /home/htb-student/.vnc/linux:1.log
+
+Use xtigervncviewer -SecurityTypes VncAuth -passwd /home/htb-student/.vnc/passwd :1 to connect to the VNC server.
+
+### list sessions
+htb-student@ubuntu:~$ vncserver -list
+
+TigerVNC server sessions:
+
+X DISPLAY #     RFB PORT #      PROCESS ID
+:1              5901            79746
+
+### setting up an ssh tunnel
+d41y@htb[/htb]$ ssh -L 5901:127.0.0.1:5901 -N -f -l htb-student 10.129.14.130
+
+htb-student@10.129.14.130''s password: *******
+
+### connecting to the vnc server
+d41y@htb[/htb]$ xtightvncviewer localhost:5901
+
+Connected to RFB server, using protocol version 3.8
+Performing standard VNC authentication
+
+Password: ******
+
+Authentication successful
+Desktop name "linux:1 (htb-student)"
+VNC server default format:
+  32 bits per pixel.
+  Least significant byte first in each pixel.
+  True colour: max red 255 green 255 blue 255, shift red 16 green 8 blue 0
+Using default colormap which is TrueColor.  Pixel format:
+  32 bits per pixel.
+  Least significant byte first in each pixel.
+  True colour: max red 255 green 255 blue 255, shift red 16 green 8 blue 0
+Same machine: preferring raw encoding
+```
+
+## Hardening
+
+### Security
+
+One of the Linux OS's most important security measures is keeping the OS and installed packages up to date:
+
+```bash
+d41y@htb[/htb]$ apt update && apt dist-upgrade
+```
+
+Moreover, you can use:
+
+- ```iptables```
+  - for firewall rules
+- ```sudoers```
+  - to (un)set privileges
+- ```fail2ban```
+  - for handling high amounts of failed logins
+- ...
+
+#### TCP Wrappers
+
+... are a security mechanism used in Linux system that allow the system admins to control which services are allowed access to the system. It works by restricting access to certain services based on the hostname or IP address of the user requesting access. When a client attempts to connect to a service the system will first consult the rules defined in the TCP wrappers configuration files to determine the IP address of the client. If the IP address matches the criteria specified in the configuration files, the system will then grant the client access to the service. However, if the criteria are not met, the connection will be denied, providing an additional layer of security for the service. TCP wrappers use the following configuration files:
+
+- ```/etc/hosts.allow```
+- ```/etc/hosts.deny```
+
+In short, the ```/etc/hosts.allow``` file specifies which services and hosts are allowed to the system, whereas the ```/etc/hosts.deny``` file specifies which services and hosts are not allowed access. These files can be configured by adding specific rules to the files.
+
+```bash
+### /etc/hosts.allow
+d41y@htb[/htb]$ cat /etc/hosts.allow
+
+# Allow access to SSH from the local network
+sshd : 10.129.14.0/24
+
+# Allow access to FTP from a specific host
+ftpd : 10.129.14.10
+
+# Allow access to Telnet from any host in the inlanefreight.local domain
+telnetd : .inlanefreight.local
+
+### /etc/hosts.deny
+d41y@htb[/htb]$ cat /etc/hosts.deny
+
+# Deny access to all services from any host in the inlanefreight.com domain
+ALL : .inlanefreight.com
+
+# Deny access to SSH from a specific host
+sshd : 10.129.22.22
+
+# Deny access to FTP from hosts with IP addresses in the range of 10.129.22.0 to 10.129.22.255
+ftpd : 10.129.22.0/24
+```
