@@ -58,6 +58,9 @@
         - [Creating a Swap Space](#creating-a-swap-space)
         - [Sizing and Managing Swap Space](#sizing-and-managing-swap-space)
         - [Swap Space for Hibernation](#swap-space-for-hibernation)
+    - [Containerization](#containerization)
+      - [Dockers](#dockers)
+      - [Linux Containers](#linux-containers)
 
 ---
 
@@ -1009,3 +1012,120 @@ When setting up swap space, it's important to allocate it on a dedicated partiti
 ##### Swap Space for Hibernation
 
 Besides extending physical memory, swap space is also used for hibernation. Hibernation is a power-saving feature that saves the system's state to the swap space and powers of the system. When the system is powered back on, it restores its previous state from the swap space, resuming exactly where it left off.
+
+### Containerization
+
+... is the process of packaging and running apps in isolated environments, typically referred to as containers. These containers provide lightweight, consistent environments for apps to run, ensuring that they behave the same way, regardless of where they are deployed.
+
+Containers differ from VMs in that they share the host system's kernel, making them far more lightweight and efficient.
+
+Containers are highly configurable, allowing users to tailor them to their specific needs, and their lightweight nature makes it easy to run multiple containers simultaneously on the same host system.
+
+Security is a critical aspect of containerization. Containers isolate apps from the host and from each other, providing a barrier that reduces the risk of malicious activities affecting the host or other containers. This isolation, along with proper configuration and hardening techniques, adds an additional layer of security. However, it is important to note that containers do not offer the same level of isolation as traditional VMs.
+
+#### Dockers
+
+Docker is an open-source platform for automating the deployment of apps as self-contained units called containers. It uses a layerd filesystem and resource isolation features to provide flexibility and portability. Additionally, it provides a robust set of tools for creating, deploying, and managing apps, which helps streamline the containerization process.
+
+```bash
+### install docker
+#!/bin/bash
+
+# Preparation
+sudo apt update -y
+sudo apt install ca-certificates curl gnupg lsb-release -y
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker Engine
+sudo apt update -y
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+# Add user htb-student to the Docker group
+sudo usermod -aG docker htb-student
+echo '[!] You need to log out and log back in for the group changes to take effect.'
+
+# Test Docker installation
+docker run hello-world
+```
+
+The Docker engine and specific Docker images are needed to run a container. These can be obtained from the Docker Hub, a repo of pre-made images, or created by the user. The Docker Hub is a cloud-based registry for software repos or a library for Docker images. It is divided into a public and a private area. The public area allows users to upload and share images with the community. It also contains official images from the Docker development team and established open-source projects. Images uploaded to a private area of the registry are not publicly accessible. They can be shared within a company or with teams and acquaintances.
+
+Creating a Docker image is done by creating a Dockerfile, which contains all the instructions the Docker engine needs to create the container. You can use Docker containers as your "file hosting" server when transferring specific files to your target system. Therefore, you must create a Dockerfile based on Ubuntu 22.04 with Apache and SSH server running. With this, you can use ```scp``` to transfer files to the docker image, and Apache allows you to host files and use tools ```curl```, ```wget```, and others on the target system to donwload the required files. Such a Dockerfile could look like the following:
+
+```bash
+# Use the latest Ubuntu 22.04 LTS as the base image
+FROM ubuntu:22.04
+
+# Update the package repository and install the required packages
+RUN apt-get update && \
+    apt-get install -y \
+        apache2 \
+        openssh-server \
+        && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create a new user called "docker-user"
+RUN useradd -m docker-user && \
+    echo "docker-user:password" | chpasswd
+
+# Give the docker-user user full access to the Apache and SSH services
+RUN chown -R docker-user:docker-user /var/www/html && \
+    chown -R docker-user:docker-user /var/run/apache2 && \
+    chown -R docker-user:docker-user /var/log/apache2 && \
+    chown -R docker-user:docker-user /var/lock/apache2 && \
+    usermod -aG sudo docker-user && \
+    echo "docker-user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Expose the required ports
+EXPOSE 22 80
+
+# Start the SSH and Apache services
+CMD service ssh start && /usr/sbin/apache2ctl -D FOREGROUND
+```
+
+After you have defined your Dockerfile, you need to convert it into an image. With the ```build``` command, you take the directory with the Dockerfile, execute the steps from the Dockerfile, and store the image in your local Docker Engine. If one of the steps fails due to an error, the container creation will be aborted. With the option ```-t```, you give your container a tag, so it is easier to identify and work with later.
+
+```bash
+d41y@htb[/htb]$ docker build -t FS_docker .
+```
+
+Once the Docker image has been created, it can be executed through the Docker engine, making it a very efficient and easy way to run a container. It is similar to the virtual machine concept, based on images. Still, these images are read-only templates and provide the file system necessary for runtime and all parameters. A container can be considered a running process of an image. When a container is to be started on a system, a package with the respective image is first loaded if unavailable locally. You can start the container by the following command:
+
+```bash
+d41y@htb[/htb]$ docker run -p <host port>:<docker port> -d <docker container name>
+
+...
+
+d41y@htb[/htb]$ docker run -p 8022:22 -p 8080:80 -d FS_docker
+```
+
+In this case, you start a new container from the image ```FS_docker``` and map the host ports 8022 and 8080 to container ports 22 and 80, respectively. The container runs in the background, allowing you to access the SSH and HTTP services inside the container using the specified host ports.
+
+When managing Docker containers, Docker provides a comprehensive suite of tools that enable you to easily create, deploy, and manage containers. With these powerfull tools, you can list, start and stop containers and effectively manage them, ensuring seamless execution of apps. Some of the most commonly used Docker management commands are:
+
+- ```docker ps```
+  - list all running containers
+- ```docker stop```
+  - stop a running container
+- ```docker start```
+  - start a stopped container
+- ```docker restart```
+  - restart a running container
+- ```docker rm```
+  - remove a container
+- ```docker rmi```
+  - remove a Docker image
+- ```docker logs```
+  - view the logs of a container
+
+It is important to note that Docker commands can be combined with various options to add extra functionality. For example, you can specify which ports to expose, mount volumes to retain data, or set environment variables to configure your containers. This flexibility allows you to customize your Docker containers to meet specific needs and requirements.
+
+When working with Docker images, it's crucial to understand that any changes made to a running container based on an image are not automatically saved to the image. To preverse these changes, you need to create a new image that inlcudes them. This is done by writing a new Dockefile, which starts with the ```FROM``` statement and then includes the necessary commands to apply the changes. Once the Dockerfile is ready, you can use the ```docker build``` command to build the new image and assign it a uniqe tag to identify it. This process ensures that the original image remains unchanged, while the new image reflects the upadtes.
+
+It's also important to note that Docker containers are stateless by design, meaning that any changes made inside a running container are lost once the container is stopped or removed. For this reason, it's best practice to use volumes to persist data outside of the container or store application state.
+
+In production environments, managing containers at scale becomes more complex. Tools like Docker Compose or Kubernetes help orchestrate containers, enabling you to manage, scale, and link mulitple containers efficiently.
+
+#### Linux Containers
