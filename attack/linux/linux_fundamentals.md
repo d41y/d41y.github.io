@@ -60,7 +60,8 @@
         - [Swap Space for Hibernation](#swap-space-for-hibernation)
     - [Containerization](#containerization)
       - [Dockers](#dockers)
-      - [Linux Containers](#linux-containers)
+      - [Linux Containers (_LXC_)](#linux-containers-lxc)
+        - [Securing LXC](#securing-lxc)
 
 ---
 
@@ -1128,4 +1129,92 @@ It's also important to note that Docker containers are stateless by design, mean
 
 In production environments, managing containers at scale becomes more complex. Tools like Docker Compose or Kubernetes help orchestrate containers, enabling you to manage, scale, and link mulitple containers efficiently.
 
-#### Linux Containers
+#### Linux Containers (_LXC_)
+
+... is a lightweight virtualization technology that allows multiple isolated Linux systems to run on a single host. LXC uses key resource isolation features, such as control groups (_cgroups_) and namespaces, to ensure that each container operates independently. Unlike traditional VMs, which require a full OS for each instance, containers share the host's kernel, making LXC more efficient in terms of resource usage.
+
+LXC provides a comprehensive set of tools and APIs for managing and configuring containers, making it a popular choice for containerization on Linux systems. However, while LXC and Docker are both containerizations technologies, they serve different purposes and have unique features.
+
+Docker builds upen the idea of containerization by adding ease of use and portability, which has made it highly popular in the world of DevOps, Docker emphasizes packaging apps with all their dependencies in a portable "image", allowing them to be easily deployed across different environments. However, there are some differences between the two that can be distinguished based on the following categories:
+
+| Category | Description |
+| -------- | ----------- |
+| Approach | LXC is often seen as a more traditional, system-level containerization tool, focusing on creating Linux environments that behave like lightweight VMs; docker is app-focused, meaning it is optimized for packaging and deploying single apps or microservices |
+| Image building | Docker uses a standardized image format that includes everything needed to run an app; LXC, while capable of similar functionality, typically requires more manual setup for building and managing environments |
+| Portability | Docker excels in portability, its container images can be easily shared across different systems via Dockeer Hub or other registries; LXC environments are less portable in this sense, as they are more tightly integrated with the host system's configuration |
+| Easy of use | Docker is designed with simplicity in mind, offering a user-friendly CLI and extensive community support; LXC, while powerful, may require more in-depth knowledge of Linux system administration, making it less straightforward for beginners |
+| Security | Docker containers are generally more secure out of the box, thanks to additional isolation layers like AppArmor and SELinux, along with its read-only filesystem feature; LXC containers, while secure, may need additional configurations to match the level of isolation Docker offers by default; interestingly, when misconfigured, both Docker and LXC can present a vector for local privilege escalation |
+
+In LXC, images are manually built by creating a root filesystem and installing the necessary packages and configurations. Those containers are tied to the host system, may not be easily portable, and may require more technical expertise to configure and manage.
+
+On the other hand, Docker is an app-centric platform that builds on top of LXC and provides a more user-friendly interface for containerization. Its images are built using a Dockerfile, which specifies the base image and the steps required to build the image. Those images are designed to be portable so they can be easily moved from on environment to another.
+
+To install LXC on a Linux distro, you can use the distro's package manager.
+
+```bash
+d41y@htb[/htb]$ sudo apt-get install lxc lxc-utils -y
+```
+
+Once LXC is installed, you can start creating and managing containers on the Linux host. It is worth noting that LXC requires the Linux kernel to support the necessary features for containerization. Most modern Linux kernels have built-in support for containerization, but some older kernels may require additional configuration or patching to enable support for LXC.
+
+To create a new LXC container, you can use the ```lxc-create``` command followed by the container's name and the template to use.
+
+```bash
+d41y@htb[/htb]$ sudo lxc-create -n linuxcontainer -t ubuntu
+```
+
+When working with LXC containers, several tasks are involved in managing them. These tasks include creating new containers, configuring their settings, starting and stopping them as necessary, and monitoring their performance. Fortunately, there are many command-line tools and configuration files available that can assist with these tasks. These tools enable you to quickly and easily manage your containers, ensuring they are optimized for your specific needs and requirements. By leveraging these tools effectively, you can ensure that your LXC containers run efficiently allowing you to maximize your system's performance and capabilities.
+
+- ```lxc-ls```
+  - list all existing containers
+- ```lxc-stop -n <container>```
+  - stop a running container
+- ```lxc-start -n <container>```
+  - start a stopped container
+- ```lxc-restart -n <container>```
+  - restart a running container
+- ```lxc-config -n <container name> -s storage```
+  - manage container storage
+- ```lxc-config -n <container name> -s network```
+  - manage container network settings
+- ```lxc-config -n <container name> -s security```
+  - manage container security settings
+- ```lxc-attach -n <container>```
+  - connect to a container
+- ```lxc-attach -n <container> -f /path/to/share```
+  - connect to a container and share a specific directory or file
+
+Containers are particularly useful because they allow you to quickly create and run isolated environments tailored to your specific testing needs.
+
+LXC containers can be accessed using various methods, such as SSH or console. It is recommended to restrict access to the container by disabling unneccessary services, using secure protocols, and enforcing strong authentication mechanisms.
+
+##### Securing LXC
+
+Limit the resources to the container. In order to configure ```cgroups``` for LXC and limit the CPU and memory, a container can create a new configuration file in the ```/usr/share/lxc/config/<container name>.conf``` directory with the name of your container.
+
+```bash
+d41y@htb[/htb]$ sudo vim /usr/share/lxc/config/linuxcontainer.conf
+```
+
+In this configuration file, you can add the following lines to limit the CPU and memory the container can use.
+
+```
+lxc.cgroup.cpu.shares = 512
+lxc.cgroup.memory.limit_in_bytes = 512M
+```
+
+When working with containers, it is important to understand the ```lxc.cgroup.cpu.shares``` parameter. This parameter determines the CPU time a container can use in relation to the other containers on the system. By default, this value is set to 1024, meaning the container can use up to its fair share of CPU time. However, if you set this value to 512, for example, the container can only use half of the CPU time available on the system. This can be a useful way to manage resources and ensure all containers have the necessary access to CPU time.
+
+One of the key parameters in controlling the resource allocation of a container is the ```lxc.cgroup.memory.limit_in_bytes``` parameter. This parameter allows you to set the maximum amount of memory a container can use. It's important to note that this value can be specified in a variety of units, including bytes, kilobytes (_K_), megabytes (_M_), gigabytes (_G_), or terabytes (_T_), allowing for a high degree of granularity in defining container resource limits. After adding these two lines, you can save and close the file.
+
+To apply these changes, you must restart the LXC service:
+
+```bash
+d41y@htb[/htb]$ sudo systemctl restart lxc.service
+```
+
+LXC uses namespaces to provide an isolated environment for processes, networks, and file systems from the host system. Namespaces are a feature of the Linux kernel that allows for creating isolated environments by providing an abstraction of system resources.
+
+Namespaces are a crucial aspect of containerization as they provide a high degree of isolation for the container's processes, network interfaces, routing tables, and firewall rules. Each container is allocated a unique process id (_pid_) number space, isolated from the host system's process IDs. This ensures that the container's processes cannot interfere with the host system's processes, enhancing system stability and reliability. Additionally, each container has its own network interface, routing tables, and firewall rules, which are completely separate from the host system's network interfaces. Any network-related activity within the container is cordoned off from the host system's network, providing an extra layer of network security.
+
+Moreover, containers come with their own root file system, which is entirely different from the host system's root file system. This separation between the two ensures that any changes or modifications made within the container's file system do not affect the host system's file system. However, it's important to remember that while namespaces provide a high level of isolation, they do not provide complete security. Therefore, it is always advisable to implement additional security measures to further protect the container and the host system from potential security breaches.
