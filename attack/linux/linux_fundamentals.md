@@ -91,6 +91,12 @@
   - [Hardening](#hardening-1)
     - [Security](#security)
       - [TCP Wrappers](#tcp-wrappers-1)
+    - [Firewall Setup](#firewall-setup)
+      - [iptables](#iptables)
+        - [Tables](#tables)
+        - [Chains](#chains)
+        - [Rules and Targets](#rules-and-targets)
+        - [Matches](#matches)
 
 ---
 
@@ -1603,3 +1609,99 @@ sshd : 10.129.22.22
 # Deny access to FTP from hosts with IP addresses in the range of 10.129.22.0 to 10.129.22.255
 ftpd : 10.129.22.0/24
 ```
+
+### Firewall Setup
+
+The primary goal of firewalls is to provide a security mechanism for controlling and monitoring network traffic between different network segments, such as internal and external networks or different network zones. Firewalls play a crucial role in protecting computer networks from unauthorized access, malicious traffic, and other security threats. Linux provides built-in firewall capabilities that can be used to control network traffic.
+
+#### iptables
+
+... provides a flexible set of rules for filtering network traffic based on various criteria such as source and destination IP address, port numbers, protocols, and more.
+
+The main components of iptables are:
+
+| Component | Description |
+| --------- | ----------- |
+| Tables | ... are used to organize and categorize firewall rules |
+| Chains | ... are used to group a set of firewall rules applied to a specific type of network traffic |
+| Rules | ... define the criteria for filtering network traffic and the actions to take for packets that match the criteria |
+| Matches | are used to match specific criteria for filtering network traffic, such as source or destination IP addresses, ports, protocols, and more |
+| Targets | ... specify the action for packets that match a specific rule |
+
+##### Tables
+
+When working with firewalls on Linux systems, it is important to understand how tables work in iptables. Tables in iptables are used to categorize and organize firewall rules based on the type of traffic that they are designed to handle. Each table is responsible for performing a specific set of tasks.
+
+| Table Name | Description | Built-In Chains |
+| ---------- | ----------- | --------------- |
+| filter | used to filter network traffic based on IP addresses, ports, and protocols | INPUT, OUTPUT, FORWARD |
+| nat | used to modify the source or destination IP addresses of network packets | PREROUTING, POSTROUTING |
+| mangle | used to modify the header fields of network packets | PREROUTING, OUTPUT, INPUT, FORWARD, POSTROUTING |
+
+In addition to the built-in tables, iptables provides a fourth table called the raw table, which is used to configure special packet processing options. The raw table contains two built-in chains: PREROUTING, and OUTPUT.
+
+##### Chains
+
+In iptabels, chains organize rules that define how network traffic should be filtered or modified. There are two types of chains in iptables:
+
+- Built-in chains
+- User-defined chains
+
+The built-in chains are pre-defined and automatically created when a table is created. Each table has a different set of built-in chains.
+
+User-defined chains can simplify rule management by grouping firewall rules based on specific criteria, such as source IP address, destination port, or protocol. They can be added to any of the three main tables. For example, if an organization has multiple web servers that all require similar firewall rules, the rules for each server could be grouped in a user-defined chain.
+
+##### Rules and Targets
+
+Iptables rules are used to define the criteria for filtering network traffic and the actions to take for packets that match the criteria. Rules are added to chains using the ```-A``` option followed by the chain name, and they can be modified or deleted using various other options.
+
+Each rule consists of a set of criteria or matches and a target specifying the action for packets that match the criteria. The criteria or matches match specific fields in the IP header, such as the source or destination IP address, protocol, source, destination port number, and more. The target specifies the action for packets that match the criteria. They specify the action to take for packets that match a specific rule. For example, targets can accept, drop, reject, or modify the packets. Some of the common targets used in iptables rules include the following:
+
+| Target Name | Description |
+| ----------- | ----------- |
+| ACCEPT | allows the packet to pass through the firewall and continue to its destination |
+| DROP | drops the packet, effectively blocking it from passing through the firewall |
+| REJECT | drops the packet and sends an error message back to the source address, notifying them that the packet was blocked |
+| LOG | logs the packet information to the system log |
+| SNAT | modifies the source IP address of the packet, typically used for NAT to translate private IP addresses to puclic IP addresses |
+| DNAT | modifies the destinatio IP address of the packet, typically used for NAT to forward traffic from one IP address to another |
+| MASQUERADE | similar to SNAT but used when the source IP address is not fixed, such as in a dynamic IP address scenario |
+| REDIRECT | redirects packets to another port or IP address |
+| MARK | adds or modifies the Netfilter mark value of the packet, which can be used for advanced routing or other purposes |
+
+Example:
+
+```bash
+d41y@htb[/htb]$ sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+# allows incoming TCP traffic on port 22 to be accepted
+```
+
+##### Matches
+
+... are used to specify the criteria that determine whether a firewall rule should be applied to a particular packet or connection. Matches are used to match specific characteristics of network traffic, such as the source or destination IP address, protocol, port number, and more.
+
+| Match Name | Description |
+| ---------- | ----------- |
+| ```-p``` / ```--protocol``` | specifies the protocol to match |
+| ```--dport``` | specifies the destination port to match |
+| ```--sport``` | specifies the source port to match |
+| ```-s``` / ```--source``` | specifies the source IP address to match |
+| ```-d``` / ```--destination``` | specifies the destination IP address to match |
+| ```-m state``` | matches the state of a connection |
+| ```-m multiport``` | machtes multiple ports or port ranges |
+| ```-m tcp``` | matches TCP packets and includes additional TCP-specific options |
+| ```-m udp``` | matches UDP packets and includes additional UDP-specific options |
+| ```-m string``` | matches packets that contain a specific string |
+| ```-m limit``` | matches packets at a specified rate limit |
+| ```-m conntrack``` | matches packets based on their connection tracking information |
+| ```-m mark``` | matches packets based on their Netfilter mark value |
+| ```-m mac``` | matches packets based on their MAC address |
+| ```-m iprange``` | matches packets based on a range of IP addresses |
+
+Example:
+
+```bash
+d41y@htb[/htb]$ sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+# adds a rule to the INPUT chain in the filter table that matches incoming TCP traffic on port 80
+```
+
