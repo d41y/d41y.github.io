@@ -97,6 +97,22 @@
         - [Chains](#chains)
         - [Rules and Targets](#rules-and-targets)
         - [Matches](#matches)
+    - [System Logs](#system-logs)
+      - [Kernel Logs](#kernel-logs)
+      - [System Logs](#system-logs-1)
+      - [Authentication Logs](#authentication-logs)
+      - [Application Logs](#application-logs)
+      - [Security Logs](#security-logs)
+  - [Distros](#distros)
+    - [Solaris](#solaris)
+      - [Differences to other Linux Distros](#differences-to-other-linux-distros)
+      - [Command Examples](#command-examples)
+        - [System Information](#system-information-1)
+        - [Installing Packages](#installing-packages)
+        - [Permission Management](#permission-management)
+        - [NFS](#nfs)
+        - [Process Mapping](#process-mapping)
+        - [Executable Access](#executable-access)
 
 ---
 
@@ -1705,3 +1721,149 @@ d41y@htb[/htb]$ sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 # adds a rule to the INPUT chain in the filter table that matches incoming TCP traffic on port 80
 ```
 
+### System Logs
+
+
+... on Linux are a set of files that contain information about the system and the activities taking place on it. These logs are important for monitoring and troubleshooting the system, as they can provide insights into system behavior, application security, and security events. These system logs can be a valuable source of information for identifying potential security weaknesses and vulnerabilities within a Linux system as well. By analyzing the logs on your target systems, you can gain insights into the system's behavior, network activity, and user activity and can use this information to identify any abnormal activity, such as unauthorized logins, attempted attacks, clear text credentials, or unusual file access, which could indicate a potential security breach.
+
+As pentesters, you can also use system logs to monitor the effectiveness of your security testing activities. By reviewing the logs after performing security testing, you can determine if your activities triggered any security events, such as intrusion detection alerts or system warnings. This information can help you refine your testing strategies and improve overall security of the system.
+
+In order to ensure the security of a Linux system, it is important to configure system logs properly. This includes setting the appropriate log levels, configuring log rotation to prevent log files from becoming too large, and ensuring that the logs are stored securely and protected from unauthorized access. In addition, it is important to regularly review and analyze the logs to identify potential security risks and respond to any security events in a timely manner. There are several different types of system logs on Linux:
+
+- Kernel logs
+- System logs
+- Authentication logs
+- Application logs
+- Security logs
+
+#### Kernel Logs
+
+... contain information about the system's kernel, including hardware drivers, system calls, and kernel events. They are stored in ```/var/log/kern.log```. They can also provide insights into system crashes, resource limitations, and other events that could lead to a denial of service or other security issues. In addition, kernel logs can help you identify suspicious system calls or other activities that could indicate the presence of malware or other malicious software on the system. By monitoring this file, you can detect any unusual behavior and take appropriate action to prevent further damage to the system.
+
+#### System Logs
+
+... contain information about system-level events, such as service starts and stops, login attempts, and system reboots. They are stored in the ```/var/log/syslog``` file. By analyzing login attempts, service starts and stops, and other system-level events, you can detect any possible access or activities on the system. This can help you identify any vulnerabilities that could be exploited and help you recommend security measures to mitigate these risks. In addition, you can use the ```syslog``` to identify potential issues that could impact the availability or performance of the system, such as failed service starts or system reboots.
+
+Example:
+
+```bash
+Feb 28 2023 15:00:01 server CRON[2715]: (root) CMD (/usr/local/bin/backup.sh)
+Feb 28 2023 15:04:22 server sshd[3010]: Failed password for htb-student from 10.14.15.2 port 50223 ssh2
+Feb 28 2023 15:05:02 server kernel: [  138.303596] ata3.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6 frozen
+Feb 28 2023 15:06:43 server apache2[2904]: 127.0.0.1 - - [28/Feb/2023:15:06:43 +0000] "GET /index.html HTTP/1.1" 200 13484 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
+Feb 28 2023 15:07:19 server sshd[3010]: Accepted password for htb-student from 10.14.15.2 port 50223 ssh2
+Feb 28 2023 15:09:54 server kernel: [  367.543975] EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
+Feb 28 2023 15:12:07 server systemd[1]: Started Clean PHP session files.
+```
+
+#### Authentication Logs
+
+... contain information about user authentication attempts, including successful and failes attempts. They are stored in the ```/var/log/auth.log``` file. It is important to note that while the ```/var/log/syslog``` file may contain similar login information, the ```/var/log/auth.log``` file specifically focuses on user authentication attempts, making it a more valuable resource for identifying potential security threats. Therefore, it is essential for penetration testers to review the logs stored in the ```/var/log/auth.log``` file to ensure that the system is secure and has not been compromised.
+
+Example:
+
+```bash
+Feb 28 2023 18:15:01 sshd[5678]: Accepted publickey for admin from 10.14.15.2 port 43210 ssh2: RSA SHA256:+KjEzN2cVhIW/5uJpVX9n5OB5zVJ92FtCZxVzzcKjw
+Feb 28 2023 18:15:03 sudo:   admin : TTY=pts/1 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash
+Feb 28 2023 18:15:05 sudo:   admin : TTY=pts/1 ; PWD=/home/admin ; USER=root ; COMMAND=/usr/bin/apt-get install netcat-traditional
+Feb 28 2023 18:15:08 sshd[5678]: Disconnected from 10.14.15.2 port 43210 [preauth]
+Feb 28 2023 18:15:12 kernel: [  778.941871] firewall: unexpected traffic allowed on port 22
+Feb 28 2023 18:15:15 auditd[9876]: Audit daemon started successfully
+Feb 28 2023 18:15:18 systemd-logind[1234]: New session 4321 of user admin.
+Feb 28 2023 18:15:21 CRON[2345]: pam_unix(cron:session): session opened for user root by (uid=0)
+Feb 28 2023 18:15:24 CRON[2345]: pam_unix(cron:session): session closed for user root
+```
+
+#### Application Logs
+
+... contain information about the activities of specific applications running on the system. They are often stored in their own files. These logs are particularly important when you are targeting specific applications, such as web servers or databases, as they can provide insights into how these apps are processing and handling data. By examining these logs, you can identify potential vulnerabilities or misconfigurations. These logs can be used to identify unauthorized login attempts, data exfiltration, or other suspicious activity.
+
+Besides, access and audit logs are critical logs that record information about the actions of users and processes on the system. They are crucial for security and compliance purposes, and you can use them to identify potential security issues and attack vectors.
+
+Example:
+
+```bash
+2023-03-07T10:15:23+00:00 servername privileged.sh: htb-student accessed /root/hidden/api-keys.txt
+```
+
+#### Security Logs
+
+... are often recorded in a variety of log files, depending on the specific security application or tool in use. As pentesters, you can use log analysis tools and techniques to search for specific events or patterns of activity that may indicate a security issue and use that information to further test the system for vulnerabilities or potential attack vectors.
+
+It is important to be familiar with the default locations for access logs and other log files on the Linux system, as this information can be useful when performing a security assessment or penetration test. By understanding how security related events are recorded and stored, you can more effectively analyze log data and identify potential security issues.
+
+## Distros
+
+### Solaris
+
+... is a Unix-based OS developed by Sun Microsystems in the 1990s. It is known for its robustness, scalability, and support for high-end hardware and software systems. Solaris is widely used in enterprise environments for mission-critical applications, such as database management, cloud computing, and virtualization. Overall, it is designed to handle large amounts of data and provide reliable and secure services to users and is often used in enterprise environments where security, performance, and stability are key requirements.
+
+#### Differences to other Linux Distros
+
+- proprietary OS; source code not available to the general public
+- uses a Service Management Facility (_SMF_), which is a highly advanced service management framework that provides better reliability and availability for system services
+- has a number of unique features
+  - support for high-end hardware and software systems
+  - designed to work with large-scale data centers and complex network infrastructures
+  - can handle large amounts of data without any performance issues
+- uses the Image Packaging System (_IPS_)
+- provides advanced security features, such as Role-Based Access Control and mandatory access controls
+
+#### Command Examples
+
+##### System Information
+
+```bash
+# uname -a 
+$ showrev -a
+
+Hostname: solaris
+Kernel architecture: sun4u
+OS version: Solaris 10 8/07 s10s_u4wos_12b SPARC
+Application architecture: sparc
+Hardware provider: Sun_Microsystems
+Domain: sun.com
+Kernel version: SunOS 5.10 Generic_139555-08
+```
+
+##### Installing Packages
+
+```bash
+# sudo apt-get install
+$ pkgadd -d SUNWapchr
+```
+
+##### Permission Management
+
+```bash
+# find / -perm 4000
+$ find / -perm -4000
+```
+
+##### NFS
+
+```bash
+$ share -F nfs -o rw /export/home
+
+# cat /etc/dfs/dfstab
+
+share -F nfs -o rw /export/home
+```
+
+##### Process Mapping
+
+```bash
+# lists all files opened by the Apache web server process
+$ pfiles `pgrep httpd`
+```
+
+##### Executable Access
+
+```bash
+# d41y@htb[/htb]$ sudo strace
+$ truss ls
+# shows the system calls made by the ls command
+
+execve("/usr/bin/ls", 0xFFBFFDC4, 0xFFBFFDC8)  argc = 1
+...SNIP...
+```
