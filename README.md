@@ -48,6 +48,11 @@
 
 ## Reversing
 
+## Vuln Scanning
+
+- [Nessus](./attack/vuln_scanning/nessus.md)
+- [OpenVAS](./attack/vuln_scanning/openvas.md)
+
 ## Web
 
 ### 0x00
