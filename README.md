@@ -146,7 +146,7 @@ Web Service & API
 
 ## Assessments
 
-- [Assessment Standards]()
+- [Assessment Standards](./general/assessments/vulnerability_assessment.md)
 - [Security Assessment](./general/assessments/security_assessment.md)
 - [Vulnerability Assessment]()
 
