@@ -79,17 +79,19 @@ Server-side
   - [XLST](./attack/web/web_attacks/server_side/xlst.md)
   - [XXE](./attack/web/web_attacks/server_side/xxe.md)
 
-[Web Service & API](./attack/web/web_attacks/web_service_api/web_service_api.md)
-- [APIs](./attack/web/web_attacks/web_service_api/api_attacks.md)
-- [Web Service](./attack/web/web_attacks/web_service_api/web_service_attacks.md)
+Web Service & API
+  - [0x00](./attack/web/web_attacks/web_service_api/web_service_api.md)
+  - [APIs](./attack/web/web_attacks/web_service_api/api_attacks.md)
+  - [Web Service](./attack/web/web_attacks/web_service_api/web_service_attacks.md)
 
 ### Authentication
 
 - [Broken Authentication](./attack/web/authentication/broken_authentication.md)
 - [Login Brute Forcing](./attack/web/authentication/login_brute_forcing.md)
 
-### [CMS](./attack/web/cms/cms.md)
+### CMS
 
+- [0x00](./attack/web/cms/cms.md)
 - [Wordpress](./attack/web/cms/wordpress.md)
 
 ### Web Security
@@ -142,7 +144,9 @@ Server-side
 <summary>
 </summary>
 
-## [DBMS](./general/dbms/dbms_fundamentals.md)
+## DBMS
+
+[0x00](./general/dbms/dbms_fundamentals.md)
 
 Relational
 
@@ -151,6 +155,10 @@ Relational
 Non-Relational
 
 - [Neo4J]()
+
+## Networking
+
+0x00
 
 ## Processes
 
