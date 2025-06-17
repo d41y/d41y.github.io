@@ -29,7 +29,7 @@
 
 ## Linux
 
-### [0x00](./attack/linux/linux_fundamentals.md)
+- [0x00](./attack/linux/linux_fundamentals.md)
 
 ## MacOS
 
@@ -112,7 +112,7 @@ Web Service & API
 
 ## Windows
 
-### [0x00](./attack/windows/windows_fundamentals.md)
+- [0x00](./attack/windows/windows_fundamentals.md)
 
 ### Active Directory
 - [testlink]()
