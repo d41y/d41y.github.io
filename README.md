@@ -33,7 +33,7 @@
   - [Applications]()
   - [Passwords]()
   - [Services]()
-  - [Web](./README.md#attacks)
+  - [Web]()
 - [Footprinting]()
 - [Shells & Payloads]()
 
