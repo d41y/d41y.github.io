@@ -27,6 +27,16 @@
 
 ## Hardware
 
+## Initial Access
+
+- Attacks:
+  - [Applications]()
+  - [Passwords]()
+  - [Services]()
+  - [Web](./README.md#attacks)
+- [Footprinting]()
+- [Shells & Payloads]()
+
 ## Linux
 
 - [0x00](./attack/linux/linux_fundamentals.md)
@@ -37,9 +47,7 @@
 
 ## OSINT
 
-## Pivoting
-
-## Pivoting (alt)
+## Pivoting (_old; now in post-exploitation_)
 - [Chisel](./attack/pivoting/chisel.md)
 - [Ligolo](./attack/pivoting/ligolo.md)
 - [Socat](./attack/pivoting/socat.md)
@@ -48,11 +56,16 @@
 
 ## Post-Exploitation
 
+- [File Transfer]()
+- [Persistence]()
+- [Pivoting]()
+
 ## Reversing
 
 ## Tools
 
 - [Metasploit](./attack/tools/metasploit.md)
+- [nmap]()
 
 ## Vuln Scanning
 
