@@ -48,6 +48,10 @@
 
 ## Reversing
 
+## Tools
+
+- [Metasploit](./attack/tools/metasploit.md)
+
 ## Vuln Scanning
 
 - [Nessus](./attack/vuln_scanning/nessus.md)
