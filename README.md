@@ -33,7 +33,6 @@
   - [Applications]()
   - [Passwords]()
   - [Services]()
-  - [Web]()
 - [Footprinting]()
 - [Shells & Payloads]()
 
