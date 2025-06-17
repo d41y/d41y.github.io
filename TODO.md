@@ -4,9 +4,9 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 
 # TODO
 
-- Doku für:
-  - Linux Fundamentals
-  - Windwos Fundamentals
+- Wave Terminal?
+- Tmux?
+- shell? oh my zsh?
 
 - Attack cycle / workflow with clickable links
   - Cyber Kill Chain / MITRE Attack Chain
@@ -18,9 +18,6 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
   - Anpassen von mermaid
 
 - Module für CPTS
-  - Linux Fund
-  - Wind Fund
-  - Introduction to Networking
   - Introduction to Web Apps
   - Web Requests
   - Intro to AD
