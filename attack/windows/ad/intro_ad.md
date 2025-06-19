@@ -39,6 +39,7 @@
       - [sIDHistory](#sidhistory)
       - [NTDS.DIT](#ntdsdit)
       - [MSBROWSE](#msbrowse)
+    - [AD Objects](#ad-objects)
 
 ---
 
@@ -238,3 +239,5 @@ The NTDS.DIT file can be considered the heart of AD. It is stored on a DC at ```
 In older versions of Windows you could use ```nbtstat -A ip-address``` to search for the Master Browser. If you see MSBROWSE it means that's the Master Browser. Additionally you could use ```nltest``` utility to query a Windows Master Browser for the names of the DCs.
 
 Today, MSBROWSE is largely obsolete and is no longer in widespread use. Modern Windows-based LANs use the Server Message Block (_SMB_) protocol for file and printer sharing, and the Common Internet File System (_CIFS_) protocol for browsing services.
+
+### AD Objects
