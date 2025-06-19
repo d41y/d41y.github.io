@@ -1130,6 +1130,7 @@ Network Distance: 1 hop
 OS detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 4.11 seconds
 # -S [IP]: scans the target by using different source IP address
+# -e tun0 send all requests through the specified interface
 ```
 
 ### DNS Proxying
