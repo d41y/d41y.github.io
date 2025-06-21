@@ -66,6 +66,18 @@
       - [LDAP](#ldap)
         - [AD LDAP Authentication](#ad-ldap-authentication)
       - [MSRPC](#msrpc)
+    - [NTLM Authentication](#ntlm-authentication)
+      - [Hash Protocol Comparison](#hash-protocol-comparison)
+      - [LM](#lm)
+      - [NTHash (_NTLM_)](#nthash-ntlm)
+        - [NTLM Authentication Request](#ntlm-authentication-request)
+      - [NTLMv1v (_Net-NTLMv1_)](#ntlmv1v-net-ntlmv1)
+        - [V1 Challenge \& Response Algorithm](#v1-challenge--response-algorithm)
+        - [NTLMv1 Hash Example](#ntlmv1-hash-example)
+      - [NTLMv2 (_Net-NTLMv2_)](#ntlmv2-net-ntlmv2)
+        - [V2 Challenge \& Response Algorithm](#v2-challenge--response-algorithm)
+        - [NTLMv2 Hash Example](#ntlmv2-hash-example)
+      - [Domain Cached Creds (_MSCache2_)](#domain-cached-creds-mscache2)
 
 ---
 
@@ -485,3 +497,92 @@ MSRPC is Microsoft's implementation of Remote Procedure Call (_RPC_), an interpr
 | samr | remote SAM provides management functionality for the domain account database, storing information about users and groups; IT admins use the protocol to manage users, groups, and computers by enabling admins to create, read, update, and delete information about security principles; attackers can use the samr protocol to perform reconnaissance about the internal domain using tools like BloodHound to visually map out the AD network and create "attack paths" to illustrate visually how administrative access or full domain compromise could be achieved; organizations can protect against this type of reconnaissance by changing a Windwos registry key to only allow admins to perform remote SAM queries, by default, all authenticated domain users can make these queries to gather a considerable amount of information about the AD domain |
 | drsuapi | drsuapi is the Microsoft API that implements the Directory Replication Service Remote Protocol which is used to perform replication-related tasks across DCs in a multi-DC environment; attackers can utilize drsuapi to create a copy of the AD domain database file to retrieve password hashes for all accounts in the domain, which can then be used to perform Pass-the-Hash attacks to access more systems or cracked offline to obtain the cleartext password to log in to systems using remote management protocols such as RDP and WinRM |
 
+### NTLM Authentication
+
+Aside from Kerberos and LDAP, AD uses several other authentication methods which can be used by apps and services in AD. These include LM, NTLM, NTLMv1, and NTLMv2. LM and NTLM here are the hash names, and NTLMv1 and NTLMv2 are authentication protocols that utilize the LM or NT hash.
+
+#### Hash Protocol Comparison
+
+| Hash / Protocol | Cryptographic Technique | Manual Authentication | Message Type | Trusted Third Party |
+| --------------- | ----------------------- | --------------------- | ------------ | ------------------- |
+| NTLM | symmetric key cryptography | no | random number | DC |
+| NTLMv1 | symmetric key cryptography | no | MD4 hash, random number | DC |
+| NTLMv2 | symmetric key cryptography | no | MD4 hash, random number | DC |
+| Kerberos | symmetric key cryptography & asymmetric cryptography | yes | encrypted ticket using DES, MD5 | DC / KDC |
+
+#### LM
+
+LAN Manager (_LM/LANMAN_) hashes are the oldest password storage mechanism used by the Windows OS. If in use, they are stored in the SAM database on a Windows host and the NTDS.DIT database on a DC. Due to significant security weaknesses in the hashing algorithm used for LM hashes, it has been turned off by default since Windows Vista / Server 2008. However, it is still common to encounter, especially in large environments where older systems are still used. Passwords using LM are limited to a maximum of 14 chars. Passwords are not case sensitive and are converted to uppercase before generating the hashed value, limiting the keyspace to a total of 69 chars making it relatively easy to crack these hashes.
+
+Before hashing, a 14 char password is first split into two seven-char chunks. If the password is less than fourteen chars, it will be padded with NULL chars to reach the correct value. Two DES keys are created from each chunk. These chunks are then encrypted using the string ```KGS!@#$%```, creating two 8-byte ciphertext values. These two values are then concatenated together, resulting in an LM hash. This hashing algorithm means that an attacker only needs to brute force seven chars twice instead of the entire fourteen chars, making it fast to crack LM hashes on a system with one or more GPUs. If a password is seven chars or less, the second half of the LM hash will always be the same value and could even be determined visually without even needed tools. The use of LM hashes can be disallowed using Group Policy. An LM hash takes the form of ```299bd128c1101fd6```.
+
+#### NTHash (_NTLM_)
+
+NT LAN Manager (_NTLM_) hashes are used on modern Windows systems. It is challenge-response authentication protocol and uses three messages to authenticate: a client first sends a ```NEGOTIATE_MESSAGE``` to the server, whose response is a ```CHALLENGE_MESSAGE``` to verify the client's identity. Lastly, the client responds with an ```AUTHENTICATE_MESSAGE```. These hashes are stored locally in the SAM database or the NTDS.DIT database file on a DC. The protocol has two hashed password values to choose from to perform authentication: the LM hash and the NT hash, which is the MD4 hash of the little-endian UTF-16 value of the password. The algorithm can be visualized as: ```MD4(UTF-16-LE(password))```.
+
+##### NTLM Authentication Request
+
+![intro ad 8](../../../images/intro_ad8.png)
+
+Even though they are considerably stronger than LM hashes, they can still be brute-forced offline relatively quickly. GPU attacks have shown that the entire NTLM 8 char keyspace can be brute-forced in under 3 hours. Longer NTLM hashes can be more challenging to crack depending on the password chosen, and even long passwords can be cracked using an offline dictionary attack combined with rules. NTLM is also vulnerable to the pass-the-hash attack, which means an attacker can use just the NTLM hash to authenticate to target systems where the user is a local admin without needing to know the cleartext value of the password.
+
+An NT hash takes the form of ```b4b9b02e6f09a9bd760f388b67351e2b```, which is the second half of the full NTLM hash. An NTLM hash looks like this:
+
+```
+Rachel:500:aad3c435b514a4eeaad3b935b51304fe:e46b9e548fa0d122de7f59fb6d48eaa2:::
+```
+
+- Rachel
+  - username
+- 500
+  - the RID; 500 is known to be the administrator
+- aad3c435b514a4eeaad3b935b51304fe
+  - is the LM hash and, if LM hashes are disabled on the system, can not be used for anything
+- e46b9e548fa0d122de7f59fb6d48eaa2
+  - is the NT hash; this hash can either be cracked offline to reveal the cleartext value or used for a pass-the-hash attack
+
+#### NTLMv1v (_Net-NTLMv1_)
+
+The NTLM protocol performs a challenge/response between a server and client using the NT hash. NTLMv1 uses both the NT and the LM hash, which can make it easier to "crack" offline after capturing a hash using a tool such as Responder or via an NTLM relay attack. The protocol is used for network authentication, and the Net-NTLMv1 hash itself is created from a challenge/response algorithm. The server sends the client an 8-byte random number, and the client returns a 24-byte response. These hashes can not be used for pass-the-hash attacks. The algorithm looks as follows:
+
+##### V1 Challenge & Response Algorithm
+
+```
+C = 8-byte server challenge, random
+K1 | K2 | K3 = LM/NT-hash | 5-bytes-0
+response = DES(K1,C) | DES(K2,C) | DES(K3,C)
+```
+
+##### NTLMv1 Hash Example
+
+```
+u4-netntlm::kNS:338d08f8e26de93300000000000000000000000000000000:9526fb8c23a90751cdd619b6cea564742e1e4bf33006ba41:cb8086049ec4736c
+```
+
+NTLMv1 was the building block for modern NTLM authentication. Like any protocol, it has flaws and is susceptible to cracking and other attacks.
+
+#### NTLMv2 (_Net-NTLMv2_)
+
+The NTLM2 protocol was created as a stronger alternative to NTLMv1. It has been the default in Windows since Sever 2000. It is hardened against certain spoofing attacks that NTLMv1 is susceptible to. NTLMv2 sends two responses to the 8-byte challenge received by the server. These responses contain a 16-byte HMAC-MD5 hash of the challenge, a randomly generated challenge from the client, and an HMAC-MD5 hash of the user's creds. A second response is sent, using a variable-length client challenge including the current time, an 8-byte random value, and the domain name. The algorithm is as follows:
+
+##### V2 Challenge & Response Algorithm
+
+```
+SC = 8-byte server challenge, random
+CC = 8-byte client challenge, random
+CC* = (X, time, CC2, domain name)
+v2-Hash = HMAC-MD5(NT-Hash, user name, domain name)
+LMv2 = HMAC-MD5(v2-Hash, SC, CC)
+NTv2 = HMAC-MD5(v2-Hash, SC, CC*)
+response = LMv2 | CC | NTv2 | CC*
+```
+
+##### NTLMv2 Hash Example
+
+```
+admin::N46iSNekpT:08ca45b7d7ea58ee:88dcbe4446168966a153a0064958dac6:5c7830315c7830310000000000000b45c67103d07d7b95acd12ffa11230e0000000052920b85f78d013c31cdb3b92f5d765c783030
+```
+
+#### Domain Cached Creds (_MSCache2_)
+
+In an AD environment, the authentication methods mentioned in this section and the previous require the host you are trying to access to communicate with the "brains" of the network, the DC. Microsoft developed the MS Cache v1 and v2 algorithm to solve the potential issue of a domain-joined host being unable to communicate with a DC and, hence, NTLM/Kerberos authentication not working to access the host in question. Hosts save the last ten hashes for any domain users that successfully log into the machine in the ```HKEY_LOCAL_MACHINE\SECURITY\Cache``` registry key. These hashes cannot be used in pass-the-hash attacks. Furthermore, the hash is very slow to crack with a tool such as Hashcat, even when using an extremely powerful GPU cracking rig, so attempts to crack these hashes typically need to be extremely targeted or rely on a very weak password in use. These hashes can be obtained by an attacker or pentester after gaining local admin access to a host and have the following format: ```$DCC2$10240#bjones#e4e938d12fe5974dc42a90120bd9c90f```. It is vital as pentesters that you understand the varying types of hashes that you may encounter while assessing an AD environment, their strengths, weaknesses, how they can be abused, and when an attack may be futile.
