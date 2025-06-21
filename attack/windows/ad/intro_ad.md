@@ -78,6 +78,9 @@
         - [V2 Challenge \& Response Algorithm](#v2-challenge--response-algorithm)
         - [NTLMv2 Hash Example](#ntlmv2-hash-example)
       - [Domain Cached Creds (_MSCache2_)](#domain-cached-creds-mscache2)
+  - [Users](#users-1)
+    - [User and Machine Accounts](#user-and-machine-accounts)
+    - [Local Accounts](#local-accounts)
 
 ---
 
@@ -586,3 +589,31 @@ admin::N46iSNekpT:08ca45b7d7ea58ee:88dcbe4446168966a153a0064958dac6:5c7830315c78
 #### Domain Cached Creds (_MSCache2_)
 
 In an AD environment, the authentication methods mentioned in this section and the previous require the host you are trying to access to communicate with the "brains" of the network, the DC. Microsoft developed the MS Cache v1 and v2 algorithm to solve the potential issue of a domain-joined host being unable to communicate with a DC and, hence, NTLM/Kerberos authentication not working to access the host in question. Hosts save the last ten hashes for any domain users that successfully log into the machine in the ```HKEY_LOCAL_MACHINE\SECURITY\Cache``` registry key. These hashes cannot be used in pass-the-hash attacks. Furthermore, the hash is very slow to crack with a tool such as Hashcat, even when using an extremely powerful GPU cracking rig, so attempts to crack these hashes typically need to be extremely targeted or rely on a very weak password in use. These hashes can be obtained by an attacker or pentester after gaining local admin access to a host and have the following format: ```$DCC2$10240#bjones#e4e938d12fe5974dc42a90120bd9c90f```. It is vital as pentesters that you understand the varying types of hashes that you may encounter while assessing an AD environment, their strengths, weaknesses, how they can be abused, and when an attack may be futile.
+
+## Users
+
+### User and Machine Accounts
+
+User accounts are created on both local systems and in AD to give a person or a program the ability to log on to a computer and access resources based on their rights. When a user logs in, the system verifies their password and creates an access token. This token describes the security content of a process or thread and includes the user's security identity and group membership. Whenever a user interacts with a process, this token is presented. User accounts are used to allow employees/contractors to log in to a computer and access resources, to run programs or services under a specific security context, and to manage access to objects and their properties such as netwotk file shares, files applications, etc. Users can be assigend to groups that can contain one or more members. These groups can also be used to control access to resources. It can be easier for an administrator to assign privileges once to a group instead of many times to each individual user. This helps simplify administration and makes it easier to grant and revoke user rights.
+
+The ability to provision and manage user accounts is one of the core elements of AD. Typically, every company you encounter will have at least one AD user account provisioned per user. Some users may have two or more accoutns provisioned based on their job role. Aside from standard user and admin accounts tied back to a specific user, you will often see many service accounts used to run a particular application or service in the background or perform other vital functions within the domain environment. An organization with 1,000 employees could have 1,200 active user accounts or more! You may also see organizations with hundreds of disabled accounts from former employees, temporary/seasonal employees, interns, etc. Some companies must retain records of these accounts for audit purposes, so they will deactivate them once the employee is terminated, but they will not delete them. It is common to see an OU such as ```FORMER EMPLOYEES``` that will contain many deactivated accounts.
+
+![intro ad 9](../../../images/intro_ad9.png)
+
+User accounts can be provisioned many rights in AD. They can be configured as basically read-only users who have read access to most of the environment up to Enterprise Admin and countless combinations in between. Because users can have so many rights assigned to them, they can also be misconfigured relatively easily and granted unintended rights that an attacker or a pentester can leverage. User accounts present an immense attack surface and are usually a key focus for gaining a foothold during a pentest. Users are often the weakest link in any organization. It is difficult to manage human behavior and account for every user choosing weak or shared passwords, installing unauthorized software, or admins making careless mistakes or being overly permissive with account management. To combat this, an organization needs to have policies and procedures to combat issues that can arise around user accounts and must have defense in depth to mitigate the inherent risk that users bring to the domain.
+
+### Local Accounts
+
+... are stored locally on a particular server or workstation. These accounts can be assigned rights on that host either individually or via group membership. Any rights assigned can only be granted to that specific host and will not work across the domain. Local user accounts are considered security principals but can only manage access to and secure resources on a standalone host. There are several default local user accounts that are created on a Windows system:
+
+- Administrator:
+  - this account has the SID ```S-1-5-domain-500``` and is the first account created with a new Windows installation; it has full control over almost every resource on the system; it cannot be deleted or locked, but it can be disabled or renamed. Windows 10 and Server 2016 hosts disable the built-in administrator account by default and create another local account in the local administrator's group during setup
+- Guest
+  - this account is disabled by default; the purpose of this account is to allow users without an account on the computer to log in temporarily with limited access rights; by default, it has a blank password and is generally recommended to be left disabled because of the security risk of allowing anonymous access to a host
+- SYSTEM
+  - the SYSTEM (_or NT AUTHORITY\SYSTEM_) account on a Windows host is the default account installed and used by the OS to perform many of its internal functions; unlike the root account on Linux, SYSTEM is a service account and does not run entirely in the same context as a regular user; many of the processes and services running on a host are run under the SYSTEM context; one thing to note with this account is that a profile for it does not exist, but it will have permissions over almost everything on the host; it does not appear in User Manager and cannot be added to any groups; a SYSTEM account is the highest permission level one can achieve on a Windows host and, by default, is granted Full Control permissions to all files on a Windows system
+- Network Service
+  - this is a predefined local account used by the Service Control Manager (_SCM_) for running Windows services; when a service runs in the context of this particular account, it will present credentials to remote services
+- Local Service
+  - this is another predefined local account used by the SCM for running Windows servics; it is configured with minimal privileges on the computer and presents anonymous credentials to the network
+
