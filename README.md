@@ -29,11 +29,13 @@
 
 ## Initial Access
 
-- Attacks:
+- Attacks
   - [Applications]()
   - [Passwords]()
   - [Services]()
 - [Footprinting]()
+  - [Infrastructure Based Enumeration]()
+  - [Host Based Enumeration]()
 - [Shells & Payloads]()
 
 ## Linux
