@@ -87,6 +87,16 @@
     - [Domain-joined vs. Non-domain-joined Machine](#domain-joined-vs-non-domain-joined-machine)
       - [Domain joined](#domain-joined)
       - [Non-domain joined](#non-domain-joined)
+  - [Groups](#groups-1)
+    - [Types of Groups](#types-of-groups)
+    - [Group Scopes](#group-scopes)
+      - [Domain Local Group](#domain-local-group)
+      - [Global Group](#global-group)
+      - [Universal Group](#universal-group)
+        - [AD Group Scope Examples](#ad-group-scope-examples)
+    - [Built-in vs. Custom Groups](#built-in-vs-custom-groups)
+    - [Nested Group Membership](#nested-group-membership)
+    - [Important Group Attributes](#important-group-attributes)
 
 ---
 
@@ -667,3 +677,115 @@ Hosts joined to a domain have greater ease of information sharing within the ent
 Non-domain joined computers or computers in a workgroup are not managed by domain policy. With that in mind, sharing resources outside your local network is much more comlicated than it would be on a domain. This is fine for computers meant for home use or small business clusters on the same LAN. The advantage of this setup is that the individual users are in charge of any changes they wish to make to their host. Any user accounts on a workgroup computer only exist on that host, and profiles are not migrated to other hosts within the workgroup.
 
 It is important to note that a machine account in an AD environment will have most of the same rights as a standard domain user account. This is important because you do not always need to obtain a set of valid creds for an individual user's account to begin enumerating and attacking a domain. You may obtain SYSTEM level access to a domain-joined Windows host through a successful RCE exploit or by escalating privileges on a host. This access is often overlooked as only useful for pillaging sensitive data on a particular host. In reality, access in the context of the SYSTEM account will allow you read access to much of the data within the domain and is a great launching point for gathering as much information as possible before proceeding with applicable AD-related attacks.
+
+## Groups
+
+After users, groups are another significant object in AD. They can place similar users together and mass assign rights and access. Groups are another key target for attackers and pentesters, as the rights that they confer on their members may not be readily apparent but may grant excessive privileges that can be abused if not set up properly. There are many built-in groups in AD, and most organizations also create their own groups to define rights and privileges, further managing access within the domain. The number of groups in an AD environment can snowball an become unwieldy, potentially leading to unintended access if left unchecked. It is essential to understand the impact of using different group types and for any organization to periodically audit which groups exist within their domain, the privileges that these groups grant their members, and check for excessive group membership beyond what is required for a user to perform their day-to-day work.
+
+One question that comes up often is the difference between Groups and OUs. OUs are useful for grouping users, and computers to ease management and deploying Group Policy settings to a specific object in the domain. Groups are primarily used to assign permissions to access resources. OUs can also be used to delegate administrative tasks to a user, such as resetting passwords or unlocking user accounts without giving them additional admin rights that they may inherit through group membership.
+
+### Types of Groups
+
+In simpler terms, groups are used to place users, computers, and contact objects into management units that provide ease of administration over permissions and facilitate the assignment of resources such as printers and file share access.
+
+Groups in AD have two fundamental characteristics: type and scope. The group type defines the group's purpose, while the group scope shows how the group can be used within the domain or forest. When creating a new group, you must select a group type. There are two main types: security and distribution groups.
+
+![intro ad 10](../../../images/intro_ad10.png)
+
+The Security Groups type is primarily for ease of assigning permissions and rights to a collection of users instead of one at a time. They simlify management and reduce overhead when assigning permissions and rights for a given resource. All users added to a security group will inherit any permissions assigned to the group, making it easier to move users in and out of groups while leaving the group's permissions unchanged.
+
+The Distribution Groups type is used by email applications such as Microsoft Exchange to distribute messages to group members. They function much like mailing lists and allow for auto-adding emails in the "To" field when creating an email in Microsoft Outlook. This type of group cannot be used to assign permissions to resources in a domain environment.
+
+### Group Scopes
+
+There are three different group scopes that can be assigned when creating a new group:
+
+#### Domain Local Group
+
+... can only be used to manage permissions to domain resources in the domain where it was created. Local groups cannot be used in other domains but can contain users from other domains. Local groups can be nested into other local groups but not within global groups.
+
+#### Global Group
+
+... can be used to grant access to resources in another domain. A global group can only contain accounts from the domain where it was created. Global groups can be added to both other global groups and local groups.
+
+#### Universal Group
+
+The universal group scope can be used to manage resources distributed across multiple domains and can be given permissions to any object within the same forest. They are available to all domains within an organization and can contain users from any domain. Unlike domain local and global groups, universal groups are stored in the Global Catalog (_GC_), and adding or removing objects from a universal group triggers forest-wide replication. It is recommended that administrators maintain other groups is less likely to change than individual user membership in global groups. Replication is only triggered at the individual domain level when a user is removed from a global group. If individual users and computers are maintained within universal groups, it will trigger forest-wide replication each time a change is made. This can create a lot of network overhead and potential for issues. Below is an example of the groups in AD and their scope settings. Please pay attention to some of the critical groups and their scope.
+
+##### AD Group Scope Examples
+
+```ps
+PS C:\htb> Get-ADGroup  -Filter * |select samaccountname,groupscope
+
+samaccountname                           groupscope
+--------------                           ----------
+Administrators                          DomainLocal
+Users                                   DomainLocal
+Guests                                  DomainLocal
+Print Operators                         DomainLocal
+Backup Operators                        DomainLocal
+Replicator                              DomainLocal
+Remote Desktop Users                    DomainLocal
+Network Configuration Operators         DomainLocal
+Distributed COM Users                   DomainLocal
+IIS_IUSRS                               DomainLocal
+Cryptographic Operators                 DomainLocal
+Event Log Readers                       DomainLocal
+Certificate Service DCOM Access         DomainLocal
+RDS Remote Access Servers               DomainLocal
+RDS Endpoint Servers                    DomainLocal
+RDS Management Servers                  DomainLocal
+Hyper-V Administrators                  DomainLocal
+Access Control Assistance Operators     DomainLocal
+Remote Management Users                 DomainLocal
+Storage Replica Administrators          DomainLocal
+Domain Computers                             Global
+Domain Controllers                           Global
+Schema Admins                             Universal
+Enterprise Admins                         Universal
+Cert Publishers                         DomainLocal
+Domain Admins                                Global
+Domain Users                                 Global
+Domain Guests                                Global
+
+<SNIP>
+```
+
+Group scopes can be changed, but there are a few caveats:
+
+- a Global Group can only be converted to a Universal Group if it is not part of another Global Group
+- a Domain Local Group can only be converted to a Universal Group if the Domain Local Group does not contain any other Domain Local Group as members
+- a Universal Group can be converted to a Domain Local Group without any restrictions
+- a Universal Group can only be converted to a Global Group if it does not contain any other Universal Group as members
+
+
+
+
+### Built-in vs. Custom Groups
+
+Several built-in security groups are created with a Domain Local Group scope when a domain is created. These groups are used for specific administrative purposes. It is important to note that only user accounts can be added to these built-in groups included Domain Admins, which is a global security group and can only contain accounts from its own domain. If an organization wants to allow an account from domain B to perform administrative functions on a DC in domain A, the account would have to be added to the built-in Administrators group, which is a Domain Local Group. Though AD comes prepopulated with many groups, it is common for most organizations to create additional groups for their own purposes. Changes/additions to an AD environment can also trigger the creation of additional groups. For example, when Microsoft Exchange is added to a domain, it adds various different security groups to the domain, some of which are highly privileged and, if not managed properly, can be used to gain privileged access within the domain.
+
+### Nested Group Membership
+
+Nested group membership is an important concept in AD. A Domain Local Group can be a member of another Domain Local Group in the same domain. Through this membership, a user may inherit privileges not assigned directly to their account or even the group they are directly a member of, but rather the group that their group is a member of. This can sometimes lead to unintended privileges granted to a user that are difficult to uncover without an in-depth assessment of the domain. Tools such as BloodHound are particularly useful in uncovering privileges that a user may inherit through one or more nestings of groups. This is a key tool for pentesters for uncovering nuanced misconfigurations and is also extremely powerful for sysadmins and the like to gain deep insights into the security posture of their domain(s).
+
+Below is an example of privileges through nested group memberships. Though ```DCorner``` is not a direct member of ```Helpdesk Level 1```, their membership in ```Help Desk``` grants them the same privileges that any member of ```Helpdesk Level 1``` has. In this case, the privilege would allow them to add a member to the ```Tier 1 Admins``` group (_GenericWrite_). If this group confers any elevated privileges in the domain, it would likely be a key target for a pentester. Here, you could add your user to the group and obtain privileges that members of the ```Tier 1 Admins``` group are granted, such as local administrator access to one or more hosts that could be used to further access.
+
+![intro ad 11](../../../images/intro_ad11.png)
+
+### Important Group Attributes
+
+Like users, groups have many attributes. Some of the most important group attributes include:
+
+- cn (_Common Name_)
+  - is the name of the group in AD DS
+- member
+  - which user, group, and contact objects are members of the group
+- groupType
+  - an integer that specifies the group type and scope
+- memberOf
+  - a listing of any groups that contain the group as a member
+- objectSid
+  - this is the security identifier or SID of the group, which is the unique value used to identify the group as a security principal
+
+Groups are fundamental objects in AD that can be used to group other objects together and facilitate the management of rights and access.
