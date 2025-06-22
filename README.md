@@ -128,7 +128,7 @@ Web Service & API
 
 ### Active Directory
 
-- [0x00](./attack/windows/windows_fundamentals.md)
+- [0x00](./attack/windows/ad/intro_ad.md)
 
 </details>
 
