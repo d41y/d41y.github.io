@@ -107,6 +107,26 @@
       - [Domain Admin Rights Non-Elevated](#domain-admin-rights-non-elevated)
       - [Domain Admin Rights Elevated](#domain-admin-rights-elevated)
       - [Backup Operator Rights](#backup-operator-rights)
+  - [Security](#security)
+    - [General AD Hardening Measures](#general-ad-hardening-measures)
+      - [Microsoft Local Administrator Password Solution (_LAPS_)](#microsoft-local-administrator-password-solution-laps)
+      - [Audit Policy Settings (_Logging and Monitoring_)](#audit-policy-settings-logging-and-monitoring)
+      - [Group Policy Security Settings](#group-policy-security-settings)
+        - [Advanced Audit Policy](#advanced-audit-policy)
+      - [Update Management (_SCCM/WSUS_)](#update-management-sccmwsus)
+      - [Group Managed Service Accounts (_gMSA_)](#group-managed-service-accounts-gmsa)
+      - [Security Groups](#security-groups)
+        - [Built-in AD Security Groups](#built-in-ad-security-groups)
+      - [Account Separation](#account-separation)
+      - [Password Complexity Policies + Passphrases + 2FA](#password-complexity-policies--passphrases--2fa)
+      - [Limiting Domain Admin Accout Usage](#limiting-domain-admin-accout-usage)
+      - [Periodically Auditing and Removing Stale Users and Objects](#periodically-auditing-and-removing-stale-users-and-objects)
+      - [Auditing Permissions and Access](#auditing-permissions-and-access)
+      - [Audit Policies \& Logging](#audit-policies--logging)
+      - [Using Restricted Groups](#using-restricted-groups)
+      - [Limiting Server Roles](#limiting-server-roles)
+      - [Limiting Local Admin and RDP Rights](#limiting-local-admin-and-rdp-rights)
+      - [More Best Practices](#more-best-practices)
 
 ---
 
@@ -1010,3 +1030,90 @@ SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
 ```
 
 As attackers and defenders, you need to understand the rights that are granted to users via membership from built-in security groups in AD. It's not uncommon to find seemingly low privileged users added to one or more of these groups, which can be used to further access or compromise the domain. Access to these groups should be strictly controlled. It is typically best practice to leave most of these groups empty and only add an account to a group if a one-off action needs to be performed or a repetitive task needs to be set up. Any accounts added to one of the groups discussed in this section or granted extra privileges should be strictly controlled and monitored, assigned a very strong password or passphrase, and should be separate from an account used by a sysadmin to perform their day-to-day duties.
+
+## Security
+
+### General AD Hardening Measures
+
+#### Microsoft Local Administrator Password Solution (_LAPS_)
+
+Accounts can be set up to have their password rotated on a fixed internal. This free tool can be beneficial in reducing the impact of an individual compromised host in an AD environment. Organizations should not rely on tools like this alone. Still, when combined with other hardening measures and security best practices, it can be a very effective tool for local administrator account password management.
+
+#### Audit Policy Settings (_Logging and Monitoring_)
+
+Every organization needs to have logging and monitoring setup to detect and react to unexpected changes or activities that may indicate an attack. Effective logging and monitoring can be used to detect an attacker or unauthorized employee adding a user or computer, modifying an obbject in AD, changing an account password, accessing a system in an unauthorized or non-standard manner, performing an attack such as password spraying, or more advanced attacks such as modern Kerberos attacks.
+
+#### Group Policy Security Settings
+
+Group Policy Objects are virtual collections of policy settings that can be applied to specific users, groups, and computers at the OU level. These can be used to apply a wide variety of security policies to help harden AD. The following is a non-exhaustive list of the types of security policies that can be applied:
+
+- Account Policies
+  - manage how user accounts can interact with the domain; these include the password policy, account lockout policy, and Kerberos-related settings such as the lifetime of Kerberos tickets
+- Local Privileges
+  - these apply to a specific computer and include the security event audit policy, user rights assignments, and specific security settings such as the ability to install drivers, whether the administrator and guest accounts are enabled, renaming the guest and administrator accounts, preventing users from installing printers or using removable media, and a variety of network access and network security controls
+- Software Restriction Policies
+  - settings to control what software can be run on a host
+- Application Control Policies
+  - settigs to control which applications can be run by certain users/groups; this may include blocking certain users from running all executables, Windows Installer files, scripts, etc.; Administrators use AppLocker to restrict access to certain types of applications and files; it is not uncommon to see organizations block access to CMD and PowerShell for users that do not require them for their day-to-day job; these policies are imperfect and can often be bypassed but necessary for a defense-in-depth strategy
+- Advanced Audit Policy Configuration
+  - a variety of settings that can be adjusted to audit activities such as file access or modification, account logon/logoff, policy changes, privilege usage, and more
+
+##### Advanced Audit Policy
+
+![intro ad 12](../../../images/intro_ad12.png)
+
+#### Update Management (_SCCM/WSUS_)
+
+Proper patch management is critical for any organization, especially those running Windows/AD systems. The Windows Server Update Service (_WSUS_) can be installed as a role on a Windows Server and can be used to minimize the manual task of patching Windows systems. System Center Configuration Manager (_SCCM_) is a paid solution that relies on the WSUS Windows server role being installed and offers more features than WSUS on its own. A patch management solution can help ensure timely deployment of patches and maximize coverage, making sure that no hosts miss critical security patches. If an organization relies on a manual method for applying patches, it could take a very long time depending on the siuze of the environment and also could result in systems being missed and left vulnerable.
+
+#### Group Managed Service Accounts (_gMSA_)
+
+a gMSA is an account managed by the domain that offers a higher level of security than other types of service accounts for use with non-interactive applications, services, processes, and tasks that are run automatically but require credentials to run. They provide automatic password management with a 120 char password generated by the domain controller. The password is changed at a regular interval and does not need to be known by and user. It allows for creds to be used across mutliple hosts.
+
+#### Security Groups
+
+... offer an easy way to assign access to network resources. They can be used to assign specific rights to the group to determine what members of the group can do within the AD environment. AD automatically creates some default security groups during installation. Some examples are Account Operators, Administrators, Backup Operators, Domain Admins, and Domain Users. These groups can also be used to assign permission to access resources. Security groups help ensure you can assign granular permissions to users en masse instead of individually managing each user.
+
+##### Built-in AD Security Groups
+
+![intro ad 13](../../../images/intro_ad13.png)
+
+#### Account Separation
+
+Administrators must have two separate accounts. One for their day-to-day work and a second for any administrative tasks they must perform. This can help ensure that if a user's host is compromised, the attacker would be limited to that host and would not obtain credentials for a highly privileged user with considerable access within the domain. It is also essential for the individual to use different passwords for each account to mitigate the risk of password reuse attacks if their non-admin account is compromised.
+
+#### Password Complexity Policies + Passphrases + 2FA
+
+Ideally, an organization should be using passphrases or large randomly generated passwords using an enterprise password manager. The standard 7-8 character passwords can be cracked offline very quickly with a GPU password cracking rig. Shorter, less complex passwords may also be guessed through a password spraying attack, giving an attacker a foothold in the domain. Password complexity rules alone in AD are not enough to ensure strong passwords. An organization should also consider implementing a password filter to disallow passwords containing the months or seasons of the year, the company name, and common words. The minimum password length for standard users should be at least 12 chars and ideally longer for administrators/service accounts. Another important security measure is the implementation of multi-factor authentication for remote desktop access to any host. This can help to limit lateral movement attempts that may rely on GUI access to a host.
+
+#### Limiting Domain Admin Accout Usage
+
+All-powerful Domain Admin accounts should only be used to log in to DCs, not personal workstations, jump hosts, web servers, etc. This can significantly reduce the impact of an attack and cut down potential attack paths should a host be compromised. This would ensure that Domain Admin account passwords are not left in memory on hosts throughout the environment.
+
+#### Periodically Auditing and Removing Stale Users and Objects
+
+It is important for an organization to periodically audit AD and remove or disable any unused accounts.
+
+#### Auditing Permissions and Access
+
+Organizations should also periodically perform access control audits to ensure that users only have the level of access required for their day-to-day work. It is important to audit local admin rights, the number of Domain Admins, and Enterprise Admins to limit the attack surface, file share access, user rights, and more.
+
+#### Audit Policies & Logging
+
+Visibility into the domain is a must. An organization can achieve this through robust logging and then using rules to detect anomalous activity or indicators that a Kerberoasting attack is being attempted. These can also be used to detect AD enumeration. It is worth familiarizing yourself with Microsoft's [Audit Policy Recommendations](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/audit-policy-recommendations) to help detect compromise.
+
+#### Using Restricted Groups
+
+Restricted Groups allow for administrators to configure group membership via Group Policy. They can be used for a number of reasons, such as controlling membership in the local administrator's group on all hosts in the domain by restricting it to just the local Administator account and Domain Admins and controlling membership in the highly privileged Enterprise Admins and Schema Admins groups and other key administrative groups.
+
+#### Limiting Server Roles
+
+It is important not to install additional roles on sensitive hosts, such as installing the Internet Information Server role on a DC. This would increase the attack surface of the DC, and this type of role should be installed on a separate standalone web server. Some other examples would be not hosting web apps on an Exchange mail server and seperating web servers and database servers out to different hosts. This type of role separation can help to reduce the impact of a successful attack.
+
+#### Limiting Local Admin and RDP Rights
+
+Organizations should tightly control which users have local admin rights on which computers. This can be achieved using Restricted Groups.
+
+#### More Best Practices
+
+... can be found [here](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory).
