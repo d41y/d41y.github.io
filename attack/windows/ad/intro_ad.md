@@ -127,6 +127,16 @@
       - [Limiting Server Roles](#limiting-server-roles)
       - [Limiting Local Admin and RDP Rights](#limiting-local-admin-and-rdp-rights)
       - [More Best Practices](#more-best-practices)
+  - [Group Policy](#group-policy)
+    - [GPOs](#gpos)
+      - [RDP GPO Settings](#rdp-gpo-settings)
+    - [GPO Order of Precedence](#gpo-order-of-precedence)
+      - [GPMC Hive Example](#gpmc-hive-example)
+      - [Enforced GPO Policy Precedence](#enforced-gpo-policy-precedence)
+      - [Default Domain Policy Override](#default-domain-policy-override)
+      - [Block Inheritance](#block-inheritance)
+    - [Group Policy Refresh Frequency](#group-policy-refresh-frequency)
+    - [Security Considerations of GPOs](#security-considerations-of-gpos)
 
 ---
 
@@ -1117,3 +1127,81 @@ Organizations should tightly control which users have local admin rights on whic
 #### More Best Practices
 
 ... can be found [here](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory).
+
+## Group Policy
+
+... is a Windows feature that provides administrators with a wide array of advanced settings that can apply to both user and computer accounts in a Windows environment. Every Windows host has a Local Group Policy editor to manage local settings. Group Policy is a powerful tool for managing and configuring user settings, operating systems, and applications. Group Policy is also a potent tool for managing security in a domain environment. From a security context, leveraging Group Policy is one of the best ways to widely affect your enterprise's security posture. AD is by no means secure out of the box, and Group Policy, when used properly, is a crucial part of a defense-in-depth strategy.
+
+While Group Policy is an excellent tool for managing the security of a domain, it can also be abused by attackers. Gaining rights over a Group Policy Object could lead to lateral movement, PrivEsc, and even full domain compromise if the attacker can leverage them in a way to take over d high-vale user or computer. They can also be used as a way for an attacker to maintain persistence within a network. Understanding how Group Policy works will give you a leg up against attackers and can help you greatly on pentests, sometimes finding nuanced misconfigurations that other penetration testers may miss.
+
+### GPOs
+
+a GPO is a virtual collection of policy settings that can be applied to users or computers. GPOs include policies such as screen lock timeout, disabling USB ports, enforcing a custom domain password policy, installing software, managing applications, customizing remote access settings, and much more. Every GPO has a unique name and is assigned a unique identifier. They can be linked to a specific OU, domain, or site. A single GPO can be linked to multiple containers, and any container can have multiple GPOs applied to it. They can be applied to invidividual users, hosts, or groups by being applied directly to an OU. Every GPO contains one or more Group Policy settings that may apply at the local machine level or within the AD context.
+
+#### RDP GPO Settings
+
+![intro ad 14](../../../images/intro_ad14.png)
+
+GPO settings are processed using the hierarchical structure of AD and are applied using the Order of Precedence rule as seen below:
+
+### GPO Order of Precedence
+
+GPOs are processed from the top down when viewing them from a domain organizational standpoint. A GPO linked to an OU at the highest level in an AD network would be processed first, followed by those linked to a child OU, etc. This means that a GPO linked directly to an OU containing user or computer objects is processed last. In other words, a GPO attached to a specific OU would have precedence over a GPO attached at the domain level because it will be processed last and could run the risk of overriding settings in a GPO higher up in the domain hierarchy. One more thing to keep track of with precedence is that a setting configured in Computer policy will always have a higher priority of the same setting applied to a user. The following graphic illustrates presedence and how it is applied.
+
+![intro ad 15](../../../images/intro_ad15.png)
+
+| Level | Description |
+| ----- | ----------- |
+| Local Group Policy | the policies are defined directly to the host locally outside the domain; any setting here will be overwritten if a similar setting is defined at a higher level |
+| Site Policy | any policies specific to the Enterprise Site that the host resides in; remember that enterprise environments can span large campuses and even across countries; so it stands to reason that a site might have its own policies to follow that could differentiate it from the rest of the organization; access control policies are a great example of this; say a specific building or site performs secret or restricted research and requires a higher level of authorization for access to resources; you could specify those settings at the site level and ensure they are linked so as not to be overwritten by domain policy; this is also a great way to perform actions like printer and share mapping for users in specific sites |
+| Domain-wide Policy | any settings you wish to have applied across the domain as a whole; for example, setting the password policy complexity level, configuring a Desktop background for all users, and setting a Notice of Use and Consent to Monitor banner at the login screen |
+| OUs | these settings would affect users and computers who belong to specific OUs; you would want to place any unique settings here that are role-specific; for example, the mapping of a particular share drive that can only be accessed by HR, access to specific resources like printers, or the ability for IT admins to utilize PowerShell and command-prompt |
+| Any OU Policies nested within other OUs | settings at this level would reflect special permissions for objects within nested OUs; for example, providing Security Analysts a specific set of AppLocker policy settings that differ from the standard IT AppLocker settings |
+
+You can manage Group Policy fromt the Group Policy Management Console, custom applications, or using the PowerShell GroupPolicy Module via command line. The Default Domain Policy is the default GPO that is automatically created and linked to the domain. It has the highest precedence of all GPOs and is applied by default to all users and computers. Generally, it is best practice to use this default GPO to manage default settings that will apply domain-wide. The Default DCs policy is also created automatically with a domain and sets baseline security and auditing settings for all DCs in a given domain. It can customized as needed, like any GPO.
+
+Look at another example using the Group Policy Management Console on a DC. In this image, you see several GPOs. The ```Disable Forced Restarts``` GPO will have precedence over the ```Logon Banner``` GPO since it would be processed last. Any settings configured in the ```Disable Forced Restarts``` GPO could potentially override settings in any GPOs higher up in the hierarchy.
+
+#### GPMC Hive Example
+
+![intro ad 16](../../../images/intro_ad16.png)
+
+This image also shows an example of several GPOs being linked to the ```Corp```. If this option is set, policy settings in GPOs linked to lower OUs cannot override the settings. If a GPO is set at the domain level with the ```Enforced``` option selected, the settings contained in that GPO will be applied to all OUs in the domain and cannot be overridden by lower-level OU policies. In the past, this setting was called ```No override``` and was set on the container in question under AD users and computers. Belowe you can see an example of an ```Enforced``` GPO, where ```Logon Banner``` GPO is taking precedence over GPOs linked to lower OUs and therefore will not be overridden.
+
+#### Enforced GPO Policy Precedence
+
+![intro ad 17](../../../images/intro_ad17.png)
+
+Regardless of which GPO is set to enforced, if the Default Domain Policy GPO is enforced, it will take precedence over all GPOs at all levels.
+
+#### Default Domain Policy Override
+
+![intro ad 18](../../../images/intro_ad18.png)
+
+It is also possible to set the "Block inheritance" option on an OU. If this is specified for a particular OU, then policies higher up will not be applied to this OU. If both options are set, the "No override" option has precedence over the "Block inheritance" option. Here is a quick example. The ```Computers``` OU is inheriting GPOs set on the ```Corp``` OU in the below image.
+
+![intro ad 19](../../../images/intro_ad19.png)
+
+If the "Block inheritance" option is chosen, you can see that the 3 GPOs applied higher up to the ```Corp``` OU are no longer enforced on the ```Computers``` OU.
+
+#### Block Inheritance
+
+![intro ad 20](../../../images/intro_ad20.png)
+
+### Group Policy Refresh Frequency
+
+When a new GPO is created, the settings are not automatically applied right away. Windows performs periodic Group Policy updates, which by default is done every 90 minutes with a randomized offset of +/- 30 minutes for users and computers. The period is only 5 minutes for DCs to update by default. When a new GPO is created and linked, it could take up to 2 hours until the setings take effect. This random offset of +/- 30 minutes is set to avoid overwhelming DCs by having all clients request Group Policy from the DC simultaneously
+
+It is possible to change the default refresh interval within Group Policy itself. Furthermore, you can issue the command ```gpupdate /force``` to kick off the update process. This command will compare the GPOs currently applied on the machine against the DC and either modify or skip them depending on if they have changed since the last automatic update.
+
+You can modify the refresh rate interval via Group Policy by clicking on "Computer Configuration", "Policies", "Administrative Templates", "System", "Group Policy" and selecting "Set Group Policy refresh interval for computers". While it can be changed, it should not be set to occur too often, or it could cause network congestion leading to replication issues.
+
+![intro ad 21](../../../images/intro_ad21.png)
+
+### Security Considerations of GPOs
+
+GPOs an be used to carry out attacks. These attacks may include adding additional rights to a user account that you control, adding a local administrator to a host, or creating an immediate scheduled task to run a malicious command such as modifying group membership, adding a new admin account, establishing a reverse shell connection, or even installing targeted malware throughout a domain. These attacks typically happen when a user has the rights required to modify a GPO that applies to an OU that contains either a user account that you control or a computer.
+
+Below is an example of a GPO attack path identified using the BloodHound tool. This example shows that the ```Domain Users``` group can modify the ```Disconnect Idle RDP``` GPO due to nested group membership. In this case, you would next look to see which OUs this GPO applies to and if you can leverage these rights to gain control over a high-value user or computer and move laterally to escalate privileges within the domain.
+
+![intro ad 22](../../../images/intro_ad22.png)
