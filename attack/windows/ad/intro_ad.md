@@ -81,6 +81,12 @@
   - [Users](#users-1)
     - [User and Machine Accounts](#user-and-machine-accounts)
     - [Local Accounts](#local-accounts)
+    - [Domain Users](#domain-users)
+    - [User Naming Attributes](#user-naming-attributes)
+      - [Common User Attributes](#common-user-attributes)
+    - [Domain-joined vs. Non-domain-joined Machine](#domain-joined-vs-non-domain-joined-machine)
+      - [Domain joined](#domain-joined)
+      - [Non-domain joined](#non-domain-joined)
 
 ---
 
@@ -617,3 +623,47 @@ User accounts can be provisioned many rights in AD. They can be configured as ba
 - Local Service
   - this is another predefined local account used by the SCM for running Windows servics; it is configured with minimal privileges on the computer and presents anonymous credentials to the network
 
+### Domain Users
+
+... differ from local accounts in that they are granted rights from the domain to access resources such as file servers, printers, intranet hosts, and other objects based on the permissions granted to their user account or the group that account is a member of. Domain user accounts can log in to any host in the domain, unlike local users. One account to keep in mind is the ```KRBTGT``` account, however. This is a type of local account built into the AD infrastructure. This account acts as a service account for the Key Distribution service providing authentication and access for domain resources. This account is a common target of many attackers since gaining control or access will enable an attacker to have unconstrained access to the domain. It can be leveraged for PrivEsc and persistence in a domain through attacks such as the Golden Ticket attack.
+
+### User Naming Attributes
+
+Security in AD can be improved using a set of user naming attributes to help identify user objects like logon name or ID. The following are a few important Naming Attributes in AD:
+
+|   |   |
+| - | - |
+| UserPrincipalName | this is the primary logon name for the user; by convention, the UPN uses the email address of the user |
+| ObjectGUID | this is a unique identifier of the user; in AD, the ObjectGUID attribute name never changes and remains unique even if the user is removed |
+| SAMAccountName | this is a logon name that supports the previous version of Windows clients and servers |
+| objectSID | the user's SID; this attribute identifies a user and its group memberships during security interactions with the server |
+| sIDHistory | this contains previous SIDs for the user object if moved from another domain and is typically seen in migration scenarios from domain to domain; after a migration occurs, the last SID will be added to the sIDHistory property, and the new SID will become its objectSID |
+
+#### Common User Attributes
+
+```ps
+PS C:\htb Get-ADUser -Identity htb-student
+
+DistinguishedName : CN=htb student,CN=Users,DC=INLANEFREIGHT,DC=LOCAL
+Enabled           : True
+GivenName         : htb
+Name              : htb student
+ObjectClass       : user
+ObjectGUID        : aa799587-c641-4c23-a2f7-75850b4dd7e3
+SamAccountName    : htb-student
+SID               : S-1-5-21-3842939050-3880317879-2865463114-1111
+Surname           : student
+UserPrincipalName : htb-student@INLANEFREIGHT.LOCAL
+```
+
+### Domain-joined vs. Non-domain-joined Machine
+
+#### Domain joined
+
+Hosts joined to a domain have greater ease of information sharing within the enterprise and a central management point to gather resources, policies and updates from. A host joined to a domain will acquire any configurations or changes necessary through the domain's Group Policy. The benefit here is that a user in the domain can log in and access resources from any host joined to the domain, not just the one they work on. This is the typical setup you will see in enterprise environments.
+
+#### Non-domain joined
+
+Non-domain joined computers or computers in a workgroup are not managed by domain policy. With that in mind, sharing resources outside your local network is much more comlicated than it would be on a domain. This is fine for computers meant for home use or small business clusters on the same LAN. The advantage of this setup is that the individual users are in charge of any changes they wish to make to their host. Any user accounts on a workgroup computer only exist on that host, and profiles are not migrated to other hosts within the workgroup.
+
+It is important to note that a machine account in an AD environment will have most of the same rights as a standard domain user account. This is important because you do not always need to obtain a set of valid creds for an individual user's account to begin enumerating and attacking a domain. You may obtain SYSTEM level access to a domain-joined Windows host through a successful RCE exploit or by escalating privileges on a host. This access is often overlooked as only useful for pillaging sensitive data on a particular host. In reality, access in the context of the SYSTEM account will allow you read access to much of the data within the domain and is a great launching point for gathering as much information as possible before proceeding with applicable AD-related attacks.
