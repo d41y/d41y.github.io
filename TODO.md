@@ -18,17 +18,9 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
   - Anpassen von mermaid
 
 - Module für CPTS
-  - Introduction to Web Apps
-  - Web Requests
-  - Intro to AD
-  - Getting Started
-  - Network Enum with nmap
   - Footprinting
   - OSINT Corporate Recon
-  - Vuln Assessment
-  - File Transfers
   - Shells & Payloads
-  - Using MSFCONSOLE
   - Password Attacks
   - Attacking Common Services
   - Pivoting, Tunneling, Port Forwarding

@@ -33,7 +33,7 @@
   - [Applications]()
   - [Passwords]()
   - [Services]()
-- [Footprinting]()
+- [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration]()
   - [Host Based Enumeration]()
 - [Shells & Payloads]()
