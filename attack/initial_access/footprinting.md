@@ -21,6 +21,9 @@
       - [GrayHatWarfare](#grayhatwarfare)
     - [Staff](#staff)
       - [Job Post](#job-post)
+  - [Host-Based Enumeration](#host-based-enumeration)
+    - [File Transfer Protocol (_FTP_)](#file-transfer-protocol-ftp)
+      - [TFTP](#tftp)
 
 ---
 
@@ -406,3 +409,19 @@ From a job post like this, you can see which programming languages are preferred
 People try to make business contacts on social media sites and prove to visitors what skills they bring to the table, which inevitably leads them to sharing with the public what they know and what they have learned so far.
 
 Furthermore, showing projects can, of course, be of great advantage to make new business contacts and possibly even get a new job, but on the other hand, it can lead to mistakes that will be very difficult to fix.
+
+## Host-Based Enumeration
+
+### File Transfer Protocol (_FTP_)
+
+FTP is one of the oldest protocols on the internet. It runs within the application layer of the TCP/IP protocol stack. Thus, it is on the same layer as HTTP or POP. These protocols also work with the support of browsers or email clients to perform their services.
+
+In an FTP connection, two channels are opened. First, the client and server establish a control channel through TCP port 21. The client sends commands to the server, and the server returns status codes. Then both communication participants can establish the data channel via TCP port 20. This channel is used exclusively for data transmission, and the protocol watches for errors during this process. If a connection is broken off during transmission, the transport can be resumed after re-established contact.
+
+A distinction is made between active and passive FTP. In the active variant, the client establishes the connection as described via TCP port 21 and thus informs the server via which client-side port the server can transmit its responses. However, if a firewall protects the client, the server cannot reply because all external connections are blocked. For this purpose, the passive mode has been developed. Here, the server announces a port through which the client can establish the data channel. Since the client initiates the conncetion in this method, the firewall does not block the transfer.
+
+FTP knows different [commands](https://web.archive.org/web/20230326204635/https://www.smartfile.com/blog/the-ultimate-ftp-commands-list/) and [status codes](https://en.wikipedia.org/wiki/List_of_FTP_server_return_codes). Not all of these commands are consistently implemented on the server.
+
+Usually, you need credentials to use FTP on a server. You also need to know that FTP is a clear-text protocol that can sometimes be sniffed if conditions on the network are right. However, there is also the possibility that a server offers anonymous FTP. The server operator then allows any user to upload or download file via FTP without using a password. Since there are security risks associated with such a public FTP server, the options for users are usually limited.
+
+#### TFTP
