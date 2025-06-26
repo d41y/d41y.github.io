@@ -39,6 +39,17 @@
       - [SMBmap](#smbmap)
       - [CrackMapExec](#crackmapexec)
       - [Enum4Linux-ng](#enum4linux-ng)
+    - [Network File System (_NFS_)](#network-file-system-nfs)
+    - [Enum - NFS](#enum---nfs)
+      - [Nmap](#nmap-2)
+      - [Show Shares, Mounting, List Content, Unmounting](#show-shares-mounting-list-content-unmounting)
+    - [Domain Name System (_DNS_)](#domain-name-system-dns)
+    - [Enum - DNS](#enum---dns)
+      - [dig - ns](#dig---ns)
+      - [dig - version](#dig---version)
+      - [dig - any](#dig---any)
+      - [dig - zone transfer](#dig---zone-transfer)
+      - [Subdomain Brute Forcing](#subdomain-brute-forcing)
 
 ---
 
@@ -1104,3 +1115,356 @@ domain_logoff_information:
 Completed after 0.61 seconds
 ```
 
+### Network File System (_NFS_)
+
+... is a network file system developed by Sun Mircosystems and has the same purpose as SMB. Its purpose is to access file systems over a network as if they were local. However, it uses an entirely different protocol. NFS is used between Linux and Unix systems. This means that NFS clients cannot communicate directly with SMB servers. NFS is an internet standard that governs the procedures in a distributed file system. While NFS protocol version 3.0 (_NFSv3_), which has been in use for many years, authenticates the client computer, this changes with NFSv4. Here, as with the Windows SMB protocol, the user must authenticate.
+
+NFS version 4.1 aims to provide protocol support to leverage cluster server deployments, including the ability to provide scalable parallel access to files distributed across multiple servers. In addition, NFSv4.1 includes a session trunking mechanism, also known as NFS multipathing. A significant advantage of NFSv4 over its predecessors is that only one UDP or TCP port 2049 is used to run the service, which simplifies the use of the protocol across firewalls.
+
+NFS is based on the Open Network Computing Remote Procedure Call protocol exposed on TCP and UDP ports 111, which uses External Data Reprensentation for the system-independent exchange of data. The NFS protocol has no mechanism for authentication or authorization. Instead, authentication is completely shifted to the RPC protocol's options. The authorization is derived from the available file system information. In this process, the server is responsible for translating the client's user information into the file system's format and converting the corresponding authorization details into the required UNIX syntax as accurately as possible.
+
+The most common authentication is via UNIX UID/GID and group membership, which is why this syntax is most likely to be applied to the NFS protocol. One problem is that the client and server do not necessarily have to have the same mappings of UID/GID to users and groups, and the server does not need to do anything further. No further checks can be made on the part of the server. This is why NFS should only be used with this authentication method in trusted networks.
+
+### Enum - NFS
+
+#### Nmap
+
+```bash
+d41y@htb[/htb]$ sudo nmap 10.129.14.128 -p111,2049 -sV -sC
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-09-19 17:12 CEST
+Nmap scan report for 10.129.14.128
+Host is up (0.00018s latency).
+
+PORT    STATE SERVICE VERSION
+111/tcp open  rpcbind 2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100003  3           2049/udp   nfs
+|   100003  3           2049/udp6  nfs
+|   100003  3,4         2049/tcp   nfs
+|   100003  3,4         2049/tcp6  nfs
+|   100005  1,2,3      41982/udp6  mountd
+|   100005  1,2,3      45837/tcp   mountd
+|   100005  1,2,3      47217/tcp6  mountd
+|   100005  1,2,3      58830/udp   mountd
+|   100021  1,3,4      39542/udp   nlockmgr
+|   100021  1,3,4      44629/tcp   nlockmgr
+|   100021  1,3,4      45273/tcp6  nlockmgr
+|   100021  1,3,4      47524/udp6  nlockmgr
+|   100227  3           2049/tcp   nfs_acl
+|   100227  3           2049/tcp6  nfs_acl
+|   100227  3           2049/udp   nfs_acl
+|_  100227  3           2049/udp6  nfs_acl
+2049/tcp open  nfs_acl 3 (RPC #100227)
+MAC Address: 00:00:00:00:00:00 (VMware)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 6.58 seconds
+```
+
+The ```rpcinfo``` NSE script retrieves a list of all currently running RPC services, their name and descriptions, and the ports they use. This lets you check whether the target share is connected to the network on all required ports. Also, Nmap has some NSE scripts that can be used for the scans.
+
+```bash
+d41y@htb[/htb]$ sudo nmap --script nfs* 10.129.14.128 -sV -p111,2049
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-09-19 17:37 CEST
+Nmap scan report for 10.129.14.128
+Host is up (0.00021s latency).
+
+PORT     STATE SERVICE VERSION
+111/tcp  open  rpcbind 2-4 (RPC #100000)
+| nfs-ls: Volume /mnt/nfs
+|   access: Read Lookup NoModify NoExtend NoDelete NoExecute
+| PERMISSION  UID    GID    SIZE  TIME                 FILENAME
+| rwxrwxrwx   65534  65534  4096  2021-09-19T15:28:17  .
+| ??????????  ?      ?      ?     ?                    ..
+| rw-r--r--   0      0      1872  2021-09-19T15:27:42  id_rsa
+| rw-r--r--   0      0      348   2021-09-19T15:28:17  id_rsa.pub
+| rw-r--r--   0      0      0     2021-09-19T15:22:30  nfs.share
+|_
+| nfs-showmount: 
+|_  /mnt/nfs 10.129.14.0/24
+| nfs-statfs: 
+|   Filesystem  1K-blocks   Used       Available   Use%  Maxfilesize  Maxlink
+|_  /mnt/nfs    30313412.0  8074868.0  20675664.0  29%   16.0T        32000
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100003  3           2049/udp   nfs
+|   100003  3           2049/udp6  nfs
+|   100003  3,4         2049/tcp   nfs
+|   100003  3,4         2049/tcp6  nfs
+|   100005  1,2,3      41982/udp6  mountd
+|   100005  1,2,3      45837/tcp   mountd
+|   100005  1,2,3      47217/tcp6  mountd
+|   100005  1,2,3      58830/udp   mountd
+|   100021  1,3,4      39542/udp   nlockmgr
+|   100021  1,3,4      44629/tcp   nlockmgr
+|   100021  1,3,4      45273/tcp6  nlockmgr
+|   100021  1,3,4      47524/udp6  nlockmgr
+|   100227  3           2049/tcp   nfs_acl
+|   100227  3           2049/tcp6  nfs_acl
+|   100227  3           2049/udp   nfs_acl
+|_  100227  3           2049/udp6  nfs_acl
+2049/tcp open  nfs_acl 3 (RPC #100227)
+MAC Address: 00:00:00:00:00:00 (VMware)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 0.45 seconds
+```
+
+#### Show Shares, Mounting, List Content, Unmounting
+
+Once you have discovered such an NFS service, you can mount it on your local machine. For this, you can create a new empty folder to which the NFS share will be mounted. Once mounted, you can navigate it and view the contents just like your local system.
+
+Show available shares:
+
+```bash
+d41y@htb[/htb]$ showmount -e 10.129.14.128
+
+Export list for 10.129.14.128:
+/mnt/nfs 10.129.14.0/24
+```
+
+Mounting NFS shares:
+
+```bash
+d41y@htb[/htb]$ mkdir target-NFS
+d41y@htb[/htb]$ sudo mount -t nfs 10.129.14.128:/ ./target-NFS/ -o nolock
+d41y@htb[/htb]$ cd target-NFS
+d41y@htb[/htb]$ tree .
+
+.
+└── mnt
+    └── nfs
+        ├── id_rsa
+        ├── id_rsa.pub
+        └── nfs.share
+
+2 directories, 3 files
+```
+
+There you will have the opportunity to access the rights and the usernames and groups to whom the shown and viewable files belong. Because once you have the usernames, group names, UIDs, and GUIDs, you can create them on your system and adapt them to the NFS share to view and modify the files.
+
+```bash
+d41y@htb[/htb]$ ls -l mnt/nfs/
+
+total 16
+-rw-r--r-- 1 cry0l1t3 cry0l1t3 1872 Sep 25 00:55 cry0l1t3.priv
+-rw-r--r-- 1 cry0l1t3 cry0l1t3  348 Sep 25 00:55 cry0l1t3.pub
+-rw-r--r-- 1 root     root     1872 Sep 19 17:27 id_rsa
+-rw-r--r-- 1 root     root      348 Sep 19 17:28 id_rsa.pub
+-rw-r--r-- 1 root     root        0 Sep 19 17:22 nfs.share
+
+...
+
+d41y@htb[/htb]$ ls -n mnt/nfs/
+
+total 16
+-rw-r--r-- 1 1000 1000 1872 Sep 25 00:55 cry0l1t3.priv
+-rw-r--r-- 1 1000 1000  348 Sep 25 00:55 cry0l1t3.pub
+-rw-r--r-- 1    0 1000 1221 Sep 19 18:21 backup.sh
+-rw-r--r-- 1    0    0 1872 Sep 19 17:27 id_rsa
+-rw-r--r-- 1    0    0  348 Sep 19 17:28 id_rsa.pub
+-rw-r--r-- 1    0    0    0 Sep 19 17:22 nfs.share
+```
+
+> [!NOTE]
+> If the ```root_squash``` option is set, you cannot edit the ```backup.sh``` file even as root.
+
+You can also use NFS for further escalation. For example, if you have access to the system via SSH and want to read files from another folder that a specific user can read, you would need to upload a shell to the NFS share that has the SUID of that user and then run the shell via the SSH user.
+
+Unmounting:
+
+```bash
+d41y@htb[/htb]$ cd ..
+d41y@htb[/htb]$ sudo umount ./target-NFS
+```
+
+### Domain Name System (_DNS_)
+
+... is an integral part of the Internet. For example, through domain names, such as ```academy.hackthebox.com``` or ```www.hackthebox.com```, you can reach the web servers that the hosting provider has assigned oner or more specific IP addresses. DNS is a system for resolving computer names into IP addresses, and it does not have a central database. Simplified, you can imagine it like a library with many different phone books. The information is distributed over many thousands of name servers. Globally distributed DNS servers translate domain names into IP addresses and thus control which server a user can reach via a particular domain. There are several types of DNS servers that are used worldwide:
+
+| Server Type | Description |
+| ----------- | ----------- |
+| DNS Root Server | the root servers of the DNS are responsible for the top-level domains; as the last instance, they are only requested if the name server does not respond; thus, a root server is a central interface between users and content on the internet, as it links domain and IP addresses; the ICANN coordinates the work of the root name servers; there are 13 such root servers around the globe |
+| Authoritative Nameserver | authoritative nameservers hold authority for a particular zone; they only answer queries from their area of responsibility, and their information is binding; if an authoritative name server cannot answer a client's query, the root name server takes over at that point; based on the country, company, etc., authoritative nameservers provide answers to recursive DNS nameservers, assisting in finding the specific web server(s) |
+| Non-authoritative Nameserver | non-authoritative nameserver are not responsible for a particular DNS zone; instead, they collect information on specific DNS zones themselves, which is done using recursive or iterative DNS querying |
+| Caching DNS Server | caching DNS servers cache information from other name servers for a specified period; the authoritative name server determines the duration of this storage |
+| Forwarding Server | forwarding servers perform only one function: they forward DNS queries to another DNS server |
+| Resolver | resolvers are not authoritative DNS servers but perform name resolution locally in the computer or router |
+
+DNS is mainly unencrypted. Devices on the local WLAN and internet providers can therefore hack in and spy on DNS queries. Since this poses a privacy risk, there are now some solutions for DNS encryption. By default, IT security professionals apply DNS over TLS or DNS over HTTPS here. In addition, the network protocol DNSCrypt also encrypts the traffic between the computer and the name server.
+
+However, the DNS does not only link computer names and IP addresses. It also stores and outputs additional information about the services associated with a domain. A DNS query can therefore also be used, for example, to determine which computer serves as the e-mail server for the domain in question or what the domain's name servers are called.
+
+### Enum - DNS
+
+The footprinting at DNS servers is done as a result of the requests you send. So, first of all, the DNS server can be queried as to which other name servers are known. You do this using the NS record and the specification of the DNS server you want to query using ```@```. This is because if there are other DNS servers, you can also use them and query the records. However, other DNS servers may be configured differently, in addition, may be permanent for other zones.
+
+#### dig - ns
+
+```bash
+d41y@htb[/htb]$ dig ns inlanefreight.htb @10.129.14.128
+
+; <<>> DiG 9.16.1-Ubuntu <<>> ns inlanefreight.htb @10.129.14.128
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45010
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 2
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: ce4d8681b32abaea0100000061475f73842c401c391690c7 (good)
+;; QUESTION SECTION:
+;inlanefreight.htb.             IN      NS
+
+;; ANSWER SECTION:
+inlanefreight.htb.      604800  IN      NS      ns.inlanefreight.htb.
+
+;; ADDITIONAL SECTION:
+ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
+
+;; Query time: 0 msec
+;; SERVER: 10.129.14.128#53(10.129.14.128)
+;; WHEN: So Sep 19 18:04:03 CEST 2021
+;; MSG SIZE  rcvd: 107
+```
+
+#### dig - version
+
+Sometimes it is also possible to query a DNS server's version using a class CHAOS query and type TXT. However, this entry must exist on the DNS server:
+
+```bash
+d41y@htb[/htb]$ dig CH TXT version.bind 10.129.120.85
+
+; <<>> DiG 9.10.6 <<>> CH TXT version.bind
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 47786
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; ANSWER SECTION:
+version.bind.       0       CH      TXT     "9.10.6-P1"
+
+;; ADDITIONAL SECTION:
+version.bind.       0       CH      TXT     "9.10.6-P1-Debian"
+
+;; Query time: 2 msec
+;; SERVER: 10.129.120.85#53(10.129.120.85)
+;; WHEN: Wed Jan 05 20:23:14 UTC 2023
+;; MSG SIZE  rcvd: 101
+```
+
+#### dig - any
+
+You can use the option ```ANY``` to view all available records. This will cause the server to show you all available entries that it is willing to disclose. It is important to note that not all entries from the zones will be shown.
+
+```bash
+d41y@htb[/htb]$ dig any inlanefreight.htb @10.129.14.128
+
+; <<>> DiG 9.16.1-Ubuntu <<>> any inlanefreight.htb @10.129.14.128
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7649
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 2
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: 064b7e1f091b95120100000061476865a6026d01f87d10ca (good)
+;; QUESTION SECTION:
+;inlanefreight.htb.             IN      ANY
+
+;; ANSWER SECTION:
+inlanefreight.htb.      604800  IN      TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
+inlanefreight.htb.      604800  IN      TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
+inlanefreight.htb.      604800  IN      TXT     "MS=ms97310371"
+inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
+inlanefreight.htb.      604800  IN      NS      ns.inlanefreight.htb.
+
+;; ADDITIONAL SECTION:
+ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
+
+;; Query time: 0 msec
+;; SERVER: 10.129.14.128#53(10.129.14.128)
+;; WHEN: So Sep 19 18:42:13 CEST 2021
+;; MSG SIZE  rcvd: 437
+```
+
+#### dig - zone transfer
+
+Zone transfers refers to the transfer of zones to another server in DNS, which generally happens over TCP port 53. This procedure is abbreviated Asynchronous Full Transfer Zone. Since a DNS failure usually has severe consequences for a company, the zone file is almost invariably kept identical on several name servers. When changes are made, it must be ensured that all servers have the same data. Synchronization between the servers involved is realized by zone transfers. Using a secret key ```rndc-key``` the servers make sure that they communicate with their own master or slave. Zone transfer involves the mere transfer of files or records and the detection of discrepancies in the data of the servers involved.
+
+The original data of a zone is located on a DNS server, which is called the primary name server for this zone. However, to increase the reliability, realize a simple load distribution, or protect the primary from attacks, one or more additional servers are installed in practice in almost all cases, which are called secondary name servers for this zone. For some TLD, making zone files for the Second Level Domain accessible on at least two servers is mandatory.
+
+The slave fetches the SOA record of the relevant zone from the master at certain intervals, the so-called refresh time, usually one hour, and compares the serial numbers. If the serial number of the SOA record or the master is greater than that of the slave, the data sets no longer match.
+
+```bash
+d41y@htb[/htb]$ dig axfr inlanefreight.htb @10.129.14.128
+
+; <<>> DiG 9.16.1-Ubuntu <<>> axfr inlanefreight.htb @10.129.14.128
+;; global options: +cmd
+inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
+inlanefreight.htb.      604800  IN      TXT     "MS=ms97310371"
+inlanefreight.htb.      604800  IN      TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
+inlanefreight.htb.      604800  IN      TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
+inlanefreight.htb.      604800  IN      NS      ns.inlanefreight.htb.
+app.inlanefreight.htb.  604800  IN      A       10.129.18.15
+internal.inlanefreight.htb. 604800 IN   A       10.129.1.6
+mail1.inlanefreight.htb. 604800 IN      A       10.129.18.201
+ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
+inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
+;; Query time: 4 msec
+;; SERVER: 10.129.14.128#53(10.129.14.128)
+;; WHEN: So Sep 19 18:51:19 CEST 2021
+;; XFR size: 9 records (messages 1, bytes 520)
+```
+
+If the admin used a subnet for the ```allow-transfer``` option for testing purposes or as a workaround solution or set it to any, everyone would query the entire zone file at the DNS server. In addition, other zones can be queried, which may even show internal IP addresses and hostnames.
+
+```bash
+d41y@htb[/htb]$ dig axfr internal.inlanefreight.htb @10.129.14.128
+
+; <<>> DiG 9.16.1-Ubuntu <<>> axfr internal.inlanefreight.htb @10.129.14.128
+;; global options: +cmd
+internal.inlanefreight.htb. 604800 IN   SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
+internal.inlanefreight.htb. 604800 IN   TXT     "MS=ms97310371"
+internal.inlanefreight.htb. 604800 IN   TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
+internal.inlanefreight.htb. 604800 IN   TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
+internal.inlanefreight.htb. 604800 IN   NS      ns.inlanefreight.htb.
+dc1.internal.inlanefreight.htb. 604800 IN A     10.129.34.16
+dc2.internal.inlanefreight.htb. 604800 IN A     10.129.34.11
+mail1.internal.inlanefreight.htb. 604800 IN A   10.129.18.200
+ns.internal.inlanefreight.htb. 604800 IN A      10.129.34.136
+vpn.internal.inlanefreight.htb. 604800 IN A     10.129.1.6
+ws1.internal.inlanefreight.htb. 604800 IN A     10.129.1.34
+ws2.internal.inlanefreight.htb. 604800 IN A     10.129.1.35
+wsus.internal.inlanefreight.htb. 604800 IN A    10.129.18.2
+internal.inlanefreight.htb. 604800 IN   SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
+;; Query time: 0 msec
+;; SERVER: 10.129.14.128#53(10.129.14.128)
+;; WHEN: So Sep 19 18:53:11 CEST 2021
+;; XFR size: 15 records (messages 1, bytes 664)
+```
+
+#### Subdomain Brute Forcing
+
+The individual A records with the hostnames can also be found out with the help of a brute-force attack. To do this, you need a list of possible hostnames, which you use to send requests in order.
+
+An option would be to execute a for-loop in Bash that lists these entries and sends the corresponding query to the desired DNS server.
+
+```bash
+d41y@htb[/htb]$ for sub in $(cat /opt/useful/seclists/Discovery/DNS/subdomains-top1million-110000.txt);do dig $sub.inlanefreight.htb @10.129.14.128 | grep -v ';\|SOA' | sed -r '/^\s*$/d' | grep $sub | tee -a subdomains.txt;done
+
+ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
+mail1.inlanefreight.htb. 604800 IN      A       10.129.18.201
+app.inlanefreight.htb.  604800  IN      A       10.129.18.15
+```
