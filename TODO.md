@@ -4,8 +4,9 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 
 # TODO
 
+- Gespielte Boxen (_im Wesentlichen die Initial Accesses und generische PrivEscs_) in Notizen einpflegen
+
 - Wave Terminal?
-- Tmux?
 - shell? oh my zsh?
 
 - Attack cycle / workflow with clickable links
