@@ -50,6 +50,8 @@
       - [dig - any](#dig---any)
       - [dig - zone transfer](#dig---zone-transfer)
       - [Subdomain Brute Forcing](#subdomain-brute-forcing)
+    - [Simple Mail Transfer Protocol (_SMTP_)](#simple-mail-transfer-protocol-smtp)
+    - [Enum - SMTP](#enum---smtp)
 
 ---
 
@@ -1468,3 +1470,40 @@ ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 mail1.inlanefreight.htb. 604800 IN      A       10.129.18.201
 app.inlanefreight.htb.  604800  IN      A       10.129.18.15
 ```
+
+### Simple Mail Transfer Protocol (_SMTP_)
+
+... is a protocol for sending emails in an IP network. It can be used between an email client and an outgoing mail server or between two SMTP servers. SMTP is often combined with the IMAP or POP3 protocols, which can fetch emails and send emails. In principle, it is a client-server-based protocol, although SMTP can be used between a client and a server and between two SMTP servers. In this case, a server effectively acts as a client.
+
+By default, SMTP servers accept connection requests on port 25. However, newer SMTP servers also use other ports such as TCP port 587. This port is used to receive mail from authenticated users/servers, usually using the STARTTLS command to switch the existing plaintext connection to an encrypted connection. The authentication data is protected and no longer visible in plaintext over the network. At the beginning of the connection, authentication occurs when the client confirms its identity with a user name and password. The emails can then be transmitted. For this purpose, the client sends the server sender and recipient addresses, the email's content, and other information and parameters. After the email has been transmitted, the connection is terminated again. The email server then starts sending the email to another SMTP server.
+
+SMTP works unencrypted without any further measures and transmits all commands, data, or authentication information in plain text. To prevent unauthorized reading of data, the SMTP is used in conjunction with SSL/TLS encryption. Under certain circumstances, a server uses a port other than the standard TCP port 25 for the encrypted connection, for example, TCP port 465.
+
+An essential function of an SMTP server is preventing spam using authentication mechanisms that allow only authorized users to send emails. For this purpose, most modern SMTP servers support the protocol extension ESMTP with SMTP-Auth. After sending his email, the SMTP client, also known as Mail User Agent (_MUA_), converts it into a header and a body and uploads both to the SMTP server. This has a so-called Mail Transfer Agent (_MTA_), the software basis for sending and receiving emails. The MTA checks the email for size and spam and then stores it. To relieve the MTA, it is occasionally preceded by a Mail Submission Agent (_MSA_), which checks the validity, i. e., the origin of the email. This MSA is also called Relay server.
+
+On arrival at the destination SMTP server, the data packets are reassembled to form a complete email. From there, the Mail delivery agent (_MDA_) transfers it to the recipient's mailbox.
+
+```mermaid
+flowchart LR
+
+A["Client (MUA)"]
+B["Submission Agent (MSA)"]
+C["Open Relay (MTA)"]
+D["Mail Delivery Agent (MDA)"]
+E["Mailbox (POP3/IMAP)"]
+
+A --> B
+B --> C
+C --> D
+D --> E
+```
+
+But SMTP has two disadvantages inherent to the network protocol:
+
+1. Sending an email using SMTP does not return a usable delivery information. Although the specifications of the protocol provide for this type of notification, its formatting is not specified by default, so that usually only english-language error message, including the header of the undelivered message, is returned.
+2. Users are not authenticated when a connection is established, and the sender of an email is therefore unreliable. As a result, open SMTP relays are often misused to send spam en masse. The originators use arbitrary fake sender addresses for this purpose to not be traced. Today, many different security techniques are used to prevent the misuse of SMTP servers. For example, suspicious emails are rejected or moved to quarantine.
+
+For this purpose, an extension for SMTP has been developed called Extended SMTP (_ESMTP_). When people talk about SMTP in general, they usually mean ESMTP. ESMTP uses TLS, which is done after the ```EHLO``` command by sending ```STARTTLS```. This initializes the SSL-protected SMTP connection, and from this moment on, the entire connection is encrypted, and therefore more or less secure.
+
+### Enum - SMTP
+
