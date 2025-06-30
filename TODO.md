@@ -7,9 +7,7 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 - Gespielte Boxen (_im Wesentlichen die Initial Accesses und generische PrivEscs_) in Notizen einpflegen
 
 - setup
-  - Terminal Emulator: Kitty, Wave, wezterm, ghostty
   - shell: zsh (_ohmyzsh_)
-  - tmux
 
 - Attack cycle / workflow with clickable links
   - Cyber Kill Chain / MITRE Attack Chain
