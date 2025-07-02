@@ -36,7 +36,7 @@
 - [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration]()
   - [Host Based Enumeration]()
-- [Shells & Payloads]()
+- [Shells & Payloads](./attack/initial_access/shells_payloads.md)
 
 ## Linux
 
