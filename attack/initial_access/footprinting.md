@@ -23,84 +23,101 @@
       - [Job Post](#job-post)
   - [Host-Based Enumeration](#host-based-enumeration)
     - [File Transfer Protocol (_FTP_)](#file-transfer-protocol-ftp)
+      - [Intro](#intro)
       - [Trivial File Transfer Protocl (_TFTP_)](#trivial-file-transfer-protocl-tftp)
-    - [Enum - FTP](#enum---ftp)
-      - [Nmap](#nmap)
-      - [Nmap FTP Scripts](#nmap-ftp-scripts)
-      - [Nmap Script Trace](#nmap-script-trace)
-      - [Service Interaction](#service-interaction)
+      - [Enum](#enum)
+        - [Nmap](#nmap)
+        - [Nmap FTP Scripts](#nmap-ftp-scripts)
+        - [Nmap Script Trace](#nmap-script-trace)
+        - [Service Interaction](#service-interaction)
     - [Server Message Block (_SMB_)](#server-message-block-smb)
+      - [Intro](#intro-1)
       - [Samba](#samba)
-    - [Enum - SMB](#enum---smb)
-      - [Nmap](#nmap-1)
-      - [RPC](#rpc)
-      - [RPCclient](#rpcclient)
-      - [Impacket](#impacket)
-      - [SMBmap](#smbmap)
-      - [CrackMapExec](#crackmapexec)
-      - [Enum4Linux-ng](#enum4linux-ng)
+      - [Enum](#enum-1)
+        - [Nmap](#nmap-1)
+        - [RPC](#rpc)
+        - [RPCclient](#rpcclient)
+        - [Impacket](#impacket)
+        - [SMBmap](#smbmap)
+        - [CrackMapExec](#crackmapexec)
+        - [Enum4Linux-ng](#enum4linux-ng)
     - [Network File System (_NFS_)](#network-file-system-nfs)
-    - [Enum - NFS](#enum---nfs)
-      - [Nmap](#nmap-2)
-      - [Show Shares, Mounting, List Content, Unmounting](#show-shares-mounting-list-content-unmounting)
+      - [Intro](#intro-2)
+      - [Enum](#enum-2)
+        - [Nmap](#nmap-2)
+        - [Show Shares, Mounting, List Content, Unmounting](#show-shares-mounting-list-content-unmounting)
     - [Domain Name System (_DNS_)](#domain-name-system-dns)
-    - [Enum - DNS](#enum---dns)
-      - [dig - ns](#dig---ns)
-      - [dig - version](#dig---version)
-      - [dig - any](#dig---any)
-      - [dig - zone transfer](#dig---zone-transfer)
-      - [Subdomain Brute Forcing](#subdomain-brute-forcing)
+      - [Intro](#intro-3)
+      - [Enum](#enum-3)
+        - [dig - ns](#dig---ns)
+        - [dig - version](#dig---version)
+        - [dig - any](#dig---any)
+        - [dig - zone transfer](#dig---zone-transfer)
+        - [Subdomain Brute Forcing](#subdomain-brute-forcing)
     - [Simple Mail Transfer Protocol (_SMTP_)](#simple-mail-transfer-protocol-smtp)
-    - [Enum - SMTP](#enum---smtp)
-      - [Nmap](#nmap-3)
+      - [Intro](#intro-4)
+      - [Enum](#enum-4)
+        - [Nmap](#nmap-3)
     - [Internet Message Access Protocol (_IMAP_) / Post Office Protocol (_POP3_)](#internet-message-access-protocol-imap--post-office-protocol-pop3)
-    - [Enum - IMAP / POP3](#enum---imap--pop3)
-      - [Nmap](#nmap-4)
-      - [cURL](#curl)
-      - [OpenSSl - TLS Encrypted Interaction POP3](#openssl---tls-encrypted-interaction-pop3)
-      - [OpenSSl - TLS Encrypted Interaction IMAP](#openssl---tls-encrypted-interaction-imap)
+      - [Intro](#intro-5)
+      - [Enum](#enum-5)
+        - [Nmap](#nmap-4)
+        - [cURL](#curl)
+        - [OpenSSl - TLS Encrypted Interaction POP3](#openssl---tls-encrypted-interaction-pop3)
+        - [OpenSSl - TLS Encrypted Interaction IMAP](#openssl---tls-encrypted-interaction-imap)
     - [Simple Network Management Protocol (_SNMP_)](#simple-network-management-protocol-snmp)
-    - [Enum - SNMP](#enum---snmp)
-      - [SNMPwalk](#snmpwalk)
-      - [OneSixtyOne](#onesixtyone)
-      - [Braa](#braa)
+      - [Intro](#intro-6)
+      - [Enum](#enum-6)
+        - [SNMPwalk](#snmpwalk)
+        - [OneSixtyOne](#onesixtyone)
+        - [Braa](#braa)
     - [MySQL](#mysql)
-    - [Enum - MySQL](#enum---mysql)
-      - [Nmap](#nmap-5)
-      - [Interacting with the MySQL Server](#interacting-with-the-mysql-server)
+      - [Intro](#intro-7)
+      - [Enum](#enum-7)
+        - [Nmap](#nmap-5)
+        - [Interacting with the MySQL Server](#interacting-with-the-mysql-server)
     - [MSSQL](#mssql)
-    - [Enum - MSSQL](#enum---mssql)
-      - [Nmap](#nmap-6)
-      - [Metasploit](#metasploit)
-      - [Interacting with mssqlclient.py](#interacting-with-mssqlclientpy)
+      - [Intro](#intro-8)
+      - [Enum](#enum-8)
+        - [Nmap](#nmap-6)
+        - [Metasploit](#metasploit)
+        - [Interacting with mssqlclient.py](#interacting-with-mssqlclientpy)
     - [Oracle Transparent Network Substrate (_TNS_)](#oracle-transparent-network-substrate-tns)
-    - [Enum - TNS](#enum---tns)
-      - [Nmap](#nmap-7)
-      - [Nmap - SID Bruteforcing](#nmap---sid-bruteforcing)
-      - [Oracle Database Attacking Tool (_ODAT_)](#oracle-database-attacking-tool-odat)
-      - [SQLplus](#sqlplus)
-      - [Interacting with Oracle RDBMS](#interacting-with-oracle-rdbms)
+      - [Intro](#intro-9)
+      - [Enum](#enum-9)
+        - [Nmap](#nmap-7)
+        - [Nmap - SID Bruteforcing](#nmap---sid-bruteforcing)
+        - [Oracle Database Attacking Tool (_ODAT_)](#oracle-database-attacking-tool-odat)
+        - [SQLplus](#sqlplus)
+        - [Interacting with Oracle RDBMS](#interacting-with-oracle-rdbms)
     - [Intelligent Platform Management Interface (_IPMI_)](#intelligent-platform-management-interface-ipmi)
-    - [Enum - IPMI](#enum---ipmi)
-      - [Nmap](#nmap-8)
-      - [Metasploit](#metasploit-1)
+      - [Intro](#intro-10)
+      - [Enum](#enum-10)
+        - [Nmap](#nmap-8)
+        - [Metasploit](#metasploit-1)
     - [Secure Shell (_SSH_)](#secure-shell-ssh)
-    - [Enum - SSH](#enum---ssh)
-      - [SSH-Audit](#ssh-audit)
-      - [Change Authentication Method](#change-authentication-method)
+      - [Intro](#intro-11)
+      - [Enum](#enum-11)
+        - [SSH-Audit](#ssh-audit)
+        - [Change Authentication Method](#change-authentication-method)
     - [Rsync](#rsync)
-    - [Enum - Rsync](#enum---rsync)
+      - [Intro](#intro-12)
+      - [Enum](#enum-12)
     - [R-Services](#r-services)
-    - [Enum - R-Services](#enum---r-services)
-      - [Nmap](#nmap-9)
-      - [Interacting with R-Commands](#interacting-with-r-commands)
+      - [Intro](#intro-13)
+      - [Enum](#enum-13)
+        - [Nmap](#nmap-9)
+        - [Interacting with R-Commands](#interacting-with-r-commands)
     - [Remote Desktop Protocol (_RDP_)](#remote-desktop-protocol-rdp)
-    - [Enum - RDP](#enum---rdp)
-      - [Nmap](#nmap-10)
+      - [Intro](#intro-14)
+      - [Enum](#enum-14)
+        - [Nmap](#nmap-10)
     - [Windows Remote Management (_WinRM_)](#windows-remote-management-winrm)
-    - [Enum - WinRM](#enum---winrm)
+      - [Intro](#intro-15)
+      - [Enum](#enum-15)
     - [Windows Management Instrumentation (_WMI_)](#windows-management-instrumentation-wmi)
-    - [Enum - WMI](#enum---wmi)
+      - [Intro](#intro-16)
+      - [Enum](#enum-16)
 
 ---
 
@@ -491,6 +508,8 @@ Furthermore, showing projects can, of course, be of great advantage to make new 
 
 ### File Transfer Protocol (_FTP_)
 
+#### Intro
+
 FTP is one of the oldest protocols on the internet. It runs within the application layer of the TCP/IP protocol stack. Thus, it is on the same layer as HTTP or POP. These protocols also work with the support of browsers or email clients to perform their services.
 
 In an FTP connection, two channels are opened. First, the client and server establish a control channel through TCP port 21. The client sends commands to the server, and the server returns status codes. Then both communication participants can establish the data channel via TCP port 20. This channel is used exclusively for data transmission, and the protocol watches for errors during this process. If a connection is broken off during transmission, the transport can be resumed after re-established contact.
@@ -507,9 +526,9 @@ Usually, you need credentials to use FTP on a server. You also need to know that
 
 It does not support protected login via passwords and sets limits on access based solely on the read and write permissions of a file in the OS. Practically, this lead to TFTP operating exclusively in directories and with files that have been shared with all users and can be read and written globally. Because of the lack of security, TFTP may only be used in local and protected networks.
 
-### Enum - FTP
+#### Enum
 
-#### Nmap
+##### Nmap
 
 As you already know, the FTP server usually runs on the standard TCP port 21, which you can scan using Nmap.
 
@@ -544,7 +563,7 @@ PORT   STATE SERVICE VERSION
 |_End of status
 ```
 
-#### Nmap FTP Scripts
+##### Nmap FTP Scripts
 
 ```bash
 d41y@htb[/htb]$ sudo nmap --script-updatedb
@@ -570,7 +589,7 @@ d41y@htb[/htb]$ find / -type f -name ftp* 2>/dev/null | grep scripts
 /usr/share/nmap/scripts/ftp-brute.nse
 ```
 
-#### Nmap Script Trace
+##### Nmap Script Trace
 
 Nmap provides the ability to trace the progress of NSE scripts at the network level if you use the ```--script-trace``` option in your scans. This lets you see what commands Nmap sends, what ports are used, and what responses you receive from the scanned server.
 
@@ -597,7 +616,7 @@ NSE: TCP 10.10.14.4:54228 < 10.129.14.136:21 | 220 Welcome to HTB-Academy FTP se
 
 The scan history shows that four different parallel scans are running against the service, with various timeouts. For the NSE scripts, you see that your local machine uses other ports and first initiates the connection with the ```CONNECT``` command. From the first response from the server, you can see that you are receiving the banner from the server to you second NSE script from the target FTP server.
 
-#### Service Interaction
+##### Service Interaction
 
 ```bash
 d41y@htb[/htb]$ nc -nv 10.129.14.136 21
@@ -641,6 +660,8 @@ This is because the SSL certificate allows you to recognize the hostname, for ex
 
 ### Server Message Block (_SMB_)
 
+#### Intro
+
 ... is a client-server protocol that regulates access to files and entire directories and other network resources such as printers, routers, or interfaces released for the network. Information exchange between different system processes can also be handled based on the SMB protocol. SMB first became available to a broader public, for example, as part of the OS/2 network OS LAN Manager and LAN Server. Since then, the main application are of the protocol has been the Windows OS series in particular, whose network services support SMB in a downward-compatible manner - which means that devices with newer editions can easily communicate with devices that have an older Microsoft OS installed. With the free software project Samba, there is also a solution that enables the use of SMB in Linux and Unix distros and thus cross-platform communications via SMB.
 
 The SMB protocol enables the client to communicate with other participants in the same network to access files or services shared with it on the network. The other system must also have implemented the network protocol and received and processed the client request using an SMB server application. Before that, however, both parties must establish a connection, which is why they first exchange corresponding messages.
@@ -662,9 +683,9 @@ You know that Samba is suitable for both Linux and Windows systems. In a network
 > [!TIP]
 > ```smbclient``` allows to execute local system commands using an exclamation mark at the beginning (```!<cmd>```) without interrupting the connection.
 
-### Enum - SMB
+#### Enum
 
-#### Nmap
+##### Nmap
 
 ```bash
 d41y@htb[/htb]$ sudo nmap 10.129.14.128 -sV -sC -p139,445
@@ -693,7 +714,7 @@ Nmap done: 1 IP address (1 host up) scanned in 11.35 seconds
 
 You can see from the results that it is not very much that Nmap provided you with. Therefore, you should resort to other tools that allow you to interact manually with the SMB and send specific requests for the information.
 
-#### RPC
+##### RPC
 
 The Remote Procedure Call (_RPC_) is a concept and, therefore, also a central tool to realize operational and work-sharing structures in networks and client-server architectures. The communication process via RPC includes passing parameters and the return of a function value.
 
@@ -716,7 +737,7 @@ All functions can be found [here](https://www.samba.org/samba/docs/current/man-h
 | ```enumdomusers``` | enumerates all domain users |
 | ```queryuser <RID>``` | provides information about a specific user |
 
-#### RPCclient
+##### RPCclient
 
 ```bash
 rpcclient $> srvinfo
@@ -892,7 +913,7 @@ d41y@htb[/htb]$ for i in $(seq 500 1100);do rpcclient -N -U "" 10.129.14.128 -c 
         group_rid:      0x201
 ```
 
-#### Impacket
+##### Impacket
 
 An alternative would be a Python script from Impacket called samrdump.py.
 
@@ -929,7 +950,7 @@ cry0l1t3 (1001)/ScriptPath:
 [*] Received 2 entries.
 ```
 
-#### SMBmap
+##### SMBmap
 
 Can get you the information already obtained with rpcclient.
 
@@ -948,7 +969,7 @@ d41y@htb[/htb]$ smbmap -H 10.129.14.128
         IPC$                                                    NO ACCESS       IPC Service (DEVSM)
 ```
 
-#### CrackMapExec
+##### CrackMapExec
 
 Can get you the information already obtained with rpcclient.
 
@@ -967,7 +988,7 @@ SMB         10.129.14.128   445    DEVSMB           notes           READ,WRITE  
 SMB         10.129.14.128   445    DEVSMB           IPC$                            IPC Service (DEVSM)
 ```
 
-#### Enum4Linux-ng
+##### Enum4Linux-ng
 
 ... is another tool worth mentioning, which is based on an older tool, enum4linux. This tool automates many of the queries, but not all, and can return a large amount of information.
 
@@ -1168,6 +1189,8 @@ Completed after 0.61 seconds
 
 ### Network File System (_NFS_)
 
+#### Intro
+
 ... is a network file system developed by Sun Mircosystems and has the same purpose as SMB. Its purpose is to access file systems over a network as if they were local. However, it uses an entirely different protocol. NFS is used between Linux and Unix systems. This means that NFS clients cannot communicate directly with SMB servers. NFS is an internet standard that governs the procedures in a distributed file system. While NFS protocol version 3.0 (_NFSv3_), which has been in use for many years, authenticates the client computer, this changes with NFSv4. Here, as with the Windows SMB protocol, the user must authenticate.
 
 NFS version 4.1 aims to provide protocol support to leverage cluster server deployments, including the ability to provide scalable parallel access to files distributed across multiple servers. In addition, NFSv4.1 includes a session trunking mechanism, also known as NFS multipathing. A significant advantage of NFSv4 over its predecessors is that only one UDP or TCP port 2049 is used to run the service, which simplifies the use of the protocol across firewalls.
@@ -1176,9 +1199,9 @@ NFS is based on the Open Network Computing Remote Procedure Call protocol expose
 
 The most common authentication is via UNIX UID/GID and group membership, which is why this syntax is most likely to be applied to the NFS protocol. One problem is that the client and server do not necessarily have to have the same mappings of UID/GID to users and groups, and the server does not need to do anything further. No further checks can be made on the part of the server. This is why NFS should only be used with this authentication method in trusted networks.
 
-### Enum - NFS
+#### Enum
 
-#### Nmap
+##### Nmap
 
 ```bash
 d41y@htb[/htb]$ sudo nmap 10.129.14.128 -p111,2049 -sV -sC
@@ -1272,7 +1295,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 0.45 seconds
 ```
 
-#### Show Shares, Mounting, List Content, Unmounting
+##### Show Shares, Mounting, List Content, Unmounting
 
 Once you have discovered such an NFS service, you can mount it on your local machine. For this, you can create a new empty folder to which the NFS share will be mounted. Once mounted, you can navigate it and view the contents just like your local system.
 
@@ -1342,6 +1365,8 @@ d41y@htb[/htb]$ sudo umount ./target-NFS
 
 ### Domain Name System (_DNS_)
 
+#### Intro
+
 ... is an integral part of the Internet. For example, through domain names, such as ```academy.hackthebox.com``` or ```www.hackthebox.com```, you can reach the web servers that the hosting provider has assigned oner or more specific IP addresses. DNS is a system for resolving computer names into IP addresses, and it does not have a central database. Simplified, you can imagine it like a library with many different phone books. The information is distributed over many thousands of name servers. Globally distributed DNS servers translate domain names into IP addresses and thus control which server a user can reach via a particular domain. There are several types of DNS servers that are used worldwide:
 
 | Server Type | Description |
@@ -1357,11 +1382,11 @@ DNS is mainly unencrypted. Devices on the local WLAN and internet providers can 
 
 However, the DNS does not only link computer names and IP addresses. It also stores and outputs additional information about the services associated with a domain. A DNS query can therefore also be used, for example, to determine which computer serves as the e-mail server for the domain in question or what the domain's name servers are called.
 
-### Enum - DNS
+#### Enum
 
 The footprinting at DNS servers is done as a result of the requests you send. So, first of all, the DNS server can be queried as to which other name servers are known. You do this using the NS record and the specification of the DNS server you want to query using ```@```. This is because if there are other DNS servers, you can also use them and query the records. However, other DNS servers may be configured differently, in addition, may be permanent for other zones.
 
-#### dig - ns
+##### dig - ns
 
 ```bash
 d41y@htb[/htb]$ dig ns inlanefreight.htb @10.129.14.128
@@ -1390,7 +1415,7 @@ ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 ;; MSG SIZE  rcvd: 107
 ```
 
-#### dig - version
+##### dig - version
 
 Sometimes it is also possible to query a DNS server's version using a class CHAOS query and type TXT. However, this entry must exist on the DNS server:
 
@@ -1415,7 +1440,7 @@ version.bind.       0       CH      TXT     "9.10.6-P1-Debian"
 ;; MSG SIZE  rcvd: 101
 ```
 
-#### dig - any
+##### dig - any
 
 You can use the option ```ANY``` to view all available records. This will cause the server to show you all available entries that it is willing to disclose. It is important to note that not all entries from the zones will be shown.
 
@@ -1450,7 +1475,7 @@ ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 ;; MSG SIZE  rcvd: 437
 ```
 
-#### dig - zone transfer
+##### dig - zone transfer
 
 Zone transfers refers to the transfer of zones to another server in DNS, which generally happens over TCP port 53. This procedure is abbreviated Asynchronous Full Transfer Zone. Since a DNS failure usually has severe consequences for a company, the zone file is almost invariably kept identical on several name servers. When changes are made, it must be ensured that all servers have the same data. Synchronization between the servers involved is realized by zone transfers. Using a secret key ```rndc-key``` the servers make sure that they communicate with their own master or slave. Zone transfer involves the mere transfer of files or records and the detection of discrepancies in the data of the servers involved.
 
@@ -1506,7 +1531,7 @@ internal.inlanefreight.htb. 604800 IN   SOA     inlanefreight.htb. root.inlanefr
 ;; XFR size: 15 records (messages 1, bytes 664)
 ```
 
-#### Subdomain Brute Forcing
+##### Subdomain Brute Forcing
 
 The individual A records with the hostnames can also be found out with the help of a brute-force attack. To do this, you need a list of possible hostnames, which you use to send requests in order.
 
@@ -1521,6 +1546,8 @@ app.inlanefreight.htb.  604800  IN      A       10.129.18.15
 ```
 
 ### Simple Mail Transfer Protocol (_SMTP_)
+
+#### Intro
 
 ... is a protocol for sending emails in an IP network. It can be used between an email client and an outgoing mail server or between two SMTP servers. SMTP is often combined with the IMAP or POP3 protocols, which can fetch emails and send emails. In principle, it is a client-server-based protocol, although SMTP can be used between a client and a server and between two SMTP servers. In this case, a server effectively acts as a client.
 
@@ -1554,9 +1581,9 @@ But SMTP has two disadvantages inherent to the network protocol:
 
 For this purpose, an extension for SMTP has been developed called Extended SMTP (_ESMTP_). When people talk about SMTP in general, they usually mean ESMTP. ESMTP uses TLS, which is done after the ```EHLO``` command by sending ```STARTTLS```. This initializes the SSL-protected SMTP connection, and from this moment on, the entire connection is encrypted, and therefore more or less secure.
 
-### Enum - SMTP
+#### Enum
 
-#### Nmap
+##### Nmap
 
 The default Nmap scripts include smtp-commands, which uses the ```EHLO``` command to list all possible commands that can be executed on the target SMTP server.
 
@@ -1632,6 +1659,8 @@ Nmap done: 1 IP address (1 host up) scanned in 0.48 seconds
 
 ### Internet Message Access Protocol (_IMAP_) / Post Office Protocol (_POP3_)
 
+#### Intro
+
 With the help of IMAP, access to emails from a mail server is possible. Unlike the POP3, IMAP allows online management of emails directly on the server and supports folder structures. Thus, it is a network protocol for the online management of emails on a remote server. The protocol is client-server-based and allows synchronization of a local email client with the mailbox on the server, providing a kind of network file system for emails, allowing problem-free synchronization across several independent clients. POP3, on the other hand, does not have the same functionality as IMAP, and it only provides listing, retrieving, and deleting emails as functions at the email server. Therefore, protocols such as IMAP must be used for additional functionalities such as hierarchical mailboxes directly at the mail server, access to multiple mailboxes during a session, and preselection of emails.
 
 Clients access these structures online and can create local copies. Even across several clients, this results in a uniform database. Emails remain on the server until they are deleted. IMAP is text-based and has extended functions, such as browsing emails directly on the server. It is also possible for several users to access the email server simultaneously. Without an active connection to the server, managing emails is impossible. However, some clients offer an offline mode with a local copy of the mailbox. The client synchronizes all offline local changes when a connection is reestablished.
@@ -1640,9 +1669,9 @@ SMTP is usually used to send emails. By copying sent emails into an IMAP folder,
 
 Without further measures, IMAP works unencrypted and transmits commands, emails, or usernames and passwords in plain text. Many email servers require establishing an encrypted IMAP session to ensure greater security in email traffic and prevent unauthorized access to mailboxes. SSL/TLS is usually used for this purpose. Depending on the method and implementation used, the encrypted connection uses the standard port 143 or an alternative port such as 993.
 
-### Enum - IMAP / POP3
+#### Enum
 
-#### Nmap
+##### Nmap
 
 Using Nmap, you can scan the server for default ports. The scan will return the corresponding information if the server uses an embedded certificate.
 
@@ -1680,7 +1709,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 12.74 seconds
 ```
 
-#### cURL
+##### cURL
 
 If you successfully figure out the access creds for one of the employees, an attacker could log in to the mail server and read or even send the individual messages.
 
@@ -1736,7 +1765,7 @@ d41y@htb[/htb]$ curl -k 'imaps://10.129.14.128' --user cry0l1t3:1234 -v
 * Connection #0 to host 10.129.14.128 left intact
 ```
 
-#### OpenSSl - TLS Encrypted Interaction POP3
+##### OpenSSl - TLS Encrypted Interaction POP3
 
 To interact with the IMAP or POP3 server over SSL, you can use ```openssl```, as well as ```ncat```.
 
@@ -1794,7 +1823,7 @@ read R BLOCK
 +OK HTB-Academy POP3 Server
 ```
 
-#### OpenSSl - TLS Encrypted Interaction IMAP
+##### OpenSSl - TLS Encrypted Interaction IMAP
 
 ```bash
 d41y@htb[/htb]$ openssl s_client -connect 10.129.14.128:imaps
@@ -1854,6 +1883,8 @@ Once you have successfully initiated a connection and logged in to the target ma
 
 ### Simple Network Management Protocol (_SNMP_)
 
+#### Intro
+
 ... was created to monitor network devices. In addition, this protocol can also be used to handle configuration tasks and change settings remotely. SNMP-enabled hardware includes routers, switches, servers, IoT devices, and many other devices that can also be queried and controlled using this standard protocol. Thus, it is a protocol for monitoring and managing network devices. In addition, configuration tasks can be handled, and settings can be made remotely using this standard. The current version is SNMPv3, which increases the security of SNMP in particular, but also the complexity of using this protocol.
 
 In addition to the pure exchange of information, SNMP also transmits control commands using agents over UDP port 161. The client can set specific values in the device and change options and settings with these commands. While in classical communication, it is always the client who actively requests information from the server, SNMP also enables the use of so-called traps over UDP port 162. These are data packets sent from SMTP server to the client without being explicitly requested. If a device is configured accordingly, SNMP trap is sent to the client once a specific event occurs on the server-side.
@@ -1872,11 +1903,11 @@ The security has been increased enormously for SNMPv3 by security features such 
 
 Community strings can be seen as passwords that are used to determine whether the requested information can be viewed or not. It is important to note that many organizations are still using SNMPv2, as the transition to SNMPv3 can be very complex, but the services still need to remain active. This causes many administrators a great deal of concern and creates some problems they are keen to avoid. The lack of knowledge about how the information can be obtained and how you as attackers use it makes the administrator's approach seem inexplicable. At the same time, the lack of encryption of the data sent is also a problem. Because every time the community strings are sent over the network, they can be intercepted and read.
 
-### Enum - SNMP
+#### Enum
 
 ```snmpwalk``` is used to query the OIDs with their information. ```onesixtyone``` can be used to brute-force the names of the community strings since they can be named arbitrarily by the administrator.
 
-#### SNMPwalk
+##### SNMPwalk
 
 ```bash
 d41y@htb[/htb]$ snmpwalk -v2c -c public 10.129.14.128
@@ -1951,7 +1982,7 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 
 Once you know the community string and the SNMP service that does not require authentication, you can query internal system information like in the previous example.
 
-#### OneSixtyOne
+##### OneSixtyOne
 
 ```bash
 d41y@htb[/htb]$ sudo apt install onesixtyone
@@ -1963,7 +1994,7 @@ Scanning 1 hosts, 3220 communities
 
 Often, when certain community strings are bound to specific IP addresses, they are named with the hostname of the host, and sometimes even symbols are added to these names to make them more challenging to identify. However, if you imagine an extensive network with over 100 different servers managed using SNMP, the labels, in that case, will have some pattern to them. Therefore, you can use different rules to guess them. You can use the tool ```crunch``` to create custom wordlists.
 
-#### Braa
+##### Braa
 
 Once you know a community string, you can use it with ```braa``` to brute-force the individual OIDs and enumerate the information behind them.
 
@@ -1984,6 +2015,8 @@ d41y@htb[/htb]$ braa public@10.129.14.128:.1.3.6.*
 
 ### MySQL
 
+#### Intro
+
 ... is an open-source SQL relational database management system developed and supported by Oracle. A database is simply a structured collection of data organized for easy use and retrieval. The database system can quickly process large amounts of data with high performance. Within the database, the storage is done in a manner to take up as little space as possible. The database is controlled using the SQL database language. MySQL works according to the client-server principle and consists of a MySQL server and one or more MySQL clients. The MySQL server is the actual database management system. It takes care of data storage and distribution. The data is stored in tables with different columns, rows, and data types. These databases are often stored in a single file with the file extension ```.sql```.
 
 The MySQL cliens can retrieve and edit the data using structured queries to the database engine. Inserting, deleting, modifying, and retrieving data, is done using the SQL database language. Therefore, MySQL is suitable for managing many different databases to which clients can send multiple queries simultaneously. Depending on the use of the database, access is possible via an internal network or the public internet.
@@ -1992,9 +2025,9 @@ MySQL is ideally suited for applications such as dynamic websites, where efficie
 
 MariaDB, which is often connected with MySQL, is a fork of the original MySQL code. This is because the chief developer of MySQL left the company MySQL AB after it was acquised by Oracle and developed another open-source SQL database management system based on the source code of MySQL and called it MariaDB.
 
-### Enum - MySQL
+#### Enum
 
-#### Nmap
+##### Nmap
 
 Usually, the MySQL server runs on TCP port 3306, and you can scan this port with Nmap to get more detailed information.
 
@@ -2046,7 +2079,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 11.21 seconds
 ```
 
-#### Interacting with the MySQL Server
+##### Interacting with the MySQL Server
 
 ```bash
 d41y@htb[/htb]$ mysql -u root -h 10.129.14.132
@@ -2152,6 +2185,8 @@ The information schema is also a database that contains metadata. However, this 
 
 ### MSSQL
 
+#### Intro
+
 ... is Microsoft's SQL-based relational database management system. Unlike MySQL, MSSQL is closed source and was initially written to run on Windows OS. It is popular among database administration and developers when building applications that run on Microsoft's .NET framework due to its strong native support for .NET. There are versions of MSSQL that will run on Linux and MacOS, but you will more likely come accross MSSQL instances on targets running Windows.
 
 SQL Server Management Studio (_SSMS_) comes as a feature that can be installed with the MSSQL install package or can be downloaded & installed separately. It is commonly installed on the server for initial configuration and long-term management of databases by admins. Keep in mind that since SSMS is a client-side application, it can be installed and used on any system and admin or developer is planning to manage the database from. It doesn't only exist on the server hosting the database. This means you could come across a vulnerable system with SSMS with saved creds that allow you to connect to the database.
@@ -2172,9 +2207,9 @@ MSSQL has default system databases that can help you understand the structure of
 - tempdb
 - resource
 
-### Enum - MSSQL
+#### Enum
 
-#### Nmap
+##### Nmap
 
 ... has default mssql scripts that can be used to target the default tcp port 1433 that MSSQL listens on.
 
@@ -2216,7 +2251,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 8.52 seconds
 ```
 
-#### Metasploit
+##### Metasploit
 
 You can also use Metasploit to run an auxiliary scanner called ```mssql_ping``` that will scan the MSSQL service and provide helpful information in your footprinting process.
 
@@ -2239,7 +2274,7 @@ msf6 auxiliary(scanner/mssql/mssql_ping) > run
 [*] Auxiliary module execution completed
 ```
 
-#### Interacting with mssqlclient.py
+##### Interacting with mssqlclient.py
 
 If you can guess or gain access to creds, this allows you to remotely connect to the MSSQL server and start interacting with databases using T-SQL. Authenticating with MSSQL will enable you to interact with databases through the SQL Database Engine.
 
@@ -2277,6 +2312,8 @@ Transactions
 
 ### Oracle Transparent Network Substrate (_TNS_)
 
+#### Intro
+
 The Oracle TNS server is a communication protocol that facilitates communication between Oracle databases and applications over networks. Initially introduced as part of the Oracle Net Services software suite, TNS supports various networking protocols between Oracle databases and client applications, such as IPX/SPX and TCP/IP protocol stacks. As a result, it has become a preferred solution for managing large, complex databases in the healthcare, finance, and retail industries. In addition, its built-in encryption mechanism ensures the security of data transmitted, making it an ideal solution for enterprise environments where data security is paramount.
 
 Over time, TNS has been updated to support newer technologies, including IPv6 and SSL/TLS encryption which makes it more suitable for the following purposes:
@@ -2288,9 +2325,9 @@ Over time, TNS has been updated to support newer technologies, including IPv6 an
 
 Furthermore, it enables encryption between client and server communication through an additional layer of security over the TCP/IP protocol layer. This feature helps secure the database architecture from unauthorized access or attacks that attempt to compromise the data no the network traffic. Besides, it provides advanced tools and capabilities for database administrators and developers since it offers comprehensive performance monitoring and analysis tools, error reporting and logging capabilities, workload management, and fault tolerance through database services.
 
-### Enum - TNS
+#### Enum
 
-#### Nmap
+##### Nmap
 
 ```bash
 d41y@htb[/htb]$ sudo nmap -p1521 -sV 10.129.204.235 --open
@@ -2310,7 +2347,7 @@ You can see that the port is open, and the service is running. In Oracle RDBMS, 
 
 The SIDs are an essential part of the connection process, as it identifies the specific instance of the database the client wants to connect to. If the client specifies an incorrect SID, the connection attempt will fail. Database admins can use the SID to monitor and manage the individual instances of a database. For example, they can start, stop, or restart an instance, adjust its memory allocation or other configuration parameters, and monitor its performance using tools like Oracle Enterprise Manager.
 
-#### Nmap - SID Bruteforcing
+##### Nmap - SID Bruteforcing
 
 ```bash
 d41y@htb[/htb]$ sudo nmap -p1521 -sV 10.129.204.235 --open --script oracle-sid-brute
@@ -2328,7 +2365,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 55.40 seconds
 ```
 
-#### Oracle Database Attacking Tool (_ODAT_)
+##### Oracle Database Attacking Tool (_ODAT_)
 
 ODAT is an open-source penetration testing tool designed to enumerate and exploit vulns in Oracle databases. It can be used to identify and exploit various security flaws in Oracle databases, including SQLi, RCE, and PrivEsc.
 
@@ -2350,7 +2387,7 @@ d41y@htb[/htb]$ ./odat.py all -s 10.129.204.235
 ...SNIP...
 ```
 
-#### SQLplus
+##### SQLplus
 
 You can use the tool ```sqlplus``` to connect to the Oracle database and interact with it.
 
@@ -2376,7 +2413,7 @@ SQL>
 > [!TIP]
 > If you come across the following error<br>```sqlplus: error while loading shared libraries: libsqlplus.so: cannot open shared object file: No such file or directory```<br>use:<br>```sudo sh -c "echo /usr/lib/oracle/12.2/client64/lib > /etc/ld.so.conf.d/oracle-instantclient.conf";sudo ldconfig```
 
-#### Interacting with Oracle RDBMS
+##### Interacting with Oracle RDBMS
 
 ```bash
 SQL> select table_name from all_tables;
@@ -2488,6 +2525,8 @@ Oracle File Upload Test
 
 ### Intelligent Platform Management Interface (_IPMI_)
 
+#### Intro
+
 ... is a set of standardized specifications for hardware-based host management systems used for system management and monitoring. It acts as an autonomous subsystem and works independently of the host's BIOS, CPU, firmware, and underlying OS. IPMI provides sysadmins with the ability to manage and monitor systems even if they are powered off or in an unresponsive state. It operates using a direct network connection to the system's hardware and does not require access to the OS via a login shell. IPMI can also be used for remote upgrades to system without requiring physical access to the target host. IPMI is typically used in three ways:
 
 - before the OS has booted to modify BIOS settings
@@ -2504,7 +2543,7 @@ To function, IPMI requires the following components:
 - IPMI Memory
 - Communications Interfaces
 
-### Enum - IPMI
+#### Enum
 
 IPMI communicates over port 623 UDP. System that use the IPMI protocol are called Baseboard Management Controllers (_BMCs_). BMCs are typically implemented as embedded ARM systems running Linux, and connected directly to the host's motherboard. BMCs are built into many motherboards but can also be added to a system as a PCI card. Most servers either come with a BMC or support adding a BMC. The most common BMCs you often see during internal pentests are HP iLO, Dell DRAC, and Supermicro IPMI. If you can access a BMC during an assessment, you would gain full access to the host motherboard and be able to monitor, reboot, power off, or even reinstall the host OS. Gaining access to a BMC is nearly equivalent to physical access to a system. Many BMCs expose a web-based management console, some sort of command-line remote access protocol such as Telnet or SSH, and the port 623 UDP, which, again is for the IPMI network protocol.
 
@@ -2516,7 +2555,7 @@ During internal pentests, you often find BMCs where the admins have not changed 
 | HP iLO | Administrator | randomized 8-character string consisting of numbers and uppercase letters |
 | Supermicro IPMI | ADMIN | ADMIN |
 
-#### Nmap 
+##### Nmap 
 
 ```bash
 d41y@htb[/htb]$ sudo nmap -sU --script ipmi-version -p 623 ilo.inlanfreight.local
@@ -2538,7 +2577,7 @@ MAC Address: 14:03:DC:674:18:6A (Hewlett Packard Enterprise)
 Nmap done: 1 IP address (1 host up) scanned in 0.46 seconds
 ```
 
-#### Metasploit
+##### Metasploit
 
 ```bash
 msf6 > use auxiliary/scanner/ipmi/ipmi_version 
@@ -2595,6 +2634,8 @@ msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) > run
 
 ### Secure Shell (_SSH_)
 
+#### Intro
+
 ... enables two computers to establish an encrypted and direct connection within a possibly insecure network on the standard port 22. This is necessary to prevent third parties from intercepting the data and thus intercepting sensitive data. The SSH server can also be configured to only allow connections from specific clients. An advantage of SSH is that the protocol runs on all common OS. Since it is originally a Unix application, it is also implemented natively on all Linux distros and MacOS. SSH can also be used on Windows, provided you install an appropriate program. The well-known OpenBSD SSH server on Linux distros is an open-source fork of the original and commercial SSH server from SSH Communication Security. Accordingly, there are two competing protocols:
 
 - SSH-1
@@ -2611,9 +2652,9 @@ OpenSSH has six different authentication methods:
 5. Challenge-Response
 6. GSSAPI
 
-### Enum - SSH
+#### Enum
 
-#### SSH-Audit
+##### SSH-Audit
 
 One of the tools you can use to fingerprint the SSH server is [ssh-audit](https://github.com/jtesta/ssh-audit). It checks the client-side and server-side configuration and shows some general information and which encryption algorithms are still used by the client and server.
 
@@ -2656,7 +2697,7 @@ d41y@htb[/htb]$ ./ssh-audit.py 10.129.14.132
 
 The first thing you can see in the first few lines of the output is the banner that reveals the version of the OpenSSH server. The previous versions had some vulns, which allowed the attacker the capability to MITM and attack the initial connection attempt.
 
-#### Change Authentication Method
+##### Change Authentication Method
 
 For potential brute-force attacks, you can specify the authentication method with the SSH client option ```PreferredAuthentications```.
 
@@ -2683,9 +2724,11 @@ cry0l1t3@10.129.14.132's password:
 
 ### Rsync
 
+#### Intro
+
 ... is a fast and efficient tool for locally and remotely copying files. It can be used to copy files locally on a given machine and to/from remote hosts. It is highly versatile and well-known for its delta-transfer algorithm. This algorithm reduces the amount of data transmitted over the network when a version of the file already exists on the destination host. It does this by sending only the difference between the source files and the older version of the files that reside on the destination server. It is often used for backups and mirroring. It finds files that need to be transferred by looking at files that have changed in size or the last modified time. By default, it uses port 873 and can be configured to use SSH for secure file transfer by piggybacking on top of an established SSH server connection.
 
-### Enum - Rsync
+#### Enum
 
 ```bash
 d41y@htb[/htb]$ sudo nmap -sV -p 873 127.0.0.1
@@ -2731,6 +2774,8 @@ total size is 0  speedup is 0.00
 
 ### R-Services
 
+#### Intro
+
 ... are a suite of services hosted to enable remote access or issue commands between Unix hosts over TCP/IP. Initially developed by the Computer Systems Research Group (_CSRG_) at the University of California, Berkeley, r-services were the de facto standard for remote access between Unix OS until they were replaced by the SSH protocols and commands due to inherent security flaws built into them. Much like telnet, r-services transmit information from client to server over the network in an unencrypted format, making it possible for attackers to intercept network traffic by performing MITM attacks.
 
 R-services span across the ports 512, 513, and 513 and are only accessible through a suite of programs known as r-commands. They are most commonly used by commercial OS such as Solaris, HP-UX, and AIX. While less common nowadays, you do run into them from time to time during your internal pentests so it is worth understanding how to approach them.
@@ -2764,9 +2809,9 @@ htb-student     10.0.17.5
 +               +
 ```
 
-### Enum - R-Services
+#### Enum
 
-#### Nmap
+##### Nmap
 
 ```bash
 d41y@htb[/htb]$ sudo nmap -sV -p 512,513,514 10.0.17.2
@@ -2784,7 +2829,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 145.54 seconds
 ```
 
-#### Interacting with R-Commands
+##### Interacting with R-Commands
 
 ```bash
 d41y@htb[/htb]$ rlogin 10.0.17.2 -l htb-student
@@ -2815,6 +2860,8 @@ htb-student     10.0.17.5:console          Dec 2 19:57     2:25
 
 ### Remote Desktop Protocol (_RDP_)
 
+#### Intro
+
 ... is a protocol developed by Microsoft for remote access to a computer running the Windows OS. This protocol allows display and control commands to be transmitted via the GUI encrypted over IP networks. RDP works at the application layer in the TCP/IP reference model, typically utilizing TCP port 3389 as the transport protocol. However, the connectionless UDP protocol can use port 3389 also for remote administration.
 
 For an RDP session to be established, both the network firewall and the firewall on the server must allow connections from the outside. If Network Address Translation (_NAT_) is used on the route between client and server, as is often the case with internet connections, the remote computer needs the public IP address to reach the server. In addition, port forwarding must be set up on the NAT router in the direction of the server.
@@ -2823,9 +2870,9 @@ RDP has handled Transport Layer Security (_TLS/SSL_) since Windows Vista, which 
 
 The Remote Desktop service is installed by default on Windows servers and does not require additional external applications. This service can be activated using the Server Manager and comes with the default setting to allow connections to the service only to hosts with Network Level Authentication (_NLA_).
 
-### Enum - RDP
+#### Enum
 
-#### Nmap
+##### Nmap
 
 ```bash
 d41y@htb[/htb]$ nmap -sV -sC 10.129.201.248 -p3389 --script rdp*
@@ -3041,13 +3088,15 @@ Do you trust the above certificate? (Y/T/N) y
 
 ### Windows Remote Management (_WinRM_)
 
+#### Intro
+
 ... is a simple Windows integrated remote management protocol based on the command line. WinRM uses the Simple Object Access Protocol (_SOAP_) to establish connections to remote hosts and their applications. Therefore, WinRM must be explicitly enabled and configured starting with Windows 10. WinRM relies on TCP ports 5985 and 5986 for communication, with the last port 5986 using HTTPS, as ports 80 and 443 were previously used for this task. However, since port 80 was mainly blocked for security reasons, the newer ports 5985 and 5986 are used today.
 
 Another component that fits WinRM for administration is Windows Remote Shell (_WinRS_), which lets you execute arbitrary commands on the remote system. The program is even included on Windows 7 by default. Thus, with WinRM, it is possible to execute a remote command on another server.
 
 Services like remote sessions using PowerShell and event log merging require WinRM. It is enabled by default starting with the Windows Server 2012 version, but it must be configured for older server versions and clients, and the necessary firewall exceptions created.
 
-### Enum - WinRM
+#### Enum
 
 ```bash
 d41y@htb[/htb]$ nmap -sV -sC 10.129.201.248 -p5985,5986 --disable-arp-ping -n
@@ -3084,9 +3133,11 @@ Info: Establishing connection to remote endpoint
 
 ### Windows Management Instrumentation (_WMI_)
 
+#### Intro
+
 ... is Microsoft's implementation and also an extension of the Common Information Model (_CIM_), core functionality of the standardized Web-Based Enterprise Management (_WBEM_) for the Windows platform. WMI allows read and write access to almost all settings on Windows systems. Understandably, this makes it the most critical interface in the Windows environment for the administration and remote maintenance of Windows computers, regardless of whether they are PCs or servers. WMI is typically accessed via PowerShell, VBScript, or the Windows Management Instrumentation Console (_WMIC_). WMI is not a single program but consists of several programs and various databases, also known as repositories.
 
-### Enum - WMI
+#### Enum
 
 The initialization of the WMI communication always takes place on TCP port 135, and after successful establishment of the connection, the communication is moved to a random port. For example, the program wmiexec.py from the Impacket toolkit can be used for this.
 
