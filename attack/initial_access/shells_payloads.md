@@ -53,6 +53,11 @@
       - [Usage](#usage-1)
     - [PHP](#php)
       - [Usage](#usage-2)
+  - [Detection \& Prevention](#detection--prevention)
+    - [Monitoring - Events to watch for:](#monitoring---events-to-watch-for)
+    - [Establish Network Visibility](#establish-network-visibility)
+    - [Protecting End Devices](#protecting-end-devices)
+    - [Potential Mitigations](#potential-mitigations)
 
 ---
 
@@ -1108,3 +1113,40 @@ Log in, using given creds, then navigate to Devices -> Vendors -> Add Vendor.
 You can use any webshell, even [this](https://github.com/WhiteWinterWolf/wwwolf-php-webshell). Intercept the upload request, insert the PHP code and forward the request. Sometimes you have to find a way around file filters.
 
 When uploaded, navigate to the file path and you should be able to use the web shell.
+
+## Detection & Prevention
+
+### Monitoring - Events to watch for:
+
+- File Uploads
+- Suspicious non-admin user actions
+- Anomalous network sessions
+
+### Establish Network Visibility
+
+Much like identifying and then using various shells & payloads, detection & prevention requires a detailed understanding of the systems and overall network environment you are trying to protect. It's always essential to have good documentation practices so individuals responsible for keeping the environment secure can have consistent visibility of the devices, data, and traffic flow in the environment they administer. Developing & maintaining visual network topology diagrams can help visualize network traffic flow. Newer tools like netbrain may be good to research as they combine visual diagramming that can be achieved with tools like Draw.io, documentation and remote management. Interactive visual network topologies allow you to interact with the routers, network firewalls, IDS/IPS appliances, switches, and hosts. Tools like this are becoming more common to use as it can be challenging to keep the visibility of the network updated, especially in larger environments that are constantly growing.
+
+Keep in mind that if a payload is successfully executed, it will need to communicate over the network, so this is why network visibility is essential within the context of shells & payloads. Having a network security appliance capable of deep packet inspection can often act as an AV for the network. Some payloads could get detected & blocked at the network level if successfully executed on the hosts. This is especially easy to detect if traffic is not encrypted. When you use nc the traffic passing between the source and destination is not encrypted. Someone could capture that traffic and see every command you sent between your attack box and the target.
+
+### Protecting End Devices
+
+End devices are the devices that connect at the end of a network. This means they are either the source or destination of data transmission. Some examples of end devices would be:
+
+- Workstations
+- Servers
+- Printers
+- Network Attached Storage
+- Cameras
+- Smart TVs
+- Smart Speakers
+
+You should prioritize the protection of these kinds of devices, especially those that run an OS with a CLI that can be remotely accessed. The same interface that makes it easy to administer and automate tasks on a device can make it a good target for attackers. As simple as this seems, having AV installed & enabled is a great start. The most common successful attack vector besides misconfiguration is the human element. All it takes for a user to click a link or open a file, and they can be compromised. Having monitoring and alerting on your end devices can help detect and potentially prevent issues before they happen.
+
+On Windows systems, Windows Defender is present at install and should be left enabled. Also, ensuring the Defender Firewall is left enabled with all profiles left on. Only make exceptions for approved applications based on a change management process. Establish a patch management strategy to ensure that all hosts are receiving updates shortly after Microsoft releases them. All of this applies to servers hosting shared resources and websites as well. Though it can slow performance, AV on a server can prevent the execution of a payload and the establishment of a shell session with a malicious attacker's system.
+
+### Potential Mitigations
+
+- Application Sandboxing
+- Least Privilege Permission Policies
+- Host Segmentation & Hardening
+- Physical and Application Layer Firewalls
