@@ -49,6 +49,8 @@
   - [Web Shells](#web-shells)
     - [Laudanum](#laudanum)
       - [Usage](#usage)
+    - [Antak](#antak)
+      - [Usage](#usage-1)
 
 ---
 
@@ -1077,3 +1079,16 @@ Now, you need to find a web app vulnerable to file upload (_ideally, one which a
 
 Now, you should be able to use the input field for commands and interact with the target.
 
+### Antak
+
+... is a web shell built in ASP.Net included within the Nishang project. Nishang is an offensive PS toolset that can provide options for any portion of your pentest. Antak utilizes PS to interact with the host, making it great for acquiring a web shell on a Windows server. The UI is even themed like PS.
+
+#### Usage
+
+```bash
+d41y@htb[/htb]$ cp /usr/share/nishang/Antak-WebShell/antak.aspx /home/administrator/Upload.aspx
+```
+
+Make sure you set creds for access to the web shell. Modify line 14, adding a user and password. This comes into play when you browse to your web shell. This can help make your operations more secure by ensuring random people can't just stumble into using the shell. It can be prudent to remove the ASCII art and comments from the file. These items in a payload are often signatured on and can alert the defenders/AV to what you are doing.
+
+Upload the shell, navigate to the path where the file was uploaded to, enter creds and use PS-like shell.
