@@ -51,6 +51,8 @@
       - [Usage](#usage)
     - [Antak](#antak)
       - [Usage](#usage-1)
+    - [PHP](#php)
+      - [Usage](#usage-2)
 
 ---
 
@@ -1063,7 +1065,7 @@ User apache may run the following commands on ILF-WebSrv:
 
 A web shell is a browser-based shell session you can use to interact with the underlying OS of a web server. Again, to gain RCE via web shell, you must first find a website or web application vuln that can give you file upload capabilities. Most web shells are gained by uploading a payload written in a web language on the target server. The payload(s) you upload should give you RCE capability within the browser.
 
-### Laudanum
+### [Laudanum](https://github.com/jbarcia/Web-Shells/tree/master/laudanum)
 
 ... is a repository of ready-made files that can be used to inject onto a victim and receive back access via a reverse shell, run commands on the victim host right from the browser, and more. The repo includes injectable files for many different web app languages to include asp, aspx, jsp, php, and more. This is a staple to have on any pentest.
 
@@ -1079,7 +1081,7 @@ Now, you need to find a web app vulnerable to file upload (_ideally, one which a
 
 Now, you should be able to use the input field for commands and interact with the target.
 
-### Antak
+### [Antak](https://github.com/samratashok/nishang)
 
 ... is a web shell built in ASP.Net included within the Nishang project. Nishang is an offensive PS toolset that can provide options for any portion of your pentest. Antak utilizes PS to interact with the host, making it great for acquiring a web shell on a Windows server. The UI is even themed like PS.
 
@@ -1092,3 +1094,17 @@ d41y@htb[/htb]$ cp /usr/share/nishang/Antak-WebShell/antak.aspx /home/administra
 Make sure you set creds for access to the web shell. Modify line 14, adding a user and password. This comes into play when you browse to your web shell. This can help make your operations more secure by ensuring random people can't just stumble into using the shell. It can be prudent to remove the ASCII art and comments from the file. These items in a payload are often signatured on and can alert the defenders/AV to what you are doing.
 
 Upload the shell, navigate to the path where the file was uploaded to, enter creds and use PS-like shell.
+
+### PHP
+
+Since PHP processes code & commands on the server-side, you can use pre-written payloads to gain a shell through the browser or initate a reverse shell session with your attack box.
+
+#### Usage
+
+In this case (_example: rConfig vuln_), you will manually upload a PHP web shell and interact with the underlying Linux host.
+
+Log in, using given creds, then navigate to Devices -> Vendors -> Add Vendor.
+
+You can use any webshell, even [this](https://github.com/WhiteWinterWolf/wwwolf-php-webshell). Intercept the upload request, insert the PHP code and forward the request. Sometimes you have to find a way around file filters.
+
+When uploaded, navigate to the file path and you should be able to use the web shell.
