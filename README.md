@@ -63,7 +63,7 @@
 
 ## Reversing
 
-## Tools
+## [Tools](./attack/tools/tools_list.md)
 
 - [Metasploit](./attack/tools/metasploit.md)
 - [nmap](./attack/tools/nmap.md)
