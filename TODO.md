@@ -5,6 +5,7 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 # TODO
 
 - Gespielte Boxen (_im Wesentlichen die Initial Accesses und generische PrivEscs_) in Notizen einpflegen
+  - liste mit nützlichen tools erstellen, in der ich suchen kann wenn ich eine bestimmte sachen brauche (bspw. Trufflehog: damit lassen sich secrets, creds, sensitive information in git repos oder auf verzeichnissen finden ...)
 
 - setup
   - shell: zsh (_ohmyzsh_)
