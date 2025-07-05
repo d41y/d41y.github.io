@@ -34,8 +34,8 @@
   - [Passwords]()
   - [Services]()
 - [Footprinting](./attack/initial_access/footprinting.md)
-  - [Infrastructure Based Enumeration]()
-  - [Host Based Enumeration]()
+  - [Infrastructure Based Enumeration](./attack/initial_access/footprinting.md#infrastructure-based-enumeration)
+  - [Host Based Enumeration](./attack/initial_access/footprinting.md#host-based-enumeration)
 - [Shells & Payloads](./attack/initial_access/shells_payloads.md)
 
 ## Linux
