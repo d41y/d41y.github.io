@@ -16,6 +16,9 @@
       - [Attack Modes](#attack-modes)
       - [Dictionary Attack](#dictionary-attack-1)
       - [Mask Attack](#mask-attack)
+  - [Cracking Techniques](#cracking-techniques)
+    - [Writing Custom Wordlists and Rules](#writing-custom-wordlists-and-rules)
+      - [Generating Wordlists using CeWL](#generating-wordlists-using-cewl)
 
 ---
 
@@ -244,7 +247,7 @@ d41y@htb[/htb]$ hashcat --help
 ...SNIP...
 ```
 
-Alternatively, ```hashID``` can be used to quickly identify the hashcat hash type by specifying the ```-m``` argument.
+Alternatively, ```hashid``` can be used to quickly identify the hashcat hash type by specifying the ```-m``` argument.
 
 ```bash
 d41y@htb[/htb]$ hashid -m '$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1'
@@ -400,5 +403,91 @@ Hardware.Mon.#1..: Util: 98%
 
 Started: Sat Apr 19 09:42:46 2025
 Stopped: Sat Apr 19 09:43:08 2025
+```
+
+## Cracking Techniques
+
+### Writing Custom Wordlists and Rules
+
+Take a look at a simple example using a password list with only one entry.
+
+```bash
+d41y@htb[/htb]$ cat password.list
+
+password
+```
+
+You can use Hashcat to combine lists of potential names and labels with specific mutation rules to create custom wordlists. Hashcat uses a specific syntax to define chars, words, and their transformations. The complete syntax is documented in the official [Hashcat rule-based attack documentation](https://hashcat.net/wiki/doku.php?id=rule_based_attack), but the examples below are sufficient to understand how Hashcat mutates input words.
+
+| Function | Description |
+| -------- | ----------- |
+| ```:``` | do nothing |
+| ```l``` | lowercase all letters |
+| ```u``` | uppercase all letters |
+| ```c``` | capitalize the first letter and lowercase others |
+| ```sXY``` | replace all instances of X with Y |
+| ```$!```  | add the exclamation char at the end```
+
+Each rule is written on a new line and determines how a given word should be transformed. If you write the functions shown above into a file, it may look like this:
+
+```bash
+d41y@htb[/htb]$ cat custom.rule
+
+:
+c
+so0
+c so0
+sa@
+c sa@
+c sa@ so0
+$!
+$! c
+$! so0
+$! sa@
+$! c so0
+$! c sa@
+$! so0 sa@
+$! c so0 sa@
+```
+
+You can use the following command to apply the rules in ```custom.rule``` to each word in ```password.list``` and store the mutated results in another file.
+
+```bash
+d41y@htb[/htb]$ hashcat --force password.list -r custom.rule --stdout | sort -u > mut_password.list
+```
+
+Content looks like this:
+
+```bash
+d41y@htb[/htb]$ cat mut_password.list
+
+password
+Password
+passw0rd
+Passw0rd
+p@ssword
+P@ssword
+P@ssw0rd
+password!
+Password!
+passw0rd!
+p@ssword!
+Passw0rd!
+P@ssword!
+p@ssw0rd!
+P@ssw0rd!
+```
+
+Hashcat and John both come with pre-built rule lists that can be used for password generation and cracking. One of the most effective and widely used rulesets is ```best64.rule```, which applies common transformations that frequently result in successful password guesses. It is important to note that password cracking and the creation of custom wordlists are, in most cases, a guessing game. You can narrow this down and perform more targeted guessing if you have information about the password policy, while considering factors such as the company name, geographical region, industry, and other topics or keywords that users might choose when creating their passwords. Exceptions, of course, include cases where passwords haven been leaked and directly obtained.
+
+#### Generating Wordlists using CeWL
+
+You can use a tool called [CeWL](https://github.com/digininja/CeWL) to scan potential words from a company's website and save them in a separate list. You can then combine this list with the desired rules to create a customized password list - one that has a higher probability of containing the correct password for an employee. You can specify some parameters, like the depth to spider (```-d```), the minimum length of the word (```-m```), the storage of the found words in lowercase (```--lowercase```), as well as the file where you want to store the results (```-w```).
+
+```bash
+d41y@htb[/htb]$ cewl https://www.inlanefreight.com -d 4 -m 6 --lowercase -w inlane.wordlist
+d41y@htb[/htb]$ wc -l inlane.wordlist
+
+326
 ```
 
