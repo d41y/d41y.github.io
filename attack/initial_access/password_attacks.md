@@ -792,8 +792,13 @@ d41y@htb[/htb]$ sudo mkdir -p /media/bitlockermount
 You then use ```losetup``` to configure the VHD as loop device, decrypt the drive using ```dislocker```, and finally mount the decrypted volume:
 
 ```bash
+# Find the next available loop device and associate it with the VHD file (mounts partitions too with -P)
 d41y@htb[/htb]$ sudo losetup -f -P Backup.vhd
+# Use dislocker to decrypt the BitLocker-encrypted partition (loop0p2) using the password "1234qwer"
+# The decrypted data is written as a file called `dislocker-file` inside /media/bitlocker
 d41y@htb[/htb]$ sudo dislocker /dev/loop0p2 -u1234qwer -- /media/bitlocker
+# Mount the decrypted "dislocker-file" (which is a virtual NTFS drive) as a loop device
+# so the contents can be accessed via /media/bitlockermount
 d41y@htb[/htb]$ sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
 ```
 
@@ -811,3 +816,6 @@ d41y@htb[/htb]$ sudo umount /media/bitlockermount
 d41y@htb[/htb]$ sudo umount /media/bitlocker
 ```
 
+> [!NOTE]
+> To find the loop device which was picked:<br>
+> ```losetup -j Backup.vhd```
