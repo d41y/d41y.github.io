@@ -24,6 +24,12 @@
       - [Hunting for SSH Keys](#hunting-for-ssh-keys)
         - [Cracking encrypted SSH Keys](#cracking-encrypted-ssh-keys)
       - [Cracking password-protected Documents](#cracking-password-protected-documents)
+    - [Cracking Protected Archives](#cracking-protected-archives)
+      - [Cracking ZIP Files](#cracking-zip-files)
+      - [Cracking OpenSSL encrypted GZIP Files](#cracking-openssl-encrypted-gzip-files)
+      - [Cracking BitLocker-encrpyted Drives](#cracking-bitlocker-encrpyted-drives)
+        - [Mounting BitLocker-encrypted Drives in Windows](#mounting-bitlocker-encrypted-drives-in-windows)
+        - [Mounting BitLocker-encrypted Drives in Linux (_or macOS_)](#mounting-bitlocker-encrypted-drives-in-linux-or-macos)
 
 ---
 
@@ -651,3 +657,157 @@ PDF.pdf:1234
 ```
 
 One of the primary challenges in this process is the generation and mutation of password lists, which is a prerequisite for successfully cracking password-protected files and access points. In many cases, using a standard or publicly known password list is no longer sufficient, as such lists are often recognized and blocked by built-in security mechanisms. These files may also be more difficult to crack - or not crackable at all within a reasonable timeframe - because users are increasingly required to choose longer, randomly generated passwords or complex passphrases. Nevertheless, attempting to crack password-protected documents is often worthwhile, as they may contain sensitive information that can be leveraged to gain further access.
+
+### Cracking Protected Archives
+
+There are many types of archive files. Some of the more commonly encountered file extensions include ```tar```, ```gz```, ```rar```, ```zip```, ```vmdb/vmx```, ```cpt```, ```truecrypt```, ```bitlocker```, ```kdbx```, ```deb```, ```7z```, and ```gzip```.
+
+A comprehensive list of archive file types can be found [here](https://fileinfo.com/filetypes/compressed).
+
+Note that not all archive types support native password protection, and in such cases, additional tools are often used to encrypt the files. For example, TAR files are commonly encrypted using ```openssl``` or ```gpg```.
+
+#### Cracking ZIP Files
+
+```bash
+d41y@htb[/htb]$ zip2john ZIP.zip > zip.hash
+d41y@htb[/htb]$ cat zip.hash 
+
+ZIP.zip/customers.csv:$pkzip2$1*2*2*0*2a*1e*490e7510*0*42*0*2a*490e*409b*ef1e7feb7c1cf701a6ada7132e6a5c6c84c032401536faf7493df0294b0d5afc3464f14ec081cc0e18cb*$/pkzip2$:customers.csv:ZIP.zip::ZIP.zip
+```
+
+Once you have extracted the hash, you can use John to crack it with the desired password list.
+
+```bash
+d41y@htb[/htb]$ john --wordlist=rockyou.txt zip.hash
+
+d41y@htb[/htb]$ john zip.hash --show
+
+ZIP.zip/customers.csv:1234:customers.csv:ZIP.zip::ZIP.zip
+
+1 password hash cracked, 0 left
+```
+
+#### Cracking OpenSSL encrypted GZIP Files
+
+It is not always immediately apparent whether a file is password-protected, particularily when the file extension corresponds to a format that does not natively support password protection. ```openssl``` can be used to encrypt files in the GZIP format. To determine the actual format of a file, you can use the ```file``` command, which provides detailed information about its content.
+
+```bash
+d41y@htb[/htb]$ file GZIP.gzip 
+
+GZIP.gzip: openssl enc'd data with salted password
+```
+
+When cracking OpenSSL encrypted files, you may encounter various challenges, including numerous false positives or complete failure to identify the correct password. To mitigate this, a more reliable approach is to use the ```openssl``` tool within a for loop that attempts to extract the contents directly, succeeding only if the correct password is found.
+
+```bash
+d41y@htb[/htb]$ for i in $(cat rockyou.txt);do openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2>/dev/null| tar xz;done
+
+gzip: stdin: not in gzip format
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+
+gzip: stdin: not in gzip format
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+<SNIP>
+```
+
+Once the for loop has finished, you can check the current directory for a newly extracted file.
+
+```bash
+d41y@htb[/htb]$ ls
+
+customers.csv  GZIP.gzip  rockyou.txt
+```
+
+#### Cracking BitLocker-encrpyted Drives
+
+BitLocker is a full-disk encryption feature developed by Microsoft for the Windows OS. It uses the AES encryption algorithm with either 128-bit or 256-bit key lengths. If the password or PIN used for BitLocker is forgotten, decryption can still be performed using a recovery key - a 48-digit string generated during the setup process.
+
+In enterprise environments, virtual drives are sometimes used to store personal information, documents, or notes on company-issued devices to prevent unauthorized access. To crack a BitLocker encrypted drive, you can use a script called ```bitlocker2john``` to four different hashes: the first two correspond to the BitLocker password, while the latter two present the recovery key. Because the recovery key is very long and randomly generated, it is generally not practical to guess - unless partial knowledge is available. Therefore, you will focus on cracking the password using the first hash.
+
+```bash
+d41y@htb[/htb]$ bitlocker2john -i Backup.vhd > backup.hashes
+d41y@htb[/htb]$ grep "bitlocker\$0" backup.hashes > backup.hash
+d41y@htb[/htb]$ cat backup.hash
+
+$bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$1048576$12$00b0a67f961dd80103000000$60$d59f37e70696f7eab6b8f95ae93bd53f3f7067d5e33c0394b3d8e2d1fdb885cb86c1b978f6cc12ed26de0889cd2196b0510bbcd2a8c89187ba8ec54f
+```
+
+Once a hash is generated, either John or Hashcat can be used to crack it. For example, you will look at the procedure using Hashcat. The Hashcat mode associated with the BitLocker hash is ```-m 22100```. You supply the hash, speciy the wordlist, and define the hash mode. Since this encryption uses strong AES encryption, cracking may take considerable time depending on hardware performance.
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 22100 '$bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$1048576$12$00b0a67f961dd80103000000$60$d59f37e70696f7eab6b8f95ae93bd53f3f7067d5e33c0394b3d8e2d1fdb885cb86c1b978f6cc12ed26de0889cd2196b0510bbcd2a8c89187ba8ec54f' /usr/share/wordlists/rockyou.txt
+
+<SNIP>
+
+$bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$1048576$12$00b0a67f961dd80103000000$60$d59f37e70696f7eab6b8f95ae93bd53f3f7067d5e33c0394b3d8e2d1fdb885cb86c1b978f6cc12ed26de0889cd2196b0510bbcd2a8c89187ba8ec54f:1234qwer
+                                                          
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 22100 (BitLocker)
+Hash.Target......: $bitlocker$0$16$02b329c0453b9273f2fc1b927443b5fe$10...8ec54f
+Time.Started.....: Sat Apr 19 17:49:25 2025 (1 min, 56 secs)
+Time.Estimated...: Sat Apr 19 17:51:21 2025 (0 secs)
+Kernel.Feature...: Pure Kernel
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:       25 H/s (9.28ms) @ Accel:64 Loops:4096 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 2880/14344385 (0.02%)
+Rejected.........: 0/2880 (0.00%)
+Restore.Point....: 2816/14344385 (0.02%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:1044480-1048576
+Candidate.Engine.: Device Generator
+Candidates.#1....: pirate -> soccer9
+Hardware.Mon.#1..: Util:100%
+
+Started: Sat Apr 19 17:49:05 2025
+Stopped: Sat Apr 19 17:51:22 2025
+```
+
+After successfully cracking the password, you can access the encrypted drive.
+
+##### Mounting BitLocker-encrypted Drives in Windows
+
+The easiest method for mounting a BitLocker virtual drive on Windows is to double-click the ```.vhd``` file. Since it is encrypted, Windows will initially show an error. After mounting, simply double-click the BitLocker volume to be prompted for the password.
+
+##### Mounting BitLocker-encrypted Drives in Linux (_or macOS_)
+
+It is also possible to mount BitLocker-encrypted drives in Linux. To do this, you can use a tool called [dislocker](https://github.com/Aorimn/dislocker).
+
+First, you need to install the package:
+
+```bash
+d41y@htb[/htb]$ sudo apt-get install dislocker
+```
+
+Next, you create two folders which you will use to mount the VHD:
+
+```bash
+d41y@htb[/htb]$ sudo mkdir -p /media/bitlocker
+d41y@htb[/htb]$ sudo mkdir -p /media/bitlockermount
+```
+
+You then use ```losetup``` to configure the VHD as loop device, decrypt the drive using ```dislocker```, and finally mount the decrypted volume:
+
+```bash
+d41y@htb[/htb]$ sudo losetup -f -P Backup.vhd
+d41y@htb[/htb]$ sudo dislocker /dev/loop0p2 -u1234qwer -- /media/bitlocker
+d41y@htb[/htb]$ sudo mount -o loop /media/bitlocker/dislocker-file /media/bitlockermount
+```
+
+If everything was done correctly, you can now browse the files:
+
+```bash
+d41y@htb[/htb]$ cd /media/bitlockermount/
+d41y@htb[/htb]$ ls -la
+```
+
+Once you have analyzed the files on the mounted drive, you can unmount it using the following commands:
+
+```bash
+d41y@htb[/htb]$ sudo umount /media/bitlockermount
+d41y@htb[/htb]$ sudo umount /media/bitlocker
+```
+
