@@ -19,6 +19,11 @@
   - [Cracking Techniques](#cracking-techniques)
     - [Writing Custom Wordlists and Rules](#writing-custom-wordlists-and-rules)
       - [Generating Wordlists using CeWL](#generating-wordlists-using-cewl)
+    - [Cracking Protected Files](#cracking-protected-files)
+      - [Hunting for Encrypted Files](#hunting-for-encrypted-files)
+      - [Hunting for SSH Keys](#hunting-for-ssh-keys)
+        - [Cracking encrypted SSH Keys](#cracking-encrypted-ssh-keys)
+      - [Cracking password-protected Documents](#cracking-password-protected-documents)
 
 ---
 
@@ -491,3 +496,158 @@ d41y@htb[/htb]$ wc -l inlane.wordlist
 326
 ```
 
+### Cracking Protected Files
+
+#### Hunting for Encrypted Files
+
+Many different extensions correspond to encrypted files -  a useful reference list can be found [here](https://fileinfo.com/filetypes/encoded).
+
+Example command to find commonly encrypted files on a Linux system:
+
+```bash
+d41y@htb[/htb]$ for ext in $(echo ".xls .xls* .xltx .od* .doc .doc* .pdf .pot .pot* .pp*");do echo -e "\nFile extension: " $ext; find / -name *$ext 2>/dev/null | grep -v "lib\|fonts\|share\|core" ;done
+
+File extension:  .xls
+
+File extension:  .xls*
+
+File extension:  .xltx
+
+File extension:  .od*
+/home/cry0l1t3/Docs/document-temp.odt
+/home/cry0l1t3/Docs/product-improvements.odp
+/home/cry0l1t3/Docs/mgmt-spreadsheet.ods
+...SNIP...
+```
+
+#### Hunting for SSH Keys
+
+Certain files, such as SSH keys, do not have standard file extension. In cases like these, it may be possible to identify files by standard content such as header and footer values. For example, SSH private keys always begin with ```-----BEGIN [...SNIP...] PRIVATE KEY-----```. You can use tools like ```grep``` to recursively search the file system for them during post-exploitation.
+
+```bash
+d41y@htb[/htb]$ grep -rnE '^\-{5}BEGIN [A-Z0-9]+ PRIVATE KEY\-{5}$' /* 2>/dev/null
+
+/home/jsmith/.ssh/id_ed25519:1:-----BEGIN OPENSSH PRIVATE KEY-----
+/home/jsmith/.ssh/SSH.private:1:-----BEGIN RSA PRIVATE KEY-----
+/home/jsmith/Documents/id_rsa:1:-----BEGIN OPENSSH PRIVATE KEY-----
+<SNIP>
+```
+
+Some SSH keys are encrypted with a passphrase. With older PEM formats, it was possible to tell if an SSH key is encrypted based on the header, which contains the encryption method in use. Modern SSH keys, however, appear the same whether encrypted or not.
+
+```bash
+d41y@htb[/htb]$ cat /home/jsmith/.ssh/SSH.private
+
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,2109D25CC91F8DBFCEB0F7589066B2CC
+
+8Uboy0afrTahejVGmB7kgvxkqJLOczb1I0/hEzPU1leCqhCKBlxYldM2s65jhflD
+4/OH4ENhU7qpJ62KlrnZhFX8UwYBmebNDvG12oE7i21hB/9UqZmmHktjD3+OYTsD
+<SNIP>
+```
+
+One way to tell whether an SSH key is encrypted or not, is to try reading the key with ```ssh-keygen```.
+
+```bash
+d41y@htb[/htb]$ ssh-keygen -yf ~/.ssh/id_ed25519 
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIpNefJd834VkD5iq+22Zh59Gzmmtzo6rAffCx2UtaS6
+```
+
+As shown below, attempting to read a password-protected SSH key will prompt the user for a passphrase:
+
+```bash
+d41y@htb[/htb]$ ssh-keygen -yf ~/.ssh/id_rsa
+
+Enter passphrase for "/home/jsmith/.ssh/id_rsa":
+```
+
+##### Cracking encrypted SSH Keys
+
+John has many different scripts for extracting hashes from files - which you can then proceed to crack. You can find these scripts on your system using the following command:
+
+```bash
+d41y@htb[/htb]$ locate *2john*
+
+/usr/bin/bitlocker2john
+/usr/bin/dmg2john
+/usr/bin/gpg2john
+/usr/bin/hccap2john
+/usr/bin/keepass2john
+/usr/bin/putty2john
+/usr/bin/racf2john
+/usr/bin/rar2john
+/usr/bin/uaf2john
+/usr/bin/vncpcap2john
+/usr/bin/wlanhcx2john
+/usr/bin/wpapcap2john
+/usr/bin/zip2john
+/usr/share/john/1password2john.py
+/usr/share/john/7z2john.pl
+/usr/share/john/DPAPImk2john.py
+/usr/share/john/adxcsouf2john.py
+/usr/share/john/aem2john.py
+/usr/share/john/aix2john.pl
+/usr/share/john/aix2john.py
+/usr/share/john/andotp2john.py
+/usr/share/john/androidbackup2john.py
+<SNIP>
+```
+
+For example, you could use the Python script ```ssh2john.py``` to acquire the corresponding hash for an encrypted SSH key, and then use John to try and crack it.
+
+```bash
+d41y@htb[/htb]$ ssh2john.py SSH.private > ssh.hash
+d41y@htb[/htb]$ john --wordlist=rockyou.txt ssh.hash
+
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 2 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press 'q' or Ctrl-C to abort, almost any other key for status
+1234         (SSH.private)
+1g 0:00:00:00 DONE (2022-02-08 03:03) 16.66g/s 1747Kp/s 1747Kc/s 1747KC/s Knightsing..Babying
+Session completed
+```
+
+Viewing the resulting hash:
+
+```bash
+d41y@htb[/htb]$ john ssh.hash --show
+
+SSH.private:1234
+
+1 password hash cracked, 0 left
+```
+
+#### Cracking password-protected Documents
+
+You are likely to encounter a wide variety of documents that are password-protected to restrict access to authorized individuals. Today, most reports, documentation, and information sheets are commonly distributed as Microsoft Office documents or PDFs. John includes a Python script called ```office2john.py```, which can be used to extract password hashes from all common Office document formats. These hashes can then be supplied to John or Hashcat for offline cracking. The cracking procedure remains consistent with other hash types.
+
+```bash
+d41y@htb[/htb]$ office2john.py Protected.docx > protected-docx.hash
+d41y@htb[/htb]$ john --wordlist=rockyou.txt protected-docx.hash
+d41y@htb[/htb]$ john protected-docx.hash --show
+
+Protected.docx:1234
+
+1 password hash cracked, 0 left
+```
+
+The process for cracking PDF files is quite similar, as you simply swap out ```office2john.py``` for ```pdf2john.py```.
+
+```bash
+d41y@htb[/htb]$ pdf2john.py PDF.pdf > pdf.hash
+d41y@htb[/htb]$ john --wordlist=rockyou.txt pdf.hash
+d41y@htb[/htb]$ john pdf.hash --show
+
+PDF.pdf:1234
+
+1 password hash cracked, 0 left
+```
+
+One of the primary challenges in this process is the generation and mutation of password lists, which is a prerequisite for successfully cracking password-protected files and access points. In many cases, using a standard or publicly known password list is no longer sufficient, as such lists are often recognized and blocked by built-in security mechanisms. These files may also be more difficult to crack - or not crackable at all within a reasonable timeframe - because users are increasingly required to choose longer, randomly generated passwords or complex passphrases. Nevertheless, attempting to crack password-protected documents is often worthwhile, as they may contain sensitive information that can be leveraged to gain further access.
