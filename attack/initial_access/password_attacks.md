@@ -1311,3 +1311,10 @@ d41y@htb[/htb]$ creds search linksys
 | linksys (ssh) |      root     |   admin    |
 +---------------+---------------+------------+
 ```
+
+In addition to publicly available lists and tools, default credentials can often be found in product documentation, which typically outlines the steps required to set up a service. While some devices and applications prompt the user to set a password during installation, others use a default - often weak - password.
+
+Imagine you have identified certain apps in use on a customer's network. After researching the default credentials online, you can combine them into a new list, formatted as ```username:password```, and reuse the previously mentioned Hydra to attempt access.
+
+Beyond apps, default credentials are also commonly associated with routers. One such list is available [here](https://www.softwaretestinghelp.com/default-router-username-and-password-list/). While it is less likely that the router credentials remain unchanged, oversights do occur. Routers used in internal testing environments, for example, may be left with default settings and can be exploited to gain further access.
+
