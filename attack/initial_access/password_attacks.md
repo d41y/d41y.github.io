@@ -56,6 +56,10 @@
       - [Metasploit](#metasploit)
       - [NetExec](#netexec-1)
       - [SMB](#smb-1)
+    - [Spraying, Stuffing, and Defaults](#spraying-stuffing-and-defaults)
+      - [Password Spraying](#password-spraying)
+      - [Credential Stuffing](#credential-stuffing)
+      - [Default Credentials](#default-credentials)
 
 ---
 
@@ -1254,3 +1258,56 @@ smb: \> ls
 smb: \> 
 ```
 
+### Spraying, Stuffing, and Defaults
+
+#### Password Spraying
+
+... is a type of brute-force attack in which an attacker attempts to use a single password across many different user accounts. This technique can be particularly effective in environments where users are initialized with a default or standard password. For example, if it is known that administrators at a particular company commonly use ```ChangeMe123!``` when setting up new accounts, it would be worthwhile to spray this password across all user accounts to identify any that were not updated.
+
+Depending on the target system, different tools may be used to carry out password spraying attacks. For web apps, Burp is a strong option, while for AD environments, tools such as NetExec or Kerbrute are commonly used.
+
+```bash
+d41y@htb[/htb]$ netexec smb 10.100.38.0/24 -u <usernames.list> -p 'ChangeMe123!'
+```
+
+#### Credential Stuffing
+
+... is another type of brute-force attack in which an attacker uses stolen credentials from one service to attempt access on others. Since many users reuse their usernames and passwords across multiple platforms, these attacks are sometimes successful. As with password spraying, credential stuffing can be carried out using a variety of tools, depending on the target system. For example, if you have a list of ```username:password``` credentials obtained from a database leak, you can use Hydra to perform a credential stuffing attack against an SSH service using the following syntax:
+
+```bash
+d41y@htb[/htb]$ hydra -C user_pass.list ssh://10.100.38.23
+```
+
+#### Default Credentials
+
+Many systems - such as routers, firewalls, and databases - come with defautl credentials. While best practice dictates that admins change these credentials during setup, they are sometimes left unchanged, posing a serious security risk.
+
+While several lists of known default credentials are available online, there are also dedicated tools that automate the process. One widely used example is the [Default Credentials Cheat Sheet](https://github.com/ihebski/DefaultCreds-cheat-sheet), which can be installed with ```pip3```.
+
+```bash
+d41y@htb[/htb]$ pip3 install defaultcreds-cheat-sheet
+```
+
+Once installed, you can use the ```creds``` command to search for known default credentials associated with a specific product or vendor.
+
+```bash
+d41y@htb[/htb]$ creds search linksys
+
++---------------+---------------+------------+
+| Product       |    username   |  password  |
++---------------+---------------+------------+
+| linksys       |    <blank>    |  <blank>   |
+| linksys       |    <blank>    |   admin    |
+| linksys       |    <blank>    | epicrouter |
+| linksys       | Administrator |   admin    |
+| linksys       |     admin     |  <blank>   |
+| linksys       |     admin     |   admin    |
+| linksys       |    comcast    |    1234    |
+| linksys       |      root     |  orion99   |
+| linksys       |      user     |  tivonpw   |
+| linksys (ssh) |     admin     |   admin    |
+| linksys (ssh) |     admin     |  password  |
+| linksys (ssh) |    linksys    |  <blank>   |
+| linksys (ssh) |      root     |   admin    |
++---------------+---------------+------------+
+```
