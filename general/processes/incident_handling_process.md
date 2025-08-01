@@ -18,6 +18,13 @@
       - [Clear Policies \& Documentation](#clear-policies--documentation)
       - [Tools](#tools)
       - [DMARC](#dmarc)
+      - [Endpoint Hardening (\& EDR)](#endpoint-hardening--edr)
+      - [Network Protection](#network-protection)
+      - [Privilege Identity Management / MFA / Passwords](#privilege-identity-management--mfa--passwords)
+      - [Vuln Scanning](#vuln-scanning)
+      - [User Awareness Training](#user-awareness-training)
+      - [AD Security Assessment](#ad-security-assessment)
+      - [Purple Team Exercises](#purple-team-exercises)
 
 ---
 
@@ -202,3 +209,50 @@ Many of the tools mentioned above will be part of what is known as a jump bag - 
 
 #### DMARC
 
+... is an email protection against phishing built on top of the already existing SPF and DKIM. The idea behing DMARC is to reject emails that pretend to originate from your organization. Therefore, if an adversary is spoofing an email pretending to be an employee asking for an invoice to be paid, the system will reject the email before it reaches the intended recipient. DMARC is easy and inexpensive to implement, however, thorough testing is mandatory; otherwise, you risk blocking legitimate emails with no ability to recover them.
+
+With email filtering rules, you may be able to take DMARC to the next level and apply additional protection against emails failing DMARC from domains you do not own. This is possible because some email systems will perform a DMARC check and include a header string whether DMARC passed or failed in the message headers. While this can be incredibly powerful to detect phishing emails from any domain, it requires extensive testing before it can be introduced in a production environment. High false-positives here are emails that are sent on behalf of via some email sending service, since they tend to fail DMARC due to domain mismatch.
+
+#### Endpoint Hardening (& EDR)
+
+Endpoint devices are the entry points for most of the attacks that you are facing on a daily basis. If you consider the fact that most threats will originate from the internet and will target users who are browsing websites, opening attachments, or running malicious executables, a percentage of this activity will occur from their corporate endpoints.
+
+There are few widely recognized endpoint hardening standards by now, with CIS and Microsoft baseline being the most popular, and these should really be the building blocks for your organization's hardening baselines. Some highly important actions to note and do something about are:
+
+- disable LLMR/NetBIOS
+- implement LAPS and remove administrative privileges from regular users
+- disable or configure PowerShell in "ConstrainedLanguage" mode
+- enable attack surface reduction (_ASR_) rules if using Microsoft Defender
+- implement whitelisting
+- utilize host-based firewalls; as a bare minimum, block workstation-to-workstation communication and block outbound traffic to LOLBins
+- deploy an EDR product; at this point in time, AMSI provides great visibility into obfuscated scripts for antimalware products to inspect the content before it gets executed; it is highly recommended that you only choose products that integrate with AMSI
+
+#### Network Protection
+
+Network segmentation is a powerful technique to avoid having a breach across the entire organization. Business-critical systems must be isolated, and connections should be allowed only as the business requires. Internal resources should really not be facing the Internet directly.
+
+Additionally, when speaking of network protection you should consider IDS/IPS systems. Their power really shines when SSL/TLS interception is performed so that they can identify malicious traffic based on the content on the wire and not based on reputation of IP addresses, which is a traditional and very inefficient way of detecting malicious traffic.
+
+Additionally, ensure that only organization-approved devices can get on the network. Solutions such as 802.1x can be utilized to reduce the risk of bring your own device (_BYOD_) or malicious devices connecting to the corporate network. If you are a cloud-only company using, for example, Azure/Azure AD, then you can achieve similar protection with Conditional Access policies that will allow access to organization resources only if you are connecting from a company-managed device.
+
+#### Privilege Identity Management / MFA / Passwords
+
+At this point in time, stealing privileged user credentials is the most common escalation path in AD environments. Additionally, a common mistake is that admin users either have a weak password or a shared password with their regular user account. For reference, a weak but complex password is "Password1!". It includes uppercase, lowercase, numerical, and special chars, but despite this, it's easily predictable and can be found in many password lists that adversaries employ in their attacks. It is recommended to teach employees to use pass phrases because they are harder to guess and difficult to brute force. An example of a password phrase that is easy to remember yet long and complex is "i LIK3 my coffeE warm". If one knows a second language, they can mix up words from multiple languages for additional protection.
+
+Multi-factor authentication (_MFA_) is another identity-protecting solution that should be implemented at least for any type of administrative access to ALL apps and devices.
+
+#### Vuln Scanning
+
+Perform continuous vuln scans of your environment and remediate at least the "high" and "critical" vulns that are discovered. While the scanning can be automated, the fixes usually require manual involvement. If you can't apply patches for some reasons, definitely segment the systems that are vulnerable.
+
+#### User Awareness Training
+
+Training users to recognize suspicious behavior and report it when discovered is a big win for you. While it is unlikely to reach 100% success on this task, these trainings are known to significantly reduce the number of successful compromises. Periodic "surprise" testing should also be part of this training, including, for example, monthly phishing emails, dropped USB sticks in the office building etc.
+
+#### AD Security Assessment
+
+The best way to detect security misconfigurations or exposed critical vulnerabilities is by looking for them from the perspective of an attacker. Doing your own reviews will ensure that when an endpoint device is compromised, the attacker will not have a one-step escalation possibilty to high privileges on the network. The more additional tools and activity an attacker is generating, the higher the likelihood of you detecting them, so try to eliminate easy wins and low-hanging fruits as much as possible.
+
+#### Purple Team Exercises
+
+You need to train incident handlers and keep them engaged. There is no question about that, and the best place to do it is inside an organization's own environment. Purple team exercises are essentially security assessments by a red team that either continuously or eventually inform the blue team about their actions, findings, any visibility/security shortcomings, etc. Such exercises will help identifying vulns in an organization while testing the blue team's defensive capabilities in terms of logging, monitoring, detection, and responsiveness. If a threat goes unnoticed, there is a oppurtunity to improve. For those that are detected, the blue team can test any playbooks and incident handling procedures to ensure they are robust and the expected result has been achieved.
