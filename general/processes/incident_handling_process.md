@@ -25,6 +25,10 @@
       - [User Awareness Training](#user-awareness-training)
       - [AD Security Assessment](#ad-security-assessment)
       - [Purple Team Exercises](#purple-team-exercises)
+    - [Detection \& Analysis Stage](#detection--analysis-stage)
+      - [Initial Investigation](#initial-investigation)
+      - [Incident Severity \& Extent Questions](#incident-severity--extent-questions)
+      - [Incident Confidentiality \& Communication](#incident-confidentiality--communication)
 
 ---
 
@@ -176,7 +180,7 @@ Some of the written policies and documentation should contain an up-to-date vers
 - ability to acquire hardware, software, or an external resource without a complete procurement process; the last thing you need during an incident is to wait for weeks for the approval of a 500 dollar tool
 - forensic/investigative cheat sheets
 
-Some of the non-severe cases may be handled relatively quickly and without too much friction within the organization or outside of it. Other cases may require law enforcement notification and external communication to customers and third-party vendors, especially in cases of legal concerns arising from the incident. For example, a data breach involving customer data has to be reported to law enforcement within a certain time threshold in accordance with GPDR. There may be many compliance requirements depending on the location and/or branches where the incident has occured, so the best way to understand these is to discuss them with your legal and compliance teams on a per-incident basis.
+Some of the non-severe cases may be handled relatively quickly and without too much friction within the organization or outside of it. Other cases may require law enforcement notification and external communication to customers and third-party vendors, especially in cases of legal concerns arising from the incident. For example, a data breach involving customer data has to be reported to law enforcement within a certain time threshold in accordance with GPDR. There may be many compliance requirements depending on the location and/or branches where the incident has occurred, so the best way to understand these is to discuss them with your legal and compliance teams on a per-incident basis.
 
 While having documentation in place is vital, it is also important to document the incident as you investigate. Therefore, during this stage you will also have to establish an effective reporting capability. Incidents can be extremely stressful, and it becomes easy to forget this part as the incident unfolds itself, especially when you are focused and going extremely fast in order to solve it as soon as possible. Try to remain calm, take notes, and ensure that these notes contain timestamps, the activity performed, the result of it, and who did it. Overall, you should seek answers to who, what, when, why, and how.
 
@@ -256,3 +260,67 @@ The best way to detect security misconfigurations or exposed critical vulnerabil
 #### Purple Team Exercises
 
 You need to train incident handlers and keep them engaged. There is no question about that, and the best place to do it is inside an organization's own environment. Purple team exercises are essentially security assessments by a red team that either continuously or eventually inform the blue team about their actions, findings, any visibility/security shortcomings, etc. Such exercises will help identifying vulns in an organization while testing the blue team's defensive capabilities in terms of logging, monitoring, detection, and responsiveness. If a threat goes unnoticed, there is a oppurtunity to improve. For those that are detected, the blue team can test any playbooks and incident handling procedures to ensure they are robust and the expected result has been achieved.
+
+### Detection & Analysis Stage
+
+The detection & analysis phase involves all aspects of detecting an incident, such as utilizing sensors, logs, and trained personnel. It also includes information and knowledge sharing, as well as utilizing context-based threat intelligence. Segmentation of the architecture and having a clear understanding of and visibility within the network are also important factors.
+
+Threats are introduced to the organization via an infinite amount of attack vectors, and their detection can come from sources such as:
+
+- an employee that notices abnormal behavior
+- an alert from one of your tools
+- threat hunting activities
+- a third-party notification informing you that they discovered signs of your organization being compromised
+
+It is highly recommended to create levels of detection by logically categorizing your network as follows:
+
+- detection at the network perimeter
+- detection at the internal network level
+- detection at the endpoint level
+- detection at the application level
+
+#### Initial Investigation
+
+When a security incident is detected, you should conduct some initial investigation and establish context before assembling the team and calling an organization-wide incident response. Think about how information is presented in the event of an administrative account connecting to an IP address at HH:MM:SS. Without knowing what system is on that IP address and which time zone the time refers to, you may easily jump to a wrong conclusion about what this event is about. To sum up, you should aim to collect as much information as possible at this stage about the following:
+
+- Date/time when the incident was reported? Additionally, who detected the incident and/or who reported it.
+- How was the incident detected?
+- What was the incident? Phishing? System unavailability?
+- Assemble a list of impacted systems
+- Document who accessed the impacted systems and what actions have been taken. Make a note of whether this is an ongoing incident or the suspicious activity has been stopped
+- Physical location, OS, IP addresses and hostnames, system owner, system's purpose, current state of the system
+- List of IP addresses, time and date of detection, type of malware, systems impacted, export of malicious files with forensic information on them
+
+With that information at hand, you can make decisions based on the knowledge you have gathered. What does this mean? You would likely take different actions if you knew that the CEO's laptop was compromised as opposed to an intern's one.
+
+With the initially gathered information, you can start building an incident timeline. This timeline will keep you organized throughout the event and provide an overall picture of what happened. The events in the timeline are time-sorted based on when they occurred. Note that during the investigative process later on, you will not necessarily uncover evidence in this time-sorted order. However, when you sort the evidence based on when it occurred, you will get context from the separate events that took place. The timeline can also shed some light on whether newly discovered evidence is part of the current incident. For example, imagine that what you though was the initial payload of an attacker was later discovered to be present on another device two weeks ago. You will encounter situations where the data you are looking at is extremely relevant and situations where the data is unrelated and you are looking in the wrong place. Overall, the timeline should contain the information described below:
+
+- date
+- time of the event
+- hostname
+- event description
+- data source
+  
+As you can infer, the timeline focuses primarily on attacker behavior, so activities that are recorded depict when the attack occurred, when a network connection was established to access a system, when files were downloaded, etc. It is important to ensure that you capture from where the activity was detected/discovered and the systems associated with it.
+
+#### Incident Severity & Extent Questions
+
+When handling a security incident, you should always try to answer the following questions to get an idea of the incident's severity and extent:
+
+- What is the exploitation impact?
+- What are the exploitation requirements?
+- Can any business-critical systems be affected by the incident?
+- Are there any suggested remediation steps?
+- How many systems have been impacted?
+- Is the exploit being used in the wild?
+- Does the exploit have any worm-like capabilities?
+
+The last two can possibly indicate the level of sophistication of an adversary.
+
+As you can imagine, high-impact incidents will be handled promptly, and incidents with a high number of impacted systems will have to be escalated.
+
+#### Incident Confidentiality & Communication
+
+Incidents are very confidential topics as such, all of the information gathered should be kept on a need-to-know basis, unless applicable laws or management decisions instruct you otherwise. There are multiple reasons for this. The adversary may be for example, an employee of the company, or if a breach has occurred, the communication to internal and external parties should be handled by the appointed persin in accordance with the legal department.
+
+When an investigation is launched, you will set some expectations and goals. These often include the type of incident that occurred, the sources of evidence that you have available, and a rough estimation of how much time the team needs for the investigation. Also, based on the incident, you will set expectations on whether you will be able to uncover the adversary or not. Of course, a lot of the above may change as the investigation evolves and new leads are discovered. It is important to keep everyone involved and the management informed about any advancements and expectations.
