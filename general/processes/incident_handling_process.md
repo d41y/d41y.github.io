@@ -29,6 +29,11 @@
       - [Initial Investigation](#initial-investigation)
       - [Incident Severity \& Extent Questions](#incident-severity--extent-questions)
       - [Incident Confidentiality \& Communication](#incident-confidentiality--communication)
+      - [The Investigation](#the-investigation)
+      - [Initial Investigation Data](#initial-investigation-data)
+      - [Creation \& Usage of IOCs](#creation--usage-of-iocs)
+      - [Identification of New Leads \& Impacted Systems](#identification-of-new-leads--impacted-systems)
+      - [Data Collection \& Analysis from the new Leads \& Impacted Systems](#data-collection--analysis-from-the-new-leads--impacted-systems)
 
 ---
 
@@ -324,3 +329,33 @@ As you can imagine, high-impact incidents will be handled promptly, and incident
 Incidents are very confidential topics as such, all of the information gathered should be kept on a need-to-know basis, unless applicable laws or management decisions instruct you otherwise. There are multiple reasons for this. The adversary may be for example, an employee of the company, or if a breach has occurred, the communication to internal and external parties should be handled by the appointed persin in accordance with the legal department.
 
 When an investigation is launched, you will set some expectations and goals. These often include the type of incident that occurred, the sources of evidence that you have available, and a rough estimation of how much time the team needs for the investigation. Also, based on the incident, you will set expectations on whether you will be able to uncover the adversary or not. Of course, a lot of the above may change as the investigation evolves and new leads are discovered. It is important to keep everyone involved and the management informed about any advancements and expectations.
+
+#### The Investigation
+
+The investigation starts based on the initially gathered information that contain what you know about the incident so far. With this initial data, you will begin a 3-step cyclic process that will iterate over and over again as the investigation evolves. This process includes:
+
+- creation and usage of indicators of compromise (_IOC_)
+- identification of new leads and impacted systems
+- data collection and analysis from the new leads and impacted systems
+
+#### Initial Investigation Data
+
+In order to reach a conclusion, an investigation should be based on valid leads that have been discovered not only during this initial phase but throughout the entire investigation process. The incident handling team should bring up new leads constantly and not go solely after a specific finding, such as a known malicious tool. Narrowing an investigation down to a specific activity often results in limited findings, premature conclusions, and an incomplete understanding of the overall impact.
+
+#### Creation & Usage of IOCs
+
+An indicator of compromise is a sign that an incident has occurred. IOCs are documented in a structured manner, which represents the artifacts of the compromise. Examples of IOCs can be IP addresses, hash values of files, and file names. In fact, because IOCs are so important to an investigation, special languages such as OpenIOC have been developed to document them and share them in a standard manner. Another widely used standard for IOCs is Yara. There are a number of free tools that can be utilized, such as Mandiant's IOC editor, to create or edit IOCs. Using these languages, you can describe and use the artifacts that you uncover during an incident investigation. You may even obtain IOCs from third parties if the adversary or the attack is known.
+
+To leverage IOCs, you will have to deploy an IOC-obtaining/IOC-searching tool. A common approach is to utilize WMI or PowerShell for IOC-related operations in Windows environments. A word of caution! During an investigation, you have to be extra careful to prevent the credentials of your highly privileged user(s) from being cached when connecting to (potentially) compromised systems. More specifically, you need to ensure that only connection protocols and tools that don't cache credentials upon a successful login are utilized. Windows logons with logon type 3 typically don't cache credentials on the remote systems. The best example of "know your tools" that comes to mind is "PsExec". When "PsExec" is used with explicit credentials, those credentials are cached on the remote machine. When "PsExec" is used without credentials through the session of the currently logged on user, the credentials are not cached on the remote machine.
+
+#### Identification of New Leads & Impacted Systems
+
+After searching for IOCs, you expect to have some hits that reveal other systems with the same signs of compromise. These hits may not be directly associated with the incident you are investigating. Your IOC could be, for example, too generic. You need to identify and eliminate false positives. You may also end up in a position where you come across a large number of hits. In this case, you should prioritize the ones you will focus on, ideally those that can provide you with new leads after a potential forensic analysis.
+
+#### Data Collection & Analysis from the new Leads & Impacted Systems
+
+Once you have identified system that include your IOCs, you will want to collect and preserve the state of those systems for further analysis in order to uncover new leads and/or answer investigative questions about the incident. Depending on the system, there are multiple approaches to how and what data to collect. Sometimes you want to perform a "live response" on a system as it is running, while in other cases you may want to shut down a system and then perform any analysis on it. Live response is the most common approach, where you collect a predefined set of data that is usually rich in artifacts that may explain what happened to a system. Shutting down a system is not an easy decision when it comes to preserving valuable information, because, in many cases, much of the artifacts will only live within the RAM memory of the machine, which will be lost if the machine is turned off. Regardless of the collection approach you choose, it is vital to ensure that minimal interaction with the system occurs to avoid altering any evidence or artifacts.
+
+Once the data has been collected, it is time to analyze it. This is often the most time-consuming process during an incident. Malware analysis and disk forensics are the most common examination types. Any newly discovered and validated leads are added to the timeline, which is constantly updated. Also note that memory forensics is a capability that is becoming more popular and extremely relevant when dealing with advanced attacks.
+
+Keep in mind that during the data collection process, you should keep track of the chain of custody to ensure that the examined data is court-admissible if legal action is to be taken against an adversary.
