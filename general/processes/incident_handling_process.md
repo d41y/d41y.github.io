@@ -34,6 +34,10 @@
       - [Creation \& Usage of IOCs](#creation--usage-of-iocs)
       - [Identification of New Leads \& Impacted Systems](#identification-of-new-leads--impacted-systems)
       - [Data Collection \& Analysis from the new Leads \& Impacted Systems](#data-collection--analysis-from-the-new-leads--impacted-systems)
+    - [Containment, Eradication, \& Recovery Stage](#containment-eradication--recovery-stage)
+      - [Containment](#containment)
+      - [Eradication](#eradication)
+      - [Recovery](#recovery)
 
 ---
 
@@ -359,3 +363,30 @@ Once you have identified system that include your IOCs, you will want to collect
 Once the data has been collected, it is time to analyze it. This is often the most time-consuming process during an incident. Malware analysis and disk forensics are the most common examination types. Any newly discovered and validated leads are added to the timeline, which is constantly updated. Also note that memory forensics is a capability that is becoming more popular and extremely relevant when dealing with advanced attacks.
 
 Keep in mind that during the data collection process, you should keep track of the chain of custody to ensure that the examined data is court-admissible if legal action is to be taken against an adversary.
+
+### Containment, Eradication, & Recovery Stage
+
+When the investigation is complete and you have understood the type of incident and the impact on the business, it is time to enter the containment stage to prevent the incident from causing more damage.
+
+#### Containment
+
+In this stage, you take action to prevent the spread of the incident. You divide the actions into short-term containment and long-term containment. It is important that containment actions are coordinated and executed across all systems simultaneously. Otherwise, you risk notifying attackers that you after them, in which case they might change their techniques and tools in order to persist in the environment.
+
+In short-term containment, the actions taken leave a minimal footprint on the systems on which they occur. Some of these actions can include, placing a system in e separate/isolated VLAN, pulling the network cable out of the system(s) or modifying the attacker's C2 DNS name to a system under your control or to a non-existing one. The actions here contain the damage and provide time to develop a more concrete remediation strategy. Additionally, since you keep the systems unaltered, you have the oppurtunity to take forensic images and preserve eivdence if this wasn't already done during the investigation. If a short-term containment action requires shutting down a system, you have to ensure that this is communicated to the business and appropriate permissions are granted.
+
+In long-term containment actions, you focus on persistent actions and changes. These can include changing user passwords, applying firewall rules, inserting a host intrusion detection system, applying a system patch, and shutting down systems. While doing these activities, you should keep the business and the relevant stakeholders updated. Bear in mind that just because a system is now patched does not mean that the incident is over. Eradication, recovery, and post-incident activities are still pending.
+
+#### Eradication
+
+Once the incident is contained, eradication is necessary to eliminate both the root cause of the incident and what is left of it to ensure that the adversary is out of the systems and network. Some of the activities in this stage include removing the detected malware from systems, rebuilding some systems, and restoring others from backup. During the eradication stage, you may extend the previously performed containment activities by applying additional patches, which were not immediately required. Additional system-hardening activities are often performed during the eradication stage.
+
+#### Recovery
+
+In the recovery stage, you bring systems back to normal operation. Of course, the business needs to verify that a system is in fact working as expected and that it contains all the necessary data. When everything is verified, these systems are brought into the production environment. All restored systems will be subject to heavy logging and monitoring after an incident, as compromised systems tend to be targets again if the adversary regains access to the environment in a short period of time. Typical suspicious events to monitor are:
+
+- unusual logons
+- unusual processes
+- changes to the registry
+
+The recovery stage in some large incidents may take months, since it is often approached in phases. During the early phases, the focus is on increasing overall security to prevent future incidents through quick wins and the elimation of low-hanging fruits. The later phases focus on permanent, long-term changes to keep the organization as secure as possible.
+
