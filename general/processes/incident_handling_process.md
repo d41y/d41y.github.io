@@ -38,6 +38,8 @@
       - [Containment](#containment)
       - [Eradication](#eradication)
       - [Recovery](#recovery)
+    - [Post-Incident Stage](#post-incident-stage)
+      - [Reporting](#reporting)
 
 ---
 
@@ -390,3 +392,19 @@ In the recovery stage, you bring systems back to normal operation. Of course, th
 
 The recovery stage in some large incidents may take months, since it is often approached in phases. During the early phases, the focus is on increasing overall security to prevent future incidents through quick wins and the elimation of low-hanging fruits. The later phases focus on permanent, long-term changes to keep the organization as secure as possible.
 
+### Post-Incident Stage
+
+In this stage, your objective is to document the incident and improve your capabilities based on lessons learned from it. This stage gives you an oppurtunity to reflect on the threat by understanding what occurred, what you did, and how your actions and activities worked out. This information is best gathered and analyzed in a meeting with all stakeholders that were involved during the incident. It generally takes place within a few days after the incident, when the incident report has been finalized.
+
+#### Reporting
+
+The final report is a crucial part of the entire process. A complete report will contain answers to questions such as:
+
+- What happened and when?
+- Performance of the team dealing with the incident in regard to plans, playbooks, policies and procedures
+- Did the business provide the necessary information and respond promptly to aid in handling the incident in an efficient manner? What can be improved?
+- What actions have been implemented to contain and eridicate the incident?
+- What preventive measures should be put in place to prevent similar incidents in the future?
+- What tools and resources are needed to detect and analyze similar incidents in the future?
+
+Such reports can eventually provide you with measurable results. For example, they can provide you with knowledge around how many incidents have been handled, how much time the team spends per incident, and the different actions that were performed during the handling process. Additionally, incident reports also provide a reference for handling future events of similar nature. In situations where legal action is to be taken, an incident report will also be used in court and as a source for identifying the costs and impact of incidents.
