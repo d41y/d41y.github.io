@@ -15,6 +15,9 @@
       - [Leverage KQL's Free Text Search](#leverage-kqls-free-text-search)
       - [Leverage Elastic's Documentation](#leverage-elastics-documentation)
     - [Elastic Common Schema (_ECS_)](#elastic-common-schema-ecs)
+  - [SOC](#soc)
+    - [What is a SOC?](#what-is-a-soc)
+    - [Roles within a SOC](#roles-within-a-soc)
 
 ---
 
@@ -176,3 +179,43 @@ It could be a good idea to first familiarize yourself with Elastic's comprehensi
 - **Better Visualization**: Consistent field naming conventions improve the efficacy of visualizations in Kibana. As all data sources adhere to the same schema, creating dashboards and visualizations becomes easier and more intuitive. This can help in spotting trends, identifying anomalies, and visualizing security incidents.
 - **Interoperability with Elastic Solutions**: Using ECS fields ensures full compatibility with advanced Elastic Stack features and solutions, such as Elastic Security, Elastic Observability, and Elastic Machine Learning. This allows for advanced threat hunting, anomaly detection, and performance monitoring.
 - **Future-proofing**: AS ECS is the foundational schema across the Elastic Stack, adopting ECS ensures future compatibility with enhancements and new features that are introduced into the Elastic ecosystem.
+
+## SOC
+
+### What is a SOC?
+
+A Security Operations Center (_SOC_) is an essential facility that houses a team of information security experts responsible for continuously monitoring and evaluating an organization's security status. The main objective of a SOC team is to identify, examine, and address cybersecurity incidents by employing a mix of technology solutions and a comprehensive set of procedures.
+
+The SOC team usually consists of proficient security analysts, engineers, and managers overseeing security operations. They collaborate closely with organization incident response teams to guarantee security concerns are promptly detected and resolved.
+
+Various technology solutions, such as SIEM systems systems, IDS/IPS, and Endpoint Detection and Response tools, are utilized by the SOC team to monitor and identify security threats. They also make use of threat intelligence and engage in threat hunting initiatives to proactively detect potential threats and vulns.
+
+Besides employing technology solutions, the SOC team follows a series of well-defined processes for addressing security incidents. These processes encompass incident triage, containment, elimination, and recovery. The SOC team cooperates closely with the incident response team to ensure proper handling of security incidents, safeguarding the organization's security stance.
+
+In summary, a SOC is a vital element of an organization's cybersecurity approach. It offers continuous monitoring and response capabilities, enabling organizations to promptly detect and address security incidents, minimizing the consequences of a security breach and decreasing the likelihood of future attacks.
+
+### Roles within a SOC
+
+| Role | Description |
+| ---- | ----------- |
+| SOC Director | Responsible for overall management and strategic planning of the SOC, including budgeting, staffing, and alignment with organizational security objectives. |
+| SOC Manager | Oversees day-to-day operations, manages the team, coordinates incident response efforts, and ensures smooth collaboration with other departments. |
+| Tier 1 Analyst | Monitors security alerts an events, triages potential incidents, and escalates them to higher tiers for further investigation. |
+| Tier 2 Analyst | Performs in-depth analysis of escalated incidents, identifies patterns and trends, and develops mitigation strategies to address security threats. |
+| Tier 3 Analyst | Provides advanced expertise in handling complex security incidents, conducts threat hunting activities, and collaborates with other teams to improve the organization's security posture. |
+| Detection Engineer | Is responsible for developing, implementing, and maintaining detection rules and signatures for security monitoring tools. They work closely with security analysts to identify gaps in detection coverage and continuously improve the organization's ability to detect and respond to threats. |
+| Incident Responder | Takes charge of active security incidents, carries out in-depth digital forensics and containment and remediation efforts, and collaborates with other teams to restore affected systems and prevent future consequences. |
+| Threat Intelligence Analyst | Gathers, analyzes, and disseminates threat intelligence data to help SOC team members better understand the threat landscape and proactively defend against emerging risks. |
+| Security Engineer | Develops, deploys, and maintains security tools, technologies, and infrastructure, and provides technical expertise to the SOC team. |
+| Compliance and Governance Specialist | Ensures that the organization's security practices and processes adhere to relevant industry standards, regulations, and best practices, and assis with audit and reporting requirements. |
+| Security Awareness and Training Coordinator | Develops and implements security training and awareness programs to educate employees about cybersecurity best practices and promote a culture of security within the requirements. |
+
+
+It is important to note that the specific roles and responsibilities within each tier can vary depending on the organization's size, industry, and specific security requirements.
+
+In general, the tiered structure can be described as follows:
+
+- **Tier 1 Analyst**: Also known as "first responders", these analysts monitor security events and alerts, perform initial triage, and escalate potential incidents to higher tiers for further investigation. Their main goal is to quickly identify and prioritize security incidents.
+- **Tier 2 Analysts**: These analysts are more experienced and perform deeper analysis of escalated incidents. They identify patterns and trends, develop mitigation strategies, and sometimes assist in incident response efforts. They may also be responsible for tuning security monitoring tools to reduce false positives and improve detection capabilities.
+- **Tier 3 Analysts**: Often considered the most experienced and knowledgeable analysts on the team, Tier 3 analysts handle the most complex and high-profile security incidents. They may also engage in proactive threat hunting, develop advanced detection and prevention strategies, and collaborate with other teams to improve the organization's overall security posture.
+
