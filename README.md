@@ -154,6 +154,10 @@ Web Service & API
 
 ## Network Traffic Analysis
 
+## SIEM
+
+- [0x00](./defend/siem/siem_fundamentals.md)
+
 </details>
 
 <br>

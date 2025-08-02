@@ -1,0 +1,178 @@
+- [Security Monitoring \& SIEM Fundamentals](#security-monitoring--siem-fundamentals)
+  - [SIEM](#siem)
+    - [What is SIEM?](#what-is-siem)
+    - [How does a SIEM Solution work?](#how-does-a-siem-solution-work)
+    - [Data Flows within a SIEM](#data-flows-within-a-siem)
+  - [Elastic Stack](#elastic-stack)
+    - [What is the Elastic Stack?](#what-is-the-elastic-stack)
+      - [Components](#components)
+        - [Elasticsearch](#elasticsearch)
+        - [Logstash](#logstash)
+        - [Kibana](#kibana)
+        - [Beats](#beats)
+    - [Elastic Stack as a SIEM Solution](#elastic-stack-as-a-siem-solution)
+    - [Identifying Available Data](#identifying-available-data)
+      - [Leverage KQL's Free Text Search](#leverage-kqls-free-text-search)
+      - [Leverage Elastic's Documentation](#leverage-elastics-documentation)
+    - [Elastic Common Schema (_ECS_)](#elastic-common-schema-ecs)
+
+---
+
+# Security Monitoring & SIEM Fundamentals
+
+## SIEM
+
+### What is SIEM?
+
+Security Information and Event Management (_SIEM_) encompasses the utilization of software offerings and solutions that merge the management of security data with the supervision of security events. These instruments facilitate real-time evaluations of alerts related to security, which are produced by network hardware and apps.
+
+SIEM tools posses an extensive range of core functionalities, such as the collection and administration of log events, the capacity to examine log events and supplementary data from various sources, as well as operational features like incident handling, visual summaries, and documentation.
+
+Employing SIEM innovations, IT personnel can detect cyberattacks at the time of or even prior to their occurrence, thereby enhancing the speed of their response during incident resolution. Consequently, SIEM plays an indispensable role in the effectiveness and ongoing supervision of a company's information security framework. It serves as the bedrock of an organization's security tactics, offering a holistic method for identifying and managing potential threats.
+
+### How does a SIEM Solution work?
+
+SIEM systems function by gathering data from a variety of sources, including PCs, network devices, servers, and more. This data is then standardized and consolidated to facilitate ease of analysis.
+
+SIEM platforms employ security experts who scrutinize the data in order to identify and detect potential threats. This procedure allows businesses to locate security breaches and examine alerts, offering crucial insights into the organization's security standing.
+
+Alerts notify Security Operations/Monitoring personnel that they must look into a possible security event or incident. These notifications are usually concise and inform staff of a specific attack targeting the organization's information systems. Alerts can be conveyed through multiple channels, such as emails, console pop-up messages, text messages, or phone calls to smartphones.
+
+SIEM systems generate a vast number of alerts owing to the substantial volume of events produced for each monitored platform. It is not unusual for an hourly log of events to range from hundreds to thousands. As a result, fine-tuning the SIEM for detecting and alerting on high-risk events is crucial.
+
+The capacity to accurately pinpoint high-risk events is what distinguishes SIEM from other network monitoring and detection tools, such as Intrusion Prevention Systems or Intrusion Detection Systems. SIEM does not supplant the logging capabilities of these devices; rather, it operates in conjunction with them by processing and amalgamating their log data to recognize events that could potentially lead to system exploitation. By integrating data from numerous sources, SIEM solutions deliver a holistic strategy for threat detection and management.
+
+### Data Flows within a SIEM
+
+1. SIEM solutions ingest logs from various data sources. Each SIEM tool possesses unique capabilities for collecting logs from different sources. This process is known as data ingestion or data collection.
+2. The gathered data is processed and normalized to be understood by the SIEM correlation engine. The raw data must be written or read in a format that can be comprehended by the SIEM and converted into a common format from various types of datasets. This process is called data normalization and data aggregation.
+3. Finally, the most crucial part of SIEM, where SOC teams utilize the normalized data collected by the SIEM to create various detection rules, dashboards, visualizations, alerts, and incidents. This enables the SOC team to identify potential security risks and respond swiftly to security incidents.
+
+## Elastic Stack
+
+### What is the Elastic Stack?
+
+The Elastic Stack, created by Elastic, is an open-source collection of mainly three apps (_Elasticsearch, Logstash, and Kibana_) that work in harmony to offer users comprehensive search and visualization capabilities for real-time analysis and exploration of log file sources.
+
+The high-level architecture of the Elastic stack can be enhanced in resource-intensive environments with the addition of Kafka, RabbitMQ, and Redis for buffering and resiliency, and nginx for security.
+
+#### Components
+
+##### Elasticsearch
+
+... is a distributed and JSON-based search engine, designed with RESTful APIs. As the core component of the Elastic Stack, it handles indexing, storing, and querying. Elasticsearch empowers users to conduct sophisticated queries and perform analytics operations on the log file records processed by Logstach.
+
+##### Logstash
+
+... is responsible for collecting, transforming, and transporting log file records. Its strength lies in its ability to consolidate data from various sources and normalize them. Logstash operates in three main areas:
+
+1. **Process input**: Logstah ingests log file records from remote locations, converting them into a format that machines can understand. It can receive records through different input methods, such as reading from a flat file, a TCP socket, or directly from syslog messages. After processing the input, Logstash proceeds to the next function.
+2. **Transform and enrich log records**: Logstash offers numerous ways to modify a log record's format and even content. Specifically, filter plugins can perform intermediary processing on an event, often based on a predefined condition. Once a log record is transformed, Logstash processes it further.
+3. **Send log records to Elasticsearch**: Logstash utilizes output plugins to transmit log records to Elasticsearch.
+
+##### Kibana
+
+... serves as the visualization tool for Elasticsearch documents. Users can view the data stored in Elasticsearch and execute queries through Kibana. Additionally, Kibana simplifies the comprehension of query results using tables, charts, and custom dashboards.
+
+##### Beats
+
+... is an additional component of the Elastic Stack. These lightweight, single-purpose data shippers are designed to be installed on remote machines to forward logs and metrics to either Logstash or Elasticsearch directly. Beats simplify the process of collecting data from various sources and ensure that the Elastic Stack receives the necessary information for analysis and visualization.
+
+### Elastic Stack as a SIEM Solution
+
+The Elastic Stack can be used as a SIEM solution to collect, store, analyze, and visualize security-related data from various sources.
+
+To implement the Elastic Stack as a SIEM solution, security-related data from various sources such as firewalls, IDS/IPS, and enpoints should be ingested into the Elastic Stack using Logstash. Elasticsearch should be configured to store and index the security data, and Kibana should be used to create custom dashboards and visualizations to provide insights into security-related events.
+
+To detect security-related incidents, Elasticsearch can be used to perform searches and correlations on the collected security data.
+
+As SOC analysts, you are likely to extensively use Kibana as your primary interface when working with the Elastic Stack. Therefore, it is essential to become proficient with its functionalities and features.
+
+Kibana Query Language (_KQL_) is a powerful and user-friendly query language designed specifically for searching and analyzing data in Kibana. It simplifies the process of extracting insights from your indexed Elasticsearch data, offering a more intuitive approach than Elasticsearch's Query DSL.
+
+- **Basic Structure**: KQL queries are composed of ```field:value``` pairs, with the field representing the data's attribute and the value presenting the date you're searching for.
+
+```
+event.code:4625
+```
+
+The KQL query ```event.code:4625``` filters data in Kibana to show events that have the Windows event code 4625. This Windows event code is associated with failed login attempts in a Windows OS.
+
+By using this query, SOC analysts can identify failed login attempts on Windows machines within the Elasticsearch index, and investigate the source of the attempts and potential security threats. This type of query can help identify brute force attacks, password guessing, and other suspicious activities related to login attempts on Windows systems.
+
+By further refining the query with additional conditions, such as the source IP address, username, or time range, SOC analysts can gain more specific insights and effectively investigate potential security incidents.
+
+- **Free Text Search**: KQL supports free text search, allowing you to search for a specific term across multiple fields without specifying a field name.
+
+```
+"svc-sql1"
+```
+
+This query returns records containing the string "svc-sql1" in any indexed field.
+
+- **Logical Operators**: KQL supports logical operators AND, OR, and NOT for contructing more complex queries, Parantheses can be used to group expressions and control the order of evaluation.
+
+```
+event.code:4625 AND winlog.event_data.SubStatus:0xC0000072
+```
+
+The KQL query ```event.code:4625 AND winlog.event_data.SubStatus:0xC0000072``` filters data in Kibana to show events that have the Windows event code 4625 and the SubStatus value of 0xC0000072.
+
+In Windows, the SubStatus value indicates the reason for a login failure. A SubStatus value of 0xC0000072 indicates that the account is currently disabled.
+
+By using this query, SOC analysts can identify failed login attempts against disabled accounts. Such a behavior requires further investigation, as the disabled account's credentials may have been identified somehow by an attacker.
+
+- **Comparison Operatos**: KQL supports various comparison operators such as ```,```, ```:>```, ```:>=```, ```:<```, ```:<=``` and ```:!```. These operators enable you to define precise conditions for matching field values.
+
+```
+event.code:4625 AND winlog.event_data.SubStatus:0xC0000072 AND @timestamp >= "2023-03-03T00:00:00.000Z" AND @timestamp <= "2023-03-06T23:59:59.999Z"
+```
+
+By using this query, SOC analysts can identify failed login attempts against disabled accounts that took place between March 3rd 2023 and March 6th 2023.
+
+- **Wildcards and RegEx**: KQL supports wildcards and RegEx to search for patterns in field values.
+
+```
+event.code:4625 AND user.name: admin*
+```
+
+The Kibana KQL query ```event.code:4625 AND user.name: admin*``` filters data in Kibana to show events that have the Windows event code 4625 and where the username starts with "admin", such as "admin", "administrator", "admin123", etc.
+
+This query can be useful in identifying potentially malicious login attempts targeted at administrator accounts.
+
+### Identifying Available Data
+
+#### Leverage KQL's Free Text Search
+
+Using the "Discover" feature, you can effortlessly explore and sift through the available data, as well as gain insights into the architecture of the available fields, before you start constructing KQL queries.
+
+- By using a search engine for the Windows event logs that are associated with failed login attempts, you will come across resources such as [https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4625](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4625)
+- Using KQL's free text search you can search for ```4625```. In the returned records you notice ```event.code:4625```, ```winlog.event_id:4625```, and ```@timestamp```
+  - ```event.code``` is related to the Elastic Common Schema (_ECS_)
+  - ```winlog.event_id``` is related to Winlogbeat
+  - If the organization you work for is using the Elastic Stack across all offices and security departments, it is preferred that you use the ECS fields in your queries
+  - ```@timestamp``` typically contains the time extracted from the original event and it is different from ```event.created```
+  - When it comes to disabled accounts, the aforementioned resource informs you that a SubStatus value of 0xC0000072 inside a 4625 Windows event log indicates that the account is currently disabled. Again using KQL's free text search you can search for ```0xC0000072```. By expanding the returned record you notice ```winlog.event_data.SubStatus``` that is related to Winlogbeat.
+
+#### Leverage Elastic's Documentation
+
+It could be a good idea to first familiarize yourself with Elastic's comprehensive documentation before delving into the "Discover" feature. The documentation provides a wealth of information on the different types of fields you may encounter. Some good resources to start with are:
+
+- Elastic Common Schema
+- Elastic Common Schema event fields
+- Winlogbeat fields
+- Winlogbeat ECS fields
+- Winlogbeat security module fields
+- Filebeat fields
+- Filebeat ECS fields
+
+### Elastic Common Schema (_ECS_)
+
+... is a shared and extensible vocabulary for events and logs across the Elastic Stack, which ensures consistent field formats across different data sources. When it comes to KQL searches within the Elastic Stack, using ECS fields presents several key advantages:
+
+- **Unified Data View**: ECS enforces a structured and consistent approach to data, allowing for unified views across multiple data sources. For instance, data originating from Windows logs, network traffic, endpoint events, or cloud-based data sources can all be searched and correlated using the same field names.
+- **Improved Search Efficieny**: By standardizing the field names across different data types, ECS simplifies the process of writing queries in KQL. This means that analysts can efficiently construct queries without needing to remember specific field names for each data source.
+- **Enhanced Correlations**: ECS allows for easier correlation of events across different sources, which is pivotal in cybersecurity investigations. For example, you can correlate an IP address involved in a security incident with network traffic logs, firewall logs, and endpoint data to gain a more comprehensive understanding of the incident.
+- **Better Visualization**: Consistent field naming conventions improve the efficacy of visualizations in Kibana. As all data sources adhere to the same schema, creating dashboards and visualizations becomes easier and more intuitive. This can help in spotting trends, identifying anomalies, and visualizing security incidents.
+- **Interoperability with Elastic Solutions**: Using ECS fields ensures full compatibility with advanced Elastic Stack features and solutions, such as Elastic Security, Elastic Observability, and Elastic Machine Learning. This allows for advanced threat hunting, anomaly detection, and performance monitoring.
+- **Future-proofing**: AS ECS is the foundational schema across the Elastic Stack, adopting ECS ensures future compatibility with enhancements and new features that are introduced into the Elastic ecosystem.
