@@ -18,6 +18,9 @@
   - [SOC](#soc)
     - [What is a SOC?](#what-is-a-soc)
     - [Roles within a SOC](#roles-within-a-soc)
+  - [MITRE ATT\&CK](#mitre-attck)
+    - [What is MITRE ATT\&CK?](#what-is-mitre-attck)
+    - [Use Case in Security Operations](#use-case-in-security-operations)
 
 ---
 
@@ -218,4 +221,25 @@ In general, the tiered structure can be described as follows:
 - **Tier 1 Analyst**: Also known as "first responders", these analysts monitor security events and alerts, perform initial triage, and escalate potential incidents to higher tiers for further investigation. Their main goal is to quickly identify and prioritize security incidents.
 - **Tier 2 Analysts**: These analysts are more experienced and perform deeper analysis of escalated incidents. They identify patterns and trends, develop mitigation strategies, and sometimes assist in incident response efforts. They may also be responsible for tuning security monitoring tools to reduce false positives and improve detection capabilities.
 - **Tier 3 Analysts**: Often considered the most experienced and knowledgeable analysts on the team, Tier 3 analysts handle the most complex and high-profile security incidents. They may also engage in proactive threat hunting, develop advanced detection and prevention strategies, and collaborate with other teams to improve the organization's overall security posture.
+
+## MITRE ATT&CK
+
+### What is MITRE ATT&CK?
+
+The MITRE ATT&CK framework serves as an extensive, regularly updated resource outlining the tactics, techniques, and procedures employed by cyber threat actors. This structured methodology assists cybersecurity experts in comprehending, identifying, and reacting to threats more proactively and knowledgeably.
+
+The ATT&CK framework compromises matrices tailored to various computing contexts, such as enterprise, mobile, or cloud systems. Each matrix links the tactics and techniques to distinct TTPs. This linkage allows security teams to methodically examine and predict attacker activities.
+
+### Use Case in Security Operations
+
+The MITRE ATT&CK framework not only serves as a comprehensive resource for understanding adversarial tactics, techniques, and procedures, but it also plays a crucial role in several aspects of SOC. These include:
+
+- **Detection and Response**: The framework supports SOCs in devising detection and response plans based on recognized attacker TTPs, empowering security teams to pinpoint potential dangers and develop proactive countermeasures.
+- **Security Evaluation and Gap Analysis**: Organizations can leverage the ATT&CK framework to identify the strengths and weaknesses of their security posture, subsequently prioritizing security control investments to effectively defend against releveant threats.
+- **SOC Maturity Assessment**: The ATT&CK framework enables organizations to assess their SOC maturity by measuring their ability to detect, respond to, and mitigate various TTPs. This assessment assists in identifying areas for improvement and prioritizing resources to strengthen the overall security posture.
+- **Threat Intelligence**: The framework offers a unified language and format to describe adversarial actions, enabling organizations to bolster their threat intelligence and improve collaboration among internal teams or with external stakeholder.
+- **Cyber Threat Intelligence Enrichment**: Leveraging the ATT&CK framework can help organizations enrich their cyber threat intelligence by providing context on attacker TTPs, as well as insights into potential targets and indicators of compromise. This enrichment allows for more informed decision-making and effective threat mitigation strategies.
+- **Behavioral Analytics Development**: By mapping the TTPs outlined in the ATT&CK framework to specific user and system behaviors, organizations can develop behavioral analytics models to identify anomalous activities indicative of potential threats. This approach enhances detection capabilities and helps security teams proactively mitigate risks.
+- **Red Teaming and Pentesting**: The ATT&CK framework presents a systematic way to replicate genuine attacker techniques during red teaming exercises and pentests, ultimately assessing an organization's defensive capabilities.
+- **Training and Education**: The comprehensive and well-organized nature of the ATT&CK framework makes it an exceptional resource for training and educating security professionals on the latest adversarial tactics and methods.
 
