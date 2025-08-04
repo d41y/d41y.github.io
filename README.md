@@ -201,6 +201,9 @@ Non-Relational
 
 ## Elastic Stack
 
+Elasticsearch Engineer
+- [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
+
 ## Networking
 
 [0x00](./general/networking/networking_introduction.md)
