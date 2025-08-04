@@ -365,3 +365,4 @@ POST comments/_bulk
 - Elastic Stack works well with either type of data
 
 
+**DO LABS 1.1 AND 1.2 FIRST**
