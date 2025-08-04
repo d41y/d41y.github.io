@@ -148,15 +148,22 @@ Web Service & API
 <summary>
 </summary>
 
-## Forensics
+## Digital Forensics
+
+Disk Forensic
+- [Windows Event Logs]()
+
+Memory Forensic
+
+Network Forensic
 
 ## Malware Analysis
-
-## Network Traffic Analysis
 
 ## SIEM
 
 - [0x00](./defend/siem/siem_fundamentals.md)
+
+## Threat Hunting
 
 </details>
 
@@ -191,6 +198,8 @@ Relational
 Non-Relational
 
 - [Neo4J]()
+
+## Elastic Stack
 
 ## Networking
 
