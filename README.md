@@ -150,12 +150,12 @@ Web Service & API
 
 ## Digital Forensics
 
-Disk Forensic
+Disk Forensics
 - [Windows Event Logs]()
 
-Memory Forensic
+Memory Forensics
 
-Network Forensic
+Network Forensics
 
 ## Malware Analysis
 
