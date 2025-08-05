@@ -27,6 +27,19 @@
     - [Bulk API Example](#bulk-api-example)
     - [Upload a File in Kibana](#upload-a-file-in-kibana)
     - [Understanding Data](#understanding-data)
+  - [Searching Data](#searching-data)
+    - [Different Use Cases](#different-use-cases)
+    - [Query Languages](#query-languages)
+    - [Basic Structure of Search](#basic-structure-of-search)
+    - [Using Query DSL](#using-query-dsl)
+    - [match\_all query](#match_all-query)
+    - [Aggregations](#aggregations)
+      - [Aggregating Data](#aggregating-data)
+    - [ES|QL](#esql)
+      - [Query](#query)
+      - [Running an ES|QL Query in Dev Tools](#running-an-esql-query-in-dev-tools)
+      - [Running an ES|QL Query in Discover](#running-an-esql-query-in-discover)
+      - [Examples](#examples)
 
 ---
 
@@ -365,4 +378,147 @@ POST comments/_bulk
 - Elastic Stack works well with either type of data
 
 
-**DO LABS 1.1 AND 1.2 FIRST**
+## Searching Data
+
+### Different Use Cases
+
+- **Search**
+  - Typically uses human generated, error-prone data
+  - Often uses free-form text fields for anybody to type anything
+- **Observability**:
+  - Need to analyze HUGE amounts of data in real-time
+  - Ingest load can vary
+- **Security**:
+  - Collect data from MANY different sources with different data formats
+
+### Query Languages
+
+Several to choose from:
+
+- KQL
+- Lucene
+- ES|QL
+- Query DSL
+- Elasticsearch SQL
+- EQL
+
+### Basic Structure of Search
+
+- In Elasticsearch, search breaks down into two basic parts:
+  - **Queries**
+    - Which documents meet a specific set of criteria?
+  - **Aggregations**
+    - Tell me something about a group of documents
+
+### Using Query DSL
+
+- Send a request using the search API:
+  - GET \<index\>/_search
+
+### match_all query
+
+- is the default request for the search API
+  - Every document is a hit for this search
+  - Elasticsearch returns 10 hits by default
+
+### Aggregations
+
+- Visualizations on a Kibana dashboard are powered by aggregations
+
+#### Aggregating Data
+
+Request:
+
+```
+GET blogs/_search
+{
+  "aggs": {
+    "first_blog": {
+      "min": {
+        "field": "publish_date"
+      }
+    }
+  }
+}
+```
+
+Response:
+
+```json
+{
+  ...
+  "aggregations": {
+    "first_blog": {
+      "value": 1265658554000,
+      "value_as_string": "2010-02-08T19:49:14.000Z"
+    }
+  }
+}
+```
+
+### ES|QL
+
+- A piped query language that delivers advanced search capabilities
+  - Streamlines searching, aggregating, and visualizing large data sets
+  - Brings together the capabilties of multiple languages (_Query DSL, KQL, EQL, Lucene, SQL, ..._)
+- Powered by a dedicated query engine with concurrent processing
+  - Designed for performance
+  - Enhances speed and efficiency irrespective of data source and structure
+
+#### Query
+
+- Composed of a series of commands chained together by pipes
+
+#### Running an ES|QL Query in Dev Tools
+
+- Wrap the query in a POST request to the query API
+  - By default, results are returned as a JSON object
+  - Use the ```format``` option to retrieve the results in alternative formats
+
+Request:
+
+```
+POST /_query
+{
+"query": "FROM blogs | KEEP publish_date, authors.full_name | SORT (publish_date)"
+}
+```
+
+Request with ```format```:
+
+```
+POST /_query?format=csv
+{
+  "query": """
+      FROM blogs
+        | KEEP publish_date, authors.first_name, authors.last_name
+        | SORT (publish_date)
+  “””
+}
+```
+
+#### Running an ES|QL Query in Discover
+
+1. Select ```Language ES|QL``` in the ```Data View``` pull-down
+2. Expand the query editor to enter multiline commands
+3. Click the ```Run button``` or type ```command/alt-Enter``` to run the query
+
+#### Examples
+
+```
+FROM blogs
+| KEEP publish_date, authors.first_name, authors.last_name
+```
+
+```
+FROM blogs
+| WHERE authors.last_name.keyword == "Kearns"
+| KEEP publish_date, authors.first_name, authors.last_name
+```
+
+```
+FROM blogs
+| STATS count = COUNT(*) BY authors.last_name.keyword
+| SORT count DESC
+| LIMIT 10
+```
