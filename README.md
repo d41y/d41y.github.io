@@ -203,6 +203,7 @@ Non-Relational
 
 Elasticsearch Engineer
 - [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
+- [Data Modelling](./general/elastic_stack/elasticsearch_engineer/data_modelling.md)
 
 ## Networking
 
