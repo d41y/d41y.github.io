@@ -3,6 +3,11 @@
     - [Anatomy of an Event Log](#anatomy-of-an-event-log)
     - [Leveraging Custom XML Queries](#leveraging-custom-xml-queries)
     - [Useful Windows Event Logs](#useful-windows-event-logs)
+    - [Sysmon \& Event Logs](#sysmon--event-logs)
+      - [Sysmon Basics](#sysmon-basics)
+      - [Detection Example 1: Detecting DLL Hijacking](#detection-example-1-detecting-dll-hijacking)
+      - [Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection](#detection-example-2-detecting-unmanaged-powershellc-sharp-injection)
+      - [Detection Example 3: Detecting Credential Dumping](#detection-example-3-detecting-credential-dumping)
 
 ---
 
@@ -111,3 +116,139 @@ A comprehensive list of privileges can be found in the documentation on [privile
 
 ... can be found [here](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/).
 
+### Sysmon & Event Logs
+
+#### Sysmon Basics
+
+System Monitor (_Sysmon_) is a Windows system service and device driver that remains resident across system reboots to monitor and log systems to the Windows event log. Sysmon provides detailed information about process creation, network connections, changes to file creation time, and more.
+
+Sysmon's primary components include:
+
+- A windows service for monitoring system activity.
+- A device driver that assists in capturing the system activity data.
+- An event log to display captured activity data.
+
+Sysmon's unique capability lies in its ability to log information that typically doesn't appear in the Security Event logs, and this makes it a powerful tool for deep system monitoring and cybersecurity forensic analysis.
+
+Sysmon categorizes different types of system activity using event IDs, where each ID corresponds to a specific type of event. The full list of Sysmon event IDs can be found [here](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon).
+
+For more granular control over what events get logged, Sysmon uses an XML-based configuration file. This file allows you to include or exclude certain types of events based on different attributes like process names, IP addresses, etc. You can refer to popular examples of useful Sysmon config files:
+
+- for a comprehensive config, you can visit [this](https://github.com/SwiftOnSecurity/sysmon-config)
+- another option is [this](https://github.com/olafhartong/sysmon-modular), which provides a modular approach
+
+To get started, you can install Sysmon by downloading it from the [official Microsoft doc](https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon). Once downloaded, open an administrator command prompt and execute the following command to install Sysmon:
+
+```
+C:\Tools\Sysmon> sysmon.exe -i -accepteula -h md5,sha256,imphash -l -n
+```
+
+To utilize a custom Sysmon config, execute the following after installing Sysmon:
+
+```
+C:\Tools\Sysmon> sysmon.exe -c filename.xml
+```
+
+#### Detection Example 1: Detecting DLL Hijacking
+
+To detect a DLL hijack, you need to focus on Event Type 7, which corresponds to module load events. To achieve this, you need to modify the ```sysmonconfig-export.xml``` Sysmon config file you dowloaded from the link above.
+
+By examining the modified config, you can observe that the "include" comment signifies events that should be included.
+
+![windows event logs 15](../../images/windows_event_logs15.png)
+
+In the case of detecting DLL hijacks, you change the "include" to "exclude" to ensure that nothing is excluded, allowing you to capture the necessary data.
+
+To utilize the updated Sysmon config, execute the following:
+
+```
+C:\Tools\Sysmon> sysmon.exe -c sysmonconfig-export.xml
+```
+
+With the modified Sysmon config, you can start observing image load events. To view these events, navigate to the Event Viewer and access "Applications and Services" -> "Microsoft" -> "Windows" -> "Systmon". A quick chck will reveal the presence of the targeted event ID.
+
+![windows event logs 16](../../images/windows_event_logs16.png)
+
+Now see how a Sysmon event ID 7 looks like.
+
+![windows event logs 17](../../images/windows_event_logs17.png)
+
+The event log contains the DLL's signing status, the process or image responsible for loading the DLL, and the specific DLL that was loaded. In your example, you observe that "MMC.exe" loaded "psapi.dll", which is also Microsoft-signed. Both files are located in the System32 directory.
+
+**To build a detection mechanism**: Research is needed. You stumble upon an informative [blog post](https://www.wietzebeukema.nl/blog/hijacking-dlls-in-windows) that provides an exhaustive list of various DLL hijack techniques. For example:
+
+![windows event logs 18](../../images/windows_event_logs18.png)
+
+**Recreation (_using "calc.exe" and "WININET.dll"_)**: You can utilize Stephen Fewer's "hello world" [reflective DLL](https://github.com/stephenfewer/ReflectiveDLLInjection/tree/master/bin). It should be noted that DLL hijacking does not require reflective DLLs.
+
+by following the required steps, which involve renaming ```reflective_dll.x64.dll``` to ```WININET.dll```, moving ```calc.exe``` from ```C:\Windows\System32``` along with ```WININET.dll``` to a writable directory, and executing ```calc.exe```, you achieve success. Instead of the Calculator app, a MessageBox is displayed.
+
+![windows event logs 19](../../images/windows_event_logs19.png)
+
+Next, you analyze the impact of the hijack. First, you filter the event logs to focus on Event ID 7, which represents module load events, by clicking "Filter Current Log...".
+
+![windows event logs 20](../../images/windows_event_logs20.png)
+
+Subsequently, you search for instances of "calc.exe", by clicking "Find ...", to identify the DLL load associated with your hijack.
+
+![windows event logs 21](../../images/windows_event_logs21.png)
+
+The output from Sysmon provides valuable insights. Now, you can observe several indicators of compromise to create effective detection rules. Before moving forward though, compare this to an authenticate load of "wininet.dll" by "calc.exe".
+
+![windows event logs 22](../../images/windows_event_logs22.png)
+
+Exploring these IOCs:
+
+1. "calc.exe", originally located in System32, should not be found in a writable directory. Therefore, a copy of "calc.exe" in a writable directory serves as an IOC, as it should always reside in System32 or potentially Syswow64.
+2. "WININET.dll", originally located in System32, should not be loaded outside of System32 by calc.exe. If instances of "WININET.dll" loading occur outside of System32 with "calc.exe" as the parent process, it indicates a DLL hijack within calc.exe. While caution is necessary when alerting on all instances of "WININET.dll" loading outside of System32, in the case of "calc.exe", you can confidently assert a hijack due to the DLL's unchanging name, which attackers cannot modify to evade detection.
+3. The original "WININET.dll" is Microsoft-signed, while your injected DLL remains unsigned.
+
+These three powerful IOCs provide an effective means of detecting a DLL hijack involving calc.exe. It's important to note that while Sysmon and event logs offer valuable telemetry for hunting and creating alert rules, they are not the sole sources of information.
+
+#### Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection
+
+C# is considered a "managed" language, meaning it requires a backend runtime to execute its code. The Common Language Runtime (_CLR_) serves as this runtime environment. Managed code does not directly run as assembly; instead, it is compiled inty a bytecode format that the runtime processes and executes. Consequently, a managed process relies on the CLR to execute C# code.
+
+As defenders, you can leverage this knowledge to detect unusual C# injections or executions within your environment. To accomplish this, you can utilize a useful utility called [Process Hacker](C:\Windows\System32).
+
+![windows event logs 23](../../images/windows_event_logs23.png)
+
+By using Process Hacker, you can observe a range of processes within your environment. Sorting the processes by name, you can identify color-coded distinctions. Notably, "powershell.exe", a managed process, is highlighted in green compared to other processes. Hovering over "powershell.exe" reveals the label "Process is managed (_.NET_)," confirming its managed status.
+
+![windows event logs 24](../../images/windows_event_logs24.png)
+
+Examining the module loads for ```powershell.exe```, by right-clicking on ```powershell.exe```, clicking "Properties", and navigating to "Modules", you can find relevant information.
+
+![windows event logs 25](../../images/windows_event_logs25.png)
+
+The presence of "Microsoft .NET Runtime ...", ```clr.dll```, and ```clrjit.dll``` should attract your attention. These 2 DLLs are used when C# code is ran as part of the runtime to execute the bytecode. If you observe these DLLs loaded in processes that typically to not reuqire them, it suggests a potential execute-assembly or unmanaged PowerShell injection attack.
+
+To showcase unmanaged PowerShell injection, you can inject an unmanaged PowerShell-like DLL into a random process, such as ```spoolsv.exe```. You can do that by utilizing the [PSInject project](https://github.com/EmpireProject/PSInject) in the following manner:
+
+```ps
+powershell -ep bypass
+Import-Module .\Invoke-PSInject.ps1
+Invoke-PSInject -ProcId [Process ID of spoolsv.exe] -PoshCode "V3JpdGUtSG9zdCAiSGVsbG8sIEd1cnU5OSEi"
+```
+
+![windows event logs 26](../../images/windows_event_logs26.png)
+
+After the injection, you observe that "spoolsv.exe" transitions from an unmanaged to a managed state.
+
+![windows event logs 27](../../images/windows_event_logs27.png)
+
+Additionally, by referring to both the related "Modules" tab of Process Hacker and Sysmon Event ID 7, you can examine the DLL load information to validate the presence of the aforementioned DLLs.
+
+![windows event logs 28](../../images/windows_event_logs28.png)
+
+![windows event logs 29](../../images/windows_event_logs29.png)
+
+#### Detection Example 3: Detecting Credential Dumping
+
+Another critical aspect of cybersecurity is detecting credential dumping activities. One widely used tool for credential dumping is Mimikatz, offering various methods for extracting Windows credentials. One specifc command, ```sekurlsa::logonpasswords```, enables the dumping of password hashes or plaintext passwords by accessing the Local Security Authority Subsystem Service. LSASS is responsible for managing user credentials and is a primary target for credential-dumping tools like Mimikatz.
+
+To detect this activity, you can rely on a different Sysmon event. Instead of focusing on DLL loads, you shift your attention to process access events. By checking Sysmon Event ID 10, which represents "ProcessAccess" events, you can identify any suspicious attempts to access LSASS.
+
+![windows event logs 30](../../images/windows_event_logs30.png)
+
+For instance, if you observe a random file (_"AgentEXE" in this case_) from a random folder attempting to access LSASS, it indicates unusual behavior. Additionally, the ```SourceUser``` being different from the ```TargetUser``` further emphasizes the abnormality. It's also worth noting that as part of the mimikatz-based credential dumping process, the user must request SeDebugPrivileges. As the name suggests, it's primarily used for debugging. This can be another IOC.
