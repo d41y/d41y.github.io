@@ -3,11 +3,11 @@
     - [Anatomy of an Event Log](#anatomy-of-an-event-log)
     - [Leveraging Custom XML Queries](#leveraging-custom-xml-queries)
     - [Useful Windows Event Logs](#useful-windows-event-logs)
-    - [Sysmon \& Event Logs](#sysmon--event-logs)
-      - [Sysmon Basics](#sysmon-basics)
-      - [Detection Example 1: Detecting DLL Hijacking](#detection-example-1-detecting-dll-hijacking)
-      - [Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection](#detection-example-2-detecting-unmanaged-powershellc-sharp-injection)
-      - [Detection Example 3: Detecting Credential Dumping](#detection-example-3-detecting-credential-dumping)
+  - [Sysmon \& Event Logs](#sysmon--event-logs)
+    - [Sysmon Basics](#sysmon-basics)
+    - [Detection Example 1: Detecting DLL Hijacking](#detection-example-1-detecting-dll-hijacking)
+    - [Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection](#detection-example-2-detecting-unmanaged-powershellc-sharp-injection)
+    - [Detection Example 3: Detecting Credential Dumping](#detection-example-3-detecting-credential-dumping)
 
 ---
 
@@ -116,9 +116,9 @@ A comprehensive list of privileges can be found in the documentation on [privile
 
 ... can be found [here](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/).
 
-### Sysmon & Event Logs
+## Sysmon & Event Logs
 
-#### Sysmon Basics
+### Sysmon Basics
 
 System Monitor (_Sysmon_) is a Windows system service and device driver that remains resident across system reboots to monitor and log systems to the Windows event log. Sysmon provides detailed information about process creation, network connections, changes to file creation time, and more.
 
@@ -149,7 +149,7 @@ To utilize a custom Sysmon config, execute the following after installing Sysmon
 C:\Tools\Sysmon> sysmon.exe -c filename.xml
 ```
 
-#### Detection Example 1: Detecting DLL Hijacking
+### Detection Example 1: Detecting DLL Hijacking
 
 To detect a DLL hijack, you need to focus on Event Type 7, which corresponds to module load events. To achieve this, you need to modify the ```sysmonconfig-export.xml``` Sysmon config file you dowloaded from the link above.
 
@@ -205,7 +205,7 @@ Exploring these IOCs:
 
 These three powerful IOCs provide an effective means of detecting a DLL hijack involving calc.exe. It's important to note that while Sysmon and event logs offer valuable telemetry for hunting and creating alert rules, they are not the sole sources of information.
 
-#### Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection
+### Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection
 
 C# is considered a "managed" language, meaning it requires a backend runtime to execute its code. The Common Language Runtime (_CLR_) serves as this runtime environment. Managed code does not directly run as assembly; instead, it is compiled inty a bytecode format that the runtime processes and executes. Consequently, a managed process relies on the CLR to execute C# code.
 
@@ -243,7 +243,7 @@ Additionally, by referring to both the related "Modules" tab of Process Hacker a
 
 ![windows event logs 29](../../images/windows_event_logs29.png)
 
-#### Detection Example 3: Detecting Credential Dumping
+### Detection Example 3: Detecting Credential Dumping
 
 Another critical aspect of cybersecurity is detecting credential dumping activities. One widely used tool for credential dumping is Mimikatz, offering various methods for extracting Windows credentials. One specifc command, ```sekurlsa::logonpasswords```, enables the dumping of password hashes or plaintext passwords by accessing the Local Security Authority Subsystem Service. LSASS is responsible for managing user credentials and is a primary target for credential-dumping tools like Mimikatz.
 
