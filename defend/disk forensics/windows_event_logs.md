@@ -165,7 +165,7 @@ To utilize the updated Sysmon config, execute the following:
 C:\Tools\Sysmon> sysmon.exe -c sysmonconfig-export.xml
 ```
 
-With the modified Sysmon config, you can start observing image load events. To view these events, navigate to the Event Viewer and access "Applications and Services" -> "Microsoft" -> "Windows" -> "Systmon". A quick check will reveal the presence of the targeted event ID.
+With the modified Sysmon config, you can start observing image load events. To view these events, navigate to the Event Viewer and access "Applications and Services" -> "Microsoft" -> "Windows" -> "Sysmon". A quick check will reveal the presence of the targeted event ID.
 
 ![windows event logs 16](../../images/windows_event_logs16.png)
 
