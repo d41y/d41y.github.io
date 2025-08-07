@@ -27,6 +27,8 @@
 
 ## Hardware
 
+- [0x00](./attack/hardware/hardware_fundamentals.md)
+
 ## Initial Access
 
 - Attacks

@@ -312,7 +312,7 @@ Escalation ensures that critical alerts receive prompt attention and facilitates
 
 - Assess the need for additional context or missing information by consulting with IT operations or relevant departments:
   - Engage in discussions or meetings to gather insights on the affected systems, recent changes, or ongoing maintenance activities.
-  - Collaborate to understand any known issues, misconfigurations, or network changes that could potentially generate false-positive alerts.
+  - Collaborate to understand any known issues, misconfigurations, or network changes that could potentially generate false-positgitive alerts.
   - Gain a holistic understanding of the environment and any non-malicious activities that might have triggered the alert.
   - Document the insights and information obtained during the consultation.
 
