@@ -8,6 +8,8 @@
       - [NOR Gate](#nor-gate)
       - [XOR Gate](#xor-gate)
       - [XNOR Gate](#xnor-gate)
+  - [PJL Commands](#pjl-commands)
+    - [Basic Commands](#basic-commands)
   - [SAL Files](#sal-files)
     - [Analysis](#analysis)
     - [Handling Framing Errors](#handling-framing-errors)
@@ -121,6 +123,29 @@ They are constructed from so-called transistors. Transistors are electronic comp
 | 0 | 1 | 0 |
 | 1 | 0 | 0 |
 | 1 | 1 | 1 |
+
+## PJL Commands
+
+PJL stands for Printer Job Language developed by Hewlett-Packard. A documentation can be found [here](https://h10032.www1.hp.com/ctg/Manual/bpl13208.pdf). It allows:
+
+- Control print jobs
+- Query printer status, configurations
+- Switch between languages
+- Set environment variables
+- Manage print job separation
+
+### Basic Commands
+
+| Command | Description |
+| ------- | ----------- |
+| ```FSAPPEND``` | Appends data to an existing file or creates a new file. |
+| ```FSDELETE``` | Deletes printer mass storage files. |
+| ```FSDIRLIST``` | Lists PJL file system files and dirs. |
+| ```FSDOWNLOAD``` | Downloads files to the printer mass storage system. |
+| ```FSINIT``` | Initializes the printer mass storage file system. |
+| ```FSMKDIR``` | Creates a dir on the printer mass storage file system. |
+| ```FSQUERY``` | Queries existence if dirs and files and returns file size. |
+| ```FSUPLOAD``` | Uploads all or part of a file from the printer to the host. |
 
 ## SAL Files
 
