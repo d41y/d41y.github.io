@@ -105,6 +105,14 @@
         - [A faster Method: Using NetExec to capture NTDS.dit](#a-faster-method-using-netexec-to-capture-ntdsdit)
       - [Cracking Hashes and Gaining Credentials](#cracking-hashes-and-gaining-credentials)
       - [Pass the Hash (PtH) Considerations](#pass-the-hash-pth-considerations)
+    - [Credential Hunting](#credential-hunting)
+      - [Search-centric](#search-centric)
+        - [Key Terms to Search for](#key-terms-to-search-for)
+      - [Search Tools](#search-tools)
+        - [Windows Search](#windows-search)
+        - [LaZagne](#lazagne)
+        - [findstr](#findstr)
+      - [Additional Considerations](#additional-considerations)
 
 ---
 
@@ -2386,4 +2394,111 @@ You can still use hashes to attempt to authenticate with a system using a type o
 ```bash
 d41y@htb[/htb]$ evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b
 ```
+
+### Credential Hunting
+
+... is the process of performing detailed searches across the file system and through various applications to discover credentials.
+
+#### Search-centric
+
+Many of the tools available in Windows have search functionality. In this day and age, there are search-centric features built into most apps and OS, so you can use this to your advantage on an engagement. A user may have documented their passwords somewhere on the system. There may even be default credentials that could be found in various files. It would be wise to base your search for credentials on what you know about the target system is being used.
+
+##### Key Terms to Search for
+
+Some helpful key terms you can use that help you discover some credentials:
+
+- Passwords
+- Passphrases
+- Keys
+- Username
+- User account
+- Creds
+- Users
+- Passkeys
+- configuration
+- dbcredential
+- dbpassword
+- pwd
+- Login
+- Credentials
+
+#### Search Tools
+
+##### Windows Search
+
+With access to the GUI, it is worth attempting to use Windows Search to find files on the target using some of the keywords mentioned above.
+
+![password attacks 6](../../images/password_attacks_6.png)
+
+By default, it will search various OS settings and the file system for files and applications containing the key term entered in the search bar.
+
+##### [LaZagne](https://github.com/AlessandroZ/LaZagne)
+
+... is made up of modules which each target different software when looking for passwords.
+
+| Module | Description |
+| ------ | ----------- |
+| browsers | extracts passwords from various browsers including Chromium, Firefox, Microsoft Edge, and Opera |
+| chats | extracts passwords from various chat apps including Skype |
+| mails | searches through mailboxes for passwords including Outlook and Thunderbird |
+| memory | dumps passwords from memory, targeting KeePass and LSASS |
+| sysadmin | extracts passwords from the configuration files of various sysadmin tools like OpenVPN and WinSCP |
+| windows | extracts Windows-specific credentials targeting LSA secrets, Credential Manager, and more |
+| wifi | dumps WiFi credentials |
+
+It would be beneficial to keep a standalone copy of LaZagne on your attack host so you can quickly transfer it over to the target. LaZagne.exe will do just fine for you in this scenario.
+
+Once LaZagne.exe is on the target, you can open command prompt or PowerShell, navigate to the directory the file was uploaded to, and execute the following command:
+
+```
+C:\Users\bob\Desktop> start LaZagne.exe all
+```
+
+This will execute LaZagne and run all included modules. You can include the option ```-vv``` to study what it is doing in the background. Once you hit enter, it will open another prompt and display the results.
+
+```
+|====================================================================|
+|                                                                    |
+|                        The LaZagne Project                         |
+|                                                                    |
+|                          ! BANG BANG !                             |
+|                                                                    |
+|====================================================================|
+
+
+########## User: bob ##########
+
+------------------- Winscp passwords -----------------
+
+[+] Password found !!!
+URL: 10.129.202.51
+Login: admin
+Password: SteveisReallyCool123
+Port: 22
+```
+
+If you used the ```-vv``` option, you would see attempts to gather passwords from all LaZagne's supported software.
+
+##### findstr
+
+You can also use findstr to search from patterns across many types of files. Keeping in mind common key terms, you can use variations of this command to discover credentials on a Windows target:
+
+```
+C:\> findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml
+```
+
+#### Additional Considerations
+
+There are thousands of tools and key terms you could use to hunt for credentials on Windows OS. Know that which ones you choose to use will be primarily based on the function of the computer. If you land on a Windows Server, you may use a different approach than if you land on a Windows Desktop. Always be mindful of how the system is being used, and this will help you know where to look. Sometimes you may even be able to find credentials by navigating and listing dirs on the file system as your tools run.
+
+Here are some other places you should keep in mind when credential hunting:
+
+- passwords in Group Policy in the SYSVOL share
+- passwords in scripts in the SYSVOL share
+- passwords in web.config files on dev machines and IT shares
+- passwords in unattend.xml
+- passwords in the AD user or computer description fields
+- KeePass databases
+- Found on user systems and shares
+- Files with names like pass.txt, passwords.docx, passwords.xlsx found on user systems, shares, and Sharepoint
 
