@@ -113,6 +113,12 @@
         - [LaZagne](#lazagne)
         - [findstr](#findstr)
       - [Additional Considerations](#additional-considerations)
+  - [Linux Systems](#linux-systems)
+    - [Authentication Process](#authentication-process-1)
+      - [Passwd File](#passwd-file)
+      - [Shadow File](#shadow-file)
+      - [Opasswd](#opasswd)
+      - [Cracking Linux Credentials](#cracking-linux-credentials)
 
 ---
 
@@ -2502,3 +2508,119 @@ Here are some other places you should keep in mind when credential hunting:
 - Found on user systems and shares
 - Files with names like pass.txt, passwords.docx, passwords.xlsx found on user systems, shares, and Sharepoint
 
+## Linux Systems
+
+### Authentication Process
+
+Linux-based distributions support various authentication mechanisms. One of the most commonly used is Pluggable Authentication Modules (_PAM_). The modules responsible for this functionality, such as ```pam_unix.so``` or ```pam_unix2.so```, are typically located in ```/usr/lib/x86_64-linux-gnu/security/``` on Debian-based systems. These modules manage user information, authentication, sessions, and password changes. For example, when a user changes their password using the ```passwd``` command, PAM is invoked, which takes the appropriate precautions to handle and store the information accordingly.
+
+The ```pam_unix.so``` module uses standardized API calls from system libraries to update account information. The primary files it reads from and writes to are ```/etc/passwd``` and ```/etc/shadow```. PAM also includes many other services, such as those for LDAP, mount operations, and Kerberos authentication.
+
+#### Passwd File
+
+The ```/etc/passwd``` file contains information about every user on the system and is readable by all users and services. Each entry in the file corresponds to a single user and consists of seven fields, which store user-related data in a structured format. These fields are separated by ```:```.
+
+Example:
+
+```bash
+htb-student:x:1000:1000:,,,:/home/htb-student:/bin/bash
+```
+
+| Field | Value |
+| ----- | ----- |
+| Username | htb-student |
+| Password | x |
+| User ID | 1000 |
+| Group ID | 1000 |
+| GECOS | ,,, |
+| Home dir | /home/htb-student |
+| Default shell | /bin/bash |
+
+The most relevant field for your purposes is the password field, as it can obtain different types of entries. In rare cases this field may hold the actual password hash. On modern systems, however, password hashes are stored in the ```/etc/shadow``` file. Despite this, the ```/etc/passwd``` file is world-readable, giving attackers the ability to crack the passwords if hashes are stored here.
+
+Usually, you will find the value ```x``` in this field, indicating that the passwords are stored in a hashed form within the ```/etc/shadow``` file. However, it can also be that the ```/etc/shadow``` file is writeable by mistake. This would allow you to remove the password field for the root user entirely.
+
+```bash
+d41y@htb[/htb]$ head -n 1 /etc/passwd
+
+root::0:0:root:/root:/bin/bash
+```
+
+This results in no password prompt being displayed when attempting to log in as root.
+
+```bash
+d41y@htb[/htb]$ su
+
+root@htb[/htb]#
+```
+
+Although the scenarios described are rare, you should still pay attention and watch for potential security gaps, as there are apps that require specific permissions on entire folders. If the administrator has little experience with Linux, they might mistakenly assign write permissions to the ```/etc``` dir and fail to correct them later.
+
+#### Shadow File
+
+Since reading password hash values can put the entire system at risk, the ```/etc/shadow``` file was introduced. It has a similar format to ```/etc/passwd``` but is solely responsible for password storage and management. It contains all password information for created users. For example, if there is no entry in the ```/etc/shadow``` file for a user listed in ```/etc/passwd```, that user is considered invalid. The ```/etc/shadow``` file is also only readable by users with administrative privileges. The format of this file is divided into the following nine fields:
+
+```bash
+htb-student:$y$j9T$3QSBB6CbHEu...SNIP...f8Ms:18955:0:99999:7:::
+```
+
+| Field | Value |
+| ----- | ----- |
+| Username | htb-student |
+| Password | $y$j9T$3QSBB6CbHEu...SNIP...f8Ms |
+| Last change | 18955 |
+| Min age | 0 |
+| Max age | 99999 |
+| Warning period | 7 |
+| Inactivity period | - |
+| Expiration date | - |
+| Reserved field | - |
+
+If the password field contains a char such as ```!``` or ```*```, the user cannot log in using a Unix password. However, other authentication methods - such as Kerberos or key-based authenticatino - can still be used. The same applies if the password field is empty, meaning no password is required to login. This can lead to certain programs denying access to specific functions. The password field also follows a particular format, from which you can extract additional information.
+
+```
+$<id>$<salt>$<hashed>
+```
+
+As you can see here, the hashed passwords are divided into three parts. The ```ID``` value specifies which cryptographic hash algorithm was used, typically one of the following:
+
+| ID | Cryptographic Hash Algorithm |
+| -- | ---------------------------- |
+| 1 | MD5 |
+| 2a | Blowfish |
+| 5 | SHA-256 |
+| 6 | SHA-512 |
+| sha1 | SHA1crypt |
+| y | Yescrypt |
+| gy | Gost-yescrypt |
+| 7 | Scrypt |
+
+Many Linux distributions, including Debian, now use yescrypt as the default hashing algorithm. On older systems, however, you may still encounter other hashing methods that can potentially be cracked.
+
+#### Opasswd
+
+The PAM library (_pam\_unix.so_) can prevent users from reusing old passwords. These previous passwords are stored in the ```/etc/security/opasswd``` file. Administrator privileges are required to read this file, assuming its permissions have not been modified manually.
+
+```bash
+d41y@htb[/htb]$ sudo cat /etc/security/opasswd
+
+cry0l1t3:1000:2:$1$HjFAfYTG$qNDkF0zJ3v8ylCOrKB0kt0,$1$kcUjWZJX$E9uMSmiQeRh4pAAgzuvkq1
+```
+
+Looking at the contents of this file, you can see that it contains several entries for the user ```cry0l1t3```, separated by a comman. One critical detail to pay attention to is the type of hash that's been used. This is because the MD5 algorithm is significantly easier to crack than SHA-512. This is particularly important when identifying old passwords and recognizing patterns, as users often reuse similar passwords across multiple services or apps. Recognizing these patterns can greatly improve your chances of correctly guessing the password.
+
+#### Cracking Linux Credentials
+
+Once you have root access on a Linux machine, you can gather user password hashes and attempt to crack them using various methods to recover the plaintext passwords. To do this, you can use a tool called [unshadow](https://github.com/pmittaldev/john-the-ripper/blob/master/src/unshadow.c), which is included in John. It works by combining the ```passwd``` and ```shadow``` files into a single file suitable for cracking.
+
+```bash
+d41y@htb[/htb]$ sudo cp /etc/passwd /tmp/passwd.bak 
+d41y@htb[/htb]$ sudo cp /etc/shadow /tmp/shadow.bak 
+d41y@htb[/htb]$ unshadow /tmp/passwd.bak /tmp/shadow.bak > /tmp/unshadowed.hashes
+```
+
+This "unshadowed" file can now be attacked with either John or Hashcat.
+
+```bash
+d41y@htb[/htb]$ hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
+```
