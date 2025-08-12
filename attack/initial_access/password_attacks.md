@@ -133,6 +133,8 @@
         - [LaZagne](#lazagne-1)
         - [Browser Credentials](#browser-credentials)
   - [Extracting Passwords from the Network](#extracting-passwords-from-the-network)
+    - [Wireshark](#wireshark)
+    - [Pcredz](#pcredz)
 
 ---
 
@@ -3102,3 +3104,51 @@ elapsed time = 0.2310788631439209
 
 ## Extracting Passwords from the Network
 
+In today's security-conscious world, most applications wisely use TLS to encrypt sensitive data in trasnmit. However, not all environments are fully secured. Legacy systems, misconfigured services, or test apps launched without HTTPS can still result in the use of unencrypted protocols such as HTTP or SNMP. These gaps present a valuable opportunity for attackers: the chance to hunt for credentials in cleartext network traffic..
+
+### Wireshark
+
+In Wireshark it is possible to locate packets that contain specific bytes or strings. One way to do this is by using a display filter such as ```http contains "passw```. Alternatively, you can navigate to ```Edit > Find Packet``` and enter the desired search query manually.
+
+### [Pcredz](https://github.com/lgandx/PCredz)
+
+... is a tool that can be used to extract credentials from live traffic or network packet captures. Specifically, it supports extracting the following information:
+
+- Credit card numbers
+- POP credentials
+- SMTP credentials
+- IMAP credentials
+- SNMP credentials
+- FTP credentials
+- Credentials from HTTP NTLM/Basic headers, as well as HTTP Forms
+- Kerberos hashes
+
+The following command can be used to run Pcredz against a packet capture file:
+
+```bash
+d41y@htb[/htb]$ ./Pcredz -f demo.pcapng -t -v
+
+Pcredz 2.0.2
+Author: Laurent Gaffie
+Please send bugs/comments/pcaps to: laurent.gaffie@gmail.com
+This script will extract NTLM (HTTP,LDAP,SMB,MSSQL,RPC, etc), Kerberos,
+FTP, HTTP Basic and credit card data from a given pcap file or from a live interface.
+
+CC number scanning activated
+
+Unknown format, trying TCPDump format
+
+[1746131482.601354] protocol: udp 192.168.31.211:59022 > 192.168.31.238:161
+Found SNMPv2 Community string: s3cr...SNIP...
+
+[1746131482.601640] protocol: udp 192.168.31.211:59022 > 192.168.31.238:161
+Found SNMPv2 Community string: s3cr...SNIP...
+
+<SNIP>
+
+[1746131482.658938] protocol: tcp 192.168.31.243:55707 > 192.168.31.211:21
+FTP User: le...SNIP...
+FTP Pass: qw...SNIP...
+
+demo.pcapng parsed in: 1.82 seconds (File size 15.5 Mo).
+```
