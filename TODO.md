@@ -20,9 +20,7 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
   - Anpassen von mermaid
 
 - Module für CPTS
-  - Footprinting
   - OSINT Corporate Recon
-  - Shells & Payloads
   - Password Attacks
   - Attacking Common Services
   - Pivoting, Tunneling, Port Forwarding

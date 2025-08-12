@@ -1,5 +1,9 @@
 # Tools List
 
-| Tool | Description |
+| Tool | Description | Github | Note |
 | ---- | ----------- |
-| test | test |
+| Firefox Decrypt | test |  |  |
+| LaZagne |  |  |  |
+| mimipenguin |  |  |
+| Pcredz |  |  |
+| Trufflehog |  |  |  |
