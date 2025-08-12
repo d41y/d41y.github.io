@@ -4,6 +4,9 @@
 | ---- | ----------- | ------ | ---- |
 | Firefox Decrypt | test |  |  |
 | LaZagne |  |  |  |
-| mimipenguin |  |  |
-| Pcredz |  |  |
+| Manspider |  |  |  |
+| mimipenguin |  |  |  |
+| Pcredz |  |  |  |
+| PowerHuntShares |  |  |  |
+| Snaffler |  |  |  |
 | Trufflehog |  |  |  |
