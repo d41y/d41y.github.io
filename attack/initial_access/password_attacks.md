@@ -132,6 +132,7 @@
         - [Mimipenguin](#mimipenguin)
         - [LaZagne](#lazagne-1)
         - [Browser Credentials](#browser-credentials)
+  - [Extracting Passwords from the Network](#extracting-passwords-from-the-network)
 
 ---
 
@@ -3098,4 +3099,6 @@ For more information launch it again with the -v option
 
 elapsed time = 0.2310788631439209
 ```
+
+## Extracting Passwords from the Network
 
