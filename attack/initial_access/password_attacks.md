@@ -3309,3 +3309,5 @@ SMB         10.129.234.121  445    DC01             [*] Spidering .
 <SNIP>
 ```
 
+>[!TIP]
+> Use ```spider_plus``` to download all files matching the pattern. Look at [this](https://medium.com/@ravsau00/password-attacks-credential-hunting-in-network-shares-5bd37d2b120d).
