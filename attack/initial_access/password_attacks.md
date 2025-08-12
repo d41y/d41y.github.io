@@ -228,7 +228,7 @@ This mode is the most exhaustive, but also the most time-consuming. It generates
 d41y@htb[/htb]$ john --incremental <hash_file>
 ```
 
-by default, John uses predefined incremental modes specified in its config file (```john.conf```), which define character sets and password lengths. You can customize these or define your own to target passwords that use special characters or specific patterns.
+By default, John uses predefined incremental modes specified in its config file (```john.conf```), which define character sets and password lengths. You can customize these or define your own to target passwords that use special characters or specific patterns.
 
 ```bash
 d41y@htb[/htb]$ grep '# Incremental modes' -A 100 /etc/john/john.conf
