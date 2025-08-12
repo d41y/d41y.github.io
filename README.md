@@ -33,7 +33,7 @@
 
 - Attacks
   - [Applications]()
-  - [Passwords]()
+  - [Passwords](./attack/initial_access/password_attacks.md)
   - [Services]()
 - [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration](./attack/initial_access/footprinting.md#infrastructure-based-enumeration)
