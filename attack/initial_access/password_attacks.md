@@ -119,6 +119,8 @@
       - [Shadow File](#shadow-file)
       - [Opasswd](#opasswd)
       - [Cracking Linux Credentials](#cracking-linux-credentials)
+    - [Credential Hunting](#credential-hunting-1)
+      - [Files](#files)
 
 ---
 
@@ -2624,3 +2626,27 @@ This "unshadowed" file can now be attacked with either John or Hashcat.
 ```bash
 d41y@htb[/htb]$ hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
 ```
+
+### Credential Hunting
+
+There are several sources that can provide you with credentials that you put in four categories. These include, but are not limited to:
+
+- **Files** including configs, databases, notes, scripts, source code, cronjobs, and SSH keys
+- **History** including logs, and command-line history
+- **Memory** including cache, and in-memory processing
+- **Key-rings** such as browser stored credentials
+
+Enumerating all these categories will allow you to increase the probability of successfully finding out - with some ease - credentials of existing users on the system. There are countless different situations in which you will always see different results. Therefore, you should adapt your approach to the circumstances of the environment and keep the big picture in mind. Above all, it is crucial to keep in mind how the system works, its focus, what purpose it exists for, and what role it plays in the business logic and the overall network. For example, suppose it is an isolated database server, in that case, you will not necessarily find normal users there since it is a sensitive interface in the management of data to which only a few people are granted access.
+
+#### Files
+
+One core principle of Linux is that everything is a file. Therefore, it is crucial to keep this concept in mind and search, find and filter the appropriate files according to your requirements. You should look for, find, and inspect several categories of files one by one. These categories are the following:
+
+- Configs
+- Databases
+- Notes
+- Scripts
+- Cronjobs
+- SSH keys
+
+Configs are the core of the functionality of services on Linux distributions. Often they even contain credentials that you will be able to read. Their insight also allows you to understand how the service works and its requirements precisely. Usually, the configs are marked with the following three file extensions: ```.config```, ```.conf```, ```.cnf```. However, these configuration files or the associated extentsion files can be renamed, which means that these file extensions are not necessarily required. Furthermore, even when recompiling a service, the required filename for the basic configuration can be changed, which would result in the same effect. However, this is a rare case that you will not encounter often, but this possibility should not be left out of your search.
