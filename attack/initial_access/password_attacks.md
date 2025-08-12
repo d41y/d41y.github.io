@@ -3310,4 +3310,4 @@ SMB         10.129.234.121  445    DC01             [*] Spidering .
 ```
 
 >[!TIP]
-> Use ```spider_plus``` to download all files matching the pattern. Look at [this](https://medium.com/@ravsau00/password-attacks-credential-hunting-in-network-shares-5bd37d2b120d).
+> Use ```spider_plus``` to download all files matching the pattern. Look at [this](https://medium.com/@ravsau00/password-attacks-credential-hunting-in-network-shares-5bd37d2b120d) or [this](https://www.netexec.wiki/smb-protocol/spidering-shares).
