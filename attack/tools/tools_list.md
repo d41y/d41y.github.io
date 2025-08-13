@@ -10,5 +10,6 @@
 | mimipenguin |  |  |  |
 | Pcredz |  |  |  |
 | PowerHuntShares |  |  |  |
+| Rubeus |  |  |  |
 | Snaffler |  |  |  |
 | Trufflehog |  |  |  |
