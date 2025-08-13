@@ -10,6 +10,9 @@
 | mimipenguin |  |  |  |
 | Pcredz |  |  |  |
 | PowerHuntShares |  |  |  |
+| realm |  |  |  |
 | Rubeus |  |  |  |
 | Snaffler |  |  |  |
+| sssd |  |  |  |
 | Trufflehog |  |  |  |
+| winbind |  |  |  |
