@@ -3678,7 +3678,7 @@ This is a common way to retrieve tickets from a computer. Another advantage of a
 
 #### Pass the Key aka OverPass the Hash
 
-The traditional PtH technique involves reusing an NTLM password hash that doesn't touch Kerberos. The PsK aka OverPass the Hash approach converts a hash/key for a domain-joined user into full TGT.
+The traditional PtH technique involves reusing an NTLM password hash that doesn't touch Kerberos. The PtK aka OverPass the Hash approach converts a hash/key for a domain-joined user into full TGT.
 
 To forge your tickets, you need to have the user's hash; you can use Mimikatz to dump all users Kerberos encryption keys using the module ```sekurlsa::ekeys```. This module will enumerate all key types present for the Kerberos package.
 
