@@ -181,6 +181,18 @@
       - [AD CS NTLM Relay Attack (_ESC_)](#ad-cs-ntlm-relay-attack-esc)
       - [Shadow Credentials](#shadow-credentials)
       - [No PKINIT?](#no-pkinit)
+  - [Password Management](#password-management)
+    - [Password Policy](#password-policy)
+      - [Policy Standards](#policy-standards)
+      - [Sample Password Policy](#sample-password-policy)
+      - [Enforcing Password Policy](#enforcing-password-policy)
+      - [Creating a Strong Password](#creating-a-strong-password)
+    - [Password Managers](#password-managers)
+      - [How does it work?](#how-does-it-work)
+      - [Cloud Password Managers](#cloud-password-managers)
+      - [Local Password Managers](#local-password-managers)
+      - [Alternatives](#alternatives)
+      - [Going Passwordless](#going-passwordless)
 
 ---
 
@@ -4827,3 +4839,99 @@ inlanefreight\jpinkman
 
 In certain environments, an attacker may be able to obtain a certificate but be unable to use it for pre-authentication as specific victims due to the KDC not supporting the appropriate EKU. The tool [PassTheCert](https://github.com/AlmondOffSec/PassTheCert/) was created for such situations. It can be used to authenticate against LDAPS using a certificate and perform various attacks.
 
+## Password Management
+
+### Password Policy
+
+A password policy is a set of rules designed to enhance computer security by encouraging users to create strong passwords and use them appropriately according to the organization's standard. The scope of a password policy extends beyond minimum password requirements to encompass the entire password lifecycle.
+
+#### Policy Standards
+
+Due to compliance requirements and best practices, many companies follow established IT security standards. While adhering to these standards does not guarantee complete security, it is a widely accepted industry practice that defines a baseline for security controls with an organization. However, compliance alone should not be the sole measure of an organization's security controls.
+
+Some security standards include sections on password policies or guidelines. Here are few of the most common:
+
+- NIST SP800-63B
+- CIS Password Policy Guide
+- PCI DSS
+
+These standards offer different perspectives on password security. You can study them to help shape your own password policy.
+
+#### Sample Password Policy
+
+To illustrate important considerations, here is a sample password policy. It requires that all passwords:
+
+- minimum of 8 chars
+- include uppercase and lowercase letters
+- include at least one number
+- include at least one special char
+- it should not be the username
+- it should be changed every 60 days
+
+#### Enforcing Password Policy
+
+A password policy is a set of guidelines for how passwords should be created, managed, and stored within an organization. To implement this policy effectively, it must be enforced using the technology at your disposal or by acquiring the necessary tools. Most apps and identity management systems offer features to support the enforcement of such policies.
+
+For instance, if you use AD for authentication, you can configure an AD Password Policy GPO to ensure users comply with your policy.
+
+Once the technical aspect is covered, the policy must be communicated to the rest ot the company. Subsequently, processes and procedures should be created to guarantee that the password policy is applied everywhere.
+
+#### Creating a Strong Password
+
+Creating a strong password doesn't have to be be difficult. Tools like [PasswordMonster](https://www.passwordmonster.com/) help evaluate the strength of passwords, while [1Password Password Generator](https://1password.com/password-generator/) can generate securen ones.
+
+### Password Managers
+
+A password manager is an app that securely stores passwords and sensitive information in an encrypted database. In addition to keeping data safe, password managers offer features such as password generation, two-factor authentication support, secure from filling, browser integration, multi-device synchronization, security alerts, and more.
+
+#### How does it work?
+
+The implementation of password managers varies by provider, but most operate using a master password to encrypt the password database.
+
+The encryption and authentication rely on cryptographic hash functions and key derivation functions to prevent unauthorized access to the encrypted database and its content. The specific mechanisms used depend on the provider and whether the password manager is cloud-based or locally stored.
+
+#### Cloud Password Managers
+
+One of the key considerations when choosing a password manager is convenience. The average person owns three or four devices and uses them to log into different websites and applications. A cloud-based password manager allows users to synchronize their encrypted password database across multiple devices. Most of them provide:
+
+- a mobile app
+- a browser add-on
+- some other features
+
+Each password manager vendor implements security in their own way, and usually provide a technical document detailing how their system works.
+
+A common implementation for cloud password manager involve deriving encryption keys from the master password. This approach supports Zero-Knowledge Encryption, which ensures that no one, not even the service provider, can access your secured data. To illustrate this, examine Bitwarden's approach to password derivation:
+
+- **Master key**: Derived from the master password using a key derivation function.
+- **Master password hash**: Generated using the master password to authenticate the user to the cloud service.
+- **Decryption key**: Created using the master key to form a symmetric key, which is then used to decrypt vault items.
+
+#### Local Password Managers
+
+Local password managers use encryption methods similar to those of cloud-based implementations. The most notable difference lies in data transmission and authenticate. To encrypt the database, local password managers focus on securing the database stored on the local system, using various cryptographic hash functions. They also employ key derivation functions with random salt to prevent precomputed keys and to hinder dictionary and guessing attacks. Some offer additional protections such as memory protection and keylogger resistance, using a secure desktop environment similar to Windows User Account Control (_UAC_).
+
+Some of the most widely used local password managers are:
+
+- KeePass
+- KWalletManager
+- Pleasant Password Server
+- Password Safe
+
+#### Alternatives
+
+By default, most OS and apps are built around password based authentication. However, administrators can adopt third-party identity providers or apps to enhance identity protection. Some of the most common alternatives include:
+
+- MFA
+- FID002
+- One-Time Passwords
+- Time-Based One-Time Passwords
+- IP restrictions
+- Device compliance enforcement via tools like Microsoft Endpoint Manager or Workspace ONE
+
+#### Going Passwordless
+
+Many companies - including Microsoft, Auth0, Okta, and Ping Identity - are advocating for a passwordless future. This strategy aims to remove passwords as an authentication method altogether.
+
+Passwordless authentication is achieved when an authentication factor other than a password is used. A password is a knowledge factor, meaning it's something a user knows. The problem with relying on a knowledge factor alone is that it's vulnerable to theft, sharing, repeat use, misuse, and other risks. Passwordless authentication ultimately means no more passwords. Instead, it relies on a possession factor or an inherent factor to verify user identity with greater assurance.
+
+As new technology and standards evolve, you need to investigate and understand the details of their implementations to determine whether those alternatives will provide the security you need for the authentication process.
