@@ -33,12 +33,9 @@
 
 - Attacks
   - [Applications]()
-  - [Passwords](./attack/initial_access/password_attacks.md)
+  - [Password Attacks](./attack/initial_access/password_attacks.md)
     - [0x00](./attack/initial_access/password_attacks/password_attacks_fundamentals.md)
-    - [Linux](./attack/initial_access/password_attacks/linux_password_attacks.md)
-    - [Network](./attack/initial_access/password_attacks/network_password_attacks.md)
     - [Remote](./attack/initial_access/password_attacks/remote_password_attacks.md)
-    - [Windows](./attack/initial_access/password_attacks/windows_password_attacks.md)
   - [Services]()
 - [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration](./attack/initial_access/footprinting.md#infrastructure-based-enumeration)
@@ -65,6 +62,10 @@
 ## Post-Exploitation
 
 - [File Transfer](./attack/post_exploitation/file_transfers.md)
+- Password Attacks / Credential Hunting
+  - [Linux]((./attack/initial_access/password_attacks/linux_password_attacks.md))
+  - [Network]((./attack/initial_access/password_attacks/network_password_attacks.md))
+  - [Windows]((./attack/initial_access/password_attacks/windows_password_attacks.md))
 - [Persistence]()
 - [Pivoting]()
 
