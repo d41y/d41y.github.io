@@ -8,9 +8,10 @@
       - [NOR Gate](#nor-gate)
       - [XOR Gate](#xor-gate)
       - [XNOR Gate](#xnor-gate)
+  - [Gerber](#gerber)
   - [PJL Commands](#pjl-commands)
     - [Basic Commands](#basic-commands)
-  - [SAL Files](#sal-files)
+  - [SAL](#sal)
     - [Analysis](#analysis)
     - [Handling Framing Errors](#handling-framing-errors)
   - [VHDL (_VHSIC Hardware Description Language_)](#vhdl-vhsic-hardware-description-language)
@@ -125,6 +126,16 @@ They are constructed from so-called transistors. Transistors are electronic comp
 | 1 | 0 | 0 |
 | 1 | 1 | 1 |
 
+## Gerber
+
+_.grb_
+
+Gerber files are open ASCII vector format files that contain information on each phyiscal board layer of your PCB (_Print Circuit Board_) design. Circuit board objects, like copper traces, vias, pads, solder masks, and silkscreen images, are all represented by a flash or draw code and defined by a series of vector coordinates. PCB manufacturers use these files to translate the details of a design into the physical properties of the PCB. The PCB design software typically generates Gerber files, although the process will vary with each CAD tool. Gerber data does not have a specific identifying file name as a text file but has a common extension such as .gb or .gbr.
+
+Further readings:
+
+- [Gerber files: what are they & how are they used by your PCB manufacturer?](https://www.proto-electronics.com/blog/gerber-files-what-are-they)
+
 ## PJL Commands
 
 PJL stands for Printer Job Language developed by Hewlett-Packard. A documentation can be found [here](https://h10032.www1.hp.com/ctg/Manual/bpl13208.pdf). It allows:
@@ -148,9 +159,11 @@ PJL stands for Printer Job Language developed by Hewlett-Packard. A documentatio
 | ```FSQUERY``` | Queries existence if dirs and files and returns file size. |
 | ```FSUPLOAD``` | Uploads all or part of a file from the printer to the host. |
 
-## SAL Files
+## SAL
 
-A SAL (_.sal_) file is a capture file in Saleae Logic Analyzer. A .sal capture itself is a zip file containing:
+_.sal_
+
+A SAL file is a capture file in Saleae Logic Analyzer. A .sal capture itself is a zip file containing:
 
 - ```meta.json``` - _a json file describing the capture_
 - ```digital-#.bin``` - _raw digital data_
@@ -193,6 +206,8 @@ Bit rate (bit/s) = 1 second / (interval(microseconds) x 10^(-6)) seconds
 ```
 
 ## VHDL (_VHSIC Hardware Description Language_)
+
+_.vhd_
 
 ... is a hardware description language that can model the behaviour and structure of digital systems at multiple levels of abstraction, ranging from the system level down to that of logic gates, for design entry, documentation, and verification purposes.
 
