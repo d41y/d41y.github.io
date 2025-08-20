@@ -13,6 +13,7 @@
   - [SAL Files](#sal-files)
     - [Analysis](#analysis)
     - [Handling Framing Errors](#handling-framing-errors)
+  - [VHDL (_VHSIC Hardware Description Language_)](#vhdl-vhsic-hardware-description-language)
 
 ---
 
@@ -189,4 +190,69 @@ To calculate the actual bit rate:
 ```
 Bit rate (bit/s) = 1 second / (interval(microseconds) x 10^(-6)) seconds
 # ignore decimals
+```
+
+## VHDL (_VHSIC Hardware Description Language_)
+
+... is a hardware description language that can model the behaviour and structure of digital systems at multiple levels of abstraction, ranging from the system level down to that of logic gates, for design entry, documentation, and verification purposes.
+
+The following code will be creating a VHDL file that describes an AND gate:
+
+```
+signal and_gate : std_logic;
+and_gate <= input_1 and input_2;
+```
+
+The first line of code defines a signal of type ```std_logic``` and it is called ```and_gate```. ```Std_logic``` is the type that is most commonly used to define signals, but there are others too. This code will generate an AND gate with a single output and two inputs. The keyword "and" is reserved in VHDL. The ```<=``` operator is known as the assignment operator. When you verballly parse the code above, you can say out load, "The signal and_gate GETS input_1 and-ed with input_2".
+
+Input and outputs are defined in an entity. An entity contains a port that defines all inputs and outputs to a file:
+
+```
+entity example_and is
+  port (
+    input_1    : in  std_logic;
+    input_2    : in  std_logic;
+    and_result : out std_logic
+  );
+end example_and;
+```
+
+This is a basic entity. It defines an entity called ```example_and``` and three signals, two inputs, and one output, all of which are of type ```std_logic```. One other VHDL keyword is needed to make this complete, namely architecture. An architecture is used to describe the functionality of a particular entity. Think of it as a thesis paper: the entity is the table of contents and the architecture is the content.
+
+```
+architecture rtl of example_and is
+  signal and_gate : std_logic;
+begin
+  and_gate <= input_1 and input_2;
+  and_result <= and_gate;
+end rtl;
+```
+
+The above code defines an architecture called rtl of entity ```example_and```. All signals that are used by the architecture must be defined between the "is" and the "begin" keywords. The actual architecture logic comes between the "begin" and "end" keywords. One last thing you need to tell the tool is which library to use. A library defines how certain keywords behave in your file.
+
+```
+library ieee;
+use ieee.std_logic_1164.all;
+```
+
+Results in:
+
+```
+library ieee;
+use ieee.std_logic_1164.all;
+ 
+entity example_and is
+  port (
+    input_1    : in  std_logic;
+    input_2    : in  std_logic;
+    and_result : out std_logic
+    );
+end example_and;
+ 
+architecture rtl of example_and is
+  signal and_gate : std_logic;
+begin
+  and_gate   <= input_1 and input_2;
+  and_result <= and_gate;
+end rtl;
 ```
