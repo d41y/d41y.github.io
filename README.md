@@ -52,7 +52,7 @@
 
 ## OSINT
 
-## Pivoting (_old; now in post-exploitation_)
+## Pivoting (_partially used as reference for Post-Exploitation/Pivoting .mds_)
 - [Chisel](./attack/pivoting/chisel.md)
 - [Ligolo](./attack/pivoting/ligolo.md)
 - [Socat](./attack/pivoting/socat.md)
@@ -67,7 +67,7 @@
   - [Network]((./attack/initial_access/password_attacks/network_password_attacks.md))
   - [Windows]((./attack/initial_access/password_attacks/windows_password_attacks.md))
 - [Persistence]()
-- [Pivoting]()
+- [Pivoting](./attack/post_exploitation/pivoting.md)
 
 ## Reversing
 
