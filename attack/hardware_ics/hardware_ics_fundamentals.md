@@ -1,4 +1,5 @@
 - [Hardware / ICS Fundamentals](#hardware--ics-fundamentals)
+  - [Gerber](#gerber)
   - [Logic Gates](#logic-gates)
     - [Gate Types](#gate-types)
       - [AND Gate](#and-gate)
@@ -8,7 +9,6 @@
       - [NOR Gate](#nor-gate)
       - [XOR Gate](#xor-gate)
       - [XNOR Gate](#xnor-gate)
-  - [Gerber](#gerber)
   - [PJL Commands](#pjl-commands)
     - [Basic Commands](#basic-commands)
   - [SAL](#sal)
@@ -19,6 +19,16 @@
 ---
 
 # Hardware / ICS Fundamentals
+
+## Gerber
+
+_.grb_
+
+Gerber files are open ASCII vector format files that contain information on each phyiscal board layer of your PCB (_Print Circuit Board_) design. Circuit board objects, like copper traces, vias, pads, solder masks, and silkscreen images, are all represented by a flash or draw code and defined by a series of vector coordinates. PCB manufacturers use these files to translate the details of a design into the physical properties of the PCB. The PCB design software typically generates Gerber files, although the process will vary with each CAD tool. Gerber data does not have a specific identifying file name as a text file but has a common extension such as .gb or .gbr.
+
+Further readings:
+
+- [Gerber files: what are they & how are they used by your PCB manufacturer?](https://www.proto-electronics.com/blog/gerber-files-what-are-they)
 
 ## Logic Gates
 
@@ -125,16 +135,6 @@ They are constructed from so-called transistors. Transistors are electronic comp
 | 0 | 1 | 0 |
 | 1 | 0 | 0 |
 | 1 | 1 | 1 |
-
-## Gerber
-
-_.grb_
-
-Gerber files are open ASCII vector format files that contain information on each phyiscal board layer of your PCB (_Print Circuit Board_) design. Circuit board objects, like copper traces, vias, pads, solder masks, and silkscreen images, are all represented by a flash or draw code and defined by a series of vector coordinates. PCB manufacturers use these files to translate the details of a design into the physical properties of the PCB. The PCB design software typically generates Gerber files, although the process will vary with each CAD tool. Gerber data does not have a specific identifying file name as a text file but has a common extension such as .gb or .gbr.
-
-Further readings:
-
-- [Gerber files: what are they & how are they used by your PCB manufacturer?](https://www.proto-electronics.com/blog/gerber-files-what-are-they)
 
 ## PJL Commands
 
