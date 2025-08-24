@@ -9,6 +9,10 @@
       - [NOR Gate](#nor-gate)
       - [XOR Gate](#xor-gate)
       - [XNOR Gate](#xnor-gate)
+  - [Modbus](#modbus)
+    - [Modbus TCP](#modbus-tcp)
+    - [Register Types](#register-types)
+    - [Function Codes](#function-codes)
   - [PJL Commands](#pjl-commands)
     - [Basic Commands](#basic-commands)
   - [SAL](#sal)
@@ -135,6 +139,64 @@ They are constructed from so-called transistors. Transistors are electronic comp
 | 0 | 1 | 0 |
 | 1 | 0 | 0 |
 | 1 | 1 | 1 |
+
+## Modbus
+
+Modbus is an industrial protocol standard that was created by Modicon, now Schneider Electric, in the late 1970s for communication among programmable logic controllers (_PLC_). Modbus remains the most widely available protocol for connecting industrial devices. The Modbus protocol specification is openly published and use of the protocol is royalty-free.
+
+![modbus 1](../../images/modbus1.png)
+
+Modbus protocol is defined as a master/slave protocol, meaning a device operating a master will poll one or more devices operating as a slave. This means a slave device cannot volunteer information; it must wait to be asked for it. The master will write data to a slave device's registers, and read data from a slave device's registers. A register address or register reference is always in the context of the slave's registers.
+
+The most commonly used form of Modbus protocol is RTU over RS-485. Modbus RTU is a relatively simple serial protocol that can be transmitted via traditional UART technology. Data is transmitted in 8-bit bytes, one bit at a time, at baud rates ranging from 1200 bits per second to 115200 bits per second. The majority of Modbus RTU devices only support speeds up to 38400 bits per second.
+
+A Modbus RTU network has one master and one or more slaves. Each slave has a unique 8-bit device address or unit number. Packets sent by the master include the address of the slave the message is intended for. The slave must respond only if its address is recognized, and must respond within a certain time period or the master will call it a "no response" error.
+
+Each exchange of data consists of a request from the master, followed by a response from the slave. Each data packet, whether request or response, begins with the device address or slave address, followed by function code, followed by parameters defining what is being asked for or provided. The exact formats of the request and response are documented in detail in the Modbus protocol specification. The general outline of each request and response is illustrated below.
+
+![modbus 2](../../images/modbus2.png)
+
+Modbus data is most often read and written as "registers" which are 16-bit pieces of data. Most often, the register is either a signed or unsigned 16-bit integer. If a 32-bit integer or floating point is required, these values are actually read as a pair of registers. The most commonly used register is called a Holding Register, and these can be read or written. The other possible type is Input Register, which is read-only.
+
+The exceptions to registers being 16 bits are the coil and the discrete input, which are each 1 bit only. Coils can be read or written, while discrete inputs are read-only. Coils are usually associated with relay outputs.
+
+The type of register being addressed by a Modbus request is determined by the function code. The most common codes include 3 for "real holding registers", and may read 1 or more. Function code 6 is used to write a single holding register. Function code 16 is used to write one or more holding registers.
+
+### Modbus TCP
+
+Modbus encapsulates Modbus RTU request and response data packets in a TCP packet transmitted over standard Ethernet networks. The unit number is still included and its interpretation varies by application - the unit or slave address is not the primary means of addressing in TCP. The address of most importance here is the IP address. The **standard port for Modbus TCP is 502**, but port number can often be reassigned if desired.
+
+The checksum field normally found at the end of an RTU packet is omitted from the TCP packet. Checksum and error handlind are handled by Ethernet in the case of Modbus TCP.
+
+Modbus TCP makes the definition of master and slave less obvious because Ethernet allows peer to peer communication. The definition of client and server are better known entities in Ethernet based networking. In this context, the slave becomes the server and the master becomes the client. There can be more than one client obtaining data from a server. In Modbus terms, this means there can be multiple masters as well as multiple slaves. Rather than defining master and slave on a physical device bases, it now becomes the system designer's responsibility to create logical associations between master and slave functonality.
+
+### Register Types
+
+The types of registers referenced in Modbus devices include the following:
+
+| Register Type | Function | Size | R/W |
+| ------------- | -------- | ---- | --- |
+| Coil (_Discrete Output_) | used to control discrete outputs | 1-bit | R/W |
+| Discrete Input (_or Status Input_) | used as inputs | 1-bit | R |
+| Input Register | used for input | 16-bit | R |
+| Holding Register | used for a variety of things including inputs, outputs, config data, or any requirement for "holding data" | 16-bit | R/W |
+
+### Function Codes
+
+Modbus protocol defines several function codes for accessing Modbus registers. There are four different data blocks defined by Modbus, and the addresses or register numbers in each of those overlap. Therefore, a complete definition of where to find a piece of data requires both the address and function code.
+
+The function codes most commonly reconized by Modbus devices are indicated in the table below. This is only a subset of the codes available - several of the codes have special applications that most often do not apply.
+
+| Function Code | Register Type |
+| ------------- | ------------- |
+| 1 | Read Coil |
+| 2 | Read Discrete Input |
+| 3 | Read Holding Registers |
+| 4 | Read Input Registers |
+| 5 | Write Single Coil |
+| 6 | Write Single Holding Register |
+| 15 | Write Multiple Coils |
+| 16 | Write Multiple Holding Registers |
 
 ## PJL Commands
 
