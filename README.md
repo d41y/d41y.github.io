@@ -25,9 +25,9 @@
 
 ## GamePwn
 
-## Hardware
+## Hardware / ICS
 
-- [0x00](./attack/hardware/hardware_fundamentals.md)
+- [0x00](./attack/hardware/hardware_ics_fundamentals.md)
 
 ## Initial Access
 

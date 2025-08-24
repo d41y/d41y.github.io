@@ -1,4 +1,4 @@
-- [Hardware Fundamentals](#hardware-fundamentals)
+- [Hardware / ICS Fundamentals](#hardware--ics-fundamentals)
   - [Logic Gates](#logic-gates)
     - [Gate Types](#gate-types)
       - [AND Gate](#and-gate)
@@ -18,7 +18,7 @@
 
 ---
 
-# Hardware Fundamentals
+# Hardware / ICS Fundamentals
 
 ## Logic Gates
 
