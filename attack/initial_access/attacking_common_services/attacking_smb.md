@@ -13,6 +13,9 @@
       - [Extract Hashes from SAM Database](#extract-hashes-from-sam-database)
       - [PtH](#pth)
       - [Forced Authentication Attacks](#forced-authentication-attacks)
+  - [Latest Vulnerabilities](#latest-vulnerabilities)
+    - [CVE-2020-0796](#cve-2020-0796)
+      - [Concept of the Attack](#concept-of-the-attack)
 
 ---
 
@@ -523,3 +526,14 @@ nt authority\system
 WIN11BOX
 ```
 
+## Latest Vulnerabilities
+
+### CVE-2020-0796
+
+This vulnerability consisted of a compression mechanism of the version SMB v3.1.1 which made Windows 10 versions 1903 and 1909 vulnerable to attack by an unauthenticated attacker. The vulnerability allowed the attacker to gain RCE and full access to the remote target system.
+
+#### Concept of the Attack
+
+In simple terms, this is an integer overflow vulnerability in a function of an SMB driver that allows system commands to be overwritten while accessing memory. An integer overflow results from a CPU attempting to generate a number that is greater than the value required for the allocated memory space. Arithmetic operations can always return unexpected values, resulting in an error. An example of an integer overflow can occur when a programmer does not allow a negative number to occur. In this case, an integer overflow occurs when a variable performs an operation that results in a negative number, and the variable is returned as a positive integer. This vulnerability occured because, at the time, the function lacked bounds checks to handle the size of the data sent in the process of SMB session negotiation.
+
+The vuln occurs while processing a malformed compressed message after the Negotiate Protocol Responses. If the SMB server allows requests, compression is generally supported, where the server and the client set the terms of communication before the client sends any more data. Suppose the data transmitted exceeds the integer variable limits due to the excessive amount of data. In that case, these parts are written into the buffer, which leads to the overwriting of the subsequent CPU instructions and interrupts the process's normal or planned execution. These data sets can be structured so that the overwritten instructions are replaced with your own ones, and thus you force the CPU to perform other tasks and instructions.
