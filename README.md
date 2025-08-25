@@ -39,7 +39,7 @@
   - [Services](./attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.md)
     - [FTP](./attack/initial_access/attacking_common_services/attacking_ftp.md)
     - [SMB](./attack/initial_access/attacking_common_services/attacking_smb.md)
-    - SQL
+    - [SQL](./attack/initial_access/attacking_common_services/attacking_sql.md)
     - RDP
     - DNS
     - SMTP
