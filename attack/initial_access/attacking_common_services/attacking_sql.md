@@ -168,6 +168,9 @@ Password: MyPassword!
 SQL> 
 ```
 
+>[!TIP]
+> Use ```-windows-auth``` to use Windows auhentication with mssqlclient.py.
+
 When using Windows authentication, you need to specify the domain name or the hostname of the target machine. If you don't specify a domain or hostname, it will assume SQL authentication and authenticate against the users created in the SQL server. Instead, if you define the domain or hostname, it will use Windows authentication. If you are targeting a local account, you can use ```SERVERNAME\\accountname``` or ```.\\accountname```.
 
 ```bash
