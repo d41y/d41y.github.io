@@ -14,6 +14,9 @@
     - [Capture MSSQL Service Hash](#capture-mssql-service-hash)
     - [Impersonate Existing Users with MSSQL](#impersonate-existing-users-with-mssql)
     - [Communicate with Other DBs with MSSQL](#communicate-with-other-dbs-with-mssql)
+  - [Latest Vulnerabilities](#latest-vulnerabilities)
+    - [NO CVE](#no-cve)
+      - [Concept of the Attack](#concept-of-the-attack)
 
 ---
 
@@ -485,3 +488,15 @@ DESKTOP-0L9D4KA\SQLEXPRESS     Microsoft SQL Server 2019 (RTM sa_remote         
 ```
 
 You can now execute queries with sysadmin privileges on the linked server. As sysadmin, you control the SQL Server istance. You can read data from any database or execute system commands with xp_cmdshell.
+
+## Latest Vulnerabilities
+
+### NO CVE
+
+You can get the NTLMv2 hashes by interacting with the MSSQL server. However, it should be mentioned that this attack is possible through a direct connection to the MSSQL server and vulnerable web applications.
+
+#### Concept of the Attack
+
+The interesting thing is that the MSSQL function ```xp_dirtree``` is not directly vulnerable but takes advantage of the authentication mechanism of SMB. When you try to access a shared folder on the network with a Windows host, this Windows host automatically sends an NTLMv2 hash for authentication.
+
+This hash can be used in various ways against the MSSQL server and other hosts in the corporate network. This includes an SMB relay attack where you "replay" the hash to log into other systems where the account has local admin privileges or cracking this hash on your local system. Successful cracking would allow you to see and use the password in cleartext. A successful SMB relay attack would grant you admin rights on another host in the network, but not necessarily the host where the hash originated because Microsoft patched an older flaw that allowed an SMB relay back to the originating host. You could, however, possibly gain local admin to another host and then steal credentials that could be re-used to gain local admin access to the original system where the NTLMv2 hash originated from.
