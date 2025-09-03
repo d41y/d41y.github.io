@@ -42,7 +42,7 @@
     - [SQL](./attack/initial_access/attacking_common_services/attacking_sql.md)
     - [RDP](./attack/initial_access/attacking_common_services/attacking_rdp.md)
     - [DNS](./attack/initial_access/attacking_common_services/attacking_dns.md)
-    - SMTP
+    - [Email Services](./attack/initial_access/attacking_common_services/attacking_email_services.md)
 - [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration](./attack/initial_access/footprinting.md#infrastructure-based-enumeration)
   - [Host Based Enumeration](./attack/initial_access/footprinting.md#host-based-enumeration)
