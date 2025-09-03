@@ -128,6 +128,8 @@ sub.target.com.   60   IN   CNAME   anotherdomain.com
 
 The domain name (_sub.target.com_) uses a CNAME record to another domain (_anotherdomain.com_). Suppose the anotherdomain.com expires and is available for anyone to claim the domain since the target.com's DNS server has the CNAME record. In that case, anyone who registers anotherdomain.com will have complete control over (_sub.target.com_) until the DNS record is updated.
 
+Take a look at [can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz). It shows whether the target services are vulnerable to a subdomain takeover and provides guidelines on assessing the vulnerability.
+
 ### Subdomain Enumeration
 
 Before performing a subdomain takeover, you should enumerate subdomains for a target domain using tools like [Subfinder](https://github.com/projectdiscovery/subfinder). This tool can scrape subdomains from open sources like [DNSdumpster](https://dnsdumpster.com/). Other tools like [Sublist3r](https://github.com/aboul3la/Sublist3r) can also be used to brute-force subdomains by supplying a pre-generated wordlist:
