@@ -5,6 +5,9 @@
   - [Protocol Specific Attacks](#protocol-specific-attacks)
     - [RDP Session Hijacking](#rdp-session-hijacking)
     - [RDP PtH](#rdp-pth)
+  - [Latest Vulnerabilities](#latest-vulnerabilities)
+    - [CVE-2019-0708](#cve-2019-0708)
+      - [Concept of the Attack](#concept-of-the-attack)
 
 ---
 
@@ -148,3 +151,14 @@ d41y@htb[/htb]# xfreerdp /v:192.168.220.152 /u:lewen /pth:300FF5E89EF33F83A8146C
 > [!NOTE]
 > Keep in mind that this will not work against every Windows system, you encounter, but is always wort trying in a situation where you have an NTLM hash, know the user has RDP rights against a machine or set of machines, and GUI access would benefit you in some ways towards fulfilling the goal of your assessment.
 
+## Latest Vulnerabilities
+
+### CVE-2019-0708
+
+This vulnerability is known as BlueKeep. It does not require prior access to the system to exploit the service for your purposes. However, the exploitation of this vulnerability led and still leads to many malware or ransomware attacks. Large organizations such as hospitals, whose software is only designed for specific versions and libraries, are particularly vulnerable to such attacks, as infrastructure maintenance is costly.
+
+#### Concept of the Attack
+
+The vulnerability is also based, as with SMB, on manipulated requests sent to the targeted service. However, the dangerous thing here is that the vulnerability does not require user authentication to be triggered. Instead, the vulnerability occurs after initializing the connection when basic settings are exchanged between client and server. This is known as a Use-After-Free technique that uses freed memory to execute arbitrary code.
+
+Read [this](https://unit42.paloaltonetworks.com/exploitation-of-windows-cve-2019-0708-bluekeep-three-ways-to-write-data-into-the-kernel-with-rdp-pdu/).
