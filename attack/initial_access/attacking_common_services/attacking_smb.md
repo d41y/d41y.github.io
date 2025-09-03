@@ -3,7 +3,7 @@
   - [Misconfigurations](#misconfigurations)
     - [Anonymous Authentication](#anonymous-authentication)
     - [Remote Procedure Call (_RPC_)](#remote-procedure-call-rpc)
-  - [Protocl Specific Attacks](#protocl-specific-attacks)
+  - [Protocol Specific Attacks](#protocol-specific-attacks)
     - [Without Credentials](#without-credentials)
       - [Brute Forcing and Password Spraying](#brute-forcing-and-password-spraying)
     - [With Credentials](#with-credentials)
@@ -194,7 +194,7 @@ ENUM4LINUX - next generation
 <SNIP>
 ```
 
-## Protocl Specific Attacks
+## Protocol Specific Attacks
 
 ### Without Credentials
 

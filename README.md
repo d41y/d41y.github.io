@@ -41,7 +41,7 @@
     - [SMB](./attack/initial_access/attacking_common_services/attacking_smb.md)
     - [SQL](./attack/initial_access/attacking_common_services/attacking_sql.md)
     - [RDP](./attack/initial_access/attacking_common_services/attacking_rdp.md)
-    - DNS
+    - [DNS](./attack/initial_access/attacking_common_services/attacking_dns.md)
     - SMTP
 - [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration](./attack/initial_access/footprinting.md#infrastructure-based-enumeration)
