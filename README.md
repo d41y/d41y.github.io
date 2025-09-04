@@ -147,6 +147,18 @@ Web Service & API
 ### Active Directory
 
 - [0x00](./attack/windows/ad/intro_ad.md)
+- Enumeration and Attacks
+  1. [Initial Enumeration]()
+  2. [Foothold]()
+  3. [User Hunting]()
+  4. [Password Spraying]()
+  5. [Cred Enum & LOTL]()
+  6. [Kerberoasting]()
+  7. [ACL]()
+  8. [Extras]()
+  9. [Domain Trusts Attacks]()
+  10. [Cross-Forest Trust Abuse]()
+  11. [Defensive Considerations]()
 
 </details>
 
