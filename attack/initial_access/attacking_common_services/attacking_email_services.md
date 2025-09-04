@@ -11,6 +11,9 @@
     - [Password Attacks](#password-attacks)
   - [Protocol Specific Attacks](#protocol-specific-attacks)
     - [Open Relay](#open-relay)
+  - [Latest Vulnerabilities](#latest-vulnerabilities)
+    - [CVE-2020-7247](#cve-2020-7247)
+      - [Concept of the Attack](#concept-of-the-attack)
 
 ---
 
@@ -393,3 +396,14 @@ d41y@htb[/htb]# swaks --from notifications@inlanefreight.com --to employees@inla
 === Connection closed with remote host.
 ```
 
+## Latest Vulnerabilities
+
+### CVE-2020-7247
+
+One of the most recent publicly disclosed and dangerous SMTP vuln was discovered in OpenSMTP up to version 6.6.2 service was in 2020. This vuln leads to RCE. It has been exploitable since 2018. This service has been used in many different Linux distributions, such as Debian, Fedora, FreeBSD, and others. The dangerous thing about this vuln is the possibility of executing system commands remotely on the system and that exploiting this vuln does not require authentication.
+
+#### Concept of the Attack
+
+As you already know, with the SMTP service, you can compose emails and send them to desired people. The vuln in this service lies in the program's code, namely the function that records the sender's email address. This offers the possibility of escaping the function using a ```;``` and making the system execute arbitrary shell commands. However, there is a limit of 64 chars, which can be inserted as a command.
+
+You need to initialize a connection with the SMTP service first. This can be automated by a script or entered manually. After the connection is established, an email must composed in which you define the sender, the recipient, and the actual message for the recipient. The desired system comannd is inserted in the sender field connected to the sender address with a ```;```. As soon as you finish writing, the data entered is processed by the OpenSMTPD process.
