@@ -10,6 +10,13 @@
       - [Hunting for Files and Email Addresses](#hunting-for-files-and-email-addresses)
       - [Username Harvesting](#username-harvesting)
       - [Credential Hunting](#credential-hunting)
+  - [Initial Enumeration of the Domain](#initial-enumeration-of-the-domain)
+    - [Identifying Hosts](#identifying-hosts)
+      - [Wireshark](#wireshark)
+      - [TCPDump](#tcpdump)
+      - [Responder](#responder)
+      - [FPing](#fping)
+      - [Nmap](#nmap)
 
 ---
 
@@ -157,3 +164,205 @@ database_name : MyFitnessPal
 
 <SNIP>
 ```
+
+## Initial Enumeration of the Domain
+
+### Identifying Hosts
+
+First, take some time to listen to the network and see what's going on. You can use Wireshark and TCPDump to "put your ear to the wire" and see what hosts and types of network traffic you can capture. This is particularly helpful if the assessment approach is "black box". You notice some ARP requests and replies, MDNS, and other basic layer two packets some of which you can see below. This is a great start that gives you a few bits of information about the customer's network setup.
+
+#### Wireshark
+
+```bash
+┌─[htb-student@ea-attack01]─[~]
+└──╼ $sudo -E wireshark
+
+11:28:20.487     Main Warn QStandardPaths: runtime directory '/run/user/1001' is not owned by UID 0, but a directory permissions 0700 owned by UID 1001 GID 1002
+<SNIP>
+```
+
+![initial enum 7](../../../../images/ad_initial_enum7.png)
+
+ARP packets make you aware of the hosts: .5, .25, .50, .100, .125.
+
+![initial enum 8](../../../../images/ad_initial_enum8.png)
+
+MDNS makes you aware of the ACADEMY-EA-WEB01 host.
+
+#### TCPDump
+
+If you are on a host without a GUI, you can use tcpdump, net-creds, and NetMiner, etc., to perform the same functions. You can also use tcpdump to save a capture to a .pcap file, transfer it to another host, and open it in Wireshark.
+
+```bash
+d41y@htb[/htb]$ sudo tcpdump -i ens224 
+```
+
+There is no one right way to listen and capture network traffic. There are plenty of tools that can process network data. Wireshark and tcpdump are just a few of the easiest to use and most widely known. Depending on the host you are on, you may already have a network monitoring tool built-in, such as pktmon.exe, which was added to all editions of Windows 10. As a note for testing, it's always a good idea to save the PCAP traffic you capture. You can review it again later to look for more hints, and it makes for great additional information to include while writing your reports.
+
+#### Responder
+
+Your first look at network traffic pointed you to a couple of hosts via MDNS and ARP. Utilize Responder to analyze network traffic and determine if anything else in the domain pops up.
+
+[Responder](https://github.com/lgandx/Responder-Windows) is a tool built to listen, analyze, and poison LLMNR, NBT-NS, and MDNS requests and responses. It has many more functions, but for now, all you are utilizing is the tool in its Analyze mode. This will passively listen to the network and not send any poisoned packets.
+
+```bash
+sudo responder -I ens224 -A 
+```
+
+As you start Responder with passive analysis mode enabled, you will requests flow in your session. Notice below that you found a few unique hosts not previously mentioned in your Wireshark captures. It's wort noting these down as you are starting to build a nice target list of IPs and DNS hostnames.
+
+#### FPing
+
+Your passive checks have given you a few hosts to note down for a more in-depth enumeration. Now perform some active checks starting with a quick ICMP sweep of the subnet using fping.
+
+[Fping](https://fping.org/) provides you with a similar capability as the standard ping application in that it utilizes ICMP requests and replies to reach out and interact with a host. Where fping shines is in its ability to issue ICMP packets against a list of multiple hosts at once and its scriptability. Also, it works in a round-robin fashion, querying hosts in a cyclical manner instead of waiting for multiple requests to a single host to return before moving on. These checks will help you determine if anything else is active on the internal network. ICMP is not a one-stop-show, but it is an easy way to get initial idea of what exists. Other open ports and active protocols may point to new hosts for later targeting.
+
+Here you'll start fping with a few flags: ```a``` to show targets that are alive, ```s``` to print stats at the end of the scan, ```g``` to generate a target list from the CIDR network, and ```q``` to not show per-target results.
+
+```bash
+d41y@htb[/htb]$ fping -asgq 172.16.5.0/23
+
+172.16.5.5
+172.16.5.25
+172.16.5.50
+172.16.5.100
+172.16.5.125
+172.16.5.200
+172.16.5.225
+172.16.5.238
+172.16.5.240
+
+     510 targets
+       9 alive
+     501 unreachable
+       0 unknown addresses
+
+    2004 timeouts (waiting for response)
+    2013 ICMP Echos sent
+       9 ICMP Echo Replies received
+    2004 other ICMP received
+
+ 0.029 ms (min round trip time)
+ 0.396 ms (avg round trip time)
+ 0.799 ms (max round trip time)
+       15.366 sec (elapsed real time)
+```
+
+The command above validates which hosts are active in the /23 network and does it quietly instead of spamming the terminal with results for each IP in the target list. You can combine the successful results and the information you gleaned from your passive checks into a list for a more detailed scan with Nmap. From the fping command, you can see 9 live hosts, including your attack host.
+
+#### Nmap
+
+Now that you have a list of active hosts within your network, you can enumerate those hosts further. You are looking to determine what services each host is running, identify critical hosts such as DCs and web servers, and identify potentially vulnerable hosts to probe later. With your focus on AD, after doing a broad sweep, it would be wise of you to focus on standard protocols typically seen accompanying AD services, such as DNS, SMB, LDAP, and Kerberos name a few.
+
+```bash
+sudo nmap -v -A -iL hosts.txt -oN /home/htb-student/Documents/host-enum
+
+...
+Nmap scan report for inlanefreight.local (172.16.5.5)
+Host is up (0.069s latency).
+Not shown: 987 closed tcp ports (conn-refused)
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2022-04-04 15:12:06Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+|_ssl-date: 2022-04-04T15:12:53+00:00; -1s from scanner time.
+| ssl-cert: Subject:
+| Subject Alternative Name: DNS:ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+| Issuer: commonName=INLANEFREIGHT-CA
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2022-03-30T22:40:24
+| Not valid after:  2023-03-30T22:40:24
+| MD5:   3a09 d87a 9ccb 5498 2533 e339 ebe3 443f
+|_SHA-1: 9731 d8ec b219 4301 c231 793e f913 6868 d39f 7920
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+<SNIP>  
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info:
+|   Target_Name: INLANEFREIGHT
+|   NetBIOS_Domain_Name: INLANEFREIGHT
+|   NetBIOS_Computer_Name: ACADEMY-EA-DC01
+|   DNS_Domain_Name: INLANEFREIGHT.LOCAL
+|   DNS_Computer_Name: ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+|   DNS_Tree_Name: INLANEFREIGHT.LOCAL
+|   Product_Version: 10.0.17763
+|_  System_Time: 2022-04-04T15:12:45+00:00
+<SNIP>
+5357/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Service Unavailable
+|_http-server-header: Microsoft-HTTPAPI/2.0
+Service Info: Host: ACADEMY-EA-DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+```
+
+Your scans have provided you with the naming standard used by NetBIOS and DNS, you can see some hosts have RDP open, and they have pointed you in the direction of the primary DC for the INLANEFREIGHT.LOCAL domain. The results below show some interesting results surrounding a possible outdated host.
+
+```bash
+d41y@htb[/htb]$ nmap -A 172.16.5.100
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-04-08 13:42 EDT
+Nmap scan report for 172.16.5.100
+Host is up (0.071s latency).
+Not shown: 989 closed tcp ports (conn-refused)
+PORT      STATE SERVICE      VERSION
+80/tcp    open  http         Microsoft IIS httpd 7.5
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Microsoft-IIS/7.5
+| http-methods: 
+|_  Potentially risky methods: TRACE
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+443/tcp   open  https?
+445/tcp   open  microsoft-ds Windows Server 2008 R2 Standard 7600 microsoft-ds
+1433/tcp  open  ms-sql-s     Microsoft SQL Server 2008 R2 10.50.1600.00; RTM
+| ssl-cert: Subject: commonName=SSL_Self_Signed_Fallback
+| Not valid before: 2022-04-08T17:38:25
+|_Not valid after:  2052-04-08T17:38:25
+|_ssl-date: 2022-04-08T17:43:53+00:00; 0s from scanner time.
+| ms-sql-ntlm-info: 
+|   Target_Name: INLANEFREIGHT
+|   NetBIOS_Domain_Name: INLANEFREIGHT
+|   NetBIOS_Computer_Name: ACADEMY-EA-CTX1
+|   DNS_Domain_Name: INLANEFREIGHT.LOCAL
+|   DNS_Computer_Name: ACADEMY-EA-CTX1.INLANEFREIGHT.LOCAL
+|_  Product_Version: 6.1.7600
+Host script results:
+| smb2-security-mode: 
+|   2.1: 
+|_    Message signing enabled but not required
+| ms-sql-info: 
+|   172.16.5.100:1433: 
+|     Version: 
+|       name: Microsoft SQL Server 2008 R2 RTM
+|       number: 10.50.1600.00
+|       Product: Microsoft SQL Server 2008 R2
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|_    TCP port: 1433
+|_nbstat: NetBIOS name: ACADEMY-EA-CTX1, NetBIOS user: <unknown>, NetBIOS MAC: 00:50:56:b9:c7:1c (VMware)
+| smb-os-discovery: 
+|   OS: Windows Server 2008 R2 Standard 7600 (Windows Server 2008 R2 Standard 6.1)
+|   OS CPE: cpe:/o:microsoft:windows_server_2008::-
+|   Computer name: ACADEMY-EA-CTX1
+|   NetBIOS computer name: ACADEMY-EA-CTX1\x00
+|   Domain name: INLANEFREIGHT.LOCAL
+|   Forest name: INLANEFREIGHT.LOCAL
+|   FQDN: ACADEMY-EA-CTX1.INLANEFREIGHT.LOCAL
+|_  System time: 2022-04-08T10:43:48-07:00
+
+<SNIP>
+```
+
+You can see from the output above that you have a potential host running an outdated OS. This is of interest to you since it means there are legacy OS running in this AD environment. It also means there is potential for older exploits like EternalBlue, MS08-067, and others to work and provide you with a SYSTEM level shell. As weird as it sounds to have hosts running legacy software or end-of-life OS, it is still common in large enterprise environments. You will often have some process or equipment such as a production line or the HVAC built on the older OS and has been in place for a long time. Taking equipment like that offline is costly and can hurt an organization, so legacy hosts are often left in place. They will likely try to build a hard outer shell of Firewalls, IDS/IPS, and other monitoring and protection solutions around those systems. If you can find your way into one, it is a big deal and can be a quick and easy foothold. Before exploiting legacy systems, however, you should alert your client and get their approval in writing in case an attack results in system instability or brings a service or the host down. They may prefer that you just observe, report, and move on without actively exploiting the system.
+
+The results of these scans will clue you into where you will start looking for potential domain enumeration avenues, not just host scanning. You need to find your way to a domain user account. Looking at your resulsts, you found several servers that host domain services. Now that you know what exists and what services are running, you can poll those servers and attempt to enumerate users. Be sure to use the ```-oA``` flag as a best practice when performing Nmap scans. This will ensure that you have your scan results in several formats for logging purposes and formats that can be manipulated and fed into other tools.
+
+You need to be aware of what scans you run and how they work. Some of the Nmap scripted scans run active vulnerability checks against a host that could cause system instability or take it offline, causing issues for the customer or worse. For example, running a large discovery scan against a network with devices such as sensors or logic controllers could potentially overload them and disrupt the customer's industrial equipment causing a loss of product or capability.
+
