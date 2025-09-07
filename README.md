@@ -148,7 +148,7 @@ Web Service & API
 
 - [0x00](./attack/windows/ad/intro_ad.md)
 - Enumeration and Attacks
-  1. [Initial Enumeration](./attack/windows/ad/enum_and_attacks/initial_enum.md)
+  1. [Initial Enumeration](./attack/windows/ad/enum_and_attacks/ad_initial_enum.md)
   2. [Foothold]()
   3. [User Hunting]()
   4. [Password Spraying]()
