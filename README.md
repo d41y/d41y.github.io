@@ -151,7 +151,7 @@ Web Service & API
   1. [Initial Enumeration](./attack/windows/ad/enum_and_attacks/ad_initial_enum.md)
   2. [Foothold](./attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.md)
   3. [User Hunting](./attack/windows/ad/enum_and_attacks/ad_user_hunting.md)
-  4. [Password Spraying]()
+  4. [Internal Password Spraying]()
   5. [Cred Enum & LOTL]()
   6. [Kerberoasting]()
   7. [ACL]()
