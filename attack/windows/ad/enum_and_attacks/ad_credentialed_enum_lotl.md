@@ -5,6 +5,18 @@
     - [PowerShell Constrained Language Mode](#powershell-constrained-language-mode)
     - [LAPS](#laps)
   - [Credentialed Enum - from Linux](#credentialed-enum---from-linux)
+    - [CrackMapExec](#crackmapexec)
+      - [Domain User Enum](#domain-user-enum)
+      - [Domain Group Enum](#domain-group-enum)
+      - [Logged On Users](#logged-on-users)
+      - [Share Searching](#share-searching)
+    - [SMBMap](#smbmap)
+      - [Checking Access](#checking-access)
+      - [Recursive List of all Dirs](#recursive-list-of-all-dirs)
+    - [rpcclient](#rpcclient)
+      - [RID](#rid)
+      - [enumdomusers](#enumdomusers)
+    - [Impacket Toolkit](#impacket-toolkit)
 
 ---
 
@@ -172,3 +184,354 @@ WS01.INLANEFREIGHT.LOCAL    TCaG-F)3No;l8C 09/26/2020 00:46:04
 ```
 
 ## Credentialed Enum - from Linux
+
+### CrackMapExec
+
+... is a powerful toolset to help with assessing AD environments. It utilizes packages from the Impacket and PowerSploit toolkits to perform its functions.
+
+```bash
+d41y@htb[/htb]$ crackmapexec -h
+
+usage: crackmapexec [-h] [-t THREADS] [--timeout TIMEOUT] [--jitter INTERVAL] [--darrell]
+                    [--verbose]
+                    {mssql,smb,ssh,winrm} ...
+
+      ______ .______           ___        ______  __  ___ .___  ___.      ___      .______    _______ ___   ___  _______   ______
+     /      ||   _  \         /   \      /      ||  |/  / |   \/   |     /   \     |   _  \  |   ____|\  \ /  / |   ____| /      |
+    |  ,----'|  |_)  |       /  ^  \    |  ,----'|  '  /  |  \  /  |    /  ^  \    |  |_)  | |  |__    \  V  /  |  |__   |  ,----'
+    |  |     |      /       /  /_\  \   |  |     |    <   |  |\/|  |   /  /_\  \   |   ___/  |   __|    >   <   |   __|  |  |
+    |  `----.|  |\  \----. /  _____  \  |  `----.|  .  \  |  |  |  |  /  _____  \  |  |      |  |____  /  .  \  |  |____ |  `----.
+     \______|| _| `._____|/__/     \__\  \______||__|\__\ |__|  |__| /__/     \__\ | _|      |_______|/__/ \__\ |_______| \______|
+
+                                         A swiss army knife for pentesting networks
+                                    Forged by @byt3bl33d3r using the powah of dank memes
+
+                                                      Version: 5.0.2dev
+                                                     Codename: P3l1as
+optional arguments:
+  -h, --help            show this help message and exit
+  -t THREADS            set how many concurrent threads to use (default: 100)
+  --timeout TIMEOUT     max timeout in seconds of each thread (default: None)
+  --jitter INTERVAL     sets a random delay between each connection (default: None)
+  --darrell             give Darrell a hand
+  --verbose             enable verbose output
+
+protocols:
+  available protocols
+
+  {mssql,smb,ssh,winrm}
+    mssql               own stuff using MSSQL
+    smb                 own stuff using SMB
+    ssh                 own stuff using SSH
+    winrm               own stuff using WINRM
+
+Ya feelin' a bit buggy all of a sudden?
+```
+
+You can see that you can use the tool with MSSQL, SMB, SSH, and WinRm credentials.
+
+```bash
+d41y@htb[/htb]$ crackmapexec smb -h
+
+usage: crackmapexec smb [-h] [-id CRED_ID [CRED_ID ...]] [-u USERNAME [USERNAME ...]] [-p PASSWORD [PASSWORD ...]] [-k]
+                        [--aesKey AESKEY [AESKEY ...]] [--kdcHost KDCHOST]
+                        [--gfail-limit LIMIT | --ufail-limit LIMIT | --fail-limit LIMIT] [-M MODULE]
+                        [-o MODULE_OPTION [MODULE_OPTION ...]] [-L] [--options] [--server {https,http}] [--server-host HOST]
+                        [--server-port PORT] [-H HASH [HASH ...]] [--no-bruteforce] [-d DOMAIN | --local-auth] [--port {139,445}]
+                        [--share SHARE] [--smb-server-port SMB_SERVER_PORT] [--gen-relay-list OUTPUT_FILE] [--continue-on-success]
+                        [--sam | --lsa | --ntds [{drsuapi,vss}]] [--shares] [--sessions] [--disks] [--loggedon-users] [--users [USER]]
+                        [--groups [GROUP]] [--local-groups [GROUP]] [--pass-pol] [--rid-brute [MAX_RID]] [--wmi QUERY]
+                        [--wmi-namespace NAMESPACE] [--spider SHARE] [--spider-folder FOLDER] [--content] [--exclude-dirs DIR_LIST]
+                        [--pattern PATTERN [PATTERN ...] | --regex REGEX [REGEX ...]] [--depth DEPTH] [--only-files]
+                        [--put-file FILE FILE] [--get-file FILE FILE] [--exec-method {atexec,smbexec,wmiexec,mmcexec}] [--force-ps32]
+                        [--no-output] [-x COMMAND | -X PS_COMMAND] [--obfs] [--amsi-bypass FILE] [--clear-obfscripts]
+                        [target ...]
+
+positional arguments:
+  target                the target IP(s), range(s), CIDR(s), hostname(s), FQDN(s), file(s) containing a list of targets, NMap XML or
+                        .Nessus file(s)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -id CRED_ID [CRED_ID ...]
+                        database credential ID(s) to use for authentication
+  -u USERNAME [USERNAME ...]
+                        username(s) or file(s) containing usernames
+  -p PASSWORD [PASSWORD ...]
+                        password(s) or file(s) containing passwords
+  -k, --kerberos        Use Kerberos authentication from ccache file (KRB5CCNAME)
+  
+<SNIP>  
+```
+
+CME offers a help menu for each protocol. Be sure to review the entire help menu and all possible options.
+
+#### Domain User Enum
+
+You start by pointing CME at the DC and using the credentials for the forend user to retrieve a list of all domain users. Notice when it provides you the user information, it includes data points such as the [badPwdCount](https://docs.microsoft.com/en-us/windows/win32/adschema/a-badpwdcount) attribute. This is helpful when performing actions like targeted password spraying. You could build a target user list filtering out any users with their badPwdCount attribute above 0 to be extra careful not to lock any accounts out.
+
+```bash
+d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --users
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\forend:Klmcargo2 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated domain user(s)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\administrator                  badpwdcount: 0 baddpwdtime: 2022-03-29 12:29:14.476567
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\guest                          badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\lab_adm                        badpwdcount: 0 baddpwdtime: 2022-04-09 23:04:58.611828
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\krbtgt                         badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\htb-student                    badpwdcount: 0 baddpwdtime: 2022-03-30 16:27:41.960920
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\avazquez                       badpwdcount: 3 baddpwdtime: 2022-02-24 18:10:01.903395
+
+<SNIP>
+```
+
+#### Domain Group Enum
+
+You can also obtain a complete listing of domain groups. You should save all of your output to files to easily access it again later for reporting or use with other tools.
+
+```bash
+d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --groups
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\forend:Klmcargo2 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated domain group(s)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Administrators                           membercount: 3
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Users                                    membercount: 4
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Guests                                   membercount: 2
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Print Operators                          membercount: 0
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Backup Operators                         membercount: 1
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Replicator                               membercount: 0
+
+<SNIP>
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Domain Admins                            membercount: 19
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Domain Users                             membercount: 0
+
+<SNIP>
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Contractors                              membercount: 138
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Accounting                               membercount: 15
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Engineering                              membercount: 19
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Executives                               membercount: 10
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Human Resources                          membercount: 36
+
+<SNIP>
+```
+
+The above snippet lists the groups within the domain and the number of users in each. The output also shows the built-in groups on the DC, such as Backup Operators. You can begin to note down groups of interest. Take note of key groups like Administrators, Domain Admins, Executives, any groups that may contain privileged IT admins, etc. These groups will likely contain users with elevated privileges worth targeting during your assessment.
+
+#### Logged On Users
+
+You can also use CME to target other hosts. Check out what appears to be a file server to see what users are logged in currently.
+
+```bash
+d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.130 -u forend -p Klmcargo2 --loggedon-users
+
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-FILE) (domain:INLANEFREIGHT.LOCAL) (signing:False) (SMBv1:False)
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  [+] INLANEFREIGHT.LOCAL\forend:Klmcargo2 (Pwn3d!)
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  [+] Enumerated loggedon users
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  INLANEFREIGHT\clusteragent              logon_server: ACADEMY-EA-DC01
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  INLANEFREIGHT\lab_adm                   logon_server: ACADEMY-EA-DC01
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  INLANEFREIGHT\svc_qualys                logon_server: ACADEMY-EA-DC01
+SMB         172.16.5.130    445    ACADEMY-EA-FILE  INLANEFREIGHT\wley                      logon_server: ACADEMY-EA-DC01
+
+<SNIP>
+```
+
+You see that many users are logged into this server which is very interesting. You can also see that your user forend is a local admin because ```Pwn3d!``` appears after the tool successfully authenticates to the target host. A host like this may be used as a jump host or similar by administrative users. You can see that the user svc_qualys is logged in, who you earlier identified as a domain admin. It could be an easy win if you can steal this user's credentials from memory or impersonate them.
+
+#### Share Searching
+
+You can use the ```--shares``` flag to enumerate available shares on the remote host and the level of access your user account has to each share.
+
+```bash
+d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --shares
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\forend:Klmcargo2 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated shares
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Share           Permissions     Remark
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  -----           -----------     ------
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  ADMIN$                          Remote Admin
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  C$                              Default share
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Department Shares READ            
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  IPC$            READ            Remote IPC
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  NETLOGON        READ            Logon server share 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  SYSVOL          READ            Logon server share 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  User Shares     READ            
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  ZZZ_archive     READ 
+```
+
+You see several shares available to you with READ access. The Department Shares, User Shares, and ZZZ_archive shares would be worth digging into further as they may contain sensitive data such as passwords or PII. Next, you can dig into the shares and spider each directory looking for files. The module ```spider_plus``` will dig through each readable share on the host and list all readable files.
+
+```bash
+d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M spider_plus --share 'Department Shares'
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\forend:Klmcargo2 
+SPIDER_P... 172.16.5.5      445    ACADEMY-EA-DC01  [*] Started spidering plus with option:
+SPIDER_P... 172.16.5.5      445    ACADEMY-EA-DC01  [*]        DIR: ['print$']
+SPIDER_P... 172.16.5.5      445    ACADEMY-EA-DC01  [*]        EXT: ['ico', 'lnk']
+SPIDER_P... 172.16.5.5      445    ACADEMY-EA-DC01  [*]       SIZE: 51200
+SPIDER_P... 172.16.5.5      445    ACADEMY-EA-DC01  [*]     OUTPUT: /tmp/cme_spider_plus
+```
+
+In the above command, you ran the spider against the Department Shares. When completed, CME writes the results to a JSON file located at ```/tmp/cme_spider_plus/<ip of host>```. Below you can see a portion of the JSON output. You could dig around for interesting files such as web.config files or scripts that may contain passwords. If you wanted to dig further, you could pull those files to see what all resides within, perhaps finding some hardcoded credentials or other sensitive information.
+
+```bash
+d41y@htb[/htb]$ head -n 10 /tmp/cme_spider_plus/172.16.5.5.json 
+
+{
+    "Department Shares": {
+        "Accounting/Private/AddSelect.bat": {
+            "atime_epoch": "2022-03-31 14:44:42",
+            "ctime_epoch": "2022-03-31 14:44:39",
+            "mtime_epoch": "2022-03-31 15:14:46",
+            "size": "278 Bytes"
+        },
+        "Accounting/Private/ApproveConnect.wmf": {
+            "atime_epoch": "2022-03-31 14:45:14",
+     
+<SNIP>
+```
+
+### SMBMap
+
+... is great for enumerating SMB shares from a Linux attack host. It can be used to gather a listing of shares, permissions, and share contents if accessible. Once access is obtained, it can be used to download and upload files and execute commands.
+
+Like CME, you can use SMBMap and set of domain user credentials to check for accessible shares on remote systems. As with other tools, you can type the command ```smbmap -h``` to view the tool usage menu. Aside from listing shares, you can use SMBMap to recursively list directories, list the contents of a directory, search file contents, and more. This can be especially useful when pillaging shares for useful information.
+
+#### Checking Access
+
+```bash
+d41y@htb[/htb]$ smbmap -u forend -p Klmcargo2 -d INLANEFREIGHT.LOCAL -H 172.16.5.5
+
+[+] IP: 172.16.5.5:445	Name: inlanefreight.local                               
+        Disk                                                  	Permissions	Comment
+	----                                                  	-----------	-------
+	ADMIN$                                            	NO ACCESS	Remote Admin
+	C$                                                	NO ACCESS	Default share
+	Department Shares                                 	READ ONLY	
+	IPC$                                              	READ ONLY	Remote IPC
+	NETLOGON                                          	READ ONLY	Logon server share 
+	SYSVOL                                            	READ ONLY	Logon server share 
+	User Shares                                       	READ ONLY	
+	ZZZ_archive                                       	READ ONLY
+```
+
+The above will tell you what your user can access and their permission levels. Like your resulsts from CME, you see that the user forend has no access to the DC via the ADMIN$ or C$ shares, but does have read access over IPC$, NETLOGON, and SYSVOL which is the default in any domain. The other non-standard shares, such as Department Shares and the user and archive shares, are most interesting. Do a recursive listing of the dirs in the Department Shares share.
+
+#### Recursive List of all Dirs
+
+```bash
+d41y@htb[/htb]$ smbmap -u forend -p Klmcargo2 -d INLANEFREIGHT.LOCAL -H 172.16.5.5 -R 'Department Shares' --dir-only
+
+[+] IP: 172.16.5.5:445	Name: inlanefreight.local                               
+        Disk                                                  	Permissions	Comment
+	----                                                  	-----------	-------
+	Department Shares                                 	READ ONLY	
+	.\Department Shares\*
+	dr--r--r--                0 Thu Mar 31 15:34:29 2022	.
+	dr--r--r--                0 Thu Mar 31 15:34:29 2022	..
+	dr--r--r--                0 Thu Mar 31 15:14:48 2022	Accounting
+	dr--r--r--                0 Thu Mar 31 15:14:39 2022	Executives
+	dr--r--r--                0 Thu Mar 31 15:14:57 2022	Finance
+	dr--r--r--                0 Thu Mar 31 15:15:04 2022	HR
+	dr--r--r--                0 Thu Mar 31 15:15:21 2022	IT
+	dr--r--r--                0 Thu Mar 31 15:15:29 2022	Legal
+	dr--r--r--                0 Thu Mar 31 15:15:37 2022	Marketing
+	dr--r--r--                0 Thu Mar 31 15:15:47 2022	Operations
+	dr--r--r--                0 Thu Mar 31 15:15:58 2022	R&D
+	dr--r--r--                0 Thu Mar 31 15:16:10 2022	Temp
+	dr--r--r--                0 Thu Mar 31 15:16:18 2022	Warehouse
+
+    <SNIP>
+```
+
+As the recursive listing dives deeper, it will show you the output of all subdirs within the higher-level dirs. The use of ```--dir-only``` provided only the output of all directories and did not list all files.
+
+### rpcclient
+
+... is a handy tool created for use with the Samba protocol and to provide extra functionality via MS-RPC. It can enumerate, add, change, and even remove objects from AD. It is highly versatile; you just have to find the correct command to issue for what you want to accomplish.
+
+Due to SMB NULL sessions on some of your hosts, you can perform authenticated or unauthenticated enumeration using rpcclient.  Below is an example of the unauthenticated way:
+
+```bash
+rpcclient -U "" -N 172.16.5.5
+```
+
+The above will provide you with a bound connection, and you should be greeted with a new prompt to start unleashing the power of rpcclient.
+
+#### RID
+
+While looking at users in rpcclient, you may notice a field called ```rid:``` beside each user. A Relative Identifier is a unique identifier utilized by Windows to track and identify objects.
+
+> [!NOTE]
+> When an object is created within a domain, the SID will be combined with a RID to make a unique value used to represent the object. So a domain user with the SID of ```S-1-5-21-3842939050-3880317879-2865463114``` and a ```RID:[0x457]```, will have a full user SID of: ```S-1-5-21-3842939050-3880317879-2865463114-1111```.
+
+However, there are accounts that you will notice that have the same RID regardless of what host you are on. Accounts like the built-in Administrator for a domain will have a RID:[0x1f4], which, when converted to a decimal value, equals 500. The built-in Administrator account will always have this value.
+
+Since this value is unique to an object, you can use it to enumerate further information about it from the domain.
+
+```bash
+rpcclient $> queryuser 0x457
+
+        User Name   :   htb-student
+        Full Name   :   Htb Student
+        Home Drive  :
+        Dir Drive   :
+        Profile Path:
+        Logon Script:
+        Description :
+        Workstations:
+        Comment     :
+        Remote Dial :
+        Logon Time               :      Wed, 02 Mar 2022 15:34:32 EST
+        Logoff Time              :      Wed, 31 Dec 1969 19:00:00 EST
+        Kickoff Time             :      Wed, 13 Sep 30828 22:48:05 EDT
+        Password last set Time   :      Wed, 27 Oct 2021 12:26:52 EDT
+        Password can change Time :      Thu, 28 Oct 2021 12:26:52 EDT
+        Password must change Time:      Wed, 13 Sep 30828 22:48:05 EDT
+        unknown_2[0..31]...
+        user_rid :      0x457
+        group_rid:      0x201
+        acb_info :      0x00000010
+        fields_present: 0x00ffffff
+        logon_divs:     168
+        bad_password_count:     0x00000000
+        logon_count:    0x0000001d
+        padding1[0..7]...
+        logon_hrs[0..21]...
+```
+
+#### enumdomusers
+
+When you searched for information using the ```queryuser``` command against an RID, RPC returned the user information. This wasn't hard since you already knew the RID for the user. If you wished to enumerate all users to gather the RIDs for more than just one, you would use the following:
+
+```bash
+rpcclient $> enumdomusers
+
+user:[administrator] rid:[0x1f4]
+user:[guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[lab_adm] rid:[0x3e9]
+user:[htb-student] rid:[0x457]
+user:[avazquez] rid:[0x458]
+user:[pfalcon] rid:[0x459]
+user:[fanthony] rid:[0x45a]
+user:[wdillard] rid:[0x45b]
+user:[lbradford] rid:[0x45c]
+user:[sgage] rid:[0x45d]
+user:[asanchez] rid:[0x45e]
+user:[dbranch] rid:[0x45f]
+user:[ccruz] rid:[0x460]
+user:[njohnson] rid:[0x461]
+user:[mholliday] rid:[0x462]
+
+<SNIP>  
+```
+
+Using it in this manner will print out all domain users by name and RID. Your enumeration can go into great detail utilizing rpcclient. You could even start performing actions such as editing users and groups or adding your own into the domain.
+
+### Impacket Toolkit
+
