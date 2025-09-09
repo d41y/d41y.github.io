@@ -4,6 +4,7 @@
     - [AppLocker](#applocker)
     - [PowerShell Constrained Language Mode](#powershell-constrained-language-mode)
     - [LAPS](#laps)
+  - [Credentialed Enum - from Linux](#credentialed-enum---from-linux)
 
 ---
 
@@ -170,3 +171,4 @@ SQL01.INLANEFREIGHT.LOCAL   9G#f;p41dcAe,s 09/26/2020 00:30:09
 WS01.INLANEFREIGHT.LOCAL    TCaG-F)3No;l8C 09/26/2020 00:46:04
 ```
 
+## Credentialed Enum - from Linux
