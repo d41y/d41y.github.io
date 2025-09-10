@@ -1972,7 +1972,7 @@ This rule is used to match filters that apply to the Distinguished Name of an ob
 
 When building out search strings, you can utilize logical operators to combine values for the search. The operators ```&```, ```|```, and ```!``` are used for this purpose. For example you can combine multiple search criteria with the ```&``` operator like so: ```(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=64))``` .
 
-The above exmaple sets the first criteria that the object must be a user and combines it with searching for a UAC bit value of 64 (_Password can't change_). A user with that attribute set would match the filter. You can take this even further and combine multiple attributes like ```(&(1) (2) (3))```. The ```!``` and ```|``` operators can work similarly. For example, your filter above can be modified as follows: ```(&(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=64))```.
+The above example sets the first criteria that the object must be a user and combines it with searching for a UAC bit value of 64 (_Password can't change_). A user with that attribute set would match the filter. You can take this even further and combine multiple attributes like ```(&(1) (2) (3))```. The ```!``` and ```|``` operators can work similarly. For example, your filter above can be modified as follows: ```(&(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=64))```.
 
 This would search for any user object that does NOT have the "Password Can't Change" attribute set. When thinking about users, groups, and other objects in AD, you ability to search with LDAP queries is pretty extensive.
 
