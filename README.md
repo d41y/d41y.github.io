@@ -153,7 +153,7 @@ Web Service & API
   3. [User Hunting](./attack/windows/ad/enum_and_attacks/ad_user_hunting.md)
   4. [Internal Password Spraying](./attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.md)
   5. [Credentialed Enum & LOTL](./attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.md)
-  6. [Kerberoasting]()
+  6. [Kerberoasting](./attack/windows/ad/enum_and_attacks/ad_kerberoasting.md)
   7. [ACL]()
   8. [Extras]()
   9. [Domain Trusts Attacks]()
