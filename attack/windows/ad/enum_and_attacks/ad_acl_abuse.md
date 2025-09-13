@@ -234,7 +234,7 @@ This example is not very efficient, and the command can take a long time to run,
 PS C:\htb> Get-ADUser -Filter * | Select-Object -ExpandProperty SamAccountName > ad_users.txt
 ```
 
-You then read each line of the file using a foreach loop, and use the ```Get-Acl``` cmdlet to retrieve ACL information for each domain user by feeding each line of the ```ad_users.txt``` file to the ```Get-ADUser``` cmdlet. You then select just the ```Acess property```, which will give you information about access rights. Finally, you set the ```IdentityReference``` propery to the user you are in control of.
+You then read each line of the file using a foreach loop, and use the ```Get-Acl``` cmdlet to retrieve ACL information for each domain user by feeding each line of the ```ad_users.txt``` file to the ```Get-ADUser``` cmdlet. You then select just the ```Acess property```, which will give you information about access rights. Finally, you set the ```IdentityReference``` property to the user you are in control of.
 
 ```powershell
 PS C:\htb> foreach($line in [System.IO.File]::ReadLines("C:\Users\htb-student\Desktop\ad_users.txt")) {get-acl  "AD:\$(Get-ADUser $line)" | Select-Object Path -ExpandProperty Access | Where-Object {$_.IdentityReference -match 'INLANEFREIGHT\\wley'}}
