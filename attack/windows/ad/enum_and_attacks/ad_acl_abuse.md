@@ -13,6 +13,10 @@
       - [Get-Acl \& Get-ADUser](#get-acl--get-aduser)
       - [Further Enumeration of Rights](#further-enumeration-of-rights)
     - [Enumerating ACLs with BloodHound](#enumerating-acls-with-bloodhound)
+      - [Viewing Node Info](#viewing-node-info)
+      - [Investigating ForceChangePassword Further](#investigating-forcechangepassword-further)
+      - [Viewing Potential Attack Paths](#viewing-potential-attack-paths)
+      - [Viewing Pre-Built Queries](#viewing-pre-built-queries)
 
 
 # ACL Abuse
@@ -372,4 +376,32 @@ OpaqueLength           : 0
 The output above shows that your adunn user has ```DS-Replication-Get-Changes``` and ```DS-Replication-Get-Changes-In-Filtered-Set``` rights over the domain object. This means that this user can be leveraged to perform a DCSync attack.
 
 ### Enumerating ACLs with BloodHound
+
+#### Viewing Node Info
+
+![ad acl abuse 5](../../../../images/ad_acl_abuse5.png)
+
+If you right-click on the line between the two objects, a menu will pop up. If you select ```Help```, you will be presented with help around abusing this ACE, including:
+
+- More info on the specific right, tools, and commands that can be used to pull off this attack
+- Operational Securtiy considerations
+- External references
+
+#### Investigating ForceChangePassword Further
+
+![ad acl abuse 6](../../../../images/ad_acl_abuse6.png)
+
+If you click on the ```16``` next to ```Transitive Object Control```, you will see the entire path that you painstakingly enumerated above. From here, you could leverage the help menus for each edge to find ways to best pull off each attack.
+
+#### Viewing Potential Attack Paths
+
+![ad acl abuse 7](../../../../images/ad_acl_abuse7.png)
+
+Finally, you can use the pre-built queries in BloodHound to confirm that the adunn user has DCSync rights.
+
+#### Viewing Pre-Built Queries
+
+![ad acl abuse 8](../../../../images/ad_acl_abuse8.png)
+
+You've now enumerated these attack paths in multiple ways.
 
