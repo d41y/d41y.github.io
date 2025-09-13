@@ -154,7 +154,7 @@ PS C:\htb> Import-Module .\PowerView.ps1
 PS C:\htb> $sid = Convert-NameToSid wley
 ```
 
-You can then use the ```Get-DomainObjectACL``` function to perform your targeted search. In the below example, you are using this function to find all domain objects that your user has rights over by mapping the user's SID using the ```$sid``` variable thing to the ```SecurityIdentifier``` property which is what tells you who has the given right over an object. One important thing to note is that if you search without the flag ```ResolveGUIDs```, you will see results like the below, where the right ```ExtendedRight``` does not give you a clear picture of what ACE entry the user wley has over damundsen. This is because the ```ObcetAceType``` property is returning a GUID value that is not human readable.
+You can then use the ```Get-DomainObjectACL``` function to perform your targeted search. In the below example, you are using this function to find all domain objects that your user has rights over by mapping the user's SID using the ```$sid``` variable thing to the ```SecurityIdentifier``` property which is what tells you who has the given right over an object. One important thing to note is that if you search without the flag ```ResolveGUIDs```, you will see results like the below, where the right ```ExtendedRight``` does not give you a clear picture of what ACE entry the user wley has over damundsen. This is because the ```ObjetAceType``` property is returning a GUID value that is not human readable.
 
 Note that this command will take a while to run, especially in a large environment.
 
