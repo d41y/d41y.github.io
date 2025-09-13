@@ -154,7 +154,7 @@ Web Service & API
   4. [Internal Password Spraying](./attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.md)
   5. [Credentialed Enum & LOTL](./attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.md)
   6. [Kerberoasting](./attack/windows/ad/enum_and_attacks/ad_kerberoasting.md)
-  7. [ACL]()
+  7. [ACL](./attack/windows/ad/enum_and_attacks/ad_acl_abuse.md)
   8. [Extras]()
   9. [Domain Trusts Attacks]()
   10. [Cross-Forest Trust Abuse]()
