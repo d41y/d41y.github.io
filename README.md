@@ -179,13 +179,15 @@ Web Service & API
 ## Digital Forensics
 
 Disk Forensics
-- [Windows Event Logs]()
+- [Windows Event Logs](./defend/disk_forensics/windows_event_logs.md)
 
 Memory Forensics
 
 Network Forensics
 
 ## Malware Analysis
+
+- [0x00](./defend/malware_analysis/intro_malware_analysis.md)
 
 ## SIEM
 
