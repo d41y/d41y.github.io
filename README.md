@@ -17,6 +17,7 @@
 
 ## Binary Exploitation
 
+- [Pwntools](./attack/binary_exploitation/intro_pwntools.md)
 - [Stack-Based Buffer Overflows on Linux x86](./attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.md)
 
 ## Cloud
