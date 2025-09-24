@@ -43,6 +43,14 @@
       - [Requesting TGT and Performing PTT with DC01$ Machine Account](#requesting-tgt-and-performing-ptt-with-dc01-machine-account)
       - [Confirming the Ticket is in Memory](#confirming-the-ticket-is-in-memory)
       - [Performing DCSync with Mimikatz](#performing-dcsync-with-mimikatz)
+  - [Miscellaneous Misconfigurations](#miscellaneous-misconfigurations)
+    - [Exchange Related Group Membership](#exchange-related-group-membership)
+    - [PrivExchange](#privexchange)
+    - [Printer Bug](#printer-bug)
+    - [MS14-068](#ms14-068)
+    - [Sniffing LDAP Credentials](#sniffing-ldap-credentials)
+    - [Enumerating DNS Records](#enumerating-dns-records)
+    - [Password in Description Field](#password-in-description-field)
 
 ---
 
@@ -1437,3 +1445,124 @@ Credentials:
     lm  - 0: 4562458c201a97fa19365ce901513c21
 ```
 
+## Miscellaneous Misconfigurations
+
+### Exchange Related Group Membership
+
+A default installation of Microsoft Exchange within an AD environment opens up many attack vectors, as Exchange is often granted considerable privileges within the domain. The group Exchange Windows Permissions is not listed as a protected group, but members are granted the ability to write a DACL to the domain object. This can be leveraged to give a user DCSync privileges. An attacker can add accounts to this group by leveraging a DACL misconfig or by leveraging a compromised account that is a member of the Account Operators group. It is common to find user accounts and even computer as members of this group. Power users and support staff in remote offices are often added to this group, allowing them to reset passwords. Read [this](https://github.com/gdedrouas/Exchange-AD-Privesc).
+
+The Exchange group Organization Management is another extremely powerful group and can access the mailboxes of all domain users. It is not uncommon for sysadmins to be members of this group. This group also has full control of the OU called Microsoft Exchange Security Groups, which contains the group Exchange Windows Permissions.
+
+![ad extras 6](../../../../images/ad_extras6.png)
+
+If you can compromise an Exchange server, this will often lead to Domain Admin privileges. Additionally, dumping credentials in memory from an Exchange server will produce 10s if not 100s of cleartext credentials or NTLM hashes. This is often due to users logging in to Outlook Web Access and Exchange caching their credentials in memory after a successful login.
+
+### PrivExchange
+
+The PrivExchange attack results from a flaw in the Exchange Server PushSubscription feature, which allows any domain user with a mailbox to force the Exchange server to authenticate to any host provided by the client over HTTP.
+
+The Exchange service runs as SYSTEM and is over-privileged by default. This flaw can be leveraged to relay to LDAP and dump the domain NDTS database. If you cannot relay to LDAP, this can be leveraged to relay and authenticate to other hosts within the domain. This attack will take you directly to Domain Admin with any authenticated domain user account.
+
+### Printer Bug
+
+The Printer Bug is a flaw in the MS-RPRN protocol. This protocol defines the communication of print job processing and print system management between a client and a print server. To leverage this flaw, any domain user can connect to the spool's named pipe with the ```RpcOpenPrinter``` method and use the ```RpcRemoteFindFirstPrinterChangeNotificationEx``` method, and force the server to authenticate to any host provided by the client over SMB.
+
+The spooler service runs as SYSTEM and installed by default in Windows servers running Desktop Experience. This attack can be leveraged to relay to LDAP and granz your attacker account DCSync privileges to retrieve all password hashes from AD.
+
+The attack can also be used to relay LDAP authentication and grant Resource-Based Constrained Delegation (_RBCD_) privileges for the victim to a computer account under your control, thus giving the attacker privileges to authenticate as any user on the victim's computer. This attack can be leveraged to compromise a DC in a partner domain/forest, provided you have administrative access to a DC in the first forest/domain already, and the trust allows TGT delegation, which is not by default anymore.
+
+You can use tools such as the Get-SpoolStatus module from [this](http://web.archive.org/web/20200919080216/https://github.com/cube0x0/Security-Assessment) tool or [this](https://github.com/NotMedic/NetNTLMtoSilverTicket) tool to check for machines vulnerable to the Printer Bug. This flaw can be used to compromise a host in another forest that has Unconstrained Delegation enabled, such as a DC. It can help you attack across forest trusts once you have compromised one forest.
+
+```powershell
+PS C:\htb> Import-Module .\SecurityAssessment.ps1
+PS C:\htb> Get-SpoolStatus -ComputerName ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+
+ComputerName                        Status
+------------                        ------
+ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL   True
+```
+
+### MS14-068
+
+This was a flaw in the Kerberos protocol, which could be leveraged along with standard domain user credentials to elevate privileges to Domain Admin. A Kerberos ticket contains information about a user, including the account name, ID, and group membership in the Privilege Attribute Certificate (_PAC_). The PAC is signed by the KDC using secret keys to validate that the PAC has not been tampered with after creation.
+
+The vuln allowed a forged PAC to be accepted by the KDC as legitimate. This can be leveraged to create a fake PAC, presenting a user as a member of the Domain Administrators or other privileged group. It can be exploited with tools such as the [Python Kerberos Exploitation Kit](https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068/pykek) or the Impacket toolkit. The only defense against this attack is patching.
+
+### Sniffing LDAP Credentials
+
+Many applications and printers store LDAP credentials in their web admin console to connect to the domain. These consoles are often left with weak or default passwords. Sometimes, these credentials can be viewed in cleartext. Other times, the application has a "test connection" function that you can use to gather credentials by changing the LDAP IP address to that of your attack host and setting up a netcat listener on LDAP port 389. When the device attempts to test the LDAP conncetion, it will send the credentials to your machine, often in cleartext. Accounts used for LDAP connections are often privileged,but if not, this could serve as an initial foothold in the domain. Other times, a full LDAP server is required to pull off this attack.
+
+### Enumerating DNS Records
+
+You can use a tool such as [adidnsdump](https://github.com/dirkjanm/adidnsdump) to enumerate all DNS records in a domain using a valid domain user account. This is especially helpful if the naming convention for hosts returned to you in your enumeration using tools such as BloodHound is similar to ```SRV01934.INLANEFREIGHT.LOCAL```. If all servers and workstations have a non-descriptive name, it makes it difficult for you to know what exactly to attack. If you can access DNS entries in AD, you can potentially discover interesting DNS records that point to this same server, such as ```JENKINS.INLANEFREIGHT.LOCAL```, which you can use to better plan out your attacks.
+
+The tools works because, by default, all users can list the child object of a DNS zone in an AD environment. By default, querying DNS records using LDAP does not return all results. So by using the adidnsdump tool, you can resolve all records in the zone and potentially find something useful for you engagement. The background and more in-depth explanation [here](https://dirkjanm.io/getting-in-the-zone-dumping-active-directory-dns-with-adidnsdump/).
+
+On the first run of the tool, you can see that some records are blank, namely ```?,LOGISTICS,?```.
+
+```bash
+d41y@htb[/htb]$ adidnsdump -u inlanefreight\\forend ldap://172.16.5.5 
+
+Password: 
+
+[-] Connecting to host...
+[-] Binding to host
+[+] Bind OK
+[-] Querying zone for records
+[+] Found 27 records
+
+d41y@htb[/htb]$ head records.csv 
+
+type,name,value
+?,LOGISTICS,?
+AAAA,ForestDnsZones,dead:beef::7442:c49d:e1d7:2691
+AAAA,ForestDnsZones,dead:beef::231
+A,ForestDnsZones,10.129.202.29
+A,ForestDnsZones,172.16.5.240
+A,ForestDnsZones,172.16.5.5
+AAAA,DomainDnsZones,dead:beef::7442:c49d:e1d7:2691
+AAAA,DomainDnsZones,dead:beef::231
+A,DomainDnsZones,10.129.202.29
+```
+
+If you run again with the ```-r``` flag the tool will attempt to resolve unknown records by performing an ```A``` query. Now you can see that an IP address of 172.16.5.240 showed up for LOGISTICS. While this is a small example, it is worth running this tool in larger environments. You may uncover "hidden" records that can lead to discovering interesting hosts.
+
+```bash
+d41y@htb[/htb]$ adidnsdump -u inlanefreight\\forend ldap://172.16.5.5 -r
+
+Password: 
+
+[-] Connecting to host...
+[-] Binding to host
+[+] Bind OK
+[-] Querying zone for records
+[+] Found 27 records
+
+d41y@htb[/htb]$ head records.csv 
+
+type,name,value
+A,LOGISTICS,172.16.5.240
+AAAA,ForestDnsZones,dead:beef::7442:c49d:e1d7:2691
+AAAA,ForestDnsZones,dead:beef::231
+A,ForestDnsZones,10.129.202.29
+A,ForestDnsZones,172.16.5.240
+A,ForestDnsZones,172.16.5.5
+AAAA,DomainDnsZones,dead:beef::7442:c49d:e1d7:2691
+AAAA,DomainDnsZones,dead:beef::231
+A,DomainDnsZones,10.129.202.29
+```
+
+### Password in Description Field
+
+Sensitive information such as account passwords are sometimes found in the user account Description or Notes fields and can be quickly enumerated using PowerView. For large domains, it is helpful to export this data to a CSV file to review offline.
+
+```powershell
+PS C:\htb> Get-DomainUser * | Select-Object samaccountname,description |Where-Object {$_.Description -ne $null}
+
+samaccountname description
+-------------- -----------
+administrator  Built-in account for administering the computer/domain
+guest          Built-in account for guest access to the computer/domain
+krbtgt         Key Distribution Center Service Account
+ldap.agent     *** DO NOT CHANGE ***  3/12/2012: Sunsh1ne4All!
+```
