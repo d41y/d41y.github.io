@@ -157,7 +157,7 @@ Web Service & API
   6. [Kerberoasting](./attack/windows/ad/enum_and_attacks/ad_kerberoasting.md)
   7. [ACL](./attack/windows/ad/enum_and_attacks/ad_acl_abuse.md)
   8. [Extras](./attack/windows/ad/enum_and_attacks/ad_extras.md)
-  9. [Domain Trusts Attacks]()
+  9. [Domain Trusts Attacks](./attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.md)
   10. [Cross-Forest Trust Abuse]()
   11. [Defensive Considerations]()
 
