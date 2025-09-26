@@ -633,6 +633,12 @@ Taking a look at the ```MSV``` part: MSV is an authentication package in Windows
 
 Taking a look at the ```WDIGEST``` part: WDIGEST is an older authentication protocol enabled by default in Windows XP - Windows 8 and Windows Server 2003 - Windows Server 2012. LSASS caches credentials used by WDIGEST in clear-text. This means if you find yourself targeting a Windows system with WDIGEST enabled, you will most likely see a password in clear-text. Modern Windows OS have WDIGEST disabled by default. Additionally, it is essential to note that Microsoft released a security update for systems affected by this issue with WDIGEST.
 
+> [!INFO]
+> Using ```reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1``` will enable WDigest.<br>
+> Then, you need to restart the machine ```shutdown.exe /r /t 0 /f```.<br>
+> If it worked, you should now be able to view the passwords in cleartext.<br>
+> To check if it worked use ```Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" | Select-Object UseLogonCredential```, there should be a ```1```.
+
 Taking a look at the ```Kerberos``` part: Kerberos is a network authentication protocol used by AD in Windows Domain environments. Domain user accounts are granted tickets upon authentication with AD. This ticket is used to allow the user to access shared resources on the network that they have been granted access to without needing to type their credentials each time. LSASS caches passwords, ekeys, tickets, and pins associated with Kerberos. It is possible to extract these from LSASS process memory and use them to access other systems joined to the same domain.
 
 Taking a look at the ```DPAPI``` part: Mimikatz and Pypykatz can extract the DPAPI masterkey for logged-on users whose data is present in LSASS process memory. These masterkeys can then be used to decrypt the secrets associated with each of the applications using DPAPI and result in the capturing of credentials for various accounts.
