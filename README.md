@@ -33,7 +33,8 @@
 ## Initial Access
 
 - Attacks
-  - [Applications]()
+  - Applications
+    - [CMS](./attack/initial_access/attacking_common_applications/attacking_cms.md)
   - [Password Attacks](./attack/initial_access/password_attacks.md)
     - [0x00](./attack/initial_access/password_attacks/password_attacks_fundamentals.md)
     - [Remote](./attack/initial_access/password_attacks/remote_password_attacks.md)
