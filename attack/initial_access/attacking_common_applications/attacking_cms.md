@@ -1095,4 +1095,3 @@ Computer    : app01
 OS          : Linux app01 5.4.0-81-generic #91-Ubuntu SMP Thu Jul 15 19:09:17 UTC 2021 x86_64
 Meterpreter : php/linux
 ```
-
