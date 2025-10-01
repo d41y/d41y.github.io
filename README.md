@@ -37,6 +37,7 @@
     - [Application Discovery & Enum](./attack/initial_access/attacking_common_applications/app_discovery_enum.md)
     - [CMS](./attack/initial_access/attacking_common_applications/attacking_cms.md)
     - [Infra & Network Tools](./attack/initial_access/attacking_common_applications/attacking_infra_network_tools.md)
+    - [Customer Service / Configuration Management]()
   - [Password Attacks](./attack/initial_access/password_attacks.md)
     - [0x00](./attack/initial_access/password_attacks/password_attacks_fundamentals.md)
     - [Remote](./attack/initial_access/password_attacks/remote_password_attacks.md)
