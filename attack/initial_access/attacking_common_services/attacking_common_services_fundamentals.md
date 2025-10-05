@@ -2,12 +2,16 @@
   - [Interacting with Common Services](#interacting-with-common-services)
     - [File Share Services](#file-share-services)
       - [SMB](#smb)
-          - [Windows](#windows)
-          - [Linux](#linux)
+        - [Windows](#windows)
+          - [Command Shell](#command-shell)
+          - [PowerShell](#powershell)
+        - [Linux](#linux)
     - [Other Services](#other-services)
       - [Email](#email)
       - [Databases](#databases)
-          - [Command Line Utilities](#command-line-utilities)
+        - [Command Line Utilities](#command-line-utilities)
+          - [MSSQL](#mssql)
+          - [MySQL](#mysql)
           - [GUI App](#gui-app)
       - [Tools](#tools)
           - [Tools to Interact with Common Services](#tools-to-interact-with-common-services)
@@ -31,7 +35,7 @@ A file share service is a type of service that provides, mediates, and monitors 
 
 #### SMB
 
-###### Windows
+##### Windows
 
 There are different ways you can interact with a shared folder using Windows. On Windows GUI, you can press ```[WINKEY] + [R]``` to open the Run dialog box and type the file share location, e. g.: ```\\192.168.220.129\Finance\```.
 
@@ -47,7 +51,7 @@ If you do not have access, you will receive an authentication request.
 
 Windows has two command-line shells: the Command shell and PowerShell. Each shell is a software program that provides direct communication between you and the OS or application, providing an environment to automate IT operations.
 
-####### Command Shell
+###### Command Shell
 
 ```
 C:\htb> dir \\192.168.220.129\Finance\
@@ -120,7 +124,7 @@ n:\Contracts\private\secret.txt:file with all credentials
 n:\Contracts\private\credentials.txt:admin:SecureCredentials!
 ```
 
-####### PowerShell
+###### PowerShell
 
 PowerShell was designed to extend the capabilities of the Command shell to run PowerShell commands called cmdlets. Cmdlets are similar to Windows commands but provide a more extensible scripting language. You can run both Windows commands and PowerShell cmdlets in PowerShell, but the Command shell can only run Windows commands and not PowerShell cmdlets.
 
@@ -190,7 +194,7 @@ N:\Contracts\private\credentials.txt:1:admin:SecureCredentials!
 
 CLI enables IT operations to automate routine tasks like user account management, nightly backups, or interaction with many files. You can perform operations more efficiently by using scripts than the user interface or GUI.
 
-###### Linux
+##### Linux
 
 Linux can also be used to browse and mount SMB shares. Note that this can be done whether the target server is a Windows machine or a Samba server.
 
@@ -244,9 +248,9 @@ You can use the domain name or IP address of the mail server. If the server uses
 
 ... are typically used in enterprise, and most companies use them to store and manage information. There are different types of databases, such as hierarchical databases, NoSQL databases, and SQL relational databases.
 
-###### Command Line Utilities
+##### Command Line Utilities
 
-####### MSSQL
+###### MSSQL
 
 To interact with MSSQL with Linux you can use sqsh or sqlcmd if you are using Windows. Sqsh is much more than a friendly prompt. It is intended to provide much of the functionality provided by a command shell, such as variables, aliasing, redirection, pipes, back-grounding, job control, history, command substitution, and dynamic config. You can start an interactive SQL session as follows:
 
@@ -265,7 +269,7 @@ The sqlcmd utility lets you enter Transact-SQL statements, system procedures, an
 C:\htb> sqlcmd -S 10.129.20.13 -U username -P Password123
 ```
 
-####### MySQL
+###### MySQL
 
 To interact with MySQL, you can use MySQL binaries for Linux or Windows. MySQL comes preinstalled on some Linux distros. Start an interactive SQL session using Linux:
 
