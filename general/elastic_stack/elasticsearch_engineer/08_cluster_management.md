@@ -11,6 +11,16 @@
       - [Searching Remotely](#searching-remotely)
       - [Searching Multiple Cluster](#searching-multiple-cluster)
       - [Search Response](#search-response)
+  - [Troubelshooting](#troubelshooting)
+    - [The Health API](#the-health-api)
+      - [Health Status Levels](#health-status-levels)
+      - [Health Indicator Breakdown](#health-indicator-breakdown)
+      - [Health Indicator Symptoms and Impacts](#health-indicator-symptoms-and-impacts)
+      - [Health Indicator Diagnosis](#health-indicator-diagnosis)
+    - [Monitoring Your Clusters](#monitoring-your-clusters)
+      - [Monitoring the Elastic Stack](#monitoring-the-elastic-stack)
+      - [Monitoring with Elastic Agent](#monitoring-with-elastic-agent)
+      - [Configuring Monitoring on Elastic Cloud](#configuring-monitoring-on-elastic-cloud)
 
 ---
 
@@ -136,3 +146,87 @@ GET blogs,eu-west-1:blogs,us-*:blogs/_search
     ...
     } },
 ```
+
+## Troubelshooting
+
+### The Health API
+
+- The Health API provide an an overview of the health of a cluster
+  - Diagnose issues across different components like shards, ingestion, and search
+  - Health reports include specific recommendations to fix the issues
+
+```
+GET /_health_report
+```
+
+#### Health Status Levels
+
+- Each indicator has a health status
+- The cluster's status is controlled by the worst indicator status
+
+| Color | Meaning |
+| ----- | ------- |
+| Green | The indicator is healthy |
+| Unknown | Could not be determined |
+| Yellow | Degraded states |
+| Red | Outage or feature unavailable |
+
+#### Health Indicator Breakdown
+
+|   |   |
+| - | - |
+| ```master_is_stable``` | checks if the master is changing too frequently |
+| ```shards_availability``` | check if the cluster has all shards available |
+| ```disk``` | reports health issues caused by lack of disk space |
+| ```ilm``` | reports health issues related to ILM |
+| ```repository_integrity``` | checks if any snapshot repos becomes corrupted, unknown or invalid |
+| ```slm``` | reports health issues related to SLM |
+| ```shards_capacity``` | checks if the cluster has enough room to add new shards |
+
+#### Health Indicator Symptoms and Impacts
+
+```
+{"status": "red",
+    "indicators": { ...
+        "shards_availability": {
+            "status": "red",
+            "symptom": "This cluster has 1 unavailable primary shard, 1 unavailable replica shard.",
+            "details": {},
+            "impacts": [{ ...
+                "description": "Cannot add data to 1 index [blogs_elser]. Searches might return incomplete results.",
+                "impact_areas": ["ingest", "search"]
+    }],
+```
+
+#### Health Indicator Diagnosis
+
+```
+"diagnosis": [{
+    "cause": "Elasticsearch isn't allowed to allocate some shards from these indices to any of the nodes in the cluster",
+    "action": "Diagnose the issue by calling the allocation explain API for an index [GET _cluster/allocation/explain]..."
+    "help_url": "https://ela.st/diagnose-shards",
+    "affected_resources": {"indices": ["blogs_elser"]}
+}]
+```
+
+### Monitoring Your Clusters
+
+#### Monitoring the Elastic Stack
+
+- To monitor the Elastic Stack, you can use the Elastic Stack
+  - Metricbeat to collect metrics
+  - Filebeat to collect logs
+  - Or use Elastic Agent
+- It is recommended using a dedicated cluster for monitoring
+  - to reduce the load and storage on the monitored cluster
+  - to keep access to monitoring even for unhealthy clusters
+  - to support segregation of duties
+
+#### Monitoring with Elastic Agent
+
+- Use Elastic Agent to collect both metrics and logs
+
+#### Configuring Monitoring on Elastic Cloud
+
+- Enable monitoring via the Cloud console
+  - select the deployment used to monitor the Stack
