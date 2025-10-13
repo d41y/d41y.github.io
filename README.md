@@ -220,9 +220,9 @@ Network Forensics
 
 ## Assessments
 
-- [Assessment Standards](./general/assessments/vulnerability_assessment.md)
+- [Assessment Standards](./general/assessments/standards.md)
 - [Security Assessment](./general/assessments/security_assessment.md)
-- [Vulnerability Assessment]()
+- [Vulnerability Assessment](./general/assessments/vulnerability_assessment.md)
 
 ## DBMS
 
@@ -243,6 +243,10 @@ Elasticsearch Engineer
 - [Data Modelling](./general/elastic_stack/elasticsearch_engineer/data_modelling.md)
 - [Search](./general/elastic_stack/elasticsearch_engineer/03_search.md)
 - [Aggregations](./general/elastic_stack/elasticsearch_engineer/04_aggregations.md)
+- [Data Processing](./general/elastic_stack/elasticsearch_engineer/05_data_processing.md)
+- [Distributed Datastore](./general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.md)
+- [Data Management](./general/elastic_stack/elasticsearch_engineer/07_data_management.md)
+- [Cluster Management](./general/elastic_stack/elasticsearch_engineer/08_cluster_management.md) 
 
 ## Networking
 
