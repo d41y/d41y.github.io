@@ -245,6 +245,7 @@ Data Analysis with Kibana
 - [Search Your Data](./general/elastic_stack/data_analysis_with_kibana/02_search_your_data.md)
 - [Visualize Your Data](./general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.md)
 - [Additional Visualizations](./general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.md)
+- [Present Your Data](./general/elastic_stack/data_analysis_with_kibana/05_present_your_data.md)
 
 Elasticsearch Engineer
 - [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
