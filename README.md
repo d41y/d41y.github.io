@@ -242,7 +242,8 @@ Non-Relational
 ## Elastic Stack
 
 Data Analysis with Kibana
-- [Search your Data](./general/elastic_stack/data_analysis_with_kibana/02_search_your_data.md)
+- [Search Your Data](./general/elastic_stack/data_analysis_with_kibana/02_search_your_data.md)
+- [Visualize Your Data](./general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.md)
 
 Elasticsearch Engineer
 - [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
