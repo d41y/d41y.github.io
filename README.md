@@ -241,24 +241,24 @@ Non-Relational
 
 ## Elastic Stack
 
-Data Analysis with Kibana
-- [Search Your Data](./general/elastic_stack/data_analysis_with_kibana/02_search_your_data.md)
-- [Visualize Your Data](./general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.md)
-- [Additional Visualizations](./general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.md)
-- [Present Your Data](./general/elastic_stack/data_analysis_with_kibana/05_present_your_data.md)
-- [Analyze Your Data With Machine Learning](./general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.md)
-- [Advanced Kibana](./general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.md)
-- [Alerting](./general/elastic_stack/data_analysis_with_kibana/08_alerting.md)
-
-Elasticsearch Engineer
-- [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
-- [Data Modelling](./general/elastic_stack/elasticsearch_engineer/data_modelling.md)
-- [Search](./general/elastic_stack/elasticsearch_engineer/03_search.md)
-- [Aggregations](./general/elastic_stack/elasticsearch_engineer/04_aggregations.md)
-- [Data Processing](./general/elastic_stack/elasticsearch_engineer/05_data_processing.md)
-- [Distributed Datastore](./general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.md)
-- [Data Management](./general/elastic_stack/elasticsearch_engineer/07_data_management.md)
-- [Cluster Management](./general/elastic_stack/elasticsearch_engineer/08_cluster_management.md) 
+- [Building Great Search Experiences](./general/elastic_stack/building_great_search_experiences.md)
+- Data Analysis with Kibana
+  - [Search Your Data](./general/elastic_stack/data_analysis_with_kibana/02_search_your_data.md)
+  - [Visualize Your Data](./general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.md)
+  - [Additional Visualizations](./general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.md)
+  - [Present Your Data](./general/elastic_stack/data_analysis_with_kibana/05_present_your_data.md)
+  - [Analyze Your Data With Machine Learning](./general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.md)
+  - [Advanced Kibana](./general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.md)
+  - [Alerting](./general/elastic_stack/data_analysis_with_kibana/08_alerting.md)
+- Elasticsearch Engineer
+  - [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
+  - [Data Modelling](./general/elastic_stack/elasticsearch_engineer/data_modelling.md)
+  - [Search](./general/elastic_stack/elasticsearch_engineer/03_search.md)
+  - [Aggregations](./general/elastic_stack/elasticsearch_engineer/04_aggregations.md)
+  - [Data Processing](./general/elastic_stack/elasticsearch_engineer/05_data_processing.md)
+  - [Distributed Datastore](./general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.md)
+  - [Data Management](./general/elastic_stack/elasticsearch_engineer/07_data_management.md)
+  - [Cluster Management](./general/elastic_stack/elasticsearch_engineer/08_cluster_management.md) 
 
 ## Networking
 
