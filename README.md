@@ -242,6 +242,7 @@ Non-Relational
 ## Elastic Stack
 
 - [Building Great Search Experiences](./general/elastic_stack/building_great_search_experiences.md)
+- [Configuring Elasticsearch Index for Time Series Data](./general/elastic_stack/configuring_index_time_series_data.md)
 - Data Analysis with Kibana
   - [Search Your Data](./general/elastic_stack/data_analysis_with_kibana/02_search_your_data.md)
   - [Visualize Your Data](./general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.md)
@@ -258,7 +259,8 @@ Non-Relational
   - [Data Processing](./general/elastic_stack/elasticsearch_engineer/05_data_processing.md)
   - [Distributed Datastore](./general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.md)
   - [Data Management](./general/elastic_stack/elasticsearch_engineer/07_data_management.md)
-  - [Cluster Management](./general/elastic_stack/elasticsearch_engineer/08_cluster_management.md) 
+  - [Cluster Management](./general/elastic_stack/elasticsearch_engineer/08_cluster_management.md)
+- [Kubernetes Basics](./general/elastic_stack/kubernetes_basics.md)
 
 ## Networking
 
