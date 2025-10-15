@@ -21,8 +21,6 @@ Zugang Alex - https://wikare.de/s/jkENHLqYjtgLd4d
 
 - Module für CPTS
   - OSINT Corporate Recon
-  - Attacking Common Services
-  - AD Enum & Attacks
   - Attacking common apps
   - linux privesc
   - wind privesc
