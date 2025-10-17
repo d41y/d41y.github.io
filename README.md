@@ -260,6 +260,7 @@ Non-Relational
   - [Distributed Datastore](./general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.md)
   - [Data Management](./general/elastic_stack/elasticsearch_engineer/07_data_management.md)
   - [Cluster Management](./general/elastic_stack/elasticsearch_engineer/08_cluster_management.md)
+- [ES|QL for Security Analysts](./general/elastic_stack/esql_for_security_analysts.md)
 - [Kubernetes Basics](./general/elastic_stack/kubernetes_basics.md)
 
 ## Networking
