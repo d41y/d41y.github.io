@@ -1,4 +1,4 @@
-- [Reporting](#reporting)
+- [Bug Bounty Hunting Reporting](#bug-bounty-hunting-reporting)
   - [Essential Elements of a good Bug Report](#essential-elements-of-a-good-bug-report)
   - [CWE \& CVSS](#cwe--cvss)
     - [CWE (_Common Weakness Enumeration_)](#cwe-common-weakness-enumeration)
@@ -17,7 +17,7 @@
 
 ---
 
-# Reporting
+# Bug Bounty Hunting Reporting
 
 ## Essential Elements of a good Bug Report
 
