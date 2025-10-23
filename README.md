@@ -284,7 +284,7 @@ Non-Relational
 ## Reporting
 
 - [Bug Bounty](./general/reporting/bbh_reporting.md)
-- [Penetration Test]()
+- [Penetration Test](./general/reporting/pt_reporting.md)
 
 ## WebDev
 
