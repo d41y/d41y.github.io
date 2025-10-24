@@ -7,6 +7,8 @@
     - [Server Side Attacks](#server-side-attacks)
   - [Attacking Thick Client Applications](#attacking-thick-client-applications-1)
     - [Retrieving Hardcoded Creds from Thick Client Applications](#retrieving-hardcoded-creds-from-thick-client-applications)
+  - [Exploiting Web Vulnerabilities in Thick-Client Applications](#exploiting-web-vulnerabilities-in-thick-client-applications)
+    - [Foothold](#foothold)
 
 ---
 
@@ -217,4 +219,160 @@ Now, you can read the source code of the exported application by dragging and dr
 ![attacking thick client 6](../../../images/attacking_thick_client6.png)
 
 With the source code disclosed, you can understand that this binary is a custom-made runas.exe with the sole purpose of restarting the Oracle service using hardcoded credentials.
+
+## Exploiting Web Vulnerabilities in Thick-Client Applications
+
+Thick-client applications with a three-tier architecture have a security advantage over those with a two-tier architecture since it prevents the end-user from communicating directly with the database server. However, three-tier applications can be susceptible to web-specific attacks like SQLi and Path traversal.
+
+During pentesting, it is common for someone to encounter a thick client application that connects to a server to communicate with the database. The following scenario demonstrates a case where the tester has found the following files while enumerating an FTP server that provides anonymous user access.
+
+- fatty-client.jar
+- note.txt
+- note2.txt
+- note3.txt
+
+Reading the content of all the text files reveals that:
+
+- A server has been reconfigured to run on port 1337 instead of 8000.
+- This might be a thick/thin client architecture where the client application still needs to be updated to use the new port.
+- The client application relies on Java 8.
+- The login creds for login in the client application are qtc:clarabibi.
+
+Run the fatty-client.jar file by double-clicking on it. Once the app is started, you can log in using the said credentials.
+
+![attacking thick client 7](../../../images/attacking_thick_client7.png)
+
+This is not successful, and the message "Connection Error!" is displayed. This is probably because the port pointing to the server needs to be updated from 8000 to 1337. Capture and analyze the network traffic using Wireshark to confirm this. Once Wireshark is started, you click on "Login" once again.
+
+![attacking thick client 8](../../../images/attacking_thick_client8.png)
+
+The client attempts to connect to the ```server.fatty.htb``` subdomain. Start a command prompt as administrator and add the following entry to the hosts file.
+
+```
+C:\> echo 10.10.10.174    server.fatty.htb >> C:\Windows\System32\drivers\etc\hosts
+```
+
+Inspecting the traffic again reveals that the client is attempting to connect to port 8000.
+
+![attacking thick client 9](../../../images/attacking_thick_client9.png)
+
+The fatty-client.jar is a Java Archive file, and its content can be extracted by right-clicking on it and selecting "Extract files".
+
+```powershell
+C:\> ls fatty-client\
+
+<SNIP>
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       10/30/2019  12:10 PM                htb
+d-----       10/30/2019  12:10 PM                META-INF
+d-----        4/26/2017  12:09 AM                org
+------       10/30/2019  12:10 PM           1550 beans.xml
+------       10/30/2019  12:10 PM           2230 exit.png
+------       10/30/2019  12:10 PM           4317 fatty.p12
+------       10/30/2019  12:10 PM            831 log4j.properties
+------        4/26/2017  12:08 AM            299 module-info.class
+------       10/30/2019  12:10 PM          41645 spring-beans-3.0.xsd
+```
+
+Run PowerShell as administrator, navigate to the extracted directory and use the ```Select-String``` command to search all the files for port 8000.
+
+```powershell
+C:\> ls fatty-client\ -recurse | Select-String "8000" | Select Path, LineNumber | Format-List
+
+Path       : C:\Users\cybervaca\Desktop\fatty-client\beans.xml
+LineNumber : 13
+```
+
+There's a match in beans.xml. This is a Spring configuration file containing metadata. Read its content.
+
+```powershell
+C:\> cat fatty-client\beans.xml
+
+<SNIP>
+<!-- Here we have an constructor based injection, where Spring injects required arguments inside the
+         constructor function. -->
+   <bean id="connectionContext" class = "htb.fatty.shared.connection.ConnectionContext">
+      <constructor-arg index="0" value = "server.fatty.htb"/>
+      <constructor-arg index="1" value = "8000"/>
+   </bean>
+
+<!-- The next to beans use setter injection. For this kind of injection one needs to define an default
+constructor for the object (no arguments) and one needs to define setter methods for the properties. -->
+   <bean id="trustedFatty" class = "htb.fatty.shared.connection.TrustedFatty">
+      <property name = "keystorePath" value = "fatty.p12"/>
+   </bean>
+
+   <bean id="secretHolder" class = "htb.fatty.shared.connection.SecretHolder">
+      <property name = "secret" value = "clarabibiclarabibiclarabibi"/>
+   </bean>
+<SNIP>
+```
+
+Edit the line ```<constructor-arg index="1" value = "8000"/>``` and set the port to 1337. Reading the content carefully, you also notice that the value of the secret is ```clarabibiclarabibiclarabibi```. Running the edited application will fail due to an SHA-256 digest mismatch. The JAR is signed, validating every file's SHA-256 hashes before running. These hashes are present in the file ```META-INF/MANIFEST.MF```.
+
+```powershell
+C:\> cat fatty-client\META-INF\MANIFEST.MF
+
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Built-By: root
+Sealed: True
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_232
+Main-Class: htb.fatty.client.run.Starter
+
+Name: META-INF/maven/org.slf4j/slf4j-log4j12/pom.properties
+SHA-256-Digest: miPHJ+Y50c4aqIcmsko7Z/hdj03XNhHx3C/pZbEp4Cw=
+
+Name: org/springframework/jmx/export/metadata/ManagedOperationParamete
+ r.class
+SHA-256-Digest: h+JmFJqj0MnFbvd+LoFffOtcKcpbf/FD9h2AMOntcgw=
+<SNIP>
+```
+
+Remove the hashes from the ```META-INF/MANIFEST.MF``` and delete the ```1.RSA``` and ```1.SF``` files from the ```META-INF``` dir. The modified ```MANIFEST.MF``` should end with a new line.
+
+```Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Built-By: root
+Sealed: True
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_232
+Main-Class: htb.fatty.client.run.Starter
+
+```
+
+You can update and run the fatty-client.jar file by issuing the following commands.
+
+```powershell
+C:\> cd .\fatty-client
+C:\> jar -cmf .\META-INF\MANIFEST.MF ..\fatty-client-new.jar *
+```
+
+Then, you double-click on the fatty-client-new.jar file to start it and try logging in using the creds qtc:clarabibi.
+
+![attacking thick client 10](../../../images/attacking_thick_client10.png)
+
+This time you get the message "Login Successful!".
+
+### Foothold
+
+Clicking on "Profile" -> "Whoami" reveals that the user qtc is assigned with the user role.
+
+![attacking thick client 11](../../../images/attacking_thick_client11.png)
+
+Clicking on the "ServerStatus", you notice that you can't click on any options.
+
+![attacking thick client 12](../../../images/attacking_thick_client12.png)
+
+This implies that there might be another user with higher privileges that is allowed to use this feature. Clicking on the "FileBrowser" -> "Notes.txt" reveals the file security.txt. Clicking the "Open" option at the bottom of the window shows the following content.
+
+![attacking thick client 13](../../../images/attacking_thick_client13.png)
+
+This note informs you that a few critical issues in the application still need to be fixed. Navigating to the "FileBrowser" -> "Mail" option reveals the dave.txt file containing interesting information. You can read its content by clicking the "Open" option at the bottom of the window.
+
+![attacking thick client 14](../../../images/attacking_thick_client14.png)
+
+The message from dave says that all admin users are removed from the database. It also refers to a timeout implemented in the login procedure to mitigate time-based SQLi attacks.
 
