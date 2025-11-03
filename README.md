@@ -28,8 +28,6 @@
 
 ## Hardware / ICS
 
-- [0x00](./attack/hardware/hardware_ics_fundamentals.md)
-
 ## Initial Access
 
 - Attacks
@@ -39,19 +37,23 @@
     - [Common Gateway Interfaces](./attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.md)
     - [Customer Service / Configuration Management](./attack/initial_access/attacking_common_applications/attacking_management.md)
     - [Infra & Network Tools](./attack/initial_access/attacking_common_applications/attacking_infra_network_tools.md)
-  - [Password Attacks](./attack/initial_access/password_attacks.md)
+    - [Misc Applications](./attack/initial_access/attacking_common_applications/attacking_misc_apps.md)
+    - [Servlet Containers / Software Dev](./attack/initial_access/attacking_common_applications/attacking_servlet_containers.md)
+    - [Thick Client Applications](./attack/initial_access/attacking_common_applications/attacking_thick_client.md)
+  - Password Attacks
     - [0x00](./attack/initial_access/password_attacks/password_attacks_fundamentals.md)
     - [Linux](./attack/initial_access/password_attacks/linux_password_attacks.md)
     - [Network](./attack/initial_access/password_attacks/network_password_attacks.md)
     - [Remote](./attack/initial_access/password_attacks/remote_password_attacks.md)
     - [Windows](./attack/initial_access/password_attacks/windows_password_attacks.md)
-  - [Services](./attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.md)
-    - [FTP](./attack/initial_access/attacking_common_services/attacking_ftp.md)
-    - [SMB](./attack/initial_access/attacking_common_services/attacking_smb.md)
-    - [SQL](./attack/initial_access/attacking_common_services/attacking_sql.md)
-    - [RDP](./attack/initial_access/attacking_common_services/attacking_rdp.md)
+  - Services
+    - [0x00](./attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.md)
     - [DNS](./attack/initial_access/attacking_common_services/attacking_dns.md)
     - [Email Services](./attack/initial_access/attacking_common_services/attacking_email_services.md)
+    - [FTP](./attack/initial_access/attacking_common_services/attacking_ftp.md)
+    - [RDP](./attack/initial_access/attacking_common_services/attacking_rdp.md)
+    - [SMB](./attack/initial_access/attacking_common_services/attacking_smb.md)
+    - [SQL](./attack/initial_access/attacking_common_services/attacking_sql.md)
 - [Footprinting](./attack/initial_access/footprinting.md)
   - [Infrastructure Based Enumeration](./attack/initial_access/footprinting.md#infrastructure-based-enumeration)
   - [Host Based Enumeration](./attack/initial_access/footprinting.md#host-based-enumeration)
@@ -170,7 +172,7 @@ Web Service & API
   8. [Extras](./attack/windows/ad/enum_and_attacks/ad_extras.md)
   9. [Domain Trusts Attacks](./attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.md)
   10. [Cross-Forest Trust Attacks](./attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.md)
-   
+- Mitigation
   - [Defensive Considerations](./attack/windows/ad/enum_and_attacks/ad_defensive_considerations.md)
 
 </details>
