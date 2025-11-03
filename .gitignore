@@ -1,0 +1,6 @@
+# ignoring trashcan
+ZZZ_trashcan/
+
+# ignoring sensitive files
+TODO.md
+github_cloning_enabling.md
