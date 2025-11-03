@@ -36,12 +36,15 @@
   - Applications
     - [Application Discovery & Enum](./attack/initial_access/attacking_common_applications/app_discovery_enum.md)
     - [CMS](./attack/initial_access/attacking_common_applications/attacking_cms.md)
-    - [Infra & Network Tools](./attack/initial_access/attacking_common_applications/attacking_infra_network_tools.md)
-    - [Customer Service / Configuration Management](./attack/initial_access/attacking_common_applications/attacking_management.md)
     - [Common Gateway Interfaces](./attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.md)
+    - [Customer Service / Configuration Management](./attack/initial_access/attacking_common_applications/attacking_management.md)
+    - [Infra & Network Tools](./attack/initial_access/attacking_common_applications/attacking_infra_network_tools.md)
   - [Password Attacks](./attack/initial_access/password_attacks.md)
     - [0x00](./attack/initial_access/password_attacks/password_attacks_fundamentals.md)
+    - [Linux](./attack/initial_access/password_attacks/linux_password_attacks.md)
+    - [Network](./attack/initial_access/password_attacks/network_password_attacks.md)
     - [Remote](./attack/initial_access/password_attacks/remote_password_attacks.md)
+    - [Windows](./attack/initial_access/password_attacks/windows_password_attacks.md)
   - [Services](./attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.md)
     - [FTP](./attack/initial_access/attacking_common_services/attacking_ftp.md)
     - [SMB](./attack/initial_access/attacking_common_services/attacking_smb.md)
@@ -168,7 +171,7 @@ Web Service & API
   9. [Domain Trusts Attacks](./attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.md)
   10. [Cross-Forest Trust Attacks](./attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.md)
    
-  - [Defensive Considerations]()
+  - [Defensive Considerations](./attack/windows/ad/enum_and_attacks/ad_defensive_considerations.md)
 
 </details>
 
