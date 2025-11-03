@@ -2,7 +2,7 @@
 ZZZ_trashcan/
 
 # ignoring obisidian
-.obisidian/
+.obsidian/
 
 # ignoring sensitive files
 TODO.md
