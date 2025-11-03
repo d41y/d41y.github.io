@@ -1,6 +1,9 @@
 # ignoring trashcan
 ZZZ_trashcan/
 
+# ignoring obisidian
+.obisidian/
+
 # ignoring sensitive files
 TODO.md
 github_cloning_enabling.md
