@@ -283,6 +283,7 @@ Non-Relational
 ## Programming
 
 - [Assembly](./general/programming/assembly/assembly.md)
+- [Bash](./general/programming/bash.md)
 - [Python](./general/programming/python/python.md)
   - [573 Cheatsheet](./general/programming/python/sans573/cheatsheet.md)
 
