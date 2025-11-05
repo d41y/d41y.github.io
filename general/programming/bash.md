@@ -4,6 +4,8 @@
 		- [Conditional Execution](#conditional-execution)
 			- [Shebang](#shebang)
 			- [If-Else-Fi](#if-else-fi)
+		- [Arguments, Variables, and Arrays](#arguments-variables-and-arrays)
+			- [Arguments](#arguments)
 
 ---
 
@@ -306,4 +308,17 @@ fi
 ```
 
 Here you define another condition (```elif [<condition>]; then```) that prints a line telling you (```echo -e "..."```) that you have given more than one argument and exits the program with an error (```exit 1```).
+
+### Arguments, Variables, and Arrays
+
+#### Arguments
+
+The advantage of bash scripts is that you can always pass up to 9 arguments (```$0```-```$9```) to the script without assigning them to variables or setting the corresponding requirements for these. 9 arguments because the first argument ```$0``` is reserved for the script. As you can see here, you need the dollar sign before the name of the variable to use it at the specified position. The assignment would look like this in comparison:
+
+```bash
+d41y@htb[/htb]$ ./script.sh ARG1 ARG2 ARG3 ... ARG9
+       ASSIGNMENTS:       $0      $1   $2   $3 ...   $9
+```
+
+This means that you have automatically assigned the corresponding arguments to the predefined variables in this place. These variables are called special variables. These special variables serve as placeholders. If you now look at the code section again, you will see where and which arguments have been used.
 
