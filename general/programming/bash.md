@@ -1,9 +1,9 @@
 - [Intro to Bash Scripting](#intro-to-bash-scripting)
-  - [0x00](#0x00)
-  - [Working Components](#working-components)
-    - [Conditional Execution](#conditional-execution)
-      - [Shebang](#shebang)
-      - [If-Else-Fi](#if-else-fi)
+	- [0x00](#0x00)
+	- [Working Components](#working-components)
+		- [Conditional Execution](#conditional-execution)
+			- [Shebang](#shebang)
+			- [If-Else-Fi](#if-else-fi)
 
 ---
 
