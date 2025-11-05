@@ -6,6 +6,9 @@
 			- [If-Else-Fi](#if-else-fi)
 		- [Arguments, Variables, and Arrays](#arguments-variables-and-arrays)
 			- [Arguments](#arguments)
+			- [Special Variables](#special-variables)
+			- [Variables](#variables)
+			- [Arrays](#arrays)
 
 ---
 
@@ -321,4 +324,118 @@ d41y@htb[/htb]$ ./script.sh ARG1 ARG2 ARG3 ... ARG9
 ```
 
 This means that you have automatically assigned the corresponding arguments to the predefined variables in this place. These variables are called special variables. These special variables serve as placeholders. If you now look at the code section again, you will see where and which arguments have been used.
+
+```bash
+#!/bin/bash
+
+# Check for given argument
+if [ $# -eq 0 ]
+then
+	echo -e "You need to specify the target domain.\n"
+	echo -e "Usage:"
+	echo -e "\t$0 <domain>"
+	exit 1
+else
+	domain=$1
+fi
+
+<SNIP>
+```
+
+There are several ways how you can execute your script. However, you must first set the script's execution privileges before executing it with the interpreter defined in it.
+
+```bash
+# Set Execution Privileges
+d41y@htb[/htb]$ chmod +x cidr.sh
+
+# Execution without Arguments
+d41y@htb[/htb]$ ./cidr.sh
+
+You need to specify the target domain.
+
+Usage:
+	cidr.sh <domain>
+
+# Execution without Execution Permissions
+d41y@htb[/htb]$ bash cidr.sh
+
+You need to specify the target domain.
+
+Usage:
+	cidr.sh <domain>
+```
+
+#### Special Variables
+
+... use the Internal Field Separator (_IFS_) to identify when an argument ends and the next begins. Bash provides various special variables that assist while scripting. Some of these variables are:
+
+| Special Variable | Description |
+| ---------------- | ----------- |
+| ```$#``` | This variable holds the number of arguments passed to the script. |
+| ```$@``` | This variable can be used to retrieve the list of command-line arguments. |
+| ```$n``` | Each command-line argument can be selectively retrieved using its position. For example, the first argument is found at ```$1```. |
+| ```$$``` | The process ID of the currently executing process. |
+| ```$?``` | The exit status of the script. This variable is useful to determine a command's success. The value 0 represents successful execution, while 1 is a result of a failure. |
+
+#### Variables
+
+You also see at the end of the if-else loop that you assign the value of the first argument to the variable called "domain". The assignment of variables takes place without the dollar sign. The dollar sign is only intended to allow this variable's corresponding value to be used in other code sections. When assigning variables, there must be no spaces between the names and values.
+
+```bash
+<SNIP>
+else
+	domain=$1
+fi
+<SNIP>
+```
+
+In constrast to other programming languages, there is no direct differentiation and recognition between the types of variables in Bash like strings, integers, and boolean. All contents of the variables are treated as string chars. Bash enables arithmetic functions depending on whether only numbers are assigned or not. It is important to note when declaring variables that they do not contain a space. Otherwise, the actual variable name will be interpreted as an internal function or command.
+
+```bash
+# Error
+d41y@htb[/htb]$ variable = "this will result with an error."
+
+command not found: variable
+
+# Without an Error
+d41y@htb[/htb]$ variable="Declared without an error."
+d41y@htb[/htb]$ echo $variable
+
+Declared without an error.
+```
+
+#### Arrays
+
+There is also the possibility of assigning several values to a single variable in Bash. This can be beneficial if you want to scan multiple domains or IP addresses. These variables are called arrays that you can use to store and process an ordered sequence of specific type values. Arrays identify each stored entry with an index starting with 0. When you want to assign a value to an array componenet, you do so in the same way as with standard shell variables. All you do is specify the field index enclosed in square brackets. The declaration for arrays looks like this in Bash:
+
+```bash
+#!/bin/bash
+
+domains=(www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com www2.inlanefreight.com)
+
+echo ${domains[0]}
+```
+
+You can also retrieve them individually using the index using the variables with the corresponding index in curly brackets. Curly brackets are used for variable expansion.
+
+```bash
+d41y@htb[/htb]$ ./Arrays.sh
+
+www.inlanefreight.com
+```
+
+It is important to note that single quotes and double quotes prevent the separation by a space of individual values in the array. This means that all spaces between the single and double quotes are ignored and handled as a single value assigned to the array.
+
+```bash
+#!/bin/bash
+
+domains=("www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com" www2.inlanefreight.com)
+echo ${domains[0]}
+```
+
+```bash
+d41y@htb[/htb]$ ./Arrays.sh
+
+www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com
+```
 
