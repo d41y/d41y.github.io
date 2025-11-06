@@ -15,6 +15,7 @@
 		- [File Operators](#file-operators)
 			- [Boolean and Logical Operators](#boolean-and-logical-operators)
 			- [Logical Operators](#logical-operators)
+		- [Arithmetic](#arithmetic)
 
 ---
 
@@ -617,5 +618,97 @@ else
 	echo -e "Error occured."
 	exit 5
 fi
+```
+
+### Arithmetic
+
+In Bash, you have seven different arithemtic operators you can work with. These are used to perform different mathematical operations or to modify certain integers.
+
+| Operator | Description |
+| -------- | ----------- |
+| ```+``` | Addition |
+| ```-``` | Subtraction |
+| ```*``` | Multiplication |
+| ```/``` | Division |
+| ```%``` | Modulus |
+| ```variable++``` | Increase the value of the variable by 1 |
+| ```variable--``` | Decrease the value of the variable by 1 |
+
+You can summarize all these operators in a small script:
+
+```bash
+#!/bin/bash
+
+increase=1
+decrease=1
+
+echo "Addition: 10 + 10 = $((10 + 10))"
+echo "Subtraction: 10 - 10 = $((10 - 10))"
+echo "Multiplication: 10 * 10 = $((10 * 10))"
+echo "Division: 10 / 10 = $((10 / 10))"
+echo "Modulus: 10 % 4 = $((10 % 4))"
+
+((increase++))
+echo "Increase Variable: $increase"
+
+((decrease--))
+echo "Decrease Variable: $decrease"
+```
+
+The output of this script looks like this:
+
+```bash
+d41y@htb[/htb]$ ./Arithmetic.sh
+
+Addition: 10 + 10 = 20
+Subtraction: 10 - 10 = 0
+Multiplication: 10 * 10 = 100
+Division: 10 / 10 = 1
+Modulus: 10 % 4 = 2
+Increase Variable: 2
+Decrease Variable: 0
+```
+
+You can also calculate the length of the variable. Using this function ```${#variable}```, every character gets counted, and you get the total number of chars in the variable.
+
+```bash
+#!/bin/bash
+
+htb="HackTheBox"
+
+echo ${#htb}
+```
+
+```bash
+d41y@htb[/htb]$ ./VarLength.sh
+
+10
+```
+
+If you look at your CIDR.sh script, you will see that you have used the increase and decrease operators several times. This ensures that the while loop runs and pings the hosts while the variable "stat" has a value of 1. If the ping command ends with code 0, you get a message that the host is up and the "stat" variable, as well as the variables "hosts_up" and "hosts_total" get changed.
+
+```bash
+<SNIP>
+	echo -e "\nPinging host(s):"
+	for host in $cidr_ips
+	do
+		stat=1
+		while [ $stat -eq 1 ]
+		do
+			ping -c 2 $host > /dev/null 2>&1
+			if [ $? -eq 0 ]
+			then
+				echo "$host is up."
+				((stat--))
+				((hosts_up++))
+				((hosts_total++))
+			else
+				echo "$host is down."
+				((stat--))
+				((hosts_total++))
+			fi
+		done
+	done
+<SNIP>
 ```
 
