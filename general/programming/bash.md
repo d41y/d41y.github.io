@@ -16,6 +16,14 @@
 			- [Boolean and Logical Operators](#boolean-and-logical-operators)
 			- [Logical Operators](#logical-operators)
 		- [Arithmetic](#arithmetic)
+	- [Script Control](#script-control)
+		- [Input and Output](#input-and-output)
+			- [Input Control](#input-control)
+			- [Output Control](#output-control)
+		- [Flow Control - Loops](#flow-control---loops)
+			- [For Loops](#for-loops)
+			- [While Loops](#while-loops)
+			- [Until Loops](#until-loops)
 
 ---
 
@@ -710,5 +718,240 @@ If you look at your CIDR.sh script, you will see that you have used the increase
 		done
 	done
 <SNIP>
+```
+
+## Script Control
+
+### Input and Output
+
+#### Input Control
+
+You may get results from your sent requests and executed commands, which you have to decide manually on how to proceed. Another example would be that you have defined several functions in your script designed for different scenarios. You have to decide which of them should be executed after a manual check and based on the results. It is also quite possible that specific scans or activities may not be allowed to be performed. Therefore, you need to be familiar with how to get a running script to wait for your instructions. If you look at your CIDR.sh script again, you see that you have added such a call to decide further steps.
+
+```bash
+# Available options
+<SNIP>
+echo -e "Additional options available:"
+echo -e "\t1) Identify the corresponding network range of target domain."
+echo -e "\t2) Ping discovered hosts."
+echo -e "\t3) All checks."
+echo -e "\t*) Exit.\n"
+
+read -p "Select your option: " opt
+
+case $opt in
+	"1") network_range ;;
+	"2") ping_host ;;
+	"3") network_range && ping_host ;;
+	"*") exit 0 ;;
+esac
+```
+
+The first echo lines serve as a display menu for the options available to you. With the read command, the line with "Select your option:" is displayed, and the additional option ```-p``` ensures that you input remains on the same line. Your input is stored in the variable ```opt```, which you then use to execute the corresponding functions with the case statement. Depending on the number you enter, the case statement determines which functions are executed.
+
+#### Output Control
+
+```bash
+<SNIP>
+
+# Identify Network range for the specified IP address(es)
+function network_range {
+	for ip in $ipaddr
+	do
+		netrange=$(whois $ip | grep "NetRange\|CIDR" | tee -a CIDR.txt)
+		cidr=$(whois $ip | grep "CIDR" | awk '{print $2}')
+		cidr_ips=$(prips $cidr)
+		echo -e "\nNetRange for $ip:"
+		echo -e "$netrange"
+	done
+}
+
+<SNIP>
+
+# Identify IP address of the specified domain
+hosts=$(host $domain | grep "has address" | cut -d" " -f4 | tee discovered_hosts.txt)
+
+<SNIP>
+```
+
+When using tee, you transfer the received output and use the pipe to forward it to ```tee```. The ```-a``` / ```--append``` parameter ensures that the specified file is not overwritten but supplemented with the new results. At the same time, it shows you the results and how they will be found in the file.
+
+```bash
+d41y@htb[/htb]$ cat discovered_hosts.txt CIDR.txt
+
+165.22.119.202
+NetRange:       165.22.0.0 - 165.22.255.255
+CIDR:           165.22.0.0/16
+```
+
+### Flow Control - Loops
+
+The control of the flow of your scripts is essential. Each control structure is either a branch or a loop. Logical expressions of boolean values usually control the execution of a control structure. These control structures include:
+
+- Branches
+  - If-Else Conditions
+  - Case Statements
+- Loops:
+  - For Loops
+  - While Loops
+  - Until Loops
+
+#### For Loops
+
+The for loop is executed on each pass for precisely one parameter, which the shell takes from a list, calculates an increment, or takes from another data source. The for loop runs as long as it finds corresponding data. This type of loop can be structured and defined in different ways. For example, the for loops are often used when you need to work with many different values from an array. This can be used to scan different hosts or ports. You can also use it to execute specific commands for known ports and their services to speed up your enumeration process.
+
+```bash
+for variable in 1 2 3 4
+do
+	echo $variable
+done
+```
+
+```bash
+for variable in file1 file2 file3
+do
+	echo $variable
+done
+```
+
+```bash
+for ip in "10.10.10.170 10.10.10.174 10.10.10.175"
+do
+	ping -c 1 $ip
+done
+```
+
+Of course, you can also write these commands in a single line.
+
+```bash
+d41y@htb[/htb]$ for ip in 10.10.10.170 10.10.10.174;do ping -c 1 $ip;done
+
+PING 10.10.10.170 (10.10.10.170): 56 data bytes
+64 bytes from 10.10.10.170: icmp_seq=0 ttl=63 time=42.106 ms
+
+--- 10.10.10.170 ping statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 42.106/42.106/42.106/0.000 ms
+PING 10.10.10.174 (10.10.10.174): 56 data bytes
+64 bytes from 10.10.10.174: icmp_seq=0 ttl=63 time=45.700 ms
+
+--- 10.10.10.174 ping statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 45.700/45.700/45.700/0.000 ms
+```
+
+Have another look at your CIDR.sh script.
+
+```bash
+<SNIP>
+
+# Identify Network range for the specified IP address(es)
+function network_range {
+	for ip in $ipaddr
+	do
+		netrange=$(whois $ip | grep "NetRange\|CIDR" | tee -a CIDR.txt)
+		cidr=$(whois $ip | grep "CIDR" | awk '{print $2}')
+		cidr_ips=$(prips $cidr)
+		echo -e "\nNetRange for $ip:"
+		echo -e "$netrange"
+	done
+}
+
+<SNIP>
+```
+
+For each IP address from the array "ipaddr" you make a "whois" request, whose output is filtered for "NetRange" and "CIDR". This helps you to determine which address range your target is located in. You can use this information to search for additional hosts during a pentest, if approved by the client. The results that you receive are displayed accordingly and stored in the file "CIDR.txt".
+
+#### While Loops
+
+The while loop is conceptually simple and follows the following principle: "A statement is executed as long as a condition is fulfilled (_true_)".
+
+You can also combine loops and merge their execution with different values. It is important to note that the excessive combination of several loops in each other can make the code very unclear and lead to errors that can be hard to find and follow.
+
+```bash
+<SNIP>
+		stat=1
+		while [ $stat -eq 1 ]
+		do
+			ping -c 2 $host > /dev/null 2>&1
+			if [ $? -eq 0 ]
+			then
+				echo "$host is up."
+				((stat--))
+				((hosts_up++))
+				((hosts_total++))
+			else
+				echo "$host is down."
+				((stat--))
+				((hosts_total++))
+			fi
+		done
+<SNIP>
+```
+
+The while loops also work with conditions like if-else. A while loop needs some sort of a counter to orientate itself when it has to stop executing the commands it contains. Otherwise, this leads to an endless loop. Such a counter can be a variable that you have declared with a specific value or boolean value. While loops run while the boolean value is true. Besides the counter, you can also use the command "break", which interrupts the loop when reaching this command like in the following example:
+
+```bash
+#!/bin/bash
+
+counter=0
+
+while [ $counter -lt 10 ]
+do
+  # Increase $counter by 1
+  ((counter++))
+  echo "Counter: $counter"
+
+  if [ $counter == 2 ]
+  then
+    continue
+  elif [ $counter == 4 ]
+  then
+    break
+  fi
+done
+```
+
+```bash
+d41y@htb[/htb]$ ./WhileBreaker.sh
+
+Counter: 1
+Counter: 2
+Counter: 3
+Counter: 4
+```
+
+#### Until Loops
+
+There is also the until loop, which is relatively rare. Nevertheless, the until loop works precisely like the while loop, but with the difference: "The code inside a loop is executed as long as the particular condition is false".
+
+The other way is to let the loop run until the desired value is reached. The "until" loops are very well suited for this. This type of loop works similarily to the "while" loop but with the difference that it runs until the boolean value is false.
+
+```bash
+#!/bin/bash
+
+counter=0
+
+until [ $counter -eq 10 ]
+do
+  # Increase $counter by 1
+  ((counter++))
+  echo "Counter: $counter"
+done
+```
+
+```bash
+d41y@htb[/htb]$ ./Until.sh
+
+Counter: 1
+Counter: 2
+Counter: 3
+Counter: 4
+Counter: 5
+Counter: 6
+Counter: 7
+Counter: 8
+Counter: 9
+Counter: 10
 ```
 
