@@ -9,6 +9,12 @@
 			- [Special Variables](#special-variables)
 			- [Variables](#variables)
 			- [Arrays](#arrays)
+		- [Comparison Operators](#comparison-operators)
+			- [String Operators](#string-operators)
+			- [Integer Operators](#integer-operators)
+		- [File Operators](#file-operators)
+			- [Boolean and Logical Operators](#boolean-and-logical-operators)
+			- [Logical Operators](#logical-operators)
 
 ---
 
@@ -437,5 +443,179 @@ echo ${domains[0]}
 d41y@htb[/htb]$ ./Arrays.sh
 
 www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com
+```
+
+### Comparison Operators
+
+To compare specific values with each other, you need elements that are called comparison operators. The comparison operators are used to determine how the defined values will be compared. For these operators, you differentiate between:
+
+- string operators
+- integer operators
+- file operators
+- boolean operators
+
+#### String Operators
+
+If you compare strings, then you know what you would like to have in the corresponding value.
+
+| Operator | Description |
+| -------- | ----------- |
+| ```==``` | is equal to |
+| ```!=``` | is not equal to |
+| ```<``` | is less than in ASCII alphabetical order |
+| ```>``` | is greater than in ASCII alphabetical order |
+| ```-z``` | if the string is empty |
+| ```-n``` | if the string is not null |
+
+It is important to note here that you put the variable for the given argument in double quotes. This tells Bash that the content of the variable should be handled as a string. Otherwise, you would get an error.
+
+```bash
+#!/bin/bash
+
+# Check the given argument
+if [ "$1" != "HackTheBox" ]
+then
+	echo -e "You need to give 'HackTheBox' as argument."
+	exit 1
+
+elif [ $# -gt 1 ]
+then
+	echo -e "Too many arguments given."
+	exit 1
+
+else
+	domain=$1
+	echo -e "Success!"
+fi
+```
+
+String comparison operators (```<``` / ```>```) work only within the double square brackets (```[[ condition ]]```). You can find the ASCII table on the internet or by using the following command in the terminal.
+
+```bash
+d41y@htb[/htb]$ man ascii
+```
+
+#### Integer Operators
+
+Comparing integer numbers can be very useful for you if know what values you want to compare. Accordingly, you define the next steps and commands how the script should handle the corresponding value.
+
+| Operator | Description |
+| -------- | ----------- |
+| ```-eq``` | is equal to |
+| ```-ne``` | is not equal to |
+| ```-lt``` | is less than |
+| ```-le``` | is less than or equal to |
+| ```-gt``` | is greater than |
+| ```-ge``` | is greater than or equal to |
+
+```bash
+#!/bin/bash
+
+# Check the given argument
+if [ $# -lt 1 ]
+then
+	echo -e "Number of given arguments is less than 1"
+	exit 1
+
+elif [ $# -gt 1 ]
+then
+	echo -e "Number of given arguments is greater than 1"
+	exit 1
+
+else
+	domain=$1
+	echo -e "Number of given arguments equals 1"
+fi
+```
+
+### File Operators
+
+The file operators are useful if you want to find out specific permissions or if they exist.
+
+| Operator | Description |
+| ```-e``` | if the file exist |
+| ```-f``` | tests if it is a file |
+| ```-d``` | tests if it is a directory |
+| ```-L``` | tests if it is a symbolic link |
+| ```-N``` | checks if the file was modified after it was last read |
+| ```-O``` | if the current user owns the file |
+| ```-G``` | if the file's group id matches the current user's |
+| ```-s``` | tests if the file has a size greater than 0 |
+| ```-r``` | tests if the file has read permissions |
+| ```-w``` | tests if the file has write permissions |
+| ```-x``` | tests if the file has execute permissions |
+
+```bash
+#!/bin/bash
+
+# Check if the specified file exists
+if [ -e "$1" ]
+then
+	echo -e "The file exists."
+	exit 0
+
+else
+	echo -e "The file does not exist."
+	exit 2
+fi
+```
+
+#### Boolean and Logical Operators
+
+You get a boolean value "false" or "true" as a result with logical operators. Bash gives you the possibility to compare strings by using double square brackets. To get these boolean values, you can use the string operators. Whether the comparison matches or not, you get the boolean value "false" or "true".
+
+```bash
+#!/bin/bash
+
+# Check the boolean value
+if [[ -z $1 ]]
+then
+	echo -e "Boolean value: True (is null)"
+	exit 1
+
+elif [[ $# > 1 ]]
+then
+	echo -e "Boolean value: True (is greater than)"
+	exit 1
+
+else
+	domain=$1
+	echo -e "Boolean value: False (is equal to)"
+fi
+```
+
+#### Logical Operators
+
+With logical operators, you can define several conditions within one. This means that all the conditions you define must match before the corresponding code can be executed.
+
+| Operator | Description |
+| -------- | ----------- |
+| ```!``` | logical negation NOT |
+| ```&&``` | logical AND |
+| ```\|\|``` | logical OR |
+
+```bash
+#!/bin/bash
+
+# Check if the specified file exists and if we have read permissions
+if [[ -e "$1" && -r "$1" ]]
+then
+	echo -e "We can read the file that has been specified."
+	exit 0
+
+elif [[ ! -e "$1" ]]
+then
+	echo -e "The specified file does not exist."
+	exit 2
+
+elif [[ -e "$1" && ! -r "$1" ]]
+then
+	echo -e "We don't have read permission for this file."
+	exit 1
+
+else
+	echo -e "Error occured."
+	exit 5
+fi
 ```
 
