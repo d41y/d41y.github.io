@@ -1,5 +1,96 @@
 - [Security Incident Reporting](#security-incident-reporting)
+  - [0x00](#0x00)
+    - [Incident Identification and Categorisation](#incident-identification-and-categorisation)
+      - [Identifying Security Incidents](#identifying-security-incidents)
+      - [Categorising Security Incidents](#categorising-security-incidents)
+      - [Incident Severity Levels](#incident-severity-levels)
+  - [Incident Reporting Process](#incident-reporting-process)
+    - [1. Initial Detection \& Acknowledgement](#1-initial-detection--acknowledgement)
+    - [2. Preliminary Analysis](#2-preliminary-analysis)
+    - [3. Incident Logging](#3-incident-logging)
+    - [4. Notification of Relevant Parties](#4-notification-of-relevant-parties)
+    - [5. Detailed Investigation \& Reporting](#5-detailed-investigation--reporting)
+    - [6. Final Report Creation](#6-final-report-creation)
+    - [7. Feedback Loop!](#7-feedback-loop)
 
 ---
 
 # Security Incident Reporting
+
+## 0x00
+
+Security incident reporting serves as a conduit between the identification and remediation of threats. It facilitates the archival of past incidents, thereby providing an invaluable repository for lessons learned from previous mistakes. This repository can be seamlessly integrated into a broader strategy fro preempting and mitigating future threats. Given the perpetually evolving threat landscape, a comprehensive and consistent incident reporting framework is indispensable for ensuring that organizations and their workforce are optimally prepared for any contingencies.
+
+Effective incident reporting should strike a balance between granularity and accessibility, making it comprehensible to both technically savvy and non-technical audiences.
+
+### Incident Identification and Categorisation
+
+Navigating the labyrinthine array of cybersecurity threats that could potentially impact your organization necessitates a methodical approach to identifying and classifying security incidents. This enables the rapid allocation of resources and expedites threat mitigation. Essentially, the cornerstone of an initial successful response to an incident lies in the capability to promptly identify and categorize the threat.
+
+#### Identifying Security Incidents
+
+Security incidents can emanate from a diverse array of sources and often manifest as detections, anomalies, or deviations from established baselines. There are primarily three key sources for incident identification:
+
+| Source | Description |
+| ------ | ----------- |
+| Security Systems / Tooling in Place | There is a wide variety of security systems and tools in place within your organization. Some excellent sources for identification include IDS/IPS, EDR/XDR, SIEM tools, or even basic AV alerts and NetFlow data. |
+| Human Observations | Users may notice and report suspicious activities, unusual emails, or systems behaving abnormally. |
+| Third Party Notifications | Partners, vendors, or even customers might inform organizations about any vulns or breaches they are experiencing. |
+
+#### Categorising Security Incidents
+
+Upon identification of an incident, it is imperative to categorize it to facilitate the priorization and allocation of resources for an effective response. This categorization also aids in comprehending the nature of the incident, thereby informing subsequent briefings to stakeholders.
+
+Examples of incident types:
+
+- **Malware**: Malicious software encompassing viruses, worms, and ransomware.
+- **Phishing**: Fraudulent endeavors to exfiltrate sensitive information, predominantly via email.
+- **DDoS Attacks**: Deliberate attempts to inundate a system or network, thereby disrupting its regular functionality.
+- **Unauthorized Access**: Incidents where unauthorized entities gain access to systems or data repos.
+- **Data Leakage**: Inadvertent exposure of confidential data, both within and outside the organizational perimeter.
+- **Physical Breach**: Unauthorized physical access to secure locations.
+
+#### Incident Severity Levels
+
+- **Critical (P1)**: Imminent threats that jeopardize core business functionalities or sensitive data, necessitating immediate intervention.
+- **High (P2)**: Latent threats to business operations that, while not immediately detrimental, are of elevated priority.
+- **Medium (P3)**: Incidents that, although not posing an immediate threat to business operations, warrant timely attention.
+- **Low (P4)**: Trivial incidents or routine anomalies that can be managed within standard operational workflows.
+
+It's crucial to recognize that incidents frequently straddle multiple categories and can dynamically shift in both category and severity as additional intelligence is garnered during the analysis phase. The fluid nature of these threats mandates a flexible yet structured approach to both identification and categorization.
+
+## Incident Reporting Process
+
+### 1. Initial Detection & Acknowledgement
+
+Before any incident can be formally reported, it must first be detected and acknowlegded. Detection vectors can vary, ranging from human observation to automated alerts generated by deployed security tools. In some cases, the threat actor themselves may trigger the detection, especially if you're dealing with a ransomware incident.
+
+### 2. Preliminary Analysis
+
+During this phase, the scope and potential ramifications of the security incident must be ascertained. The incident should be categorized based on your previously established classification and severity metrics.
+
+### 3. Incident Logging
+
+Every facet, action, and observation related to the security incident should be meticulously logged using an established system. Popular platforms for this purpose include JIRA and TheHiveProject. In the absence of such a system, alternative methods should be employed. Even rudimentary tools like pen and paper or a spreadsheet can suffice in a pinch.
+
+### 4. Notification of Relevant Parties
+
+Stakeholders must be promptly identified, and notifications should be segmented into:
+
+- **Internal Communications**
+  - Relevant internal departments, such as IT, legal, PR, and executive teams, should be alerted. In cases where the incident has widespread and severe implications, an organization-wide notification may be warranted.
+- **External Communications**
+  - Depending on the incident's nature and impact, external communications may be necessary. This could involve notifying customers, partners, regulatory bodies, or even the general public.
+
+### 5. Detailed Investigation & Reporting
+
+The duration of this phase can vary significantly, ranging from a couple of days to potentially years. What's crucial here is a comprehensive technical analysis coupled with a compilation of findings. This in-depth investigation is vital for understanding the incident's full impact.
+
+### 6. Final Report Creation
+
+The culmination of your role as a security analyst or incident responder is the creation of a finalized incident report. This document will furnish regulators, insurers, and executive leadership with a detailed account of the incident, its origins, and the remedial actions taken.
+
+### 7. Feedback Loop!
+
+Post-incident reflection is essential for enhancing your preparedness for future incidents. This involves revisiting and analyzing the incident to identify areas for improvement.
+
