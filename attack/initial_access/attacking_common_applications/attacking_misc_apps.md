@@ -497,3 +497,33 @@ This command combines egrep and sed to filter and modify the contents of input f
 | ```sed 's/ ^[^:]*://'``` | The ```sed``` command is used to perform a find-and-replace operation on its input. The ```'s/ ^[^:]*://'``` expression tells sed to find any sequence of chars at the beginning of a line up to the first colon, and replace them with nothing. The result will be the lines starting with "transf" but without the file names and colons. |
 
 #### Gobuster Enumeration
+
+Once you have created the custom wordlist, you can use gobuster to enumerate all items in the target.
+
+```bash
+d41y@htb[/htb]$ gobuster dir -u http://10.129.204.231/ -w /tmp/list.txt -x .aspx,.asp
+
+===============================================================
+Gobuster v3.5
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.129.204.231/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /tmp/list.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.5
+[+] Extensions:              asp,aspx
+[+] Timeout:                 10s
+===============================================================
+2023/03/23 15:14:05 Starting gobuster in directory enumeration mode
+===============================================================
+/transf**.aspx        (Status: 200) [Size: 941]
+Progress: 306 / 309 (99.03%)
+===============================================================
+2023/03/23 15:14:11 Finished
+===============================================================
+```
+
+From the redacted output, you can see that Gobuster has successfully identified an .aspx file as the full filename corresponding to the previously discovered short name TRANS~1.ASP.
+
