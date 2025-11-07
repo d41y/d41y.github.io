@@ -24,6 +24,13 @@
 			- [For Loops](#for-loops)
 			- [While Loops](#while-loops)
 			- [Until Loops](#until-loops)
+		- [Flow Control - Branches](#flow-control---branches)
+			- [Case Statements](#case-statements)
+	- [Execution Flow](#execution-flow)
+		- [Functions](#functions)
+			- [Parameter Passing](#parameter-passing)
+			- [Return Values](#return-values)
+		- [Debugging](#debugging)
 
 ---
 
@@ -955,3 +962,225 @@ Counter: 9
 Counter: 10
 ```
 
+### Flow Control - Branches
+
+#### Case Statements
+
+... are also known as switch-case statements in other languages. The main difference between if-else and switch-case is that if-else constructs allow you to check any boolean expression, while switch-case always compares only the variable with the exact value. Therefore, the same condition as for if-else, such as "greater than", are not allowed for switch-case. The syntax for the switch-case statements looks like this:
+
+```bash
+case <expression> in
+	pattern_1 ) statements ;;
+	pattern_2 ) statements ;;
+	pattern_3 ) statements ;;
+esac
+```
+
+The definition of switch-case starts ```case```, followed by the variable or value as an expression, which is then compared in the pattern. If the variable or value matches the expression, then the statemens are executed after the paranthesis and ended with a double semicolon.
+
+In your CIDR.sh script, you have used such a case statement. Here you defined four different options that you assigned to your script, how it should proceed after your decision.
+
+```bash
+<SNIP>
+# Available options
+echo -e "Additional options available:"
+echo -e "\t1) Identify the corresponding network range of target domain."
+echo -e "\t2) Ping discovered hosts."
+echo -e "\t3) All checks."
+echo -e "\t*) Exit.\n"
+
+read -p "Select your option: " opt
+
+case $opt in
+	"1") network_range ;;
+	"2") ping_host ;;
+	"3") network_range && ping_host ;;
+	"*") exit 0 ;;
+esac
+<SNIP>
+```
+
+With the first two options, this script executes different functions that you had defined before. With the third option, both functions are executed, and with any other option, the script will be terminated.
+
+## Execution Flow
+
+### Functions
+
+Functions are the solution that improves both the size and the clarity of the script many times. You combine several commands in a block between curly brackets and call them with a function name defined by you with functions. Once a function has been defined, it can be called and used again during the script.
+
+Functions are an essential part of scripts and programs, as they are used to execute recurring commands for different values and phases of the script or program. Therefore, you do not have to repeat the whole section of code repeatedly but can create a single function that executes the specific commands. The definition of such functions makes the code easier to read and helps to keep the code as short as possible. It is important to note that functions must always be defined logically before the first call since a script is also processed from top to bottom. Therefore the definition of a function is always at the beginning of the script. There are two methods to define a function:
+
+```bash
+function name {
+	<commands>
+}
+```
+
+```bash
+name() {
+	<commands>
+}
+```
+
+You can choose the method to define a function that is most comfortable for you. In you CIDR.sh script, you used the first method because it is easier to read with the keyword "function".
+
+```bash
+<SNIP>
+# Identify Network range for the specified IP address(es)
+function network_range {
+	for ip in $ipaddr
+	do
+		netrange=$(whois $ip | grep "NetRange\|CIDR" | tee -a CIDR.txt)
+		cidr=$(whois $ip | grep "CIDR" | awk '{print $2}')
+		cidr_ips=$(prips $cidr)
+		echo -e "\nNetRange for $ip:"
+		echo -e "$netrange"
+	done
+}
+<SNIP>
+```
+
+The function is called only by calling the specified name of the function.
+
+```bash
+<SNIP>
+case $opt in
+	"1") network_range ;;
+	"2") ping_host ;;
+	"3") network_range && ping_host ;;
+	"*") exit 0 ;;
+esac
+```
+
+#### Parameter Passing
+
+Such functions should be designed so that they can be used with a fixed structure of the values or at least only with a fixed formatl. The parameters are optional, and therefore you can call the function without parameters. In principle, the same applies to the passed parameters passed to a shell script. These are $1-$9, or $variable. Each function has its own set of parameters. So they do not collide with those of other functions or the parameters of the shell script.
+
+An important difference between bash scripts and other programming languages is that all defined variables are always processed globally unless otherwise declared by "local". This means that the first time you have defined a variable in a function, you will call it in your main script. Passing the parameters to the functions is done the same way as you passed the arguments to your script and looks like this:
+
+```bash
+#!/bin/bash
+
+function print_pars {
+	echo $1 $2 $3
+}
+
+one="First parameter"
+two="Second parameter"
+three="Third parameter"
+
+print_pars "$one" "$two" "$three"
+```
+
+```bash
+d41y@htb[/htb]$ ./PrintPars.sh
+
+First parameter Second parameter Third parameter
+```
+
+#### Return Values
+
+When you start a new process, each child process returns a return code to the parent process at its termination, informing it of the status of the execution. This information is used to determine whether the process ran successfully or whether specific errors occured. Based on this information, the parent process can decide on further program flow.
+
+| Return Code | Description |
+| ----------- | ----------- |
+| 1 | General errors |
+| 2 | Misuse of shell builtins |
+| 126 | Command invoked cannot execute |
+| 127 | Command not found |
+| 128 | Invalid argument to exit |
+| 128+n | Fatal error signal "n" |
+| 130 | Script terminated by Ctrl+C |
+| 255\\* | Exit status out of range |
+
+To get the value of a function back, you can use several methods like return, echo, or a variable. In the next example, you will see how to use ```$?``` to read the return code, how to pass the arguments to the function and how to assign the result to a variable.
+
+```bash
+#!/bin/bash
+
+function given_args {
+
+        if [ $# -lt 1 ]
+        then
+                echo -e "Number of arguments: $#"
+                return 1
+        else
+                echo -e "Number of arguments: $#"
+                return 0
+        fi
+}
+
+# No arguments given
+given_args
+echo -e "Function status code: $?\n"
+
+# One argument given
+given_args "argument"
+echo -e "Function status code: $?\n"
+
+# Pass the results of the funtion into a variable
+content=$(given_args "argument")
+
+echo -e "Content of the variable: \n\t$content"
+```
+
+```bash
+d41y@htb[/htb]$ ./Return.sh
+
+Number of arguments: 0
+Function status code: 1
+
+Number of arguments: 1
+Function status code: 0
+
+Content of the variable:
+    Number of arguments: 1
+```
+
+### Debugging
+
+Bash gives you an excellent oppurtunity to find, track, and fix errors in your code. Bash debugging is the process of removing errors from your code. Debugging can be performed in many different ways. For example, you can use your code for debugging to check for typos, or you can use it for code analysis to track them and determine why specific errors occur.
+
+This process is also used to find vulns in programs. For example, you can try to cause errors using different input types and track their handling in the CPU through the assembler, which may provide a way to manipulate the handling of these errors to insert your own code and force the system to execute it. Bash allows you to debug your code by using the ```-x``` and ```-v``` options.
+
+```bash
+d41y@htb[/htb]$ bash -x CIDR.sh
+
++ '[' 0 -eq 0 ']'
++ echo -e 'You need to specify the target domain.\n'
+You need to specify the target domain.
+
++ echo -e Usage:
+Usage:
++ echo -e '\tCIDR.sh <domain>'
+	CIDR.sh <domain>
++ exit 1
+```
+
+Here Bash shows you precisely which function or command was executed with which values. This is indicated by the plus sign at the beginning of the line. If you want to see all the code for a particular function, you can set the ```-v``` option that displays the output in more detail.
+
+```bash
+d41y@htb[/htb]$ bash -x -v CIDR.sh
+
+#!/bin/bash
+
+# Check for given argument
+if [ $# -eq 0 ]
+then
+	echo -e "You need to specify the target domain.\n"
+	echo -e "Usage:"
+	echo -e "\t$0 <domain>"
+	exit 1
+else
+	domain=$1
+fi
++ '[' 0 -eq 0 ']'
++ echo -e 'You need to specify the target domain.\n'
+You need to specify the target domain.
+
++ echo -e Usage:
+Usage:
++ echo -e '\tCIDR.sh <domain>'
+	CIDR.sh <domain>
++ exit 1
+```
