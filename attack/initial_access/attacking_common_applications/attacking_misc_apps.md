@@ -9,6 +9,10 @@
       - [Tilde Enumeration using IIS ShortName Scanner](#tilde-enumeration-using-iis-shortname-scanner)
       - [Generate Wordlist](#generate-wordlist)
       - [Gobuster Enumeration](#gobuster-enumeration)
+  - [LDAP](#ldap)
+    - [ldapsearch](#ldapsearch)
+    - [LDAP Injection](#ldap-injection)
+    - [Enumeration](#enumeration-2)
 
 ---
 
@@ -526,4 +530,95 @@ Progress: 306 / 309 (99.03%)
 ```
 
 From the redacted output, you can see that Gobuster has successfully identified an .aspx file as the full filename corresponding to the previously discovered short name TRANS~1.ASP.
+
+## LDAP
+
+LDAP (_Lightweight Directory Access Protocol_) is a protocol used to access and manage directory information. A directory is a hierarchical data store that contains information about network resources such as users, groups, computers, printers, and other devices. LDAP provides some excellent funtionality:
+
+| Functionality | Description |
+| ------------- | ----------- |
+| Efficient | Efficient and fast queries and connections to directory services, thanks to its lean query language and non-normalised data storage. |
+| Global naming model | Supports multiple independent directories with a global naming model that ensures unique entries. |
+| Extensible and flexible | This helps to meet future and local requirements by allowing custom attributes and schemas. |
+| Compatibility | It is compatible with many software products and platforms as it runs over TCP/IP and SSL directly, and it is platform-independent, suitable for use in heterogeneous environments with various OS. |
+| Authentication | It provides authentication mechanisms that enable users to sign on once and access multiple resources on the server securely. |
+
+However, it suffers some significant issues:
+
+| Functionality | Description |
+| ------------- | ----------- |
+| Compliance | Directory servers must be LDAP compliant for service to be deployed, which may limit the choice of vendors and products. |
+| Complexity | Difficult to use and understand for many developers and administrators, who may not know how to configure LDAP clients correctly or use it securely. |
+| Encryption | LDAP does not encrypt its traffic by default, which exposes sensitive data to potential eavesdropping and tampering. LDAPS or StartTLS must be used to enable encryption. |
+| Injection | Vulnerable to LDAP injection attacks, where malicious users can manipulate LDAP queries and gain unauthorised access to data or resources. To prevent such attacks, input validation and output encoding must be implemented. |
+
+LDAP is commonly used for providing a central location for accessing and managing directory services. Directory services are collections of information about the organisation, its users, and assets-like usernames and passwords. LDAP enables organisations to store, manage, and secure this information in a standardised way. Some use cases are:
+
+| Use Case | Description |
+| -------- | ----------- |
+| Authentication | LDAP can be used for central authentication, allowing users to have single login credentials across multiple applications and systems. This is one of the most common use cases for LDAP. |
+| Authorisation | LDAP can manage permissions and access control for network resources such as folders or files on a network share. However, this may require additional configuration or integration with protocols like Kerberos. |
+| Directory Services | LDAP provides a way to search, retrieve, and modify data stored in a directory, making it helpful for managing large numbers of users and devices in a corporate network. LDAP is based on the X.500 standard for directory services. |
+| Synchronisation | LDAP can be used to keep data consistent across multiple systems by replicating changes made in one directory to another. |
+
+There are two popular implementations of LDAP: OpenLDAP, an open-source software widely used and supported, and Microsoft AD, a Windows-based implementation that seamlessly integrates with other Microsoft products and services.
+
+Although LDAP and AD are related, they serve different purposes. LDAP is a protocol that specifies the method of accessing and modifying directory services, whereas AD is a directory service that stores and manages users and computer data. While LDAP can communicate with AD and other directory services, it is not a directory service itself. AD offers extra funtionalities such as policy administration, single sign-on, and integration with various Microsoft products.
+
+LDAP works by using a client-server architecture. A client sends an LDAP request to a server, which searches the directory service and returns a response to the client. LDAP is a protocol that is simpler and more efficient than X.500, on which it is based. It uses a client-server model, where clients send requests to servers using LDAP messages encoded in ASN.1 and transmitted over TCP/IP. The servers process the requests and send back responses using the same format. LDAP supports various requests, such as bind, unbind, search, compare, add, delete, modify, etc.
+
+LDAP requests are messages that clients send to servers to perform operations on data stored in a directory service. An LDAP request is comprised of several components:
+
+1. **Session connection**: The client connects to the server via an LDAP port (_usually 389 or 636_)
+2. **Request type**: The client specifies the operation it wants to perform, such as bind, search, etc.
+3. **Request parameters**: The client provides additional information for the request, such as the distinguished name of the entry to be accessed or modified, the scope and filter of the search query, the attributes and values to be added or changed, etc.
+4. **Request ID**: The client assigns a unique identifier for each request to match it with the corresponding response from the server.
+
+Once the server receives the request, it processes it and sends back a response message that includes several components:
+
+1. **Response type**: The server indicates the operation that was performed in response to the request.
+2. **Result code**: The server indicates whether or not the operation was successful and why.
+3. **Matched DN**: If applicable, the server returns the DN of the closest existing entry that matches the request.
+4. **Referral**: The server returns a URL of another server that may have more information about the request, if applicable.
+5. **Response data**: The server returns any additional data related to the response, such as the attributes and values of an entry that was searched or modified.
+
+After receiving and processing the response, the client disconnects from the LDAP port.
+
+### ldapsearch
+
+... is a command-line utility used to search for information stored in a directory using the LDAP protocol. It is commonly used to query and retrieve data from an LDAP directory service.
+
+```bash
+d41y@htb[/htb]$ ldapsearch -H ldap://ldap.example.com:389 -D "cn=admin,dc=example,dc=com" -w secret123 -b "ou=people,dc=example,dc=com" "(mail=john.doe@example.com)"
+```
+
+This command can be broken down as follows:
+
+- Connect to the server ```ldap.exmaple.com``` on port 389.
+- Bind as ```cn=admin,dc=example,dc=com``` with password "secret123".
+- Search under the base DN ```ou=people,dc=example,dc=com```.
+- Use the filter ```(mail=john.doe@example.com)``` to find entries that have this email address.
+
+The server would process the request and send back a response, which might look something like this:
+
+```
+dn: uid=jdoe,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: John Doe
+sn: Doe
+uid: jdoe
+mail: john.doe@example.com
+
+result: 0 Success
+```
+
+This response includes the entry's distinguished name that matches the search criteria and its attributes and values.
+
+
+### LDAP Injection
+
+### Enumeration
 
