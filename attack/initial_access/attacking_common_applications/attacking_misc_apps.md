@@ -620,5 +620,74 @@ This response includes the entry's distinguished name that matches the search cr
 
 ### LDAP Injection
 
+... is an attack that exploits web applications that use LDAP for authentication or storing user information. The attacker can inject malicious code or chars into LDAP queries to alter the application's behaviour, bypass security measures, and access sensitive data stored in the LDAP directory.
+
+To test LDAP injection, you can use input values that contain special chars or operators that can change the query's meaning:
+
+| Input | Description |
+| ----- | ----------- |
+| ```*``` | An asterisk can match any number of chars. |
+| ```( )``` | Parantheses can group expressions. |
+| ```\|``` | A vertical bar can perform logical OR. |
+| ```&``` | An ampersand can perform logical AND. |
+| ```(cn=*)``` | Input values that try to bypass authentication or authorisation checks by injecting conditions that always evaluate to true can be used. For example, ```(cn=*)``` or ```(objectClass=*)``` can be used as input values for a username or password fields. |
+
+LDAP injection attacks are similar to SQLi attacks but target the LDAP directory service instead of a database.
+
+For example, suppose an application uses the following LDAP query to authenticate users:
+
+```
+(&(objectClass=user)(sAMAccountName=$username)(userPassword=$password))
+```
+
+In this query, ```$username``` and ```$password``` contain the user's login credentials. An attacker could inject the ```*``` character into the ```$username``` or ```$password``` field to modify the LDAP query and bypass authentication.
+
+If an attacker injects the ```*``` into the ```$username``` field, the LDAP query will match any user account with any password. This would allow the attacker to gain access to the application with any password, as shown below:
+
+```
+$username = "*";
+$password = "dummy";
+(&(objectClass=user)(sAMAccountName=$username)(userPassword=$password))
+```
+
+Alternatively, if an attacker injects the ```*``` into the ```$password``` field, the LDAP query would match any user account with any password that contains the injected string. This would allow the attacker to gain access to the application with any username, as shown below:
+
+```
+$username = "dummy";
+$password = "*";
+(&(objectClass=user)(sAMAccountName=$username)(userPassword=$password))
+```
+
+LDAP injection attacks can lead to severe consequences, such as unauthorised access to sensitive information, elevated priviliges, and even full control over the affected application or server. These attacks can also considerably impact data integrity and availability, as attackers may alter or remove data within the directory service, causing disruptions to applications and services dependent on that data.
+
+To mitigate the risks associated with LDAP injection attacks, it is crucial to thoroughly validate and sanitize user input before incorporating it into LDAP queries. This process should involve removing LDAP-specific special characters like ```*``` and employing parameterised queries to ensure user input is treated solely as data, not executable code.
+
 ### Enumeration
 
+Enumerating the target helps you to understand services and exposed ports.
+
+```bash
+d41y@htb[/htb]$ nmap -p- -sC -sV --open --min-rate=1000 10.129.204.229
+
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-23 14:43 SAST
+Nmap scan report for 10.129.204.229
+Host is up (0.18s latency).
+Not shown: 65533 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT    STATE SERVICE VERSION
+80/tcp  open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+|_http-title: Login
+389/tcp open  ldap    OpenLDAP 2.2.X - 2.3.X
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 149.73 seconds
+```
+
+As OpenLDAP runs on the server, it is safe to assume that the web application running on port 80 uses LDAP for authentication.
+
+Attempting to log in using a wildcard char in the username and password field grants access to the system, effectively bypassing any authentication measures that had been implemented. This is a significant security issue as it allows anyone with knowledge of the vulnerability to gain unauthorised access to the system and potentially sensitive data.
