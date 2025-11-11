@@ -13,6 +13,8 @@
     - [ldapsearch](#ldapsearch)
     - [LDAP Injection](#ldap-injection)
     - [Enumeration](#enumeration-2)
+  - [Web Mass Assignment](#web-mass-assignment)
+    - [Exploit Mass Assignment](#exploit-mass-assignment)
 
 ---
 
@@ -691,3 +693,28 @@ Nmap done: 1 IP address (1 host up) scanned in 149.73 seconds
 As OpenLDAP runs on the server, it is safe to assume that the web application running on port 80 uses LDAP for authentication.
 
 Attempting to log in using a wildcard char in the username and password field grants access to the system, effectively bypassing any authentication measures that had been implemented. This is a significant security issue as it allows anyone with knowledge of the vulnerability to gain unauthorised access to the system and potentially sensitive data.
+
+## Web Mass Assignment
+
+Several framekworks offer handy mass-assignment features to lessen the workload for devs. Because of this, programmers can directly insert a whole set of user-entered data from a form into an object or database. This feature is often used without a whitelist for protecting the fields from the user's input. This vuln could be used by an attacker to steal sensitive information or destroy data.
+
+Web mass assignment vulnerability is a type of security vulnerability where attackers can modify the model attributes of an application through the parameters sent to the server. Reversing the code, attackers can see these parameters and by assigning values to critical unprotected parameters during the HTTP request, they can edit the data of a database and change the intended functionality of an application.
+
+Ruby on Rails is a web application framework that is vulnerable to this type of attack. The following example shows how attackers can exploit mass assignment vulnerability in Ruby on Rails. Assuming you have a User model with the following attributes:
+
+```ruby
+class User < ActiveRecord::Base
+  attr_accessible :username, :email
+end
+```
+
+The above model specifies that only the username and email attributes are allowed to be mass-assigned. However, attackers can modify other attributes by tampering with the parameters sent to the server. Assume that the server receives the following parameters.
+
+```javascript
+{ "user" => { "username" => "hacker", "email" => "hacker@example.com", "admin" => true } }
+```
+
+Although the User model does not explicitly state the admin attribute is accessible, the attacker can still change it because it is present in the arguments. Bypassing any access controls that may be in place, the attacker can send this data as part of a POST request to the server establish a user with admin privileges.
+
+### Exploit Mass Assignment
+
