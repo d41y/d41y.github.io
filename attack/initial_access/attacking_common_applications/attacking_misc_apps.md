@@ -15,6 +15,7 @@
     - [Enumeration](#enumeration-2)
   - [Web Mass Assignment](#web-mass-assignment)
     - [Exploit Mass Assignment](#exploit-mass-assignment)
+    - [Prevention](#prevention)
 
 ---
 
@@ -718,3 +719,71 @@ Although the User model does not explicitly state the admin attribute is accessi
 
 ### Exploit Mass Assignment
 
+Suppose you come across the following application that features an Asset Manager web app. Also suppose that the application's source code has been provided to you. Completing the registration step, you get the message "Success!!", and you can try to log in.
+
+![exploiting mass assignment 1](../../../images/exploiting_mass_assignment1.png)
+
+After login in, you get the message "Account is pending for approval". The administrator of this web app must approve your registration. Reviewing the python code of the ```/opt/asset-manager/app.py``` file reveals the following snippet.
+
+```python
+for i,j,k in cur.execute('select * from users where username=? and password=?',(username,password)):
+  if k:
+    session['user']=i
+    return redirect("/home",code=302)
+  else:
+    return render_template('login.html',value='Account is pending for approval')
+```
+
+You can see that the application is checking if the value ```k``` is set. If yes, then it allows the user to log in. In the code below, you can also see that if you set the ```confirmed``` parameter during registration, then it inserts ```cond``` as ```True``` and allows you to bypass the registration checking step.
+
+```python
+try:
+  if request.form['confirmed']:
+    cond=True
+except:
+      cond=False
+with sqlite3.connect("database.db") as con:
+  cur = con.cursor()
+  cur.execute('select * from users where username=?',(username,))
+  if cur.fetchone():
+    return render_template('index.html',value='User exists!!')
+  else:
+    cur.execute('insert into users values(?,?,?)',(username,password,cond))
+    con.commit()
+    return render_template('index.html',value='Success!!')
+```
+
+In that case, what you should try is to register another user and try setting the ```confirmed``` parameter to a random value. Using Burp, you can capture the HTTP POST request to the ```/register``` page and set the parameters ```username=new&password=test&confirmed=test```.
+
+![exploiting mass assignment 2](../../../images/exploiting_mass_assignment2.png)
+
+You can now try to log in to the application using the ```new:test``` credentials.
+
+![exploiting mass assignment 3](../../../images/exploiting_mass_assignment3.png)
+
+The mass assignment vulnerability is exploited successfully and you are now logged into the web app without waiting for the administrator to approve your registration request.
+
+### Prevention
+
+To prevent this type of attack, one should explicitly assign the attributes for the allowed fields, or use whitelisting methods provided by the framework to check the attributes that can be mass-assigned. The following example shows how to use strong parameters in the ```User``` controller.
+
+```ruby
+class UsersController < ApplicationController
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      redirect_to @user
+    else
+      render 'new'
+    end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:username, :email)
+  end
+end
+```
+
+In the example above, the ```user_params``` method returns a new hash that includes only the ```username``` and ```email``` attributes, ignoring any more input the client may have sent. By doing this, you ensure that only explicitly permitted attributes can be changed by mass assignment. 
