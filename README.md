@@ -38,6 +38,7 @@
     - [Customer Service / Configuration Management](./attack/initial_access/attacking_common_applications/attacking_management.md)
     - [Infra & Network Tools](./attack/initial_access/attacking_common_applications/attacking_infra_network_tools.md)
     - [Misc Applications](./attack/initial_access/attacking_common_applications/attacking_misc_apps.md)
+    - [Other Notable Apps](./attack/initial_access/attacking_common_applications/attacking_other_apps.md)
     - [Servlet Containers / Software Dev](./attack/initial_access/attacking_common_applications/attacking_servlet_containers.md)
     - [Thick Client Applications](./attack/initial_access/attacking_common_applications/attacking_thick_client.md)
   - Password Attacks
