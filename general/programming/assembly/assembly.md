@@ -477,7 +477,7 @@ For example, you can't use a variable defined as byte with ```rax```, as ```rax`
 
 ### Assembly File Structure
 
-```x86asm
+```asm
          global  _start
 
          section .data
@@ -543,7 +543,7 @@ Furthermore, you can use the ```equ``` instruction with the ```$``` token to eva
 
 For example, the following code defines a variable and then defines a constant for its length.
 
-```x86asm
+```asm
 section .data
     message db "Hello World!", 0x0a
     length  equ $-message
@@ -564,7 +564,7 @@ The text segment within the memory is read-only, so you cannot write any variabl
 
 First, you copy the code below into a file called ```helloWorld.s```.
 
-```x86asm
+```asm
 global _start
 
 section .data
@@ -1010,7 +1010,7 @@ The main data movement instructions are:
 
 To load initial values into ```rax``` and ```rbx``` (_file = fib.s_):
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1051,7 +1051,7 @@ This is why it is more efficient to use a register size that matches your data s
 
 Assembly code:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1074,7 +1074,7 @@ d41y@htb[/htb]$ nasm -f elf64 fib.s && objdump -M intel -d fib.o
 
 Modifying the code and using sub-registers to make it more efficient:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1113,7 +1113,7 @@ To move the actual value, you will have to use square brackets, which in x85_64 
 
 Example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1166,7 +1166,7 @@ However, if you wanted to load a pointer with an offset, you should use ```lea``
 
 Example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1211,7 +1211,7 @@ The following are the main Unary Arithmetic Instructions:
 
 ```fib.s``` example:
 
-```x86asm
+```asm
 global  _start
 section .text
 _start:
@@ -1251,7 +1251,7 @@ The main ones are (_assuming that both ```rax``` and ```rbx``` start as 1_):
 
 Adding to ```fib.s```:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1296,7 +1296,7 @@ If you want to turn the ```rax``` register to 0, the most efficient way to do it
 
 ```fib.s``` example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1340,7 +1340,7 @@ $rbx   : 0x1
 
 A loop in Assembly is a set of instructions that repeat for ```rcx``` times.
 
-```x86asm
+```asm
 exampleLoop:
     instruction 1
     instruction 2
@@ -1359,7 +1359,7 @@ Once the Assembly code reaches ```exampleLoop```, it will start the instructions
 
 ```fib.s``` example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1440,7 +1440,7 @@ The basic ```jmp``` instruction is uncoditional, which means that it will always
 
 ```fib.s``` example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1549,7 +1549,7 @@ Just like other registers, the 64-bit RFLAGS register has a 32-bit sub-register 
 
 ```fib.s``` example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1615,7 +1615,7 @@ The main advantage of ```cmp``` is that it does not affect the operands.
 
 ```fib.s``` example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1696,7 +1696,7 @@ For example, if you wanted to call a syscall to print "Hello World" to the scree
 
 This is your current code:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1717,7 +1717,7 @@ To ```push``` value into the stack, you can use its name as the operand, as in `
 
 Example:
 
-```x86asm
+```asm
 global  _start
 
 section .text
@@ -1916,7 +1916,7 @@ To call a syscall, you have to:
 
 Example moving the syscall number to the ```rax``` register:
 
-```x86asm
+```asm
 mov rax, 1
 ```
 
@@ -1948,7 +1948,7 @@ For the ```print``` example:
 
 You could use ```mov rcx, 'string'```. However, you can only store up to 16 chars in a register, so your intro string would not fit. Instead, create a variable with your string:
 
-```x86asm
+```asm
 global  _start
 
 section .data
@@ -1966,7 +1966,7 @@ mov rdx, 20      ; rdx: print length of 20 bytes
 
 ... should look like this:
 
-```x86asm
+```asm
 global  _start
 
 section .data
@@ -2046,7 +2046,7 @@ void _exit(int status);
 
 You see that it only needs one integer argument, ```status```, which is explained to be the exit code. In Linux, whenever a program exits without any errors, it passes an exit code of 0. Otherwise, the exit code is a different number, usually 1. In your case, as everything went as expected, you'll pass the exit code of 0:
 
-```x86asm
+```asm
     mov rax, 60
     mov rdi, 0
     syscall
@@ -2054,7 +2054,7 @@ You see that it only needs one integer argument, ```status```, which is explaine
 
 Adding this to the previous code:
 
-```x86asm
+```asm
 global  _start
 
 section .data
@@ -2102,7 +2102,7 @@ A procedure is usually a set of instructions you want to execute at specific poi
 
 Changing from:
 
-```x86asm
+```asm
 global  _start
 
 section .data
@@ -2131,7 +2131,7 @@ loopFib:
 
 ... to:
 
-```x86asm
+```asm
 global  _start
 
 section .data
@@ -2179,7 +2179,7 @@ Once the procedure is executed, you should end it with a ```ret``` instruction t
 
 ```fib.s ``` example:
 
-```x86asm
+```asm
 global  _start
 
 section .data
@@ -2254,7 +2254,7 @@ There are external functions you can use. The ```libc``` library of functions us
 
 First, to import an external ```libc``` function, you can use the ```extern``` instruction at the beginning of your code:
 
-```x86asm
+```asm
 global  _start
 extern  printf
 ```
@@ -2265,7 +2265,7 @@ Once this is done, you should be able to call the ```printf``` function.
 
 When defining a new procedure, ```printFib```, to hold your function call instructions. The very first step is to save to the stack any registers you are using, which are ```rax``` and ```rbx```:
 
-```x86asm
+```asm
 printFib:
     push rax        ; push registers to stack
     push rbx
@@ -2288,7 +2288,7 @@ d41y@htb[/htb]$ man -s 3 printf
 
 Now, you can create a variable that contains the output format to pass it as the first argument. The ```printf``` man page also details various print formats. You want to print an integer, so you can use the ```%d``` format:
 
-```x86asm
+```asm
 global  _start
 extern  printf
 
@@ -2299,7 +2299,7 @@ section .data
 
 ... and then:
 
-```x86asm
+```asm
 printFib:
     push rax            ; push registers to stack
     push rbx
@@ -2339,7 +2339,7 @@ So, you are inside ```printFib``` and inside ```loopFib```, and have pushed ```r
 
 If you were in a case where you wanted to bring the boundary up to 16, you can substract bytes from ```rsp``` as follows:
 
-```x86asm
+```asm
     sub rsp, 16
     call function
     add rsp, 16
@@ -2353,7 +2353,7 @@ The critical thing to remember is that you should have 16-bytes on top of the st
 
 Exmaple: 
 
-```x86asm
+```asm
 printFib:
     push rax            ; push registers to stack
     push rbx
@@ -2367,7 +2367,7 @@ printFib:
 
 Now you can add your ```printFib``` procedure to the beginning of ```loopFib```, such that it prints the current Fibonacci number at the beginning of each loop:
 
-```x86asm
+```asm
 loopFib:
     call printFib   ; print current Fib number
     add rax, rbx    ; get the next number
@@ -2379,7 +2379,7 @@ loopFib:
 
 The final code:
 
-```x86asm
+```asm
 global  _start
 extern  printf
 
@@ -2455,14 +2455,14 @@ In order to make the programm more dynamic you could ask the user for the max Fi
 
 To do so, you can use the ```scanf``` function from ```libc``` to take user input and have it properly converted to an integer.
 
-```x86asm
+```asm
 global  _start
 extern  printf, scanf
 ```
 
 You can now start writing a new procedure, ```getInput```:
 
-```x86asm
+```asm
 getInput:
     ; call scanf
 ```
@@ -2484,7 +2484,7 @@ int scanf(const char *format, ...);
 
 ... leads to:
 
-```x86asm
+```asm
 section .data
     message db "Please input max Fn", 0x0a
     outFormat db  "%d", 0x0a, 0x00
@@ -2495,14 +2495,14 @@ You also changed your intro message to 'Please input max Fn', to tell the user w
 
 Next, you must set a buffer space for the input storage. Uninitialized buffer space must be stored in the ```.bss``` label, and use ```resb 1``` to tell nasm to reserver it 1 byte of buffer space:
 
-```x86asm
+```asm
 section .bss
     userInput resb 1
 ```
 
 You can now set your function args under your ```getInput``` procedure:
 
-```x86asm
+```asm
 getInput:
     mov rdi, inFormat   ; set 1st parameter (inFormat)
     mov rsi, userInput  ; set 2nd parameter (userInput)
@@ -2512,7 +2512,7 @@ getInput:
 
 Next, you have to ensure that a 16-byte boundary aligns your stack. You are currently inside the ```getInput``` procedure, so you have 1 call instruction and no push instructions, so you have an 8-byte boundary. So, you can use ```sub``` to fix ```rsp```:
 
-```x86asm
+```asm
 getInput:
     sub rsp, 8
     ; call scanf
@@ -2525,7 +2525,7 @@ You can ```push rax``` instead, and this will properly align the stack as well. 
 
 Now, you set the function arguments and ```call scanf```:
 
-```x86asm
+```asm
 getInput:
     sub rsp, 8          ; align stack to 16-bytes
     mov rdi, inFormat   ; set 1st parameter (inFormat)
@@ -2537,7 +2537,7 @@ getInput:
 
 You will also add ```call getInput``` at ```_start```, so that you go to this procedure right after printing the intro message:
 
-```x86asm
+```asm
 section .text
 _start:
     call printMessage   ; print intro message
@@ -2549,7 +2549,7 @@ _start:
 
 Finally, you have to make use of the user input. To do so, instead of using a static 10 when comparing in ```cmp rbx, 10```, you will change it to ```cmp rbx [userInput]```:
 
-```x86asm
+```asm
 loopFib:
     ...SNIP...
     cmp rbx,[userInput] ; do rbx - userInput
@@ -2559,7 +2559,7 @@ loopFib:
 
 Complete code:
 
-```x86asm
+```asm
 global  _start
 extern  printf, scanf
 
@@ -2630,7 +2630,7 @@ Please input max Fn:
 
 ... are a hex representation of a binary's executable machine code:
 
-```x86asm
+```asm
 global _start
 
 section .data
@@ -2889,7 +2889,7 @@ This is what will happen if your Assembly code is not shellcode compliant and do
 
 You need to fix the following Assembly code:
 
-```x86asm
+```asm
 global _start
 
 section .data
@@ -2921,13 +2921,13 @@ There are many techniques you can use to avoid using variables:
 
 Example of moving your string to ```rsi```:
 
-```x86asm
+```asm
     mov rsi, 'Academy!'
 ```
 
 However, y 64-bit register can only hold 8 bytes, which may not be enough for larger strings. So, your other option is to rely on the Stack by pushing your string 16-bytes at a time, and then using ```rsp``` as your string pointer:
 
-```x86asm
+```asm
     push 'y!'
     push 'B Academ'
     push 'Hello HT'
@@ -2936,7 +2936,7 @@ However, y 64-bit register can only hold 8 bytes, which may not be enough for la
 
 However, this would exceed the allowed bounds of immediate strings ```push```, which is a ```dword``` at a time. So, you will instead move your string to ```rbx```, and then push ```rbx``` to the Stack:
 
-```x86asm
+```asm
     mov rbx, 'y!'
     push rbx
     mov rbx, 'B Academ'
@@ -2991,7 +2991,7 @@ If you ever had any calls or references to direct memory addresses, you can fix 
 
 NULL chars are used as string terminators in Assembly and machine code, and so if they are encountered, they will cause issues and may lead the program to terminate early. So, you must ensure that your shellcode does not contain any NULL bytes 00. If you go back to your HelloWorld shellcode disassembly, you noticed many red 00s in it:
 
-```x86asm
+```asm
 $ pwn disasm '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05' -c 'amd64'
    0:    48 be 00 20 40 00 00     movabs rsi,  0x402000
    7:    00 00 00
@@ -3029,14 +3029,14 @@ As you can see, not only does your new shellcode not contain any NULL bytes, but
 
 You can start with the new instruction you added earlier, ```mov rbx, 'y!'```. You see that this instruction is moving 2-bytes into an 8-byte register. So to fix it, you will first zero-out ```rbx```, and then use the 2-byte register:
 
-```x86asm
+```asm
     xor rbx, rbx
     mov bx, 'y!'
 ```
 
 ... applied to the whole code:
 
-```x86asm
+```asm
     xor rax, rax
     mov al, 1
     xor rdi, rdi
@@ -3053,7 +3053,7 @@ You can start with the new instruction you added earlier, ```mov rbx, 'y!'```. Y
 
 ... leads to:
 
-```x86asm
+```asm
 global _start
 
 section .text
@@ -3118,7 +3118,7 @@ So, you will set your arguments as:
 
 Using the same concepts you learned for calling a syscall, the following Assembly code should execute the syscall you need:
 
-```x86asm
+```asm
 global _start
 
 section .text
@@ -3139,7 +3139,7 @@ As you can see, you pushed two ```'/bin//sh'``` strings and then moved their poi
 
 Better example:
 
-```x86asm
+```asm
 _start:
     mov al, 59          ; execve syscall number
     xor rdx, rdx        ; set env to NULL
