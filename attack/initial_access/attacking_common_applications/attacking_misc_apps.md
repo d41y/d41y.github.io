@@ -941,4 +941,3 @@ Using the debugger and .NET assembly editor [dnSpy](https://github.com/0xd4d/dnS
 ![apps connecting to services 1](../../../images/apps_connecting_to_services1.png)
 
 Apart from trying to connect to the MSSQL service, attacks like password spraying can also be used to test the security of other services.
-
