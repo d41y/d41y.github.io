@@ -173,8 +173,6 @@ Web Service & API
   8. [Extras](./attack/windows/ad/enum_and_attacks/ad_extras.md)
   9. [Domain Trusts Attacks](./attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.md)
   10. [Cross-Forest Trust Attacks](./attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.md)
-- Mitigation
-  - [Defensive Considerations](./attack/windows/ad/enum_and_attacks/ad_defensive_considerations.md)
 
 </details>
 
@@ -191,6 +189,11 @@ Web Service & API
 
 <summary>
 </summary>
+
+## Defensive Considerations, Mitigation, Hardening
+
+- [AD](./defend/defensive_considerations/ad_defensive_considerations.md)
+- [Common Applications](./defend/defensive_considerations/common_application_hardening.md)
 
 ## Digital Forensics
 
