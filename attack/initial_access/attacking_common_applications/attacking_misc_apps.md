@@ -18,6 +18,7 @@
     - [Prevention](#prevention)
   - [Applications Connecting to Services](#applications-connecting-to-services)
     - [ELF Executable Examination](#elf-executable-examination)
+    - [DLL File Examination](#dll-file-examination)
 
 ---
 
@@ -919,4 +920,25 @@ RDI: 0x55555556c4f0 --> 0x4b5a ('ZK')
 
 <SNIP>
 ```
+
+Apart from trying to connect to the MSSQL service, pentesters can also check if the password is reusable from users of the same network.
+
+### DLL File Examination
+
+A DLL file is a Dynamically Linked Library and it contains code that is called from other programs while they are running. The MultimasterAPI.dll binary is found on a remote machine during the enumeration process. Examination of the file reveals that this is a .ENT assembly.
+
+```powershell
+C:\> Get-FileMetaData .\MultimasterAPI.dll
+
+<SNIP>
+M .NETFramework,Version=v4.6.1 TFrameworkDisplayName.NET Framework 4.6.1    api/getColleagues        ! htt
+p://localhost:8081*POST         Ò^         øJ  ø,  RSDSœ»¡ÍuqœK£"Y¿bˆ   C:\Users\Hazard\Desktop\Stuff\Multimast
+<SNIP>
+```
+
+Using the debugger and .NET assembly editor [dnSpy](https://github.com/0xd4d/dnSpy), you can view the source code directly. This tool allows reading, editing, and debugging the source code of a .NET assembly. Inspection of MultimasterAPI.Controllers -> ColleagueController reveals a database connection string containing the password.
+
+![apps connecting to services 1](../../../images/apps_connecting_to_services1.png)
+
+Apart from trying to connect to the MSSQL service, attacks like password spraying can also be used to test the security of other services.
 
