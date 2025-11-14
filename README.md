@@ -90,7 +90,7 @@
 - [Pivoting](./attack/post_exploitation/pivoting.md)
 - Privesc
   - [Linux](./attack/post_exploitation/privesc/linux_privesc.md)
-  - Windows
+  - [Windows](./attack/post_exploitation/privesc/windows_privesc.md)
 
 ## Reversing
 
