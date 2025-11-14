@@ -17,7 +17,6 @@
 
 ## Binary Exploitation
 
-- [Pwntools](./attack/binary_exploitation/intro_pwntools.md)
 - [Stack-Based Buffer Overflows on Linux x86](./attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.md)
 
 ## Cloud
@@ -27,6 +26,8 @@
 ## GamePwn
 
 ## Hardware / ICS
+
+-  [0x00](./attack/hardware_ics/hardware_ics_fundamentals.md)
 
 ## Initial Access
 
@@ -83,9 +84,9 @@
 
 - [File Transfer](./attack/post_exploitation/file_transfers.md)
 - Password Attacks / Credential Hunting
-  - [Linux]((./attack/initial_access/password_attacks/linux_password_attacks.md))
-  - [Network]((./attack/initial_access/password_attacks/network_password_attacks.md))
-  - [Windows]((./attack/initial_access/password_attacks/windows_password_attacks.md))
+  - [Linux](./attack/post_exploitation/password_attacks/linux_password_attacks.md)
+  - [Network](./attack/post_exploitation/password_attacks/network_password_attacks.md)
+  - [Windows](./attack/post_exploitation/password_attacks/windows_password_attacks.md)
 - [Persistence]()
 - [Pivoting](./attack/post_exploitation/pivoting.md)
 - Privesc
@@ -265,8 +266,8 @@ Non-Relational
   - [Advanced Kibana](./general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.md)
   - [Alerting](./general/elastic_stack/data_analysis_with_kibana/08_alerting.md)
 - Elasticsearch Engineer
-  - [0x00](./general/elastic_stack/elasticsearch_engineer/intro_elasticsearch.md)
-  - [Data Modelling](./general/elastic_stack/elasticsearch_engineer/data_modelling.md)
+  - [0x00](./general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.md)
+  - [Data Modelling](./general/elastic_stack/elasticsearch_engineer/02_data_modelling.md)
   - [Search](./general/elastic_stack/elasticsearch_engineer/03_search.md)
   - [Aggregations](./general/elastic_stack/elasticsearch_engineer/04_aggregations.md)
   - [Data Processing](./general/elastic_stack/elasticsearch_engineer/05_data_processing.md)

