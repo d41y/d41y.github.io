@@ -1,4 +1,4 @@
-> ⚠️ Under Construction ⚠️ <br>
+> ⚠️ UNDER CONSTRUCTION ⚠️ <br>
 > This repository is a work in progress. I am gradually importing all my notes, so some sections may be incomplete or missing. Please be patient while I continue to expand and organize the content.
 
 # Welcome to My Cybersecurity Notes
