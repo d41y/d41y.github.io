@@ -2,5 +2,6 @@
   "userIgnoreFilters": [
     "book/"
   ],
-  "spellcheck": false
+  "spellcheck": false,
+  "showUnsupportedFiles": true
 }

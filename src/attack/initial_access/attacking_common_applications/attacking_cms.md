@@ -36,8 +36,6 @@
 
 ### Discovery/Footprinting
 
-[[wordpress]]
-
 A quick way to identify a WordPress site is browsing to the ```/robots.txt``` file. A typical robots.txt on a WordPress installation may look like:
 
 ```bash

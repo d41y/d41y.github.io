@@ -6,3 +6,10 @@ src = "src"
 
 # added
 [preprocessor.callouts]
+
+[preprocessor.wikilinks]
+
+[preprocessor.wikilinks.options]
+extension = ".md"
+pretty-links = false
+use-link-labels = true

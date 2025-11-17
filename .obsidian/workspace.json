@@ -11,6 +11,20 @@
             "id": "df16afea50ee8ba4",
             "type": "leaf",
             "state": {
+              "type": "markdown",
+              "state": {
+                "file": "src/attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "attacking_common_services_fundamentals"
+            }
+          },
+          {
+            "id": "0ab6b1c68ddb390a",
+            "type": "leaf",
+            "state": {
               "type": "graph",
               "state": {},
               "icon": "lucide-git-fork",
@@ -186,7 +200,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -202,7 +217,31 @@
   },
   "active": "df16afea50ee8ba4",
   "lastOpenFiles": [
+    "book/general/programming/python/sans573",
+    "book/general/programming/python",
+    "book/general/programming/assembly",
+    "book/general/networking/cisco",
+    "book/general/elastic_stack/elasticsearch_engineer",
+    "book/general/elastic_stack/data_analysis_with_kibana",
+    "book/general/webdev",
+    "book/general/reporting",
+    "book/general/programming",
+    "book/general/processes",
+    "book/general/networking",
+    "book/images/xxe_9.png",
+    "book/images/xxe_8.png",
+    "book/images/xxe_7.png",
+    "book/images/xxe_6.png",
+    "book/images/xxe_5.png",
+    "book/images/xxe_4.png",
+    "book/images/xxe_3.png",
+    "book/images/xxe_2.png",
+    "book/images/xxe_10.png",
+    "book/images/xxe_1.png",
+    "src/attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.md",
+    "src/attack/initial_access/attacking_common_applications/attacking_other_apps.md",
     "src/attack/initial_access/attacking_common_applications/attacking_cms.md",
+    "src/introduction.md",
     "src/attack/web/cms/wordpress.md",
     "src/SUMMARY.md",
     "README.md",
