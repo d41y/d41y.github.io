@@ -1,0 +1,8 @@
+[book]
+authors = ["d41y"]
+title = "Cybersecurity Notes"
+language = "en"
+src = "src"
+
+# added
+[preprocessor.callouts]
