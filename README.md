@@ -10,11 +10,6 @@
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
-<details>
-
-<summary>
-</summary>
-
 ## Binary Exploitation
 
 - [Stack-Based Buffer Overflows on Linux x86](./attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.md)
@@ -175,8 +170,6 @@ Web Service & API
   9. [Domain Trusts Attacks](./attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.md)
   10. [Cross-Forest Trust Attacks](./attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.md)
 
-</details>
-
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
@@ -185,11 +178,6 @@ Web Service & API
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
-
-<details>
-
-<summary>
-</summary>
 
 ## Defensive Considerations, Mitigation, Hardening
 
@@ -219,8 +207,6 @@ Network Forensics
 
 ## Threat Hunting
 
-</details>
-
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
@@ -229,11 +215,6 @@ Network Forensics
 </h3>
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
-
-<details>
-
-<summary>
-</summary>
 
 ## Assessments
 
@@ -308,8 +289,6 @@ Non-Relational
 - [Sylius](./general/webdev/sylius.md)
 - [Symfony](./general/webdev/symfony.md)
 
-</details>
-
 <br>
 <hr style="border: none; height: 5px; background-color:rgb(0, 126, 78);">
 
@@ -319,15 +298,8 @@ Non-Relational
 
 <hr style="border: none; height: 5px; background-color: rgb(0, 126, 78);">
 
-<details>
-
-<summary>
-</summary>
-
 ## GitHub
 
 [Cloning GitHub, committing and pushing](./infra_misc/github_cloning_enabling.md)
 
 ## VPS
-
-</details>
