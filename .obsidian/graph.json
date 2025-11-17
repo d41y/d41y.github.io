@@ -1,6 +1,6 @@
 {
   "collapse-filter": false,
-  "search": "",
+  "search": "-file:\"README\" and -file:\"README\":\"src/SUMMARY\"",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,

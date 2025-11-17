@@ -160,13 +160,33 @@
               "icon": "lucide-list",
               "title": "Outline of cheatsheet"
             }
+          },
+          {
+            "id": "617223a410f615b2",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          },
+          {
+            "id": "b8e2c5c7483fb88c",
+            "type": "leaf",
+            "state": {
+              "type": "git-history-view",
+              "state": {},
+              "icon": "history",
+              "title": "History"
+            }
           }
-        ]
+        ],
+        "currentTab": 6
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -176,12 +196,16 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "obsidian-git:Open Git source control": false
     }
   },
   "active": "df16afea50ee8ba4",
   "lastOpenFiles": [
-    "src/general/programming/python/sans573/cheatsheet.md",
-    "src/SUMMARY.md"
+    "src/attack/initial_access/attacking_common_applications/attacking_cms.md",
+    "src/attack/web/cms/wordpress.md",
+    "src/SUMMARY.md",
+    "README.md",
+    "src/general/programming/python/sans573/cheatsheet.md"
   ]
 }
