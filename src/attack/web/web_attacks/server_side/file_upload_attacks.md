@@ -38,8 +38,6 @@
 
 ---
 
-[Cheatsheet File Upload Attacks](../../../../cheatsheets/File_Upload_Attacks_Module_Cheat_Sheet.pdf)
-
 # File Upload Attacks
 
 Uploading a file has become a key feature for most modern web applications to allow the extensibility of web apps with user information. A social media website allows the upload of user profile images and other social media, while a corporate website may allow users to upload PDFs and other documents for corporate use.

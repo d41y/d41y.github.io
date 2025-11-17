@@ -97,9 +97,6 @@
 
 ---
 
-[Cheatsheet SQLi](../../../../cheatsheets/Sql_Injection_Fundamentals_Module_Cheat_Sheet.pdf)<br>
-[Cheatsheet SQLMap](../../../../cheatsheets/Sqlmap_Essentials_Module_Cheat_Sheet.pdf)
-
 # SQL Injection (SQLi)
 
 ... refers to attacks against relational databases such as MySQL. An SQLi occurs when a malicious user attempts to pass input that changes the final SQL query sent by the web application to the database, enabling the user to perform other unintended SQL queries directly against the database.
