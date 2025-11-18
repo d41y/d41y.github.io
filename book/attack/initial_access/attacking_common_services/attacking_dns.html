@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="../../../css/variables.css">
         <link rel="stylesheet" href="../../../css/general.css">
         <link rel="stylesheet" href="../../../css/chrome.css">
-        <link rel="stylesheet" href="../../../css/print.css" media="print">
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
@@ -141,8 +140,8 @@
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
-                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
                     </div>
@@ -626,8 +625,9 @@ Approximate round trip times in milli-seconds:
 <h4 id="concept-of-the-attack"><a class="header" href="#concept-of-the-attack">Concept of the Attack</a></h4>
 <p>One of the biggest dangers of a subdomain takeover is that a phishing campaign can be launched that is considered part of the official domain of the target company. For example, customers would look at the link and see that the domain <code>custom-drive.inlanefreight.com</code> is behind the official domain <code>inlanefreight.com</code> and trust it as a customer. However, the customers do not know that this page has been mirrored or created by an attacker to provoke a login by the company's customers, for example.</p>
 <p>Therefore, if an attacker finds a CNAME record in the company's DNS records that points to a subdomain that no longer exists and returns an HTTP 404 error, this subdomain can most likely be taken over by you through the use of the third party provider. A subdomain takeover occurs when a subdomain points to another domain using the CNAME record that does not currently exist. When an attacker registers this nonexistant domain, the subdomain points to the domain registration by you. By making a single DNS change, you make yourself the owner of that particular subdomain, and after that, you can manage the subdomain as you choose.</p>
-<p>What happens here is that the existing subdomain no longer points to a third-party provider and is therefore no longer occupied by this provider. Pretty much anyone can register this subdomain as their own. Visiting this subdomain and the presence of the CNAME record in the company's DNS leads, in most cases, to things working es expected. However, the design and function of this subdomain are in the hands of the attacker.</p>
-
+<p>What happens here is that the existing subdomain no longer points to a third-party provider and is therefore no longer occupied by this provider. Pretty much anyone can register this subdomain as their own. Visiting this subdomain and the presence of the CNAME record in the company's DNS leads, in most cases, to things working es expected. However, the design and function of this subdomain are in the hands of the attacker.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

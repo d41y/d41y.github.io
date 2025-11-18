@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="../../../css/variables.css">
         <link rel="stylesheet" href="../../../css/general.css">
         <link rel="stylesheet" href="../../../css/chrome.css">
-        <link rel="stylesheet" href="../../../css/print.css" media="print">
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
@@ -141,8 +140,8 @@
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
-                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
                     </div>
@@ -682,8 +681,9 @@ Wrote HTML report to: aquatone_report.html
 <p>Continuing through the report, it looks like the main <code>http://inlanefreight.local</code> website is next. Custom web apps are always worth testing as they may contain a wide variety of vulns. Here you would also be interested to see if the website was running a popular CMS such as WordPress, Joomla, or Drupal. The next application, <code>http://support-dev.inlanefreight.local</code>, is interesting because it appears to be running osTicket, which has suffered from various severe vulns over the years. Support ticketing systems are of particular interest because you be able to log in and gain access to sensitive information. If social engineering is in scope, you may be able to interact with customer support personnel or even manipulate the system to register a valid email address for the company's domain which you may be able to leverage to gain access to other services.</p>
 <p>During an assessment, you would continue reviewing the report, noting down interesting hosts, including the URL and application name/version for later. It is important at this point to remember that you are still in the information gathering phase, and very little detail could make or break your assessment. You should not get careless and begin attacking hosts right away, as you may and up down a rabbit hole and miss something crucial later in the report. During an external pentest, you would expect to see a mix of custom apps, some CMS, perhaps apps such as Tomcat, Jenkins, and Splunk, remote access portals such as Remote Desktop Services, SSL VPN endpoints, Outlook Web Access, O365, perhaps some sort of edge network device login page, etc.</p>
 <p>Your mileage may vary, and sometimes you will come across apps that absolutely should not be exposed, such as a single page with a file upload button.</p>
-<p>During internal pentests, you will see much of the same but often also see many printer login pages, ESXi and vCenter login portals, iLO and iDRAC login pages, a plethora of network devices, IoT devices, IP phones, internal code repos, SharePoint custom intranet portals, security appliances, and much more.</p>
-
+<p>During internal pentests, you will see much of the same but often also see many printer login pages, ESXi and vCenter login portals, iLO and iDRAC login pages, a plethora of network devices, IoT devices, IP phones, internal code repos, SharePoint custom intranet portals, security appliances, and much more.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

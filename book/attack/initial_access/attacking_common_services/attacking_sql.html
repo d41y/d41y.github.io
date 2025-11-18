@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="../../../css/variables.css">
         <link rel="stylesheet" href="../../../css/general.css">
         <link rel="stylesheet" href="../../../css/chrome.css">
-        <link rel="stylesheet" href="../../../css/print.css" media="print">
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
@@ -141,8 +140,8 @@
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
-                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
                     </div>
@@ -833,8 +832,9 @@ DESKTOP-0L9D4KA\SQLEXPRESS     Microsoft SQL Server 2019 (RTM sa_remote         
 <p>You can get the NTLMv2 hashes by interacting with the MSSQL server. However, it should be mentioned that this attack is possible through a direct connection to the MSSQL server and vulnerable web applications.</p>
 <h4 id="concept-of-the-attack"><a class="header" href="#concept-of-the-attack">Concept of the Attack</a></h4>
 <p>The interesting thing is that the MSSQL function <code>xp_dirtree</code> is not directly vulnerable but takes advantage of the authentication mechanism of SMB. When you try to access a shared folder on the network with a Windows host, this Windows host automatically sends an NTLMv2 hash for authentication.</p>
-<p>This hash can be used in various ways against the MSSQL server and other hosts in the corporate network. This includes an SMB relay attack where you "replay" the hash to log into other systems where the account has local admin privileges or cracking this hash on your local system. Successful cracking would allow you to see and use the password in cleartext. A successful SMB relay attack would grant you admin rights on another host in the network, but not necessarily the host where the hash originated because Microsoft patched an older flaw that allowed an SMB relay back to the originating host. You could, however, possibly gain local admin to another host and then steal credentials that could be re-used to gain local admin access to the original system where the NTLMv2 hash originated from.</p>
-
+<p>This hash can be used in various ways against the MSSQL server and other hosts in the corporate network. This includes an SMB relay attack where you "replay" the hash to log into other systems where the account has local admin privileges or cracking this hash on your local system. Successful cracking would allow you to see and use the password in cleartext. A successful SMB relay attack would grant you admin rights on another host in the network, but not necessarily the host where the hash originated because Microsoft patched an older flaw that allowed an SMB relay back to the originating host. You could, however, possibly gain local admin to another host and then steal credentials that could be re-used to gain local admin access to the original system where the NTLMv2 hash originated from.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

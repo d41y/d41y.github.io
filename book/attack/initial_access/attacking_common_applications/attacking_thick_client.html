@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="../../../css/variables.css">
         <link rel="stylesheet" href="../../../css/general.css">
         <link rel="stylesheet" href="../../../css/chrome.css">
-        <link rel="stylesheet" href="../../../css/print.css" media="print">
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
@@ -141,8 +140,8 @@
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
-                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
 
                     </div>
@@ -915,8 +914,9 @@ public void setPassword(String password) {
 <p>The server will eventually process the following query.</p>
 <pre><code class="language-sql">select id,username,email,password,role from users where username='abc' UNION SELECT 1,'abc','a@b.com','abc','admin'
 </code></pre>
-<p>The first select query fails, while the second returns valid user results with the role "admin" and the password "abc". The password sent to the server is also "abc", which results in a successful password comparison, and the application allows you to log in as the user "admin".</p>
-
+<p>The first select query fails, while the second returns valid user results with the role "admin" and the password "abc". The password sent to the server is also "abc", which results in a successful password comparison, and the application allows you to log in as the user "admin".<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
