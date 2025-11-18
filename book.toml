@@ -18,6 +18,8 @@ extension = ".md"
 pretty-links = false
 use-link-labels = true
 
+[preprocessor.pagetoc]
+
 [output.html.fold]
 enable = true
 level = 1
@@ -28,3 +30,5 @@ enable = false
 [output.html]
 git-repository-url = "https://github.com/d41y/d41y.github.io"
 git-repository-icon = "fa-github"
+additional-css = ["theme/pagetoc.css"]
+additional-js  = ["theme/pagetoc.js"]
