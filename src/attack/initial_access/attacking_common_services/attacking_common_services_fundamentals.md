@@ -246,7 +246,7 @@ You can use the domain name or IP address of the mail server. If the server uses
 
 #### Databases
 
-... are typically used in enterprise, and most companies use them to store and manage information. There are different types of databases, such as hierarchical databases, NoSQL databases, and [[attacking_sql|SQL]] relational databases.
+... are typically used in enterprise, and most companies use them to store and manage information. There are different types of databases, such as hierarchical databases, NoSQL databases, and SQL relational databases.
 
 ##### Command Line Utilities
 
