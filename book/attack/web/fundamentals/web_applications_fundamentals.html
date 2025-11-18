@@ -1,0 +1,809 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Web Applications - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#web-applications">Web Applications</a>
+<ul>
+<li><a href="#web-apps-vs-websites">Web Apps vs. Websites</a></li>
+</ul>
+</li>
+<li><a href="#web-app-layout">Web App Layout</a>
+<ul>
+<li><a href="#web-application-infrastructure">Web Application Infrastructure</a>
+<ul>
+<li><a href="#client-server">Client-Server</a></li>
+<li><a href="#one-server">One Server</a></li>
+<li><a href="#many-servers---one-database">Many Servers - One Database</a></li>
+<li><a href="#many-servers---many-databases">Many Servers - Many Databases</a></li>
+</ul>
+</li>
+<li><a href="#web-application-components">Web Application Components</a></li>
+<li><a href="#web-application-architecture">Web Application Architecture</a></li>
+</ul>
+</li>
+<li><a href="#front-end-components">Front End Components</a>
+<ul>
+<li><a href="#hypertext-markup-language-html">HyperText Markup Language (HTML)</a></li>
+<li><a href="#cascading-style-sheets-css">Cascading Style Sheets (CSS)</a></li>
+</ul>
+</li>
+<li><a href="#front-end-vulns">Front End Vulns</a>
+<ul>
+<li><a href="#sensitive-data-exposure">Sensitive Data Exposure</a></li>
+<li><a href="#html-injection">HTML Injection</a></li>
+<li><a href="#cross-site-scripting-xss">Cross-Site Scripting (XSS)</a></li>
+<li><a href="#cross-site-request-forgery-csrf">Cross-Site Request Forgery (CSRF)</a></li>
+</ul>
+</li>
+<li><a href="#back-end-components">Back End Components</a>
+<ul>
+<li><a href="#back-end-servers">Back End Servers</a></li>
+<li><a href="#web-servers">Web Servers</a></li>
+<li><a href="#databases">Databases</a>
+<ul>
+<li><a href="#relational-sql">Relational (SQL)</a></li>
+<li><a href="#non-relational-nosql">Non-relational (NoSQL)</a></li>
+</ul>
+</li>
+<li><a href="#development-framework--application-programming-interfaces-apis">Development Framework &amp; Application Programming Interfaces (APIs)</a>
+<ul>
+<li><a href="#development-framework">Development Framework</a></li>
+<li><a href="#apis">APIs</a>
+<ul>
+<li><a href="#web-apis">Web APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#back-end-vulns">Back End Vulns</a>
+<ul>
+<li><a href="#broken-access-control">Broken Access Control</a></li>
+<li><a href="#malicious-file-upload">Malicious File Upload</a></li>
+<li><a href="#command-injection">Command Injection</a></li>
+<li><a href="#sql-injection-sqli">SQL Injection (SQLi)</a></li>
+<li><a href="#public-vulnerabilities">Public Vulnerabilities</a>
+<ul>
+<li><a href="#common-vulnerability-scoring-system-cvss">Common Vulnerability Scoring System (CVSS)</a>
+<ul>
+<li><a href="#cvss-v20-rating">CVSS V2.0 Rating</a></li>
+<li><a href="#cvss-v30-rating">CVSS V3.0 Rating</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="web-applications"><a class="header" href="#web-applications">Web Applications</a></h1>
+<p>... are interactive applications that run on webservers. Web applications usually adopt a client-server architecture to run and handle interactions. They typically have front end components that run on the client-side and other back end components that run on the server-side.</p>
+<h2 id="web-apps-vs-websites"><a class="header" href="#web-apps-vs-websites">Web Apps vs. Websites</a></h2>
+<p>Traditional webistes were statically created to represent specific information, and this information would not change with our interactions (<em>also known as Web 1.0</em>).</p>
+<p>Most websites run web applications (<em>Web 2.0</em>) presenting dynamic content based on user interaction. Another significant difference is that web aaplications are fully functional and can perform various functionalities for the end-user, while websites lack this type of functionality.</p>
+<h1 id="web-app-layout"><a class="header" href="#web-app-layout">Web App Layout</a></h1>
+<p>... consists of:</p>
+<ul>
+<li><strong>Web Application Infrastructure</strong>
+<ul>
+<li>describes the structure of required components, such as the database, needed for the web application to function as intended</li>
+</ul>
+</li>
+<li><strong>Web Application Components</strong>
+<ul>
+<li>the components that make up a web application represent all the components that the web application interacts with; divide into:
+<ul>
+<li>UI/UX</li>
+<li>Client</li>
+<li>Server</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Web Application Architecture</strong>
+<ul>
+<li>Architecture comprises all the relationships between the various web application components</li>
+</ul>
+</li>
+</ul>
+<h2 id="web-application-infrastructure"><a class="header" href="#web-application-infrastructure">Web Application Infrastructure</a></h2>
+<h3 id="client-server"><a class="header" href="#client-server">Client-Server</a></h3>
+<p>A server hosts the web app in a client-server model and distributes it to any clients to access it. In this model, web applications have two types of components, those in the front end, which are usually interpreted and executed on the client-side, and components in the back end, usually compiled, interpreted, and executed by the hosting server.</p>
+<p><img src="../../../images/client_server.png" alt="Client-Server" /></p>
+<h3 id="one-server"><a class="header" href="#one-server">One Server</a></h3>
+<p>If any web application hosted on this server is compromised in this architecture, then all web applications' data will be compromised. This design represents an "all eggs in one basket" approach since any of the hosted web applications are vulnerable, the entire webserver becomes vulnerable.</p>
+<p><img src="../../../images/one_server.png" alt="One Server" /></p>
+<h3 id="many-servers---one-database"><a class="header" href="#many-servers---one-database">Many Servers - One Database</a></h3>
+<p>This model separates the database onto its own database server and allows the applications' hosting server to access the database server to store and retrieve data. It can be seen as many-servers to one-database and one-server to one-database, as long as the database is separated on its own database server.</p>
+<p><img src="../../../images/many_servers_one_database.png" alt="Many Servers - One Database" /></p>
+<h3 id="many-servers---many-databases"><a class="header" href="#many-servers---many-databases">Many Servers - Many Databases</a></h3>
+<p>This model builds upon the Many Servers, One Database model. However, within the database server, each web application's data is hosted in a separate database. The web application can only access private data and only common data that is shared across the web applications. It is also possible to host each web application's database on its separate database server.</p>
+<p><img src="../../../images/many_servers_many_databases.png" alt="Many Servers - Many Databases" /></p>
+<h2 id="web-application-components"><a class="header" href="#web-application-components">Web Application Components</a></h2>
+<ol>
+<li>Client</li>
+<li>Server
+<ul>
+<li>Webserver</li>
+<li>Web Application Logic</li>
+<li>Database</li>
+</ul>
+</li>
+<li>Services
+<ul>
+<li>3rd Party Integration</li>
+<li>Web Application Integrations</li>
+</ul>
+</li>
+<li>Functions (<em>Serverless</em>)</li>
+</ol>
+<h2 id="web-application-architecture"><a class="header" href="#web-application-architecture">Web Application Architecture</a></h2>
+<p>The components of a web application are divided into three different layers:</p>
+<div class="table-wrapper"><table><thead><tr><th>Layer</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Presentation Layer</strong></td><td>consists of UI process components that enable communication with the application and the system<br>can be accessed by the client via the web brwoser and are returned in the form of HTML,JavaScript, and CSS</td></tr>
+<tr><td><strong>Application Layer</strong></td><td>ensures that all client requests are correctly processed<br>various criteria are checked, such as authorization, privileges, and data passed on to the client</td></tr>
+<tr><td><strong>Data Layer</strong></td><td>works closely with the application layer to determine exactly where the required data is stored and can be accessed</td></tr>
+</tbody></table>
+</div>
+<h1 id="front-end-components"><a class="header" href="#front-end-components">Front End Components</a></h1>
+<h2 id="hypertext-markup-language-html"><a class="header" href="#hypertext-markup-language-html">HyperText Markup Language (HTML)</a></h2>
+<p>... is at the very core of any web page we see on the internet. It contains each page's basic elements, including titles, forms, images, and many other elements. The web browser, in turn, interprets these elements and displays them to the end-user.</p>
+<p>An important concept to learn in HTML is URL encoding, or percent-encoding. For a browser to properly display a page's contents, it has to know the charset in use. In URLs, for example, browsers can only use ASCII encoding, which only allows alphanumerical characters and certain special characters. Therefore, all other characters outside of the ASCII character-set have to be encoded within a URL. URL encoding replaces unsafe ASCII characters with a <code>%</code> symbol followed by two hexadecimal digits.</p>
+<p>Example:</p>
+<div class="table-wrapper"><table><thead><tr><th>Character</th><th>Encoding</th></tr></thead><tbody>
+<tr><td><strong>space</strong></td><td>%20</td></tr>
+<tr><td><strong>!</strong></td><td>%21</td></tr>
+<tr><td><strong>"</strong></td><td>%22</td></tr>
+<tr><td><strong>#</strong></td><td>%23</td></tr>
+<tr><td><strong>$</strong></td><td>%24</td></tr>
+<tr><td><strong>%</strong></td><td>%25</td></tr>
+<tr><td><strong>&amp;</strong></td><td>%26</td></tr>
+<tr><td><strong>'</strong></td><td>%27</td></tr>
+<tr><td><strong>(</strong></td><td>%28</td></tr>
+<tr><td><strong>)</strong></td><td>%29</td></tr>
+</tbody></table>
+</div>
+<h2 id="cascading-style-sheets-css"><a class="header" href="#cascading-style-sheets-css">Cascading Style Sheets (CSS)</a></h2>
+<p>... is the stylesheet language used alongside HTML to format and set the style of HTML elements. Like HTML, there are several versions of CSS, and each subsequent version introduces a new set of capabilities that can be used for formatting HTML elements. Browsers are updated alongside it to support these new features.</p>
+<h1 id="front-end-vulns"><a class="header" href="#front-end-vulns">Front End Vulns</a></h1>
+<h2 id="sensitive-data-exposure"><a class="header" href="#sensitive-data-exposure">Sensitive Data Exposure</a></h2>
+<p>... refers to the availability of sensitive data in clear-text to the end-user. This is usually found in the source of the web page or page source on the front end of web apps.</p>
+<p>Example:</p>
+<pre><code class="language-html">&lt;form action="action_page.php" method="post"&gt;
+
+    &lt;div class="container"&gt;
+        &lt;label for="uname"&gt;&lt;b&gt;Username&lt;/b&gt;&lt;/label&gt;
+        &lt;input type="text" required&gt;
+
+        &lt;label for="psw"&gt;&lt;b&gt;Password&lt;/b&gt;&lt;/label&gt;
+        &lt;input type="password" required&gt;
+
+        &lt;!-- TODO: remove test credentials test:test --&gt;
+
+        &lt;button type="submit"&gt;Login&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+
+&lt;/html&gt;
+</code></pre>
+<h2 id="html-injection"><a class="header" href="#html-injection">HTML Injection</a></h2>
+<p>... occurs when unfiltered user input is displayed on the page. This can either be through retrieving previously submitted code, like retrieving a user comment from the back end database, or by directly displaying unfiltered user input through JavaScript on the front end.</p>
+<p>If no input sanitization is in place, this is potentially an easy target for HTML Injection and Cross-Site Scripting (XSS) attacks.</p>
+<p>Bad sanitization example:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;body&gt;
+    &lt;button onclick="inputFunction()"&gt;Click to enter your name&lt;/button&gt;
+    &lt;p id="output"&gt;&lt;/p&gt;
+
+    &lt;script&gt;
+        function inputFunction() {
+            var input = prompt("Please enter your name", ""); // no sanitization
+
+            if (input != null) {
+                document.getElementById("output").innerHTML = "Your name is " + input; // no sanitization
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<h2 id="cross-site-scripting-xss"><a class="header" href="#cross-site-scripting-xss">Cross-Site Scripting (XSS)</a></h2>
+<p>... is very similar to HTML Injection. However, XSS involves the injection of JavaScript code to perform more advanced attacks on the client-side, instead of merely injecting HTML code. There are three main types of XSS:</p>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Reflected XSS</strong></td><td>occurs when user input is displayed on the page after processing</td></tr>
+<tr><td><strong>Stored XSS</strong></td><td>occurs when user input is stored in the back end database and then displayed upon retrieval</td></tr>
+<tr><td><strong>DOM XSS</strong></td><td>occurs when user input is directly shown in the browser and is written to an HTML DOM object</td></tr>
+</tbody></table>
+</div>
+<p>DOM XSS example:</p>
+<pre><code class="language-html">#"&gt;&lt;img src=/ onerror=alert(document.cookie)&gt;
+</code></pre>
+<h2 id="cross-site-request-forgery-csrf"><a class="header" href="#cross-site-request-forgery-csrf">Cross-Site Request Forgery (CSRF)</a></h2>
+<p>... is caused by unfiltered user input. CSRF attacks may utilize XSS vulnerabilities to perform certain queries, and API calls on the web app that the victim is currently authenticated to. This would allow the attacker to perform actions as the authenticated user. It may also utilize other vulnerabilities to perform the same functions, like utilizing HTTP parameters for attacks.</p>
+<p>Example:</p>
+<pre><code class="language-html">"&gt;&lt;script src=//www.example.com/exploit.js&gt;&lt;/script&gt;
+</code></pre>
+<p>Many modern browsers have built-in anti-CSRF measures, which prevent automatically executing JavaScript code. Furthermore, many modern web apps have anti-CSRF measures, including certain HTPP headers and flags that can prevent automated requests.</p>
+<h1 id="back-end-components"><a class="header" href="#back-end-components">Back End Components</a></h1>
+<h2 id="back-end-servers"><a class="header" href="#back-end-servers">Back End Servers</a></h2>
+<p>The back end server contains the other three back end components:</p>
+<ul>
+<li>Web Server</li>
+<li>Database</li>
+<li>Development Framework</li>
+</ul>
+<p>Popular stack-combinations:</p>
+<div class="table-wrapper"><table><thead><tr><th>Combination</th><th>Components</th></tr></thead><tbody>
+<tr><td><strong>LAMP</strong></td><td>Linux, Apache, MySQL, PHP</td></tr>
+<tr><td><strong>WAMP</strong></td><td>Windows, Apache, MySQL, PHP</td></tr>
+<tr><td><strong>WINS</strong></td><td>Windows, IIS, .NET, SQL Server</td></tr>
+<tr><td><strong>MAMP</strong></td><td>macOS, Apache, MySQL, PHP</td></tr>
+<tr><td><strong>XAMP</strong></td><td>Cross-Platform, Apache, MySQL, PHP/PERL</td></tr>
+</tbody></table>
+</div>
+<h2 id="web-servers"><a class="header" href="#web-servers">Web Servers</a></h2>
+<p>... are applications that run on the back end server, which handle all of the HTPP traffic from the client-side browser, routes it to the requested pages, and finally responds to the client-side browser. Web servers usually run on TCP ports 80 or 443, and are responsible for connecting end-users to various parts of the web application, in addition to handling their various responses.</p>
+<p>Common web servers:</p>
+<ul>
+<li>Apache</li>
+<li>NGINX</li>
+<li>IIS</li>
+</ul>
+<h2 id="databases"><a class="header" href="#databases">Databases</a></h2>
+<p>... are used by web apps to store various content and information related to the web app. This can be core web app assets like images and files, web app content like posts and updates, or user data like username and passwords.</p>
+<h3 id="relational-sql"><a class="header" href="#relational-sql">Relational (SQL)</a></h3>
+<p>... store their data in tables, rows, and columns. Each table can have unique keys, which can link tables together and create relationships between tables.</p>
+<p>Common relational DBs:</p>
+<ul>
+<li>MySQL</li>
+<li>MSSQL</li>
+<li>Oracle</li>
+<li>PostgreSQL</li>
+</ul>
+<h3 id="non-relational-nosql"><a class="header" href="#non-relational-nosql">Non-relational (NoSQL)</a></h3>
+<p>... does not use tables, rows, columns, primary keys, relationships, or schemas. Instead, a NoSQL database stores data using various storage models, depending on the type of data stored.</p>
+<p>Common storage models for NoSQL:</p>
+<ul>
+<li>Key-Value</li>
+<li>Document-Based</li>
+<li>Wide-Column</li>
+<li>Graph</li>
+</ul>
+<h2 id="development-framework--application-programming-interfaces-apis"><a class="header" href="#development-framework--application-programming-interfaces-apis">Development Framework &amp; Application Programming Interfaces (APIs)</a></h2>
+<h3 id="development-framework"><a class="header" href="#development-framework">Development Framework</a></h3>
+<p>Development frameworks help in developing core web application files and functionality.</p>
+<p>Common web development frameworks:</p>
+<ul>
+<li>Laravel</li>
+<li>Express</li>
+<li>Django</li>
+<li>Rails</li>
+</ul>
+<h3 id="apis"><a class="header" href="#apis">APIs</a></h3>
+<p>An important aspect of back end web application development is the use of Web APIs and HTPP Request parameters to connect the front end and the back end to be able to send data back and forth between front and back end components and carry out various functions within the web app.</p>
+<h4 id="web-apis"><a class="header" href="#web-apis">Web APIs</a></h4>
+<p>Web APIs allow remote access to functionality on back end components. Web APIs are usually accessed over the HTTP protocol and are usually handled and translated through web servers.</p>
+<p>Common web API standards:</p>
+<ul>
+<li>Representational State Transfer (REST)</li>
+<li>Simple Objects Access (SOAP)</li>
+</ul>
+<h1 id="back-end-vulns"><a class="header" href="#back-end-vulns">Back End Vulns</a></h1>
+<h2 id="broken-access-control"><a class="header" href="#broken-access-control">Broken Access Control</a></h2>
+<p>... refers to vulnerabilities that allow attackers to bypass authentication functions. For example, this may allow attacker to login wihtout having a valid set of credentials or allow a normal user to become an administrator without having the privileges to do so.</p>
+<h2 id="malicious-file-upload"><a class="header" href="#malicious-file-upload">Malicious File Upload</a></h2>
+<p>If the web app has a file upload feature and does not properly validate the uploaded files, you may upload a malicious script, which will allow us to execute commands on the remote server.</p>
+<h2 id="command-injection"><a class="header" href="#command-injection">Command Injection</a></h2>
+<p>Many web apps execute local OS commands to perform certain processes. For example, a web app may install a plugin of your choosing by executing an OS command that downloads that plugin, using the plugin name provided. If not properly filtered and sanitized, attackers may be able to inject antoher command to be executed alongside the originally intended command, which allows them to directly execute commands on the back end server and gain control over it.</p>
+<h2 id="sql-injection-sqli"><a class="header" href="#sql-injection-sqli">SQL Injection (SQLi)</a></h2>
+<p>Similar to a Command Injection vulnerability, this vulnerability may occur when the web app executes a SQL query, including a value taken from user-supplied input.</p>
+<h2 id="public-vulnerabilities"><a class="header" href="#public-vulnerabilities">Public Vulnerabilities</a></h2>
+<p>... are sometimes shared and can be assigned a <a href="https://en.wikipedia.org/wiki/Common_Vulnerabilities_and_Exposures">Common Vulnerabilities and Exposures (CVEs)</a> record. They can be found at:</p>
+<ul>
+<li><a href="https://www.exploit-db.com/">Exploit DB</a></li>
+<li><a href="https://www.rapid7.com/db/">Rapid7 DB</a></li>
+<li><a href="https://www.vulnerability-lab.com/">Vulnerability Lab</a></li>
+</ul>
+<h3 id="common-vulnerability-scoring-system-cvss"><a class="header" href="#common-vulnerability-scoring-system-cvss">Common Vulnerability Scoring System (CVSS)</a></h3>
+<p>... is an open-source industry standard for assessing the severity of security vulnerabilities. This scoring system is often used as a standard measurement for organizations and governments that need to produce accurate and consistent severity scores for their systems' vulnerabilities.</p>
+<h4 id="cvss-v20-rating"><a class="header" href="#cvss-v20-rating">CVSS V2.0 Rating</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Severity</th><th>Base Score Rating</th></tr></thead><tbody>
+<tr><td><strong>Low</strong></td><td>0.0 - 3.9</td></tr>
+<tr><td><strong>Medium</strong></td><td>4.0 - 6.9</td></tr>
+<tr><td><strong>High</strong></td><td>70. - 10.0</td></tr>
+</tbody></table>
+</div>
+<h4 id="cvss-v30-rating"><a class="header" href="#cvss-v30-rating">CVSS V3.0 Rating</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Severity</th><th>Base Score Rating</th></tr></thead><tbody>
+<tr><td><strong>None</strong></td><td>0.0</td></tr>
+<tr><td><strong>Low</strong></td><td>0.1 - 3.9</td></tr>
+<tr><td><strong>Medium</strong></td><td>4.0 - 6.9</td></tr>
+<tr><td><strong>High</strong></td><td>70. - 8.9</td></tr>
+<tr><td><strong>Critical</strong></td><td>9.0 - 10.0</td></tr>
+</tbody></table>
+</div><div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../attack/web/fundamentals/web_recon_fundamentals.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../attack/web/web_attacks/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../attack/web/fundamentals/web_recon_fundamentals.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../attack/web/web_attacks/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

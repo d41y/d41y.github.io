@@ -1,0 +1,752 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Proxies - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#web-proxies">Web Proxies</a>
+<ul>
+<li><a href="#web-proxies-1">Web Proxies</a>
+<ul>
+<li><a href="#setup">Setup</a>
+<ul>
+<li><a href="#burp">Burp</a></li>
+<li><a href="#zap">ZAP</a></li>
+<li><a href="#proxy-setup">Proxy Setup</a></li>
+<li><a href="#ca-certificate">CA Certificate</a></li>
+</ul>
+</li>
+<li><a href="#intercepting-web-requests">Intercepting Web Requests</a>
+<ul>
+<li><a href="#burp-1">Burp</a></li>
+<li><a href="#zap-1">ZAP</a></li>
+<li><a href="#manipulating-web-requests">Manipulating Web Requests</a></li>
+</ul>
+</li>
+<li><a href="#intercepting-responses">Intercepting Responses</a>
+<ul>
+<li><a href="#burp-2">Burp</a></li>
+<li><a href="#zap-2">ZAP</a></li>
+</ul>
+</li>
+<li><a href="#automatic-request-modification">Automatic Request Modification</a>
+<ul>
+<li><a href="#burp-3">Burp</a></li>
+<li><a href="#zap-3">ZAP</a></li>
+</ul>
+</li>
+<li><a href="#automatic-response-modification">Automatic Response Modification</a>
+<ul>
+<li><a href="#burp-4">Burp</a></li>
+</ul>
+</li>
+<li><a href="#repeating-requests">Repeating Requests</a>
+<ul>
+<li><a href="#burp-5">Burp</a></li>
+<li><a href="#zap-4">ZAP</a></li>
+</ul>
+</li>
+<li><a href="#off-topic-encodingdecoding">Off-Topic: Encoding/Decoding</a></li>
+<li><a href="#off-topic-proxying-tools">Off-Topic: Proxying Tools</a></li>
+</ul>
+</li>
+<li><a href="#web-fuzzer">Web Fuzzer</a>
+<ul>
+<li><a href="#burp-intruder">Burp Intruder</a>
+<ul>
+<li><a href="#target">Target</a></li>
+<li><a href="#positions">Positions</a></li>
+<li><a href="#payload-sets">Payload Sets</a></li>
+<li><a href="#payload-options">Payload Options</a></li>
+<li><a href="#payload-processing">Payload Processing</a></li>
+<li><a href="#payload-encoding">Payload Encoding</a></li>
+<li><a href="#options">Options</a></li>
+</ul>
+</li>
+<li><a href="#zap-fuzzer">ZAP Fuzzer</a>
+<ul>
+<li><a href="#fuzz-locations">Fuzz Locations</a></li>
+<li><a href="#payload">Payload</a></li>
+<li><a href="#processors">Processors</a></li>
+<li><a href="#options-1">Options</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#web-scanner">Web Scanner</a>
+<ul>
+<li><a href="#burp-scanner">Burp Scanner</a></li>
+<li><a href="#zap-scanner">ZAP Scanner</a>
+<ul>
+<li><a href="#zap-spider">ZAP Spider</a></li>
+<li><a href="#zap-passive-scanner">ZAP Passive Scanner</a></li>
+<li><a href="#zap-active-scanner">ZAP Active Scanner</a></li>
+<li><a href="#zap-reporting">ZAP Reporting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="web-proxies"><a class="header" href="#web-proxies">Web Proxies</a></h1>
+<p>... are specialized tools that can be set up between a browser/mobile application and a back-end server to capture and view all the web requests being sent between both ends, essentially acting as MitM tools. They mainly work with web ports, such as HTTP/80 and HTTPS/443.</p>
+<h2 id="web-proxies-1"><a class="header" href="#web-proxies-1">Web Proxies</a></h2>
+<p>To use Burp or ZAP as web proxies, you must configure your browser proxy settings to use them as the proxy or use the pre-configured browser.</p>
+<h3 id="setup"><a class="header" href="#setup">Setup</a></h3>
+<h4 id="burp"><a class="header" href="#burp">Burp</a></h4>
+<p><em>Pre-configured</em>:</p>
+<pre><code class="language-mermaid">flowchart LR
+  A[Proxy] --&gt; B[Intercept] --&gt; C[Open Browser]
+</code></pre>
+<h4 id="zap"><a class="header" href="#zap">ZAP</a></h4>
+<p><em>Pre-configured</em>:</p>
+<p>Click on the browser icon at the end of the top bar.</p>
+<h4 id="proxy-setup"><a class="header" href="#proxy-setup">Proxy Setup</a></h4>
+<p>In cases you want to use a real browser, you can utilize the Firefox extension <a href="https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/">FoxyProxy</a>.</p>
+<pre><code class="language-mermaid">flowchart LR
+  A[options] --&gt; B[add] --&gt; C[IP: 127.0.0.1&lt;br&gt;Port: 8080]
+</code></pre>
+<h4 id="ca-certificate"><a class="header" href="#ca-certificate">CA Certificate</a></h4>
+<p>If you don't install the CA Cert, some HTTPS traffic may not get properly routed, or you may need to click 'accept' every time firefox needs to send an HTTPS request.</p>
+<ul>
+<li><a href="https://portswigger.net/burp/documentation/desktop/external-browser-config/certificate">Installing Burp's CA certificate</a> <br></li>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/network/options/servercertificates/">Server Certificates - Zed Attack Proxy (ZAP)</a></li>
+</ul>
+<pre><code class="language-mermaid">flowchart LR
+  A[about:preferences#privacy] --&gt; B[Authorities] --&gt; C[import] --&gt; D[Trust ... identify websites&lt;br&gt;+&lt;br&gt;Trust ... identify email users]
+</code></pre>
+<h3 id="intercepting-web-requests"><a class="header" href="#intercepting-web-requests">Intercepting Web Requests</a></h3>
+<h4 id="burp-1"><a class="header" href="#burp-1">Burp</a></h4>
+<pre><code class="language-mermaid">flowchart LR
+  A[Proxy] --&gt; B[Intercept] --&gt; C[Intercept is on/off]
+</code></pre>
+<h4 id="zap-1"><a class="header" href="#zap-1">ZAP</a></h4>
+<p>Click the green button on the top bar to turn 'Request Interception' on/off.</p>
+<h4 id="manipulating-web-requests"><a class="header" href="#manipulating-web-requests">Manipulating Web Requests</a></h4>
+<p>Once you intercepted the request, it will remain hanging until you forward it. You can examine the request, manipulate it to make any changes you want, and then send it to its destination.</p>
+<p>Possibilities:</p>
+<ul>
+<li>SQLi</li>
+<li>Command injections</li>
+<li>Upload bypasses</li>
+<li>Authentication bypass</li>
+<li>XSS</li>
+<li>XXE</li>
+<li>Error handling</li>
+<li>Deserialization</li>
+<li>...</li>
+</ul>
+<h3 id="intercepting-responses"><a class="header" href="#intercepting-responses">Intercepting Responses</a></h3>
+<h4 id="burp-2"><a class="header" href="#burp-2">Burp</a></h4>
+<pre><code class="language-mermaid">flowchart LR
+  A[Proxy] --&gt; B[Settings] --&gt; C[Intercept Server Responses] --&gt; D[Intercept Response]
+</code></pre>
+<h4 id="zap-2"><a class="header" href="#zap-2">ZAP</a></h4>
+<p>You can click 'Step' and ZAP will automatically intercept the response.</p>
+<h3 id="automatic-request-modification"><a class="header" href="#automatic-request-modification">Automatic Request Modification</a></h3>
+<p>You may want to apply certain modifications to all outgoing HTTP requests in certain situations.</p>
+<h4 id="burp-3"><a class="header" href="#burp-3">Burp</a></h4>
+<pre><code class="language-mermaid">flowchart LR
+  A[Proxy] --&gt; B[Options] --&gt; C[Match and Replace] --&gt; D[Add]
+</code></pre>
+<p><em>Options in 'Add'</em>:</p>
+<div class="table-wrapper"><table><thead><tr><th>Options</th><th>Example</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Type</strong></td><td><em>Request header</em></td><td>since the change you want to make will be in the request header and not in its body</td></tr>
+<tr><td><strong>Match</strong></td><td><em>^User-Agent.*$</em></td><td>the regex pattern that matches the entire line with User-Agent in it</td></tr>
+<tr><td><strong>Replace</strong></td><td><em>User-Agent: HackTheBox Agent 1.0</em></td><td>this is the value that will replace the line we matched above</td></tr>
+<tr><td><strong>Regex match</strong></td><td><em>True</em></td><td>you don't know the exact User-Agent string you want to replace, so you'll use regex to match any value that matches the pattern we specified above</td></tr>
+</tbody></table>
+</div>
+<h4 id="zap-3"><a class="header" href="#zap-3">ZAP</a></h4>
+<p>Using the 'Replacer' by clicking on it or pressing <code>[CRTL+R]</code>.</p>
+<p><em>Options in Replacer</em>:</p>
+<div class="table-wrapper"><table><thead><tr><th>Options</th><th>Example</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Description</strong></td><td><em>HTB User-Agent</em></td><td></td></tr>
+<tr><td><strong>Match Type</strong></td><td><em>Request Header</em></td><td></td></tr>
+<tr><td><strong>Match String</strong></td><td><em>User-Agent</em></td><td>You can select the header you want from the drop-down menu, and ZAP will replace its value</td></tr>
+<tr><td><strong>Replacement String</strong></td><td><em>HackTheBox Agent 1.0</em></td><td></td></tr>
+<tr><td><strong>Enable</strong></td><td><em>True</em></td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="automatic-response-modification"><a class="header" href="#automatic-response-modification">Automatic Response Modification</a></h3>
+<p>You may want to apply certain modifications to all incoming HTTP responses in certain situations.</p>
+<h4 id="burp-4"><a class="header" href="#burp-4">Burp</a></h4>
+<pre><code class="language-mermaid">flowchart LR
+  A[Proxy] --&gt; B[Options] --&gt; C[Match and Replace]
+</code></pre>
+<p><em>Options in 'Add'</em>:</p>
+<div class="table-wrapper"><table><thead><tr><th>Options</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>Type</strong></td><td><em>Response body</em></td></tr>
+<tr><td><strong>Match</strong></td><td><em>type="number"</em></td></tr>
+<tr><td><strong>Replace</strong></td><td><em>type="text"</em></td></tr>
+<tr><td><strong>Regex match</strong></td><td><em>False</em></td></tr>
+</tbody></table>
+</div>
+<h3 id="repeating-requests"><a class="header" href="#repeating-requests">Repeating Requests</a></h3>
+<h4 id="burp-5"><a class="header" href="#burp-5">Burp</a></h4>
+<p>Once you located the request you want to repeat, you can click <code>[CTRL+R]</code> and then you can navigate to the 'Repeater' tab. Once in 'Repeater' you cand click 'Send' to send the request.</p>
+<h4 id="zap-4"><a class="header" href="#zap-4">ZAP</a></h4>
+<p>Once you located the request you want to repeat, right-click on it and select 'Open/Resend with Request Editor'.</p>
+<h3 id="off-topic-encodingdecoding"><a class="header" href="#off-topic-encodingdecoding">Off-Topic: Encoding/Decoding</a></h3>
+<p>As you modify and send custom HTTP requests, you may have to perform various types of encoding and decoding to interact with the webserver properly. Both Burp and ZAP have built-in encoders that can help you in quickly encoding and decoding various types of text.</p>
+<p>Otherwise: <a href="https://gchq.github.io/CyberChef/">CyberChef</a></p>
+<h3 id="off-topic-proxying-tools"><a class="header" href="#off-topic-proxying-tools">Off-Topic: Proxying Tools</a></h3>
+<p>An important aspect of using web proxies is enabling the interception of web requests made by the command-line tools and thick client applications. This gives you transparency into the web requests made by the applications and allows you to utilize all of the different proxy features you have used with web applications.</p>
+<p>To route all web requests made by a specific tool through your web proxy tools, you have to set them up as the tool's proxy.</p>
+<p>Possibilites:</p>
+<ul>
+<li>Proxychains</li>
+<li>Nmap</li>
+<li>Metasploit</li>
+</ul>
+<h2 id="web-fuzzer"><a class="header" href="#web-fuzzer">Web Fuzzer</a></h2>
+<h3 id="burp-intruder"><a class="header" href="#burp-intruder">Burp Intruder</a></h3>
+<p>Burp's web fuzzer is called 'Intruder', and can be used to fuzz pages, directories, sub-domains, parameters, paramater values, and many other things. Community version is throttled at a speed of 1 request per second.</p>
+<h4 id="target"><a class="header" href="#target">Target</a></h4>
+<p>On the first tab, 'Target', you see the details of the target you will be fuzzing, which is fed from the request we sent to 'Intruder'.</p>
+<h4 id="positions"><a class="header" href="#positions">Positions</a></h4>
+<p>The second tab, 'Positions', is where you place the payload position pointer, which is the point where words from our wordlist will be placed and iterated over.</p>
+<p><a href="https://portswigger.net/burp/documentation/desktop/tools/intruder/configure-attack/attack-types">More on Attack Types!</a></p>
+<h4 id="payload-sets"><a class="header" href="#payload-sets">Payload Sets</a></h4>
+<p>The 'Payload set' identifies the Payload number, depending on the attack type and number of payloads you used in the payload position pointers.</p>
+<p>The 'Payload type' is the type of payloads/wordlists you will be using:</p>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>Simple List</strong></td><td>the 'Intruder' iterates over each line</td></tr>
+<tr><td><strong>Runtime file</strong></td><td>similar to simple list, but loads line-by-line as the scan runs to avoid excessive memory usage by Burp</td></tr>
+<tr><td><strong>Character Substitution</strong></td><td>lets you specify a list of characters and their replacements, and Burp tries all potential permutations</td></tr>
+</tbody></table>
+</div>
+<h4 id="payload-options"><a class="header" href="#payload-options">Payload Options</a></h4>
+<p>Differs for each payload type.</p>
+<h4 id="payload-processing"><a class="header" href="#payload-processing">Payload Processing</a></h4>
+<p>... allows you to determine fuzzing rules over the loaded wordlist.</p>
+<h4 id="payload-encoding"><a class="header" href="#payload-encoding">Payload Encoding</a></h4>
+<p>... enables you to enable or disable payload URL-encoding.</p>
+<h4 id="options"><a class="header" href="#options">Options</a></h4>
+<p>... can be used to customize your attack.</p>
+<p>'Grep - Match' for example enables you to flag specific requests depending on their responses. As you are fuzzing web directories, you are only interested in responses with HTTP code '200 OK'.</p>
+<h3 id="zap-fuzzer"><a class="header" href="#zap-fuzzer">ZAP Fuzzer</a></h3>
+<p>ZAP's fuzzer is called 'ZAP Fuzzer'. It can be very powerful for fuzzing various web end-points, though it is missing some of the features provided by Burp's Intruder.</p>
+<h4 id="fuzz-locations"><a class="header" href="#fuzz-locations">Fuzz Locations</a></h4>
+<p>... is where the payload will be placed. To place our location on a certain word, you can select it and click on the 'Add' button on the right pane.</p>
+<h4 id="payload"><a class="header" href="#payload">Payload</a></h4>
+<p>8 different payload types in total. Some are:</p>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><strong>File</strong></td><td>this allows you to select a payload wordlist from a file</td></tr>
+<tr><td><strong>File Fuzzers</strong></td><td>this allows you to select wordlists from built-in databases of wordlists</td></tr>
+<tr><td><strong>Numberzz</strong></td><td>generates sequences of numbers with custom increments</td></tr>
+</tbody></table>
+</div>
+<h4 id="processors"><a class="header" href="#processors">Processors</a></h4>
+<p>You may also want to perform some processing on each word in your payload wordlist. The following are some of the payload processors you can use:</p>
+<ul>
+<li>Base64 Decode/Encode</li>
+<li>MD5 Hash</li>
+<li>Postfix String</li>
+<li>Prefix String</li>
+<li>SHA-1/256/512 Hash</li>
+<li>URL Decode/Encode</li>
+<li>Script</li>
+</ul>
+<h4 id="options-1"><a class="header" href="#options-1">Options</a></h4>
+<p>You can set a few options for your fuzzer.</p>
+<h2 id="web-scanner"><a class="header" href="#web-scanner">Web Scanner</a></h2>
+<h3 id="burp-scanner"><a class="header" href="#burp-scanner">Burp Scanner</a></h3>
+<p><em>Pro-Only Feature</em></p>
+<p>... a powerful scanner various types of web vulnerabilities, using a Crawler for building the website structure, and scanner for passive and active scanning.</p>
+<h3 id="zap-scanner"><a class="header" href="#zap-scanner">ZAP Scanner</a></h3>
+<h4 id="zap-spider"><a class="header" href="#zap-spider">ZAP Spider</a></h4>
+<p>... is capable of building site maps using ZAP Spider and performing both passive and active scans to look for various types of vulnerabilities.</p>
+<p>After starting a spider scan, the scan spiders the website by looking for links and validating them.</p>
+<p>A possible outcome:</p>
+<p><img src="../../../images/proxy_zap_spider.png" alt="Sites Tree" /></p>
+<h4 id="zap-passive-scanner"><a class="header" href="#zap-passive-scanner">ZAP Passive Scanner</a></h4>
+<p>... runs and makes requests to various end-points, it is automatically running its passive scanner on each response to see if it can identify potential issues from the source code, like missing security headers or DOM-based XSS vulnerabilities.</p>
+<h4 id="zap-active-scanner"><a class="header" href="#zap-active-scanner">ZAP Active Scanner</a></h4>
+<p>... will try various tyoes of attacks against all identified pages and HTTP parameters to identify as many vulnerabilities as it can. As the active Scan runs, you will see the alerts button start to get populated with more alers as ZAP uncovers more issues.</p>
+<h4 id="zap-reporting"><a class="header" href="#zap-reporting">ZAP Reporting</a></h4>
+<p>You can generate a report with all of the findings identified by ZAP through its various scans and can be exported in other formats like XML or Markdown.</p>
+<p>Looks like:</p>
+<p><img src="../../../images/proxy_zap_report.png" alt="ZAP Reporting" /><!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../attack/web/fundamentals/http_https_fundamentals.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../attack/web/fundamentals/web_recon_fundamentals.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../attack/web/fundamentals/http_https_fundamentals.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../attack/web/fundamentals/web_recon_fundamentals.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

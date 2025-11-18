@@ -1,0 +1,794 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Initial Enumeration - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#initial-enumeration">Initial Enumeration</a>
+<ul>
+<li><a href="#external-recon-and-enumeration-principles">External Recon and Enumeration Principles</a>
+<ul>
+<li><a href="#what-and-where-to-look-for">What and where to look for?</a>
+<ul>
+<li><a href="#finding-address-spaces">Finding Address Spaces</a></li>
+<li><a href="#dns">DNS</a></li>
+<li><a href="#public-data">Public Data</a></li>
+</ul>
+</li>
+<li><a href="#overarching-enum-principles">Overarching Enum Principles</a></li>
+<li><a href="#example-enum-process">Example Enum Process</a>
+<ul>
+<li><a href="#check-for-asnip--domain-data">Check for ASN/IP &amp; Domain Data</a></li>
+<li><a href="#hunting-for-files-and-email-addresses">Hunting for Files and Email Addresses</a></li>
+<li><a href="#username-harvesting">Username Harvesting</a></li>
+<li><a href="#credential-hunting">Credential Hunting</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#initial-enumeration-of-the-domain">Initial Enumeration of the Domain</a>
+<ul>
+<li><a href="#identifying-hosts">Identifying Hosts</a>
+<ul>
+<li><a href="#wireshark">Wireshark</a></li>
+<li><a href="#tcpdump">TCPDump</a></li>
+<li><a href="#responder">Responder</a></li>
+<li><a href="#fping">FPing</a></li>
+<li><a href="#nmap">Nmap</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="initial-enumeration"><a class="header" href="#initial-enumeration">Initial Enumeration</a></h1>
+<h2 id="external-recon-and-enumeration-principles"><a class="header" href="#external-recon-and-enumeration-principles">External Recon and Enumeration Principles</a></h2>
+<h3 id="what-and-where-to-look-for"><a class="header" href="#what-and-where-to-look-for">What and where to look for?</a></h3>
+<p>When conducting your external recon, there are several key items that you should be looking for. This information may not always be publicly accessible, but it would be prudent to see what is out there. If you get stuck, during a pentest, looking back at what could be obtained through passive recon can give you a nudge needed to move forward, such as password breach data that could be used to access a VPN or other externally facing service. The table below highlights the <strong>WHAT</strong> in what you would be searching for during this phase of your engagement.</p>
+<div class="table-wrapper"><table><thead><tr><th>Data Point</th><th>Description</th></tr></thead><tbody>
+<tr><td>IP Space</td><td>Valid ASN for your target, netblocks in use for the organization's public facing infra, cloud presence and the hosting providers, DNS record entries, etc.</td></tr>
+<tr><td>Domain Information</td><td>Based on IP data, DNS, and site registrations. Who administers the domain? Are there any subdomains tied to your target? Are there any publicly accessible domain services present? Can you determine what kind of defenses are in place?</td></tr>
+<tr><td>Schema Format</td><td>Can you discover the organization's email accounts, AD usernames, and even password policies? Anything that will give you information you can use to build a valid username list to test external-facing services for password spraying, credential stuffing, brute forcing, etc.</td></tr>
+<tr><td>Data Disclosures</td><td>For data disclosures you will be looking for publicly accessible files for any information that helps shed light on the target. For example, any published files that contain <code>intranet</code> site listings, user metadata, shares, or other critical software or hardware in the environment.</td></tr>
+<tr><td>Breach Data</td><td>Any publicly released usernames, passwords, or other critical information that can help an attacker gain a foothold.</td></tr>
+</tbody></table>
+</div>
+<p>The list of data points above can be gathered in many different ways. There are many different websites and tools that can provide you with some or all of the information above that you could use to obtain information vital to your assessment. The table below lists a few potential resources and examples that can be used.</p>
+<div class="table-wrapper"><table><thead><tr><th>Resource</th><th>Examples</th></tr></thead><tbody>
+<tr><td>ASN / IP registrars</td><td><a href="https://www.iana.org/">IANA</a>, <a href="https://www.arin.net/">arin</a> for searching the Americas, <a href="https://www.ripe.net/">RIPE</a> for searching in Europe, <a href="https://bgp.he.net/">BGP Toolkit</a></td></tr>
+<tr><td>Domain Registrars &amp; DNS</td><td><a href="https://www.domaintools.com/">Domaintools</a>, <a href="http://ptrarchive.com/">PTRArchive</a>, <a href="https://lookup.icann.org/lookup">ICANN</a>, manual DNS record requests against the domain in question or against well known DNS servers, such as 8.8.8.8.</td></tr>
+<tr><td>Social Media</td><td>Searching Linkedin, Twitter, Facebook, your region's major social media sites, news articles, and any relevant info you can find about the organization.</td></tr>
+<tr><td>Public-Facing Company Websites</td><td>Often, the public websites for a corporation will have relevant info embedded. News articles, embedded documents, and the "About us" and "Contact us" pages can also be gold mines.</td></tr>
+<tr><td>Cloud &amp; Dev Storage Spaces</td><td><a href="https://github.com/">GitHub</a>, <a href="https://grayhatwarfare.com/">AWS S3 buckets &amp; Azure Blog Storage containers</a>, Google searches using "Dorks"</td></tr>
+<tr><td>Breach Data Sources</td><td><a href="https://haveibeenpwned.com/">HaveIBeenPwned</a> to determine if any corporate email accounts appear in public data, <a href="https://www.dehashed.com/">Dehashed</a> to search for corporate emails with cleartext passwords or hashes you can try to crack offline. You can then try these passwords against any exposed login portals that may use AD authentication.</td></tr>
+</tbody></table>
+</div>
+<h4 id="finding-address-spaces"><a class="header" href="#finding-address-spaces">Finding Address Spaces</a></h4>
+<p><img src="../../../../images/ad_initial_enum1.png" alt="initial enum 1" /></p>
+<p>The BGP-Toolkit is a fantastic resource for researching what address blocks are assigned to an organization and what ASN they reside within. Many large corporations will often self-host their infra, and since they have such a large footprint, they will have their own ASN. This will typically not be the case for smaller organizations or fledging companies. As you research, keep this in mind since smaller organizations will often host their websites and other infra in someone else's space.</p>
+<h4 id="dns"><a class="header" href="#dns">DNS</a></h4>
+<p>... is a great way to validate your scope and find out about reachable hosts the customer did not disclose in their scoping document. Sites like <a href="https://whois.domaintools.com/">domaintools</a>, and <a href="https://viewdns.info/">viewdns.info</a> are great spots to start. You can get back many records and other data ranging from DNS resolution to testing for DNSSEC and if the site is accessible in more restricted countries. Sometimes you may find additional hosts out of scope, but looking interesting. In that case, you could bring this list to your client to see if any of them should indeed be included in the scope. You may also find interesting subdomains that were not listed in the scoping documents, but reside on in-scope IP addresses and therefore are fair game.</p>
+<p><img src="../../../../images/ad_initial_enum2.png" alt="initial enum 2" /></p>
+<p>There is also a great way to validate some of the data found from your IP/ASN searches. Not all information about the domain found will be current, and running checks that can validate what you see is always good practice.</p>
+<h4 id="public-data"><a class="header" href="#public-data">Public Data</a></h4>
+<p>Social media can be a treasure trove in interesting data that can clue you in to how the organization is structured, what kind of equipment they operate, potential software and security implementations, their schema, and more. On top of that list are job-related sites like Linkedin, Indeed.com, and Glassdoor. Simple job postings often reveal a lot about the company. For example, take a look at the job listing below. It's for a SharePoint Admin and can key you in on many things. You can tell from the listing that the company has been using SharePoint for a while and has a mature program since they are talking about security programs, backups &amp; disaster recovery, and more. What is interesting to you in this posting is that you can see the company likely uses SharePoint 2013 and SharePoint 2016. That means they may have upgraded in place, potentially leaving vulnerabilities in play that may not exist in newer versions. This also means you may run into different versions of SharePoint during your engagements.</p>
+<p><img src="../../../../images/ad_initial_enum3.png" alt="initial enum 3" /></p>
+<p>Websites hostes by the organization are also great places to dig for information. You can gather contact emails, phone numbers, organizational charts, published documents, etc. These sites, specifically the embedded documents, can often have links to internal infra or intranet sites that you would not otherwise know about. Checking any publicly accessible information for those types of details can be quick wins when trying to formulate a picture of the domain structure. With the growing use of sites such as GitHub, AWS cloud storage, and other web-hosted platforms, data can also be leaked unintentionally. For example, a dev working on a project may accidently leave some credentials or notes hardcoded into a code release. If you know where to look for that data, it can give you an easy win. It could mean the difference between having to password spray and brute-force credentials for hours or days or gaining a quick foothold with developer credentials, which may also have elevated permissions.</p>
+<h3 id="overarching-enum-principles"><a class="header" href="#overarching-enum-principles">Overarching Enum Principles</a></h3>
+<p>Keeping in mind that your goal is to understand your target better, you are looking for every possible avenue you can find that will provide you with a potential route to the inside. Enum itself if an iterative process you will repeat several times throughout a pentest. Besides the customer's scoping document, this is your primary source of information, so you want to ensure you are leaving no stone unturned. When starting your enum, you will first use passive resources, starting wide in scope and narrowing down. Once you exhaust your initial run of passive enum, you will need to examine the results and then move into your active enum phase.</p>
+<h3 id="example-enum-process"><a class="header" href="#example-enum-process">Example Enum Process</a></h3>
+<h4 id="check-for-asnip--domain-data"><a class="header" href="#check-for-asnip--domain-data">Check for ASN/IP &amp; Domain Data</a></h4>
+<p>Start first by checking netblocks data and seeing what you can find.</p>
+<p><img src="../../../../images/ad_initial_enum4.png" alt="initial enum 4" /></p>
+<p>From this look, you have already gleaned some interesting info.</p>
+<ul>
+<li>IP Address: 134.209.24.248</li>
+<li>Mail Server: mail1.inlanefreight.com</li>
+<li>Nameservers: NS1.inlanefreight.com &amp; NS2.inlanefreight.com</li>
+</ul>
+<p>For now, this is what you care about from its output. Inlanefreight is not a large corporation, so you didn't expect to find that it had its own ASN. Validate:</p>
+<p><img src="../../../../images/ad_initial_enum5.png" alt="initial enum 5" /></p>
+<p>In the request above, you utilized viewdns.info to validate the IP address of your target. Both results match, which is a good sign.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nslookup ns1.inlanefreight.com
+
+Server:		192.168.186.1
+Address:	192.168.186.1#53
+
+Non-authoritative answer:
+Name:	ns1.inlanefreight.com
+Address: 178.128.39.165
+
+nslookup ns2.inlanefreight.com
+Server:		192.168.86.1
+Address:	192.168.86.1#53
+
+Non-authoritative answer:
+Name:	ns2.inlanefreight.com
+Address: 206.189.119.186 
+</code></pre>
+<p>You now have two new IP addresses to add to your list for validation and testing. Before taking any further action with them, ensure they are in-scope for your test.</p>
+<h4 id="hunting-for-files-and-email-addresses"><a class="header" href="#hunting-for-files-and-email-addresses">Hunting for Files and Email Addresses</a></h4>
+<p>Moving on to examining the website <code>inlanefreight.com</code> by first checking for leaked documents and email addresses via Google Dorks.</p>
+<pre><code># on google
+
+filetype:pdf inurl:inlanefreight.com
+intext:"@inlanefreight.com" inurl:inlanefreight.com
+</code></pre>
+<p>Browsing the contact page, you can several emails for staff in different offices around the globe. You now have an idea of their email naming convention and where some people work in the organization. This could be handy in later password spraying attacks or if social engineering / phishing were part of your engagement scope.</p>
+<p><img src="../../../../images/ad_initial_enum6.png" alt="initial enum 6" /></p>
+<h4 id="username-harvesting"><a class="header" href="#username-harvesting">Username Harvesting</a></h4>
+<p>You can use a tool such as linkedin2username to scrape data from a company's Linkedin page and create various mashups of usernames that can be added to your list of potential password spraying targets.</p>
+<h4 id="credential-hunting"><a class="header" href="#credential-hunting">Credential Hunting</a></h4>
+<p>Dehashed is an excellent tool for hunting for cleartext credentials and password hashes in breach data. You can search either on the site or using a script that performs queries via the API. Typically you will find many old passwords for users that do not work on externally-facing portals that use AD auth, but you may get lucky. This is another tool that can be useful for creating a user list for external or internal password spraying.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sudo python3 dehashed.py -q inlanefreight.local -p
+
+id : 5996447501
+email : roger.grimes@inlanefreight.local
+username : rgrimes
+password : Ilovefishing!
+hashed_password : 
+name : Roger Grimes
+vin : 
+address : 
+phone : 
+database_name : ModBSolutions
+
+id : 7344467234
+email : jane.yu@inlanefreight.local
+username : jyu
+password : Starlight1982_!
+hashed_password : 
+name : Jane Yu
+vin : 
+address : 
+phone : 
+database_name : MyFitnessPal
+
+&lt;SNIP&gt;
+</code></pre>
+<h2 id="initial-enumeration-of-the-domain"><a class="header" href="#initial-enumeration-of-the-domain">Initial Enumeration of the Domain</a></h2>
+<h3 id="identifying-hosts"><a class="header" href="#identifying-hosts">Identifying Hosts</a></h3>
+<p>First, take some time to listen to the network and see what's going on. You can use Wireshark and TCPDump to "put your ear to the wire" and see what hosts and types of network traffic you can capture. This is particularly helpful if the assessment approach is "black box". You notice some ARP requests and replies, MDNS, and other basic layer two packets some of which you can see below. This is a great start that gives you a few bits of information about the customer's network setup.</p>
+<h4 id="wireshark"><a class="header" href="#wireshark">Wireshark</a></h4>
+<pre><code class="language-bash">┌─[htb-student@ea-attack01]─[~]
+└──╼ $sudo -E wireshark
+
+11:28:20.487     Main Warn QStandardPaths: runtime directory '/run/user/1001' is not owned by UID 0, but a directory permissions 0700 owned by UID 1001 GID 1002
+&lt;SNIP&gt;
+</code></pre>
+<p><img src="../../../../images/ad_initial_enum7.png" alt="initial enum 7" /></p>
+<p>ARP packets make you aware of the hosts: .5, .25, .50, .100, .125.</p>
+<p><img src="../../../../images/ad_initial_enum8.png" alt="initial enum 8" /></p>
+<p>MDNS makes you aware of the ACADEMY-EA-WEB01 host.</p>
+<h4 id="tcpdump"><a class="header" href="#tcpdump">TCPDump</a></h4>
+<p>If you are on a host without a GUI, you can use tcpdump, net-creds, and NetMiner, etc., to perform the same functions. You can also use tcpdump to save a capture to a .pcap file, transfer it to another host, and open it in Wireshark.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sudo tcpdump -i ens224 
+</code></pre>
+<p>There is no one right way to listen and capture network traffic. There are plenty of tools that can process network data. Wireshark and tcpdump are just a few of the easiest to use and most widely known. Depending on the host you are on, you may already have a network monitoring tool built-in, such as pktmon.exe, which was added to all editions of Windows 10. As a note for testing, it's always a good idea to save the PCAP traffic you capture. You can review it again later to look for more hints, and it makes for great additional information to include while writing your reports.</p>
+<h4 id="responder"><a class="header" href="#responder">Responder</a></h4>
+<p>Your first look at network traffic pointed you to a couple of hosts via MDNS and ARP. Utilize Responder to analyze network traffic and determine if anything else in the domain pops up.</p>
+<p><a href="https://github.com/lgandx/Responder-Windows">Responder</a> is a tool built to listen, analyze, and poison LLMNR, NBT-NS, and MDNS requests and responses. It has many more functions, but for now, all you are utilizing is the tool in its Analyze mode. This will passively listen to the network and not send any poisoned packets.</p>
+<pre><code class="language-bash">sudo responder -I ens224 -A 
+</code></pre>
+<p>As you start Responder with passive analysis mode enabled, you will requests flow in your session. Notice below that you found a few unique hosts not previously mentioned in your Wireshark captures. It's wort noting these down as you are starting to build a nice target list of IPs and DNS hostnames.</p>
+<h4 id="fping"><a class="header" href="#fping">FPing</a></h4>
+<p>Your passive checks have given you a few hosts to note down for a more in-depth enumeration. Now perform some active checks starting with a quick ICMP sweep of the subnet using fping.</p>
+<p><a href="https://fping.org/">Fping</a> provides you with a similar capability as the standard ping application in that it utilizes ICMP requests and replies to reach out and interact with a host. Where fping shines is in its ability to issue ICMP packets against a list of multiple hosts at once and its scriptability. Also, it works in a round-robin fashion, querying hosts in a cyclical manner instead of waiting for multiple requests to a single host to return before moving on. These checks will help you determine if anything else is active on the internal network. ICMP is not a one-stop-show, but it is an easy way to get initial idea of what exists. Other open ports and active protocols may point to new hosts for later targeting.</p>
+<p>Here you'll start fping with a few flags: <code>a</code> to show targets that are alive, <code>s</code> to print stats at the end of the scan, <code>g</code> to generate a target list from the CIDR network, and <code>q</code> to not show per-target results.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ fping -asgq 172.16.5.0/23
+
+172.16.5.5
+172.16.5.25
+172.16.5.50
+172.16.5.100
+172.16.5.125
+172.16.5.200
+172.16.5.225
+172.16.5.238
+172.16.5.240
+
+     510 targets
+       9 alive
+     501 unreachable
+       0 unknown addresses
+
+    2004 timeouts (waiting for response)
+    2013 ICMP Echos sent
+       9 ICMP Echo Replies received
+    2004 other ICMP received
+
+ 0.029 ms (min round trip time)
+ 0.396 ms (avg round trip time)
+ 0.799 ms (max round trip time)
+       15.366 sec (elapsed real time)
+</code></pre>
+<p>The command above validates which hosts are active in the /23 network and does it quietly instead of spamming the terminal with results for each IP in the target list. You can combine the successful results and the information you gleaned from your passive checks into a list for a more detailed scan with Nmap. From the fping command, you can see 9 live hosts, including your attack host.</p>
+<h4 id="nmap"><a class="header" href="#nmap">Nmap</a></h4>
+<p>Now that you have a list of active hosts within your network, you can enumerate those hosts further. You are looking to determine what services each host is running, identify critical hosts such as DCs and web servers, and identify potentially vulnerable hosts to probe later. With your focus on AD, after doing a broad sweep, it would be wise of you to focus on standard protocols typically seen accompanying AD services, such as DNS, SMB, LDAP, and Kerberos name a few.</p>
+<pre><code class="language-bash">sudo nmap -v -A -iL hosts.txt -oN /home/htb-student/Documents/host-enum
+
+...
+Nmap scan report for inlanefreight.local (172.16.5.5)
+Host is up (0.069s latency).
+Not shown: 987 closed tcp ports (conn-refused)
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2022-04-04 15:12:06Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+|_ssl-date: 2022-04-04T15:12:53+00:00; -1s from scanner time.
+| ssl-cert: Subject:
+| Subject Alternative Name: DNS:ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+| Issuer: commonName=INLANEFREIGHT-CA
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2022-03-30T22:40:24
+| Not valid after:  2023-03-30T22:40:24
+| MD5:   3a09 d87a 9ccb 5498 2533 e339 ebe3 443f
+|_SHA-1: 9731 d8ec b219 4301 c231 793e f913 6868 d39f 7920
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+&lt;SNIP&gt;  
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: INLANEFREIGHT.LOCAL0., Site: Default-First-Site-Name)
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info:
+|   Target_Name: INLANEFREIGHT
+|   NetBIOS_Domain_Name: INLANEFREIGHT
+|   NetBIOS_Computer_Name: ACADEMY-EA-DC01
+|   DNS_Domain_Name: INLANEFREIGHT.LOCAL
+|   DNS_Computer_Name: ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+|   DNS_Tree_Name: INLANEFREIGHT.LOCAL
+|   Product_Version: 10.0.17763
+|_  System_Time: 2022-04-04T15:12:45+00:00
+&lt;SNIP&gt;
+5357/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Service Unavailable
+|_http-server-header: Microsoft-HTTPAPI/2.0
+Service Info: Host: ACADEMY-EA-DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+</code></pre>
+<p>Your scans have provided you with the naming standard used by NetBIOS and DNS, you can see some hosts have RDP open, and they have pointed you in the direction of the primary DC for the INLANEFREIGHT.LOCAL domain. The results below show some interesting results surrounding a possible outdated host.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ nmap -A 172.16.5.100
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-04-08 13:42 EDT
+Nmap scan report for 172.16.5.100
+Host is up (0.071s latency).
+Not shown: 989 closed tcp ports (conn-refused)
+PORT      STATE SERVICE      VERSION
+80/tcp    open  http         Microsoft IIS httpd 7.5
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Microsoft-IIS/7.5
+| http-methods: 
+|_  Potentially risky methods: TRACE
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+443/tcp   open  https?
+445/tcp   open  microsoft-ds Windows Server 2008 R2 Standard 7600 microsoft-ds
+1433/tcp  open  ms-sql-s     Microsoft SQL Server 2008 R2 10.50.1600.00; RTM
+| ssl-cert: Subject: commonName=SSL_Self_Signed_Fallback
+| Not valid before: 2022-04-08T17:38:25
+|_Not valid after:  2052-04-08T17:38:25
+|_ssl-date: 2022-04-08T17:43:53+00:00; 0s from scanner time.
+| ms-sql-ntlm-info: 
+|   Target_Name: INLANEFREIGHT
+|   NetBIOS_Domain_Name: INLANEFREIGHT
+|   NetBIOS_Computer_Name: ACADEMY-EA-CTX1
+|   DNS_Domain_Name: INLANEFREIGHT.LOCAL
+|   DNS_Computer_Name: ACADEMY-EA-CTX1.INLANEFREIGHT.LOCAL
+|_  Product_Version: 6.1.7600
+Host script results:
+| smb2-security-mode: 
+|   2.1: 
+|_    Message signing enabled but not required
+| ms-sql-info: 
+|   172.16.5.100:1433: 
+|     Version: 
+|       name: Microsoft SQL Server 2008 R2 RTM
+|       number: 10.50.1600.00
+|       Product: Microsoft SQL Server 2008 R2
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|_    TCP port: 1433
+|_nbstat: NetBIOS name: ACADEMY-EA-CTX1, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: 00:50:56:b9:c7:1c (VMware)
+| smb-os-discovery: 
+|   OS: Windows Server 2008 R2 Standard 7600 (Windows Server 2008 R2 Standard 6.1)
+|   OS CPE: cpe:/o:microsoft:windows_server_2008::-
+|   Computer name: ACADEMY-EA-CTX1
+|   NetBIOS computer name: ACADEMY-EA-CTX1\x00
+|   Domain name: INLANEFREIGHT.LOCAL
+|   Forest name: INLANEFREIGHT.LOCAL
+|   FQDN: ACADEMY-EA-CTX1.INLANEFREIGHT.LOCAL
+|_  System time: 2022-04-08T10:43:48-07:00
+
+&lt;SNIP&gt;
+</code></pre>
+<p>You can see from the output above that you have a potential host running an outdated OS. This is of interest to you since it means there are legacy OS running in this AD environment. It also means there is potential for older exploits like EternalBlue, MS08-067, and others to work and provide you with a SYSTEM level shell. As weird as it sounds to have hosts running legacy software or end-of-life OS, it is still common in large enterprise environments. You will often have some process or equipment such as a production line or the HVAC built on the older OS and has been in place for a long time. Taking equipment like that offline is costly and can hurt an organization, so legacy hosts are often left in place. They will likely try to build a hard outer shell of Firewalls, IDS/IPS, and other monitoring and protection solutions around those systems. If you can find your way into one, it is a big deal and can be a quick and easy foothold. Before exploiting legacy systems, however, you should alert your client and get their approval in writing in case an attack results in system instability or brings a service or the host down. They may prefer that you just observe, report, and move on without actively exploiting the system.</p>
+<p>The results of these scans will clue you into where you will start looking for potential domain enumeration avenues, not just host scanning. You need to find your way to a domain user account. Looking at your resulsts, you found several servers that host domain services. Now that you know what exists and what services are running, you can poll those servers and attempt to enumerate users. Be sure to use the <code>-oA</code> flag as a best practice when performing Nmap scans. This will ensure that you have your scan results in several formats for logging purposes and formats that can be manipulated and fed into other tools.</p>
+<p>You need to be aware of what scans you run and how they work. Some of the Nmap scripted scans run active vulnerability checks against a host that could cause system instability or take it offline, causing issues for the customer or worse. For example, running a large discovery scan against a network with devices such as sensors or logic controllers could potentially overload them and disrupt the customer's industrial equipment causing a loss of product or capability.</p>
+<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} -->
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

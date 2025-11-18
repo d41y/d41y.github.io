@@ -1,0 +1,801 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>IDOR - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#insecure-direct-object-reference-idor">Insecure Direct Object Reference (IDOR)</a>
+<ul>
+<li><a href="#identifying-idors">Identifying IDORs</a>
+<ul>
+<li><a href="#url-parameters--apis">URL Parameters &amp; APIs</a></li>
+<li><a href="#ajax-calls">AJAX Calls</a></li>
+<li><a href="#understanding-hashingencoding">Understanding Hashing/Encoding</a></li>
+<li><a href="#compare-user-roles">Compare User Roles</a></li>
+</ul>
+</li>
+<li><a href="#mass-idor-enumeration">Mass IDOR Enumeration</a>
+<ul>
+<li><a href="#insecure-parameters">Insecure Parameters</a></li>
+<li><a href="#mass-enumeration">Mass Enumeration</a></li>
+</ul>
+</li>
+<li><a href="#bypassing-encoded-references">Bypassing Encoded References</a>
+<ul>
+<li><a href="#function-disclosure">Function Disclosure</a></li>
+<li><a href="#mass-enumeration-1">Mass Enumeration</a></li>
+</ul>
+</li>
+<li><a href="#idor-in-insecure-apis">IDOR in Insecure APIs</a>
+<ul>
+<li><a href="#identifying-insecure-apis">Identifying Insecure APIs</a></li>
+<li><a href="#exploiting-insecure-apis">Exploiting Insecure APIs</a></li>
+</ul>
+</li>
+<li><a href="#chaining-idor-vulnerabilities">Chaining IDOR Vulnerabilities</a>
+<ul>
+<li><a href="#information-disclosure">Information Disclosure</a></li>
+<li><a href="#modifying-other-users-details">Modifying Other Users' Details</a></li>
+<li><a href="#chaining-two-idor-vulnerabilites">Chaining Two IDOR Vulnerabilites</a></li>
+</ul>
+</li>
+<li><a href="#idor-prevention">IDOR Prevention</a>
+<ul>
+<li><a href="#object-level-access-control">Object Level Access Control</a></li>
+<li><a href="#object-referencing">Object Referencing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="insecure-direct-object-reference-idor"><a class="header" href="#insecure-direct-object-reference-idor">Insecure Direct Object Reference (IDOR)</a></h1>
+<p>... vulnerabilities occur when a web app exposes a direct reference to an object, like a file or database resource, which the end-user can directly control to obtain access to other similar objects. If any user can access any resource due to the lack of a solid access control system, the system is considered to be vulnerable.</p>
+<p>For example, if users request access to a file they recently uploaded, they may get a link to it such as <code>download.php?file_id=123</code>. So, as the link directly references the file, what would happen if you tried to access another file with <code>download.php?file_id=124</code>? If the web app does not have a proper access control system on the back-end, you may be able to access any file by sending a request with its <code>file_id</code>. In many cases, you may find that the <code>id</code> is easily guessable, making it possible to retrieve many files or resources that you should not have access to based on your permissions.</p>
+<h2 id="identifying-idors"><a class="header" href="#identifying-idors">Identifying IDORs</a></h2>
+<h3 id="url-parameters--apis"><a class="header" href="#url-parameters--apis">URL Parameters &amp; APIs</a></h3>
+<p>Whenever you receive a specific file or resource, you should study the HTTP requests to look for URL parameters or APIs with an object reference (<em>e.g. <code>?uid=1</code> or <code>?filename=file_1.pdf</code></em>). These are mostly found in URL parameters or APIs but may also be found in other HTTP headers, like cookies.</p>
+<p>In the most basic cases, you can try incrementing the values of the object references to retrieve other data, like <code>?uid=2</code> or <code>?filename=file_2.pdf</code>. You can also use a fuzzing application to try thousands of variations and see if they return any data. Any successful hits to files that are not your own would indicate an IDOR vuln.</p>
+<h3 id="ajax-calls"><a class="header" href="#ajax-calls">AJAX Calls</a></h3>
+<p>You may also be able to identify unused parameters or APIs in the front-end code in the form of JS AJAX calls. Some web apps developed in JS frameworks may insecurely place all function calls on the front-end and use the appropriate ones based on the user role.</p>
+<p>For example, if you did not have an admin account, only the user-level functions would be used, while the admin functions would be disabled. However, you may still be able to find the admin functions if you look into the front-end JS code and may be able to identify AJAX calls to specific end-points or APIs that contain direct object references. If you identify direct object references in the JS code, you can test them for IDOR vulns.</p>
+<p>This is not unique to admin functions, but can also be any functions or calls that may not be found through monitoring HTTP requests. The following example shows a basic example of an AJAX call:</p>
+<pre><code class="language-javascript">function changeUserPassword() {
+    $.ajax({
+        url:"change_password.php",
+        type: "post",
+        dataType: "json",
+        data: {uid: user.uid, password: user.password, is_admin: is_admin},
+        success:function(result){
+            //
+        }
+    });
+}
+</code></pre>
+<p>The above function may never be called when you use the web app as a non-admin user. However, if you locate it in the front-end code, you may test it in different ways to see whether you can call it to perform changes, which would indicate that it is vulnerable to IDOR. You can do the same with back-end code if you have access to it.</p>
+<h3 id="understanding-hashingencoding"><a class="header" href="#understanding-hashingencoding">Understanding Hashing/Encoding</a></h3>
+<p>Some web apps may not use simple sequential numbers as object references but may encode the reference or hash it instead. If you find such parameters using encoded or hashed values, you may still be able to exploit them if there is no access control system on the back-end.</p>
+<p>Suppose the reference was encoded with a common encoder. In that case, you could decode it and view the plaintext of the object reference, change its value, and then encode it again to access other data. For example, if you see a reference like <code>?filename=ZmlsZV8xMjMucGRm</code>, you can immediately guess that the file name is base64 encoded, which you can decode to get the original object reference of <code>file_123.pdf</code>. Then, you can try encoding a different object reference (<em><code>file_124.pdf</code></em>) and try accessing it with the encoded object reference <code>?filename=ZmlsZV8xMjQucGRm</code>, which may reveal an IDOR vulnerability if you were able to retrieve any data.</p>
+<p>On the other hand, the object reference may be hashed, like <code>download.php?filename=c81e728d9d4c2f636f067f89cc14862c</code>. At first glance, you may think that this is a secure object reference, as it is not using any clear text or easy encoding. However, if you look at the source code, you may see what is being hashed before the API call is made.</p>
+<pre><code class="language-javascript">$.ajax({
+    url:"download.php",
+    type: "post",
+    dataType: "json",
+    data: {filename: CryptoJS.MD5('file_1.pdf').toString()},
+    success:function(result){
+        //
+    }
+});
+</code></pre>
+<p>In this case, you can see that code uses the filename and hashing it with <code>CryptoJS.MD5</code>, making it easy for you to calculate the filename for other potential files. Otherwise, you may manually try to identify the hashing algorithm being used and then hash the filename to see if it matches the used hash. Once you can calculate hashes for other files, you may try downloading them, which may reveal an IDOR vulnerability if you can download any files that do not belong to you.</p>
+<h3 id="compare-user-roles"><a class="header" href="#compare-user-roles">Compare User Roles</a></h3>
+<p>If you want to perform more advanced IDOR attacks, you may need to register multiple users and compare their HTTP requests and object references. This may allow you to understand how the URL parameters and unique identifiers are being calculated and then calculate them for other users to gather their data.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "attributes" : 
+    {
+      "type" : "salary",
+      "url" : "/services/data/salaries/users/1"
+    },
+  "Id" : "1",
+  "Name" : "User1"
+
+}
+</code></pre>
+<p>The second user may not have all of these API parameters to replicate the call and should not be able to make the same call as <code>User1</code>. However, with these details at hand, you can try repeating the same API call while logged in as <code>User2</code> to see if the web app returns anything. Such cases may work if the web app only requires a valid logged-in session to make the API call but has no access control on the back-end to compare the caller's session with the data being called.</p>
+<p>If this is the case, and you can calculate the API parameters for other users, this would be an IDOR vulnerability. Even if you could not calculate the API parameters for other users, you would still have identified a vulnerability in the back-end access control system and may start looking for other object references to exploit.</p>
+<h2 id="mass-idor-enumeration"><a class="header" href="#mass-idor-enumeration">Mass IDOR Enumeration</a></h2>
+<h3 id="insecure-parameters"><a class="header" href="#insecure-parameters">Insecure Parameters</a></h3>
+<p><img src="../../../../images/IDOR_1.png" alt="idor 1" /></p>
+<p>The web app assumes that you are logged in as an employee with user id <code>uid=1</code> to simplify things. This would require you to log in with credentials in a real web app, but the rest of the attack would be the same. Once you click on <code>Documents</code>, you are redirected to <code>/documents.php</code>:</p>
+<p><img src="../../../../images/IDOR_2.png" alt="idor 2" /></p>
+<p>When you get to the documents page, you see several documents that belong to your user. These can be files uploaded by your user or files set for you to by another department. Checking the file links, you see that they have individual names:</p>
+<pre><code class="language-html">/documents/Invoice_1_09_2021.pdf
+/documents/Report_1_10_2021.pdf
+</code></pre>
+<p>You see that the files have a predictable naming pattern, as the file names appear to be using the user <code>uid</code> and the month/year as part of the file name, which may allow you to fuzz for other users. This is the most basic type of IDOR vuln and is called static file IDOR. However, to successfully fuzz other files, you would assume that they all start with 'Invoice' or 'Report', which may reveal some files but not all.</p>
+<p>You see that the page is setting your <code>uid</code> with a GET parameter in the URL as <code>documents.php?uid=1</code>. If the web application uses this <code>uid</code> GET parameter as a direct reference to the employee records it should show, you may be able to view other employees' documents by simply changing this value. If the back-end server of the web app does have a proper access control system, you will get some form of <code>Access Denied</code>. However, given that the web app passes as our <code>uid</code> in clear text as a direct reference, this may indicate poor web application design, leading to arbitrary access to employee records.</p>
+<p>When trying to change the <code>uid</code> to <code>?uid=2</code>, you don't notice any difference in the page output, as you are still getting the same list of documents, and may assume that it still returns your own documents.</p>
+<p><img src="../../../../images/IDOR_3.png" alt="idor 3" /></p>
+<p>However, if you look at the linked files, or if you click on them to view them, you will notice that these are indeed different files, which appear to be the documents belonging to the employee with <code>uid=2</code>.</p>
+<pre><code class="language-html">/documents/Invoice_2_08_2020.pdf
+/documents/Report_2_12_2020.pdf
+</code></pre>
+<p>This is a common mistake found in web apps suffering from IDOR vulns, as they place the parameter that controls which user documents to show under your control while having no access control system on the back-end server. Another example is using a filter parameter to only display a specific user's documents, which can also be manipulated to show other users' documents or even completely removed to show all documents at once.</p>
+<h3 id="mass-enumeration"><a class="header" href="#mass-enumeration">Mass Enumeration</a></h3>
+<p>Manually accessing files is not efficient in a real work environment with hundreds or thousands of employees. So, you can either use a tool like Burp or ZAP to retrieve all files or write a small bash script to download all files.</p>
+<p>Example for getting all documents:</p>
+<p><strong>HTML</strong>:</p>
+<pre><code class="language-html">&lt;li class='pure-tree_link'&gt;&lt;a href='/documents/Invoice_3_06_2020.pdf' target='_blank'&gt;Invoice&lt;/a&gt;&lt;/li&gt;
+&lt;li class='pure-tree_link'&gt;&lt;a href='/documents/Report_3_01_2020.pdf' target='_blank'&gt;Report&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+<p><strong>Bash</strong>:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -s "http://SERVER_IP:PORT/documents.php?uid=3" | grep "&lt;li class='pure-tree_link'&gt;"
+
+&lt;li class='pure-tree_link'&gt;&lt;a href='/documents/Invoice_3_06_2020.pdf' target='_blank'&gt;Invoice&lt;/a&gt;&lt;/li&gt;
+&lt;li class='pure-tree_link'&gt;&lt;a href='/documents/Report_3_01_2020.pdf' target='_blank'&gt;Report&lt;/a&gt;&lt;/li&gt;
+
+d41y@htb[/htb]$ curl -s "http://SERVER_IP:PORT/documents.php?uid=3" | grep -oP "\/documents.*?.pdf"
+
+/documents/Invoice_3_06_2020.pdf
+/documents/Report_3_01_2020.pdf
+</code></pre>
+<p><strong>Script</strong>:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+url="http://SERVER_IP:PORT"
+
+for i in {1..10}; do
+        for link in $(curl -s "$url/documents.php?uid=$i" | grep -oP "\/documents.*?.pdf"); do
+                wget -q $url/$link
+        done
+done
+</code></pre>
+<p>When you run the script, it will download all documents from all employees with uids between 1-10, thus successfully exploiting the IDOR vuln to mass enumerate the documents of all employees.</p>
+<h2 id="bypassing-encoded-references"><a class="header" href="#bypassing-encoded-references">Bypassing Encoded References</a></h2>
+<p>In some cases, web apps make hashes or encode their object reference, making enumeration more difficult, but it may still be possible.</p>
+<p><img src="../../../../images/IDOR_4.png" alt="idor 4" /></p>
+<p>If you click on the <code>Employment_contract.pdf</code> file, it starts downloading the file. The intercepted request in Burp looks as follows:</p>
+<p><img src="../../../../images/IDOR_5.png" alt="idor 5" /></p>
+<p>You see that it is sending a POST request to download.php with the following data:</p>
+<pre><code class="language-php">contract=cdd96d3cc73d1dbdaffa03cc6cd7339b
+</code></pre>
+<p>The web app is not sending the direct reference in cleartext but it appears to be hashed in an md5 format.</p>
+<p>You can attempt to hash various values, like <code>uid</code>, <code>username</code>, <code>filename</code>, and many others, and see if any of their md5 hashes match the above value. If you find a match, then you can replicate it for other users and collect their files. For example, try to compare the md5 of your <code>uid</code>, and see if it matches the above hash.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ echo -n 1 | md5sum
+
+c4ca4238a0b923820dcc509a6f75849b -
+</code></pre>
+<p>Unfortunately, the hashes do not match. You can attempt this with various other fields, but none of them matches the hash. In advanced cases, you may also utilize Burp Comparer and fuzz various values and then compare each to your hash to see if you find any matches. In this case, the md5 hash could be for a unique value or combination of values, which would be very difficult to predict, making this direct reference a Secure Direct Object Reference.</p>
+<h3 id="function-disclosure"><a class="header" href="#function-disclosure">Function Disclosure</a></h3>
+<p>As most modern web apps are developed using JS frameworks, like Angular, React, or Vue.js, many web devs may make the mistake or performing sensitive functions on the front-end, which would expose them to attackers. For example, if the above hash was being calculated on the front-end, you can study the function and then replicate what it's doing to calculate the same hash.</p>
+<p>If you take a look at the link in the source code, you see that it is calling a JS function with <code>javascript:downloadContract('1')</code>. Looking at the <code>downloadContract()</code> function in the source code, you see the following:</p>
+<pre><code class="language-javascript">function downloadContract(uid) {
+    $.redirect("/download.php", {
+        contract: CryptoJS.MD5(btoa(uid)).toString(),
+    }, "POST", "_self");
+}
+</code></pre>
+<p>This function appears to be sending a POST request with the <code>contract</code> parameter, which is what you saw above. The value it is sending is an md5 hash using the CryptoJS library, which also matches the request you saw earlier. So, the only thing left to see is what value is being hashed.</p>
+<p>In this case, the value being hashed is <code>btoa(uid)</code>, which is the base64 encoded string of the <code>uid</code> variable, which is an input argument for the function. Going back to the earlier link where the function was called, you see it calling <code>downloadContract('1')</code>. So, the final value being used in the POST request is the base64 encoded string of 1, which was then md5 hashed.</p>
+<p>You can test this by base64 encoding your <code>uid=1</code>, and then hashing it with md5:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ echo -n 1 | base64 -w 0 | md5sum
+
+cdd96d3cc73d1dbdaffa03cc6cd7339b -
+</code></pre>
+<div class="mdbook-callouts mdbook-callouts-tip">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  tip
+</p>
+<p>Use <code>-n</code> with <code>echo</code>, and <code>-w 0</code> with <code>base64</code> to avoid adding newlines.<br><br><em>Adding newlines would change the final md5 hash.</em></p>
+</div>
+<p>As you can see, this hash matches the hash in your request, meaning that you have successfully reversed the hashing technique used on the object reference, turning them into IDORs. With that, you can begin enumerating other employees' contracts using the same hashing method you used above.</p>
+<h3 id="mass-enumeration-1"><a class="header" href="#mass-enumeration-1">Mass Enumeration</a></h3>
+<p>Write a little script to retrieve all employee contracts more efficiently.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+for i in {1..10}; do
+    for hash in $(echo -n $i | base64 -w 0 | md5sum | tr -d ' -'); do
+        curl -sOJ -X POST -d "contract=$hash" http://SERVER_IP:PORT/download.php
+    done
+done
+</code></pre>
+<h2 id="idor-in-insecure-apis"><a class="header" href="#idor-in-insecure-apis">IDOR in Insecure APIs</a></h2>
+<p>IDOR insecure function calls enable you to call APIs or execute functions as another user. Such functions and APIs can be used to change another user's private information, reset another user's password, or even buy items using another user's payment information. In many cases, you may be obtaining certain information through an information disclosure IDOR vulnerability and then using this information with IDOR insecure function call vulnerabilities.</p>
+<h3 id="identifying-insecure-apis"><a class="header" href="#identifying-insecure-apis">Identifying Insecure APIs</a></h3>
+<p>Going back to the 'Employee Manager' web app, you can start testing the <code>Edit Profile</code> page for IDOR vulnerabilities:</p>
+<p><img src="../../../../images/IDOR_6.png" alt="idor 6" /></p>
+<p>When you click on the <code>Edit Profile</code> button, you are taken to a page to edit information of your user profile, namely <code>Full Name</code>, <code>Email</code>, and <code>About Me</code>, which is a common feature in many web applications:</p>
+<p><img src="../../../../images/IDOR_7.png" alt="idor 7" /></p>
+<p>You can change any of the details in your profile and click <code>Update profile</code>, and you'll see that they get updated and persist through refreshes, which means they get updated in a database somewhere.</p>
+<p>When intercepting with Burp, you can see that the page is sending a PUT request to the <code>/profile/api.php/profile/1</code> API endpoint. PUT requests are usually used in APIs to update item details, while POST is used to create new items, DELETE to delete items, and GET to retrieve item details. So, a PUT request for the <code>Update Profile</code> function is expected. The interesting bit is the JSON parameters it is sending:</p>
+<pre><code class="language-json">{
+    "uid": 1,
+    "uuid": "40f5888b67c748df7efba008e7c2f9d2",
+    "role": "employee",
+    "full_name": "Amy Lindon",
+    "email": "a_lindon@employees.htb",
+    "about": "A Release is like a boat. 80% of the holes plugged is not good enough."
+}
+</code></pre>
+<p>You can see that the PUT request includes a few hidden parameters, like <code>uid</code>, <code>uuid</code>, and most interestingly <code>role</code>, which is set to 'employee'. The web app also appears to be setting the user access privileges on the client-side, in the form of your <code>Cookie: role=employee</code> cookie, which appears to reflect the <code>role</code> specified for your user. This is a common security issue. The access control privileges are sent as part of the client's HTTP request, either as a cookie or as part of the JSON request, leaving it under the client's control, which could be manipulated to gain more privileges.</p>
+<p>So, unless the web app has a solid access control system on the back-end, you should be able to set an arbitrary role for your user, which may grant you more privileges.</p>
+<h3 id="exploiting-insecure-apis"><a class="header" href="#exploiting-insecure-apis">Exploiting Insecure APIs</a></h3>
+<p>You know you can change the <code>full_name</code>, <code>email</code>, and <code>about</code> parameters, as these are the ones under your control in the HTML form in the <code>/profile</code> web page. Trying to manipulate the other parameters:</p>
+<p>There are a few things you could try in this case:</p>
+<ol>
+<li>Change your <code>uid</code> to another user's <code>uid</code>, such that you can take over their accounts</li>
+<li>Change another user's details, which may follow you to perform several web attacks</li>
+<li>Create new users with arbitrary details, or delete existing users</li>
+<li>Change your role to a more privileged role to be able to perform more actions</li>
+</ol>
+<p>Starting by changing the <code>uid</code> to another user's <code>uid</code>. However, any number you set other than your own <code>uid</code> gets you a response of <code>uid mismatch</code>.</p>
+<p><img src="../../../../images/IDOR_8.png" alt="idor 8" /></p>
+<p>The web app appears to be comparing the request's <code>uid</code> to the API endpoint. This means that a form of access control on the back-end prevents you from arbitrary changing some JSON parameters, which might be necessary to prevent the web app from crashing returning errors.</p>
+<p>Perhaps you can try changing another user's details. You'll change the API endpoint to <code>/profile/api.php/profile/2</code>, and change <code>"uid": 2</code> to avoid the previous uid mismatch:</p>
+<p><img src="../../../../images/IDOR_9.png" alt="idor 9" /></p>
+<p>As you can see, this time you get an error saying uuid mismatch. The web app appears to be checking if the <code>uuid</code> value you are sending matches the user's <code>uuid</code>. Since you are sending your own <code>uuid</code>, your request is failing. This appears to be another form of access control to prevent users from changing another user's details.</p>
+<p>Next, let's see if you can create a new user with a POST request to the API endpoint. You can change the request method to POST, change the <code>uid</code> to a new one, and send the request to the API endpoint of the new <code>uid</code>:</p>
+<p><img src="../../../../images/IDOR_10.png" alt="idor 10" /></p>
+<p>You get an error message saying "Creating new employees is for admins only". The same thing happens when you send a DELETE request, as you get "Deleting employees is for admins only". The web app might be checking your authorization through the <code>role=employee</code> cookie because this appears to be the only form of authorization in the HTTP request.</p>
+<p>Finally, let's try to change your <code>role</code> to admin/administrator to gain higher privileges. Unfortunately, without knowing a valid <code>role</code> name, you get "Invalid role" in the HTTP response, and your <code>role</code> does not update.</p>
+<p><img src="../../../../images/IDOR_11.png" alt="idor 11" /></p>
+<p>So, all of your attempts appear to have failed. You cannot create or delete users as you cannot change your <code>role</code>. You cannot change your own <code>uid</code>, as there are preventive measures on the back-end that you cannot control, nor change another user's details for the same reason. So, is the web application secure against IDOR attacks?</p>
+<p>So far, you have only been testing IDOR Insecure Function Calls. However, you have not tested the API's GET request for IDOR Information Disclosure Vulnerabilites. If there was no robust access control system in place, you might be able to read other users' details, which may help you with the previous attacks you attempted.</p>
+<h2 id="chaining-idor-vulnerabilities"><a class="header" href="#chaining-idor-vulnerabilities">Chaining IDOR Vulnerabilities</a></h2>
+<p>Usually, a GET request to the API endpoint should return the details of the requested user, so you may try calling it to see if you can retrieve your user's details. You also notice that after the page loads, it fetches the user details with a GET request to the same API endpoint:</p>
+<p><img src="../../../../images/IDOR_12.png" alt="idor 12" /></p>
+<h3 id="information-disclosure"><a class="header" href="#information-disclosure">Information Disclosure</a></h3>
+<p>Let's send a GET request with another <code>uid</code>:</p>
+<p><img src="../../../../images/IDOR_13.png" alt="idor 13" /></p>
+<p>As you can see, this returned the details of another user, with their own <code>uuid</code> and <code>role</code>, confirming an IDOR Information Disclosure Vulnerability.</p>
+<pre><code class="language-json">{
+    "uid": "2",
+    "uuid": "4a9bd19b3b8676199592a346051f950c",
+    "role": "employee",
+    "full_name": "Iona Franklyn",
+    "email": "i_franklyn@employees.htb",
+    "about": "It takes 20 years to build a reputation and few minutes of cyber-incident to ruin it."
+}
+</code></pre>
+<p>This provides you with new details, most notably the <code>uuid</code>, which you could not calculate before, and thus could not change other users' details.</p>
+<h3 id="modifying-other-users-details"><a class="header" href="#modifying-other-users-details">Modifying Other Users' Details</a></h3>
+<p>Now, with the user's <code>uid</code> at hand, you can change this user's details by sending a PUT request to <code>/profile/api.php/profile/2</code> with the above details along with any modifications you made, as follows:</p>
+<p><img src="../../../../images/IDOR_14.png" alt="idor 14" /></p>
+<p>You don't get any access control error messages this time, and when trying to GET the user details again, you see that you did indeed update their details:</p>
+<p><img src="../../../../images/IDOR_15.png" alt="idor 15" /></p>
+<p>In addition to allowing you to view potentially sensitive details, the ability to modify another user's details also enables you to perform several other attacks. One type of attack is modifying a user's email address and then requesting a password reset link, which will be sent to the email address you specified, thus allowing you to take control over their account. Another potential attack is placing an XSS payload in the <code>about</code> field, which would get executed once the user visits their <code>Edit profile</code> page, enabling you to attack the user in different ways.</p>
+<h3 id="chaining-two-idor-vulnerabilites"><a class="header" href="#chaining-two-idor-vulnerabilites">Chaining Two IDOR Vulnerabilites</a></h3>
+<p>Since you have identified an IDOR Information Disclosure Vulnerability, you may also enumerate all users and look for other roles, ideally an admin role.</p>
+<pre><code class="language-json">{
+    "uid": "X",
+    "uuid": "a36fa9e66e85f2dd6f5e13cad45248ae",
+    "role": "web_admin",
+    "full_name": "administrator",
+    "email": "webadmin@employees.htb",
+    "about": "HTB{FLAG}"
+}
+</code></pre>
+<p>You may modify the admin's details and then perform one of the above attacks to take over their account. However, as you know the admin role name, you can set it to your user so you can create new users or delete current users. To do so, you will intercept the request when you click on the <code>Update profile</code> button and change your role to <code>web_admin</code>.</p>
+<p><img src="../../../../images/IDOR_16.png" alt="idor 16" /></p>
+<p>This time, you don't get the "Invalid role" error message, nor do you get any access control error messages, meaning that there are no back-end access control measures to what roles you can set for your user. If you GET your user details, you see that your <code>role</code> has indeed been set to <code>web_admin</code>.</p>
+<pre><code class="language-json">{
+    "uid": "1",
+    "uuid": "40f5888b67c748df7efba008e7c2f9d2",
+    "role": "web_admin",
+    "full_name": "Amy Lindon",
+    "email": "a_lindon@employees.htb",
+    "about": "A Release is like a boat. 80% of the holes plugged is not good enough."
+}
+</code></pre>
+<p>Now, you can refresh the page to update your cookie, or manually set it as <code>Cookie: role=web_admin</code>, and then intercept the <code>Update</code> request to create a new user and see if you'd be allowed to do so.</p>
+<p><img src="../../../../images/IDOR_17.png" alt="idor 17" /></p>
+<p>You did not get an error message this time. If you send a GET request for the new user, you see that it has been successfully created.</p>
+<p><img src="../../../../images/IDOR_18.png" alt="idor 18" /></p>
+<p>By combining the information you gained from the IDOR Information Disclosure Vulnerability with and IDOR Insecure Function Calls attack on an API endpoint, you could modify other users' details and create/delete users while bypassing various access control checks in place. On many occasions, the information you leak through IDOR vulnerabilites can be utilized in other attacks, like IDOR or XSS, leading to more sophisticated attacks or bypassing existing security mechanisms.</p>
+<p>With your new role, you may also perform mass assignments to change specific fields for all users, like placing XSS payloads in their profiles or changing their email to an email you specify.</p>
+<h2 id="idor-prevention"><a class="header" href="#idor-prevention">IDOR Prevention</a></h2>
+<h3 id="object-level-access-control"><a class="header" href="#object-level-access-control">Object Level Access Control</a></h3>
+<p>An Access Control system should be at the core of any web application since it can affect its entire design and structure. To properly control each area of the web application, its design has to support the segmentation of roles and permissions in a centralied manner. However, Access Control is a vast topic.</p>
+<p>User roles and permissions are a vital part of any access control system, which is fully realized in a Role-Based Access Control (<em>RBAC</em>) system. To avoid exploiting IDOR vulnerabilities, you must map the RBAC to all objects and resources. The back-end server can allow or deny every request, depending on whether the requester's role has enough privileges to access the object or the resource.</p>
+<p>Once an RBAC has been implemented, each user would be assigned a role that has certain privileges. Upon every request the user makes, their roles and privileges would be tested to see if they have access to the object they are requesting. They would only be allowed to access it if they have the right to do so.</p>
+<p>There are many ways to implement an RBAC system and map it to the web application's objects and resources, and designing it in the core of the web app's structure is an art to perfect. The following is a sample code of how a web app may compare user roles to objects to allow or deny access control:</p>
+<pre><code class="language-javascript">match /api/profile/{userId} {
+    allow read, write: if user.isAuth == true
+    &amp;&amp; (user.uid == userId || user.roles == 'admin');
+}
+</code></pre>
+<p>The above example uses the <code>user</code> token ´, which can be mapped from the HTTP request made to the RBAC to retrieve the user's various roles and privileges. Then, it only allows read/write access if the user's <code>uid</code> in the RBAC system matches the <code>uid</code> in the API endpoint they are requesting. Furthermore, if a user has <code>admin</code> as their role in the back-end RBAC, they are allowed read/write access.</p>
+<p>In your previous attacks, you saw examples of the user role being stored in the user's details or in their cookie, both of which are under the user's control and can be manipulated to escalate their access privileges. The above example demonstrates a safer approach to mapping user roles, as the user privileges were not passed through the HTTP request, but mapped directly from the RBAC on the back-end using the user's logged-in session token as an authentication.</p>
+<h3 id="object-referencing"><a class="header" href="#object-referencing">Object Referencing</a></h3>
+<p>While the core issue with IDOR lies in broken access control, having access to direct references to objects makes it possible to enumerate and exploit these access control vulnerabilities. You may still use direct references, but only if you have a solid access control system implemented.</p>
+<p>Even after building a solid access control system, you should never use object reference in clear text or simple patterns. You should always use strong and unique references, like salted hashes or <code>UUID</code>s. For example, you can use <code>UUID V4</code> to generate a strongly randomized id for any element, which looks something like <code>89c9b29b-d19f-4515-b2dd-abb6e693eb20</code>. Then, you can map this <code>UUID</code> to the object it is referencing in the back-end database, and whenever this <code>UUID</code> is called, the back-end database would know which object to return. The following example PHP code shows you how this may work:</p>
+<pre><code class="language-php">$uid = intval($_REQUEST['uid']);
+$query = "SELECT url FROM documents where uid=" . $uid;
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_array($result));
+echo "&lt;a href='" . $row['url'] . "' target='_blank'&gt;&lt;/a&gt;";
+</code></pre>
+<p>Furthermore, as you have seen previously, you should never calculate the hashes on the front-end. You should generate them when an object is created and store them in the back-end database. Then, you should create database maps to enable quick cross-referencing of objects and references.</p>
+<p>Finally, you must note that using <code>UUID</code>s may let IDOR vulnerabilities go undetected since it makes it more challenging to test for IDOR vulnerabilites. This is why strong object referencing is always the second step after implementing a strong access control system.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/ssi.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/ssi.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

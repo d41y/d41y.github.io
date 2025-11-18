@@ -1,0 +1,839 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ES|QL for Security Analysts - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#esql-for-security-analysts">ES|QL for Security Analysts</a>
+<ul>
+<li><a href="#getting-started">Getting Started</a>
+<ul>
+<li><a href="#elasticsearch--query-language">Elasticsearch | Query Language</a></li>
+<li><a href="#why-is-it-needed">Why is it needed?</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#esql-syntax">ES|QL Syntax</a></li>
+<li><a href="#example">Example</a></li>
+<li><a href="#esql-basic-commands">ES|QL Basic Commands</a>
+<ul>
+<li><a href="#from">FROM</a></li>
+<li><a href="#keep">KEEP</a></li>
+<li><a href="#eval">EVAL</a></li>
+<li><a href="#where">WHERE</a></li>
+<li><a href="#sort">SORT</a></li>
+<li><a href="#limit">LIMIT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#operators">Operators</a>
+<ul>
+<li><a href="#relation-operators">Relation Operators</a></li>
+<li><a href="#mathematical-operators">Mathematical Operators</a></li>
+<li><a href="#logical-operators">Logical Operators</a></li>
+<li><a href="#null-values">NULL Values</a></li>
+<li><a href="#like">LIKE</a></li>
+<li><a href="#rlike">RLIKE</a></li>
+<li><a href="#in">IN</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#metadata-fields">Metadata Fields</a></li>
+</ul>
+</li>
+<li><a href="#functions">Functions</a>
+<ul>
+<li><a href="#ip-functions---cidr_match">IP Functions - CIDR_MATCH</a></li>
+<li><a href="#string-functions---tofrom-base64">String Functions - to/from base64</a></li>
+<li><a href="#string-functions---to_lowerto_upper">String Functions - TO_LOWER/TO_UPPER</a></li>
+<li><a href="#aggregate-functions---stats--by">Aggregate Functions - STATS [...] BY</a></li>
+<li><a href="#grouping-functions---bucket">Grouping Functions - Bucket</a></li>
+</ul>
+</li>
+<li><a href="#investigating-events">Investigating Events</a>
+<ul>
+<li><a href="#esql-within-timeline">ES|QL within Timeline</a></li>
+<li><a href="#building-esql-security-queries">Building ES|QL Security Queries</a></li>
+</ul>
+</li>
+<li><a href="#rule-creation-with-esql">Rule Creation with ES|QL</a>
+<ul>
+<li><a href="#rule-creation-workflow">Rule Creation Workflow</a></li>
+<li><a href="#aggregating-vs-non-aggregating-rules">Aggregating vs Non-Aggregating Rules</a></li>
+<li><a href="#rule-creation">Rule Creation</a></li>
+<li><a href="#considerations-when-writing-rules">Considerations When Writing Rules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="esql-for-security-analysts"><a class="header" href="#esql-for-security-analysts">ES|QL for Security Analysts</a></h1>
+<h2 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h2>
+<h3 id="elasticsearch--query-language"><a class="header" href="#elasticsearch--query-language">Elasticsearch | Query Language</a></h3>
+<ul>
+<li>Dynamic language designed from the ground up to transform, enrich, and simplify investigations
+<ul>
+<li>faster results</li>
+<li>simplified user experience</li>
+<li>new search capabilities</li>
+<li>quicker insights</li>
+<li>accurate alerting</li>
+</ul>
+</li>
+<li>Uses a dedicated query engine</li>
+<li>Brings together the capabilities of multiple languages</li>
+</ul>
+<h3 id="why-is-it-needed"><a class="header" href="#why-is-it-needed">Why is it needed?</a></h3>
+<ul>
+<li>Purpose for creation
+<ul>
+<li>flexible searches with the ability to define fields at query time</li>
+<li>accurate detection rules that help reduce alert fatigue</li>
+<li>work with summarized data using aggregations in queries</li>
+<li>providing data enrichment at query time</li>
+</ul>
+</li>
+</ul>
+<h3 id="requirements"><a class="header" href="#requirements">Requirements</a></h3>
+<ul>
+<li>Elastic Stack version 8.14</li>
+<li>Data</li>
+</ul>
+<h3 id="esql-syntax"><a class="header" href="#esql-syntax">ES|QL Syntax</a></h3>
+<ul>
+<li>Each command works on the output of the previous one using the pipe character</li>
+</ul>
+<pre><code>source-command
+| processing-command1
+| processing-command2
+</code></pre>
+<ul>
+<li>Can be written in multiple lines or one</li>
+</ul>
+<pre><code>source-command | processing-command1 | processing-command2
+</code></pre>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<pre><code>FROM logs-network*
+| KEEP @timestamp, source.ip, destination.ip, source.bytes, destination.bytes
+| EVAL total.bytes = source.bytes + destination.bytes
+| WHERE total.bytes &gt; 10000
+| SORT source.ip, total.bytes desc
+| LIMIT 2
+</code></pre>
+<h3 id="esql-basic-commands"><a class="header" href="#esql-basic-commands">ES|QL Basic Commands</a></h3>
+<h4 id="from"><a class="header" href="#from">FROM</a></h4>
+<p>... retrieves data from ES</p>
+<ul>
+<li>Can specify Indices, Data Streams, and Aliases</li>
+<li>Wildcards and comma-separated lists can be used to query multiple sources</li>
+<li>Returns 1000 results by default</li>
+</ul>
+<h4 id="keep"><a class="header" href="#keep">KEEP</a></h4>
+<p>... specifies which columns are returned and in which order</p>
+<ul>
+<li>Results will be printed in a table format</li>
+<li>The order of field in the query will dictate the column order</li>
+</ul>
+<h4 id="eval"><a class="header" href="#eval">EVAL</a></h4>
+<p>... enables you to calculate new values and add them as a new column</p>
+<ul>
+<li>This new column is only created in the output table, it is not stored in ES</li>
+<li>EVAL typically uses functions to calculate values</li>
+</ul>
+<h4 id="where"><a class="header" href="#where">WHERE</a></h4>
+<p>... returns a table with the rows where the specified condition is true</p>
+<ul>
+<li>Key command to filter data</li>
+<li>The condition can include operators (<em>&lt;, ==, and, or, ...</em>) and functions</li>
+</ul>
+<h4 id="sort"><a class="header" href="#sort">SORT</a></h4>
+<p>... orders the rows of the table</p>
+<ul>
+<li><code>asc</code>/<code>desc</code> define the order -&gt; ascending is used if not specified</li>
+<li>Multiple columns can be specified</li>
+</ul>
+<h4 id="limit"><a class="header" href="#limit">LIMIT</a></h4>
+<p>... sets how many rows are returned by the query</p>
+<ul>
+<li>A limit of 10.000 rows still applies</li>
+<li>Useful for calculating the top results in a search</li>
+</ul>
+<h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
+<p>Query building-blocks for working with data</p>
+<ul>
+<li>Relational operators (<em>&lt;, &gt;, &lt;=, &gt;=, ==, !=</em>)</li>
+<li>Mathematical operators (<em>+, -, *, /</em>)</li>
+<li>Logical operators (<em>AND, OR, NOT</em>)</li>
+<li>NULL value predicates (<em>IS NULL, IS NOT NULL</em>)</li>
+<li>Other comparison operators (<em>LIKE, RLIKE, IN</em>)</li>
+</ul>
+<h3 id="relation-operators"><a class="header" href="#relation-operators">Relation Operators</a></h3>
+<ul>
+<li>Return a boolean result</li>
+<li>Comparisons can be made to values and to other fields of the same type</li>
+<li>If either field being compared is multi-value the result will be NULL</li>
+<li>Only certain fields are supported (<em>date, numbers, text, keywords, IP</em>)</li>
+</ul>
+<h3 id="mathematical-operators"><a class="header" href="#mathematical-operators">Mathematical Operators</a></h3>
+<ul>
+<li>EVAL's best friend</li>
+<li>If either field is multi-value the result will be NULL</li>
+<li>Only certain fields are supported (<em>date, numbers, text, keywords, IP</em>)</li>
+</ul>
+<h3 id="logical-operators"><a class="header" href="#logical-operators">Logical Operators</a></h3>
+<ul>
+<li>Serve them with a side of parantheses for best results</li>
+</ul>
+<h3 id="null-values"><a class="header" href="#null-values">NULL Values</a></h3>
+<ul>
+<li>When ingesting data, empty fields will be set to NULL</li>
+<li>By default NULL values are larger than other values</li>
+<li>NULL values are ignored when included in calculations</li>
+<li>Great for finding fields that contain data</li>
+</ul>
+<h3 id="like"><a class="header" href="#like">LIKE</a></h3>
+<ul>
+<li>Matches a string against a pattern using wildcards
+<ul>
+<li><code>*</code> matches zero or more matches</li>
+<li><code>?</code> matches one character</li>
+</ul>
+</li>
+</ul>
+<h3 id="rlike"><a class="header" href="#rlike">RLIKE</a></h3>
+<ul>
+<li>Matches strings using RegEx</li>
+<li>More versatile than the LIKE operator but more compute intensive</li>
+<li>Useful for matching known complex patterns</li>
+</ul>
+<h3 id="in"><a class="header" href="#in">IN</a></h3>
+<ul>
+<li>Matches values in a comma-separated list of literals, fields, or expressions</li>
+<li>Useful when filtering for multiple values</li>
+</ul>
+<h3 id="comments"><a class="header" href="#comments">Comments</a></h3>
+<ul>
+<li>Helpful for testing parts of a query, debugging, and documenting</li>
+</ul>
+<pre><code>// for single line comments
+/* and */ for block comments
+</code></pre>
+<h3 id="metadata-fields"><a class="header" href="#metadata-fields">Metadata Fields</a></h3>
+<ul>
+<li>ES|QL can access these metadata fields by using the METADATA directive in the FROM command:
+<ul>
+<li>_index: Index in which the document is stored</li>
+<li>_id: Unique identifier for the document</li>
+<li>_version: Version of the document</li>
+</ul>
+</li>
+</ul>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<p>Functions that help work with data:</p>
+<ul>
+<li>Working with strings</li>
+<li>IP address CIDR notation search</li>
+<li>Grouping Functions</li>
+<li>Aggregation Functions</li>
+</ul>
+<h3 id="ip-functions---cidr_match"><a class="header" href="#ip-functions---cidr_match">IP Functions - CIDR_MATCH</a></h3>
+<ul>
+<li>Used for IPv4/IPv6 CIDR matching</li>
+<li>Returns "true" if the IP is contained in the specified CIDR blocks</li>
+</ul>
+<h3 id="string-functions---tofrom-base64"><a class="header" href="#string-functions---tofrom-base64">String Functions - to/from base64</a></h3>
+<ul>
+<li>Encoding is useful to obfuscate URL paths, process arguments, ...</li>
+<li>Further commands can be appended afterwards</li>
+<li>Query will crash if no base64 values are ingested</li>
+</ul>
+<h3 id="string-functions---to_lowerto_upper"><a class="header" href="#string-functions---to_lowerto_upper">String Functions - TO_LOWER/TO_UPPER</a></h3>
+<ul>
+<li>These commands will convert input text to either uppercase or lowercase</li>
+<li>Useful in case insensivity situations</li>
+</ul>
+<h3 id="aggregate-functions---stats--by"><a class="header" href="#aggregate-functions---stats--by">Aggregate Functions - STATS [...] BY</a></h3>
+<ul>
+<li>"STATS ... BY" will group rows into buckets based on a common value you specify</li>
+<li>Can be used to calculate one or more aggregated values over grouped rows</li>
+<li>If "BY" is omitted no grouping will happen and only one calculation over all data will occur</li>
+<li>Multiple aggregation functions are supported (<em>Avg, Count, Sum, Percentile, ...</em>)</li>
+</ul>
+<h3 id="grouping-functions---bucket"><a class="header" href="#grouping-functions---bucket">Grouping Functions - Bucket</a></h3>
+<ul>
+<li>Creates groups of values out of a numeric or date range</li>
+<li>Useful to find anomalies in data over time or numeric data</li>
+</ul>
+<p>Bucket can be used in 2-parameter mode</p>
+<ul>
+<li>Useful for when you don't want to specify the interval:
+<ul>
+<li>Second parameter is the size of each bucket</li>
+<li>It must be a double for numbers or a time period for dates</li>
+</ul>
+</li>
+</ul>
+<h2 id="investigating-events"><a class="header" href="#investigating-events">Investigating Events</a></h2>
+<h3 id="esql-within-timeline"><a class="header" href="#esql-within-timeline">ES|QL within Timeline</a></h3>
+<ul>
+<li>Timeline is the investigative pane in Security</li>
+<li>Use ES|QL to find specific events</li>
+<li>Cannot pin events like in query</li>
+<li>Staging area for rule creation</li>
+</ul>
+<h3 id="building-esql-security-queries"><a class="header" href="#building-esql-security-queries">Building ES|QL Security Queries</a></h3>
+<ul>
+<li>Understand what data is available
+<ul>
+<li>Which integrations do you have?</li>
+<li>What fields are available?</li>
+</ul>
+</li>
+<li>Define the goals and scope of the query
+<ul>
+<li>Similar to hypothesis-driven threat hunting</li>
+<li>What fields and ES|QL functions are necessary?</li>
+</ul>
+</li>
+<li>Develop the query:
+<ul>
+<li>gather the necessary information</li>
+<li>aggregations can provide unexpected results, test them separately</li>
+<li>remember you can comment out</li>
+<li>leave LIMIT and data conversions until the end if possible</li>
+</ul>
+</li>
+</ul>
+<h2 id="rule-creation-with-esql"><a class="header" href="#rule-creation-with-esql">Rule Creation with ES|QL</a></h2>
+<h3 id="rule-creation-workflow"><a class="header" href="#rule-creation-workflow">Rule Creation Workflow</a></h3>
+<ul>
+<li>Create ES|QL queries in Timeline or Discover first</li>
+<li>Create ES|QL rules in second</li>
+<li>Considerations:
+<ul>
+<li>Is this query applicable over time?</li>
+<li>Do I want this query running on a schedule?</li>
+<li>Will this query result in false positives? How many?</li>
+</ul>
+</li>
+<li>Use your "strongest" ES|QL queries</li>
+</ul>
+<h3 id="aggregating-vs-non-aggregating-rules"><a class="header" href="#aggregating-vs-non-aggregating-rules">Aggregating vs Non-Aggregating Rules</a></h3>
+<ul>
+<li>Aggregating rules
+<ul>
+<li>Use STATS... BY functions</li>
+<li>Create a new field</li>
+<li>Performs some type of mathematical operation</li>
+</ul>
+</li>
+<li>Non-Aggregating rules
+<ul>
+<li>Non-aggregating queries retrieve specific records without performing calculations on grouped data</li>
+<li>Necessary for de-duplication</li>
+</ul>
+</li>
+</ul>
+<h3 id="rule-creation"><a class="header" href="#rule-creation">Rule Creation</a></h3>
+<ul>
+<li>You can optionally assign a Timeline template to aide your analysis when this alert triggers</li>
+<li>Identifying information on the rule goes in the "About rule" section</li>
+<li>Set the schedule that your rule will run
+<ul>
+<li>a rule that runs every 5 minutes with 1 additional look-back minute will look at the last 6 minutes of data</li>
+</ul>
+</li>
+<li>Alerts can also be sent via connectors</li>
+</ul>
+<h3 id="considerations-when-writing-rules"><a class="header" href="#considerations-when-writing-rules">Considerations When Writing Rules</a></h3>
+<ul>
+<li>The LIMIT command specifies the number of rows that can be returned</li>
+<li>A detection rule's max_signals setting specifies the maximum number of alerts it can create every time it runs
+<ul>
+<li>The max_signals default value is 100</li>
+</ul>
+</li>
+<li>If the LIMIT value is lower than the max_signals value, the rule uses the LIMIT value to determine the maximum number of alerts the rule generates
+<ul>
+<li>If the LIMIT value is higher than the max_signals value, the rule uses the max_signals value<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></li>
+</ul>
+</li>
+</ul>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../general/elastic_stack/kubernetes_basics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../general/elastic_stack/kubernetes_basics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

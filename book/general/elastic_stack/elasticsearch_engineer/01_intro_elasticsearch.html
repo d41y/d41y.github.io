@@ -1,0 +1,1045 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0x00 - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#introduction-elasticsearch-engineer">Introduction Elasticsearch Engineer</a>
+<ul>
+<li><a href="#stack-introduction">Stack Introduction</a>
+<ul>
+<li><a href="#elasticsearch-platform">Elasticsearch Platform</a>
+<ul>
+<li><a href="#out-of-the-box-solutions">Out-of-the-Box Solutions</a></li>
+<li><a href="#build-your-own">Build your own</a></li>
+<li><a href="#elasticsearch-ai-platform">Elasticsearch AI Platform</a>
+<ul>
+<li><a href="#kibana">Kibana</a></li>
+<li><a href="#elasticsearch">Elasticsearch</a></li>
+<li><a href="#integrations">Integrations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#elasticsearch-data-journey">Elasticsearch Data Journey</a></li>
+<li><a href="#elasticsearch-is-a-document-store">Elasticsearch is a Document Store</a></li>
+<li><a href="#kibana-1">Kibana</a></li>
+<li><a href="#exploring-and-querying-data-with-kibana">Exploring and Querying Data with Kibana</a></li>
+</ul>
+</li>
+<li><a href="#installation-options">Installation Options</a>
+<ul>
+<li><a href="#elastic-cloud">Elastic Cloud</a></li>
+<li><a href="#elastic-self-managed">Elastic Self-Managed</a></li>
+</ul>
+</li>
+<li><a href="#index-operations">Index Operations</a>
+<ul>
+<li><a href="#documents-are-indexed-into-an-index">Documents are Indexed into an Index</a></li>
+<li><a href="#index-a-document-curl-example">Index a Document: curl Example</a></li>
+<li><a href="#index-a-document-dev-tools--console">Index a Document: Dev Tools &gt; Console</a></li>
+<li><a href="#index-a-document-put-vs-post">Index a Document: PUT vs. POST</a></li>
+<li><a href="#retrieve-a-document">Retrieve a Document</a></li>
+<li><a href="#create-a-document">Create a Document</a></li>
+<li><a href="#update-specific-fields">Update Specific Fields</a></li>
+<li><a href="#delete-a-document">Delete a Document</a></li>
+<li><a href="#cheaper-in-bulk">Cheaper in Bulk</a></li>
+<li><a href="#bulk-api-example">Bulk API Example</a></li>
+<li><a href="#upload-a-file-in-kibana">Upload a File in Kibana</a></li>
+<li><a href="#understanding-data">Understanding Data</a></li>
+</ul>
+</li>
+<li><a href="#searching-data">Searching Data</a>
+<ul>
+<li><a href="#different-use-cases">Different Use Cases</a></li>
+<li><a href="#query-languages">Query Languages</a></li>
+<li><a href="#basic-structure-of-search">Basic Structure of Search</a></li>
+<li><a href="#using-query-dsl">Using Query DSL</a></li>
+<li><a href="#match_all-query">match_all query</a></li>
+<li><a href="#aggregations">Aggregations</a>
+<ul>
+<li><a href="#aggregating-data">Aggregating Data</a></li>
+</ul>
+</li>
+<li><a href="#esql">ES|QL</a>
+<ul>
+<li><a href="#query">Query</a></li>
+<li><a href="#running-an-esql-query-in-dev-tools">Running an ES|QL Query in Dev Tools</a></li>
+<li><a href="#running-an-esql-query-in-discover">Running an ES|QL Query in Discover</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="introduction-elasticsearch-engineer"><a class="header" href="#introduction-elasticsearch-engineer">Introduction Elasticsearch Engineer</a></h1>
+<h2 id="stack-introduction"><a class="header" href="#stack-introduction">Stack Introduction</a></h2>
+<h3 id="elasticsearch-platform"><a class="header" href="#elasticsearch-platform">Elasticsearch Platform</a></h3>
+<h4 id="out-of-the-box-solutions"><a class="header" href="#out-of-the-box-solutions">Out-of-the-Box Solutions</a></h4>
+<ul>
+<li>Elastic Observability</li>
+<li>Elastic Security</li>
+</ul>
+<h4 id="build-your-own"><a class="header" href="#build-your-own">Build your own</a></h4>
+<ul>
+<li>Elastic Search</li>
+</ul>
+<h4 id="elasticsearch-ai-platform"><a class="header" href="#elasticsearch-ai-platform">Elasticsearch AI Platform</a></h4>
+<ul>
+<li>Ingest and Secure Storage</li>
+<li>AI / ML and Search</li>
+<li>Visualization and Automation</li>
+</ul>
+<h5 id="kibana"><a class="header" href="#kibana">Kibana</a></h5>
+<ul>
+<li>Explore</li>
+<li>Visualize</li>
+<li>Engage</li>
+</ul>
+<h5 id="elasticsearch"><a class="header" href="#elasticsearch">Elasticsearch</a></h5>
+<ul>
+<li>Store</li>
+<li>Analyze</li>
+<li>Machine Learning</li>
+<li>Generative AI</li>
+</ul>
+<h5 id="integrations"><a class="header" href="#integrations">Integrations</a></h5>
+<ul>
+<li>Connect</li>
+<li>Collect</li>
+<li>Alert</li>
+</ul>
+<h3 id="elasticsearch-data-journey"><a class="header" href="#elasticsearch-data-journey">Elasticsearch Data Journey</a></h3>
+<p>Collect, connect, and visualize your data from any source.</p>
+<pre><code class="language-mermaid">flowchart LR
+
+    subgraph Data
+        A[Data]
+    end
+
+    subgraph Ingest
+        B[Beats]
+        C[Logstash]
+        D[Elastic Agent&lt;br&gt;Integrations]
+    end
+
+    subgraph Store
+        E[Elasticsearch]
+    end
+
+    subgraph Visualize
+        F[Kibana]
+    end
+
+    A --&gt; B &amp; C &amp; D
+    B --&gt; C
+    B &amp; C &amp; D--&gt; E
+    E --&gt; F
+</code></pre>
+<h3 id="elasticsearch-is-a-document-store"><a class="header" href="#elasticsearch-is-a-document-store">Elasticsearch is a Document Store</a></h3>
+<ul>
+<li>Elasticsearch is a distributed document store</li>
+<li>Documents are serialized JSON objects that are:
+<ul>
+<li>stored in Elasticsearch under a unique Document ID</li>
+<li>distributed across the cluster and can be accessed immediately from any node</li>
+</ul>
+</li>
+</ul>
+<h3 id="kibana-1"><a class="header" href="#kibana-1">Kibana</a></h3>
+<ul>
+<li>Kibana is a front-end app that sits on top of the Elastic Stack</li>
+<li>It provides search and data visualization capabilities for data in Elasticsearch</li>
+</ul>
+<h3 id="exploring-and-querying-data-with-kibana"><a class="header" href="#exploring-and-querying-data-with-kibana">Exploring and Querying Data with Kibana</a></h3>
+<ul>
+<li>Start with <code>Discover</code>
+<ul>
+<li>Create a <code>data view</code> to access your data</li>
+<li>Explore the <code>fields</code> in your data</li>
+<li>Examine popular <code>values</code></li>
+<li>Use the <code>query bar</code> and <code>filters</code> to see subsets of your data</li>
+</ul>
+</li>
+</ul>
+<h2 id="installation-options"><a class="header" href="#installation-options">Installation Options</a></h2>
+<h3 id="elastic-cloud"><a class="header" href="#elastic-cloud">Elastic Cloud</a></h3>
+<ul>
+<li>Elastic Cloud Hosted</li>
+<li>Elastic Cloud Serverless</li>
+</ul>
+<h3 id="elastic-self-managed"><a class="header" href="#elastic-self-managed">Elastic Self-Managed</a></h3>
+<ul>
+<li>Elastic Stack</li>
+<li>Elastic Cloud on Kubernetes</li>
+<li>Elastic Cloud Enterprise</li>
+</ul>
+<h2 id="index-operations"><a class="header" href="#index-operations">Index Operations</a></h2>
+<h3 id="documents-are-indexed-into-an-index"><a class="header" href="#documents-are-indexed-into-an-index">Documents are Indexed into an Index</a></h3>
+<ul>
+<li>In Elasticsearch a document is indexed into an index</li>
+<li>An index:
+<ul>
+<li>is a logical way of grouping data</li>
+<li>can be thought of as an optimized collection of documents</li>
+<li>is used as a verb and a noun</li>
+</ul>
+</li>
+</ul>
+<h3 id="index-a-document-curl-example"><a class="header" href="#index-a-document-curl-example">Index a Document: curl Example</a></h3>
+<ul>
+<li>To create an index, send a request using POST that specifies:
+<ul>
+<li><code>index_name</code></li>
+<li><code>_doc</code> resource</li>
+<li><code>document</code></li>
+</ul>
+</li>
+<li>By default, Elasticsearch generates the ID for you</li>
+</ul>
+<pre><code class="language-bash">$ curl -X POST "localhost:9200/my_blogs/_doc" -H 'Content-Type: application/json' -d'
+{
+    "title": "Fighting Ebola with Elastic",
+    "category": "Engineering",
+    "author": {
+        "first_name": "Emily",
+        "last_name": "Mosher"
+} } '
+</code></pre>
+<h3 id="index-a-document-dev-tools--console"><a class="header" href="#index-a-document-dev-tools--console">Index a Document: Dev Tools &gt; Console</a></h3>
+<ul>
+<li>Console providing Elasticsearch &amp; Kibana REST interaction</li>
+<li>User-friendly interface to create and submit requests</li>
+<li>View API docs</li>
+</ul>
+<h3 id="index-a-document-put-vs-post"><a class="header" href="#index-a-document-put-vs-post">Index a Document: PUT vs. POST</a></h3>
+<ul>
+<li>When you index a document using:
+<ul>
+<li><strong>PUT</strong>: you pass in a document ID with the request if the document ID already exists, the index will be updated and the _version incremented by 1</li>
+<li><strong>POST</strong>: the document ID is automatically generated with a unique ID for the document</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>PUT my_blogs/_doc/6OCz5pEBqWhDYCLiWpe5
+{
+    "title" : "Fighting Ebola with Elastic",
+    "category": "User Stories",
+    “Author” : {
+        “first name” : “Emily”,
+        “last name” : “Mosher”
+        }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+    "_index" : "my_blogs",
+    "_type" : "_doc",
+    "_id" : "6OCz5pEBqWhDYCLiWpe5",
+    "_version" : 2,
+    "result" : "updated",
+    ...
+}
+</code></pre>
+<h3 id="retrieve-a-document"><a class="header" href="#retrieve-a-document">Retrieve a Document</a></h3>
+<ul>
+<li>Use a GET request with the document's unique ID</li>
+</ul>
+<p>Request:</p>
+<pre><code>GET my_blogs/_doc/6OCz5pEBqWhDYCLiWpe5
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+    ...
+    "_id" : "6OCz5pEBqWhDYCLiWpe5",
+    "_source": {
+        "title": "Fighting Ebola with Elastic",
+        "category": "User Stories",
+        "author": {
+            "first_name": "Emily",
+            "last_name": "Mosher"
+        }
+</code></pre>
+<h3 id="create-a-document"><a class="header" href="#create-a-document">Create a Document</a></h3>
+<ul>
+<li>Index a new JSON document with the <code>_create</code> resource
+<ul>
+<li>guarantees that the document is only indexed if it does not already exist</li>
+<li>can not be used to update an existing document</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>POST my_blogs/_create/4
+{
+    "title" : "Fighting Ebola with Elastic",
+    "category": "Engineering",
+    “Author” : {
+        “first name” : “Emily”,
+        “last name” : “Mosher”
+        }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+    "_index" : "my_blogs",
+    "_type" : "_doc",
+    "_id" : "4",
+    "_version" : 1,
+    "result" : "created",
+    ...
+}
+</code></pre>
+<h3 id="update-specific-fields"><a class="header" href="#update-specific-fields">Update Specific Fields</a></h3>
+<ul>
+<li>Use the <code>_update</code> resource to modify specific fields in a document
+<ul>
+<li>add the <code>doc</code> context</li>
+<li><code>_version</code> is incremented by 1</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>POST my_blogs/_update/4
+{
+    "doc" : {
+        "category": "User Stories"
+    }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+    "_index" : "my_blogs",
+    "_type" : "_doc",
+    "_id" : "4",
+    "_version" : 2,
+    "result" : "updated",
+    ...
+}
+</code></pre>
+<h3 id="delete-a-document"><a class="header" href="#delete-a-document">Delete a Document</a></h3>
+<ul>
+<li>Use DELETE to delete an indexed document</li>
+</ul>
+<p>Request:</p>
+<pre><code>DELETE my_blogs/_doc/4
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+"_index": "my_blogs",
+    "_type": "_doc",
+    "_id": "4",
+    "_version": 3,
+    "result": "deleted",
+    "_shards": {
+        "total": 2,
+        "successful": 2,
+        "failed": 0
+    },
+    "_seq_no": 3,
+    "_primary_term": 1
+}
+</code></pre>
+<h3 id="cheaper-in-bulk"><a class="header" href="#cheaper-in-bulk">Cheaper in Bulk</a></h3>
+<ul>
+<li>Use the BULK API to index many documents in a single API call
+<ul>
+<li>increases the indexing speed</li>
+<li>useful if you need to index a data stream such as log events</li>
+</ul>
+</li>
+<li>Four actions
+<ul>
+<li>create, index, update, and delete</li>
+</ul>
+</li>
+<li>The response is a large JSON structure
+<ul>
+<li>returns individual results of each action that was performed</li>
+<li>failure of a single action does not affect the remaining actions</li>
+</ul>
+</li>
+</ul>
+<h3 id="bulk-api-example"><a class="header" href="#bulk-api-example">Bulk API Example</a></h3>
+<ul>
+<li>Newline delimited JSON (<em>NDJSON</em>) structure
+<ul>
+<li>increases the indexing speed</li>
+<li>index, create, update actions expect a newline followed by a JSON object on a single line</li>
+</ul>
+</li>
+</ul>
+<p>Example:</p>
+<pre><code>POST comments/_bulk
+{"index" : {}}
+{"title": "Tuning Go Apps with Metricbeat", "category": "Engineering"}
+{"index" : {"_id":4}}
+{"title": "Elasticsearch Released", "category": "Releases"}
+{"create" : {"_id":5}}
+{"title": "Searching for needle in", "category": "User Stories"}
+{"update" : {"_id":2}}
+{"doc": {"title": "Searching for needle in haystack"}}
+{"delete": {"_id":1}}
+</code></pre>
+<h3 id="upload-a-file-in-kibana"><a class="header" href="#upload-a-file-in-kibana">Upload a File in Kibana</a></h3>
+<ul>
+<li>Quickly upload a log file or delimited CSV, TSV, or JSON file
+<ul>
+<li>used for initial exploration of your data</li>
+<li>not intended as part of production process</li>
+</ul>
+</li>
+</ul>
+<h3 id="understanding-data"><a class="header" href="#understanding-data">Understanding Data</a></h3>
+<ul>
+<li>Most data can be categorized into:
+<ul>
+<li><strong>(relatively) static data</strong>: data set that may grow or change, but slowly or infrequently, like a catalog or inventory of items</li>
+<li><strong>times series data</strong>: event data associated with a moment in time that (<em>usually</em>) grows rapidly, like log files or metrics</li>
+</ul>
+</li>
+<li>Elastic Stack works well with either type of data</li>
+</ul>
+<h2 id="searching-data"><a class="header" href="#searching-data">Searching Data</a></h2>
+<h3 id="different-use-cases"><a class="header" href="#different-use-cases">Different Use Cases</a></h3>
+<ul>
+<li><strong>Search</strong>
+<ul>
+<li>Typically uses human generated, error-prone data</li>
+<li>Often uses free-form text fields for anybody to type anything</li>
+</ul>
+</li>
+<li><strong>Observability</strong>:
+<ul>
+<li>Need to analyze HUGE amounts of data in real-time</li>
+<li>Ingest load can vary</li>
+</ul>
+</li>
+<li><strong>Security</strong>:
+<ul>
+<li>Collect data from MANY different sources with different data formats</li>
+</ul>
+</li>
+</ul>
+<h3 id="query-languages"><a class="header" href="#query-languages">Query Languages</a></h3>
+<p>Several to choose from:</p>
+<ul>
+<li>KQL</li>
+<li>Lucene</li>
+<li>ES|QL</li>
+<li>Query DSL</li>
+<li>Elasticsearch SQL</li>
+<li>EQL</li>
+</ul>
+<h3 id="basic-structure-of-search"><a class="header" href="#basic-structure-of-search">Basic Structure of Search</a></h3>
+<ul>
+<li>In Elasticsearch, search breaks down into two basic parts:
+<ul>
+<li><strong>Queries</strong>
+<ul>
+<li>Which documents meet a specific set of criteria?</li>
+</ul>
+</li>
+<li><strong>Aggregations</strong>
+<ul>
+<li>Tell me something about a group of documents</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="using-query-dsl"><a class="header" href="#using-query-dsl">Using Query DSL</a></h3>
+<ul>
+<li>Send a request using the search API:
+<ul>
+<li>GET &lt;index&gt;/_search</li>
+</ul>
+</li>
+</ul>
+<h3 id="match_all-query"><a class="header" href="#match_all-query">match_all query</a></h3>
+<ul>
+<li>is the default request for the search API
+<ul>
+<li>Every document is a hit for this search</li>
+<li>Elasticsearch returns 10 hits by default</li>
+</ul>
+</li>
+</ul>
+<h3 id="aggregations"><a class="header" href="#aggregations">Aggregations</a></h3>
+<ul>
+<li>Visualizations on a Kibana dashboard are powered by aggregations</li>
+</ul>
+<h4 id="aggregating-data"><a class="header" href="#aggregating-data">Aggregating Data</a></h4>
+<p>Request:</p>
+<pre><code>GET blogs/_search
+{
+  "aggs": {
+    "first_blog": {
+      "min": {
+        "field": "publish_date"
+      }
+    }
+  }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  ...
+  "aggregations": {
+    "first_blog": {
+      "value": 1265658554000,
+      "value_as_string": "2010-02-08T19:49:14.000Z"
+    }
+  }
+}
+</code></pre>
+<h3 id="esql"><a class="header" href="#esql">ES|QL</a></h3>
+<ul>
+<li>A piped query language that delivers advanced search capabilities
+<ul>
+<li>Streamlines searching, aggregating, and visualizing large data sets</li>
+<li>Brings together the capabilties of multiple languages (<em>Query DSL, KQL, EQL, Lucene, SQL, ...</em>)</li>
+</ul>
+</li>
+<li>Powered by a dedicated query engine with concurrent processing
+<ul>
+<li>Designed for performance</li>
+<li>Enhances speed and efficiency irrespective of data source and structure</li>
+</ul>
+</li>
+</ul>
+<h4 id="query"><a class="header" href="#query">Query</a></h4>
+<ul>
+<li>Composed of a series of commands chained together by pipes</li>
+</ul>
+<h4 id="running-an-esql-query-in-dev-tools"><a class="header" href="#running-an-esql-query-in-dev-tools">Running an ES|QL Query in Dev Tools</a></h4>
+<ul>
+<li>Wrap the query in a POST request to the query API
+<ul>
+<li>By default, results are returned as a JSON object</li>
+<li>Use the <code>format</code> option to retrieve the results in alternative formats</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>POST /_query
+{
+"query": "FROM blogs | KEEP publish_date, authors.full_name | SORT (publish_date)"
+}
+</code></pre>
+<p>Request with <code>format</code>:</p>
+<pre><code>POST /_query?format=csv
+{
+  "query": """
+      FROM blogs
+        | KEEP publish_date, authors.first_name, authors.last_name
+        | SORT (publish_date)
+  “””
+}
+</code></pre>
+<h4 id="running-an-esql-query-in-discover"><a class="header" href="#running-an-esql-query-in-discover">Running an ES|QL Query in Discover</a></h4>
+<ol>
+<li>Select <code>Language ES|QL</code> in the <code>Data View</code> pull-down</li>
+<li>Expand the query editor to enter multiline commands</li>
+<li>Click the <code>Run button</code> or type <code>command/alt-Enter</code> to run the query</li>
+</ol>
+<h4 id="examples"><a class="header" href="#examples">Examples</a></h4>
+<pre><code>FROM blogs
+| KEEP publish_date, authors.first_name, authors.last_name
+</code></pre>
+<pre><code>FROM blogs
+| WHERE authors.last_name.keyword == "Kearns"
+| KEEP publish_date, authors.first_name, authors.last_name
+</code></pre>
+<pre><code>FROM blogs
+| STATS count = COUNT(*) BY authors.last_name.keyword
+| SORT count DESC
+| LIMIT 10
+```&lt;!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --&gt;
+
+&lt;div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
+
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2025 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../general/elastic_stack/elasticsearch_engineer/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../general/elastic_stack/elasticsearch_engineer/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,1291 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Data Management - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#data-management">Data Management</a>
+<ul>
+<li><a href="#data-management-concepts">Data Management Concepts</a>
+<ul>
+<li><a href="#managing-data">Managing Data</a></li>
+<li><a href="#index-aliases">Index Aliases</a>
+<ul>
+<li><a href="#scaling-indices">Scaling Indices</a></li>
+<li><a href="#using-aliases">Using Aliases</a></li>
+<li><a href="#an-alias-to-multiple-indices">An Alias to Multiple Indices</a></li>
+</ul>
+</li>
+<li><a href="#index-templates">Index Templates</a>
+<ul>
+<li><a href="#what-are-index-templates">What are Index Templates?</a></li>
+<li><a href="#elements-of-an-index-template">Elements of an Index Template</a></li>
+<li><a href="#defining-an-index-template">Defining an Index Template</a></li>
+<li><a href="#applying-an-index-template">Applying an Index Template</a></li>
+<li><a href="#component-template-example">Component Template Example</a></li>
+<li><a href="#resolving-template-match-conflicts">Resolving Template Match Conflicts</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#data-streams">Data Streams</a>
+<ul>
+<li><a href="#time-series-data-management">Time Series Data Management</a></li>
+<li><a href="#data-streams-1">Data Streams</a></li>
+<li><a href="#backing-indices">Backing Indices</a></li>
+<li><a href="#choosing-the-right-data-stream">Choosing the right Data Stream</a></li>
+<li><a href="#data-stream-naming-convention">Data Stream Naming Convention</a></li>
+<li><a href="#example-use-of-data-streams">Example Use of Data Streams</a></li>
+<li><a href="#creating-a-data-stream">Creating a Data Stream</a>
+<ul>
+<li><a href="#step-1">Step 1</a></li>
+<li><a href="#step-2">Step 2</a></li>
+<li><a href="#step-3">Step 3</a></li>
+</ul>
+</li>
+<li><a href="#rollover-a-data-stream">Rollover a Data Stream</a></li>
+<li><a href="#changing-a-data-stream">Changing a Data Stream</a></li>
+<li><a href="#reindexing-a-data-stream">Reindexing a Data Stream</a></li>
+</ul>
+</li>
+<li><a href="#index-lifecycle-management">Index Lifecycle Management</a>
+<ul>
+<li><a href="#data-tiers">Data Tiers</a>
+<ul>
+<li><a href="#what-is-a-data-tier">What is a data tier?</a></li>
+<li><a href="#overview-of-the-five-data-tiers">Overview of the Five Data Tiers</a></li>
+<li><a href="#data-tiers-nodes-and-indices">Data Tiers, Nodes, and Indices</a></li>
+<li><a href="#configuring-an-index-to-prefer-a-data-tier">Configuring an Index to Prefer a Data Tier</a></li>
+</ul>
+</li>
+<li><a href="#index-lifecycle-management-1">Index Lifecycle Management</a>
+<ul>
+<li><a href="#ilm-actions">ILM Actions</a></li>
+<li><a href="#ilm-policy-example">ILM Policy Example</a></li>
+<li><a href="#define-the-hot-phase">Define the Hot Phase</a></li>
+<li><a href="#define-the-warm-phase">Define the Warm Phase</a></li>
+<li><a href="#define-the-cold-phase">Define the Cold Phase</a></li>
+<li><a href="#define-the-delete-phase">Define the Delete Phase</a></li>
+<li><a href="#applying-the-policy">Applying the Policy</a></li>
+<li><a href="#create-an-index-template">Create an Index Template</a></li>
+<li><a href="#start-indexing-documents">Start Indexing Documents</a></li>
+<li><a href="#troubleshooting-lifecycle-rollovers">Troubleshooting Lifecycle Rollovers</a></li>
+<li><a href="#agent-and-ilm">Agent and ILM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#searchable-snapshots">Searchable Snapshots</a>
+<ul>
+<li><a href="#cost-effective-storage">Cost Effective Storage</a></li>
+<li><a href="#snapshots">Snapshots</a>
+<ul>
+<li><a href="#disaster-recovery">Disaster Recovery</a></li>
+<li><a href="#snapshot-and-restore">Snapshot and Restore</a></li>
+<li><a href="#types-of-repos">Types of Repos</a></li>
+<li><a href="#setting-up-a-repo">Setting Up a Repo</a></li>
+<li><a href="#taking-a-snapshot-manually">Taking a Snapshot Manually</a></li>
+<li><a href="#automating-snapshots">Automating Snapshots</a></li>
+<li><a href="#restoring-from-a-snapshot">Restoring from a Snapshot</a></li>
+</ul>
+</li>
+<li><a href="#searchable-snapshots-1">Searchable Snapshots</a>
+<ul>
+<li><a href="#how-searchable-snapshots-work">How Searchable Snapshots Work</a></li>
+<li><a href="#setting-up-searchable-snapshots">Setting up Searchable Snapshots</a></li>
+<li><a href="#add-searchable-snapshots-to-ilm">Add Searchable Snapshots to ILM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="data-management"><a class="header" href="#data-management">Data Management</a></h1>
+<h2 id="data-management-concepts"><a class="header" href="#data-management-concepts">Data Management Concepts</a></h2>
+<h3 id="managing-data"><a class="header" href="#managing-data">Managing Data</a></h3>
+<ul>
+<li>Data management needs differ depending on the type of data you are collecting:</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Static</th><th>Time Series Data</th></tr></thead><tbody>
+<tr><td>Data grows slowly</td><td>Data grows fast</td></tr>
+<tr><td>Updates may happen</td><td>Updates never happen</td></tr>
+<tr><td>Old data is read frequently</td><td>Old data is read infrequently</td></tr>
+</tbody></table>
+</div>
+<h3 id="index-aliases"><a class="header" href="#index-aliases">Index Aliases</a></h3>
+<h4 id="scaling-indices"><a class="header" href="#scaling-indices">Scaling Indices</a></h4>
+<ul>
+<li>Indices scaly by adding more shards
+<ul>
+<li>increasing the number of shards of an index is expensive</li>
+</ul>
+</li>
+<li><strong>Solution</strong>: create a new index</li>
+</ul>
+<h4 id="using-aliases"><a class="header" href="#using-aliases">Using Aliases</a></h4>
+<ul>
+<li>Use index aliases to simplify your access to the growing number of indices</li>
+</ul>
+<h4 id="an-alias-to-multiple-indices"><a class="header" href="#an-alias-to-multiple-indices">An Alias to Multiple Indices</a></h4>
+<ul>
+<li>Use the <code>_aliases</code> endpoint to create an alias
+<ul>
+<li>specify the <code>write index</code> using <code>is_write_index</code></li>
+</ul>
+</li>
+<li>Define an alias at index creation</li>
+</ul>
+<pre><code>POST _aliases
+{
+    "actions": [ {
+        "add": {
+            "index": "my_logs-*",
+            "alias": "my_logs"
+        } },
+    {
+        "add": {
+            "index": "my_logs-2021-07",
+            "alias": "my_logs",
+            "is_write_index": true
+} }] }
+</code></pre>
+<h3 id="index-templates"><a class="header" href="#index-templates">Index Templates</a></h3>
+<h4 id="what-are-index-templates"><a class="header" href="#what-are-index-templates">What are Index Templates?</a></h4>
+<ul>
+<li>If you need to create multiple indices with the same settings and mappings, use an index template
+<ul>
+<li>templates match an index pattern</li>
+<li>if a new index matches the pattern, then the template is applied</li>
+</ul>
+</li>
+</ul>
+<h4 id="elements-of-an-index-template"><a class="header" href="#elements-of-an-index-template">Elements of an Index Template</a></h4>
+<ul>
+<li>An index template can contain the following sections:
+<ul>
+<li>component templates</li>
+<li>settings</li>
+<li>mappings</li>
+<li>aliases</li>
+</ul>
+</li>
+<li>Component templates are reusable building blocks that can contain:
+<ul>
+<li>settings, mappings or aliases</li>
+<li>components are reused across multiple templates</li>
+</ul>
+</li>
+</ul>
+<h4 id="defining-an-index-template"><a class="header" href="#defining-an-index-template">Defining an Index Template</a></h4>
+<ul>
+<li>This logs-template:
+<ul>
+<li>overrides the default setting of 1 replica</li>
+<li>for any new indices with a name that begins with logs:</li>
+</ul>
+</li>
+</ul>
+<pre><code>PUT _index_template/logs-template
+{
+    "index_patterns": [ "logs*" ],
+    "template": {
+        "settings": {
+            "number_of_replicas": 2
+        }
+    }
+}
+</code></pre>
+<h4 id="applying-an-index-template"><a class="header" href="#applying-an-index-template">Applying an Index Template</a></h4>
+<ul>
+<li>Create an index that matches the index pattern of one of your index templates:</li>
+</ul>
+<pre><code>{
+    "logs1" : {
+        "settings" : {
+            "index" : {
+                ...
+                "number_of_replicas" : 2,
+                ...
+            }
+        }
+    }
+}
+</code></pre>
+<h4 id="component-template-example"><a class="header" href="#component-template-example">Component Template Example</a></h4>
+<ul>
+<li>A common setting across many indices may be to auto expand replica shards as more nodes become available
+<ul>
+<li>put this setting into a component template:</li>
+</ul>
+</li>
+</ul>
+<p><img src="../../../images/es_data_management1.png" alt="data management 1" /></p>
+<ul>
+<li>Use the component in an index template:</li>
+</ul>
+<p><img src="../../../images/es_data_management2.png" alt="data management 2" /></p>
+<h4 id="resolving-template-match-conflicts"><a class="header" href="#resolving-template-match-conflicts">Resolving Template Match Conflicts</a></h4>
+<ul>
+<li>One and only one template will be applied to a newly created index</li>
+<li>If more than one template defines a matching index pattern, the priority setting is used to determine which template applies
+<ul>
+<li>the highest priority is applied, others are not used</li>
+<li>set a priority over 200 to override auto-created index templates</li>
+<li>use the <code>_simulate</code> tool to test how an index would match</li>
+</ul>
+</li>
+</ul>
+<pre><code>POST /_index_template/_simulate_index/logs2
+</code></pre>
+<h2 id="data-streams"><a class="header" href="#data-streams">Data Streams</a></h2>
+<h3 id="time-series-data-management"><a class="header" href="#time-series-data-management">Time Series Data Management</a></h3>
+<ul>
+<li>Time series data typically grows quickly and is almost never updated</li>
+</ul>
+<h3 id="data-streams-1"><a class="header" href="#data-streams-1">Data Streams</a></h3>
+<ul>
+<li>A data stream lets you store time-series data across multiple indices, while giving you a single named resource for requests
+<ul>
+<li>indexing and search requests are sent to the data stream</li>
+<li>the stream routes the request to the appropriate backing index</li>
+</ul>
+</li>
+</ul>
+<h3 id="backing-indices"><a class="header" href="#backing-indices">Backing Indices</a></h3>
+<ul>
+<li>Every data stream is made up of hidden backing indices
+<ul>
+<li>with a single write index</li>
+</ul>
+</li>
+<li>A rollover creates a new backing index
+<ul>
+<li>which becomes the stream's new write index</li>
+</ul>
+</li>
+</ul>
+<h3 id="choosing-the-right-data-stream"><a class="header" href="#choosing-the-right-data-stream">Choosing the right Data Stream</a></h3>
+<ul>
+<li>Use the <code>index.mode</code> setting to control how your time series data will be ingested
+<ul>
+<li>Optimize the storage of your documents</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th><code>index.mode</code></th><th>Use case</th><th><code>_source</code></th><th>Storage saving</th></tr></thead><tbody>
+<tr><td>standard</td><td>for default settings</td><td>persisted</td><td>-</td></tr>
+<tr><td>time_series</td><td>for storing metrics</td><td>synthetic</td><td>up to 70%</td></tr>
+<tr><td>logsdb</td><td>for storing logs</td><td>synthetic</td><td>~ 2.5 times</td></tr>
+</tbody></table>
+</div>
+<h3 id="data-stream-naming-convention"><a class="header" href="#data-stream-naming-convention">Data Stream Naming Convention</a></h3>
+<ul>
+<li>Data streams are named by:
+<ul>
+<li><strong>type</strong>: to describe the generic data type</li>
+<li><strong>dataset</strong>: to describe the specific subset of data</li>
+<li><strong>namespace</strong>: for user-specific details</li>
+</ul>
+</li>
+<li>Each data stream should include <code>constant_keyword</code> fields for:
+<ul>
+<li><code>data_stream.type</code></li>
+<li><code>data_stream.dataset</code></li>
+<li><code>data_stream.namespace</code></li>
+</ul>
+</li>
+<li><code>constant_keyword</code> has the same value for all documents</li>
+</ul>
+<h3 id="example-use-of-data-streams"><a class="header" href="#example-use-of-data-streams">Example Use of Data Streams</a></h3>
+<ul>
+<li>Log data separated by app and env</li>
+<li>Each data stream can have separate lifecycles</li>
+<li>Different datasets can have different fields</li>
+</ul>
+<pre><code>GET logs-*-*/_search
+{
+    "query": {
+        "bool": {
+            "filter": {
+                "term": {
+                    "data_stream.namespace": "prod"
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="creating-a-data-stream"><a class="header" href="#creating-a-data-stream">Creating a Data Stream</a></h3>
+<ul>
+<li><strong>Step 1</strong>: create component templates
+<ul>
+<li>make sure you have a <code>@timestamp</code> field</li>
+</ul>
+</li>
+<li><strong>Step 2</strong>: create a data stream-enabled index template</li>
+<li><strong>Step 3</strong>: create the data stream by indexing documents</li>
+</ul>
+<h4 id="step-1"><a class="header" href="#step-1">Step 1</a></h4>
+<pre><code>PUT _component_template/my-mappings
+{
+    "template": {
+        "mappings": {
+            "properties": {
+                "@timestamp": {
+                    "type": "date",
+                    "format": "date_optional_time||epoch_millis"
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<h4 id="step-2"><a class="header" href="#step-2">Step 2</a></h4>
+<pre><code>PUT _index_template/my-index-template
+{
+    "index_patterns": ["logs-myapp-default"],
+    "data_stream": { },
+    "composed_of": [ "my-mappings"],
+    "priority": 500
+}
+</code></pre>
+<h4 id="step-3"><a class="header" href="#step-3">Step 3</a></h4>
+<ul>
+<li>Use <code>POST &lt;stream&gt;/_doc</code> or <code>PUT &lt;stream&gt;/_create/&lt;doc_id&gt;</code>
+<ul>
+<li>if you use <code>_bulk</code>, you must use the <code>create</code> action</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>POST logs-myapp-default/_doc
+{
+    "@timestamp": "2099-05-06T16:21:15.000Z",
+    "message": "192.0.2.42 -[06/May/2099:16:21:15] \"GET /images/bg.jp..."
+}
+</code></pre>
+<p>Response:</p>
+<pre><code>{
+    "_index": ".ds-logs-myapp-default-2024.10.22-000001",
+    "_id": "XZPRtZIBS7arFsx0_FAp",
+    ...
+}
+</code></pre>
+<h3 id="rollover-a-data-stream"><a class="header" href="#rollover-a-data-stream">Rollover a Data Stream</a></h3>
+<ul>
+<li>The rollover API creates a new index for a data stream
+<ul>
+<li>Every new document will be indexed into the new index</li>
+<li>You cannot add new documents to other backing indices</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>POST logs-myapp-default/_rollover
+</code></pre>
+<p>Response:</p>
+<pre><code>{
+    ...
+    "old_index": ".ds-logs-myapp-default-2024.10.22-000001",
+    "new_index": ".ds-logs-myapp-default-2024.10.22-000002",
+    ...
+}
+</code></pre>
+<h3 id="changing-a-data-stream"><a class="header" href="#changing-a-data-stream">Changing a Data Stream</a></h3>
+<ul>
+<li>Changes should be made to the index template associated with the stream
+<ul>
+<li>new backing indices will get the changes when they are created</li>
+<li>older backing indices can have limited changes applied</li>
+</ul>
+</li>
+<li>Changes to static mappings still require a reindex</li>
+<li>Before reindexing, use the resolve API to check for conflicting names:</li>
+</ul>
+<pre><code>GET /_resolve/index/logs-myapp-new*
+</code></pre>
+<h3 id="reindexing-a-data-stream"><a class="header" href="#reindexing-a-data-stream">Reindexing a Data Stream</a></h3>
+<ul>
+<li>Set up a new data stream template
+<ul>
+<li>use the data stream API to create an empty data stream:</li>
+</ul>
+</li>
+</ul>
+<pre><code>PUT /_data_stream/logs-myapp-new
+</code></pre>
+<ul>
+<li>Reindex with <code>op_type</code> of <code>create</code>:
+<ul>
+<li>can also use single backing indices to preserve order</li>
+</ul>
+</li>
+</ul>
+<pre><code>POST /_reindex
+{
+    "source": {
+        "index": "logs-myapp-default"
+    },
+    "dest": {
+        "index": "logs-myapp-new",
+        "op_type": "create"
+    }
+}
+</code></pre>
+<h2 id="index-lifecycle-management"><a class="header" href="#index-lifecycle-management">Index Lifecycle Management</a></h2>
+<h3 id="data-tiers"><a class="header" href="#data-tiers">Data Tiers</a></h3>
+<h4 id="what-is-a-data-tier"><a class="header" href="#what-is-a-data-tier">What is a data tier?</a></h4>
+<ul>
+<li>A data tier is a collection of nodes with the same data role
+<ul>
+<li>that typically share the same hardware profile</li>
+</ul>
+</li>
+<li>There are five types of data tiers:
+<ul>
+<li>content</li>
+<li>hot</li>
+<li>warm</li>
+<li>cold</li>
+<li>frozen</li>
+</ul>
+</li>
+</ul>
+<h4 id="overview-of-the-five-data-tiers"><a class="header" href="#overview-of-the-five-data-tiers">Overview of the Five Data Tiers</a></h4>
+<ul>
+<li>The content tier is useful for static datasets</li>
+<li>Implementing a hot -&gt; warm -&gt; cold -&gt; frozen architecture can be achieved using the following data tiers:
+<ul>
+<li><strong>hot tier</strong>: have the fastes storage for writing data and for frequent searching</li>
+<li><strong>warm tier</strong>: for read-only data that is searched less often</li>
+<li><strong>cold tier</strong>: for data that is searched sparingly</li>
+<li><strong>frozen tier</strong>: for data that is accesses rarely and never updated</li>
+</ul>
+</li>
+</ul>
+<h4 id="data-tiers-nodes-and-indices"><a class="header" href="#data-tiers-nodes-and-indices">Data Tiers, Nodes, and Indices</a></h4>
+<ul>
+<li>Every node is all data tiers by default
+<ul>
+<li>change using the <code>node.roles</code> parameter</li>
+<li>node roles are handled for you automatically on Elastic Cloud</li>
+</ul>
+</li>
+<li>Move indices to colder tiers as the data gets older
+<ul>
+<li>define an index lifecycle management policy to manage this</li>
+</ul>
+</li>
+</ul>
+<h4 id="configuring-an-index-to-prefer-a-data-tier"><a class="header" href="#configuring-an-index-to-prefer-a-data-tier">Configuring an Index to Prefer a Data Tier</a></h4>
+<ul>
+<li>Set the data tier preference of an index using the <code>routing.allocation.include._tier_preference</code> property
+<ul>
+<li><code>data_content</code> is the default for all indices</li>
+<li><code>data_hot</code> is the default for all data streams</li>
+<li>you can update the property at any time</li>
+<li>ILM can manage this setting for you</li>
+</ul>
+</li>
+</ul>
+<pre><code>PUT logs-2021-03
+{
+    "settings": {
+        "index.routing.allocation.include._tier_preference" : "data_hot"
+    }
+}
+</code></pre>
+<h3 id="index-lifecycle-management-1"><a class="header" href="#index-lifecycle-management-1">Index Lifecycle Management</a></h3>
+<p><img src="../../../images/es_data_management3.png" alt="data management 3" /></p>
+<h4 id="ilm-actions"><a class="header" href="#ilm-actions">ILM Actions</a></h4>
+<ul>
+<li>ILM consists of policies that trigger actions, such as:</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Action</th><th>Description</th></tr></thead><tbody>
+<tr><td>rollover</td><td>create a new index based on age, size, or doc count</td></tr>
+<tr><td>shrink</td><td>reduce the number of primary shards</td></tr>
+<tr><td>force merge</td><td>optimize storage space</td></tr>
+<tr><td>searchable snapshot</td><td>saves memory on rarely used indices</td></tr>
+<tr><td>delete</td><td>permanently remove an index</td></tr>
+</tbody></table>
+</div>
+<h4 id="ilm-policy-example"><a class="header" href="#ilm-policy-example">ILM Policy Example</a></h4>
+<ul>
+<li>During the hot phase you might:
+<ul>
+<li>create a new index every two weeks</li>
+</ul>
+</li>
+<li>In the warm phase you might:
+<ul>
+<li>make the index read-only and move to warm for one week</li>
+</ul>
+</li>
+<li>In the cold phase you might:
+<ul>
+<li>convert to a fully-mounted index, decrease the number of replicas, and move to cold for three weeks</li>
+</ul>
+</li>
+<li>In the delete phase:
+<ul>
+<li>the only action allowed is to delete the 28-days-old index</li>
+</ul>
+</li>
+</ul>
+<h4 id="define-the-hot-phase"><a class="header" href="#define-the-hot-phase">Define the Hot Phase</a></h4>
+<ul>
+<li>You want indices in the hot phase for two weeks:</li>
+</ul>
+<pre><code>PUT _ilm/policy/my-hwcd-policy
+{
+    "policy": {
+        "phases": {
+            "hot": {
+                "actions": {
+                    "rollover": {
+                        "max_age": "14d"
+                    }
+                }
+            },
+</code></pre>
+<h4 id="define-the-warm-phase"><a class="header" href="#define-the-warm-phase">Define the Warm Phase</a></h4>
+<ul>
+<li>You want the old index to move to the warm tier immediately and set the index as read-only:
+<ul>
+<li>data age is calculated from the time of rollover</li>
+</ul>
+</li>
+</ul>
+<pre><code>            "warm": {
+                "min_age": "0d",
+                "actions": {
+                    "readonly": {}
+                }
+            },
+</code></pre>
+<h4 id="define-the-cold-phase"><a class="header" href="#define-the-cold-phase">Define the Cold Phase</a></h4>
+<ul>
+<li>After one week of warm, move the index to the cold phase, and convert the index:</li>
+</ul>
+<pre><code>            "cold": {
+                "min_age": "7d",
+                "actions": {
+                    "searchable_snapshot" : {
+                        "snapshot_repository" : "my_snapshot"
+                    }       
+                }
+            } },
+</code></pre>
+<h4 id="define-the-delete-phase"><a class="header" href="#define-the-delete-phase">Define the Delete Phase</a></h4>
+<ul>
+<li>Delete the data four weeks after rollover:
+<ul>
+<li>which means the documents lived for 14 days in hot</li>
+<li>then 7 days in warm</li>
+<li>then 21 days in cold</li>
+</ul>
+</li>
+</ul>
+<pre><code>            "delete": {
+                "min_age": "28d",
+                "actions": {
+                    "delete": {}
+                }
+            }
+</code></pre>
+<h4 id="applying-the-policy"><a class="header" href="#applying-the-policy">Applying the Policy</a></h4>
+<ul>
+<li>Create a component template</li>
+<li>Link you ILM policy using the setting:
+<ul>
+<li><code>index.lifecycle.name</code></li>
+</ul>
+</li>
+</ul>
+<pre><code>PUT _component_template/my-ilm-settings
+{
+    "template": {
+        "settings": {
+            "index.lifecycle.name": "my-hwcd-policy"
+        }
+    }
+}
+</code></pre>
+<h4 id="create-an-index-template"><a class="header" href="#create-an-index-template">Create an Index Template</a></h4>
+<ul>
+<li>Use other components relevant to your stream</li>
+</ul>
+<pre><code>PUT _index_template/my-ilm-index-template
+{
+    "index_patterns": ["my-data-stream"],
+    "data_stream": { },
+    "composed_of": [ "my-mappings", "my-ilm-settings"],
+    "priority": 500
+}
+</code></pre>
+<h4 id="start-indexing-documents"><a class="header" href="#start-indexing-documents">Start Indexing Documents</a></h4>
+<ul>
+<li>ILM takes over from here</li>
+<li>When a rollover happens, the number of indices is incremented
+<ul>
+<li>the new index is set as the write index of the data stream</li>
+<li>old indices will automatically move to other tiers</li>
+</ul>
+</li>
+</ul>
+<h4 id="troubleshooting-lifecycle-rollovers"><a class="header" href="#troubleshooting-lifecycle-rollovers">Troubleshooting Lifecycle Rollovers</a></h4>
+<ul>
+<li>If an index is not healthy, it will not move to the next phase</li>
+<li>The default poll interval for a cluster is 10 minutes
+<ul>
+<li>can change with <code>indices.lifecycle.poll_interval</code></li>
+</ul>
+</li>
+<li>Check the server log for errors</li>
+<li>Make sure you have the appropriate data tiers for migration</li>
+<li><strong>Reminder</strong>: use a template to apply a policy to new indices</li>
+<li>Get detailed information about ILM status with:</li>
+</ul>
+<pre><code>GET &lt;data-stream&gt;/_ilm/explain
+</code></pre>
+<h4 id="agent-and-ilm"><a class="header" href="#agent-and-ilm">Agent and ILM</a></h4>
+<ul>
+<li>Agent uses ILM policies to manage rollover</li>
+<li>By default, Agent policies:
+<ul>
+<li>remain in the host phase forever</li>
+<li>never delete</li>
+<li>indices are rolled over after 30 days or 50GB</li>
+</ul>
+</li>
+<li>The default Agent policies can be edited with Kibana</li>
+</ul>
+<h2 id="searchable-snapshots"><a class="header" href="#searchable-snapshots">Searchable Snapshots</a></h2>
+<h3 id="cost-effective-storage"><a class="header" href="#cost-effective-storage">Cost Effective Storage</a></h3>
+<ul>
+<li>As your data streams and time series data grow, your storage and memory needs increase
+<ul>
+<li>at the same time, the utility of that older data decreases</li>
+</ul>
+</li>
+<li>You could delete this older data
+<ul>
+<li>but if it remains valuable, it is preferable to keep it available</li>
+</ul>
+</li>
+<li>There is an action available called searchable snapshot</li>
+</ul>
+<h3 id="snapshots"><a class="header" href="#snapshots">Snapshots</a></h3>
+<h4 id="disaster-recovery"><a class="header" href="#disaster-recovery">Disaster Recovery</a></h4>
+<ul>
+<li>You already know about replica shards:
+<ul>
+<li>they provide redundant copies of your documents</li>
+<li>that is not the same as a backup</li>
+</ul>
+</li>
+<li>Replicas do not protect you against catastrophic failure
+<ul>
+<li>you will need to keep a complete backup of your data</li>
+</ul>
+</li>
+</ul>
+<h4 id="snapshot-and-restore"><a class="header" href="#snapshot-and-restore">Snapshot and Restore</a></h4>
+<ul>
+<li>Snapshot and restore allows you to create and manage backups taken from a running ES cluster
+<ul>
+<li>takes the current state and data in your cluster and saves it to a repository</li>
+</ul>
+</li>
+<li>Repos can be on a local shared filed system or in the cloud
+<ul>
+<li>the ES Service performs snapshots automatically</li>
+</ul>
+</li>
+</ul>
+<h4 id="types-of-repos"><a class="header" href="#types-of-repos">Types of Repos</a></h4>
+<ul>
+<li>The backup process starts with the creation of a repository
+<ul>
+<li>different types are supported</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Shared file system</td><td>define <code>path.repo</code> in every node</td></tr>
+<tr><td>Read-only URL</td><td>used when multiple clusters share a repo</td></tr>
+<tr><td>AWS S3</td><td>for AWS S3 repos</td></tr>
+<tr><td>Azure</td><td>for Microsoft Azure Blob storage</td></tr>
+<tr><td>GCS</td><td>for Google Cloud Storage</td></tr>
+<tr><td>repository-hdfs plugin</td><td>store snapshots in Hadoop</td></tr>
+<tr><td>Source-only repo</td><td>take minimal snapshots</td></tr>
+</tbody></table>
+</div>
+<h4 id="setting-up-a-repo"><a class="header" href="#setting-up-a-repo">Setting Up a Repo</a></h4>
+<ul>
+<li>Cloud deployments come with free repos preconfigured</li>
+<li>Use Kibana to register a repo</li>
+</ul>
+<h4 id="taking-a-snapshot-manually"><a class="header" href="#taking-a-snapshot-manually">Taking a Snapshot Manually</a></h4>
+<ul>
+<li>Once the repo is configured, you can take a snapshot
+<ul>
+<li>using the <code>_snapshot</code> endpoint or the UI</li>
+<li>snapshots are a "point-in-time" copy of the data and incremental</li>
+</ul>
+</li>
+<li>Can back up only certain indices</li>
+<li>Can include cluster state</li>
+</ul>
+<pre><code>PUT _snapshot/my_repo/my_logs_snapshot_1
+{
+    "indices": "logs-*",
+    "ignore_unavailable": true
+}
+</code></pre>
+<h4 id="automating-snapshots"><a class="header" href="#automating-snapshots">Automating Snapshots</a></h4>
+<ul>
+<li>The <code>_snapshot</code> endpoint can be called manually
+<ul>
+<li>every time you want to take a snapshot</li>
+<li>at regular invervals using an external tool</li>
+</ul>
+</li>
+<li>Or, you can automate snapshots with Snapshot Lifecycle Management (<em>SLM</em>) policies
+<ul>
+<li>policies can be created in Kibana</li>
+<li>or using the <code>_slm</code> API</li>
+</ul>
+</li>
+</ul>
+<h4 id="restoring-from-a-snapshot"><a class="header" href="#restoring-from-a-snapshot">Restoring from a Snapshot</a></h4>
+<ul>
+<li>Use the <code>_restore</code> endpoint on the snapshot ID to restore all indices from that snapshot:</li>
+</ul>
+<pre><code>POST _snapshot/my_repo/my_logs_snapshot_1/_restore
+</code></pre>
+<ul>
+<li>Can also restore using Kibana</li>
+</ul>
+<h3 id="searchable-snapshots-1"><a class="header" href="#searchable-snapshots-1">Searchable Snapshots</a></h3>
+<ul>
+<li>There is an action called searchable snapshots</li>
+<li>Benefits include:
+<ul>
+<li>search old data in a very cost-effective fashion</li>
+<li>reduce storage costs</li>
+<li>use the same mechanism you are aleady using</li>
+</ul>
+</li>
+</ul>
+<h4 id="how-searchable-snapshots-work"><a class="header" href="#how-searchable-snapshots-work">How Searchable Snapshots Work</a></h4>
+<ul>
+<li>Searching a searchable snapshot index is the same as searching any other index
+<ul>
+<li>when a snapshot of an index is searched, the index must get mounted locally in a temporary index</li>
+<li>the shards of the index are allocated to data nodes in the cluster</li>
+</ul>
+</li>
+</ul>
+<h4 id="setting-up-searchable-snapshots"><a class="header" href="#setting-up-searchable-snapshots">Setting up Searchable Snapshots</a></h4>
+<ul>
+<li>In the cold or frozen phase, you configure a searchable snapshot by selecting a registered repository</li>
+</ul>
+<h4 id="add-searchable-snapshots-to-ilm"><a class="header" href="#add-searchable-snapshots-to-ilm">Add Searchable Snapshots to ILM</a></h4>
+<ul>
+<li>Edit your ILM policy to add a searchable snapshot to your cold or frozen phase
+<ul>
+<li>ILM will automatically handle the index mounting</li>
+<li>the hot and cold phase uses fully mounted indices</li>
+<li>the frozen phase uses partially mounted indices</li>
+</ul>
+</li>
+<li>If the delete phase is active, it will delete the searchable snapshot by default:
+<ul>
+<li>turn off with <code>"delete_searchable_snapshot": false</code></li>
+</ul>
+</li>
+<li>If your policy applies to a data stream, the searchable snapshot will be included in searches by default<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></li>
+</ul>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

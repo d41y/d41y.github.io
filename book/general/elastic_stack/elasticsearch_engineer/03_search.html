@@ -1,0 +1,1289 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Search - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#search">Search</a>
+<ul>
+<li><a href="#full-text-queries">Full Text Queries</a>
+<ul>
+<li><a href="#query-dsl-overview">Query DSL Overview</a></li>
+<li><a href="#match-query">match Query</a></li>
+<li><a href="#match-query---using-and-logic">match Query - Using AND Logic</a></li>
+<li><a href="#match-query---return-more-relevant-results">match Query - Return More Relevant Results</a></li>
+<li><a href="#match-query---searching-for-terms">match Query - Searching for Terms</a></li>
+<li><a href="#match_phrase-query">match_phrase Query</a></li>
+<li><a href="#searching-multiple-fields">Searching Multiple Fields</a></li>
+<li><a href="#multi_match-and-scoring">multi_match and Scoring</a></li>
+<li><a href="#multi_match-and-phrases">multi_match and Phrases</a></li>
+<li><a href="#the-response">The Response</a>
+<ul>
+<li><a href="#score">Score</a></li>
+<li><a href="#query-response">Query Response</a></li>
+<li><a href="#changing-the-response">Changing the Response</a></li>
+<li><a href="#sorting">Sorting</a></li>
+<li><a href="#retrieve-selected-fields">Retrieve Selected Fields</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#term-level-queries">Term-level Queries</a>
+<ul>
+<li><a href="#matching-exact-terms">Matching Exact Terms</a></li>
+<li><a href="#term-level-queries-1">Term-level Queries</a></li>
+<li><a href="#matching-on-a-keyword-field">Matching on a Keyword Field</a></li>
+<li><a href="#range-query">range Query</a></li>
+<li><a href="#date-math">Date Math</a></li>
+<li><a href="#range-query---date-math-example">range Query - Date Math Example</a></li>
+<li><a href="#exists-query">exists Query</a></li>
+<li><a href="#async-search">Async Search</a>
+<ul>
+<li><a href="#retrieve-the-results">Retrieve the Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#combining-queries">Combining Queries</a>
+<ul>
+<li><a href="#combining-queries-using-boolean-logic">Combining Queries using Boolean Logic</a></li>
+<li><a href="#bool-query">bool Query</a>
+<ul>
+<li><a href="#must-clause">must Clause</a></li>
+<li><a href="#filter-clause">filter Clause</a></li>
+<li><a href="#must_not-clause">must_not Clause</a></li>
+<li><a href="#should-clause">should Clause</a></li>
+</ul>
+</li>
+<li><a href="#comparing-query-and-filter-contexts">Comparing Query and Filter Contexts</a></li>
+<li><a href="#query-vs-filter-context---ranking">Query vs. Filter Context - Ranking</a>
+<ul>
+<li><a href="#query-context">Query Context</a></li>
+<li><a href="#filter-context">Filter Context</a></li>
+</ul>
+</li>
+<li><a href="#bool-query-summary">bool Query Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="search"><a class="header" href="#search">Search</a></h1>
+<h2 id="full-text-queries"><a class="header" href="#full-text-queries">Full Text Queries</a></h2>
+<h3 id="query-dsl-overview"><a class="header" href="#query-dsl-overview">Query DSL Overview</a></h3>
+<ul>
+<li>A search language for Elasticsearch
+<ul>
+<li>query</li>
+<li>aggregate</li>
+<li>sort</li>
+<li>filter</li>
+<li>manipulate responses</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match": {
+            "title": "community team"
+        }
+    }
+}
+</code></pre>
+<h3 id="match-query"><a class="header" href="#match-query">match Query</a></h3>
+<ul>
+<li>Returns documents that match a provided text, number, date, or boolean value</li>
+<li>By default, the match query
+<ul>
+<li>uses OR logic if multiple terms appear in the search query</li>
+<li>is case-insensitive</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match": {
+            "title":
+                "community team"
+        }
+    }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code>"title" : "Meet the team behind the Elastic Community Conference"
+"title" : "Introducing Endgame Red Team Automation"
+"title" : "Welcome Insight.io to the Elastic Team"
+"title" : "Welcome Prelert to the Elastic Team"
+. . .
+</code></pre>
+<h3 id="match-query---using-and-logic"><a class="header" href="#match-query---using-and-logic">match Query - Using AND Logic</a></h3>
+<ul>
+<li>The operator parameter
+<ul>
+<li>defines the logic to interpret text</li>
+<li>specify OR or AND</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match": {
+            "title": {
+                "query": "community team",
+                "operator": "and"
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="match-query---return-more-relevant-results"><a class="header" href="#match-query---return-more-relevant-results">match Query - Return More Relevant Results</a></h3>
+<ul>
+<li>The OR or AND options might be too wide or too strict</li>
+<li>Use the <code>minimum_should_match</code> parameter
+<ul>
+<li>specifies the minimum number of clauses that must match</li>
+<li>trims the long tail of less relevant results</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match": {
+            "title": {
+                "query": "elastic community team",
+                "minimum_should_match": 2
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="match-query---searching-for-terms"><a class="header" href="#match-query---searching-for-terms">match Query - Searching for Terms</a></h3>
+<ul>
+<li>The <code>match</code> query does not consider
+<ul>
+<li>the order of terms</li>
+<li>how far apart the terms are</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match": {
+            "title": {
+                "query": "community team",
+                "operator": "and"
+        }
+    }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code>"title" : "Meet the team behind the Elastic
+Community Conference"
+</code></pre>
+<h3 id="match_phrase-query"><a class="header" href="#match_phrase-query">match_phrase Query</a></h3>
+<ul>
+<li>The <code>match_phrase</code> searches for the exact sequence of terms specified in the query
+<ul>
+<li>terms in the phrase must appear in the exact order</li>
+<li>use the <code>slop</code> parameter to specify how far apart terms are allowed for it to be considered a match (<em>default is 0</em>)</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match_phrase": {
+            "title": "team community"
+        }
+    }
+}
+</code></pre>
+<p>Request:</p>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match_phrase": {
+            "title":{
+                "query": "team community",
+                "slop": 3
+        }
+    }
+}}
+</code></pre>
+<h3 id="searching-multiple-fields"><a class="header" href="#searching-multiple-fields">Searching Multiple Fields</a></h3>
+<ul>
+<li>Use the <code>multi_match</code> query
+<ul>
+<li>specify the comma-delimited list of fields using square brackets</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "multi_match": {
+            "query": "agent",
+            "fields": [
+                "title",
+                "content"
+            ]
+        }
+    }
+}
+</code></pre>
+<h3 id="multi_match-and-scoring"><a class="header" href="#multi_match-and-scoring">multi_match and Scoring</a></h3>
+<ul>
+<li>By default, the best scoring field will determine the score
+<ul>
+<li>set <code>type</code> to <code>most_fields</code> to let the score be the sum of the scores of the individual fields instead</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "multi_match": {
+            "type": "most_fields",
+            "query": "agent",
+            "fields": [
+                "title",
+                "content"
+            ]
+        }
+    }
+}
+</code></pre>
+<blockquote>
+<p>[!TIP]
+The more fields contain the word "agent", the highter the score.</p>
+</blockquote>
+<h3 id="multi_match-and-phrases"><a class="header" href="#multi_match-and-phrases">multi_match and Phrases</a></h3>
+<ul>
+<li>You can search for phrases with the multi_match query
+<ul>
+<li>set <code>type</code> to <code>phrase</code></li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "multi_match": {
+            "type": "phrase",
+            "query": "elastic agent",
+            "fields": [
+                "title",
+                "content"
+            ]
+        }
+    }
+}
+</code></pre>
+<h3 id="the-response"><a class="header" href="#the-response">The Response</a></h3>
+<h4 id="score"><a class="header" href="#score">Score</a></h4>
+<ul>
+<li>Calculate a <code>score</code> for each document that is a hit
+<ul>
+<li>ranks search results based on relevance</li>
+<li>represents how well a document matches a given search query</li>
+</ul>
+</li>
+<li>BM25
+<ul>
+<li>default scoring algorithm</li>
+<li>determines a document's score using:
+<ul>
+<li><strong>TF (<em>term frequency</em>)</strong>: the more a term appears in a field, the more important it is</li>
+<li><strong>IDF (<em>inverse document frequency</em>)</strong>: The more documents that contain the term, the less important the term is</li>
+<li><strong>field length</strong>: shorter fields are more likely to be relevant than longer fields</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="query-response"><a class="header" href="#query-response">Query Response</a></h4>
+<ul>
+<li>by default the query response will return:
+<ul>
+<li>the top 10 documents that match the query</li>
+<li>sorted by <code>_score</code> in descending order</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "from": 0,
+    "size": 10,
+    "sort": {
+        "_score": {
+        "order": "desc"
+        }
+    },
+    "query": {
+        ...
+    }
+}
+</code></pre>
+<h4 id="changing-the-response"><a class="header" href="#changing-the-response">Changing the Response</a></h4>
+<ul>
+<li>Set <code>from</code> and <code>size</code> to paginate through the search results</li>
+<li>Set <code>sort</code> to sort on one or more fields instead of <code>_score</code></li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "from": 100,
+    "size": 50,
+    "sort": [
+        {
+            "publish_date": {
+                "order": "asc"
+            }
+        },
+        "_score"
+    ],
+    "query": {
+        ...
+    }
+}
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+Retrieves 50 hits, starting from hit 100.</p>
+</blockquote>
+<h4 id="sorting"><a class="header" href="#sorting">Sorting</a></h4>
+<ul>
+<li>Use keyword fields to sort on field values</li>
+<li>Results are not scored
+<ul>
+<li><code>_score</code> has no impact on sorting</li>
+<li><code>_score</code>: null</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "match": {
+            "title": "Elastic"
+        }
+    },
+    "sort": {
+        "title.keyword": {
+            "order": "asc"
+        }
+    }
+}
+</code></pre>
+<h4 id="retrieve-selected-fields"><a class="header" href="#retrieve-selected-fields">Retrieve Selected Fields</a></h4>
+<ul>
+<li>By default, each hit in the response includes the document's <code>_source</code>
+<ul>
+<li>the original data that was passed at index time</li>
+</ul>
+</li>
+<li>Use <code>fields</code> to only retrieve specific fields</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "_source": false,
+    "fields": [
+        "publish_date",
+        "title"
+    ]
+    ...
+}
+</code></pre>
+<h2 id="term-level-queries"><a class="header" href="#term-level-queries">Term-level Queries</a></h2>
+<h3 id="matching-exact-terms"><a class="header" href="#matching-exact-terms">Matching Exact Terms</a></h3>
+<ul>
+<li>Recall that full text queries are analyzed and then searched within the index</li>
+</ul>
+<pre><code class="language-mermaid">flowchart LR
+    A[Full Text Query] --&gt; B[&lt;b&gt;Analyzes&lt;/b&gt; the query text&lt;br&gt;before the terms are looked&lt;br&gt;up in the index]
+</code></pre>
+<ul>
+<li>Term-level queries are used for exact searches
+<ul>
+<li>term-level queries do not analyze search terms</li>
+<li>Returns the exact match of the original string as it occurs in the documents</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-mermaid">flowchart LR
+    A[Term-level Query] --&gt; B[&lt;b&gt;Does not analyze&lt;/b&gt; the&lt;br&gt;query text before the terms&lt;br&gt;are looked up in the index]
+</code></pre>
+<h3 id="term-level-queries-1"><a class="header" href="#term-level-queries-1">Term-level Queries</a></h3>
+<ul>
+<li>Find documents based on precise values in structured data
+<ul>
+<li>queries are matched on the exact terms stored in a field</li>
+</ul>
+</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Full text queries</th><th>Term-level queries</th><th>Many more</th></tr></thead><tbody>
+<tr><td>match</td><td>term</td><td>script</td></tr>
+<tr><td>match_phrase</td><td>range</td><td>percolate</td></tr>
+<tr><td>multi_match</td><td>exists</td><td>span_queries</td></tr>
+<tr><td>query_string</td><td>fuzzy</td><td>geo_queries</td></tr>
+<tr><td>...</td><td>regexp</td><td>nested</td></tr>
+<tr><td></td><td>wildcard</td><td>...</td></tr>
+<tr><td></td><td>ids</td><td></td></tr>
+<tr><td></td><td>...</td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="matching-on-a-keyword-field"><a class="header" href="#matching-on-a-keyword-field">Matching on a Keyword Field</a></h3>
+<ul>
+<li>use the <code>keyword</code> field to match on an exact term
+<ul>
+<li>the term must exactly match the field value, including whitespace and capitalization</li>
+</ul>
+</li>
+<li>Recall that keyword types are commonly used for:
+<ul>
+<li>structured content such as IDs, email, hostnames, or zip codes</li>
+<li>sorting and aggregations</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "term": {
+            "authors.job_title.keyword": "Senior Software Engineer"
+        }
+    }
+}
+</code></pre>
+<h3 id="range-query"><a class="header" href="#range-query">range Query</a></h3>
+<ul>
+<li>Use the following parameters to specify a range:
+<ul>
+<li><strong>gt</strong>: greater than</li>
+<li><strong>gte</strong>: greater than or equal to</li>
+<li><strong>lt</strong>: less than</li>
+<li><strong>lte</strong>: less than or equal to</li>
+</ul>
+</li>
+<li>Ranges can be open-ended</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "range": {
+            "publish_date": {
+                "gte": "2023-01-01",
+                "lte": "2023-12-31"
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="date-math"><a class="header" href="#date-math">Date Math</a></h3>
+<ul>
+<li>Use date math to express relative dates in range queries</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td><strong>y</strong></td><td>years</td></tr>
+<tr><td><strong>M</strong></td><td>months</td></tr>
+<tr><td><strong>w</strong></td><td>weeks</td></tr>
+<tr><td><strong>d</strong></td><td>days</td></tr>
+<tr><td><strong>h / H</strong></td><td>hours</td></tr>
+<tr><td><strong>m</strong></td><td>minutes</td></tr>
+<tr><td><strong>s</strong></td><td>seconds</td></tr>
+</tbody></table>
+</div>
+<p>Example for now = 2023-10-19T11:56:22</p>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td><strong>now-1h</strong></td><td>2023-10-19T10:56:22</td></tr>
+<tr><td><strong>now+1h+30m</strong></td><td>2023-10-19T13:26:22</td></tr>
+<tr><td><strong>now/d+1d</strong></td><td>2023-10-20T00:00:00</td></tr>
+<tr><td><strong>2024-01-15||+1M</strong></td><td>2024-02-15T00:00:00</td></tr>
+</tbody></table>
+</div>
+<h3 id="range-query---date-math-example"><a class="header" href="#range-query---date-math-example">range Query - Date Math Example</a></h3>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "range": {
+            "publish_date": {
+                "gte": "now-1y"
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="exists-query"><a class="header" href="#exists-query">exists Query</a></h3>
+<ul>
+<li>Returns documents that contain an indexed value for a field</li>
+<li>Empty strings also indicate that a field exists</li>
+</ul>
+<p>Example "How many documents have a category?":</p>
+<pre><code>GET blogs/_count
+{
+    "query": {
+        "exists": {
+            "field": "category"
+        }
+    }
+}
+</code></pre>
+<h3 id="async-search"><a class="header" href="#async-search">Async Search</a></h3>
+<ul>
+<li>Searches asynchronously</li>
+<li>Useful for slow queries and aggregations
+<ul>
+<li>monitor the progress</li>
+<li>retrieve partial results as they become available</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>POST blogs/_async_search?wait_for_completion_timeout=0s
+{
+    "query": {
+        "match": {
+            "title": "community team"
+        }
+    }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code>{
+    "id" : "Fk0tWm1LM1hmVHA2bGNvMHF6alRhM3ccZWZ0Uk9NcFVUR3VDTzc3OENmYUcyQToyMDYyMQ==",
+    "is_partial" : true,
+    "is_running" : true,
+    "start_time_in_millis" : 1649075069466,
+    "expiration_time_in_millis" : 1649507069466,
+    "response" : {
+        ...
+        "hits" : {
+            "total" : {
+                "value" : 0,
+                "relation" : "gte"
+            },
+            "max_score" : null,
+            "hits" : [ ]
+        }
+    }   
+}
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+The <strong>id</strong> can be used to retrieve the results later.<br>
+<strong>is_partial</strong> indicates whether the current set of results is partial.<br>
+<strong>is_running</strong> indicates whether the query is still running.<br>
+You can retrieve the results until <strong>expiration_time_in_millis</strong>.</p>
+</blockquote>
+<h4 id="retrieve-the-results"><a class="header" href="#retrieve-the-results">Retrieve the Results</a></h4>
+<ul>
+<li>Use the <code>id</code> to retrieve search results</li>
+<li>The response will tell you whether
+<ul>
+<li>the query is still running (<em>is_running</em>)</li>
+<li>the results are partial (<em>is_partial</em>)</li>
+</ul>
+</li>
+</ul>
+<p>Request:</p>
+<pre><code>GET/_async_search/Fk0tWm1LM1hmVHA2bGNvMHF6alRhM3ccZWZ0Uk9NcFVUR3VDT...
+</code></pre>
+<h2 id="combining-queries"><a class="header" href="#combining-queries">Combining Queries</a></h2>
+<h3 id="combining-queries-using-boolean-logic"><a class="header" href="#combining-queries-using-boolean-logic">Combining Queries using Boolean Logic</a></h3>
+<ul>
+<li>Suppose you want to write the following query:
+<ul>
+<li><strong>find blogs about "agent" written in english</strong></li>
+</ul>
+</li>
+<li>This search is actually a combination of two queries
+<ul>
+<li>"agent" needs to be in the <code>content</code> or <code>title</code> field</li>
+<li>and "en-us" in the <code>locale</code> field</li>
+</ul>
+</li>
+<li>How can you combine these two queries?
+<ul>
+<li>by using Boolean logic and the <code>bool</code> query</li>
+</ul>
+</li>
+</ul>
+<h3 id="bool-query"><a class="header" href="#bool-query">bool Query</a></h3>
+<ul>
+<li>The <code>bool</code> query combines one or more boolean clauses:
+<ul>
+<li><strong>must</strong></li>
+<li><strong>filter</strong></li>
+<li><strong>must_not</strong></li>
+<li><strong>should</strong></li>
+</ul>
+</li>
+<li>Each of the clauses is optional</li>
+<li>Clauses can be combined</li>
+<li>Any clause accepts one or more queries</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "bool": {
+            "must": [ ... ],
+            "filter": [ ... ],
+            "must_not": [ ... ],
+            "should": [ ... ]
+        }
+    }
+}
+</code></pre>
+<h4 id="must-clause"><a class="header" href="#must-clause">must Clause</a></h4>
+<ul>
+<li>Any query in a <code>must</code> clause must match for a document to be a hit</li>
+<li>Every query contributes to the score</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "content": "agent"
+                    }
+                },
+                {
+                    "match": {
+                        "locale": "en-us"
+                    }
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+<h4 id="filter-clause"><a class="header" href="#filter-clause">filter Clause</a></h4>
+<ul>
+<li>Filters are like <code>must</code> clauses: any query in a <code>filter</code> clause has to match for a document to be a hit</li>
+<li>But, queries in a <code>filter</code> clause do not contribute to the score</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "content": "agent"
+                    }
+                }
+            ],
+            "filter": [
+                {
+                    "match": {
+                        "locale": "en-us"
+                    }
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+<blockquote>
+<p>[!TIP]
+Filters are great for <strong>yes / no</strong> type queries.</p>
+</blockquote>
+<h4 id="must_not-clause"><a class="header" href="#must_not-clause">must_not Clause</a></h4>
+<ul>
+<li>Use <code>must_not</code> to exclude documents that match a query</li>
+<li>Queries in a <code>must_not</code> clause do not contribute to the score</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "content": "agent"
+                    }
+                }
+            ],
+            "must_not": [
+                {
+                    "match": {
+                        "locale": "en-us"
+                    }
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+<h4 id="should-clause"><a class="header" href="#should-clause">should Clause</a></h4>
+<ul>
+<li>Use <code>should</code> to boost documents that match a query
+<ul>
+<li>queries in a <code>should</code> clause contribute to the score</li>
+<li>documents that do not match the queries in a <code>should</code> clause are returned as hits too</li>
+</ul>
+</li>
+<li>Use <code>minimum_should_match</code> to specify the number of percentage of should clauses returned</li>
+</ul>
+<pre><code>GET blogs/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {"match": {"content":"agent"}}
+            ],
+            "should": [
+                {"match":{"locale": “en-us"}},
+                {"match":{"locale": “fr-fr"}}
+            ],
+            "minimum_should_match": 1
+        }
+    }
+}
+</code></pre>
+<h3 id="comparing-query-and-filter-contexts"><a class="header" href="#comparing-query-and-filter-contexts">Comparing Query and Filter Contexts</a></h3>
+<pre><code class="language-mermaid">classDiagram
+    note for A "Query Context"
+    note for B "Filter Context"
+    class A["must&lt;br&gt;should"]
+    A : calculates a score
+    A : slower
+    A : no automatic caching
+
+    class B["filter&lt;br&gt;must_not"]
+    B : skips score calculation
+    B : faster
+    B : automatic caching for frequently used filters
+</code></pre>
+<h3 id="query-vs-filter-context---ranking"><a class="header" href="#query-vs-filter-context---ranking">Query vs. Filter Context - Ranking</a></h3>
+<h4 id="query-context"><a class="header" href="#query-context">Query Context</a></h4>
+<p>Request:</p>
+<pre><code>"bool": {
+    "must": [
+        {"match": {"title": "community"} }
+    ]
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">"hits" : {
+    "total" : {
+        "value" : 28,
+        "relation" : "eq"
+    },
+    "max_score" : 6.1514335,
+    "hits" : [
+</code></pre>
+<h4 id="filter-context"><a class="header" href="#filter-context">Filter Context</a></h4>
+<p>Request:</p>
+<pre><code>"bool": {
+    "filter": [
+        {"match": {"title": "community"} }
+    ]
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">"hits" : {
+    "total" : {
+        "value" : 28,
+        "relation" : "eq"
+    },
+    "max_score" : 0.0,
+    "hits" : [
+</code></pre>
+<h3 id="bool-query-summary"><a class="header" href="#bool-query-summary">bool Query Summary</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Clause</th><th>Exclude docs</th><th>Scoring</th></tr></thead><tbody>
+<tr><td><strong>must</strong></td><td>YES</td><td>YES</td></tr>
+<tr><td><strong>must_not</strong></td><td>YES</td><td>NO</td></tr>
+<tr><td><strong>should</strong></td><td>NO</td><td>YES</td></tr>
+<tr><td><strong>filter</strong></td><td>YES</td><td>NO</td></tr>
+</tbody></table>
+</div><div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

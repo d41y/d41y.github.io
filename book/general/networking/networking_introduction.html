@@ -1,0 +1,1000 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0x00 - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#introduction-to-networking">Introduction to Networking</a>
+<ul>
+<li><a href="#structure">Structure</a>
+<ul>
+<li><a href="#network-types">Network Types</a>
+<ul>
+<li><a href="#wide-area-network-wan">Wide Area Network (<em>WAN</em>)</a></li>
+<li><a href="#local-area-netwotks-lan--wireless-local-area-network-wlan">Local Area Netwotks (<em>LAN</em>) / Wireless Local Area Network (<em>WLAN</em>)</a></li>
+<li><a href="#virtual-private-network-vpn">Virtual Private Network (<em>VPN</em>)</a>
+<ul>
+<li><a href="#site-to-site-vpn">Site-to-Site VPN</a></li>
+<li><a href="#remote-access-vpn">Remote Access VPN</a></li>
+<li><a href="#ssl-vpn">SSL VPN</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#book-terms">Book Terms</a>
+<ul>
+<li><a href="#global-area-network-gan">Global Area Network (<em>GAN</em>)</a></li>
+<li><a href="#metropolitan-area-network-man">Metropolitan Area Network (<em>MAN</em>)</a></li>
+<li><a href="#personal-area-network-pan--wireless-personal-area-network-wpan">Personal Area Network (<em>PAN</em>) / Wireless Personal Area Network (<em>WPAN</em>)</a></li>
+</ul>
+</li>
+<li><a href="#topologies">Topologies</a>
+<ul>
+<li><a href="#connections">Connections</a></li>
+<li><a href="#nodes---network-interface-controller-nics">Nodes - Network Interface Controller (<em>NICs</em>)</a></li>
+<li><a href="#classifications">Classifications</a></li>
+</ul>
+</li>
+<li><a href="#proxies">Proxies</a>
+<ul>
+<li><a href="#dedicated-proxy--forward-proxy">Dedicated Proxy / Forward Proxy</a></li>
+<li><a href="#reverse-proxy">Reverse Proxy</a></li>
+<li><a href="#non--transparent-proxy">(Non-) Transparent Proxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#workflow">Workflow</a>
+<ul>
+<li><a href="#networking-models">Networking Models</a></li>
+</ul>
+</li>
+<li><a href="#addressing">Addressing</a>
+<ul>
+<li><a href="#network-layer">Network Layer</a></li>
+<li><a href="#ipv4-addresses">IPv4 Addresses</a>
+<ul>
+<li><a href="#structure-1">Structure</a></li>
+<li><a href="#subnet-mask">Subnet Mask</a></li>
+<li><a href="#network-and-gateway-addresses">Network and Gateway Addresses</a></li>
+<li><a href="#broadcast-address">Broadcast Address</a></li>
+<li><a href="#classless-inter-domain-routing---cidr">Classless Inter-Domain Routing - (<em>CIDR</em>)</a></li>
+</ul>
+</li>
+<li><a href="#subnetting">Subnetting</a></li>
+<li><a href="#mac-address">MAC Address</a>
+<ul>
+<li><a href="#adress-resolution-protocol-arp">Adress Resolution Protocol (<em>ARP</em>)</a></li>
+</ul>
+</li>
+<li><a href="#ipv6-addresses">IPv6 Addresses</a></li>
+</ul>
+</li>
+<li><a href="#protocols-and-terminology">Protocols and Terminology</a>
+<ul>
+<li><a href="#common-protocols">Common Protocols</a>
+<ul>
+<li><a href="#tcp">TCP</a></li>
+<li><a href="#udp">UDP</a></li>
+<li><a href="#icmp">ICMP</a>
+<ul>
+<li><a href="#icmp-requests">ICMP Requests</a></li>
+<li><a href="#icmp-messages">ICMP Messages</a></li>
+</ul>
+</li>
+<li><a href="#voip">VOIP</a></li>
+</ul>
+</li>
+<li><a href="#wireless-networks">Wireless Networks</a>
+<ul>
+<li><a href="#wifi-connection">WiFi Connection</a></li>
+<li><a href="#wep-challenge-response-handshake">WEP Challenge-Response Handshake</a></li>
+<li><a href="#security-features">Security Features</a></li>
+</ul>
+</li>
+<li><a href="#vpn">VPN</a>
+<ul>
+<li><a href="#ipsec">IPsec</a></li>
+<li><a href="#pptp">PPTP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#connection-establishment">Connection Establishment</a>
+<ul>
+<li><a href="#key-exchange-mechanisms">Key Exchange Mechanisms</a></li>
+<li><a href="#authentication-protocols">Authentication Protocols</a></li>
+<li><a href="#tcpudp-connections">TCP/UDP Connections</a>
+<ul>
+<li><a href="#ip-packet">IP Packet</a>
+<ul>
+<li><a href="#ip-header">IP Header</a></li>
+<li><a href="#ip-record-route-field">IP Record-Route Field</a></li>
+<li><a href="#ip-payload">IP Payload</a></li>
+</ul>
+</li>
+<li><a href="#tcp-1">TCP</a></li>
+<li><a href="#udp-1">UDP</a></li>
+</ul>
+</li>
+<li><a href="#cryptography">Cryptography</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="introduction-to-networking"><a class="header" href="#introduction-to-networking">Introduction to Networking</a></h1>
+<h2 id="structure"><a class="header" href="#structure">Structure</a></h2>
+<h3 id="network-types"><a class="header" href="#network-types">Network Types</a></h3>
+<h4 id="wide-area-network-wan"><a class="header" href="#wide-area-network-wan">Wide Area Network (<em>WAN</em>)</a></h4>
+<p>... is commonly referred to as the internet. When dealing with networking equipment, you'll often have a WAN address and LAN address. The WAN one is the address that is generally accessed by the internet. It is not exclusive to the internet; a WAN is just a large number of LANs joined together. Many large companies or government agencies will have an "Internal WAN". Generally speaking, the primaty way you identify if the network is a WAN is to use a WAN specific routing protocol such as BGP and if the IP schema in use is not within RFC 1918.</p>
+<h4 id="local-area-netwotks-lan--wireless-local-area-network-wlan"><a class="header" href="#local-area-netwotks-lan--wireless-local-area-network-wlan">Local Area Netwotks (<em>LAN</em>) / Wireless Local Area Network (<em>WLAN</em>)</a></h4>
+<p>LANs and WLANs will typically assign IP addresses designated for local use. In some cases you may be assigned a routable IP address from joining their LAN, but that is much less common. There's nothing different bewteen a LAN or WLAN, other than WLAN's introduce the ability to transmit data without cables.</p>
+<h4 id="virtual-private-network-vpn"><a class="header" href="#virtual-private-network-vpn">Virtual Private Network (<em>VPN</em>)</a></h4>
+<p>... has the goal of making the user feel as if they were plugged into a different network.</p>
+<h5 id="site-to-site-vpn"><a class="header" href="#site-to-site-vpn">Site-to-Site VPN</a></h5>
+<p>Both the client and server are Network Devices, typically either Routers or Firewalls, and share entire network ranges. This is the most commonly used to join company networks together over the internet, allowing multiple locations to communicate over the internet as if they were local.</p>
+<h5 id="remote-access-vpn"><a class="header" href="#remote-access-vpn">Remote Access VPN</a></h5>
+<p>This involves the client's computer creating a virtual interface that behaves as if it is on a client's network. When analyizing these VPNs, an important piece to consider is the routing table that is created when joining the VPN. If the VPN only creates routes for specific networks, this is called a split-tunnel VPN, meaning the internet connection is not going out of the VPN.</p>
+<h5 id="ssl-vpn"><a class="header" href="#ssl-vpn">SSL VPN</a></h5>
+<p>This is essentially a VPN that is done within your web browser and is becoming increasingly common as web browsers are becoming capable of doing anything. Typically these will stream applications or entire desktop sessions to your web browser.</p>
+<h3 id="book-terms"><a class="header" href="#book-terms">Book Terms</a></h3>
+<h4 id="global-area-network-gan"><a class="header" href="#global-area-network-gan">Global Area Network (<em>GAN</em>)</a></h4>
+<p>A worldwide network such as the internet is known as a GAN. However, the internet is not the only computer network of this kind. Internationally active companies also maintain isolated networks that span several WANs and connect company computers worldwide. GANs use the glass fibers infrastructure of wide-are networks and interconnect them by international undersea cables or satellite transmission.</p>
+<h4 id="metropolitan-area-network-man"><a class="header" href="#metropolitan-area-network-man">Metropolitan Area Network (<em>MAN</em>)</a></h4>
+<p>... is a broadband telecommunications network that connects several LANs in geographical proximity. As a rule, these are individual branches of a company connected to a MAN via leased lines. High-performance routers and high-performance connections based on glass fibers are used, which enable a significantly higher data throughput than the internet. The transmission speed between two remote nodes is comparable to communication within a LAN.</p>
+<p>Internationally operating network operators provide the infrastructure for MANs. Cities wired as MANs can be integrated supra-regionally in WANs and internationally in GANs.</p>
+<h4 id="personal-area-network-pan--wireless-personal-area-network-wpan"><a class="header" href="#personal-area-network-pan--wireless-personal-area-network-wpan">Personal Area Network (<em>PAN</em>) / Wireless Personal Area Network (<em>WPAN</em>)</a></h4>
+<p>Modern end devices such as smartphones, tablets, laptops, or desktop computers can be connected ad hoc to form a network to enable data exchange. This can be done by cable in the form of a PAN.</p>
+<p>The wireless variant WPAN is based on bluetooth or wireless USB technologies. A WPAN that is established via bluetooth is called Piconet. PANs and WPANs usually extend only a few meters and are therefore not suitable for connecting devices in separate rooms or even buildings.</p>
+<p>In the context of the Internet of Things, WPANs are used to communicate control and monitor with low data rates. Protocols such as Insteon, Z-Wave, and ZigBee were explicitly designed for smart home automation.</p>
+<h3 id="topologies"><a class="header" href="#topologies">Topologies</a></h3>
+<p>A network topology is a typical arrangement and physical or logical connection of devices in a network. Computers are hosts, such as clients and servers, that actively use the network. They also include network components such as switches, bridges, routers, which have a distribution function and ensure that all network hosts can establish a logical connection with each other. The network topology determines the components to be used and the access methods to the transmission media.</p>
+<h4 id="connections"><a class="header" href="#connections">Connections</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Wired</th><th>Wireless</th></tr></thead><tbody>
+<tr><td>Coaxial cabling</td><td>Wi-Fi</td></tr>
+<tr><td>Glass fiber cabling</td><td>Cellular</td></tr>
+<tr><td>Twisted-pair cabling</td><td>Satellite</td></tr>
+<tr><td>and others</td><td>and others</td></tr>
+</tbody></table>
+</div>
+<h4 id="nodes---network-interface-controller-nics"><a class="header" href="#nodes---network-interface-controller-nics">Nodes - Network Interface Controller (<em>NICs</em>)</a></h4>
+<p>Network nodes are the transmission medium's connection points to transmitters and receivers of electrical, optical, or radio signals in the medium. A node may be connected to a computer, but certain types may have only one microcontroller on a node or may have no programmable device at all.</p>
+<ul>
+<li>repeaters</li>
+<li>hubs</li>
+<li>bridges</li>
+<li>switches</li>
+<li>router/modem</li>
+<li>gateways</li>
+<li>firewalls</li>
+</ul>
+<h4 id="classifications"><a class="header" href="#classifications">Classifications</a></h4>
+<p>You can imagine a topology as a virtual structure of a network. This form does not necessarily correspond to the actual physical arrangement of the devices in the network. Therefore these topologies can be either physical or logical.</p>
+<ul>
+<li>point-to-point</li>
+<li>bus</li>
+<li>star</li>
+<li>ring</li>
+<li>mesh</li>
+<li>tree</li>
+<li>hybrid</li>
+<li>daisy chain</li>
+</ul>
+<h3 id="proxies"><a class="header" href="#proxies">Proxies</a></h3>
+<h4 id="dedicated-proxy--forward-proxy"><a class="header" href="#dedicated-proxy--forward-proxy">Dedicated Proxy / Forward Proxy</a></h4>
+<p>... is what most people imagine a proxy to be. A forward proxy is when a client makes a request to a computer, and that computer carries out the request.</p>
+<p><img src="../../images/network_fundamentals1.png" alt="network fundamentals 1" /></p>
+<h4 id="reverse-proxy"><a class="header" href="#reverse-proxy">Reverse Proxy</a></h4>
+<p>Instead of being designed to filter outgoing requests, it filters incoming ones. The most common goal with a reverse proxy, is to listen on an address and forward it to a closed-off network.</p>
+<p><img src="../../images/network_fundamentals2.png" alt="network fundamentals 2" /></p>
+<h4 id="non--transparent-proxy"><a class="header" href="#non--transparent-proxy">(Non-) Transparent Proxy</a></h4>
+<p>With a transparent proxy, the client doesn't know about its existence. The transparent proxy intercepts the client's communication requests to the internet and acts as a substitute instance. To the outside, the transparent proxy, like the non-transparent proxy, acts as a communication partner.</p>
+<p>If it is a non-transparent proxy, you must be informed about its existence. For this purpose, you and the software you want to use are given a special proxy configuration that ensures that traffic to the internet is first addressed to the proxy. If this configuration does not exist, you cannot communicate via the proxy. However, since the proxy usually provides the only communication path to other networks, communication to the internet is generally cut off without a corresponding proxy configuration.</p>
+<h2 id="workflow"><a class="header" href="#workflow">Workflow</a></h2>
+<h3 id="networking-models"><a class="header" href="#networking-models">Networking Models</a></h3>
+<p>Two networking models describe the communication and transfer of data from one host to another, called <a href="https://www.geeksforgeeks.org/open-systems-interconnection-model-osi/">ISO/OSI</a> model and the <a href="https://www.geeksforgeeks.org/computer-networks/tcp-ip-model/">TCP/IP</a> model. This is a simplified representation of the so-called layers representing transferred Bits in readable contents.</p>
+<p><img src="../../images/network_fundamentals3.png" alt="network fundamentals 3" /></p>
+<h2 id="addressing"><a class="header" href="#addressing">Addressing</a></h2>
+<h3 id="network-layer"><a class="header" href="#network-layer">Network Layer</a></h3>
+<p>The network layer of OSI controls the exchange of data packets, as these cannot be directly routed to the receiver and therefore have to be provided with routing nodes. The data packets are then transferred from node to node until they reach their target. To implement this, the network layer identifies the individual network nodes, sets up and clears connection channels, and takes care of routing and data flow control. When sending the packets, addresses are evaluated, and the data is routed through the network from node to node. There is usually no processing of the data in the layers above the Layer 3 in the nodes. Based on the addresses, the routing and the construction of routing tables are done.</p>
+<p>In short, it is responsible for:</p>
+<ul>
+<li>Logical Addressing</li>
+<li>Routing</li>
+</ul>
+<p>Protocols are defined in each layer of OSI, and these protocols represent a collection of rules for communication in the respective layer. They are transparent to the protocols of the layers above or below. Some protocols fulfill tasks of several layers and extend over two or more layers. The most used protocols on this layer are:</p>
+<ul>
+<li>IPv4 / IPv6</li>
+<li>IPsec</li>
+<li>ICMP</li>
+<li>IGMP</li>
+<li>RIP</li>
+<li>OSPF</li>
+</ul>
+<p>It ensures the routing of packets from source to destination within or outside a subnet. These two subnets may have different addressing schemes or incompatible addressing types. In both cases, the data transmission in each case goes through the entire communication network and includes routing between the network nodes. Since direct communication between the sender and the receiver is not always possible due to the different subnets, packets must be forwarded from nodes that are on the way. Forwarded packets do not reach the higher layers but are assigned a new intermediate destination and sent to the next node.</p>
+<h3 id="ipv4-addresses"><a class="header" href="#ipv4-addresses">IPv4 Addresses</a></h3>
+<p>Each host in the network located can be identified by the so-called Media Access Control address (<em>MAC</em>). This would allow data exchange within this one network. If the remote host is located in another network, knowledge of the MAC address is not enough to establish a connection. Addressing on the internet is done via the IPv4 and/or IPv6 address, which is made up of the network address and the host address.</p>
+<p>It does not matter whether it is a smaller network, such as a home computer network, or the entire internet. The IP address ensures the delivery of data to the correct receiver. You can imagine the representation of MAC and IPv4/IPv6 addresses as follows:</p>
+<ul>
+<li>IPv4 / IPv6
+<ul>
+<li>describes the unique postal address and district of the receiver's building</li>
+</ul>
+</li>
+<li>MAC
+<ul>
+<li>describes the exact floor and apartment of the receiver</li>
+</ul>
+</li>
+</ul>
+<h4 id="structure-1"><a class="header" href="#structure-1">Structure</a></h4>
+<p>An IPv4 address consists of a 32-bit binary number combined into 4 bytes consisting of 8-bit groups (<em>octets</em>) ranging from 0-255. These are converted into more easily readable decimal numbers, separated by dots and represented as dotted-decimal notation.</p>
+<div class="table-wrapper"><table><thead><tr><th>Notation</th><th>Presentation</th></tr></thead><tbody>
+<tr><td>Binary</td><td>0111 1111.0000 0000.0000 0000.0000 0001</td></tr>
+<tr><td>Decimal</td><td>127.0.0.1</td></tr>
+</tbody></table>
+</div>
+<p>Each network interface is assigned a unique IP address.</p>
+<p>The IPv4 format allows for 4,294,967,296 unique addresses. The IP address is divided into a host part and a network part. The router assigns the host part of the IP address at home or by an administrator. The respective network administrator assigns the network part. On the internet, this is IANA, which allocates and manages the unique IPs.</p>
+<p>The IP network blocks were divided into <a href="https://www.geeksforgeeks.org/computer-networks/introduction-of-classful-ip-addressing/">classes A - E</a>. The different classes differed in the host and network shares' respective lengths.</p>
+<h4 id="subnet-mask"><a class="header" href="#subnet-mask">Subnet Mask</a></h4>
+<p>A further separation of these classes into small networks is done with the help of subnetting. This separation is done using the netmasks, which is as long as an IPv4 address. As with classes, it describes which bit positions within the IP address act as network part or host part.</p>
+<h4 id="network-and-gateway-addresses"><a class="header" href="#network-and-gateway-addresses">Network and Gateway Addresses</a></h4>
+<p>Two additional IPs are reserved for the so-called network address (<em>usually the first</em>) and the broadcast address (<em>usually the last</em>). An important role plays the default gateway, which is the name for the IPv4 address of the router that couples networks and systems with different protocols and manages addresses and transmission methods. It is common for the default gateway to be assigned the first or last assignable IPv4 address in a subnet. This is not a technical requirement, but has become a de-facto standard in network environments of all sizes.</p>
+<h4 id="broadcast-address"><a class="header" href="#broadcast-address">Broadcast Address</a></h4>
+<p>The broadcast IP address's tasks is to connect all devices in a network with each other. Broadcast in a network is a message that is transmitted to all participants of a network and does not require any response. In this way, a host sends a data packet to all other participants on the network simultaneously and, in doing so, communicates its IP address, which the receivers can use to contact it.</p>
+<h4 id="classless-inter-domain-routing---cidr"><a class="header" href="#classless-inter-domain-routing---cidr">Classless Inter-Domain Routing - (<em>CIDR</em>)</a></h4>
+<p>... is a method of representation and replaces the fixed assignment between IPv4 address and network classes. The division is based on the subnet mask or the so-called CIDR suffix, which allows the bitwise division of the IPv4 address space and thus into subnets of any size. The CIDR suffix indicates how many bits from the beginning of the IPv4 address belong to the network. It is a notation that represents the subnet mask by specifying the number of 1-bits in the subnet mask.</p>
+<ul>
+<li>IPv4 Address
+<ul>
+<li>192.168.10.39</li>
+</ul>
+</li>
+<li>Subnet Mask
+<ul>
+<li>255.255.255.0</li>
+</ul>
+</li>
+<li>CIDR
+<ul>
+<li>192.168.10.39/24</li>
+</ul>
+</li>
+</ul>
+<h3 id="subnetting"><a class="header" href="#subnetting">Subnetting</a></h3>
+<p>The division of an address range of IPv4 addresses into several smaller address ranges is called subnetting.</p>
+<p>A subnet is a logical segment of a network that uses IP addresses with the same network address. You can think of a subnet as a labeled entrance on a large building corridor. With the help of subnetting, you can create a specific subnet by yourself or find out the following outline of the respective network:</p>
+<ul>
+<li>Network Address</li>
+<li>Broadcast Address</li>
+<li>First Host</li>
+<li>Last Host</li>
+<li>Number of Hosts</li>
+</ul>
+<p>Example:</p>
+<div class="table-wrapper"><table><thead><tr><th>Network Address</th><th>First Host</th><th>Last Host</th><th>Broadcast Address</th><th>CIDR</th></tr></thead><tbody>
+<tr><td>192.168.12.176</td><td>192.168.12.177</td><td>192.168.12.190</td><td>192.168.12.191</td><td>192.168.12.176/28</td></tr>
+</tbody></table>
+</div>
+<h3 id="mac-address"><a class="header" href="#mac-address">MAC Address</a></h3>
+<p>Each host in a network has its own 48-bit (<em>6 octets</em>) Media Access Control (<em>MAC</em>) address, represented in hexadecimal format. MAC is the physical address for your network interfaces. There are several different standards for the MAC address:</p>
+<ul>
+<li>Ethernet</li>
+<li>Bluetooth</li>
+<li>WLAN</li>
+</ul>
+<p>This is because the MAC address addresses the physical connection of a host. Each network card has its individual MAC address, which is configured once on the manufacturer's hardware side but can always be changed, at least temporarily.</p>
+<p>When an IP packet is delivered, must be addressed on Layer 2 to the destination host's physical address or to the router / NAT, which is responsible for routing. Each packet has a sender address and a destination address.</p>
+<p>The MAC address consists of a total of 6 bytes. The first half is the so called Organization Unique Identifier (<em>OUI</em>) defined by the Institute of Electrical and Electronics Engineers (<em>IEEE</em>) for the respective manufacturers.</p>
+<p>The last half of the MAC address is called the Individual Address Part or Network Interface Controller (<em>NIC</em>), which the manufacturers assign. The manufacturer sets this bit sequence only once and thus ensures that the complete address is unique.</p>
+<p>If a host with the IP target address is located in the same subnet, the delivery is made directly to the target computer's physical address. However, if this host belongs to a different subnet, the Ethernet frame is addressed to the MAC address of the responsible router. If the Ethernet frame's destination address matches its own layer 2 address, the router will forward the frame to the higher layers. Adress Resolution Protocol (<em>ARP</em>) is used in IPv4 to determine the MAC addresses associated with the IP addresses.</p>
+<p>As with IPv4 addresses, there are also certain reserved areas for the MAC address. These include, for example, the local range for the MAC:</p>
+<ul>
+<li>02:00:00:00:00:00</li>
+<li>06:00:00:00:00:00</li>
+<li>0A:00:00:00:00:00</li>
+<li>0E:00:00:00:00:00</li>
+</ul>
+<p>Furthermore, the last two bits in the first octet can play another essential role. The last bit can have two states, 0 and 1. The last bit identifies the MAC address as Unicast (<em>0</em>) or Multicast (<em>1</em>). With unicast, it means that the packet sent will reach only one specific host.</p>
+<p>With multicast, the packet is sent only once to all hosts on the local network, which then decides whether or not to accept the packet based on their configuration. The multicast address is a unique address, just like the broadcast address, which has fixed octet values. Broadcast in a network represents a broadcasted call, where data packets are transmitted simultaneously from one point to all members of a network. It is mainly used if the address of the receiver of the packet is not yet known. An example is the ARP and DHCP protocols.</p>
+<p>The second last bit in the first octet identifies whether it is a global OUI, defined by the IEEE, or a locally administrated MAC address (<em>0 = Global OUI; 1 = Locally Administrated</em>).</p>
+<h4 id="adress-resolution-protocol-arp"><a class="header" href="#adress-resolution-protocol-arp">Adress Resolution Protocol (<em>ARP</em>)</a></h4>
+<p>... is a network protocol. It is an important part of the network communication used to resolve a network layer IP address to a link layer MAC address. It maps a host's IP address to its corresponding MAC address to facilitate communication between devices on a Local Area Network. When a device on a LAN wants to communicate with another device, it sends a broadcast message containing the destination IP address and its own MAC address. The device with the matching IP address responds with its own MAC address, and the devices can then communicate directly using their MAC addresses. This process is known as ARP resolution.</p>
+<p>ARP is an important part of the network communication process because it allows devices to send and receive data using MAC addresses rather than IP addresses, which can be more efficient. Two types of request messages can be used:</p>
+<ul>
+<li>ARP Request
+<ul>
+<li>When a device wants to communicate with another device on a LAN, it sends an ARP request to resolve the destination device's IP address to its MAC address. The request is broadcast to all devices on the LAN and contains the IP address of the destination device. The device with the matching IP address responds with its MAC address.</li>
+</ul>
+</li>
+<li>ARP Reply
+<ul>
+<li>When a device receives an ARP request, it sends an ARP reply to the requesting device with its MAC address. The reply message contains the IP and MAC addresses of both the requesting and the responding devices.</li>
+</ul>
+</li>
+</ul>
+<h3 id="ipv6-addresses"><a class="header" href="#ipv6-addresses">IPv6 Addresses</a></h3>
+<p>IPv6 is the successor of IPv4. In contrast to IPv4, the IPv6 address is 128 bit long. The prefix identifies the host and network parts. The Internet Assigned Numbers Authority (<em>IANA</em>) is responsible for assigning IPv4 and IPv6 addresses. and their associated network portions. In the long term, IPv6 is expected to completely replace IPv4, which is still predominantly used on the internet. In principle, however, IPv4 and Ipv6 can be made available simultaneously.</p>
+<p>IPv6 consistently follows the end-to-end principle and provides publicly accessible IP addresses for any end devices without the need for NAT. Consequently, an interface can have multiple IPv6 addresses, and there are special IPv6 addresses to which multiple interfaces are assigned.</p>
+<p>There are three different types of IPv6 addresses:</p>
+<ul>
+<li>Unicast
+<ul>
+<li>addresses for a single interface</li>
+</ul>
+</li>
+<li>Anycast
+<ul>
+<li>addresses for multiple interfaces, where only one of them receives the packet</li>
+</ul>
+</li>
+<li>Multicast
+<ul>
+<li>addresses for multiple interfaces, where all receive the same packet</li>
+</ul>
+</li>
+</ul>
+<p>An IPv6 address consists of two parts:</p>
+<ul>
+<li>Network Prefix (<em>network part</em>)</li>
+<li>Interface Identifier / Suffix (<em>host part</em>)</li>
+</ul>
+<p>The network prefix identifies the network, subnet, or address range. The interface identifier is formed from the 48-bit MAC address of the interface and is converted to a 65-bit address in the process. The default prefix length is /64. However, other typical prefixes are /32, /48, and /56. If you want to use your networks, you get a shorter prefix than /64 from your provider.</p>
+<h2 id="protocols-and-terminology"><a class="header" href="#protocols-and-terminology">Protocols and Terminology</a></h2>
+<h3 id="common-protocols"><a class="header" href="#common-protocols">Common Protocols</a></h3>
+<h4 id="tcp"><a class="header" href="#tcp">TCP</a></h4>
+<p>... is a connection-oriented protocol that establishes a virtual connection between two devices before transmitting data by using a Three-Way-Handshake. This connection is maintained until the data transfer is complete, and the devices can continue to send data back and forth as long as the connection is active.</p>
+<h4 id="udp"><a class="header" href="#udp">UDP</a></h4>
+<p>... is a connectionless protocol, which means it does not establish a virtual connection before transmitting data. Instead, it sends the data packets to the destination without checking to see if they were received.</p>
+<h4 id="icmp"><a class="header" href="#icmp">ICMP</a></h4>
+<p>Internet Control Message Protocol is a protocol used by devices to communicate with each other on the internet for various purposes, including error reporting and status information. It sends requests and messages between devices, which can be used to report errors or provide status information.</p>
+<h5 id="icmp-requests"><a class="header" href="#icmp-requests">ICMP Requests</a></h5>
+<p>A request is a message sent by one device to another to request information or perform a specific action. An example of a request is the ping request, which tests the connectivity between two devices. When one device sends a ping request to another, the second device responds with a ping reply message.</p>
+<h5 id="icmp-messages"><a class="header" href="#icmp-messages">ICMP Messages</a></h5>
+<p>A message in ICMP can be either a request or a reply. In addition to ping requests and responses, ICMP supports other types of messages, such as error messages, destination unreachable, and time exceeded messages. These messages are used to communicate various types of information and errors between devices on the network.</p>
+<p>There are two different versions:</p>
+<ul>
+<li>ICMPv4</li>
+<li>ICMPv6</li>
+</ul>
+<p>Request types:</p>
+<ul>
+<li>Echo Request</li>
+<li>Timestamp Request</li>
+<li>Address Mask Request</li>
+</ul>
+<p>Message types:</p>
+<ul>
+<li>Echo Reply</li>
+<li>Destination Unreachable</li>
+<li>Redirect</li>
+<li>Time Exceeded</li>
+<li>Parameter Problem</li>
+<li>Source Quench</li>
+</ul>
+<p>Another crucial part of ICMP is the Time-to-Live field in the ICMP packet header that limits the packet's lifetime as it travels through the network. It prevents packets from circulating indefinitely on the network in the event of routing loops. Each time a packet passes through a router, the router decrements the TTL value by 1. When the TTL value reaches 0, the router discards the packet and sends an ICMP Time Exceeded message back to the sender.</p>
+<p>You can also use the TTL to determine the number of hops a packet has taken and the approximate distance to the destination. For example, if a packet has a TTL of 10 and takes 5 hops to reach its destination, it can be inferred that the destination is approximately 5 hops away. For example, if you see a ping with the TTL value of 122, it could mean that you are dealing with a Windows system that is 6 hops away.</p>
+<p>However, it is also possible to guess the OS based on the default TTL value used by the device. Each OS typically has a default TTL value when sending packets. This value is set in the packet's header and is decremented by 1 each time the packet passes through a router. Therefore, examining a device's default TTL value makes it possible to infer which OS the device is using.</p>
+<p>Typical default TTL:</p>
+<ul>
+<li><strong>Windows</strong>: 128</li>
+<li><strong>Linux</strong>: 64</li>
+<li><strong>MacOS</strong>: 64</li>
+<li><strong>Solaris</strong>: 255</li>
+</ul>
+<h4 id="voip"><a class="header" href="#voip">VOIP</a></h4>
+<p>Voice over Internet Protocol (<em>VoIP</em>) is a method of transmitting voice and multimedia communications. For example, it allows you to make phone calls using a broadband internet connection instead of a traditional phone line, like Skype, Whatsapp, Google Hangouts, Slack, Zoom, and others.</p>
+<h3 id="wireless-networks"><a class="header" href="#wireless-networks">Wireless Networks</a></h3>
+<p>... are computer networks that use wireless data connections between network nodes. These networks allow devices such as laptops, smartphones, and tablets to communicate with each other and the internet without needing physical connections such as cables.</p>
+<p>Wireless networks use radio frequency tech to transmit data between devices. Each device on a wireless network has a wirless adapter that converts data into RF signals and sends them over the air. Other devices on the network receive these signals with their own wireless adapters, and the data is then converted back into a usable form. Those can operate over various ranges, depending on the technology used. For example, a LAN that covers a small area, such as a home or small office, might use wireless technology called WiFi, which has a range of a few hundred feet. On the other hand, a wireles WAN might use mobile telecommunication technology such as cellular data, which can cover a much larger area, such as entire city or region.</p>
+<p>Communication between devices occurs over RF in the 2.4 GHz or 5 GHz bands in a WiFi network. When a device, like a laptop, wants to send data over the network, it first communicates with the Wireless Access Point (<em>WAP</em>) to request permission to transmit. The WAP is a central device, like a router, that connects the wireless network to a wired network and controls access to the network. Once the WAP grants permission, the transmitting device sends the data as RF signals, which are received by the wireless adapters of other devices on the network. The data is then converted back into a usable form and passed on to the appropriate application or system.</p>
+<h4 id="wifi-connection"><a class="header" href="#wifi-connection">WiFi Connection</a></h4>
+<p>The device must also be configured with the correct network settings, such as the network name / Service Set Identifier (<em>SSID</em>) and password. So, to connect to the router, the laptop uses a wireless networking protocol called IEEE 802.11. This protocol defines the technical details of how wireless devices communictate with each other and with WAPs. When a device wants to join a WiFi network, it sends a request to the WAP to initiate the connection process. This request is known as a connection request frame or association request and is sent using the IEEE 802.11 wireless networking protocol. The connection request frame contains various fields of information, including the following but not limited:</p>
+<ul>
+<li>MAC address</li>
+<li>SSID</li>
+<li>Supported data rates</li>
+<li>Supported channels</li>
+<li>Supported security protocols</li>
+</ul>
+<p>The device then uses this information to configure its wireless adapter and connect to the WAP. Once the connection is established, the device can communicate with the WAP and other network devices. It can also access the internet and other online resources through the WAP, which acts as a gateway to the wired network. However, the SSID can be hidden by disabling broadcasting. That means that devices that search for that specific WAP will not be able to identify its SSID. Nevertheless, the SSID can still be found in the authentication packet.</p>
+<h4 id="wep-challenge-response-handshake"><a class="header" href="#wep-challenge-response-handshake">WEP Challenge-Response Handshake</a></h4>
+<p>The challenge-response handshake is a process to establish a secure connection between a WAP and a client device in a wireless network that uses the WEP security protocol. This involves exchanging packets between the WAP and the client device to authenticate the device and establish a secure connection.</p>
+<div class="table-wrapper"><table><thead><tr><th>Step</th><th>Who</th><th>Description</th></tr></thead><tbody>
+<tr><td>1</td><td>Client</td><td>sends an association request packet to the WAP, requesting access</td></tr>
+<tr><td>2</td><td>WAP</td><td>responds with an association response packet to the client, which includes a challenge string</td></tr>
+<tr><td>3</td><td>Client</td><td>calculates a response to the challenge string and a shared secret key and sends it back to the WAP</td></tr>
+<tr><td>4</td><td>WAP</td><td>calculates the expected response to the challenge with the same shared secret key and sends and authentication response packet to the client</td></tr>
+</tbody></table>
+</div>
+<p>Nevertheless, some packets can get lost, so the so-called CRC checksum has been integrated. Cyclic Redundancy Check is an error-detection mechanism used in the WEP protocol to protect against data corruption in wireless communications. A CRC value is calculated for each packet transmitted over the wireless network based on the packet's data. It is used to verify the integrity of the data. When the destination device receives the packet, the CRC value is recalculated and compared to the original value. If the values match, the data has been transmitted successfully without any errors. However, if the values do not match, the data has been corrupted and needs to be retransmitted.</p>
+<h4 id="security-features"><a class="header" href="#security-features">Security Features</a></h4>
+<p>Some of the leading security features include but are not limited to:</p>
+<ul>
+<li>Encryption
+<ul>
+<li>Wired Equivalent Privacy (<em>WEP</em>)</li>
+<li>WiFi Protected Access (<em>WPA</em>)</li>
+</ul>
+</li>
+<li>Access Control</li>
+<li>Firewall</li>
+</ul>
+<h3 id="vpn"><a class="header" href="#vpn">VPN</a></h3>
+<p>... is a technology that allows a secure and encrypted connection between a private network and a remote device. This allows the remote machine to access the private network directly, providing secure and confidential access to the network's resources and services. For example, an admin from another location has to manage the internal servers so that the employees can continue to use the internal services. Many companies limit servers' access, so clients can only reach those servers from the local network. This is where VPN comes intp play, where the admin connects to the VPN server via the internet, authenticates himself, and thus creates an encrypted tunnel so that others cannot read the data transfer. In addition, the admin's computer is also assigned a local IP address through which he can access and manage the internal servers. Admins commonly use VPNs to provide secure and cost-effective remote access to a company's network.</p>
+<h4 id="ipsec"><a class="header" href="#ipsec">IPsec</a></h4>
+<p>Internet Protocol Security (<em>IPsec</em>) is a network security protocol that provides encryption and authentication for internet communications. It is a powerful and widely-used security protocol that provides encryption and authentication for internet communications and works by encrypting the data payload of each IP packet and adding an authentication header, which is used to verify the integrity and authenticity of the packet. IPsec uses a combination of two protocols to provide encryption and authentication:</p>
+<ol>
+<li>Authentication Header</li>
+<li>Encapsulating Security Payload</li>
+</ol>
+<p>IPsec can be used in two modes:</p>
+<ol>
+<li>Transport Mode</li>
+<li>Tunnel Mode</li>
+</ol>
+<h4 id="pptp"><a class="header" href="#pptp">PPTP</a></h4>
+<p>Point-to-Point Tunneling Protocol is a network protocol that enables the creation of VPNs by establishing a secure tunnel between the VPN client and server, encapsulating the data transmitted within this tunnel. Originally an extension of the Point-to-Point Protocol, PPTP is supported by many OS.</p>
+<p>However, due to its known vulns, PPTP is no longer considered secure. It can tunnel protocols such as IP, IPX, or NetBEUI via IP, but has been largely replaced by more secure VPN protocols. Since 2012, the use of PPTP has declined because of its authentication method, MSCHAPv2, employs the outdated DES encryption, which can easily be cracked with specialized hardware.</p>
+<h2 id="connection-establishment"><a class="header" href="#connection-establishment">Connection Establishment</a></h2>
+<h3 id="key-exchange-mechanisms"><a class="header" href="#key-exchange-mechanisms">Key Exchange Mechanisms</a></h3>
+<p>Key exchange methods are used to exchange cryptographic keys between two parties securely. There are many key exchange methods, each with unique characteristics and strengths. Some key exchange methods are more secure than others, and the appropriate method depends on the situation's specific circumstances and requirements.</p>
+<p>These methods typically work by allowing the two parties to agree on a shared secret key over an insecure communication channel that encrypts the communication between them. This is generally done using some form of mathematical operation, such as a computation based on the properties of a mathematical function or a series of simple manipulations of the key.</p>
+<p>Some algorithms are:</p>
+<div class="table-wrapper"><table><thead><tr><th>Algorithm</th><th>Acronym</th><th>Security</th></tr></thead><tbody>
+<tr><td>Diffie-Hellmam</td><td>DH</td><td>relatively secure and computationally efficient</td></tr>
+<tr><td>Rivest-Shamir-Adleman</td><td>RSA</td><td>widely used and considered secure, but computationally intensive</td></tr>
+<tr><td>Elliptic Curve Diffie-Hellman</td><td>ECDH</td><td>provides enhanced security compared to traditional Diffie-Hellman</td></tr>
+<tr><td>Elliptic Curve Digital Signature Algorithm</td><td>ECDSA</td><td>provides enhanced security and efficiency for digital signature generation</td></tr>
+</tbody></table>
+</div>
+<h3 id="authentication-protocols"><a class="header" href="#authentication-protocols">Authentication Protocols</a></h3>
+<p>Many different authentication protocols are used in networking to verify the identity of devices and users. Those protocols are essential because they provide a secure and standardized way of verifying the identity of users, devices, and other entities in a network. Without authentication protocols, it would be difficult to securely and reliably identify entities in a network, making it easy for attackers to gain unauthorized access and potentially compromise the network.</p>
+<p>Authentication protocols also provide a means for securely exchanging information between entities in a network. This is important for ensuring the confidentiality and integrity of sensitive data and preventing unauthorized access and other security threats.</p>
+<h3 id="tcpudp-connections"><a class="header" href="#tcpudp-connections">TCP/UDP Connections</a></h3>
+<p>Transmission Control Protocol (<em>TCP</em>) and User Datagram Protocol (<em>UDP</em>) are both protocols used in information and data transmission on the internet. Typically, TCP connections transmit important data, such as web pages and emails. In contrast, UDP connections transmit real-time data such as streaming video or online gaming.</p>
+<p>TCP is a connection-oriented protocol that ensures that all data sent from one computer to another is received. It is like a telephone conversation where both parties remain connected until the call is terminated. If an error occurs while sending data, the receiver sends a message back so the sender can resend the missing data. This makes TCP reliable and slower than UDP because more time is required for transmission and error recovery.</p>
+<p>UDP, on the other hand, is a connectionless protocol. It is used when speed is more important than reliability, such as for video streaming or online gaming. With UDP, there is no verification that the received data is complete and error-free. If an error occurs while sending data, the receiver will not receive this missing data, and no message will be sent to resend it. Some data may be lost with UDP, but the overall transmission is faster.</p>
+<h4 id="ip-packet"><a class="header" href="#ip-packet">IP Packet</a></h4>
+<p>An IP packet is the data area used by the network layer of the Open Systems Interconnection model to transmit data from one computer to another. It consists of a header and the payload, the actual payload data.</p>
+<h5 id="ip-header"><a class="header" href="#ip-header">IP Header</a></h5>
+<p>... contains of several fields that have important information:</p>
+<ul>
+<li>Version</li>
+<li>Internet Header Length</li>
+<li>Class of Service</li>
+<li>Total Length</li>
+<li>Identification</li>
+<li>Flags</li>
+<li>Fragment Offset</li>
+<li>Time to Live</li>
+<li>Protocol</li>
+<li>Checksum</li>
+<li>Source/Destination</li>
+<li>Options</li>
+<li>Padding</li>
+</ul>
+<p>You may see a computer with multiple IP addresses in different networks. Here you should pay attention to the IP ID field. It is used to identify fragments of an IP packet when fragmented into smaller parts. It is a 16-bit field with a unique number ranging from 0-65535.</p>
+<p>If a computer has multiple IP addresses, the IP ID field will be different for each packet sent from the computer but very similar. In TCPdump, the networt traffic might look something like this:</p>
+<pre><code class="language-bash">IP 10.129.1.100.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1337
+IP 10.129.1.100.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1338
+IP 10.129.1.100.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1339
+IP 10.129.2.200.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1340
+IP 10.129.2.200.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1341
+IP 10.129.2.200.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1342
+</code></pre>
+<p>You can see from the output that two different IP addresses are sending packets to IP address 10.129.1.1. However, from the IP ID, you can see that the packets are continuous. This strongly indicates that the two IP addresses belong to the same host in the network.</p>
+<h5 id="ip-record-route-field"><a class="header" href="#ip-record-route-field">IP Record-Route Field</a></h5>
+<p>... also records the route to a destination device. When the destination device sends back the ICMP Echo Reply packet, the IP addresses of all devices that pass through the packet are listed in the Record-Route field of the IP header. This happens when you use the following command:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ping -c 1 -R 10.129.143.158
+
+PING 10.129.143.158 (10.129.143.158) 56(124) bytes of data.
+64 bytes from 10.129.143.158: icmp_seq=1 ttl=63 time=11.7 ms
+RR: 10.10.14.38
+        10.129.0.1
+        10.129.143.158
+        10.129.143.158
+        10.10.14.1
+        10.10.14.38
+
+
+--- 10.129.143.158 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 11.688/11.688/11.688/0.000 ms
+</code></pre>
+<p>The output indicates that a ping request was sent and a response was received from the destination device and also shows the Record-Route field in the IP header of the ICMP Echo Request packet. The Record-Route field contains the IP addresses of all devices that passed through the ICMP Echo Request packet on the way to the destination device.</p>
+<p>The <code>traceroute</code> command can also be used to trace the route to a destination more accurately, which uses the TCO timeout method to determine when the route has been fully traced.</p>
+<h5 id="ip-payload"><a class="header" href="#ip-payload">IP Payload</a></h5>
+<p>... is the actual payload of the packet. It contains the data from various protocols, such as TCP or UDP, that are being transmitted, just like the contents of the letter in the envelope.</p>
+<h4 id="tcp-1"><a class="header" href="#tcp-1">TCP</a></h4>
+<p>TCP packets, also known as segments, are divided into several sections called headers and payloads. The TCP segments are wrapped in the sent IP packet.</p>
+<p>The header contains several fields that contain important information. The source port indicates the computer from which the packet was sent. The destination port indicates to which computer the packet is sent. The sequence number indicates the order in which the data was sent. The confirmation number is used to confirm that all data was received successfully. The control flags indicate whether the packet marks the end of a message, whether it is an acknowledgment that data has been received, or whether it contains a request to repeat data. The window size indicates how much data the receiver can receive. The checksum is used to detect errors in the header and payload. The Urgent Pointer alerts the receiver that important data is in the payload.</p>
+<p>The payload is the actual payload of the packet and contains the data that is being transmitted, just like the content of a conversation between two people.</p>
+<h4 id="udp-1"><a class="header" href="#udp-1">UDP</a></h4>
+<p>... transfers datagrams between two hosts. It is a connectionless protocol, meaning it does not need to establish a connection between the sender and the receiver before sending data. Instead, the data is sent directly to the target host without any prior connection.</p>
+<p>When <code>traceroute</code> is used with UDP, you will receive a Destination Unreachable and Port Unreachable message when the UDP datagram packet reaches the target device. Generally, UDP packets are sent using <code>traceroute</code> on Unix hosts.</p>
+<h3 id="cryptography"><a class="header" href="#cryptography">Cryptography</a></h3>
+<p>Encryption is used on the internet to transmit data, such as payment information, e-mails, or personal data confidentially and protected against manipulation. Data is encrypted using various cryptographic algorithms based on mathematical operations. With the help of encryption, data can be transformed into a form that unauthorized persons can no longer read. Digital keys in symmetric or asymmetric encryption processes are used for encryption. It is easier to crack cipher texts or keys depending on the encryption methods used. If state-of-the-art cryptographic methods with extensive key lengths are used, they work very securely and are almost impossible to compromise for the time being. In principle, you can distinguish between symmetric and asymmetric encryption techniques. Asymmetric methods have only been known for a few decades. Nevertheless, they are the most frequently used methods in digital communications.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../general/networking/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../general/networking/cisco/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../general/networking/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../general/networking/cisco/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

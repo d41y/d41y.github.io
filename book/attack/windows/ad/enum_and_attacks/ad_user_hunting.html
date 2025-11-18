@@ -1,0 +1,992 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>User Hunting - Cybersecurity Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Cybersecurity Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<ul>
+<li><a href="#user-hunting">User Hunting</a>
+<ul>
+<li><a href="#enumerating--retrieving-password-policies">Enumerating &amp; Retrieving Password Policies</a>
+<ul>
+<li><a href="#credentialed">Credentialed</a></li>
+<li><a href="#enumerating-smb-null-sessions---from-linux">Enumerating SMB NULL Sessions - from Linux</a></li>
+<li><a href="#enumerating-smb-null-sessions---from-windows">Enumerating SMB NULL Sessions - from Windows</a></li>
+<li><a href="#enumerating-password-policy---from-linux">Enumerating Password Policy - from Linux</a></li>
+<li><a href="#enumerating-password-policy---from-windows">Enumerating Password Policy - from Windows</a></li>
+<li><a href="#default-password-policy">Default Password Policy</a></li>
+</ul>
+</li>
+<li><a href="#password-spraying---making-a-target-user-list">Password Spraying - Making a Target User List</a>
+<ul>
+<li><a href="#smb-null-session-to-pull-user-list">SMB NULL Session to Pull User List</a></li>
+<li><a href="#gathering-users-with-ldap-anonymous">Gathering Users with LDAP Anonymous</a></li>
+<li><a href="#enumerating-users-with-kerbrute">Enumerating Users with Kerbrute</a></li>
+<li><a href="#credential-enumeration-to-build-your-user-list">Credential Enumeration to Build your User List</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h1 id="user-hunting"><a class="header" href="#user-hunting">User Hunting</a></h1>
+<h2 id="enumerating--retrieving-password-policies"><a class="header" href="#enumerating--retrieving-password-policies">Enumerating &amp; Retrieving Password Policies</a></h2>
+<h3 id="credentialed"><a class="header" href="#credentialed">Credentialed</a></h3>
+<p>With valid domain credentials, the password policy can be obtained remotely using tools such as CrackMapExec or rpcclient.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ crackmapexec smb 172.16.5.5 -u avazquez -p Password123 --pass-pol
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\avazquez:Password123 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Dumping password info for domain: INLANEFREIGHT
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Minimum password length: 8
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Password history length: 24
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Maximum password age: Not Set
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Password Complexity Flags: 000001
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  	Domain Refuse Password Change: 0
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  	Domain Password Store Cleartext: 0
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  	Domain Password Lockout Admins: 0
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  	Domain Password No Clear Change: 0
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  	Domain Password No Anon Change: 0
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  	Domain Password Complex: 1
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Minimum password age: 1 day 4 minutes 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Reset Account Lockout Counter: 30 minutes 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Locked Account Duration: 30 minutes 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Account Lockout Threshold: 5
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  Forced Log off Time: Not Set
+</code></pre>
+<h3 id="enumerating-smb-null-sessions---from-linux"><a class="header" href="#enumerating-smb-null-sessions---from-linux">Enumerating SMB NULL Sessions - from Linux</a></h3>
+<p>Without credentials, you may be able to obtain the password policy via an SMB NULL session or LDAP anonymous bind. SMB NULL sessions allow an unauthenticated attacker to retrieve information from the domain, such as a complete listing of users, groups, computers, user account attributes, and the domain password policy. SMB NULL session misconfigurations are often the result of legacy DC being upgraded in place, ultimately bringing along insecure configurations, which existed by default in older versions of Windows Server.</p>
+<p>When creating a domain in earlier versions of Windows Server, anonymous access was granted to certain shares, which allowed for domain enumeration. An SMB NULL session can be enumerated easily. For enumeration, you can use tools such as enum4linux, CrackMapExec, rpcclient, etc.</p>
+<p>You can use rpcclient to check a DC for SMB NULL session access.</p>
+<p>Once connected, you can issue an RPC command such as <code>querydominfo</code> to obtain information about the domain and confirm NULL session access.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ rpcclient -U "" -N 172.16.5.5
+
+rpcclient $&gt; querydominfo
+Domain:		INLANEFREIGHT
+Server:		
+Comment:	
+Total Users:	3650
+Total Groups:	0
+Total Aliases:	37
+Sequence No:	1
+Force Logoff:	-1
+Domain Server State:	0x1
+Server Role:	ROLE_DOMAIN_PDC
+Unknown 3:	0x1
+</code></pre>
+<p>You can also obtain the password policy. You can see that the password policy is relatively weak, allowing a minimum password of 8 chars.</p>
+<pre><code class="language-bash">rpcclient $&gt; querydominfo
+
+Domain:		INLANEFREIGHT
+Server:		
+Comment:	
+Total Users:	3650
+Total Groups:	0
+Total Aliases:	37
+Sequence No:	1
+Force Logoff:	-1
+Domain Server State:	0x1
+Server Role:	ROLE_DOMAIN_PDC
+Unknown 3:	0x1
+rpcclient $&gt; getdompwinfo
+min_password_length: 8
+password_properties: 0x00000001
+	DOMAIN_PASSWORD_COMPLEX
+</code></pre>
+<p>Enum4linux is a tool built around the Samba suite of tools nmblookup, net, rpcclient and smbclient to use for enumeration of Windows hosts and domains.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ enum4linux -P 172.16.5.5
+
+&lt;SNIP&gt;
+
+ ================================================== 
+|    Password Policy Information for 172.16.5.5    |
+ ================================================== 
+
+[+] Attaching to 172.16.5.5 using a NULL share
+[+] Trying protocol 139/SMB...
+
+	[!] Protocol failed: Cannot request session (Called Name:172.16.5.5)
+
+[+] Trying protocol 445/SMB...
+[+] Found domain(s):
+
+	[+] INLANEFREIGHT
+	[+] Builtin
+
+[+] Password Info for Domain: INLANEFREIGHT
+
+	[+] Minimum password length: 8
+	[+] Password history length: 24
+	[+] Maximum password age: Not Set
+	[+] Password Complexity Flags: 000001
+
+		[+] Domain Refuse Password Change: 0
+		[+] Domain Password Store Cleartext: 0
+		[+] Domain Password Lockout Admins: 0
+		[+] Domain Password No Clear Change: 0
+		[+] Domain Password No Anon Change: 0
+		[+] Domain Password Complex: 1
+
+	[+] Minimum password age: 1 day 4 minutes 
+	[+] Reset Account Lockout Counter: 30 minutes 
+	[+] Locked Account Duration: 30 minutes 
+	[+] Account Lockout Threshold: 5
+	[+] Forced Log off Time: Not Set
+
+[+] Retieved partial password policy with rpcclient:
+
+Password Complexity: Enabled
+Minimum Password Length: 8
+
+enum4linux complete on Tue Feb 22 17:39:29 2022
+</code></pre>
+<p>The tool enum4linux-ng is a rewrite of enum4linux in Python, but has additional features such as the ability to export data as YAML or JSON files which can later be used to process the data further or feed it to other tools.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ enum4linux-ng -P 172.16.5.5 -oA ilfreight
+
+ENUM4LINUX - next generation
+
+&lt;SNIP&gt;
+
+ =======================================
+|    RPC Session Check on 172.16.5.5    |
+ =======================================
+[*] Check for null session
+[+] Server allows session using username '', password ''
+[*] Check for random user session
+[-] Could not establish random user session: STATUS_LOGON_FAILURE
+
+ =================================================
+|    Domain Information via RPC for 172.16.5.5    |
+ =================================================
+[+] Domain: INLANEFREIGHT
+[+] SID: S-1-5-21-3842939050-3880317879-2865463114
+[+] Host is part of a domain (not a workgroup)
+ =========================================================
+|    Domain Information via SMB session for 172.16.5.5    |
+========================================================
+[*] Enumerating via unauthenticated SMB session on 445/tcp
+[+] Found domain information via SMB
+NetBIOS computer name: ACADEMY-EA-DC01
+NetBIOS domain name: INLANEFREIGHT
+DNS domain: INLANEFREIGHT.LOCAL
+FQDN: ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL
+
+ =======================================
+|    Policies via RPC for 172.16.5.5    |
+ =======================================
+[*] Trying port 445/tcp
+[+] Found policy:
+domain_password_information:
+  pw_history_length: 24
+  min_pw_length: 8
+  min_pw_age: 1 day 4 minutes
+  max_pw_age: not set
+  pw_properties:
+  - DOMAIN_PASSWORD_COMPLEX: true
+  - DOMAIN_PASSWORD_NO_ANON_CHANGE: false
+  - DOMAIN_PASSWORD_NO_CLEAR_CHANGE: false
+  - DOMAIN_PASSWORD_LOCKOUT_ADMINS: false
+  - DOMAIN_PASSWORD_PASSWORD_STORE_CLEARTEXT: false
+  - DOMAIN_PASSWORD_REFUSE_PASSWORD_CHANGE: false
+domain_lockout_information:
+  lockout_observation_window: 30 minutes
+  lockout_duration: 30 minutes
+  lockout_threshold: 5
+domain_logoff_information:
+  force_logoff_time: not set
+
+Completed after 5.41 seconds
+</code></pre>
+<p>Enum4linux-ng provided you with a bit clearer output and handy JSON and YAML output using the <code>-oA</code> flag.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ cat ilfreight.json 
+
+{
+    "target": {
+        "host": "172.16.5.5",
+        "workgroup": ""
+    },
+    "credentials": {
+        "user": "",
+        "password": "",
+        "random_user": "yxditqpc"
+    },
+    "services": {
+        "SMB": {
+            "port": 445,
+            "accessible": true
+        },
+        "SMB over NetBIOS": {
+            "port": 139,
+            "accessible": true
+        }
+    },
+    "smb_dialects": {
+        "SMB 1.0": false,
+        "SMB 2.02": true,
+        "SMB 2.1": true,
+        "SMB 3.0": true,
+        "SMB1 only": false,
+        "Preferred dialect": "SMB 3.0",
+        "SMB signing required": true
+    },
+    "sessions_possible": true,
+    "null_session_possible": true,
+
+&lt;SNIP&gt;
+</code></pre>
+<h3 id="enumerating-smb-null-sessions---from-windows"><a class="header" href="#enumerating-smb-null-sessions---from-windows">Enumerating SMB NULL Sessions - from Windows</a></h3>
+<p>It is less common to do this type of null session attack from Windows, but you could use the command <code>net use \\host\ipc$ "" /u:""</code> to establish a null session from a Windows machine and confirm if you can perform more of this type of attack.</p>
+<pre><code>C:\htb&gt; net use \\DC01\ipc$ "" /u:""
+The command completed successfully.
+</code></pre>
+<p>You can also use a username/password combination to attempt to connect.</p>
+<pre><code>C:\htb&gt; net use \\DC01\ipc$ "" /u:guest
+System error 1331 has occurred.
+
+This user can't sign in because this account is currently disabled.
+
+C:\htb&gt; net use \\DC01\ipc$ "password" /u:guest
+System error 1326 has occurred.
+
+The user name or password is incorrect.
+
+C:\htb&gt; net use \\DC01\ipc$ "password" /u:guest
+System error 1909 has occurred.
+
+The referenced account is currently locked out and may not be logged on to.
+</code></pre>
+<h3 id="enumerating-password-policy---from-linux"><a class="header" href="#enumerating-password-policy---from-linux">Enumerating Password Policy - from Linux</a></h3>
+<p>LDAP anonymous binds allow unauthenticated attackers to retrieve information from the domain, such as a complete listing of users, groups, computers, user account attributes, and the domain password policy. This is a legacy configuration, and as of Windows Server 2003, only authenticated users are permitted to initiate LDAP requests. You still see this configuration from time to time as an admin may have needed to set up particular application to allow anonymous binds and given out more than the intended amount of access, thereby giving unauthenticated users access to all objects in AD.</p>
+<p>With an LDAP anonymous bind, you can use LDAP-specific enumeration tools such as windapsearch.py, ldapsearch, ad-ldapdomaindump.py, etc., to pull the password policy. With ldapsearch, it can be a bit cumbersome but doable. One example command to get the password policy is as follows:</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "*" | grep -m 1 -B 10 pwdHistoryLength
+
+forceLogoff: -9223372036854775808
+lockoutDuration: -18000000000
+lockOutObservationWindow: -18000000000
+lockoutThreshold: 5
+maxPwdAge: -9223372036854775808
+minPwdAge: -864000000000
+minPwdLength: 8
+modifiedCountAtLastProm: 0
+nextRid: 1002
+pwdProperties: 1
+pwdHistoryLength: 24
+</code></pre>
+<p>Here you can see the minimum password length of 8, lockout threshold of 5, and password complexity is set.</p>
+<h3 id="enumerating-password-policy---from-windows"><a class="header" href="#enumerating-password-policy---from-windows">Enumerating Password Policy - from Windows</a></h3>
+<p>If you can authenticate to the domain from a Windows host, you can use the built-in Windows binaries such as net.exe to retrieve the password policy. You can also use various tools such as PowerView, CrackMapExec ported to Windows, SharpMapExec, SharpView, etc.</p>
+<p>Using built-in commands is helpful if you land on a Windows system and cannot transfer tools to it, or you are positioned on a Windows system by the client, but have no way of getting tools onto it. One example using the built-in net.exe binary is:</p>
+<pre><code>C:\htb&gt; net accounts
+
+Force user logoff how long after time expires?:       Never
+Minimum password age (days):                          1
+Maximum password age (days):                          Unlimited
+Minimum password length:                              8
+Length of password history maintained:                24
+Lockout threshold:                                    5
+Lockout duration (minutes):                           30
+Lockout observation window (minutes):                 30
+Computer role:                                        SERVER
+The command completed successfully.
+</code></pre>
+<p>Here you can glean the following information:</p>
+<ul>
+<li>passwords never expire</li>
+<li>the minimum password length is 8 so weak passwords are likely in use</li>
+<li>the lockout threshold is 5 wrong passwords</li>
+<li>accounts remained locked out for 30 minutes</li>
+</ul>
+<p>This password policy is excellent for password spraying. The eight-character minimum means that you can try common weak passwords such as <code>Welcome1</code>. The lockout threshold of 5 means that you can attempt 2-3 sprays every 31 minutes without the risk of locking out any accounts. If an account has been locked out, it will automatically unlock after 30 minutes, but you should avoid locking out ANY accounts at all costs.</p>
+<p>PowerView is also quite handy for this:</p>
+<pre><code class="language-powershell">PS C:\htb&gt; import-module .\PowerView.ps1
+PS C:\htb&gt; Get-DomainPolicy
+
+Unicode        : @{Unicode=yes}
+SystemAccess   : @{MinimumPasswordAge=1; MaximumPasswordAge=-1; MinimumPasswordLength=8; PasswordComplexity=1;
+                 PasswordHistorySize=24; LockoutBadCount=5; ResetLockoutCount=30; LockoutDuration=30;
+                 RequireLogonToChangePassword=0; ForceLogoffWhenHourExpire=0; ClearTextPassword=0;
+                 LSAAnonymousNameLookup=0}
+KerberosPolicy : @{MaxTicketAge=10; MaxRenewAge=7; MaxServiceAge=600; MaxClockSkew=5; TicketValidateClient=1}
+Version        : @{signature="$CHICAGO$"; Revision=1}
+RegistryValues : @{MACHINE\System\CurrentControlSet\Control\Lsa\NoLMHash=System.Object[]}
+Path           : \\INLANEFREIGHT.LOCAL\sysvol\INLANEFREIGHT.LOCAL\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHI
+                 NE\Microsoft\Windows NT\SecEdit\GptTmpl.inf
+GPOName        : {31B2F340-016D-11D2-945F-00C04FB984F9}
+GPODisplayName : Default Domain Policy
+</code></pre>
+<p>PowerView gave you the same output as your <code>net accounts</code> command, just in a different format but also revealed that password complexity is enabled.</p>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+<p>If password complexity is set, a user has to choose a password with 3/4 of the following: an uppercase letter, lowercase letter, number, special char.</p>
+</div>
+<h3 id="default-password-policy"><a class="header" href="#default-password-policy">Default Password Policy</a></h3>
+<p>The default password policy when a new domain is created is as follows, and there have been plenty of organizations that never changed this policy.</p>
+<div class="table-wrapper"><table><thead><tr><th>Policy</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>Enforce password history</td><td>24 days</td></tr>
+<tr><td>Maximum password age</td><td>42 days</td></tr>
+<tr><td>Minimum password age</td><td>1 day</td></tr>
+<tr><td>Minimum password length</td><td>7</td></tr>
+<tr><td>Password must meet complexity requirements</td><td>Enabled</td></tr>
+<tr><td>Store passwords using reversible encryption</td><td>Disabled</td></tr>
+<tr><td>Account lockout duration</td><td>Not set</td></tr>
+<tr><td>Account lockout threshold</td><td>0</td></tr>
+<tr><td>Reset account lockout counter after</td><td>Not set</td></tr>
+</tbody></table>
+</div>
+<h2 id="password-spraying---making-a-target-user-list"><a class="header" href="#password-spraying---making-a-target-user-list">Password Spraying - Making a Target User List</a></h2>
+<p>To mount a successful password spraying attack, you first need a list of valid domain users to attempt to authenticate with. There are several ways:</p>
+<ul>
+<li>by leveraging an SMB NULL Session to retrieve a complete list of domain users from the DC</li>
+<li>utilizing an LDAP anonymous bind to query LDAP anonymously and pull down the domain user list</li>
+<li>using a tool such as Kerbrute to validate users utilizing a word list from a source such as the <a href="https://github.com/insidetrust/statistically-likely-usernames">statistically-likely-usernames</a> GitHub repo, or gathered by using a tool such as <a href="https://github.com/initstring/linkedin2username">linkedin2usernames</a> to create a list of potentially valid users</li>
+<li>using a set of credentials from a Linux or Windows attack system either provided by your client or obtained through another means such as LLMNR/NBT-NS response poisoning using Responder or even a successful password spray using a smaller wordlist</li>
+</ul>
+<p>No matter the method you choose, it is also vital for you to consider the domain password policy. If you have an SMB NULL session, LDAP anonymous bind, or a set of valid credentials, you can enumerate the password policy. Having this policy in hand is very useful because the minimum password length and whether or not password complexity is enabled can help you formulate the list of passwords you will try in your spray attempts. Knowing the account lockout threshold and bad password timer will tell you how many spray attempts you can do at a time without locking out any accounts and how many minutes you should wait between spray attempts.</p>
+<p>Regardless of the method you choose, and if you have the password policy or not, you must always keep a log of your activities, including, but not limited to:</p>
+<ul>
+<li>the accounts targeted</li>
+<li>DC used in the attack</li>
+<li>time of the spray</li>
+<li>date of the spray</li>
+<li>password(s) attempted</li>
+</ul>
+<p>This will help you ensure that you do not duplicate efforts. If an account lockout occurs or your client notices suspicious logon attempts, you can supply them with your notes to crosscheck against their logging systems and ensure nothing nefarious was going on in the network.</p>
+<h3 id="smb-null-session-to-pull-user-list"><a class="header" href="#smb-null-session-to-pull-user-list">SMB NULL Session to Pull User List</a></h3>
+<p>If you are on an internal machine but don't have valid domain credentials, you can look for SMB NULL sessions or LDAP anonymous binds on DC. Either of these will allow you to obtain an accurate list of all users within AD and the password policy. If you already have credentials for a domain user or SYSTEM access on a Windows host, then you can easily query AD for this information.</p>
+<p>It's possible to do this using the SYSTEM account because it can impersonate the computer. A computer object is treated as a domain user account. If you don't have a valid domain account, and SMB NULL sessions and LDAP anonymous binds are not possible, you can create a user list using external resources such as email harvesting and LinkedIn. This user list will not be as complete, but it may be enough to provide you with access to AD.</p>
+<p>Some tools that can leverage SMB NULL sessions and LDAP anonymous binds include enum4linux, rpcclient, and CrackMapExec, among others. Regardless of the tool, you'll have to do a bit of filtering to clean up the output and obtain a list of only usernames, one on each line. You can do this with enum4linunx with the <code>-U</code> flag.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ enum4linux -U 172.16.5.5  | grep "user:" | cut -f2 -d"[" | cut -f1 -d"]"
+
+administrator
+guest
+krbtgt
+lab_adm
+htb-student
+avazquez
+pfalcon
+fanthony
+wdillard
+lbradford
+sgage
+asanchez
+dbranch
+ccruz
+njohnson
+mholliday
+
+&lt;SNIP&gt;
+</code></pre>
+<p>You can use the <code>enumdomusers</code> command after connecting anonymously using rpcclient.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ rpcclient -U "" -N 172.16.5.5
+
+rpcclient $&gt; enumdomusers 
+user:[administrator] rid:[0x1f4]
+user:[guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[lab_adm] rid:[0x3e9]
+user:[htb-student] rid:[0x457]
+user:[avazquez] rid:[0x458]
+
+&lt;SNIP&gt;
+</code></pre>
+<p>Finally, you can use CrackMapExec with the <code>--users</code> flag. This is useful tool that will also show the <code>badpwdcount</code>, so you can remove any accounts from your list that are close to the lockout threshold. It also shows the <code>badpwdtime</code>, which is the date and time of the last bad password attempt, so you can see how close an account is to having its <code>badpwdcount</code> reset. In an environment with multiple DCs, this value is maintained separately on each one. To get an accurate total of the account's bad password attempts, you would have to either query each DC and use the sum of the values or query the DC with the PDC Emulator FSMO role.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ crackmapexec smb 172.16.5.5 --users
+
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated domain user(s)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\administrator                  badpwdcount: 0 baddpwdtime: 2022-01-10 13:23:09.463228
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\guest                          badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\lab_adm                        badpwdcount: 0 baddpwdtime: 2021-12-21 14:10:56.859064
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\krbtgt                         badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\htb-student                    badpwdcount: 0 baddpwdtime: 2022-02-22 14:48:26.653366
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\avazquez                       badpwdcount: 0 baddpwdtime: 2022-02-17 22:59:22.684613
+
+&lt;SNIP&gt;
+</code></pre>
+<h3 id="gathering-users-with-ldap-anonymous"><a class="header" href="#gathering-users-with-ldap-anonymous">Gathering Users with LDAP Anonymous</a></h3>
+<p>You can use various tools to gather users when you find an LDAP anonymous bind. Some examples include windapsearch and ldapsearch. If you choose to use ldapsearch you will need to specify a valid LDAP search filter.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "(&amp;(objectclass=user))"  | grep sAMAccountName: | cut -f2 -d" "
+
+guest
+ACADEMY-EA-DC01$
+ACADEMY-EA-MS01$
+ACADEMY-EA-WEB01$
+htb-student
+avazquez
+pfalcon
+fanthony
+wdillard
+lbradford
+sgage
+asanchez
+dbranch
+
+&lt;SNIP&gt;
+</code></pre>
+<p>Tools such as windapsearch make this easier. Here you can specify anonymous access by providing a blank username with the <code>-u</code> flag and the <code>-U</code> flag to tell the tool to retrieve just users.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ ./windapsearch.py --dc-ip 172.16.5.5 -u "" -U
+
+[+] No username provided. Will try anonymous bind.
+[+] Using Domain Controller at: 172.16.5.5
+[+] Getting defaultNamingContext from Root DSE
+[+]	Found: DC=INLANEFREIGHT,DC=LOCAL
+[+] Attempting bind
+[+]	...success! Binded as: 
+[+]	 None
+
+[+] Enumerating all AD users
+[+]	Found 2906 users: 
+
+cn: Guest
+
+cn: Htb Student
+userPrincipalName: htb-student@inlanefreight.local
+
+cn: Annie Vazquez
+userPrincipalName: avazquez@inlanefreight.local
+
+cn: Paul Falcon
+userPrincipalName: pfalcon@inlanefreight.local
+
+cn: Fae Anthony
+userPrincipalName: fanthony@inlanefreight.local
+
+cn: Walter Dillard
+userPrincipalName: wdillard@inlanefreight.local
+
+&lt;SNIP&gt;
+</code></pre>
+<h3 id="enumerating-users-with-kerbrute"><a class="header" href="#enumerating-users-with-kerbrute">Enumerating Users with Kerbrute</a></h3>
+<p>If you have no access at all from your position in the internal network, you can use Kerbrute to enumerate valid AD accounts and for password spraying.</p>
+<p>This tool uses Kerberos Pre-Authentication, which is a much faster and potentially stealthier way to perform password spraying. This method does not generate Windows event ID 4625: "An Account failed to log on", or a logon failure which is often monitored for. The tool sends TGT requests to the DC without Kerberos Pre-Authentication to perform username enumeration. If the KDC responds with the error <code>PRINCIPAL UKNOWN</code>, the username is invalid. Whenever the KDC prompts for Kerberos Pre-Authentication, this signals that the username exists, and the tool will mark it as valid. This method of username enumeration does not cause logon failures and will not lock out accounts. However, once you have a list of valid users and switch gears to use this tool for password spraying, failed Kerberos Pre-Authentication attempts will count towards an account's failed login accounts and can lead to account lockout, so you still must be careful regardless of the method chosen.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$  kerbrute userenum -d inlanefreight.local --dc 172.16.5.5 /opt/jsmith.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: dev (9cfb81e) - 02/17/22 - Ronnie Flathers @ropnop
+
+2022/02/17 22:16:11 &gt;  Using KDC(s):
+2022/02/17 22:16:11 &gt;  	172.16.5.5:88
+
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 jjones@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 sbrown@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 tjohnson@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 jwilson@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 bdavis@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 njohnson@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 asanchez@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 dlewis@inlanefreight.local
+2022/02/17 22:16:11 &gt;  [+] VALID USERNAME:	 ccruz@inlanefreight.local
+
+&lt;SNIP&gt;
+</code></pre>
+<p>Using Kerbrute for username enumeration will generate event ID 4768: "A Kerberos authentication ticket (TGT) was requested". This will only be triggered if Kerberos event logging is enabled via Group Policy. Defenders can tune their SIEM tools to look for an influx of this event ID, which may indicate an attack. If you are successful with this method during a pentest, this can be an excellent recommendation to add to your report.</p>
+<h3 id="credential-enumeration-to-build-your-user-list"><a class="header" href="#credential-enumeration-to-build-your-user-list">Credential Enumeration to Build your User List</a></h3>
+<p>With valid credentials, you can use any of the tools stated previously to build a user list.</p>
+<pre><code class="language-bash">d41y@htb[/htb]$ sudo crackmapexec smb 172.16.5.5 -u htb-student -p Academy_student_AD! --users
+
+[sudo] password for htb-student: 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [*] Windows 10.0 Build 17763 x64 (name:ACADEMY-EA-DC01) (domain:INLANEFREIGHT.LOCAL) (signing:True) (SMBv1:False)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] INLANEFREIGHT.LOCAL\htb-student:Academy_student_AD! 
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  [+] Enumerated domain user(s)
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\administrator                  badpwdcount: 1 baddpwdtime: 2022-02-23 21:43:35.059620
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\guest                          badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\lab_adm                        badpwdcount: 0 baddpwdtime: 2021-12-21 14:10:56.859064
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\krbtgt                         badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\htb-student                    badpwdcount: 0 baddpwdtime: 2022-02-22 14:48:26.653366
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\avazquez                       badpwdcount: 20 baddpwdtime: 2022-02-17 22:59:22.684613
+SMB         172.16.5.5      445    ACADEMY-EA-DC01  INLANEFREIGHT.LOCAL\pfalcon                        badpwdcount: 0 baddpwdtime: 1600-12-31 19:03:58
+
+&lt;SNIP&gt;
+```&lt;!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --&gt;
+
+&lt;div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
+
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2025 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../theme/pagetoc.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
