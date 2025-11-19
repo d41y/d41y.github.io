@@ -22,7 +22,7 @@ use-link-labels = true
 
 [output.html.fold]
 enable = true
-level = 0
+level = 1
 
 [output.html.print]
 enable = false
@@ -32,3 +32,4 @@ git-repository-url = "https://github.com/d41y/d41y.github.io"
 git-repository-icon = "fa-github"
 additional-css = ["theme/pagetoc.css"]
 additional-js  = ["theme/pagetoc.js"]
+
