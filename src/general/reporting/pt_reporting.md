@@ -224,3 +224,31 @@ You should also consider color-coded highlighting in your terminal output to hig
 
 When starting a pentest, you are being trusted by your customers to enter their network and "do no harm" wherever possible. This means not bringing down any hosts or affecting the availability of applications, not changing passwords, making significant or difficult-to-reverse configuration changes, or viewing or removing certain types of data from the environment. This data may include unredacted PII, potentially criminal info, anything considered legally "discoverable", etc. For example, if you gain access to a network share with sensitive data, it's probably best to just screenshot the directory with the files in it rather than opening individual files and screenshotting the file contents. If the files are as sensitive as you think, they'll get the message and know what's in them based on the file name. Collecting actual PII and extracting it from the target environment may have significant compliance obligations for storing and processing that data like GDPR and the like and could open up a slew of issues for your company and you.
 
+### Types of Reports
+
+#### Differences Across Assessment Types
+
+##### Vulnerability Assessment
+
+Vulnerability assessments involve running an automated scan of an environment to enumerate vulnerabilities. These can be authenticated or unauthenticated. No exploitation is attempted, but you will often look to validate scanner results so your report may show a client which scanner results are actual issues and which are false positives. Validation may consist of performing an additional check to confirm a vulnerable version is in use or a setting/misconfig is in place, but the goal is not to gain a foothold and move laterally/vertically. Some customers will even ask for scan results with no validation.
+
+##### Internal vs External
+
+An external scan is performed from the perspective of an anonymous user on the internet targeting the organization's public systems. An internal scan is conducted from the perspective of a scanner on the internal network and investigates hosts from behind the firewall. This can be done from the perspective of an anonymous user on the corporate user network, emulating a compromised server, or any number of different scenarios. A customer may even ask for an internal scan to be conducted with credentials, which can lead to considerably more scanner findings to sift through but will also produce more accurate and less generic results.
+
+##### Report Contents
+
+These reports typically focus on themes that can be observed in the scan results and highlight the number of vulns and their severity levels. These scans can produce a LOT of data, so identifying patterns and mapping them to procedural deficiencies is important to prevent the information from becoming overwhelming.
+
+#### Pentesting
+
+Pentesting goes beyond automated scans and can leverage vulnerability scan data to help guide exploitation. Like vulnerability scans, these can be performed from an internal or external perspective. Depending on the type of pentest, you may not perform any kind of vulnerability scanning at all.
+
+A pentest may be performed from various perspectives, such as "black box", where you have no more information than the name of the company during an external or a network connection for an internal, "grey box" where you are given just in-scope IP addresses/CIDR network ranges, or "white box" where you may be given creds, source code, configurations, and more. Testing can be performed with zero evasion to attempt to uncover as many vulns as possible, from a hybrid evasive standpoint to test the customer's defenses by starting out evasive and gradually becoming "noisier" to see at what level internal security teams/monitoring tools detect and block you. Typically once you are detected in this type of assessment, the client will ask you to move to non-evasive testing for the remainder of the assessment. This is a great assessment type to recommend to clients with some defenses in place but not a highly mature defensive security posture. It can help to show gaps in their defenses and where they should concentrate efforts on enhancing their detection and prevention rules. For more mature clients, this type of assessment can be a great test of their defenses and internal procedures to ensure that all parties perform their roles properly in the event of an actual attack.
+
+Finally, you may be asked to perform evasive testing throughout the assessment. In this type of assessment, you will try to remain undetected for as long as possible and see what kind of access, if any, you can obtain while working stealthily. This can help to simulate a more advanced attacker. However, this type of assessment is often limited by time constraints that are not in place for a real-world attacker. A client may also opt for a longer-term adversary simulation that may occur over multiple months, with few company staff aware of the assessment and few or no client staff knowing the exact start day/time of the assessment. This assessment type is well-suited for more security mature organizations and requires a bit of a different skill set than a traditional network/application pentester.
+
+##### Internal vs External
+
+Similar to vulnerability scanning perspectives, external pentesting will typically be conducted from the perspective of an anonymous attacker on the internet. It may leverage OSINT data/publicly available information to attempt to gain access to sensitive data via applications or the internal network by attacking internet-facing hosts. Internal pentesting may be conducted as an anonymous user on the internal network or as an authenticated user. It is typically conducted to find as many flaws as possible to obtain a foothold, perform horizontal and vertical privesc, move laterally, and compromise the internal network.
+
