@@ -252,3 +252,68 @@ Finally, you may be asked to perform evasive testing throughout the assessment. 
 
 Similar to vulnerability scanning perspectives, external pentesting will typically be conducted from the perspective of an anonymous attacker on the internet. It may leverage OSINT data/publicly available information to attempt to gain access to sensitive data via applications or the internal network by attacking internet-facing hosts. Internal pentesting may be conducted as an anonymous user on the internal network or as an authenticated user. It is typically conducted to find as many flaws as possible to obtain a foothold, perform horizontal and vertical privesc, move laterally, and compromise the internal network.
 
+#### Inter-Disciplinary Assessments
+
+Some assessments may require involvement from people with diverse skillsets that complement one another. While logistically more complex, these tend to organically be more collaborative in nature between the consulting team and the client, which adds tremendous value to the assessment and trust in relationship. Some examples of these types of assessments include:
+
+- Purple Team Style
+- Cloud Focused Pentesting
+- Comprehensive IoT
+
+#### Web Application Pentesting
+
+Depending on the scope, this type of assessment may also be considered an inter-disciplinary assessment. Some application assessments may only focus on identifying and validating the vulnerabilities in an application with role-based, authenticated testing with no interest in evaluating the underlying server. Others may want to test both the application and the infrastructure with the intent of initial compromise being through the web application itself and then attempting to move beyond the application to see what other hosts and systems behind it exist that can be compromised. The latter type of assessment would benefit from someone with a development and application testing background for initial compromise and then perhaps a network-focused pentester to "live off the land" and move around or escalate privileges through AD or some other means beyond the application itself.
+
+#### Hardware Pentesting
+
+This type of testing is often done on IoT-type devices but can be extended to testing the physical security of a laptop shipped by the client or an onsite kiosk or ATM. Each client will have different comfort level with the depth of testing here, so it's vital to establish the rules of engagement before the assessment begins, particularly when it comes to destructive testing. If the client expects their device back in one piece and functioning, it is likely inadvisable to try desoldering chips from the motherboard or similar attacks.
+
+#### Draft Report
+
+It is becoming more commonplace for clients to expect to have a dialogue and incorporate their feedback into a report. This may come in many forms, whether they want to add comments on how they plan to address each finding, tweak potentially inflammatory language, or move things around to where it suits their needs better. For these reasons, it's best to plan on submitting a draft report first, giving the client time to review it on their own, and then offering a time slot where they can review it with you to ask questions, get clarification, or explain what they would like to see. The client is paying for the report deliverable in the end, and you must ensure it is as thorough and valuable to them as possible. Some will not comment on the report at all, while others will ask for significant changes/additions to help it suit their needs, whether it be to make it presentable to their board of directors for additional funding to use the report as an input to their security roadmap for performing remediation and hardening their security posture.
+
+#### Final Report
+
+Typically, after reviewing the report with the client and confirming that they are satisfied with it, you can issue the final report with any necessary modifications. This may seem like a frivolous process, but several auditing firms will not accept a draft report to fulfill their compliance obligations, so it's important from the client's perspective.
+
+##### Post-Remediation Report
+
+It is also common for a client to request that the findings you discovered during the original assessment be tested again again after they've had an opportunity to correct them. This is all but required for organizations beholden to a compliance standard such as PCI. You should not be redoing the entire assessment for this phase of the assessment. But instead, you should be focusing on retesting only the findings and only the hosts affected by those findings from the original assessment. You also want to ensure that there is a time limit on how long after the initial assessment you perform remediation testing. Here are some of the things that might happen if you don't.
+
+- The client asks you to test their remediation several months or even a year or more later, and the environment has changed so much that it's impossible to get an "apples to apples" comparison.
+- If you check the entire environment for new hosts affected by a given finding, you may discover new hosts that are affected and fall into an endless loop of remediation testing the new hosts you discovered last time.
+- If you run new large-scale scans like vulnerability scans, you will likely find stuff that wasn't there before, and your scope will quickly get out of control.
+- If a client has a problem with the "snapshot" nature of this type of testing, you could recommend a Breach and Attack Simulation (_BAS_) type tool to periodically run those scenarios to ensure they do not continue popping up.
+
+If any of these situations occur, you should expect more scrutiny around severity levels and perhaps pressure to modify things that should not be modified to help them out. In these situations, your response should be carefully crafted to be both clear that you're not going to cross ethical boundaries, but also commiserate with their situation and offer some ways out of it for them. This allows you to keep your integrity intact, fosters the feeling with the client that you sincerely care about their plight, and gives them a path forward without having to turn themselves inside out to make it happen.
+
+One approach could be to treat this as a new assessment in these situations. If the client is unwilling, then you would likely want to retest just the findings from the original report and carefully note in the report the length of time that has passed since the original assessment, that this is a point in time check to assess whether ONLY the previously reported vulns affect the originally reported host or hosts and that it's likely the client's environment has changed significantly, and a new assessment was not performed.
+
+In terms of report layout, some folks may prefer to update the original assessment by tagging affected hosts in each finding with a status, while others may prefer to issue a new report entirely that has some additional comparison content and an updated executive summary.
+
+#### Attestation Report
+
+Some clients will request an Attestation Letter or Attestation Report that is suitable for their vendors or customers who require evidence that they've had a pentest done. The most significant difference is that your client will not want to hand over the specific technical details of all of the findings or credentials or other secret information that may be included to a third party. This document can be derived from the report. It should focus only on the number of findings discovered, the approach taken, and general comments about the environment itself. This document should likely only be a page or two long.
+
+#### Other Deliverables
+
+##### Slide Deck
+
+You may also be requested to prepare a presentation that can be given at several different levels. Your audience may be technical, or they may be more executive. The language and focus should be as different in your executive presentation as the executive summary is from the technical finding details in your report. Only including graphs and numbers will put your audience to sleep, so it's best to be prepared with some anecdotes from your own experience or perhaps some recent current events that correlate to a specific attack vector or compromise. Bonus points if said story is in the same industry as your client. The purpose of this is not fear-mongering, and you should be careful not to present it that way, but it will help hold your audience's attention. It will make the risk relatable enough to maximize their chances of doing something about it.
+
+##### Spreadsheet of Findings
+
+The spreadsheet of findings should be pretty self-explanatory. This is all of the fields in the findings of your report, just in a tabular layout that the client can use for easier sorting and other data manipulation. This may also assist them with importing those findings into a ticketing system for internal tracking purposes. This document should not inlcude your executive summary or narratives. Ideally, learn how to use pivot tables and use them to create some interesting analytics that the client might find interesting. The most helpful objective in doing this is sorting findings by severity or category to help prioritize remediation.
+
+#### Vulnerability Notifications
+
+Sometimes during an assessment, you will uncover a critical flaw that requires you to stop work and inform your clients of an issue so they can decide if they would like to issue an emergency fix or wait until after the assessment is over.
+
+##### When to draft one
+
+At a minimum, this should be done for any finding that is directly exploitable that is exposed to the internet and results in unauthenticated remote code execution or sensitive data exposure, or leverage weak/default credentials for the same. Beyond that, expectations should be set for this during the project kickoff process. Some clients may want all high and critical findings reported out-of-band regardless of whether they're internal or external. Some folks may need mediums as well. It's usually best to set a baseline for yourself, tell the client what to expect, and let them ask for modifications to the process if they need them.
+
+##### Contents
+
+Due to the nature of these notifications, it's important to limit the amount of fluff in these documents so the technical folks can get right to the details and begin fixing the issue. For this reason, it's probably best to limit this to the typical content you have in the technical details of your findings and provide tools-based evidence for the finding that the client can quickly reproduce if needed.
+
