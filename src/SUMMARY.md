@@ -107,7 +107,7 @@
 		- [0x00](attack/windows/windows_fundamentals.md)
 		- [Active Directory](attack/windows/ad/README.md)
 			- [0x00](attack/windows/ad/intro_ad.md)
-			- [Enumeration and Attacks](attack/windows/ad/enum_and_attacks/README.md)
+			- [Enumeration and (basic) Attacks](attack/windows/ad/enum_and_attacks/README.md)
 				- [Initial Enumeration](attack/windows/ad/enum_and_attacks/ad_initial_enum.md)
 				- [Foothold](attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.md)
 				- [User Hunting](attack/windows/ad/enum_and_attacks/ad_user_hunting.md)

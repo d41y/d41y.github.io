@@ -1,4 +1,4 @@
-# Enumeration and Attacks
+# Enumeration and (basic) Attacks
 
 - [Initial Enumeration](ad_initial_enum.md)
 - [Foothold](ad_sniffing_for_foothold.md)

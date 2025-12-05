@@ -317,3 +317,5 @@ At a minimum, this should be done for any finding that is directly exploitable t
 
 Due to the nature of these notifications, it's important to limit the amount of fluff in these documents so the technical folks can get right to the details and begin fixing the issue. For this reason, it's probably best to limit this to the typical content you have in the technical details of your findings and provide tools-based evidence for the finding that the client can quickly reproduce if needed.
 
+### Components of a Report
+
