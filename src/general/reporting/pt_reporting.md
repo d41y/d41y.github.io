@@ -319,3 +319,51 @@ Due to the nature of these notifications, it's important to limit the amount of 
 
 ### Components of a Report
 
+#### Prioritizing Your Efforts
+
+During an assessment, especially large ones, you'll be faced with a lot of "noise" that you need to filter out to best focus your efforts and prioritize findings. As testers, you are required to disclose everything you find, but when there is a ton of information coming at you through scans and enumeration, it is easy to get lost or focus on the wrong things and waste time and potentially miss high-impact issues. This is why it is essential that you understand the output that your tools produce, have repeatable steps, to sift through all of this data, process it, and remove false positives or informational issues that could distract you from the goal of the assessment. Experience and a repeatable process are key so that you can sift through all of your data and focus your efforts on high-impact findings such as RCE flaws or others that may lead to sensitive data disclosure. It is worth it to report informational findings, but instead of spending the majority of your time validating these minor, non-exploitable issues, you may want to consider consolidating some of them into categories that show the client you were aware that the issues existed, but you were unable to exploit them in any meaningful way.
+
+When starting in pentesting, it can be difficult to know what to prioritize, and you may fall down rabbit holes trying to exploit a flaw that doesn't exist or getting a broken PoC exploit to work. Time and experience help here, but you should also lean on senior team members and mentors to help. Something that you may waste half a day on could be something that they have seen many times and could tell you quickly whether it is a false positive or worth running down. Even if they can't give you a really quick black and white answer, they can at least point you in a direction that saves you several hours. Surround yourself with people you're comfortable with asking for help that won't make you feel like an idiot if you don't know all the answers.
+
+#### Writing an Attack Chain
+
+The attack chain is your chance to show off the cool exploitation chain you took to gain a foothold, move laterally, and compromise the domain. It can be a helpful mechanism to help the reader connect the dots when multiple findings are used in conjunction with each other and gain a better understanding of why certain findings are given the severity rating that they are assigned. For example, a particular finding on its own may be medium-risk but, combined with one or two other issues, could elevate to high-risk, and this section is your chance to demonstrate that. A common example is using Responder to intercept NBT-NS/LLMNR traffinc and relaying it to hosts where SMB signing is not present. It can get really interesting if some findings can be incorporated that might otherwise seem inconsequential, like using an information disclosure of some sort to help guide you through an LFI to read an interesting configuration file, log in to an external-facing application, and leverage functionality to gain remote code execution and a foothold inside the internal network.
+
+There are multiple ways to present this, and your style may differ. EXAMPLE: You will start with a summary of the attack chain and then walk through each step with supporting command output and screenshots to show the attack chain as clearly as possible. A bonus here is that you can re-use this as evidence for your individual findings so you don't have to format things twice and can copy/paste them into the relevant finding.
+
+#### Writing a Strong Executive Summary
+
+The Executive Summary is one of the most important parts of the report. Your clients are ultimately paying for the report deliverable which has several purposes aside from showing weaknesses and reproduction steps that can be used by technical teams working on remediation. The report will likely be viewed in some part by other internal stakeholders such as Internal Audit, IT and IT Security management, C-level management, and even the Board of Directors. The report may be used to either validate funding from the prior year for infosec or to request additional funding for the following year. For this reason, you need to ensure that there is content in the report that can be easily understood by people without technical knowledge.
+
+##### Key Concepts
+
+The intended audience for the Executive Summary is typically the person that is going to be responsible for allocating the budget to fixing the issues you discovered. For better or worse, some of your clients have likely been trying to get funding to fix the issues presented in the report for years and fully intend to use the report as ammunition to finally get some stuff done. This is your best chance to help them out. If you lose your audience here and there are budgetary limitations, the rest of the report can quickly become worthless. Some key things to assume to maximize the effectiveness of the Executive Summary are:
+
+- It should be obvious, but this should be written for someone who isn't technical at all. The typical barometer for this is "if your parents can't understand what the point is, then you need to try again".
+- The reader doesn't do this every day. They don't know what Rubeus does, what password spraying means, or how it's possible that tickets can grant different tickets.
+- This may be the first time they've ever been through a pentest.
+- Much like the rest of the world in the instant gratification age, their attention span is small. When you lose it, you are extraordinarily unlikely to get it back.
+- Along the same lines, no one likes to read something where they have to Google what things mean. Those are called distractions.
+
+##### Do
+
+- When talking about metrics, be as specific as possible.
+- It's a summary. Keep it that way.
+- Describe the types of things you managed to access.
+- Describe the general things that need to improve to mitigate the risks you discovered.
+- If you're feeling brave and have a decent amount of experience on both sides, provide a general expectation for how much effort will be necessary to fix some of this.
+
+##### Do Not
+
+- Name or recommend specific vendors.
+- Use Acronyms.
+- Spend more time talking about stuff that doesn't matter than you do about the significant findings in the report.
+- Use words that no one has ever heard of before.
+- Reference a more technical section of the report.
+
+##### Anatomy of the Executive Summary
+
+The first thing you'll likely want to do is get a list of your findings together and try categorizing the nature of the risk of each one. These categories will be the foundation for what you're going to discuss in the executive summary.
+
+#### Summary of Recommendations
+
