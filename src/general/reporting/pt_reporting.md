@@ -367,3 +367,63 @@ The first thing you'll likely want to do is get a list of your findings together
 
 #### Summary of Recommendations
 
+Before you get into the technical findings, it's a good idea to provide a Summary of Recommendations or Remediation Summary. Here you can list your short, medium, and long-term recommendations based on your findings and the current state of the client's environment. You'll need to use your experience and knowledge of the client's business, security budget, staffing considerations, etc., to make accurate recommendations. Your clients will often have input on this section, so you want to get it right, or the recommendations are useless. If you structure this properly, your clients can use it as the basis for a remediation roadmap. If you opt not to do this, be prepared for clients to ask you to prioritize remediation for them. It may not happen all the time, but if you have a report with 15 high-risk findings and nothing else, they're likely going to want to know which of them is "the most high".
+
+You should tie each recommendation back to a specific finding and not include any short or medium-term recommendations that are not actionable by remediating findings reported later in the report. Long-term recommendations may map back to informational/best practice recommendations such as "Create baseline security templates for Windows Server and Workstation hosts" but may also be catch-all recommendations such as "Perform periodic Social Engineering engagements with follow-on debriefings and security awareness training to build a security-focused culture within the organization from the top down.".
+
+Some findings could have an associated short and long-term recommendation. For example, if a particular patch is missing in some places, that is a sign that the organization struggles with patch management and perhaps does not have a strong patch management program, along with associated policies and procedures. The short-term solution would be to push out the relevant patches, while the long-term objective would be to review patch and vulnerability management processes to address any gaps that would prevent the same issue from cropping up again. In the application security world, it might instead be fixing the code in the short term and in the long term, reviewing the SDLC to ensure security is considered early enough in the development process to prevent issues from making it into production.
+
+#### Findings
+
+After the Executive Summary, the Findings section is one of the most important. This section gives you a chance to show off your work, paint the client a picture of the risk to their environment, give technical teams the evidence to validate and reproduce issues and provide remediation advice.
+
+#### Appendices
+
+There are appendices that should appear in every report, but others will be dynamic and may not be necessary for all reports. If any of these appendices bloat the size of the report unnecessarily, you may want to consider whether a supplemental spreadsheet would be a better way to present the data.
+
+#### Static Appendices
+
+##### Scope 
+
+Shows the scope of the assessment. Most auditors that the client has to hand your report to will need to see this.
+
+##### Methodology
+
+Explain the repeatable process you follow to ensure that your assessments are thorough and consistent.
+
+##### Severity Ratings
+
+If your severity ratings don't directly map to a CVSS score or something similar, you will need to articulate the criteria necessary to meet your severity definitions. You will have to defend this occasionally, so make sure it is sound and can be backed up with logic and that the findings you inlcude in your report are rated accordingly.
+
+##### Biographies
+
+If you perform assessments with the intent of fulfilling PCI compliance specifically, the report should inlcude a bio about the personnel performing the assessment with the specific goal of articulating that the consultant is adequately qualified to perform the assessment. Even without compliance obligations, it can help give the client peace of mind that the person doing their assessment knew what they were doing.
+
+#### Dynamic Appendices
+
+##### Exploitation Attempts and Payloads
+
+If you've ever done anything in incident response, you should know how many artifacts are left behind after a pentest for the forensics guys to try and sift through. Be respectful and keep track of the stuff you did so that if they experience an incident, they can differentiate what was you versus an actual attacker. If you generate custom payloads, particularly if you drop them on disk, you should also inlcude the details of those payloads here, so the client knows exactly where to go and what to look for to get rid of them. This is especially important for the payloads that you cannot clean up yourself.
+
+##### Compromised Credentials
+
+If a large number of accounts were compromised, it is helpful to list them here so that the client can take action against them if necessary.
+
+##### Configuration Changes
+
+If you made any configuration changes in the client environment, you should itemize all of them so that the client can revert them and elimante any risks you introduced into the environment. Obviously, it's ideal if you put things back the way you found them yourself and get approval in writing from the client to change things to prevent getting yelled at later on if your change has unintended consequences for a revenue-generating process.
+
+##### Additional Affected Scope
+
+If you have a finding with a list of affected hosts that would be too much to include with the finding itself, you can usually reference an appendix in the finding to see a complete list of the affected hosts where you can create a table to display them in multiple columns. This helps keep the report clean instead of having a bulleted list several pages long.
+
+##### Information Gathering
+
+If the assessment is an External Pentest, you may include additional data to help the client understand their external footprint. This could include whois data, domain ownership information, subdomains, discovered emails, accounts found in public breach data, an analysis of the client's SSL/TLS configurations, and even a listing of externally accessible ports/services. This data can be beneficial in a low-to-no-finding report but should convey some sort of value to the client and not just be "fluff".
+
+##### Domain Password Analysis
+
+If you're able to gain Domain Admin access and dump the NTDS database, it's a good idea to run this through Hashcat with multiple wordlists and rules and even brute-force NTLM up through eight characters if your password cracking rig is powerful enough. Once you've exhausted your cracking attempts, a tool such as [DPAT](https://github.com/clr2of8/DPAT) can be used to produce a nice report with various statistics. You may want to include some key stats from this report. This can help drive home themes in the Executive Summary and Findings sections regarding weak passwords. You may also wish to provide the client with the entire DPAT report as supplementary data.
+
+## Reporting
+
