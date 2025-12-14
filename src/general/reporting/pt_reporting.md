@@ -427,3 +427,192 @@ If you're able to gain Domain Admin access and dump the NTDS database, it's a go
 
 ## Reporting
 
+### How to Write Up a Finding
+
+The Findings section of your report is the "meat". This is where you get to show off what you found, how you exploited them, and give the client guidance on how to remediate the issues. The more detail you can put into each finding, the better. This will help technical teams reproducde the finding on their own and then be able to test that their fix worked. Being detailed in this section will also help whoever is tasked with the post-remediation assessment if the client contracts your firm to perform it. While you'll often have "stock" findings in some sort of database, it's essential to tweak them to fit your client's environment to ensure you aren't mispresenting anything.
+
+#### Breakdown of a Finding
+
+Each finding should have the same general type of information that should be customized to your client's specific circumstances. If a finding is written to suit several different scenarios or protocols, the final version should be adjusted to only reference the particular circumstances you identified. "Default Credentials" could have different meanings for risk if it affects a DeskJet printer versus the building's HVAC control or another high-impact web application. At a minimum, the following information should be included for each finding:
+
+- Description of the finding and what platform(s) the vuln affects
+- Impact if the finding is left unresolved
+- Affected systems, networks, environments, or applications
+- Recommendation for how to address the problem
+- Reference links with additional information about the finding and resolving it
+- Steps to reproduce the issue and the evidence that you collected
+
+Some additional, optional fields include:
+
+- CVE
+- OWASP, MITRE IDs
+- CVSS or similar score
+- Ease of exploitation and probability of attack
+- Any other information that might help learn about and mitigate the attack
+
+#### Showing Finding Reproduction Steps Adequately
+
+As mentioned in the previous section regarding the Executive Summary, it's important to remeber that even though your point-of-conract might be reasonable technical, if they don't have a background specifically in pentesting, there is a pretty decent chance they won't have any idea what they're looking at. They may have never even heard of the tool you used to exploit this vuln, much less understand what's important in the wall of text it spits out when the command runs. For this reason, it's crucial to guard yourself against taking things for granted and assuming people know how to fill in the blanks themselves. If you don't do this correctly, this will erode the effectiveness of your deliverable, but this time in the eyes of your technical audience. Some concepts to consider:
+
+- Break each step into its own figure. If you perform multiple steps in the same figure, a reader unfamiliar with the tools being used may not understand what is taking place, much less have an idea of how to reproduce it themselves.
+- If setup is required, capture the full configuration so the reader can see what the exploit config should look like before running the exploit. Create a second figure that shows what happens when you run the exploit.
+- Write a narrative between figures describing what is happening and what is going through your head at this point in the assessment. Do not try to explaint what is happening in the figure with the caption and have a bunch of consecutive figures.
+- After walking through your demonstration using your preferred toolkit, offer alternative tools that can be used to validate the finding if they exist.
+
+Your primary objective should be to present evidence in a way that is understandable and actionable to the client. Think about how the client will use the information you're presenting. If you're showing a vuln in a web application, a screenshot of Burp isn't the best way to present this information if you're crafting your own web requests. The client will probably want to copy/paste the payload from your testing to recreate it, and they can't do that if it's just a screenshot.
+
+Another critical thing to consider is whether your evidence is completely and utterly defensible. For example, if you're trying to demonstrate that information is being transmitted in clear text because of the use of basic authentication in a web application, it's insufficient just to screenshot the login prompt popup. That shows that basic auth is in place but offers no proof that information is being transmitted in the clear. In this instance, showing the login prompt with some fake credentials entered into it, and the clear text credentials in a Wireshark packet capture of the human-readable authentication request leaves no room for debate. Similarly, if you're trying to demonstrate the presence of a vuln in a particular web application or something else with a GUI, it's important to capture either the URL in the address bar or output from an `ifconfig` or `ipconfig` command to prove that it's on the client's host and not some random image you downloaded from Google. Also, if you're screenshotting your browser, turn your bookmarks bar off and disable any unprofessional extensions or dedicate a specific web browser to your testing.
+
+#### Effective Remediation Recommendations
+
+##### Example
+
+- **Bad**: Reconfigure your registry settings to harden against X.
+- **Good**: To fully remediate this finding, the following registry hives should be updated with the specific values. Note that changes to critical components like the registry should be approached with caution and tested in a small group prior to making large-scale changes.
+	- `[list the full path to the actual registry hive]`
+		- Change value X to value Y
+
+##### Rationale
+
+While the "bad" example is at least somewhat helpful, it's fairly lazy, and you're squandering a learning opportunity. Once again, the reader of this report may not have the depth of experience in Windows as you, and giving them a recommendation that will require hours' worth of work for them to figure out how to do it is only going to frustrate them. Do your homework and be as specific as reasonably possible. Doing so has the following benefits:
+
+- You learn more this way and will be much more comfortable answering questions during the report review. This will reinforce the client's confidence in you and will be knowledge that you can leverage on future assessments and to help level up your team.
+- The client will appreciate you doing the research for them and outlining specifically what needs to be done so they can be as efficient as possible. This will increase the likelihood that they will ask you to do future assessments and recommend you and your team to their friends.
+
+It's also worth drawing attention to the fact the "good" example includes a warning that changing something as important as the registry carries its own set of risks and should be performed with caution. Again, this indicates to the client that you have their best interests in mind an genuinely want them to succeed. For better or worse, there will be clients that will blindly to whatever you tell them to and will not hesitate to try and hold you accountable if doing so ends up breaking something.
+
+#### Selecting Quality References
+
+Each finding should include one or more external references for further reading on a particular vuln or misconfig. Some criteria that enhances the usefulness or a reference:
+
+- A vendor-agnostic source is helpful. Obviously, if you find a ASA vuln, a Cisco reference link makes sense, but you shouldn't lean on them for a writeup on anything outside of networking. If you reference an article written by a product vendor, chances are the article's focus will be telling the reader how their product can help when all the reader wants is to know how to fix it themselves.
+
+A thorough wakthrough or explanation of the finding and any recommended workarounds or mitigations is preferable. Don't choose articles behind a paywall or something where you only get part of what you need without paying.
+
+- Use articles that get to the point quickly. This isn't a recipe website, and no one cares how often your grandmother used to make those cookies. You have problems to solve, and making someone dig through the entire NIST 800-53 document or an RFC is mor annoying than helpful.
+- Choose sources that have clean websites and don't make you feel like a bunch of crypto miners that are running in the background or ads pop up everywhere.
+- If possible, write some of your own source material and blog about it. The research will aid you in explaining the impact of the finding to your clients, and while the infosec community is pretty helpful, it'd be preferable not to send your clients to a competitor's website.
+
+### Reporting Tips and Tricks
+
+#### Templates
+
+It's best to have a blank report template for every assessment type you perform. If you are not using a reporting tool and just working in old-fashioned MS Word, you can always build a report template with macros and placeholders to fill in some of the data points you fill out for every assessment. You should work with blank templates every time and not just modify a report from a previous client, as you could risk leaving another client's name in the report or other data that does not match your current environment. This type of error makes you look amateur and is easily avoidable.
+
+#### MS Word Tips & Tricks
+
+Microsoft Word can be a pain to work with, but there are several ways you can make it work for you to make your lives easier and it's easily the least of the available evils. Here are few tips & tricks to becoming an MS Word guru.
+
+- **Font Styles**: You should be getting as close as you possibly can to a document without and "direct formatting" in it. Direct formatting is highlighting text and clicking the button to make it bold, italics, underlined, colored, highlighted, etc. If you use font styles and you find that you've overlooked a setting in one of your headings that messes up the placement or how it looks, if you update the style itself, it updates "all" instances of that style used in the entire document instead of you having to go manually update all 45 times you used your random heading.
+- **Table Styles**: Apply the same to tables. Same concept here. It makes global changes much easier and promotes consistency throughout the report. It also generally makes everyone using the document less miserable, both as an author and as QA.
+- **Captions**: Use the built-in capability if you're putting captions on things. Using this functionality will cause the captions to renumber themselves if you have to add or remove something from the report, which is a GIGANTIC headache. This typically has a built-in font style that allows you to control how the captions look.
+- **Page numbers**: Page numbers make it much easier to refer to specific areas of the document when collaborating with the client to answer questions or clarify the report's content. It's the same for clients working internally with their teams to address the findings.
+- **TOC**: A Table of Contents is a standard component of a professional report. The default TOC is probably fine, but if you want something custom, like hiding page numbers or changing the tab leader, you can select a custom TOC and tinker with the settings.
+- **List of Figures/Tables**: It's debatable whether a List of Figures or Tables should be put in the report. This is the same concept as a TOC, but it only lists the figures or tables in the report. These trigger off captions, so if you're not using captions on one or the other, or both, this won't work.
+- **Bookmarks**: Bookmarks are most commonly used to designate places in the document that you can create hyperlinks to. If you plan on using macros to combine templates, you can also use bookmarks to designate entire sections that can be automatically removed from the report.
+- **Custom Dictionary**: You can think of a custom dictionary as an extension of Word's built-in AutoCorrect feature. If you find yourself misspelling the same words every time you write a report or want to prevent embarrasing typos, you can add these words to a custom dictionary, and Word will automatically replace them for you. Unfortunately, this feature does not follow the template around, so people will have to configure their own.
+- **Language Settings**: The primary thing you want to use custom language settings for is most likely to apply it to the font style you created for your code/terminal/text-based evidence. You can select the option to ignore spelling and grammer checking within the language settings for this font style. This is helpful because after you build a report with a bunch of figures in it and you want to run the spell checker tool, you don't have to click ignore a billion times to skip all the stuff in your figures.
+- **Custom Bullet/Numbering**: You can set up custom numbering to automatically number things like your findings, appendices, and anything else that might benefit from automatic numbering.
+- **Quick Access Toolbar Setup**: There are many options and functions you can add to your Quick Access Toolbar that you should peruse at your leisure to determine how useful they will be for your workflow.
+	- Back
+	- Undo/Redo
+	- Save
+	- ...
+- **Useful Hotkeys**: `[F4]` will apply the last action you took again. For example, if you highlight some text and apply a font style to it, you can highlight something else to which you want to apply the same font style and just hit `[F4]`, which will do the same thing. If you're using a TOC and lists of figures and tables, you can hit `[Ctrl+A]` to select all and `[F9]` to update all of them simultaneously. This will also update any other "fields" in the document and sometimes does not work as planned, so use it at your own risk. A more commonly known own is `[Ctrl+S]` to save. You should be doing it often in case Word crashes, so you don't lose data. If you need to look at two different areas of the report simultaneously and don't want to scroll back and forth, you can use `[Crtl+Alt+S]` to split the window into two panes. This may seem like a silly one, but if you accidentally hit your keyboard and you have no idea where your cursor is, you can hit `[Shift+F5]` to move the cursor to where the last revision was made.
+
+#### Automation
+
+When developing report templates, you may get to a point where you have a reasonably mature document but not enough time or budget to acquire an automated reporting platform. A lot of automation can be gained through macros in MS Word documents. You will need to save your templates as .dotm files, and you will need to be in a Windows environment to get the most out of this. Some of the most common things you can do with macros are:
+
+- Create a macro that will throw a pop-up for you to enter key pieces of information that will then get automatically inserted into the report template where designated placeholder variables are:
+	- Client name
+	- Dates
+	- Scope details
+	- Type of testing
+	- Environment or application names
+- You can combine different report templates into a single document and have a macro go through and remove entire sections that don't belong in a particular assessment type.
+	- This eases the task of maintaining your templates since you only have to maintain one instead of many
+- You may also be able to automate quality assurance tasks by correcting errors made often. Given that writing Word macros is basically a programming language on its own, it's left to you to use online resources to learn how to accomplish  these tasks.
+
+#### Reporting Tools/Findings Database
+
+Once you do several assessments, you'll start to notice that many of the environments you target are afflicted by the same problems. If you do not have a database of findings, you'll waste a tremendous amount of time rewriting the same content repeatedly, and you risk introducing inconsistencies in your recommendations and how thoroughly or clearly you describe the finding itself. If you multiply these issues by an entire team, the quality of your reports will vary wildly from one consultant to the next. At a minimum, you should maintain a dedicated document with sanitized versions of your findings that can copy/paste into your reports. You should constantly strive to customize findings to a client environment whenever it makes sense but having templated findings saves a ton of time.
+
+However, it is time well spent to investigate and configure one of the available platforms designed for this purpose. Some are free, and some must be paid for, but they will most likely pay for themselves quickly in the amount of time and headache you save if you can afford the initial investment.
+
+- [Ghostwriter](https://github.com/GhostManager/Ghostwriter)
+- [AttackForge](https://attackforge.com/)
+- [Dradis](https://dradisframework.com/ce/)
+- [PlexTrac](https://plextrac.com/)
+- [Security Risk Advisors VECTR](https://github.com/SecurityRiskAdvisors/VECTR)
+- [Rootshell Prism](https://www.rootshellsecurity.net/why-prism/)
+- [WriteHat](https://github.com/blacklanternsecurity/writehat)
+
+#### Misc/Tricks
+
+- Aim to tell a story with your report. Why does it matter that you could perform Kerberoasting and crack a hash?
+- Write as you go. Don't leave reporting until the end. Your report does not seed to be perfect as you test but documenting as much as you can as clearly as you can during testing will help you be as comprehensive as possible and not miss things or cut corners while rushing on the last day of the testing window.
+- Stay organized. Keep things in chronological order, so working with your notes is easier. Make your notes clear and easy to navigate, so they provide value and don't cause you extra work.
+- Show as much evidence as possible while not being overly verbose. Show enough screenshots/command output to clearly demonstrate and reproduce issues but do not add loads of extra screenshots or unecessary command output that will clutter up the report.
+- Clearly show what is being presented in screenshots. Use a tool such as [Greenshot](https://getgreenshot.org/) to add arrows/colored boxes to screenshots and add explanations under the screenshot if needed. A screenshot is useless if your audience has to guess what you're trying to show with it.
+- Redact sensitive data wherever possible. This includes cleartext passwords, password hashes, other secrets, and any data that could be deemed sensitive to your clients. Reports may be sent around a company and even to third parties, so you want to ensure you've done your due diligence not to include any data in the report that could be misused. A tool such as Greenshot can be used to obfuscate parts of a screenshot (_NO BLURRING!_).
+- Redact tool output wherever possible to remove elements that non-hackers may construe as unprofessional. In CME's case, you can change that value in your config file to print something else to the screen, so you don't have to change it in your report every time. Other tools may have similar customization.
+- Check your Hashcat output to ensure that none of the candidate passwords is anything crude. Many wordlists will have words that can be considered crude/offensive, and if any of these are present in the Hashcat output, change them to something innocuous.
+- Check grammer, spelling, and formatting, ensure font and font sizes are consistent and spell out acronyms the first time you use them in a report.
+- Make sure screenshots are clear and do not capture extra parts of the screen that bloat their size. If your report is difficult to interpret due to poor formatting or the grammar and spelling are a mess, it will detract from the technical results of the assessment. Consider a tool such as Grammarly or LanguageTool, which is much more powerful than Microsoft Word's built-in spelling and grammer check.
+- Use raw command output where possible, but when you need to screenshot a console, make sure it's not transparent and showing your background/other tools. The console should be solid black with a reasonable theme. Your client may print the report, so you may want to consider a light background with dark text, so you don't demolish their printer cartrigde.
+- Keep your hostname and username professional. Don't show screenshots with a prompt like `azzkicker@clientsmasher`.
+- Establish a QA process. Your report should go through at least one, but preferably two rounds of QA. You should never review your own work and want to put together the best possible deliverable, so pay attention to the QA process. At a minimum, if you're independent, you should sleep on it for a night and review it again. Stepping away from the report for a while can sometimes help you see things you overlook after staring at it for a long time.
+- Establish a style guide and stick to it, so everyone on your team follows a similar format and reports look consistent across all assessments.
+- Use autosave with your notetaking tool and MS Word. You don't want to lose hours of work because a program crashes. Also, backup your notes and other data as you go, and don't store everything on a single VM. VMs can fail, so you should move evidence to a secondary location as you go. This is a task that can and should be automated.
+- Script and automate wherever possible. This will ensure your work is consistent across all assessments you perform, and you don't waste time on tasks repeated on every assessment.
+
+#### Client Communication
+
+Strong written and verbal communication skills are paramount for anyone in a pentesting role. During your engagements, you must remain in constant contact with your clients and serve appropriately in your role as trusted advisors. They are hiring your company and paying a lot of money for you to identify issues in their networks, give remediation advice, and also to educate their staff on the issue you find through your report deliverable. At the start of every engagement, you should send a start notification email including information such as:
+
+- Tester name
+- Description of the type/scope of the engagement
+- Source IP address for testing
+- Dates anticipate for testing
+- Primary and secondary contact information (_email and phone_)
+
+At the end of each day, you should send a stop notification to signal the end of testing. This can be a good time to give a high-level summary of findings so the report does not entirely blindside the client. You can also reiterate expectations for report delivery at this time. You should, of course, be working on the report as you go and not leave it 100% to the last minute, but it can take a few days to write up the entire attack chain, executive summary, findings, recommendations, and perform self-QA checks. After this, the report should go through at least one round of internal QA, which can take some time.
+
+The start and stop notifications also give the client a window for when your scans and testing activities were taking place in case they need to run down any alerts.
+
+Aside from formal communications, it is good to keep an open dialogue with your clients and build and strengthen the trusted advisor relationship. Did you discover an additional external subnet or subdomain? Check with the client to see if they'd like to add it to the scope. Did you discover a high-risk SQLi or RCE flaw on an external website? Stop testing and formally notify the client and see how they would like to proceed. A host seems down from scanning? It happens, and it's best to be upfront about it than try to hide it. Got Domain Admin/Enterprise Admin? Give the client a heads up in case they see alerts and get nervous or so they can prepare their management for the pending report. Also, at this point, let them know that you will keep testing and looking for other paths but ask them if there is anything else they'd like you to focus on or servers/databases that should still be limited even with DA privileges that you can target.
+
+You should discuss the importance of detailed notes and scanner logging/tool output. If your client asks you if you hit a specific host on X day, you should be able to, without a doubt, provide documented evidence of your exact activities. It stinks to get blamed for an outage, but it's even worse if you get blamed for one and have zero concrete evidence to prove that it was not a result of your testing.
+
+Keeping these communication tips in mind will go a long way towards building goodwill with your client and winning repeat business and even referrals. People will want to work with others who treat them well and work diligently and professionally, so this is your time to shine. With excellent technical skills and communication skills, you will be unstoppable.
+
+#### Presenting Your Report - The Final Product
+
+Once the report is ready, it needs to go through review before delivery. Once delivered, it is customary to provide the client with a report review meeting to either go over the entire report, the findings alone, or answer that they may have.
+
+##### QA Process
+
+A sloppy report will call into question everything about your assessment. If your report is a disorganized mess, is it even possible that you performed a thorough assessment? Ensure your report deliverable is a testament to your hard-earned knowledge and hard work on the assesssment and adequately reflects both. The client isn't going to see most of what you did during the assessment.
+
+The report is your highlight reel and is honestly what the client is paying for.
+
+You could have executed the most complex attack chain in the history of attack chains, but if you can't get it on paper in a way that someone else can understand, it may as well have never happened at all.
+
+If possible, every report should undergo at least one round of QA by someone who isn't the author. Some teams may also opt to break up the QA process into multiple steps. It will be up to you, your team, or your organization to choose the right approach that works for the size of your team. If you are just starting on your own and don't have the luxury of having someone else review your report, it is strongly recommended walking away from it for a while or sleeping on it and reviewing it again at a minimum. Once you read through a document 45 times, you start overlooking things. This mini-reset can help you catch things you didn't see after you had been staring at it for days.
+
+It is good practice to include a QA checklist as part of your report template. This should consist of all the checks the author should make regarding content and formatting and anything else that you may have in your style guide. This list will likely grow over time as you and your team's processes are refined, and you learn which mistakes people are most prone to making. Make sure that you check grammar, spelling, and formatting! A tool such as Grammarly or LanguageTool is excellent for this. Don't send a sloppy report to QA because it may get kicked back to you to fix before the reviewer even looks at it, and it can be a costly waste of time for you and others.
+
+If you have access to someone that can perform QA and you begin trying to implement a process, you may soon find that as the team grows and the number of reports being output increases, things can get difficult to track. At a basic level, a Google Sheet or some equivalent could be used to help make sure things don't get lost, but if you have many more people and you have access to a tool like Jira, that could be a much more scalable solution. You'll likely need a central place to store your reports so that other people can get to them to perform the QA process. There are many out there that should work.
+
+Ideally, the person performing QA should not be responsible for making significant modifications to the report. If there are minor typos, phrasing, or formatting issues to address that can be done more quickly than sending the report back to the author to change, that's likely fine. For missing or poorly illustrated evidence, missing findings, unusable executive summary content, etc., the author should bear the responsibility for getting that document into presentable condition.
+
+You obviously want to be diligent about reviewing the changes made to your report so that you can stop making the same mistakes in subsequent reports. It's absolutely a learning opportunity, so don't squander it. If it's something that happens across mutliple people, you may want to consider adding that item to your QA checklist to remind people to address those issues before sending reports to QA. There aren't many better feelings in this career than when the day comes that a report you wrote gets through QA without any changes.
+
+It may be considered strictly a formality, but it's reasonably common to initially issue a "Draft" copy of the report to the client once the QA has been completed. Once the client has the draft report, they should be expected to review it and let you know whether they would like an opportunity to walk through the report with you to discuss modifications and ask questions. If any changes or updates need to be made to the report after this conversation, they can be made to the report and a "Final" version issued. The final report is often going to be identical to the draft report, but it will just say "FInal" instead of "Draft". It may seem frivolous, but some auditors will only consider accepting a final report as an artifact, so it could be quite important to some clients.
+
+#### Report Review Meeting
+
+Once the report has been delivered, it's fairly customary to give the client a week or so to review the report, gather their thoughts, and offer to have a call to review it with them to collect any feedback they have on your work. Usually, this call covers the technical finding details one by one and allows the client to ask questions about what you found and how you found it. These calls can be immensely helpful in improving your ability to present this type of data, so pay careful attention to the conversation. If you find yourself answering the same questions every time, that could indicate that you need to tweak your workflow or the information you provide to help answer those questions before the client asks them.
+
+Once the report has been reviewed and accepted by both sides, it is customary to change the DRAFT designation to FINAL and deliver the final copy to the client. From here, you should archive all of your testing data per your company's retention policies until a retest of remediation findings is performed at the very least.
