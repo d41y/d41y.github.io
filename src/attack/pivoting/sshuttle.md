@@ -1,11 +1,3 @@
-- [SShuttle](#sshuttle)
-    - [Funktionsweise](#funktionsweise)
-    - [Verwendung](#verwendung)
-  - [Aufgabe 1](#aufgabe-1)
-  - [Aufgabe 2](#aufgabe-2)
-
----
-
 # SShuttle
 
 = ähnlich zu Proxychains, baut selbst SSH auf

@@ -1,36 +1,3 @@
-- [Kerberoasting](#kerberoasting)
-  - [From Linux](#from-linux)
-    - [with GetUserSPNs.py](#with-getuserspnspy)
-      - [Listing SPN Accounts](#listing-spn-accounts)
-      - [Requesting all TGS tickets](#requesting-all-tgs-tickets)
-      - [Requesting a Single TGS](#requesting-a-single-tgs)
-      - [Saving the TGS Ticket to an Output File](#saving-the-tgs-ticket-to-an-output-file)
-      - [Cracking the Ticket with Hashcat](#cracking-the-ticket-with-hashcat)
-      - [Testing against a DC](#testing-against-a-dc)
-  - [From Windows](#from-windows)
-    - [Semi-Manual Method](#semi-manual-method)
-      - [Enumeratin SPNs with setspn.exe](#enumeratin-spns-with-setspnexe)
-      - [Targeting a Single User](#targeting-a-single-user)
-      - [Retrieving All Tickets using setspn.exe](#retrieving-all-tickets-using-setspnexe)
-      - [Extracting Tickets from Memory with Mimikatz](#extracting-tickets-from-memory-with-mimikatz)
-      - [Preparing the Base64 Blob for Cracking](#preparing-the-base64-blob-for-cracking)
-      - [Placing the Output into a File as .kirbi](#placing-the-output-into-a-file-as-kirbi)
-      - [Extracting the Kerberos Ticket using kirbi2john.py](#extracting-the-kerberos-ticket-using-kirbi2johnpy)
-      - [Modifying crack\_file for Hashcat](#modifying-crack_file-for-hashcat)
-      - [Cracking with Hashcat](#cracking-with-hashcat)
-    - [Automated / Tool based](#automated--tool-based)
-      - [Enumerate SPN Accounts](#enumerate-spn-accounts)
-      - [Targeting a Specific User](#targeting-a-specific-user)
-      - [Exporting all Tickets to a CSV File](#exporting-all-tickets-to-a-csv-file)
-      - [Viewing the Contents of the .csv File](#viewing-the-contents-of-the-csv-file)
-      - [Using Rubeus](#using-rubeus)
-        - [Using the /stats Flag](#using-the-stats-flag)
-        - [Using the /nowrap Flag](#using-the-nowrap-flag)
-    - [Note on Encryption Types](#note-on-encryption-types)
-  - [Mitigation \& Detection](#mitigation--detection)
-
----
-
 # Kerberoasting
 
 ... is a lateral movementa/privilege escalation technique in AD environments. This attack targets Service Principal Names (_SPN_) accounts. SPNs are unique identifiers that Kerberos uses to map a service instance to a service account in whose context the service is running. Domain accounts are often used to run services to overcome the network authentication limitations of built-in accounts. Any domain user can request a Kerberos ticket for any service account in the same domain. This is also possible across forest trusts if authentication is permitted across the trust boundary. All you need to perform is a Kerberoasting attack in an account's cleartext passwort (_or NTLM hash_), a shell in the context of a domain user account, os SYSTEM level access on a domain-joined host.

@@ -1,35 +1,3 @@
-- [Attacking CMS](#attacking-cms)
-  - [WordPress - Discovery \& Enum](#wordpress---discovery--enum)
-    - [Discovery/Footprinting](#discoveryfootprinting)
-    - [Enumeration](#enumeration)
-    - [Enumerating Users](#enumerating-users)
-    - [WPScan](#wpscan)
-  - [WordPress - Attack](#wordpress---attack)
-    - [Login Bruteforce](#login-bruteforce)
-    - [Code Execution](#code-execution)
-    - [Leveraging Known Vulns](#leveraging-known-vulns)
-      - [mail-masta](#mail-masta)
-      - [wpDiscuz](#wpdiscuz)
-  - [Joomla - Discovery \& Enum](#joomla---discovery--enum)
-    - [Disovery/Footprinting](#disoveryfootprinting)
-    - [Enumeration](#enumeration-1)
-  - [Joomla - Attack](#joomla---attack)
-    - [Abusing Built-In Functionality](#abusing-built-in-functionality)
-    - [Leveraging Known Vulns](#leveraging-known-vulns-1)
-      - [CVE-2019-10945](#cve-2019-10945)
-  - [Drupal - Discovery \& Enum](#drupal---discovery--enum)
-    - [Discover/Footprinting](#discoverfootprinting)
-    - [Enumeration](#enumeration-2)
-  - [Drupal - Attack](#drupal---attack)
-    - [Leveraging the PHP Filter Module](#leveraging-the-php-filter-module)
-    - [Uploading a Backdoored Module](#uploading-a-backdoored-module)
-    - [Leveraging Known Vulns](#leveraging-known-vulns-2)
-      - [Drupalgeddon](#drupalgeddon)
-      - [Drupalgeddon 2](#drupalgeddon-2)
-      - [Drupalgeddon 3](#drupalgeddon-3)
-
----
-
 # Attacking CMS
 
 ## WordPress - Discovery & Enum

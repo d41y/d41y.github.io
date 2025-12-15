@@ -1,12 +1,3 @@
-- [Attacking Common Gateway Interfaces](#attacking-common-gateway-interfaces)
-  - [Tomcat](#tomcat)
-    - [Enumeration](#enumeration)
-    - [Exploitation](#exploitation)
-  - [Shellshock](#shellshock)
-    - [Example](#example)
-
----
-
 # Attacking Common Gateway Interfaces
 
 A Common Gateway Interface is used to help a web server render dynamic pages and create a customized response for the user making a request via a web app. CGI apps are primarily used to access other apps running on a web server. CGI is essentially middleware between web servers, external databases, and information sources. CGI scripts and programs are kept in the ```/CGI-bin``` dir on a web server and can be written in C, C++, Java, PERL, etc. scripts run in the security context of the web server. They are often used for guest books, forms, mailing lists, blogs, etc. These scripts are language-independent and can be written very simply to perform advanced tasks much easier than writing them using server-side programming languages.

@@ -1,19 +1,3 @@
-- [User Hunting](#user-hunting)
-  - [Enumerating \& Retrieving Password Policies](#enumerating--retrieving-password-policies)
-    - [Credentialed](#credentialed)
-    - [Enumerating SMB NULL Sessions - from Linux](#enumerating-smb-null-sessions---from-linux)
-    - [Enumerating SMB NULL Sessions - from Windows](#enumerating-smb-null-sessions---from-windows)
-    - [Enumerating Password Policy - from Linux](#enumerating-password-policy---from-linux)
-    - [Enumerating Password Policy - from Windows](#enumerating-password-policy---from-windows)
-    - [Default Password Policy](#default-password-policy)
-  - [Password Spraying - Making a Target User List](#password-spraying---making-a-target-user-list)
-    - [SMB NULL Session to Pull User List](#smb-null-session-to-pull-user-list)
-    - [Gathering Users with LDAP Anonymous](#gathering-users-with-ldap-anonymous)
-    - [Enumerating Users with Kerbrute](#enumerating-users-with-kerbrute)
-    - [Credential Enumeration to Build your User List](#credential-enumeration-to-build-your-user-list)
-
----
-
 # User Hunting
 
 ## Enumerating & Retrieving Password Policies

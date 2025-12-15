@@ -1,17 +1,3 @@
-- [Server-Side Request Forgery (SSRF)](#server-side-request-forgery-ssrf)
-  - [Identifying SSRF](#identifying-ssrf)
-  - [System Enumeration](#system-enumeration)
-  - [Accessing Restricted Endpoints](#accessing-restricted-endpoints)
-  - [LFI](#lfi)
-  - [gopher Protocol](#gopher-protocol)
-    - [Gopherus](#gopherus)
-  - [Blind SSRF](#blind-ssrf)
-    - [Identifying Blind SSRF](#identifying-blind-ssrf)
-    - [Exploiting Blind SSRF](#exploiting-blind-ssrf)
-  - [Prevention](#prevention)
-
----
-
 # Server-Side Request Forgery (SSRF)
 
 ... is a vulnerability where an attacker can manipulate a web application into sending unauthorized requests from the server. This vuln often occurs when an application makes HTTP requests to other servers based on user input. Successful exploitation of SSRF can enable an attacker to access internal systems, bypass firewalls, and retrieve sensitive information.

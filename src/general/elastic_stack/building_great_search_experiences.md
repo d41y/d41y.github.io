@@ -1,16 +1,3 @@
-- [Building Great Search Experiences](#building-great-search-experiences)
-  - [Introduction](#introduction)
-    - [How to deliver great search?](#how-to-deliver-great-search)
-    - [What is App Search?](#what-is-app-search)
-  - [Search UI](#search-ui)
-    - [Tools for Building Search Experiences](#tools-for-building-search-experiences)
-    - [Search UI](#search-ui-1)
-  - [React Library](#react-library)
-    - [What exactly is React?](#what-exactly-is-react)
-    - [Using React Library](#using-react-library)
-
----
-
 # Building Great Search Experiences
 
 ## Introduction

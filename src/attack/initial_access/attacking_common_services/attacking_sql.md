@@ -1,25 +1,3 @@
-- [Attacking SQL](#attacking-sql)
-  - [Enumeration](#enumeration)
-  - [Authentication Methods](#authentication-methods)
-  - [Misconfigurations](#misconfigurations)
-    - [Privileges](#privileges)
-  - [Protocol Specific Attacks](#protocol-specific-attacks)
-    - [SQL Default Databases](#sql-default-databases)
-      - [MySQL Default System Schemas/Databases](#mysql-default-system-schemasdatabases)
-      - [MSSQL Default System Schemas/Databases](#mssql-default-system-schemasdatabases)
-    - [Read/Change the Database](#readchange-the-database)
-    - [Execute Commands](#execute-commands)
-    - [Write Local Files](#write-local-files)
-    - [Read Local Files](#read-local-files)
-    - [Capture MSSQL Service Hash](#capture-mssql-service-hash)
-    - [Impersonate Existing Users with MSSQL](#impersonate-existing-users-with-mssql)
-    - [Communicate with Other DBs with MSSQL](#communicate-with-other-dbs-with-mssql)
-  - [Latest Vulnerabilities](#latest-vulnerabilities)
-    - [NO CVE](#no-cve)
-      - [Concept of the Attack](#concept-of-the-attack)
-
----
-
 # Attacking SQL
 
 ## Enumeration

@@ -1,20 +1,3 @@
-- [Security Incident Reporting](#security-incident-reporting)
-  - [0x00](#0x00)
-    - [Incident Identification and Categorisation](#incident-identification-and-categorisation)
-      - [Identifying Security Incidents](#identifying-security-incidents)
-      - [Categorising Security Incidents](#categorising-security-incidents)
-      - [Incident Severity Levels](#incident-severity-levels)
-  - [Incident Reporting Process](#incident-reporting-process)
-    - [1. Initial Detection \& Acknowledgement](#1-initial-detection--acknowledgement)
-    - [2. Preliminary Analysis](#2-preliminary-analysis)
-    - [3. Incident Logging](#3-incident-logging)
-    - [4. Notification of Relevant Parties](#4-notification-of-relevant-parties)
-    - [5. Detailed Investigation \& Reporting](#5-detailed-investigation--reporting)
-    - [6. Final Report Creation](#6-final-report-creation)
-    - [7. Feedback Loop!](#7-feedback-loop)
-
----
-
 # Security Incident Reporting
 
 ## 0x00

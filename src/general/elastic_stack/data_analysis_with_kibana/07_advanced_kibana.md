@@ -1,36 +1,3 @@
-- [Advanced Kibana](#advanced-kibana)
-  - [Formulas](#formulas)
-    - [Lens Formulas](#lens-formulas)
-    - [Formulas Categories](#formulas-categories)
-    - [Formula Example: filter radio](#formula-example-filter-radio)
-  - [Runtime Fields](#runtime-fields)
-    - [The Need for Runtime Fields](#the-need-for-runtime-fields)
-    - [Schema On Write vs On Read](#schema-on-write-vs-on-read)
-    - [Schema On Write in Detail](#schema-on-write-in-detail)
-    - [Schema On Read in Detail](#schema-on-read-in-detail)
-    - [Runtime Fields and Painless Scripts](#runtime-fields-and-painless-scripts)
-    - [Add a Runtime Field](#add-a-runtime-field)
-    - [Create a Runtime Field](#create-a-runtime-field)
-    - [Create a Custom Label](#create-a-custom-label)
-    - [Set a Value](#set-a-value)
-    - [Set a Format](#set-a-format)
-    - [Preview and Save](#preview-and-save)
-    - [Notes on Using Runtime Fields](#notes-on-using-runtime-fields)
-  - [Vega](#vega)
-    - [Vega and Vega-Lite](#vega-and-vega-lite)
-    - [Vega-Lite Visualization](#vega-lite-visualization)
-    - [Getting Started with Vega-Lite](#getting-started-with-vega-lite)
-    - [Creating a Custom Vega-Lite Visualization](#creating-a-custom-vega-lite-visualization)
-    - [Retrieve Data from ES](#retrieve-data-from-es)
-    - [Vega-Lite in Sample Dashboards](#vega-lite-in-sample-dashboards)
-    - [Editing the Sample Visualization](#editing-the-sample-visualization)
-    - [Body Example](#body-example)
-    - [Transform Example](#transform-example)
-    - [Encoding Example](#encoding-example)
-    - [Editing the Sample Visualization](#editing-the-sample-visualization-1)
-
----
-
 # Advanced Kibana
 
 ## Formulas

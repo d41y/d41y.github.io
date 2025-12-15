@@ -1,21 +1,3 @@
-- [JavaScript (De-)Obfuscation](#javascript-de-obfuscation)
-  - [Source Code](#source-code)
-    - [HTML](#html)
-    - [CSS](#css)
-    - [JavaScript](#javascript)
-  - [Code Obfuscation](#code-obfuscation)
-  - [Basic Obfuscation](#basic-obfuscation)
-    - [Minifying JavaScript Code](#minifying-javascript-code)
-    - [Packing JavaScript Code](#packing-javascript-code)
-  - [Advanced Obfuscation](#advanced-obfuscation)
-    - [Obfuscator](#obfuscator)
-    - [JSFuck](#jsfuck)
-  - [Deobfuscation](#deobfuscation)
-    - [Beautify](#beautify)
-    - [Deobfuscate](#deobfuscate)
-
----
-
 # JavaScript (De-)Obfuscation
 
 Reference JavaScript code:

@@ -1,15 +1,3 @@
-- [Attacking FTP](#attacking-ftp)
-  - [Enumeration](#enumeration)
-  - [Misconfigurations](#misconfigurations)
-  - [Protocol Specific Attacks](#protocol-specific-attacks)
-    - [Brute Forcing](#brute-forcing)
-    - [Bounce Attack](#bounce-attack)
-  - [Latest Vulnerabilities](#latest-vulnerabilities)
-    - [CVE-2022-22836](#cve-2022-22836)
-      - [Concept of the Attack](#concept-of-the-attack)
-
----
-
 # Attacking FTP
 
 ## Enumeration

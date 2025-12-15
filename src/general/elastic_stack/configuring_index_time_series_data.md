@@ -1,35 +1,3 @@
-- [Configuring Elasticsearch Index for Time Series Data](#configuring-elasticsearch-index-for-time-series-data)
-  - [Index Fundamentals](#index-fundamentals)
-    - [Documents are indexed into an index](#documents-are-indexed-into-an-index)
-    - [Managing data](#managing-data)
-    - [Different indices, different data](#different-indices-different-data)
-    - [Index summary](#index-summary)
-    - [How to configure an index up front?](#how-to-configure-an-index-up-front)
-  - [Ingest Pipeline](#ingest-pipeline)
-    - [Ingest Pipelines](#ingest-pipelines)
-    - [Exmaple: Dissect processor](#exmaple-dissect-processor)
-    - [Adding processors](#adding-processors)
-    - [Using your pipeline](#using-your-pipeline)
-  - [Index Lifecycle Policy](#index-lifecycle-policy)
-    - [Time series data management](#time-series-data-management)
-    - [Rollover index](#rollover-index)
-    - [Using rollover processes](#using-rollover-processes)
-    - [IL policy example](#il-policy-example)
-    - [What are index templates?](#what-are-index-templates)
-    - [Logistics](#logistics)
-    - [Naming schemes](#naming-schemes)
-    - [Example of naming convention](#example-of-naming-convention)
-    - [Data streams](#data-streams)
-    - [How is the data stream name created?](#how-is-the-data-stream-name-created)
-    - [Component template example](#component-template-example)
-    - [Index settings](#index-settings)
-    - [Mappings](#mappings)
-    - [Index alias](#index-alias)
-  - [Bootstrap to create index using rollover alias](#bootstrap-to-create-index-using-rollover-alias)
-    - [Adding index alias to data stream](#adding-index-alias-to-data-stream)
-
----
-
 # Configuring Elasticsearch Index for Time Series Data
 
 ## Index Fundamentals

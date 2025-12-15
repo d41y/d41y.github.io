@@ -1,29 +1,3 @@
-- [Cluster Management](#cluster-management)
-  - [Multi-Cluster Operations](#multi-cluster-operations)
-    - [Cross-Cluster Replication](#cross-cluster-replication)
-      - [Disaster Recovery and High Availability](#disaster-recovery-and-high-availability)
-      - [Data Locality](#data-locality)
-      - [Centralized Reporting](#centralized-reporting)
-      - [Replication is Pull-Based](#replication-is-pull-based)
-      - [Configuring CCR](#configuring-ccr)
-      - [Auto-Following Functionality](#auto-following-functionality)
-    - [Cross-Cluster Search](#cross-cluster-search)
-      - [Searching Remotely](#searching-remotely)
-      - [Searching Multiple Cluster](#searching-multiple-cluster)
-      - [Search Response](#search-response)
-  - [Troubelshooting](#troubelshooting)
-    - [The Health API](#the-health-api)
-      - [Health Status Levels](#health-status-levels)
-      - [Health Indicator Breakdown](#health-indicator-breakdown)
-      - [Health Indicator Symptoms and Impacts](#health-indicator-symptoms-and-impacts)
-      - [Health Indicator Diagnosis](#health-indicator-diagnosis)
-    - [Monitoring Your Clusters](#monitoring-your-clusters)
-      - [Monitoring the Elastic Stack](#monitoring-the-elastic-stack)
-      - [Monitoring with Elastic Agent](#monitoring-with-elastic-agent)
-      - [Configuring Monitoring on Elastic Cloud](#configuring-monitoring-on-elastic-cloud)
-
----
-
 # Cluster Management
 
 ## Multi-Cluster Operations

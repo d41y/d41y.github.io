@@ -1,19 +1,3 @@
-- [Networking Basics](#networking-basics)
-  - [Communication in a Connected World](#communication-in-a-connected-world)
-    - [Network Types](#network-types)
-      - [Local Networks](#local-networks)
-      - [Mobile Devices](#mobile-devices)
-      - [Connected Home Devices](#connected-home-devices)
-      - [Other Connected Devices](#other-connected-devices)
-    - [Data Transmission](#data-transmission)
-      - [Types of Personal Data](#types-of-personal-data)
-      - [Common Methods of Data Transmission](#common-methods-of-data-transmission)
-    - [Bandwith and Throughput](#bandwith-and-throughput)
-      - [Bandwith](#bandwith)
-      - [Throughput](#throughput)
-
----
-
 # Networking Basics
 
 ## Communication in a Connected World

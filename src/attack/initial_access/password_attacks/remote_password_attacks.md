@@ -1,36 +1,3 @@
-- [Remote Password Attacks](#remote-password-attacks)
-  - [WinRM](#winrm)
-    - [NetExec](#netexec)
-      - [Installing](#installing)
-      - [Menu Options](#menu-options)
-      - [Protocol-Specific Help](#protocol-specific-help)
-      - [Usage](#usage)
-      - [Example](#example)
-    - [Evil-WinRM](#evil-winrm)
-      - [Installing](#installing-1)
-      - [Usage](#usage-1)
-      - [Example](#example-1)
-  - [SSH](#ssh)
-    - [Hydra](#hydra)
-  - [RDP](#rdp)
-    - [Hydra](#hydra-1)
-    - [xFreeRDP](#xfreerdp)
-      - [Usage](#usage-2)
-      - [Example](#example-2)
-  - [SMB](#smb)
-    - [Hydra](#hydra-2)
-      - [Example](#example-3)
-      - [Error](#error)
-    - [Metasploit](#metasploit)
-    - [NetExec](#netexec-1)
-    - [smblcient](#smblcient)
-  - [Spraying, Stuffing, and Defaults](#spraying-stuffing-and-defaults)
-    - [Password Spraying](#password-spraying)
-    - [Credential Stuffing](#credential-stuffing)
-    - [Default Credentials](#default-credentials)
-
----
-
 # Remote Password Attacks
 
 During your pentests, every computer network you encounter will have services installed to manage, edit, or create content. All these services are hosted using specific permissions and are assigned to specific users. Apart from web apps, these services include FTP, SMB, NFS, IMAP/POP3, SSH, MySQL/MSSQL, RDP, WinRM, VNC, Telnet, SMTP, and LDAP.

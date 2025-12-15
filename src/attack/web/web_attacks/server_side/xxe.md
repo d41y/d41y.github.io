@@ -1,26 +1,3 @@
-- [XML External Entity (XXE) Injection](#xml-external-entity-xxe-injection)
-  - [Intro](#intro)
-    - [XML](#xml)
-    - [XML DTD](#xml-dtd)
-    - [XML Entities](#xml-entities)
-  - [Local File Disclosure](#local-file-disclosure)
-    - [Identifying](#identifying)
-    - [Reading Sensitive Files](#reading-sensitive-files)
-    - [Reading Source Code](#reading-source-code)
-    - [Remote Code Execution](#remote-code-execution)
-    - [Other XXE Attacks](#other-xxe-attacks)
-  - [Advanced File Disclosure](#advanced-file-disclosure)
-    - [... with CDATA](#-with-cdata)
-    - [Error Based XXE](#error-based-xxe)
-  - [Blind Data Exfiltration](#blind-data-exfiltration)
-    - [Out-of-band Data Exfiltration](#out-of-band-data-exfiltration)
-    - [Automated OOB Exfiltration](#automated-oob-exfiltration)
-  - [XXE Prevention](#xxe-prevention)
-    - [Avoiding Outdated Components](#avoiding-outdated-components)
-    - [Using Safe XML Configs](#using-safe-xml-configs)
-
----
-
 # XML External Entity (XXE) Injection
 
 ... vulnerabilites occur when XML data is taken from a user-controlled input without properly sanitizing or safely parsing it, which may allow you to use XML features to perform malicious actions.

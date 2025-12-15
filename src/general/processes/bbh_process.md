@@ -1,11 +1,3 @@
-- [Bug Bounty Hunting Process](#bug-bounty-hunting-process)
-  - [Bug Bounty Programs](#bug-bounty-programs)
-    - [Program Types](#program-types)
-    - [Code of Conduct](#code-of-conduct)
-    - [Programm Structure](#programm-structure)
-
----
-
 # Bug Bounty Hunting Process
 
 ## Bug Bounty Programs

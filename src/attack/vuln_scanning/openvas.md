@@ -1,15 +1,3 @@
-- [OpenVAS](#openvas)
-  - [Getting Started](#getting-started)
-    - [Installing](#installing)
-    - [Starting OpenVAS](#starting-openvas)
-  - [Scan](#scan)
-    - [Configuration](#configuration)
-    - [Setting up Scans](#setting-up-scans)
-  - [Exporting the Results](#exporting-the-results)
-    - [Exporting Formats](#exporting-formats)
-
----
-
 # OpenVAS
 
 ## Getting Started

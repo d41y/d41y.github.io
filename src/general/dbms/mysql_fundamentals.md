@@ -1,29 +1,3 @@
-- [MySQL](#mysql)
-  - [Command line](#command-line)
-  - [Creating a Database](#creating-a-database)
-  - [Tables](#tables)
-    - [Table properties](#table-properties)
-  - [Statements](#statements)
-    - [INSERT Statement](#insert-statement)
-    - [SELECT Statement](#select-statement)
-    - [DROP Statement](#drop-statement)
-    - [ALTER Statement](#alter-statement)
-    - [UPDATE Statement](#update-statement)
-  - [Query Results](#query-results)
-    - [Sorting Results](#sorting-results)
-    - [Limit Results](#limit-results)
-    - [WHERE Clause](#where-clause)
-    - [LIKE Clause](#like-clause)
-  - [SQL Operators](#sql-operators)
-    - [AND](#and)
-    - [OR](#or)
-    - [NOT](#not)
-    - [Symbol Operators](#symbol-operators)
-    - [Operators in Queries](#operators-in-queries)
-    - [Multiple Operator Precedence](#multiple-operator-precedence)
-
----
-
 # MySQL
 
 ## Command line

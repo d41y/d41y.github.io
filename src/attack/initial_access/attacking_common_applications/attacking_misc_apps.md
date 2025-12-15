@@ -1,27 +1,3 @@
-- [Attacking Miscellaneous Applications](#attacking-miscellaneous-applications)
-  - [ColdFusion](#coldfusion)
-    - [Enumeration](#enumeration)
-    - [Attacking ColdFusion](#attacking-coldfusion)
-      - [Directory Traversal](#directory-traversal)
-      - [Unauthenticated RCE](#unauthenticated-rce)
-  - [IIS Tilde Enumeration](#iis-tilde-enumeration)
-    - [Enumeration](#enumeration-1)
-      - [Tilde Enumeration using IIS ShortName Scanner](#tilde-enumeration-using-iis-shortname-scanner)
-      - [Generate Wordlist](#generate-wordlist)
-      - [Gobuster Enumeration](#gobuster-enumeration)
-  - [LDAP](#ldap)
-    - [ldapsearch](#ldapsearch)
-    - [LDAP Injection](#ldap-injection)
-    - [Enumeration](#enumeration-2)
-  - [Web Mass Assignment](#web-mass-assignment)
-    - [Exploit Mass Assignment](#exploit-mass-assignment)
-    - [Prevention](#prevention)
-  - [Applications Connecting to Services](#applications-connecting-to-services)
-    - [ELF Executable Examination](#elf-executable-examination)
-    - [DLL File Examination](#dll-file-examination)
-
----
-
 # Attacking Miscellaneous Applications
 
 ## ColdFusion

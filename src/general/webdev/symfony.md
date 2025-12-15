@@ -1,10 +1,3 @@
-- [Symfony](#symfony)
-  - [Initial Setup](#initial-setup)
-  - [Setting up DB (MariaDB)](#setting-up-db-mariadb)
-  - [Enrich DB](#enrich-db)
-
----
-
 # [Symfony](https://symfony.com/doc)
 
 ## Initial Setup

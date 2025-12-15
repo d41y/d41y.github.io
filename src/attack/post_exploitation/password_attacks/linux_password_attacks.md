@@ -1,25 +1,3 @@
-- [Linux Password Attacks](#linux-password-attacks)
-  - [Authentication Process](#authentication-process)
-    - [Passwd File](#passwd-file)
-    - [Shadow File](#shadow-file)
-    - [Opasswd](#opasswd)
-    - [Cracking Linux Credentials](#cracking-linux-credentials)
-  - [Credential Hunting](#credential-hunting)
-    - [Files](#files)
-      - [Searching for Config Files](#searching-for-config-files)
-      - [Searching for DBs](#searching-for-dbs)
-      - [Searching for Notes](#searching-for-notes)
-      - [Searching for Scripts](#searching-for-scripts)
-      - [Enumerating Cronjobs](#enumerating-cronjobs)
-      - [Enumerating History Files](#enumerating-history-files)
-      - [Enumerating Log Files](#enumerating-log-files)
-    - [Memory and Cache](#memory-and-cache)
-      - [Mimipenguin](#mimipenguin)
-      - [LaZagne](#lazagne)
-      - [Browser Credentials](#browser-credentials)
-
----
-
 # Linux Password Attacks
 
 ## Authentication Process

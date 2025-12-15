@@ -1,16 +1,3 @@
-- [Assessment Standards](#assessment-standards)
-  - [Compliance Standards](#compliance-standards)
-    - [Payment Card Industry Data Security Standard (_PCI DSS_)](#payment-card-industry-data-security-standard-pci-dss)
-    - [Health Insurance Portability and Accountability Act (_HIPAA_)](#health-insurance-portability-and-accountability-act-hipaa)
-    - [ISO 27001](#iso-27001)
-  - [Pentesting Standards](#pentesting-standards)
-    - [Penetration Testing Execution Standard (_PTES_)](#penetration-testing-execution-standard-ptes)
-    - [Open Source Security Testing Methodology Manual (_OSSTMM_)](#open-source-security-testing-methodology-manual-osstmm)
-    - [National Institute of Standards and Technology (_NIST_)](#national-institute-of-standards-and-technology-nist)
-    - [Open Web App Security Project (_OWASP_)](#open-web-app-security-project-owasp)
-
----
-
 # Assessment Standards
 
 Both pentests and vuln assessments should comply with specific standards to be accredited and accepted by governments and legal authorities. Such standards help ensure that the assessment is carried out thoroughly in a generally agreed-upon manner to increase the efficiency of these assessments and reduce the likelihood of an attack on the organization.

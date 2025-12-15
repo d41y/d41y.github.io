@@ -1,20 +1,3 @@
-- [Attacking Customer Service / Configuration Management](#attacking-customer-service--configuration-management)
-  - [osTicket](#osticket)
-    - [Footprinting/Discovery/Enumeration](#footprintingdiscoveryenumeration)
-      - [User Input](#user-input)
-      - [Processing](#processing)
-      - [Solution](#solution)
-    - [Attacking osTicket](#attacking-osticket)
-      - [osTicket - Sensitive Data Exposure](#osticket---sensitive-data-exposure)
-  - [GitLab - Discovery \& Enum](#gitlab---discovery--enum)
-    - [Footprinting \& Discovery](#footprinting--discovery)
-    - [Enumeration](#enumeration)
-  - [GitLab - Attack](#gitlab---attack)
-    - [Username Enumeration](#username-enumeration)
-    - [Authenticated RCE](#authenticated-rce)
-
----
-
 # Attacking Customer Service / Configuration Management
 
 ## osTicket

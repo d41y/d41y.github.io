@@ -1,8 +1,3 @@
-- [Sylius](#sylius)
-  - [Initial Setup](#initial-setup)
-
----
-
 # [Sylius](https://stack.sylius.com)
 
 ## Initial Setup

@@ -1,22 +1,3 @@
-- [Attacking Email Services](#attacking-email-services)
-  - [Enumeration](#enumeration)
-  - [Misconfigurations](#misconfigurations)
-    - [Authentication](#authentication)
-      - [CRFY Command](#crfy-command)
-      - [EXPN Command](#expn-command)
-      - [RCPT TO Command](#rcpt-to-command)
-      - [USER Command](#user-command)
-      - [Automation](#automation)
-    - [Cloud Enumeration](#cloud-enumeration)
-    - [Password Attacks](#password-attacks)
-  - [Protocol Specific Attacks](#protocol-specific-attacks)
-    - [Open Relay](#open-relay)
-  - [Latest Vulnerabilities](#latest-vulnerabilities)
-    - [CVE-2020-7247](#cve-2020-7247)
-      - [Concept of the Attack](#concept-of-the-attack)
-
----
-
 # Attacking Email Services
 
 When you press the ```Send``` button in your email application, the program establishes a connection to an SMTP server on the network or Internet. The name SMTP stands for Simple Mail Transfer Protocol, and it is a protocol for delivering emails from clients to servers and from servers to other servers.

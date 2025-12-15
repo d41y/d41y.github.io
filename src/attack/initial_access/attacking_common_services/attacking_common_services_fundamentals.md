@@ -1,30 +1,3 @@
-- [Attacking Common Services Fundamentals](#attacking-common-services-fundamentals)
-  - [Interacting with Common Services](#interacting-with-common-services)
-    - [File Share Services](#file-share-services)
-      - [SMB](#smb)
-        - [Windows](#windows)
-          - [Command Shell](#command-shell)
-          - [PowerShell](#powershell)
-        - [Linux](#linux)
-    - [Other Services](#other-services)
-      - [Email](#email)
-      - [Databases](#databases)
-        - [Command Line Utilities](#command-line-utilities)
-          - [MSSQL](#mssql)
-          - [MySQL](#mysql)
-          - [GUI App](#gui-app)
-      - [Tools](#tools)
-          - [Tools to Interact with Common Services](#tools-to-interact-with-common-services)
-  - [Concept of Attacks](#concept-of-attacks)
-  - [Service Misconfigurations](#service-misconfigurations)
-    - [Authentication](#authentication)
-      - [Anonymous Authentication](#anonymous-authentication)
-      - [Misconfigured Access Rights](#misconfigured-access-rights)
-    - [Unnecessary Defaults](#unnecessary-defaults)
-    - [Preventing Misconfigurations](#preventing-misconfigurations)
-
----
-
 # Attacking Common Services Fundamentals
 
 ## Interacting with Common Services

@@ -1,29 +1,3 @@
-- [Login Brute Forcing](#login-brute-forcing)
-  - [Intro](#intro)
-    - [Types of Brute Forcing](#types-of-brute-forcing)
-    - [Anatomy of a Strong Password](#anatomy-of-a-strong-password)
-    - [Common Password Weaknesses](#common-password-weaknesses)
-    - [Common Password Policies](#common-password-policies)
-  - [Brute Force Attacks](#brute-force-attacks)
-  - [Dictionary Attacks](#dictionary-attacks)
-  - [Hybrid Attacks](#hybrid-attacks)
-    - [The Power of Hybrid Attacks](#the-power-of-hybrid-attacks)
-  - [Hydra](#hydra)
-    - [Basic Usage](#basic-usage)
-    - [Basic HTTP Authentication](#basic-http-authentication)
-      - [Exploiting Basic Auth](#exploiting-basic-auth)
-    - [Login Forms](#login-forms)
-      - [http-post-form](#http-post-form)
-        - [Intel on Inner Workings](#intel-on-inner-workings)
-        - [Constructing the params String for Hydra](#constructing-the-params-string-for-hydra)
-  - [Medusa](#medusa)
-    - [Basic Usage](#basic-usage-1)
-  - [Custom Wordlists](#custom-wordlists)
-    - [Username Anarchy](#username-anarchy)
-    - [CUPP](#cupp)
-
----
-
 # Login Brute Forcing
 
 ## Intro

@@ -1,16 +1,3 @@
-- [Attacking RDP](#attacking-rdp)
-  - [Misconfigurations](#misconfigurations)
-    - [Crowbar](#crowbar)
-    - [Hydra](#hydra)
-  - [Protocol Specific Attacks](#protocol-specific-attacks)
-    - [RDP Session Hijacking](#rdp-session-hijacking)
-    - [RDP PtH](#rdp-pth)
-  - [Latest Vulnerabilities](#latest-vulnerabilities)
-    - [CVE-2019-0708](#cve-2019-0708)
-      - [Concept of the Attack](#concept-of-the-attack)
-
----
-
 # Attacking RDP
 
 ## Misconfigurations
