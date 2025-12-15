@@ -1,7 +1,3 @@
-- [Content Management System](#content-management-system)
-
----
-
 # Content Management System
 
 ... is a powerful tool that helps build a website without the need to code everything from sratch. The CMS does most of the "heavy lifting" on the infrastructure side to focus more on the design and presentation aspects of the website instead of the backend structure. Most CMS' provide a rich _What You See Is What You Get_ editor where users can edit content as if they were working in a word processing tool such as Microsoft Word. Users can upload media directly from a media library interace instead of interacting with the webserver either from a management portal or via FTP or SFTP.

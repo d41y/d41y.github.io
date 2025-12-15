@@ -1,28 +1,3 @@
-- [Insecure Direct Object Reference (IDOR)](#insecure-direct-object-reference-idor)
-  - [Identifying IDORs](#identifying-idors)
-    - [URL Parameters \& APIs](#url-parameters--apis)
-    - [AJAX Calls](#ajax-calls)
-    - [Understanding Hashing/Encoding](#understanding-hashingencoding)
-    - [Compare User Roles](#compare-user-roles)
-  - [Mass IDOR Enumeration](#mass-idor-enumeration)
-    - [Insecure Parameters](#insecure-parameters)
-    - [Mass Enumeration](#mass-enumeration)
-  - [Bypassing Encoded References](#bypassing-encoded-references)
-    - [Function Disclosure](#function-disclosure)
-    - [Mass Enumeration](#mass-enumeration-1)
-  - [IDOR in Insecure APIs](#idor-in-insecure-apis)
-    - [Identifying Insecure APIs](#identifying-insecure-apis)
-    - [Exploiting Insecure APIs](#exploiting-insecure-apis)
-  - [Chaining IDOR Vulnerabilities](#chaining-idor-vulnerabilities)
-    - [Information Disclosure](#information-disclosure)
-    - [Modifying Other Users' Details](#modifying-other-users-details)
-    - [Chaining Two IDOR Vulnerabilites](#chaining-two-idor-vulnerabilites)
-  - [IDOR Prevention](#idor-prevention)
-    - [Object Level Access Control](#object-level-access-control)
-    - [Object Referencing](#object-referencing)
-
----
-
 # Insecure Direct Object Reference (IDOR)
 
 ... vulnerabilities occur when a web app exposes a direct reference to an object, like a file or database resource, which the end-user can directly control to obtain access to other similar objects. If any user can access any resource due to the lack of a solid access control system, the system is considered to be vulnerable.

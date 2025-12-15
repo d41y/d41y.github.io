@@ -1,17 +1,3 @@
-- [Attacking DNS](#attacking-dns)
-  - [Enumeration](#enumeration)
-  - [Protocol Specific Attacks](#protocol-specific-attacks)
-    - [Zone Transfer](#zone-transfer)
-    - [Takeovers](#takeovers)
-    - [Subdomain Enumeration](#subdomain-enumeration)
-    - [DNS Spoofing](#dns-spoofing)
-      - [Local DNS Cache Poisoning](#local-dns-cache-poisoning)
-  - [Latest Vulnerabilities](#latest-vulnerabilities)
-    - [NO CVE](#no-cve)
-      - [Concept of the Attack](#concept-of-the-attack)
-
----
-
 # Attacking DNS
 
 ## Enumeration

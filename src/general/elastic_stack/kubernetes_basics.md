@@ -1,24 +1,3 @@
-- [Kubernetes Basics](#kubernetes-basics)
-  - [Introduction and Core Concepts](#introduction-and-core-concepts)
-    - [Three Big Ideas](#three-big-ideas)
-  - [Kubernetes Cluster Infrastructure](#kubernetes-cluster-infrastructure)
-    - [Control Plane](#control-plane)
-    - [Worker Nodes](#worker-nodes)
-  - [Kubernetes Objects](#kubernetes-objects)
-    - [Kubernetes Object YAMLs](#kubernetes-object-yamls)
-    - [The Pod](#the-pod)
-    - [Storage](#storage)
-    - [Networking](#networking)
-    - [Workloads](#workloads)
-    - [Namespaces](#namespaces)
-  - [Extending Kubernetes](#extending-kubernetes)
-    - [Hamburger](#hamburger)
-    - [Elastic's Operator](#elastics-operator)
-    - [ECK](#eck)
-  - [Further Reads](#further-reads)
-
----
-
 # Kubernetes Basics
 
 ## Introduction and Core Concepts

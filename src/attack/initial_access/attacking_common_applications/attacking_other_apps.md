@@ -1,8 +1,3 @@
-- [Attacking Other Notable Applications](#attacking-other-notable-applications)
-  - [Honorable Mentions](#honorable-mentions)
-
----
-
 # Attacking Other Notable Applications
 
 ## Honorable Mentions

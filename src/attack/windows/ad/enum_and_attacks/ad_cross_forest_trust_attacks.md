@@ -1,26 +1,3 @@
-- [Cross-Forest Trust Attacks](#cross-forest-trust-attacks)
-  - [Cross-Forest Trust Attacks - from Windwos](#cross-forest-trust-attacks---from-windwos)
-    - [Cross-Forest Kerberoasting](#cross-forest-kerberoasting)
-      - [Enumerating Accounts for Associated SPNs using Get-DomainUser](#enumerating-accounts-for-associated-spns-using-get-domainuser)
-      - [Enumerating the mssqlsvc Account](#enumerating-the-mssqlsvc-account)
-      - [Performing a Kerberoasting Attacking with Rubeus Using /domain Flag](#performing-a-kerberoasting-attacking-with-rubeus-using-domain-flag)
-    - [Admin Password Re-Use \& Group Membership](#admin-password-re-use--group-membership)
-      - [Using Get-DomainForeignGroupMember](#using-get-domainforeigngroupmember)
-      - [Accessing DC03 Using Enter-PSSession](#accessing-dc03-using-enter-pssession)
-    - [SID History Abuse - Cross Forest](#sid-history-abuse---cross-forest)
-  - [Cross-Forest Trust Attacks - from Linux](#cross-forest-trust-attacks---from-linux)
-    - [Cross-Forest Kerberoasting](#cross-forest-kerberoasting-1)
-      - [Using GetUserSPNs.py](#using-getuserspnspy)
-      - [Using the -request Flag](#using-the--request-flag)
-    - [Hunting Foreign Group Membership with BloodHound-python](#hunting-foreign-group-membership-with-bloodhound-python)
-      - [Adding INLANEFREIGHT.LOCAL Information to /etc/resolv.conf](#adding-inlanefreightlocal-information-to-etcresolvconf)
-      - [Running bloodhound-python against INLANEFREIGHT.LOCAL](#running-bloodhound-python-against-inlanefreightlocal)
-      - [Compressing the File with zip -r](#compressing-the-file-with-zip--r)
-      - [Repeating these Steps for FREIGHTLOGISTICS.LOCAL](#repeating-these-steps-for-freightlogisticslocal)
-      - [Viewing Dangerous Rights through BloodHound](#viewing-dangerous-rights-through-bloodhound)
-
----
-
 # Cross-Forest Trust Attacks
 
 ## Cross-Forest Trust Attacks - from Windwos

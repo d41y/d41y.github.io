@@ -1,15 +1,3 @@
-- [Internal Password Spraying](#internal-password-spraying)
-  - [Linux](#linux)
-    - [Internal Password Spraying](#internal-password-spraying-1)
-    - [Local Administrator Password Reuse](#local-administrator-password-reuse)
-  - [Windows](#windows)
-    - [Internal Password Spraying](#internal-password-spraying-2)
-    - [Mitigations](#mitigations)
-    - [Other Considerations](#other-considerations)
-    - [Detection](#detection)
-
----
-
 # Internal Password Spraying
 
 ## Linux

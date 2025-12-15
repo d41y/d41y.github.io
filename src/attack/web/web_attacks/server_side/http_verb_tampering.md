@@ -1,20 +1,3 @@
-- [HTTP Verb Tampering](#http-verb-tampering)
-  - [Intro](#intro)
-    - [HTTP Verb Tampering](#http-verb-tampering-1)
-    - [Insecure Configurations](#insecure-configurations)
-    - [Insecure Coding](#insecure-coding)
-  - [Bypassing Basic Authentication](#bypassing-basic-authentication)
-    - [Identify](#identify)
-    - [Exploit](#exploit)
-  - [Bypassing Security Filters](#bypassing-security-filters)
-    - [Identify](#identify-1)
-    - [Exploit](#exploit-1)
-  - [Verb Tampering Prevention](#verb-tampering-prevention)
-    - [Insecure Configuration](#insecure-configuration)
-    - [Insecure Coding](#insecure-coding-1)
-
----
-
 # HTTP Verb Tampering
 
 ## Intro

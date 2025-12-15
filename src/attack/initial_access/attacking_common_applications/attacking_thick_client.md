@@ -1,19 +1,3 @@
-- [Attacking Thick Client Applications](#attacking-thick-client-applications)
-  - [Introduction](#introduction)
-  - [Pentesting Steps](#pentesting-steps)
-    - [Information Gathering](#information-gathering)
-    - [Client Side Attacks](#client-side-attacks)
-    - [Network Side Attacks](#network-side-attacks)
-    - [Server Side Attacks](#server-side-attacks)
-  - [Attacking Thick Client Applications](#attacking-thick-client-applications-1)
-    - [Retrieving Hardcoded Creds from Thick Client Applications](#retrieving-hardcoded-creds-from-thick-client-applications)
-  - [Exploiting Web Vulnerabilities in Thick-Client Applications](#exploiting-web-vulnerabilities-in-thick-client-applications)
-    - [Foothold](#foothold)
-    - [Path Traversal](#path-traversal)
-    - [SQLi](#sqli)
-
----
-
 # Attacking Thick Client Applications
 
 ## Introduction

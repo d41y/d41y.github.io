@@ -1,17 +1,3 @@
-- [Chisel](#chisel)
-  - [Verwendung](#verwendung)
-    - [Tunneling](#tunneling)
-    - [Individual Port Forwarding](#individual-port-forwarding)
-    - [Reverse Individual Port Forwarding](#reverse-individual-port-forwarding)
-    - [Forward Dynamic SOCKS Proxy](#forward-dynamic-socks-proxy)
-    - [Multi Pivoting](#multi-pivoting)
-    - [Revshells](#revshells)
-  - [Aufgabe 1](#aufgabe-1)
-  - [Aufgabe 2](#aufgabe-2)
-
-
----
-
 # Chisel
 
 = zum Tunneln von Traffic, wobei Chisel den zu übertragenden TCP Traffic in einen HTTP Tunnel verpackt, welcher wiederum mit SSH gesichert wird.

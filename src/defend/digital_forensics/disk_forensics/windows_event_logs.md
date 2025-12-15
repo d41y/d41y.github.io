@@ -1,16 +1,3 @@
-- [Windows Event Logs](#windows-event-logs)
-  - [Intro](#intro)
-    - [Anatomy of an Event Log](#anatomy-of-an-event-log)
-    - [Leveraging Custom XML Queries](#leveraging-custom-xml-queries)
-    - [Useful Windows Event Logs](#useful-windows-event-logs)
-  - [Sysmon \& Event Logs](#sysmon--event-logs)
-    - [Sysmon Basics](#sysmon-basics)
-    - [Detection Example 1: Detecting DLL Hijacking](#detection-example-1-detecting-dll-hijacking)
-    - [Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection](#detection-example-2-detecting-unmanaged-powershellc-sharp-injection)
-    - [Detection Example 3: Detecting Credential Dumping](#detection-example-3-detecting-credential-dumping)
-
----
-
 # Windows Event Logs
 
 ... are an intrinsic part of the Windows OS, storing logs from different components of the system including the system itself, apps running on it, ETW providers, services, and others.

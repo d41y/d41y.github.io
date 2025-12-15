@@ -1,19 +1,3 @@
-- [Fuzzing](#fuzzing)
-  - [Wordlists](#wordlists)
-  - [Directory Fuzzing](#directory-fuzzing)
-  - [Extension Fuzzing](#extension-fuzzing)
-  - [Page Fuzzing](#page-fuzzing)
-  - [Recursive Fuzzing](#recursive-fuzzing)
-  - [Sub-domain Fuzzing](#sub-domain-fuzzing)
-  - [Vhost Fuzzing](#vhost-fuzzing)
-    - [Vhosts vs. Sub-domains](#vhosts-vs-sub-domains)
-  - [Filtering Results](#filtering-results)
-  - [Parameter Fuzzing - GET](#parameter-fuzzing---get)
-  - [Parameter Fuzzing - POST](#parameter-fuzzing---post)
-  - [Value Fuzzing](#value-fuzzing)
-
----
-
 # Fuzzing
 
 ... refers to a testing technique that sends various types of user input to a certain interface to study how it would react. If you were fuzzing for SQLi vulnerabilities, you would be sending random special characters and seeing how the server would react. If you were fuzzing for a buffer overflow, you would be sending long strips and incrementing their length to see if and when the binary would break.

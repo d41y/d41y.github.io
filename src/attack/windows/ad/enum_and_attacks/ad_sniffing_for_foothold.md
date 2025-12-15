@@ -1,14 +1,3 @@
-- [Sniffing out a Foothold](#sniffing-out-a-foothold)
-  - [LLMNR / NBT-NS Poisoning - from Linux](#llmnr--nbt-ns-poisoning---from-linux)
-    - [Responder](#responder)
-  - [LLMNR / NBT-NS Poisoning - from Windows](#llmnr--nbt-ns-poisoning---from-windows)
-    - [Inveigh](#inveigh)
-    - [C# Inveigh](#c-inveigh)
-  - [Remediation](#remediation)
-  - [Detection](#detection)
-
----
-
 # Sniffing out a Foothold
 
 ## LLMNR / NBT-NS Poisoning - from Linux

@@ -1,27 +1,3 @@
-- [Analyze Your Data With Machine Learning](#analyze-your-data-with-machine-learning)
-  - [Introduction to Elastic Machine Learning](#introduction-to-elastic-machine-learning)
-    - [Machine Learning in the Elastic Stack](#machine-learning-in-the-elastic-stack)
-    - [Elastic ML](#elastic-ml)
-    - [Anomaly Detection](#anomaly-detection)
-    - [Creating a Job](#creating-a-job)
-    - [Restore Model Snapshots](#restore-model-snapshots)
-    - [Forecasting](#forecasting)
-  - [Analyze Anomaly Detection Results](#analyze-anomaly-detection-results)
-    - [Actionable ML](#actionable-ml)
-    - [Tools for Analysis](#tools-for-analysis)
-    - [Annotations](#annotations)
-  - [Data Frame Analytics](#data-frame-analytics)
-    - [Data Types in Elastic ML](#data-types-in-elastic-ml)
-    - [Outlier Detection Example](#outlier-detection-example)
-    - [Detect Outliers](#detect-outliers)
-  - [AIOps Labs](#aiops-labs)
-    - [AIOps](#aiops)
-    - [Explain Log Rate Spikes](#explain-log-rate-spikes)
-    - [Log Pattern Analysis](#log-pattern-analysis)
-    - [Change Point Detection](#change-point-detection)
-
----
-
 # Analyze Your Data With Machine Learning
 
 ## Introduction to Elastic Machine Learning

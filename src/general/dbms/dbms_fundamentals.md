@@ -1,11 +1,3 @@
-- [Database Management Systems](#database-management-systems)
-  - [DBMSs](#dbmss)
-  - [Architecture](#architecture)
-  - [Relational Databases](#relational-databases)
-  - [Non-relational Databases](#non-relational-databases)
-
----
-
 # Database Management Systems
 
 ... help create, define, host, and manage databases. Various kinds of DBMS were designed over time, such as file-based, Relational DBMS (RDBMS), NoSQL, Graph based, and Key/Value stores.

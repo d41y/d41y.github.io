@@ -1,23 +1,3 @@
-- [Server-Side Template Injection (SSTI)](#server-side-template-injection-ssti)
-  - [Templating](#templating)
-  - [Identifying](#identifying)
-    - [Confirming SSTI](#confirming-ssti)
-    - [Identifying the Template Engine](#identifying-the-template-engine)
-  - [Exploiting Jinja2](#exploiting-jinja2)
-    - [Information Disclosure](#information-disclosure)
-    - [LFI](#lfi)
-    - [RCE](#rce)
-  - [Exploiting Twig](#exploiting-twig)
-    - [Information Disclosure](#information-disclosure-1)
-    - [LFI](#lfi-1)
-    - [RCE](#rce-1)
-  - [SSTI Tools](#ssti-tools)
-  - [Prevention](#prevention)
-
----
-
-[SSTI cheatsheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md)
-
 # Server-Side Template Injection (SSTI)
 
 Web applications can utilize templating engines and server-side templates to generate responses such as HTML content dynamically. This generation is often based on user input, enabling the web application to respond to user input dynamically. When an attacker can inject template code, a SSTI vulnerability can occur. STTI can lead to various security risks, including data leakage and even full server compromise via remote code execution.

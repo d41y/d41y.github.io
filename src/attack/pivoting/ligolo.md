@@ -1,15 +1,3 @@
-- [LigoloNG](#ligolong)
-	- [Verwendung](#verwendung)
-		- [Verbindungsaufbau](#verbindungsaufbau)
-		- [Single Pivot](#single-pivot)
-		- [Multi Pivot](#multi-pivot)
-		- [Localhost Pivot](#localhost-pivot)
-	- [Aufgabe 1](#aufgabe-1)
-	- [Aufgabe 2](#aufgabe-2)
-	- [Aufgabe 3 (optional)](#aufgabe-3-optional)
-
----
-
 # LigoloNG
 
 = erweiterte Version von Ligolo, einem Sicherheitstool, das für Red-Teaming und Pentests entwickelt wurde. Es ermöglicht sichere, multiplexierte und authentifizierte Tunnel.

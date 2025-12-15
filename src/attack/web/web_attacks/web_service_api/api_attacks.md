@@ -1,16 +1,3 @@
-- [API Attacks](#api-attacks)
-  - [Information Disclosure](#information-disclosure)
-    - [Information Disclosure through SQLi](#information-disclosure-through-sqli)
-  - [Arbitrary File Upload](#arbitrary-file-upload)
-    - [PHP File Upload via API to RCE](#php-file-upload-via-api-to-rce)
-  - [LFI](#lfi)
-  - [XSS](#xss)
-  - [SSRF](#ssrf)
-  - [RegEx Denial of Service (_ReDos_)](#regex-denial-of-service-redos)
-  - [XXE Injection](#xxe-injection)
-
----
-
 # API Attacks
 
 ## Information Disclosure

@@ -1,24 +1,3 @@
-- [Web Service \& API](#web-service--api)
-  - [Web Services vs. API](#web-services-vs-api)
-  - [Web Service Approaches/Technologies](#web-service-approachestechnologies)
-    - [XML-RPC](#xml-rpc)
-    - [JSON-RPC](#json-rpc)
-    - [SOAP (_Simple Object Access Protocol_)](#soap-simple-object-access-protocol)
-    - [WS-BPEL (_Web Services Business Process Execution Language_)](#ws-bpel-web-services-business-process-execution-language)
-    - [RESTful (_Representation State Transfer_)](#restful-representation-state-transfer)
-  - [Web Service Description Language (_WSDL_)](#web-service-description-language-wsdl)
-    - [Example](#example)
-    - [WSDL File Breakdown](#wsdl-file-breakdown)
-      - [Definition](#definition)
-      - [Data Types](#data-types)
-      - [Messages](#messages)
-      - [Operation](#operation)
-      - [Port Type](#port-type)
-      - [Binding](#binding)
-      - [Service](#service)
-
----
-
 # Web Service & API
 
 >[!NOTE]

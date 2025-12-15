@@ -1,38 +1,3 @@
-- [Python](#python)
-  - [Intro](#intro)
-    - [Executing Python Code](#executing-python-code)
-      - [IDLE](#idle)
-      - [Shebang #!](#shebang-)
-  - [Variables](#variables)
-    - [Strings](#strings)
-    - [Format Strings](#format-strings)
-    - [Integers](#integers)
-    - [Booleans](#booleans)
-    - [Comments](#comments)
-  - [Coding Style](#coding-style)
-  - [Conditional Statements / Loops](#conditional-statements--loops)
-    - [if-(elif)-else](#if-elif-else)
-    - [while](#while)
-    - [for-each-loop](#for-each-loop)
-  - [Functions](#functions)
-    - [Function Call](#function-call)
-  - [OOP](#oop)
-  - [Libraries](#libraries)
-    - [Managing Libraries](#managing-libraries)
-    - [Importance of Libraries](#importance-of-libraries)
-      - [requests](#requests)
-      - [BeautifulSoup](#beautifulsoup)
-  - [Project: Word Extractor](#project-word-extractor)
-    - [Word Extractor Improvements](#word-extractor-improvements)
-      - [main-Block](#main-block)
-      - [Accepting Arguments](#accepting-arguments)
-  - [Project: Simple Bind Shell](#project-simple-bind-shell)
-  - [Advanced Libraries](#advanced-libraries)
-    - [Directories and Search Paths](#directories-and-search-paths)
-    - [venv](#venv)
-
----
-
 # Python
 
 Python is an interpreted language, which means the code itself is not compiled into machine code like C code. Instead, it is interpreted by the Python program, and the instructions in the script(s) are executed. Python is a high-level language meaning the scripts you produce are simplified for your convenience so that you don't need to worry about memory management, system calls, and so forth. Furthermore, Python is a general-purpose, multi-paradigm language.

@@ -1,22 +1,3 @@
-- [Bug Bounty Hunting Reporting](#bug-bounty-hunting-reporting)
-  - [Essential Elements of a good Bug Report](#essential-elements-of-a-good-bug-report)
-  - [CWE \& CVSS](#cwe--cvss)
-    - [CWE (_Common Weakness Enumeration_)](#cwe-common-weakness-enumeration)
-    - [CVSS (_Common Vulnerability Scoring System_)](#cvss-common-vulnerability-scoring-system)
-  - [CVSS Calculator](#cvss-calculator)
-  - [CVSS Structure](#cvss-structure)
-    - [Attack Vector](#attack-vector)
-    - [Attack Complexity](#attack-complexity)
-    - [Privileges Required](#privileges-required)
-    - [User Interaction](#user-interaction)
-    - [Scope](#scope)
-    - [Confidentiality](#confidentiality)
-    - [Integrity](#integrity)
-    - [Availability](#availability)
-  - [Good Report Examples](#good-report-examples)
-
----
-
 # Bug Bounty Hunting Reporting
 
 ## Essential Elements of a good Bug Report

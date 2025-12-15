@@ -1,17 +1,3 @@
-- [Extracting Passwords from the Network](#extracting-passwords-from-the-network)
-  - [Wireshark](#wireshark)
-  - [Pcredz](#pcredz)
-  - [Credential Hunting in Network Shares](#credential-hunting-in-network-shares)
-    - [Common Credential Patterns](#common-credential-patterns)
-    - [Hunting from Windows](#hunting-from-windows)
-      - [Snaffler](#snaffler)
-      - [PowerHuntShares](#powerhuntshares)
-    - [Hunting from Linux](#hunting-from-linux)
-      - [Manspider](#manspider)
-      - [NetExec](#netexec)
-
----
-
 # Extracting Passwords from the Network
 
 In today's security-conscious world, most applications wisely use TLS to encrypt sensitive data in trasnmit. However, not all environments are fully secured. Legacy systems, misconfigured services, or test apps launched without HTTPS can still result in the use of unencrypted protocols such as HTTP or SNMP. These gaps present a valuable opportunity for attackers: the chance to hunt for credentials in cleartext network traffic..

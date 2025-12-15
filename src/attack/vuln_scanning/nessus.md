@@ -1,28 +1,3 @@
-- [Nessus](#nessus)
-  - [Getting Started](#getting-started)
-    - [Downloading](#downloading)
-    - [Requesting Free License](#requesting-free-license)
-    - [Installing Package](#installing-package)
-    - [Starting Nessus](#starting-nessus)
-    - [Accessing Nessus](#accessing-nessus)
-  - [Scan](#scan)
-    - [New Scan](#new-scan)
-    - [Discovery](#discovery)
-    - [Assessment](#assessment)
-    - [Advanced](#advanced)
-  - [Advanced Settings](#advanced-settings)
-    - [Scan Policies](#scan-policies)
-    - [Creating a Scan Policy](#creating-a-scan-policy)
-    - [Plugins](#plugins)
-    - [Scanning with Creds](#scanning-with-creds)
-  - [Working with Output](#working-with-output)
-    - [Reports](#reports)
-    - [Exporting](#exporting)
-  - [Scanning Issues](#scanning-issues)
-    - [Mitigating Issues](#mitigating-issues)
-
----
-
 # Nessus
 
 ## Getting Started

@@ -1,20 +1,3 @@
-- [SSH und Proxychains](#ssh-und-proxychains)
-  - [SSH unter Windows](#ssh-unter-windows)
-    - [Local Port Forwarding](#local-port-forwarding)
-    - [Wenn Nologin-Account](#wenn-nologin-account)
-    - [Remote Port Forwarding](#remote-port-forwarding)
-    - [Problem: sshd\_config](#problem-sshd_config)
-    - [Dynamic Port Forwarding](#dynamic-port-forwarding)
-    - [Proxychains und DPF](#proxychains-und-dpf)
-    - [SSH Proxy Jump](#ssh-proxy-jump)
-    - [Sneaky Fynn Way](#sneaky-fynn-way)
-  - [Aufgabe 1](#aufgabe-1)
-  - [Aufgabe 2](#aufgabe-2)
-  - [Aufgabe 3](#aufgabe-3)
-  - [Aufgabe 4](#aufgabe-4)
-
----
-
 # SSH und Proxychains
 
 ## SSH unter Windows

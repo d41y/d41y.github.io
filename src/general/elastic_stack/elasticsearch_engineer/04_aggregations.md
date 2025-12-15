@@ -1,34 +1,3 @@
-- [Aggregations](#aggregations)
-  - [Metrics and Bucket Aggregations](#metrics-and-bucket-aggregations)
-    - [Aggregations](#aggregations-1)
-      - [Basic Structure of Aggregations](#basic-structure-of-aggregations)
-      - [Aggregation Results](#aggregation-results)
-      - [Return Only Aggregation Results](#return-only-aggregation-results)
-    - [Metrics Aggregations](#metrics-aggregations)
-      - [min](#min)
-      - [value\_count](#value_count)
-      - [cardinality](#cardinality)
-    - [Bucket Aggregations](#bucket-aggregations)
-      - [date\_histogram](#date_histogram)
-      - [histogram](#histogram)
-      - [Bucket Sorting](#bucket-sorting)
-      - [terms](#terms)
-  - [Combining Aggregations](#combining-aggregations)
-    - [Working with Aggregations](#working-with-aggregations)
-    - [Reducing the Scope of an Aggregation](#reducing-the-scope-of-an-aggregation)
-    - [Run Multiple Aggregations](#run-multiple-aggregations)
-    - [Sub-Aggregations](#sub-aggregations)
-      - [Run Sub-Aggregations](#run-sub-aggregations)
-    - [Pipeline Aggregations](#pipeline-aggregations)
-  - [Transforming Data](#transforming-data)
-    - [Transform Your Data for Better Insights](#transform-your-data-for-better-insights)
-    - [Cluster-efficient Aggregations](#cluster-efficient-aggregations)
-    - [Configuring Transform Settings](#configuring-transform-settings)
-    - [Destination Index](#destination-index)
-    - [Latest Transforms](#latest-transforms)
-
----
-
 # Aggregations
 
 ## Metrics and Bucket Aggregations

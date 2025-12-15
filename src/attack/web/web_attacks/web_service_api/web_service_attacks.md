@@ -1,14 +1,3 @@
-- [Web Service Attacks](#web-service-attacks)
-  - [SOAPAction Spoofing](#soapaction-spoofing)
-    - [Example](#example)
-  - [Command Injection](#command-injection)
-    - [Example](#example-1)
-  - [Attacking WordPress _xmlrpc.php_](#attacking-wordpress-xmlrpcphp)
-    - [Example](#example-2)
-      - [IP Disclosure](#ip-disclosure)
-
----
-
 # Web Service Attacks
 
 ## SOAPAction Spoofing

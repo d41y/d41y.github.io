@@ -1,19 +1,3 @@
-- [Defensive Considerations](#defensive-considerations)
-  - [Hardening AD](#hardening-ad)
-    - [Step One: Document and Audit](#step-one-document-and-audit)
-    - [People, Processes, and Technology](#people-processes-and-technology)
-      - [People](#people)
-      - [Protected Users Group](#protected-users-group)
-      - [Processes](#processes)
-      - [Technology](#technology)
-  - [Additional AD Auditing Techniques](#additional-ad-auditing-techniques)
-    - [AD Explorer](#ad-explorer)
-    - [PingCastle](#pingcastle)
-    - [Group3r](#group3r)
-    - [ADRecon](#adrecon)
-
----
-
 # Defensive Considerations
 
 ## Hardening AD

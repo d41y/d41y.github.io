@@ -1,22 +1,3 @@
-- [Pentest Documentation \& Reporting](#pentest-documentation--reporting)
-  - [Preparation](#preparation)
-    - [Notetaking \& Organization](#notetaking--organization)
-      - [Notetaking Sample Structure](#notetaking-sample-structure)
-      - [Notetaking Tools](#notetaking-tools)
-      - [Logging](#logging)
-        - [Exploitation Attempts](#exploitation-attempts)
-      - [Artifacts Left Behind](#artifacts-left-behind)
-        - [Account Creation / System Modifications](#account-creation--system-modifications)
-      - [Evidence](#evidence)
-        - [What to Capture](#what-to-capture)
-        - [Storage](#storage)
-      - [Formatting and Redaction](#formatting-and-redaction)
-        - [Screenshots](#screenshots)
-        - [Terminal](#terminal)
-      - [What Not to Archive](#what-not-to-archive)
-
----
-
 # Pentest Documentation & Reporting
 
 ## Preparation

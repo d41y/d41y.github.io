@@ -1,24 +1,3 @@
-- [Attacking SMB](#attacking-smb)
-  - [Enumeration](#enumeration)
-  - [Misconfigurations](#misconfigurations)
-    - [Anonymous Authentication](#anonymous-authentication)
-    - [Remote Procedure Call (_RPC_)](#remote-procedure-call-rpc)
-  - [Protocol Specific Attacks](#protocol-specific-attacks)
-    - [Without Credentials](#without-credentials)
-      - [Brute Forcing and Password Spraying](#brute-forcing-and-password-spraying)
-    - [With Credentials](#with-credentials)
-      - [Impacket PsExec](#impacket-psexec)
-      - [CrackMapExec](#crackmapexec)
-      - [Enumerating Logged-on Users](#enumerating-logged-on-users)
-      - [Extract Hashes from SAM Database](#extract-hashes-from-sam-database)
-      - [PtH](#pth)
-      - [Forced Authentication Attacks](#forced-authentication-attacks)
-  - [Latest Vulnerabilities](#latest-vulnerabilities)
-    - [CVE-2020-0796](#cve-2020-0796)
-      - [Concept of the Attack](#concept-of-the-attack)
-
----
-
 # Attacking SMB
 
 ## Enumeration

@@ -1,15 +1,3 @@
-- [Attacking Infra and Network Tools](#attacking-infra-and-network-tools)
-  - [Splunk - Discover \& Enum](#splunk---discover--enum)
-    - [Discovery/Footprinting](#discoveryfootprinting)
-    - [Enumeration](#enumeration)
-  - [Splunk - Attack](#splunk---attack)
-    - [Abusing Built-In Functionality](#abusing-built-in-functionality)
-  - [PRTG Network Monitor](#prtg-network-monitor)
-    - [Discovery/Footprinting/Enumeration](#discoveryfootprintingenumeration)
-    - [Leveraging Known Vulns](#leveraging-known-vulns)
-
----
-
 # Attacking Infra and Network Tools
 
 ## Splunk - Discover & Enum

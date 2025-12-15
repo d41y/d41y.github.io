@@ -1,27 +1,3 @@
-- [Hardware / ICS Fundamentals](#hardware--ics-fundamentals)
-  - [Gerber](#gerber)
-  - [Logic Gates](#logic-gates)
-    - [Gate Types](#gate-types)
-      - [AND Gate](#and-gate)
-      - [NOT Gate](#not-gate)
-      - [OR Gate](#or-gate)
-      - [NAND Gate](#nand-gate)
-      - [NOR Gate](#nor-gate)
-      - [XOR Gate](#xor-gate)
-      - [XNOR Gate](#xnor-gate)
-  - [Modbus](#modbus)
-    - [Modbus TCP](#modbus-tcp)
-    - [Register Types](#register-types)
-    - [Function Codes](#function-codes)
-  - [PJL Commands](#pjl-commands)
-    - [Basic Commands](#basic-commands)
-  - [SAL](#sal)
-    - [Analysis](#analysis)
-    - [Handling Framing Errors](#handling-framing-errors)
-  - [VHDL (_VHSIC Hardware Description Language_)](#vhdl-vhsic-hardware-description-language)
-
----
-
 # Hardware / ICS Fundamentals
 
 ## Gerber

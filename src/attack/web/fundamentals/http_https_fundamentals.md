@@ -1,26 +1,3 @@
-- [HyperText Transfer Protocol (HTTP)](#hypertext-transfer-protocol-http)
-  - [Uniform Resource Locator (URL)](#uniform-resource-locator-url)
-  - [HTTP Flow](#http-flow)
-  - [cURL](#curl)
-- [HyperText Transfer Protocol Secure (HTTPs)](#hypertext-transfer-protocol-secure-https)
-  - [HTTPs Flow](#https-flow)
-  - [cURL with HTTPs](#curl-with-https)
-- [HTTP Requests and Responses](#http-requests-and-responses)
-  - [Request](#request)
-  - [Response](#response)
-  - [cURL](#curl-1)
-- [HTTP Headers](#http-headers)
-  - [General Headers](#general-headers)
-  - [Entity Headers](#entity-headers)
-  - [Request Headers](#request-headers)
-  - [Response Headers](#response-headers)
-  - [Security Headers](#security-headers)
-- [HTTP Methods and Codes](#http-methods-and-codes)
-  - [Request Methods](#request-methods)
-  - [Response Codes](#response-codes)
-
----
-
 # HyperText Transfer Protocol (HTTP)
 
 Most internet communications are made with web requests through the HTTP protocol. HTTP is an application-level protocol used to access the World Wide Web resources. The term 'hypertext' stands for text containing links to other resources and text that the readers can easily interpret.<br> HTTP communication consists of a client and a server, where the client requests the server for a resource. the server processes the requests and returns the requested resource. The default port for HTTP communication is port 80, though this can be changed to any other port, depending on the web server configuration.

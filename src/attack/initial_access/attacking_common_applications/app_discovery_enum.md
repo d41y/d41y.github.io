@@ -1,11 +1,3 @@
-- [Application Discovery \& Enumeration](#application-discovery--enumeration)
-  - [Initial Enum](#initial-enum)
-  - [Using EyeWitness](#using-eyewitness)
-  - [Using Aquatone](#using-aquatone)
-  - [Interpreting the Results](#interpreting-the-results)
-
----
-
 # Application Discovery & Enumeration
 
 ## Initial Enum

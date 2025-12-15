@@ -1,15 +1,3 @@
-- [Security Assessment](#security-assessment)
-  - [Vulnerability Assessments](#vulnerability-assessments)
-  - [Penetration Test](#penetration-test)
-  - [Vulnerability Assessment vs. Pentest](#vulnerability-assessment-vs-pentest)
-  - [Other Types of Assessments](#other-types-of-assessments)
-    - [Security Audits](#security-audits)
-    - [Bug Bounties](#bug-bounties)
-    - [Red Team Assessments](#red-team-assessments)
-    - [Purple Assessment](#purple-assessment)
-
----
-
 # Security Assessment
 
 The primary purpose of most types of security assessments is to find and confirm vulnerabilities are present, so you can work to patch, mitigate, or remove them. There are different ways and methodologies to test how secure a computer system is. Some types of security assessments are more appropriate for certain networks than others. But they all serve a purpose in improving cybersecurity. All organizations have different compliance requirements and risk tolerance, face different threats, and have different business models that determine the types of systems they run externally and internally. Some organizations have a much more mature security posture than their peers and can focus on advanced red team simulations conducted by third parties, while others are still working to establish baseline security. Regardless, all organizations must stay on top of both legacy and recent vulns and have system for detecting and mitigating risks to their systems and data.

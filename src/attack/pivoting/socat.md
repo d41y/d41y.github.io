@@ -1,21 +1,3 @@
-- [Socat](#socat)
-  - [Auf Windows](#auf-windows)
-  - [Verwendung](#verwendung)
-    - [Forwarding](#forwarding)
-      - [RevShell Relay](#revshell-relay)
-      - [Port Forwarding - Easy](#port-forwarding---easy)
-      - [Port Forwarding - Quiet](#port-forwarding---quiet)
-    - [Shells](#shells)
-      - [Reverse Shells](#reverse-shells)
-      - [Bind Shells](#bind-shells)
-      - [Linux Fully Stable Shell](#linux-fully-stable-shell)
-      - [Encrypted Shell](#encrypted-shell)
-  - [Aufgabe 1](#aufgabe-1)
-  - [Aufgabe 2](#aufgabe-2)
-  - [Aufgabe 3 (optional)](#aufgabe-3-optional)
-
----
-
 # Socat
 
 = Tool zur bidirektionalen Weiterleitung

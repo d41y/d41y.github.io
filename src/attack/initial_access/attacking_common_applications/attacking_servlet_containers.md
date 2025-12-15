@@ -1,20 +1,3 @@
-- [Attacking Servlet Containers](#attacking-servlet-containers)
-  - [Tomcat - Discovery \& Enum](#tomcat---discovery--enum)
-    - [Discovery/Fingerprinting](#discoveryfingerprinting)
-    - [Enumeration](#enumeration)
-  - [Tomcat - Attack](#tomcat---attack)
-    - [Tomcat Manager - Login Brute Force](#tomcat-manager---login-brute-force)
-    - [Tomcat Manager - WAR File Upload](#tomcat-manager---war-file-upload)
-    - [CVE-2020-1938: Ghostcat](#cve-2020-1938-ghostcat)
-  - [Jenkins - Discovery \& Enum](#jenkins---discovery--enum)
-    - [Discovery/Footprinting](#discoveryfootprinting)
-    - [Enumeration](#enumeration-1)
-  - [Jenkins - Attack](#jenkins---attack)
-    - [Script Console](#script-console)
-    - [Miscellaneous Vulns](#miscellaneous-vulns)
-
----
-
 # Attacking Servlet Containers
 
 ## Tomcat - Discovery & Enum

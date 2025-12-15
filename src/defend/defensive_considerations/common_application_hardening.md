@@ -1,9 +1,3 @@
-- [Common Application Hardening](#common-application-hardening)
-  - [General Hardening Tips](#general-hardening-tips)
-  - [Application-Specific Hardening Tips](#application-specific-hardening-tips)
-
----
-
 # Common Application Hardening
 
 The first step for any organization should be to create a detailed application inventory of both internal and external-facing applications. This can be achieved in many ways, and blue teams on a budget could benefit from pentesting tools such as nmap and EyeWitness to assist in the process. Various open-source and paid tools can be used to create and maintain this inventory. Without knowing what exists in the environment, you won't know what to protect! Creating this inventory may expose instances of "shadow IT", deprecated applications that are no longer needed, or even issues such as a trial version of a tool being converted to a free version automatically.

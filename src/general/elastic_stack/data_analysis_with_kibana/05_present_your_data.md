@@ -1,33 +1,3 @@
-- [Present Your Data](#present-your-data)
-  - [Sharing a Dashboard](#sharing-a-dashboard)
-    - [Custom Branding](#custom-branding)
-    - [Direct Links](#direct-links)
-    - [Embed Code](#embed-code)
-    - [Kibana Reports](#kibana-reports)
-    - [Report Generation](#report-generation)
-  - [Sharing With Users](#sharing-with-users)
-    - [Kibana RBAC Overview](#kibana-rbac-overview)
-    - [ES Role Config](#es-role-config)
-    - [Kibana Role Config](#kibana-role-config)
-    - [Share a Dashboard through a Space](#share-a-dashboard-through-a-space)
-    - [Create Space](#create-space)
-    - [Copy Dashboard to Space](#copy-dashboard-to-space)
-    - [Create Role with Privileges](#create-role-with-privileges)
-    - [Assign a Role to a User](#assign-a-role-to-a-user)
-    - [Alternatively](#alternatively)
-    - [Anonymous Authentication](#anonymous-authentication)
-  - [Canvas](#canvas)
-    - [Getting Started with Canvas](#getting-started-with-canvas)
-    - [Static Elements](#static-elements)
-    - [Visualization Library](#visualization-library)
-    - [Canvas Elements](#canvas-elements)
-    - [Data Sources](#data-sources)
-    - [Canvas Expression](#canvas-expression)
-    - [Functions](#functions)
-    - [PDFs with Infographics](#pdfs-with-infographics)
-
----
-
 # Present Your Data
 
 ## Sharing a Dashboard

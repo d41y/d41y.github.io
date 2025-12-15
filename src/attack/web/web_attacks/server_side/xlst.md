@@ -1,14 +1,3 @@
-- [eXtensible Stylesheet Language Transformations Server-Side Injection (XSLT)](#extensible-stylesheet-language-transformations-server-side-injection-xslt)
-  - [Identifying](#identifying)
-    - [Identifying XSLT Injection](#identifying-xslt-injection)
-    - [Information Disclosure](#information-disclosure)
-  - [Exploitation](#exploitation)
-    - [LFI](#lfi)
-    - [RCE](#rce)
-  - [Prevention](#prevention)
-
----
-
 # eXtensible Stylesheet Language Transformations Server-Side Injection (XSLT)
 
 eXtensible Stylesheet Language Transformation (XSLT) is a language enablnig the transformation if XML documents. For instance, select specific nodes from an XML document and change the XML structure.

@@ -1,25 +1,3 @@
-- [Initial Enumeration](#initial-enumeration)
-  - [External Recon and Enumeration Principles](#external-recon-and-enumeration-principles)
-    - [What and where to look for?](#what-and-where-to-look-for)
-      - [Finding Address Spaces](#finding-address-spaces)
-      - [DNS](#dns)
-      - [Public Data](#public-data)
-    - [Overarching Enum Principles](#overarching-enum-principles)
-    - [Example Enum Process](#example-enum-process)
-      - [Check for ASN/IP \& Domain Data](#check-for-asnip--domain-data)
-      - [Hunting for Files and Email Addresses](#hunting-for-files-and-email-addresses)
-      - [Username Harvesting](#username-harvesting)
-      - [Credential Hunting](#credential-hunting)
-  - [Initial Enumeration of the Domain](#initial-enumeration-of-the-domain)
-    - [Identifying Hosts](#identifying-hosts)
-      - [Wireshark](#wireshark)
-      - [TCPDump](#tcpdump)
-      - [Responder](#responder)
-      - [FPing](#fping)
-      - [Nmap](#nmap)
-
----
-
 # Initial Enumeration
 
 ## External Recon and Enumeration Principles

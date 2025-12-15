@@ -1,16 +1,3 @@
-- [Server-Side Includes Injection (SSI)](#server-side-includes-injection-ssi)
-  - [Directives](#directives)
-    - [Common SSI directives:](#common-ssi-directives)
-      - [printenv](#printenv)
-      - [config](#config)
-      - [echo](#echo)
-      - [exec](#exec)
-      - [include](#include)
-  - [Exploitation](#exploitation)
-  - [Prevention](#prevention)
-
----
-
 # Server-Side Includes Injection (SSI)
 
 Server-Side Includes (SSI) is a technology web applications used to create dynamic content on HTML pages. SSI is supported by many popular web servers such as Apache and IIS. The use of SSI can often be inferred from the file extension. Typical file extensions include ```.shtml```, ```.shtm```, and ```.stm```. However, web servers can be configured to support SSI directives in arbitrary file extensions. As such, you cannot conclusively conclude whether SSI is used only from the extension.
