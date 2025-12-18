@@ -77,3 +77,60 @@ The culmination of your role as a security analyst or incident responder is the 
 
 Post-incident reflection is essential for enhancing your preparedness for future incidents. This involves revisiting and analyzing the incident to identify areas for improvement.
 
+## Elements of a Proper Incident Report
+
+### Executive Summary
+
+Consider the Executive Summary as the gateway to your report, designed to cater to a broad audience, including non-technical stakeholders. This section should furnish the reader with a succinct overview, key findings, immediate actions executed, and the impact on stakeholders. Since many stakeholders may only peruse the Executive Summary, it's imperative to nail this section. Here's a more granular breakdown of what should be encapsulated in the Executive Summay:
+
+| Section | Description |
+| ------- | ----------- |
+| Incident ID | Unique identifier for the incident. |
+| Incident Overview | Provide a concise summary of the incident's events and explicitly state its type. Was it a ransomware attack, a large-scale data breach or both? This should also encompass the estimated time and date of the incident, as well as its duration, the affected systems/data, and the status. |
+| Key Findings | Enumerate any salient findings that emerged from the incident. What was the root cause? Was a specific CVE exploited? What data, if any, was compromised, exfiltrated, or jeopardized? |
+| Immediate Actions Taken | Outline the immediate response measures taken. Were the affected systems prompty isolated? Was the root cause identified? Did you engage any third-party services, and if so, who were they? |
+| Stakeholder Impact | Assess the potential on various stakeholders. For instance, did any customers experience downtime, and what are the financial ramifications? Was employee data compromised? Was proprietary information at risk, and what are the potential repercussions? |
+
+### Technical Analysis
+
+This section is where you dive deeply into the technical aspects, dissecting the events that transpired during the incident. It's likely to be the most voluminous part of the incident report. The following key points should be addressed:
+
+#### Affected Systems & Data
+
+Highlight all systems and data that were either potentially accessed or definitively compromised during the incident. If data was exfiltrated, specify the volume or quantity, if ascertainable.
+
+#### Evidence Sources & Analysis
+
+Emphasize the evidence scrutinized, the results, and the analytical methodology employed. For instance, if a compromise was confirmed through web access logs, include a screenshot for documentation. Maintaining evidence integrity is crucial, especially in criminal cases. A best practice is to hash files to ensure their integrity.
+
+#### Indicators of Compromise (_IoCs_)
+
+IoCs are instrumental for hunting potential compromises across your broader environment or even among partner organizations. It might also be feasible to attribute the attack to a specific threat group based on the IoCs identified. These can range from abnormal outbound traffic to unfamiliar processes and scheduled tasks initiated by the attacker.
+
+#### Root Cause Analysis
+
+Within this section, detail the root cause analysis conducted and elaborate on the underlying cause of the security incident.
+
+#### Technical Timeline
+
+This is a pivotal component for comprehending the incident's sequence of events. The timeline should include:
+
+- Reconnaissance
+- Initial Compromise
+- C2 Communications
+- Enumeration
+- Lateral Movement
+- Data Access & Exfiltration
+- Malware Deployment or Activity
+- Containment Times
+- Eradication Times
+- Recovery Times
+
+#### Nature of the Attack
+
+### Impact Analysis
+
+Provide an evaluation of the adverse effects that the incident had on the organization's data, operations, and reputation. This analysis aims to quantify and qualify the extent of the damage caused by the incident, identifying which systems, processes, or data sets have been compromised. It also assesses the potential business implications, such as financial loss, regulatory penalties, and reputational damage.
+
+### Response and Recovery Analysis
+
