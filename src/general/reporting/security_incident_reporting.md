@@ -134,3 +134,165 @@ Provide an evaluation of the adverse effects that the incident had on the organi
 
 ### Response and Recovery Analysis
 
+Outline the specific actions taken to contain the security incident, eradicate the threat, and restore normal operations. This section serves as a chronological account of the measures implemented to mitigate the impact and prevent future occurences of similar incidents.
+
+Here's a breakdown of what the "Response and Recovery" section typically includes.
+
+#### Immediate Response Actions
+
+##### Revocation of Access
+
+- **Identification of Compromised Accounts/Systems**: A detailed account of how compromised accounts or systems were identified, including the tools and methodologies used.
+- **Timeframe**: The exact time when unauthorized access detected and subsequently revoked, down to the minute if possible.
+- **Method of Revocation**: Explanation of the technical methods used to revoke access, such as disabling accounts, changing permissions, or altering firewall rules.
+- **Impact**: Assessment of what revoking access immediately achieved, including the prevention of data exfiltration or further system compromise.
+
+##### Containment Strategy
+
+- **Short-term Containment**: Immediate actions taken to isolate affected systems from the network to prevent lateral movement of the threat actor.
+- **Long-term Containment**: Strategic measures, such as network segmentation or zero-trust architecture implementation, aimed at long-term isolation of affected systems.
+- **Effectiveness**: An evaluation of how effective the containment strategies were in limiting the impact of the incident.
+
+#### Eradication Measures
+
+##### Malware Removal
+
+- **Identification**: Detailed procedures on how malware or malicious code was identified, including the use of Endpoint Detection and Response (_EDR_) tools or forensic analysis.
+- **Removal Techniques**: Specific tools or manual methods used to remove the malware.
+- **Verification**: Steps taken to ensure that the malware was completely eradicated, such as checksum verification or heuristic analysis.
+
+##### System Patching
+
+- **Vulnerability Identification**: How the vulnerabilities were discovered, including any CVE identifiers if applicable.
+- **Patch Management**: Detailed account of the patching process, including testing, deployment, and verification stages.
+- **Fallback Procedures**: Steps to revert the patches in case they cause system instability or other issues.
+
+#### Recovery Steps
+
+##### Data Restoration
+
+- **Backup Validation**: Procedures to validate the integrity of backups before restoration.
+- **Restoration Process**: Step-by-step account of how data was restored, including any decryption methods used if the data was encrypted.
+- **Data Integrity Checks**: Methods used to verify the integrity of the restored data.
+
+##### System Validation
+
+- **Security Measures**: Actions taken to ensure that systems are secure before bringing them back online, such as reconfiguring firewalls or updating IDS.
+- **Operational Checks**: Tests conducted to confirm that systems are fully operational and perform as expected in a production environment.
+
+#### Post-Incident Actions
+
+##### Monitoring
+
+- **Enhanced Monitoring Plans**: Detailed plans for ongoing monitoring to detect similar vulnerabilities or attack patterns in the future.
+- **Tools and Technologies**: Specific monitoring tools that will be employed, and how they integrate with existing system for a holistic view.
+
+##### Lessons Learned
+
+- **Gap Analysis**: A thorough evaluation of what security measures failed and why.
+- **Recommendations for Improvement**: Concrete, actionable recommendations based on the lessons learned, categorized by priority and timeline for implementation.
+- **Future Strategy**: Long-term changes in policy, architecture, or personnel training to prevent similar incidents.
+
+### Diagrams
+
+Given that the narrative can become exceedingly complex, visual aids can be invaluable for simplifying the incident's intricacies:
+
+- **Incident Flowchart**: Illustrate the attack's progression, from the initial entry point to its propegation throughout the network.
+- **Affected Systems Map**: Depict the network topology, accentuating the compromised nodes. Use color-coding or annotations to indicate the severity of each compromise.
+- **Attack Vector Diagram**: Utilize arrows, nodes, and annotations to trace the attacker's navigation and (_post-_)exploitation activities through your defense visually.
+
+![security incident reporting 1](../../../images/security_incident_reporting1.png)
+
+### Appendices
+
+This section serves as a repository for supplementary material that provides additional context, evidence, or technical details that are crucial for a comprehensive understanding of the incident, its impact, and the response actions taken. This section is often considered the backbone of the report, offering raw data and artifacts that can be independently verified, thus adding credibility and depth to the narrative presented in the main body of the report.
+
+The Appendices section may include:
+
+- Log Files
+- Network Diagrams
+- Forensic Evidence
+- Code Snippets
+- Incident Response Checklist
+- Communication Records
+- Legal and Regulatory Documents
+- Glossary and Acronyms
+
+### Best Practices
+
+- **Root Cause Analysis**: Always aim to find the root cause of the incident to prevent future occurences.
+- **Community Sharing**: Share non-sensitive details with a community of defenders to improve collective cybersecurity.
+- **Regular Updates**: Keep all stakeholders updated regularly throughout the incident respone process.
+- **External Review**: Consider third-party cybersecurity specialists to validate findings.
+
+## Communications
+
+In the midst of any crisis, effective communication is not just beneficial but crucial. The stakes are even higher during a security incident, where transparency, coordinated response efforts, and trust-building with stakeholders are paramount.
+
+### Importance of Effective Communications
+
+The significance of adept communications is multi-faceted and can be segmented into the following categories:
+
+#### Stakeholder Trust
+
+Transparent and coherent communication is instrumental in preserving stakeholder trust throughout an incident. It serves as a testament to an organization's responsibility, transparency, and command over the situation.
+
+#### Coordination & Efficiency
+
+Alignment among all parties involved is especially vital. A cybersecurity incident is not an isolated event affecting only the technical terms; it has broader organizational implications. Keeping everyone on the same page is not just advisable but essential.
+
+#### Regulatory Compiance
+
+It's imperative to cross-verify the regulatory compliance mandates specific to your organization. These guidelines should be explicitly documented in your Incident Response Plan.
+
+### Internal Communications
+
+While often sidelined, internal communications are pivotal for conveying a consistent message across the organization. This becomes increasingly important in the event of information leaks, which are not uncommon within corporate settings. Look at some key elements of internal communications:
+
+#### Immediate Notification
+
+Upon acknowledgement of an incident, stakeholders must be promptly informed.
+
+#### Regular Updates
+
+Consistent, periodic briefings should be disseminated to all involved teams. This ensures a shared understanding of the incident's status, its potential ramifications, and any pending actions.
+
+#### Feedback Loop
+
+A feedback loop should be established as a conduit for teams to exchange findings, voice concerns, or offer suggestions.
+
+### External Communications
+
+External communications are equally critical and often encompass a diverse array of third parties, from customers to governmental agencies and regulatory bodies. Navigating this landscape requires finesse and careful planning. Here are some key aspects to consider:
+
+#### Affected Parties
+
+Direct communication should be established with any parties impacted by the incident, be they customers, clients, or business partners.
+
+#### Public Statement
+
+For incidents of significant scale, a public statement may be warranted. Such a statement should be lucid and steer clear of overly technical jargon to prevent confusion among customers and other third parties.
+
+#### Regulatory Bodies
+
+Depending on your jurisdication and the nature of the incident, you may be obligated to notify regulatory entities like the Information Commissioner's Office (_ICO_) within a stipulated timeframe.
+
+### Navigating Communication Channels During Cybersecurity Incidents
+
+When you're hit with a cybersecurity incident, the way you communicate becomes a linchpin for both your security posture and your compliance standing. Dissect the technical landscape of these communication channels and their interwined implications.
+
+1. Security Dimensions of Communication Channels:
+
+	- **Encryption**: You must ensure that every piece of information you share is wrapped in robust end-to-end encryption. This is non-negotiable, especially when you're discussing the nitty-gritty of the incident, like which systems took a hit or which vulnerabilities got exploited.
+	- **Authentication and Authorization**: Access to your communication channels should be as tight as Fort Knox. It can't be stressed enough the importance of multi-factor authentication to double-check the identities of those trying to access the channel.
+	- **Data Integrity**: You need to be certain that your messages remain unaltered during transit. Cryptographic hashing techniques can be your best bet to ensure the integrity of your communications.
+	- **Ephemeral Communications**: For those top-secret discussions, you might consider using messaging platforms that auto-destruct messages post-reading. This minimizes the risk of any prying eyes accessing your sensitive data later on.
+	- **Air-Gapped Communications**: In situations where you suspect your primary communication backbone might be under threat, you might need to resort to air-gapped systems. These systems are your last line of defense, completely isolated from other potentially compromised networks.
+
+2. Regulatory Dimensions of Communication Channels:
+
+	- **Data Privacy Laws**: You're operating in a world where data privacy regulations, like the EU'S GDPR, hold significant sway. If you're discussing or sharing personal data, especially of EU residents, you need to toe the line with GDPR mandates.
+	- **Breach Notification Mandates**: Certain jurisdictions have clear-cut timelines for breach notifications. You need to be aware of these when communicating about data breaches, ensuring you're not only timely but also adhering to the content guidelines set by these laws.
+	- **Record-Keeping**: While you might lean towards ephemeral messages for security, some regulations mandate a clear record of all incident-related communications. It's a tightrope walk, but you need to find that balance.
+	- **Cross-Border Communications**: When your incident spills over national borders, the communication game changes. Some nations have stringent data sovereignty laws, dictating the hows and wheres of data transmission and storage.
+	- **Chain of Custody**: If there's even a hint that legal actions might follow the incident, you need to maintain an unbroken chain of custody for all communications. This ensures that if you need to present evidence in court, it's deemed admissible.
