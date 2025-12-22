@@ -609,3 +609,138 @@ One of these high-value, restricted providers is Microsoft-Windows-Threat-Intell
 In the context of Microsoft-Windows-Threat-Intelligence, the benefits of this privileged access are manifold. This provider can record highly granular data about potential threats, enabling security professionals to detect and analyze sophisticated attacks that may have eluded other defenses. Its telemetry can serve as vital evidence in forensic investigations, revealing details about the origin of a threat, the systems and data it interacted with, and the alterations it made. Moreover, by monitoring this provider in real-time, security teams can potentially identify ongoing threats and intervene to mitigate damage.
 
 ## Tapping into ETW
+
+### Detection Example 1: Detecting Strange Parent-Child Relationships
+
+Abnormal parent-child relationships among processes can be indicative of malicious activities. In standard Windows environments, certain processes never call or spawn others. For example, it is highly unlikely to see "calc.exe" spawning "cmd.exe" in a normal Windows environment. Understanding these typical parent-child relationships can assist in detecting anomalies.
+
+By utilizing Process Hacker, you can explore parent-child relationships within Windows. Sorting the processes by dropdowns in the Processes view reveals a hierarchical representation of the relationships.
+
+![windows event logs 35](../../../images/windows_event_logs35.png)
+
+Analyzing these relationships in standard and custom environments enables you to identify deviations from normal patterns. For example, if you observe the "spoolsv.exe" process creating "whoami.exe" instead of its expected behavior of creating a "conhost", it raises suspicion.
+
+![windows event logs 36](../../../images/windows_event_logs36.png)
+
+To showcase a strange parent-child relationship, where "cmd.exe" appears to be created by "spoolsv.exe" with no accompanying arguments, you will utilize an attacking technique called Parent PID Spoofing. Parent PID Spoofing can be executed through the [psgetsystem project](https://github.com/decoder-it/psgetsystem) in the following manner.
+
+```powershell
+PS C:\Tools\psgetsystem> powershell -ep bypass
+PS C:\Tools\psgetsystem> Import-Module .\psgetsys.ps1 
+PS C:\Tools\psgetsystem> [MyProcess]::CreateProcessFromParent([Process ID of spoolsv.exe],"C:\Windows\System32\cmd.exe","")
+```
+
+![windows event logs 37](../../../images/windows_event_logs37.png)
+
+Due to the parent PID spoofing technique you employed, Sysmon Event 1 incorrectly displays spoolsv.exe as the parent of cmd.exe. However, it was actually powershell.exe that created cmd.exe.
+
+Although Sysmon and event logs provide valuable telemetry for hunting and creating alert rules, they are not the only sources of information. Begin by collecting data from the Microsoft-Windows-Kernel-Process provider using SilkETW (_the provider can be identified using logman as described earlier, `logman.exe query providers | findstr "Process"`_). After that, you can proceed to simulate the attack again to assess whether ETW can provide you with more accurate information regarding the execution of cmd.exe.
+
+```
+c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Windows-Kernel-Process -ot file -p C:\windows\temp\etw.json
+```
+
+![windows event logs 38](../../../images/windows_event_logs38.png)
+
+The etw.json file seems to contain information about powershell.exe being the one who created cmd.exe.
+
+![windows event logs 39](../../../images/windows_event_logs39.png)
+
+It should be noted that SilkETW event logs can be ingested and viewed by Windows Event Viewer through SilkService to provide you with deeper and more extensive visibility into the actions performed on a system.
+
+### Detection Example 2: Detecting Malicious .NET Assembly Loading
+
+Traditionally, adversaries employed a strategy known as "Living off the Land", exploiting legitimate system tools, such as PowerShell, to carry out their malicious operations. This approach reduces the risk of detection since it involves the use of tools that are native to the system, and therefore less likely to raise suspicion.
+
+However, the cybersecurity community has adapted and developed countermeasures against this strategy.
+
+Responding to these defensive advancements, attackers have developed a new approach that is labeled as "Bring your own Land". Instead of relying on the tools already present on a victim's system, threat actors and pentesters emulating these tactics now employ .NET assemblies executed entirely in memory. This involves creating custom-built tools using languages like C#, rendering them independent of the pre-existing tools on the target system. The "Bring your own Land" lands is quite effective for the following reasons:
+
+- Each Windows system comes equipped with a certain version of .NET pre-installed by default.
+- A salient feature of .NET is its managed nature, alleviating the need for programmers to manually handle memory management. This attribute is part of the framework's managed code execution process, where the Common Language Runtime (_CLR_) takes responsibility for key system-level operations such as garbage collection, eliminating memory leaks and ensuring more efficient resource utilization.
+- One of the intriguing advantages of using .NET assemblies is their ability to be loaded directly into memory. This means that an executable or DLL does not need to be written physically to the disk - instead, it is executed directly in the memory. This behavior minimizes the artifacts left behind on the system and can help bypass some forms of detection that rely on inspecting files written to disk.
+- Microsoft has integrated a wide range of libraries into the .NET framework to address numerous common programming challenges. These libraries include functionalities for establishing HTTP connections, implementing cryptographic operations, and enabling inter-process communication (_IPC_), such as named pipes. These pre-built tools streamline the development process, reduce the likelihood of errors, and make it easier to build robust and efficient applications. Furthermore, for a threat actor, these rich features provide a toolkit for creating more sophisticated and covert attack methods.
+
+A poweful illustration of this BYOL strategy is the [`execute-assenbly`](https://www.cobaltstrike.com/blog/cobalt-strike-3-11-the-snake-that-eats-its-tail/) command implemented in CobaltStrike, a widely-used software platform for Adversary Simulations and Red Team Operations. CobaltStrike's `execute-assembly` command allows the user to execute .NET assemblies directly from memory, making it an ideal tool for implementing a BYOL strategy.
+
+In a manner akin to how you detected the execution of unmanaged PowerShell scripts through the observation of anomalous clr.dll and clrjit.dll loading activity in processes that ordinarily wouldn't require them, you can employ a similar approach to identify malicious .NET assembly loading. This is achieved by scrutinizing the activity related to the loading of [.NET-associated DLLs](https://redhead0ntherun.medium.com/detecting-net-c-injection-execute-assembly-1894dbb04ff7), specifically clr.dll and mscoree.dll.
+
+Monitoring the loading of such libraries can help reveal attempts to execute .NET assemblies in unusual or unexpected contexts, which can be a sign of malicious activity. This type of DLL loading behavior can often be detected by leveraging Sysmon's Event ID 7, which corresponds to "Image Loaded" events.
+
+For demonstrative purposes, emulate a malicious .NET assembly load by executing a precompiled version of [Seatbelt](https://github.com/GhostPack/Seatbelt) that resides on disk. Seatbelt is a well-known .NET assembly, often employed by adversaries who load and execute it in memory to gain situational awareness of a compromised system.
+
+```powershell
+PS C:\Tools\GhostPack Compiled Binaries>.\Seatbelt.exe TokenPrivileges
+
+                        %&&@@@&&
+                        &&&&&&&%%%,                       #&&@@@@@@%%%%%%###############%
+                        &%&   %&%%                        &////(((&%%%%%#%################//((((###%%%%%%%%%%%%%%%
+%%%%%%%%%%%######%%%#%%####%  &%%**#                      @////(((&%%%%%%######################(((((((((((((((((((
+#%#%%%%%%%#######%#%%#######  %&%,,,,,,,,,,,,,,,,         @////(((&%%%%%#%#####################(((((((((((((((((((
+#%#%%%%%%#####%%#%#%%#######  %%%,,,,,,  ,,.   ,,         @////(((&%%%%%%%######################(#(((#(#((((((((((
+#####%%%####################  &%%......  ...   ..         @////(((&%%%%%%%###############%######((#(#(####((((((((
+#######%##########%#########  %%%......  ...   ..         @////(((&%%%%%#########################(#(#######((#####
+###%##%%####################  &%%...............          @////(((&%%%%%%%%##############%#######(#########((#####
+#####%######################  %%%..                       @////(((&%%%%%%%################
+                        &%&   %%%%%      Seatbelt         %////(((&%%%%%%%%#############*
+                        &%%&&&%%%%%        v1.2.1         ,(((&%%%%%%%%%%%%%%%%%,
+                         #%%%%##,
+
+
+====== TokenPrivileges ======
+
+Current Token's Privileges
+
+                     SeIncreaseQuotaPrivilege:  DISABLED
+                          SeSecurityPrivilege:  DISABLED
+                     SeTakeOwnershipPrivilege:  DISABLED
+                        SeLoadDriverPrivilege:  DISABLED
+                     SeSystemProfilePrivilege:  DISABLED
+                        SeSystemtimePrivilege:  DISABLED
+              SeProfileSingleProcessPrivilege:  DISABLED
+              SeIncreaseBasePriorityPrivilege:  DISABLED
+                    SeCreatePagefilePrivilege:  DISABLED
+                            SeBackupPrivilege:  DISABLED
+                           SeRestorePrivilege:  DISABLED
+                          SeShutdownPrivilege:  DISABLED
+                             SeDebugPrivilege:  SE_PRIVILEGE_ENABLED
+                 SeSystemEnvironmentPrivilege:  DISABLED
+                      SeChangeNotifyPrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                    SeRemoteShutdownPrivilege:  DISABLED
+                            SeUndockPrivilege:  DISABLED
+                      SeManageVolumePrivilege:  DISABLED
+                       SeImpersonatePrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                      SeCreateGlobalPrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                SeIncreaseWorkingSetPrivilege:  DISABLED
+                          SeTimeZonePrivilege:  DISABLED
+                SeCreateSymbolicLinkPrivilege:  DISABLED
+    SeDelegateSessionUserImpersonatePrivilege:  DISABLED
+```
+
+Assuming you have Sysmon configured appropriately to log image loading events, executing "Seatbelt.exe" would trigger the loading of key .NET-related DLLs such as "clr.dll" and "mscoree.dll". Sysmon, keenly observing system activities, will log these DLL load operations as Event ID 7 records.
+
+![windows event logs 40](../../../images/windows_event_logs40.png)
+
+![windows event logs 41](../../../images/windows_event_logs41.png)
+
+Relying solely on Sysmon Event ID 7 for detecting attacks can be challenging due to the large volume of events it generates. Additionally, while it informs you about the DLLs being loaded, it doesn't provide granular details about the actual content of the loaded .NET assembly.
+
+To augment your visibility and gain deeper insights into the actual assmebly being loaded, you can again leverage ETW and specifically the Microsoft-Windows-DotNETRuntime provider.
+
+Use SilkETW to collect data from the Microsoft-Windows-DotNETRuntime provider. After that, you can proceed to simulate the attack again to evaluate whether ETW can furnish you with more detailed and actionable intelligence regarding the loading and execution of the "Seatbelt" .NET assembly.
+
+```
+c:\Tools\SilkETW_SilkService_v8\v8\SilkETW>SilkETW.exe -t user -pn Microsoft-Windows-DotNETRuntime -uk 0x2038 -ot file -p C:\windows\temp\etw.json
+```
+
+The etw.json file seems to contain a wealth of information about the loaded assembly, including method names.
+
+![windows event logs 42](../../../images/windows_event_logs42.png)
+
+It's worth noting that in your current SilkETW configuration, you're not capturing the entirety of events from the "Microsoft-Windows-DotNETRuntime" provider. Instead, you're selectively targeting a specific subset, which includes: JitKeyword, InteropKeyword, LoaderKeyword, and NGenKeyword.
+
+- The **JitKeyword** relates to the Just-In-Time (_JIT_) compilation events, providing information on the methods being compiled at runtime. This could be particularly useful for understanding the execution flow of the .NET assembly.
+- The **InteropKeyword** refers to Interoperability events, which come into play when managed code interacts with unmanaged code. These events could provide insights into potential interactions with native APIs or other unmanaged components.
+- **LoaderKeyword** events provide details on the assembly loading process within the .NET runtime, which can be vital for understanding what .NET assemblies are being loaded and potentially executed.
+- The **NGenKeyword** corresponds to Native Image Generator events, which are concerned with the creation and usage of precompiled .NET assemblies. Monitoring these could help detect scenarios where attackers use precompiled .NET assemblies to evade JIT-related detections.
+
