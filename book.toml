@@ -7,7 +7,7 @@ src = "src"
 # added
 [preprocessor.embedify]
 footer.enable = true
-footer.message = "2025 • Created by [d41y](https://github.com/d41y)"
+footer.message = "2026 • Created by [d41y](https://github.com/d41y)"
 
 [preprocessor.callouts]
 

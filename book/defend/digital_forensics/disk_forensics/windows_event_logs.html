@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item expanded "><a href="../../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../defend/digital_forensics/disk_forensics/windows_event_logs.html" class="active"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item "><a href="../../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,290 +172,31 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#windows-event-logs">Windows Event Logs</a>
-<ul>
-<li><a href="#intro">Intro</a>
-<ul>
-<li><a href="#anatomy-of-an-event-log">Anatomy of an Event Log</a></li>
-<li><a href="#leveraging-custom-xml-queries">Leveraging Custom XML Queries</a></li>
-<li><a href="#useful-windows-event-logs">Useful Windows Event Logs</a></li>
-</ul>
-</li>
-<li><a href="#sysmon--event-logs">Sysmon &amp; Event Logs</a>
-<ul>
-<li><a href="#sysmon-basics">Sysmon Basics</a></li>
-<li><a href="#detection-example-1-detecting-dll-hijacking">Detection Example 1: Detecting DLL Hijacking</a></li>
-<li><a href="#detection-example-2-detecting-unmanaged-powershellc-sharp-injection">Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection</a></li>
-<li><a href="#detection-example-3-detecting-credential-dumping">Detection Example 3: Detecting Credential Dumping</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="windows-event-logs"><a class="header" href="#windows-event-logs">Windows Event Logs</a></h1>
+                        <h1 id="windows-event-logs"><a class="header" href="#windows-event-logs">Windows Event Logs</a></h1>
 <p>... are an intrinsic part of the Windows OS, storing logs from different components of the system including the system itself, apps running on it, ETW providers, services, and others.</p>
 <p>Windows event logging offers comprehensive logging capabilities for application errors, security events, and diagnostic information. As cybersecurity professionals, you leverage these logs extensively for analysis and intrusion detection.</p>
-<p>The logs are categorized into different event logs, such as "Application", "System", "Security", and others, to organize events based on their source or purpose.</p>
+<p>The logs are categorized into different event logs, such as &quot;Application&quot;, &quot;System&quot;, &quot;Security&quot;, and others, to organize events based on their source or purpose.</p>
 <p>Event logs can be accesses using the Event Viewer application or programmatically using APIs such as the Windows Event Log API.</p>
 <p>Accessing the Windows Event Viewer as an administrative user allows you to explore the various log files available.</p>
-<p><img src="../../images/windows_event_logs1.png" alt="windows event logs 1" /></p>
-<p><img src="../../images/windows_event_logs2.png" alt="windows event logs 2" /></p>
-<p>The default Windows event logs consist of Application, Security, Setup, and Forwarded Events. While the first four logs cover application errors, security events, system setup activities, and general information, the "Forwarded Events" section is unique, showcasing event log data forwarded from other machines. This central logging feature proves valuable for system admins who desire a consolidated view. In your current analysis, you focus on event logs from a single machine.</p>
-<p>It should be noted, that the Windows Event Viewer has the ability to open and display previously saved <code>.evtx</code> files, which can be then found in the "Saved Logs" section.</p>
-<p><img src="../../images/windows_event_logs3.png" alt="windows event logs 3" /></p>
+<p><img src="../../../images/windows_event_logs1.png" alt="windows event logs 1" /></p>
+<p><img src="../../../images/windows_event_logs2.png" alt="windows event logs 2" /></p>
+<p>The default Windows event logs consist of Application, Security, Setup, and Forwarded Events. While the first four logs cover application errors, security events, system setup activities, and general information, the &quot;Forwarded Events&quot; section is unique, showcasing event log data forwarded from other machines. This central logging feature proves valuable for system admins who desire a consolidated view. In your current analysis, you focus on event logs from a single machine.</p>
+<p>It should be noted, that the Windows Event Viewer has the ability to open and display previously saved <code>.evtx</code> files, which can be then found in the &quot;Saved Logs&quot; section.</p>
+<p><img src="../../../images/windows_event_logs3.png" alt="windows event logs 3" /></p>
 <h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
 <h3 id="anatomy-of-an-event-log"><a class="header" href="#anatomy-of-an-event-log">Anatomy of an Event Log</a></h3>
 <p>When examining Application logs, you encounter two distinct levels of events: information and error.</p>
-<p><img src="../../images/windows_event_logs4.png" alt="windows event logs 4" /></p>
+<p><img src="../../../images/windows_event_logs4.png" alt="windows event logs 4" /></p>
 <p>Information events provide general usage details about the application, such as its start or stop events. Conversely, error events highlight specific errors and often offer detailed insights into the encountered issues.</p>
-<p><img src="../../images/windows_event_logs5.png" alt="windows event logs 5" /></p>
-<p>Each entry in the Windows Event Log is an "Event" and contains the following primary components:</p>
+<p><img src="../../../images/windows_event_logs5.png" alt="windows event logs 5" /></p>
+<p>Each entry in the Windows Event Log is an &quot;Event&quot; and contains the following primary components:</p>
 <ol>
 <li><strong>Log Name</strong>: The name of the event log.</li>
 <li><strong>Source</strong>: The software that logged the event.</li>
 <li><strong>Event ID</strong>: A unique identifier for the event.</li>
 <li><strong>Task Category</strong>: This often contains a value or name that can help you understand the purpose or use of the event.</li>
 <li><strong>Level</strong>: The severity of the event.</li>
-<li><strong>Keywords</strong>: Keywords are flags that allow you to categorize events in ways beyond the other classification options. These are generally broad categories, such as "Audit Success" or "Audit Failure" in the Security log.</li>
+<li><strong>Keywords</strong>: Keywords are flags that allow you to categorize events in ways beyond the other classification options. These are generally broad categories, such as &quot;Audit Success&quot; or &quot;Audit Failure&quot; in the Security log.</li>
 <li><strong>User</strong>: The user account that was logged on when the event occured.</li>
 <li><strong>OpCode</strong>: This field can identify the specific operation that the event reports.</li>
 <li><strong>Logged</strong>: The date and time when the event was logged.</li>
@@ -465,31 +204,31 @@
 <li><strong>XML Data</strong>: All the above information is also included in an XML format along with additional event data.</li>
 </ol>
 <p>The Keywords field is particularly useful when filtering event logs for specific types of events. It can significantly enhance the precision of search queries allowing you to specify events of interest, thus making log management more efficient and effective.</p>
-<p>Taking a closer look at the event log above, you can observe several crucial elements. The Event ID in the top left corner serves as a unique identifier, which can be further researched on Microsoft's website to gather additional information. The "SideBySide" label next to the event ID represents the event source. Below, you find the general error description, often containing rich details. By clicking on the details, you can further analyze the event's impact using XML or a well-formatted view.</p>
-<p><img src="../../images/windows_event_logs6.png" alt="windows event logs 6" /></p>
+<p>Taking a closer look at the event log above, you can observe several crucial elements. The Event ID in the top left corner serves as a unique identifier, which can be further researched on Microsoft's website to gather additional information. The &quot;SideBySide&quot; label next to the event ID represents the event source. Below, you find the general error description, often containing rich details. By clicking on the details, you can further analyze the event's impact using XML or a well-formatted view.</p>
+<p><img src="../../../images/windows_event_logs6.png" alt="windows event logs 6" /></p>
 <p>Additionally, you can extract supplementary information from the event log, such as the process ID where the error occured, enabling more precise analysis.</p>
-<p><img src="../../images/windows_event_logs7.png" alt="windows event logs 7" /></p>
+<p><img src="../../../images/windows_event_logs7.png" alt="windows event logs 7" /></p>
 <p>Switching your focus to security logs, consider event ID 4624, a commonly occuring event.</p>
-<p><img src="../../images/windows_event_logs8.png" alt="windows event logs 8" /></p>
-<p>According to Microsoft's documentation, this event signifies the creation of a logon session on the destination machine, originating from the accessed computer where the session was established. Within this log, you find crucial details, including the "Logon ID", which allows you to correlate this logon with other events sharing the same "Logon ID". Another important detail is the "Logon Type", indicating the type of logon. In this case, it specifies a Service logon type, suggesting that "SYSTEM" initiated a new service. However, further investigation is required to determine the specific service involved, utilizing correlation techniques with additional data like the "Logon ID".</p>
+<p><img src="../../../images/windows_event_logs8.png" alt="windows event logs 8" /></p>
+<p>According to Microsoft's documentation, this event signifies the creation of a logon session on the destination machine, originating from the accessed computer where the session was established. Within this log, you find crucial details, including the &quot;Logon ID&quot;, which allows you to correlate this logon with other events sharing the same &quot;Logon ID&quot;. Another important detail is the &quot;Logon Type&quot;, indicating the type of logon. In this case, it specifies a Service logon type, suggesting that &quot;SYSTEM&quot; initiated a new service. However, further investigation is required to determine the specific service involved, utilizing correlation techniques with additional data like the &quot;Logon ID&quot;.</p>
 <h3 id="leveraging-custom-xml-queries"><a class="header" href="#leveraging-custom-xml-queries">Leveraging Custom XML Queries</a></h3>
-<p>To streamline your analysis, you can create custom XML queries to identify related events using the "Logon ID" as a starting point. By navigating to "Filter Current Log" -&gt; "XML" -&gt; "Edit Query Manually", you gain access to a custom XML query language that enables more granular log searches.</p>
-<p><img src="../../images/windows_event_logs9.png" alt="windows event logs 9" /></p>
-<p>In the example query, you focus on events containing the "SubjectLogonId" field with a value of "0x3E7". The selection of this value stems from the need to correlate events associated with a specific "Logon ID" and understand the relevant details within those events.</p>
-<p><img src="../../images/windows_event_logs10.png" alt="windows event logs 10" /></p>
+<p>To streamline your analysis, you can create custom XML queries to identify related events using the &quot;Logon ID&quot; as a starting point. By navigating to &quot;Filter Current Log&quot; -&gt; &quot;XML&quot; -&gt; &quot;Edit Query Manually&quot;, you gain access to a custom XML query language that enables more granular log searches.</p>
+<p><img src="../../../images/windows_event_logs9.png" alt="windows event logs 9" /></p>
+<p>In the example query, you focus on events containing the &quot;SubjectLogonId&quot; field with a value of &quot;0x3E7&quot;. The selection of this value stems from the need to correlate events associated with a specific &quot;Logon ID&quot; and understand the relevant details within those events.</p>
+<p><img src="../../../images/windows_event_logs10.png" alt="windows event logs 10" /></p>
 <p>It is worth noting that if assistance is required in crafting the query, automatic filters can be enabled, allowing exploration of their impact on the XML representation. For further guidance, Microsoft offers informative articles on <a href="https://techcommunity.microsoft.com/t5/ask-the-directory-services-team/advanced-xml-filtering-in-the-windows-event-viewer/ba-p/399761">advanced XML filtering in the Windows Event Manager</a>.</p>
 <p>By constructing such queries, you can narrow down your focus to the account responsible for initiating the service and eliminate unnecessary details. This approach helps unveil a clearer picture of recent logon activities associated with the specified Logon ID. However, even with this refinement, the amount of data remains significant.</p>
 <p>Delving into the log details progressively reveals a narrative. For instance, the analysis begins with Event ID 4907, which signifies an audit policy change.</p>
-<p><img src="../../images/windows_event_logs11.png" alt="windows event logs 11" /></p>
-<p>Within the event description, you find valuable insights, such as "This event generates when the SACL of an object was changed".</p>
+<p><img src="../../../images/windows_event_logs11.png" alt="windows event logs 11" /></p>
+<p>Within the event description, you find valuable insights, such as &quot;This event generates when the SACL of an object was changed&quot;.</p>
 <p>Based on this information, it becomes apparent that the permissions of a file were altered to modify the logging or auditing of access attempts. Further exploration of the event details reveals additional intriguing aspects.</p>
-<p><img src="../../images/windows_event_logs12.png" alt="windows event logs 12" /></p>
-<p>For example, the process responsible for the change is identified as "SetupHost.exe", indicating a potential setup process. The object name impacted appears to be the "bootmanager", and you can examine the new and old security descriptors to identify the changes. Understanding the meaning of each field in the security descriptor can be accomplished through references such as the article ACE Strings and Understanding SDDL Syntax.</p>
-<p>From the observed events, you can infer that a setup process occured, involving the creation of a new file and the initial configuration of security permissions for auditing purposes. Subsequently, you encounter the logon event, followed by a "special logon" event.</p>
-<p><img src="../../images/windows_event_logs13.png" alt="windows event logs 13" /></p>
+<p><img src="../../../images/windows_event_logs12.png" alt="windows event logs 12" /></p>
+<p>For example, the process responsible for the change is identified as &quot;SetupHost.exe&quot;, indicating a potential setup process. The object name impacted appears to be the &quot;bootmanager&quot;, and you can examine the new and old security descriptors to identify the changes. Understanding the meaning of each field in the security descriptor can be accomplished through references such as the article ACE Strings and Understanding SDDL Syntax.</p>
+<p>From the observed events, you can infer that a setup process occured, involving the creation of a new file and the initial configuration of security permissions for auditing purposes. Subsequently, you encounter the logon event, followed by a &quot;special logon&quot; event.</p>
+<p><img src="../../../images/windows_event_logs13.png" alt="windows event logs 13" /></p>
 <p>Analyzing the special logon event, you gain insights into token permission granted to the user upon a successful logon.</p>
-<p><img src="../../images/windows_event_logs14.png" alt="windows event logs 14" /></p>
-<p>A comprehensive list of privileges can be found in the documentation on <a href="https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants">privilege constants</a>. For instance, the "SeDebugPrivilege" privilege indicates that the user possesses the ability to tamper with memory that does not belong to them.</p>
+<p><img src="../../../images/windows_event_logs14.png" alt="windows event logs 14" /></p>
+<p>A comprehensive list of privileges can be found in the documentation on <a href="https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants">privilege constants</a>. For instance, the &quot;SeDebugPrivilege&quot; privilege indicates that the user possesses the ability to tamper with memory that does not belong to them.</p>
 <h3 id="useful-windows-event-logs"><a class="header" href="#useful-windows-event-logs">Useful Windows Event Logs</a></h3>
 <p>... can be found <a href="https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/">here</a>.</p>
 <h2 id="sysmon--event-logs"><a class="header" href="#sysmon--event-logs">Sysmon &amp; Event Logs</a></h2>
@@ -516,62 +255,952 @@
 </code></pre>
 <h3 id="detection-example-1-detecting-dll-hijacking"><a class="header" href="#detection-example-1-detecting-dll-hijacking">Detection Example 1: Detecting DLL Hijacking</a></h3>
 <p>To detect a DLL hijack, you need to focus on Event Type 7, which corresponds to module load events. To achieve this, you need to modify the <code>sysmonconfig-export.xml</code> Sysmon config file you dowloaded from the link above.</p>
-<p>By examining the modified config, you can observe that the "include" comment signifies events that should be included.</p>
-<p><img src="../../images/windows_event_logs15.png" alt="windows event logs 15" /></p>
-<p>In the case of detecting DLL hijacks, you change the "include" to "exclude" to ensure that nothing is excluded, allowing you to capture the necessary data.</p>
+<p>By examining the modified config, you can observe that the &quot;include&quot; comment signifies events that should be included.</p>
+<p><img src="../../../images/windows_event_logs15.png" alt="windows event logs 15" /></p>
+<p>In the case of detecting DLL hijacks, you change the &quot;include&quot; to &quot;exclude&quot; to ensure that nothing is excluded, allowing you to capture the necessary data.</p>
 <p>To utilize the updated Sysmon config, execute the following:</p>
 <pre><code>C:\Tools\Sysmon&gt; sysmon.exe -c sysmonconfig-export.xml
 </code></pre>
-<p>With the modified Sysmon config, you can start observing image load events. To view these events, navigate to the Event Viewer and access "Applications and Services" -&gt; "Microsoft" -&gt; "Windows" -&gt; "Sysmon". A quick check will reveal the presence of the targeted event ID.</p>
-<p><img src="../../images/windows_event_logs16.png" alt="windows event logs 16" /></p>
+<p>With the modified Sysmon config, you can start observing image load events. To view these events, navigate to the Event Viewer and access &quot;Applications and Services&quot; -&gt; &quot;Microsoft&quot; -&gt; &quot;Windows&quot; -&gt; &quot;Sysmon&quot;. A quick check will reveal the presence of the targeted event ID.</p>
+<p><img src="../../../images/windows_event_logs16.png" alt="windows event logs 16" /></p>
 <p>Now see how a Sysmon event ID 7 looks like.</p>
-<p><img src="../../images/windows_event_logs17.png" alt="windows event logs 17" /></p>
-<p>The event log contains the DLL's signing status, the process or image responsible for loading the DLL, and the specific DLL that was loaded. In your example, you observe that "MMC.exe" loaded "psapi.dll", which is also Microsoft-signed. Both files are located in the System32 directory.</p>
+<p><img src="../../../images/windows_event_logs17.png" alt="windows event logs 17" /></p>
+<p>The event log contains the DLL's signing status, the process or image responsible for loading the DLL, and the specific DLL that was loaded. In your example, you observe that &quot;MMC.exe&quot; loaded &quot;psapi.dll&quot;, which is also Microsoft-signed. Both files are located in the System32 directory.</p>
 <p><strong>To build a detection mechanism</strong>: Research is needed. You stumble upon an informative <a href="https://www.wietzebeukema.nl/blog/hijacking-dlls-in-windows">blog post</a> that provides an exhaustive list of various DLL hijack techniques. For example:</p>
-<p><img src="../../images/windows_event_logs18.png" alt="windows event logs 18" /></p>
-<p><strong>Recreation (<em>using "calc.exe" and "WININET.dll"</em>)</strong>: You can utilize Stephen Fewer's "hello world" <a href="https://github.com/stephenfewer/ReflectiveDLLInjection/tree/master/bin">reflective DLL</a>. It should be noted that DLL hijacking does not require reflective DLLs.</p>
+<p><img src="../../../images/windows_event_logs18.png" alt="windows event logs 18" /></p>
+<p><strong>Recreation (<em>using &quot;calc.exe&quot; and &quot;WININET.dll&quot;</em>)</strong>: You can utilize Stephen Fewer's &quot;hello world&quot; <a href="https://github.com/stephenfewer/ReflectiveDLLInjection/tree/master/bin">reflective DLL</a>. It should be noted that DLL hijacking does not require reflective DLLs.</p>
 <p>By following the required steps, which involve renaming <code>reflective_dll.x64.dll</code> to <code>WININET.dll</code>, moving <code>calc.exe</code> from <code>C:\Windows\System32</code> along with <code>WININET.dll</code> to a writable directory, and executing <code>calc.exe</code>, you achieve success. Instead of the Calculator app, a MessageBox is displayed.</p>
-<p><img src="../../images/windows_event_logs19.png" alt="windows event logs 19" /></p>
-<p>Next, you analyze the impact of the hijack. First, you filter the event logs to focus on Event ID 7, which represents module load events, by clicking "Filter Current Log...".</p>
-<p><img src="../../images/windows_event_logs20.png" alt="windows event logs 20" /></p>
-<p>Subsequently, you search for instances of "calc.exe", by clicking "Find ...", to identify the DLL load associated with your hijack.</p>
-<p><img src="../../images/windows_event_logs21.png" alt="windows event logs 21" /></p>
-<p>The output from Sysmon provides valuable insights. Now, you can observe several indicators of compromise to create effective detection rules. Before moving forward though, compare this to an authenticate load of "wininet.dll" by "calc.exe".</p>
-<p><img src="../../images/windows_event_logs22.png" alt="windows event logs 22" /></p>
+<p><img src="../../../images/windows_event_logs19.png" alt="windows event logs 19" /></p>
+<p>Next, you analyze the impact of the hijack. First, you filter the event logs to focus on Event ID 7, which represents module load events, by clicking &quot;Filter Current Log...&quot;.</p>
+<p><img src="../../../images/windows_event_logs20.png" alt="windows event logs 20" /></p>
+<p>Subsequently, you search for instances of &quot;calc.exe&quot;, by clicking &quot;Find ...&quot;, to identify the DLL load associated with your hijack.</p>
+<p><img src="../../../images/windows_event_logs21.png" alt="windows event logs 21" /></p>
+<p>The output from Sysmon provides valuable insights. Now, you can observe several indicators of compromise to create effective detection rules. Before moving forward though, compare this to an authenticate load of &quot;wininet.dll&quot; by &quot;calc.exe&quot;.</p>
+<p><img src="../../../images/windows_event_logs22.png" alt="windows event logs 22" /></p>
 <p>Exploring these IOCs:</p>
 <ol>
-<li>"calc.exe", originally located in System32, should not be found in a writable directory. Therefore, a copy of "calc.exe" in a writable directory serves as an IOC, as it should always reside in System32 or potentially Syswow64.</li>
-<li>"WININET.dll", originally located in System32, should not be loaded outside of System32 by calc.exe. If instances of "WININET.dll" loading occur outside of System32 with "calc.exe" as the parent process, it indicates a DLL hijack within calc.exe. While caution is necessary when alerting on all instances of "WININET.dll" loading outside of System32, in the case of "calc.exe", you can confidently assert a hijack due to the DLL's unchanging name, which attackers cannot modify to evade detection.</li>
-<li>The original "WININET.dll" is Microsoft-signed, while your injected DLL remains unsigned.</li>
+<li>&quot;calc.exe&quot;, originally located in System32, should not be found in a writable directory. Therefore, a copy of &quot;calc.exe&quot; in a writable directory serves as an IOC, as it should always reside in System32 or potentially Syswow64.</li>
+<li>&quot;WININET.dll&quot;, originally located in System32, should not be loaded outside of System32 by calc.exe. If instances of &quot;WININET.dll&quot; loading occur outside of System32 with &quot;calc.exe&quot; as the parent process, it indicates a DLL hijack within calc.exe. While caution is necessary when alerting on all instances of &quot;WININET.dll&quot; loading outside of System32, in the case of &quot;calc.exe&quot;, you can confidently assert a hijack due to the DLL's unchanging name, which attackers cannot modify to evade detection.</li>
+<li>The original &quot;WININET.dll&quot; is Microsoft-signed, while your injected DLL remains unsigned.</li>
 </ol>
 <p>These three powerful IOCs provide an effective means of detecting a DLL hijack involving calc.exe. It's important to note that while Sysmon and event logs offer valuable telemetry for hunting and creating alert rules, they are not the sole sources of information.</p>
 <h3 id="detection-example-2-detecting-unmanaged-powershellc-sharp-injection"><a class="header" href="#detection-example-2-detecting-unmanaged-powershellc-sharp-injection">Detection Example 2: Detecting Unmanaged PowerShell/C-Sharp Injection</a></h3>
-<p>C# is considered a "managed" language, meaning it requires a backend runtime to execute its code. The Common Language Runtime (<em>CLR</em>) serves as this runtime environment. Managed code does not directly run as assembly; instead, it is compiled inty a bytecode format that the runtime processes and executes. Consequently, a managed process relies on the CLR to execute C# code.</p>
+<p>C# is considered a &quot;managed&quot; language, meaning it requires a backend runtime to execute its code. The Common Language Runtime (<em>CLR</em>) serves as this runtime environment. Managed code does not directly run as assembly; instead, it is compiled inty a bytecode format that the runtime processes and executes. Consequently, a managed process relies on the CLR to execute C# code.</p>
 <p>As defenders, you can leverage this knowledge to detect unusual C# injections or executions within your environment. To accomplish this, you can utilize a useful utility called <a href="C:%5CWindows%5CSystem32">Process Hacker</a>.</p>
-<p><img src="../../images/windows_event_logs23.png" alt="windows event logs 23" /></p>
-<p>By using Process Hacker, you can observe a range of processes within your environment. Sorting the processes by name, you can identify color-coded distinctions. Notably, "powershell.exe", a managed process, is highlighted in green compared to other processes. Hovering over "powershell.exe" reveals the label "Process is managed (<em>.NET</em>)," confirming its managed status.</p>
-<p><img src="../../images/windows_event_logs24.png" alt="windows event logs 24" /></p>
-<p>Examining the module loads for <code>powershell.exe</code>, by right-clicking on <code>powershell.exe</code>, clicking "Properties", and navigating to "Modules", you can find relevant information.</p>
-<p><img src="../../images/windows_event_logs25.png" alt="windows event logs 25" /></p>
-<p>The presence of "Microsoft .NET Runtime ...", <code>clr.dll</code>, and <code>clrjit.dll</code> should attract your attention. These 2 DLLs are used when C# code is ran as part of the runtime to execute the bytecode. If you observe these DLLs loaded in processes that typically to not reuqire them, it suggests a potential execute-assembly or unmanaged PowerShell injection attack.</p>
+<p><img src="../../../images/windows_event_logs23.png" alt="windows event logs 23" /></p>
+<p>By using Process Hacker, you can observe a range of processes within your environment. Sorting the processes by name, you can identify color-coded distinctions. Notably, &quot;powershell.exe&quot;, a managed process, is highlighted in green compared to other processes. Hovering over &quot;powershell.exe&quot; reveals the label &quot;Process is managed (<em>.NET</em>),&quot; confirming its managed status.</p>
+<p><img src="../../../images/windows_event_logs24.png" alt="windows event logs 24" /></p>
+<p>Examining the module loads for <code>powershell.exe</code>, by right-clicking on <code>powershell.exe</code>, clicking &quot;Properties&quot;, and navigating to &quot;Modules&quot;, you can find relevant information.</p>
+<p><img src="../../../images/windows_event_logs25.png" alt="windows event logs 25" /></p>
+<p>The presence of &quot;Microsoft .NET Runtime ...&quot;, <code>clr.dll</code>, and <code>clrjit.dll</code> should attract your attention. These 2 DLLs are used when C# code is ran as part of the runtime to execute the bytecode. If you observe these DLLs loaded in processes that typically to not reuqire them, it suggests a potential execute-assembly or unmanaged PowerShell injection attack.</p>
 <p>To showcase unmanaged PowerShell injection, you can inject an unmanaged PowerShell-like DLL into a random process, such as <code>spoolsv.exe</code>. You can do that by utilizing the <a href="https://github.com/EmpireProject/PSInject">PSInject project</a> in the following manner:</p>
 <pre><code class="language-ps">powershell -ep bypass
 Import-Module .\Invoke-PSInject.ps1
-Invoke-PSInject -ProcId [Process ID of spoolsv.exe] -PoshCode "V3JpdGUtSG9zdCAiSGVsbG8sIEd1cnU5OSEi"
+Invoke-PSInject -ProcId [Process ID of spoolsv.exe] -PoshCode &quot;V3JpdGUtSG9zdCAiSGVsbG8sIEd1cnU5OSEi&quot;
 </code></pre>
-<p><img src="../../images/windows_event_logs26.png" alt="windows event logs 26" /></p>
-<p>After the injection, you observe that "spoolsv.exe" transitions from an unmanaged to a managed state.</p>
-<p><img src="../../images/windows_event_logs27.png" alt="windows event logs 27" /></p>
-<p>Additionally, by referring to both the related "Modules" tab of Process Hacker and Sysmon Event ID 7, you can examine the DLL load information to validate the presence of the aforementioned DLLs.</p>
-<p><img src="../../images/windows_event_logs28.png" alt="windows event logs 28" /></p>
-<p><img src="../../images/windows_event_logs29.png" alt="windows event logs 29" /></p>
+<p><img src="../../../images/windows_event_logs26.png" alt="windows event logs 26" /></p>
+<p>After the injection, you observe that &quot;spoolsv.exe&quot; transitions from an unmanaged to a managed state.</p>
+<p><img src="../../../images/windows_event_logs27.png" alt="windows event logs 27" /></p>
+<p>Additionally, by referring to both the related &quot;Modules&quot; tab of Process Hacker and Sysmon Event ID 7, you can examine the DLL load information to validate the presence of the aforementioned DLLs.</p>
+<p><img src="../../../images/windows_event_logs28.png" alt="windows event logs 28" /></p>
+<p><img src="../../../images/windows_event_logs29.png" alt="windows event logs 29" /></p>
 <h3 id="detection-example-3-detecting-credential-dumping"><a class="header" href="#detection-example-3-detecting-credential-dumping">Detection Example 3: Detecting Credential Dumping</a></h3>
 <p>Another critical aspect of cybersecurity is detecting credential dumping activities. One widely used tool for credential dumping is Mimikatz, offering various methods for extracting Windows credentials. One specifc command, <code>sekurlsa::logonpasswords</code>, enables the dumping of password hashes or plaintext passwords by accessing the Local Security Authority Subsystem Service. LSASS is responsible for managing user credentials and is a primary target for credential-dumping tools like Mimikatz.</p>
-<p>To detect this activity, you can rely on a different Sysmon event. Instead of focusing on DLL loads, you shift your attention to process access events. By checking Sysmon Event ID 10, which represents "ProcessAccess" events, you can identify any suspicious attempts to access LSASS.</p>
-<p><img src="../../images/windows_event_logs30.png" alt="windows event logs 30" /></p>
-<p>For instance, if you observe a random file (<em>"AgentEXE" in this case</em>) from a random folder attempting to access LSASS, it indicates unusual behavior. Additionally, the <code>SourceUser</code> being different from the <code>TargetUser</code> further emphasizes the abnormality. It's also worth noting that as part of the mimikatz-based credential dumping process, the user must request SeDebugPrivileges. As the name suggests, it's primarily used for debugging. This can be another IOC.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>To detect this activity, you can rely on a different Sysmon event. Instead of focusing on DLL loads, you shift your attention to process access events. By checking Sysmon Event ID 10, which represents &quot;ProcessAccess&quot; events, you can identify any suspicious attempts to access LSASS.</p>
+<p><img src="../../../images/windows_event_logs30.png" alt="windows event logs 30" /></p>
+<p>For instance, if you observe a random file (<em>&quot;AgentEXE&quot; in this case</em>) from a random folder attempting to access LSASS, it indicates unusual behavior. Additionally, the <code>SourceUser</code> being different from the <code>TargetUser</code> further emphasizes the abnormality. It's also worth noting that as part of the mimikatz-based credential dumping process, the user must request SeDebugPrivileges. As the name suggests, it's primarily used for debugging. This can be another IOC.</p>
+<h2 id="event-tracing-for-windows"><a class="header" href="#event-tracing-for-windows">Event Tracing for Windows</a></h2>
+<p>In the realm of effective threat detection and incident response, you often find yourself relying on the limited log data at your disposal. However, this approach falls short of fully harnessing the immense wealth of information that can be derived from the powerful resource known as Event Tracing for Windows (<em>ETW</em>). Unfortunately, this oversight can be attributed to a lack of awareness and appreciation for the comprehensive and intricate insights that ETW can offer.</p>
+<h3 id="what-is-event-tracing-for-windows-etw"><a class="header" href="#what-is-event-tracing-for-windows-etw">What is Event Tracing for Windows (<em>ETW</em>)?</a></h3>
+<p>According to Microsoft, ETW is a general-purpose, high-speed tracing facility provided by the OS. Using a buffering and logging mechanism implemented in the kernel, ETW provides a tracing mechanism for events raised by both user-mode applications and kernel-mode device drivers.</p>
+<p>ETW, functioning as a high-performance event tracing mechanism deeply embedded within Microsoft OS, presents an unparalleled opportunity to bolster your defense capabilities. Its architecture facilitates the dynamic generation, collection, and analysis of various events occuring within the system, resulting in the creation of intricate, real-time logs that encompass a wide spectrum of activities.</p>
+<p>By effectively leveraging ETW, you can tap into an expansive array of telemetry sources that surpass the limitations imposed by traditional log data. ETW captures a diverse set of events, spanning system calls, process creation and termination, network activity, file and registry modifications, and numerous other dimensions. These events collectively weave a detailed tapestry of system activity, furnishing invaluable context for the identification of anomalous behavior, discovery of potential security incidents, and facilitation of forensic investigations.</p>
+<p>ETW's versatility and extensibility are further accentuated by its seamless integration with Event Providers. These specialized components generate specific types of events and can be seamlessly incorporated into applications, OS components, or third-party software. Consequently, this integration ensures a broad coverage of potential event sources. Furthermore, ETW's extensibility enables the creation of custom providers tailored to address specific organizational requirements, thereby fostering a targeted approach to logging and monitoring.</p>
+<p>Notably, ETW's lightweight nature and minimal performance impact render it an optimal telemetry solution for real-time monitoring and continuous security assessment. By selectively enabling and configuring relevant event providers, you can finely adjust the scope of data collection to align with your specific security objectives, striking a harmonious balance between the richness of information and system performance considerations.</p>
+<p>Moreover, the existence of robust tooling and utilities, including Microsoft's Message Analyzer and PowerShell's <code>Get-WinEvent</code> cmdlet, greatly simplifies the retrieval, parsing, and analysis of ETW logs. These tools offer advanced filtering capabilities, event correlation mechanisms, and real-time monitoring features, empowering members of the blue team to extract actionable insights from the vast pool of information captured by ETW.</p>
+<h3 id="etw-architecture--components"><a class="header" href="#etw-architecture--components">ETW Architecture &amp; Components</a></h3>
+<p>The underlying architecture and the key components of ETW are illustrated in the following diagram from Microsoft.</p>
+<p><img src="../../../images/windows_event_logs31.png" alt="windows event logs 31" /></p>
+<ul>
+<li><strong>Controllers</strong>: The Controllers component, as its name implies, assumes control over all aspects related to ETW operations. It encompasses functionalities such as initiating and terminating trace sessions, as well as enabling or disabling providers within a particular trace. Trace sessions can establish subscriptions to one or multiple providers, thereby granting the providers the ability to commence logging operations. An example of a widely used controller is the built-in utility &quot;logman.exe&quot;, which facilitates the management of ETW activities.</li>
+</ul>
+<p>At the core of ETW's architecture is the publish-subscribe model. This model involves two primary components:</p>
+<ul>
+<li><strong>Providers</strong>: Providers play a pivotal role in generating events and writing them to the designated ETW sessions. Applications have the ability to register ETW providers, enabling them to generate and transmit numerous events. There are four distinct types of providers utilized within ETW.
+<ul>
+<li><strong>MOF Providers</strong>: These providers are based on Managed Object Format (<em>MOF</em>) and are capable of generating events according to predefined MOF schemas. They offer a flexible approach to event generation and are widely used in various scenarios.</li>
+<li><strong>WPP Providers</strong>: Standing for &quot;Windows Software Trace Preprocessor&quot;, WPP providers leverage specialized macros and annotations within the application's source code to generate events. This type of provider is often utilitzed for low-level kernel-mode tracing and debugging purposes.</li>
+<li><strong>Manifest-based Providers</strong>: Manifest-based providers represent a more contemporary form of providers within ETW. They rely on XML manifest files that define the structure and characteristics of events. This approach offers enhanced flexibility and ease of management, allowing for dynamic event generation and customization.</li>
+<li><strong>TraceLogging Providers</strong>: Tracelogging providers offer a simplified and efficient approach to event generation. They leverage the TraceLogging API, introduced in recent Windows versions, which streamlines the process of event generation with minimal code overhead.</li>
+</ul>
+</li>
+<li><strong>Consumers</strong>: Consumers subscribe to specific events of interest and receive those events for further processing or analysis. By default, the events are typically directed to an .ETL (<em>Event Trave Log</em>) file for handling. However, an alternative consumer scenario involves leveraging the capabilities of the Windows API to process and consume the events.</li>
+<li><strong>Channels</strong>: To facilitate efficient event collection and consumption, ETW relies on event channels. Event channels act as logical containers for organizing and filtering events based on their characteristics and importance. ETW supports multiple channels, each with its own defined purpose and audience. Event consumers can selectively subscribe to specific channels to receive relevant events for their respective use cases.</li>
+<li><strong>ETL Files</strong>: ETW providers specialized support for writing events to disk through the use of event trace log files, commonly referred to as &quot;ETL files&quot;. These files serve as durable storage for events, enabling offline analysis, long-term archiving, and forensic investigations. ETW allows for seamless rotation and management of ETL files to ensure efficient storage utilization.</li>
+</ul>
+<blockquote>
+<p>[!NOTE]</p>
+<ul>
+<li>ETW supports event providers in both kernel mode and user mode.</li>
+<li>Some event providers generate a significant volume of events, which can potentially overwhelm the system resources if they are constanly active. As a result, to prevent unnecessary resource consumption, these providers are typically disabled by default and are only enabled when a tracing session specifically requests their activation.</li>
+<li>In addition to its inherent capabilities, ETW can be extended through custom event providers.</li>
+<li>Only ETW provider events that have a channel property applied to them can be consumed by the event log.</li>
+</ul>
+</blockquote>
+<h3 id="interacting-with-etw"><a class="header" href="#interacting-with-etw">Interacting with ETW</a></h3>
+<p>Logman is a pre-installed utility for managing ETW and Event Tracing Sessions. This tool is invaluable for creating, initiating, halting, and investigating tracing sessions. This is particularly useful when determining which sessions are set for data collection or when initiating your own data collection.</p>
+<p>Employing the <code>-ets</code> parameter will allow for a direct investigation of the event tracing sessions, providing insights into system-wide tracing sessions. As an example, the Sysmon Event Tracing Sessions can be found towards the end of the displayed information.</p>
+<pre><code>C:\Tools&gt; logman.exe query -ets
+
+Data Collector Set                      Type                          Status
+-------------------------------------------------------------------------------
+Circular Kernel Context Logger          Trace                         Running
+Eventlog-Security                       Trace                         Running
+DiagLog                                 Trace                         Running
+Diagtrack-Listener                      Trace                         Running
+EventLog-Application                    Trace                         Running
+EventLog-Microsoft-Windows-Sysmon-Operational Trace                         Running
+EventLog-System                         Trace                         Running
+LwtNetLog                               Trace                         Running
+Microsoft-Windows-Rdp-Graphics-RdpIdd-Trace Trace                         Running
+NetCore                                 Trace                         Running
+NtfsLog                                 Trace                         Running
+RadioMgr                                Trace                         Running
+UBPM                                    Trace                         Running
+WdiContextLog                           Trace                         Running
+WiFiSession                             Trace                         Running
+SHS-06012023-115154-7-7f                Trace                         Running
+UserNotPresentTraceSession              Trace                         Running
+8696EAC4-1288-4288-A4EE-49EE431B0AD9    Trace                         Running
+ScreenOnPowerStudyTraceSession          Trace                         Running
+SYSMON TRACE                            Trace                         Running
+MSDTC_TRACE_SESSION                     Trace                         Running
+SysmonDnsEtwSession                     Trace                         Running
+MpWppTracing-20230601-115025-00000003-ffffffff Trace                         Running
+WindowsUpdate_trace_log                 Trace                         Running
+Admin_PS_Provider                       Trace                         Running
+Terminal-Services-LSM-ApplicationLag-3764 Trace                         Running
+Microsoft.Windows.Remediation           Trace                         Running
+SgrmEtwSession                          Trace                         Running
+
+The command completed successfully.
+</code></pre>
+<p>When you examine an Event Tracing Session directly, you uncover specific session details including the Name, Max Log Size, Log Location, and the subscribed providers. This information is invaluable for incident responders. Discovering a session that records providers relevant to your interests may provide crucial logs for an investigation.</p>
+<p>Note that the <code>-ets</code> parameter is vital to the command. Without it, Logman will not identify the Event Tracing Session.</p>
+<p>For each provider subscribed to the session, you can acquire critical data:</p>
+<ul>
+<li><strong>Name / Provider GUID</strong>: This is the exclusive identifier for the provider.</li>
+<li><strong>Level</strong>: This describes the event level, indicating if it's filtering for warning, informational, critical, or all events.</li>
+<li><strong>Keywords Any</strong>: Keywords create a filter based on the kind of the event generated by the provider.</li>
+</ul>
+<pre><code>C:\Tools&gt; logman.exe query &quot;EventLog-System&quot; -ets
+
+
+Name:                 EventLog-System
+Status:               Running
+Root Path:            %systemdrive%\PerfLogs\Admin
+Segment:              Off
+Schedules:            On
+Segment Max Size:     100 MB
+
+Name:                 EventLog-System\EventLog-System
+Type:                 Trace
+Append:               Off
+Circular:             Off
+Overwrite:            Off
+Buffer Size:          64
+Buffers Lost:         0
+Buffers Written:      47
+Buffer Flush Timer:   1
+Clock Type:           System
+File Mode:            Real-time
+
+Provider:
+Name:                 Microsoft-Windows-FunctionDiscoveryHost
+Provider Guid:        {538CBBAD-4877-4EB2-B26E-7CAEE8F0F8CB}
+Level:                255
+KeywordsAll:          0x0
+KeywordsAny:          0x8000000000000000 (System)
+Properties:           65
+Filter Type:          0
+
+Provider:
+Name:                 Microsoft-Windows-Subsys-SMSS
+Provider Guid:        {43E63DA5-41D1-4FBF-ADED-1BBED98FDD1D}
+Level:                255
+KeywordsAll:          0x0
+KeywordsAny:          0x4000000000000000 (System)
+Properties:           65
+Filter Type:          0
+
+Provider:
+Name:                 Microsoft-Windows-Kernel-General
+Provider Guid:        {A68CA8B7-004F-D7B6-A698-07E2DE0F1F5D}
+Level:                255
+KeywordsAll:          0x0
+KeywordsAny:          0x8000000000000000 (System)
+Properties:           65
+Filter Type:          0
+
+Provider:
+Name:                 Microsoft-Windows-FilterManager
+Provider Guid:        {F3C5E28E-63F6-49C7-A204-E48A1BC4B09D}
+Level:                255
+KeywordsAll:          0x0
+KeywordsAny:          0x8000000000000000 (System)
+Properties:           65
+Filter Type:          0
+
+--- SNIP ---
+
+The command completed successfully.
+</code></pre>
+<p>By using the <code>logman query providers</code> command, you generate a list of all available providers on the system, including their respective GUIDs.</p>
+<pre><code>C:\Tools&gt; logman.exe query providers
+
+Provider                                 GUID
+-------------------------------------------------------------------------------
+ACPI Driver Trace Provider               {DAB01D4D-2D48-477D-B1C3-DAAD0CE6F06B}
+Active Directory Domain Services: SAM    {8E598056-8993-11D2-819E-0000F875A064}
+Active Directory: Kerberos Client        {BBA3ADD2-C229-4CDB-AE2B-57EB6966B0C4}
+Active Directory: NetLogon               {F33959B4-DBEC-11D2-895B-00C04F79AB69}
+ADODB.1                                  {04C8A86F-3369-12F8-4769-24E484A9E725}
+ADOMD.1                                  {7EA56435-3F2F-3F63-A829-F0B35B5CAD41}
+Application Popup                        {47BFA2B7-BD54-4FAC-B70B-29021084CA8F}
+Application-Addon-Event-Provider         {A83FA99F-C356-4DED-9FD6-5A5EB8546D68}
+ATA Port Driver Tracing Provider         {D08BD885-501E-489A-BAC6-B7D24BFE6BBF}
+AuthFw NetShell Plugin                   {935F4AE6-845D-41C6-97FA-380DAD429B72}
+BCP.1                                    {24722B88-DF97-4FF6-E395-DB533AC42A1E}
+BFE Trace Provider                       {106B464A-8043-46B1-8CB8-E92A0CD7A560}
+BITS Service Trace                       {4A8AAA94-CFC4-46A7-8E4E-17BC45608F0A}
+Certificate Services Client CredentialRoaming Trace {EF4109DC-68FC-45AF-B329-CA2825437209}
+Certificate Services Client Trace        {F01B7774-7ED7-401E-8088-B576793D7841}
+Circular Kernel Session Provider         {54DEA73A-ED1F-42A4-AF71-3E63D056F174}
+Classpnp Driver Tracing Provider         {FA8DE7C4-ACDE-4443-9994-C4E2359A9EDB}
+Critical Section Trace Provider          {3AC66736-CC59-4CFF-8115-8DF50E39816B}
+DBNETLIB.1                               {BD568F20-FCCD-B948-054E-DB3421115D61}
+Deduplication Tracing Provider           {5EBB59D1-4739-4E45-872D-B8703956D84B}
+Disk Class Driver Tracing Provider       {945186BF-3DD6-4F3F-9C8E-9EDD3FC9D558}
+Downlevel IPsec API                      {94335EB3-79EA-44D5-8EA9-306F49B3A041}
+Downlevel IPsec NetShell Plugin          {E4FF10D8-8A88-4FC6-82C8-8C23E9462FE5}
+Downlevel IPsec Policy Store             {94335EB3-79EA-44D5-8EA9-306F49B3A070}
+Downlevel IPsec Service                  {94335EB3-79EA-44D5-8EA9-306F49B3A040}
+EA IME API                               {E2A24A32-00DC-4025-9689-C108C01991C5}
+Error Instrument                         {CD7CF0D0-02CC-4872-9B65-0DBA0A90EFE8}
+FD Core Trace                            {480217A9-F824-4BD4-BBE8-F371CAAF9A0D}
+FD Publication Trace                     {649E3596-2620-4D58-A01F-17AEFE8185DB}
+FD SSDP Trace                            {DB1D0418-105A-4C77-9A25-8F96A19716A4}
+FD WNet Trace                            {8B20D3E4-581F-4A27-8109-DF01643A7A93}
+FD WSDAPI Trace                          {7E2DBFC7-41E8-4987-BCA7-76CADFAD765F}
+FDPHost Service Trace                    {F1C521CA-DA82-4D79-9EE4-D7A375723B68}
+File Kernel Trace; Operation Set 1       {D75D8303-6C21-4BDE-9C98-ECC6320F9291}
+File Kernel Trace; Operation Set 2       {058DD951-7604-414D-A5D6-A56D35367A46}
+File Kernel Trace; Optional Data         {7DA1385C-F8F5-414D-B9D0-02FCA090F1EC}
+File Kernel Trace; Volume To Log         {127D46AF-4AD3-489F-9165-F00BA64D5467}
+FWPKCLNT Trace Provider                  {AD33FA19-F2D2-46D1-8F4C-E3C3087E45AD}
+FWPUCLNT Trace Provider                  {5A1600D2-68E5-4DE7-BCF4-1C2D215FE0FE}
+Heap Trace Provider                      {222962AB-6180-4B88-A825-346B75F2A24A}
+IKEEXT Trace Provider                    {106B464D-8043-46B1-8CB8-E92A0CD7A560}
+IMAPI1 Shim                              {1FF10429-99AE-45BB-8A67-C9E945B9FB6C}
+IMAPI2 Concatenate Stream                {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E9D}
+IMAPI2 Disc Master                       {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E91}
+IMAPI2 Disc Recorder                     {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E93}
+IMAPI2 Disc Recorder Enumerator          {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E92}
+IMAPI2 dll                               {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E90}
+IMAPI2 Interleave Stream                 {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E9E}
+IMAPI2 Media Eraser                      {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E97}
+IMAPI2 MSF                               {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E9F}
+IMAPI2 Multisession Sequential           {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7EA0}
+IMAPI2 Pseudo-Random Stream              {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E9C}
+IMAPI2 Raw CD Writer                     {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E9A}
+IMAPI2 Raw Image Writer                  {07E397EC-C240-4ED7-8A2A-B9FF0FE5D581}
+IMAPI2 Standard Data Writer              {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E98}
+IMAPI2 Track-at-Once CD Writer           {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E99}
+IMAPI2 Utilities                         {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E94}
+IMAPI2 Write Engine                      {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E96}
+IMAPI2 Zero Stream                       {0E85A5A5-4D5C-44B7-8BDA-5B7AB54F7E9B}
+IMAPI2FS Tracing                         {F8036571-42D9-480A-BABB-DE7833CB059C}
+Intel-iaLPSS-GPIO                        {D386CC7A-620A-41C1-ABF5-55018C6C699A}
+Intel-iaLPSS-I2C                         {D4AEAC44-AD44-456E-9C90-33F8CDCED6AF}
+Intel-iaLPSS2-GPIO2                      {63848CFF-3EC7-4DDF-8072-5F95E8C8EB98}
+Intel-iaLPSS2-I2C                        {C2F86198-03CA-4771-8D4C-CE6E15CBCA56}
+IPMI Driver Trace                        {D5C6A3E9-FA9C-434E-9653-165B4FC869E4}
+IPMI Provider Trace                      {651D672B-E11F-41B7-ADD3-C2F6A4023672}
+KMDFv1 Trace Provider                    {544D4C9D-942C-46D5-BF50-DF5CD9524A50}
+Layer2 Security HC Diagnostics Trace     {2E8D9EC5-A712-48C4-8CE0-631EB0C1CD65}
+Local Security Authority (LSA)           {CC85922F-DB41-11D2-9244-006008269001}
+LsaSrv                                   {199FE037-2B82-40A9-82AC-E1D46C792B99}
+Microsoft-Antimalware-AMFilter           {CFEB0608-330E-4410-B00D-56D8DA9986E6}
+Microsoft-Antimalware-Engine             {0A002690-3839-4E3A-B3B6-96D8DF868D99}
+Microsoft-Antimalware-Engine-Instrumentation {68621C25-DF8D-4A6B-AABC-19A22E296A7C}
+Microsoft-Antimalware-NIS                {102AAB0A-9D9C-4887-A860-55DE33B96595}
+Microsoft-Antimalware-Protection         {E4B70372-261F-4C54-8FA6-A5A7914D73DA}
+Microsoft-Antimalware-RTP                {8E92DEEF-5E17-413B-B927-59B2F06A3CFC}
+Microsoft-Antimalware-Scan-Interface     {2A576B87-09A7-520E-C21A-4942F0271D67}
+Microsoft-Antimalware-Service            {751EF305-6C6E-4FED-B847-02EF79D26AEF}
+Microsoft-Antimalware-ShieldProvider     {928F7D29-0577-5BE5-3BD3-B6BDAB9AB307}
+Microsoft-Antimalware-UacScan            {D37E7910-79C8-57C4-DA77-52BB646364CD}
+Microsoft-AppV-Client                    {E4F68870-5AE8-4E5B-9CE7-CA9ED75B0245}
+Microsoft-AppV-Client-StreamingUX        {28CB46C7-4003-4E50-8BD9-442086762D12}
+Microsoft-AppV-ServiceLog                {9CC69D1C-7917-4ACD-8066-6BF8B63E551B}
+Microsoft-AppV-SharedPerformance         {FB4A19EE-EB5A-47A4-BC52-E71AAC6D0859}
+Microsoft-Client-Licensing-Platform      {B6CC0D55-9ECC-49A8-B929-2B9022426F2A}
+Microsoft-Gaming-Services                {BC1BDB57-71A2-581A-147B-E0B49474A2D4}
+Microsoft-IE                             {9E3B3947-CA5D-4614-91A2-7B624E0E7244}
+Microsoft-IE-JSDumpHeap                  {7F8E35CA-68E8-41B9-86FE-D6ADC5B327E7}
+Microsoft-IEFRAME                        {5C8BB950-959E-4309-8908-67961A1205D5}
+Microsoft-JScript                        {57277741-3638-4A4B-BDBA-0AC6E45DA56C}
+Microsoft-OneCore-OnlineSetup            {41862974-DA3B-4F0B-97D5-BB29FBB9B71E}
+Microsoft-PerfTrack-IEFRAME              {B2A40F1F-A05A-4DFD-886A-4C4F18C4334C}
+Microsoft-PerfTrack-MSHTML               {FFDB9886-80F3-4540-AA8B-B85192217DDF}
+Microsoft-User Experience Virtualization-Admin {61BC445E-7A8D-420E-AB36-9C7143881B98}
+Microsoft-User Experience Virtualization-Agent Driver {DE29CF61-5EE6-43FF-9AAC-959C4E13CC6C}
+Microsoft-User Experience Virtualization-App Agent {1ED6976A-4171-4764-B415-7EA08BC46C51}
+Microsoft-User Experience Virtualization-IPC {21D79DB0-8E03-41CD-9589-F3EF7001A92A}
+Microsoft-User Experience Virtualization-SQM Uploader {57003E21-269B-4BDC-8434-B3BF8D57D2D5}
+Microsoft-Windows Networking VPN Plugin Platform {E5FC4A0F-7198-492F-9B0F-88FDCBFDED48}
+Microsoft-Windows-AAD                    {4DE9BC9C-B27A-43C9-8994-0915F1A5E24F}
+Microsoft-Windows-ACL-UI                 {EA4CC8B8-A150-47A3-AFB9-C8D194B19452}
+
+The command completed successfully.
+</code></pre>
+<p>Windows 10 includes more than 1,000 built-in providers. Moreover, Third-Party Software often incorporates its own ETW providers, especially those operating in Kernel module.</p>
+<p>Due to the high number of providers, it's usually advantegeous to filter them using <code>findstr</code>. For instance, you will see multiple results for &quot;Winlogon&quot; in the given example.</p>
+<pre><code>C:\Tools&gt; logman.exe query providers | findstr &quot;Winlogon&quot;
+Microsoft-Windows-Winlogon               {DBE9B383-7CF3-4331-91CC-A3CB16A3B538}
+Windows Winlogon Trace                   {D451642C-63A6-11D7-9720-00B0D03E0347}
+</code></pre>
+<p>By specifying a provider with Logman, you gain a deeper understanding of the provider's function. This will inform you about the Keywords you can filter on, the available event levels, and which processes are currently utilizing the provider.</p>
+<pre><code>C:\Tools&gt; logman.exe query providers Microsoft-Windows-Winlogon
+
+Provider                                 GUID
+-------------------------------------------------------------------------------
+Microsoft-Windows-Winlogon               {DBE9B383-7CF3-4331-91CC-A3CB16A3B538}
+
+Value               Keyword              Description
+-------------------------------------------------------------------------------
+0x0000000000010000  PerfInstrumentation
+0x0000000000020000  PerfDiagnostics
+0x0000000000040000  NotificationEvents
+0x0000000000080000  PerfTrackContext
+0x0000100000000000  ms:ReservedKeyword44
+0x0000200000000000  ms:Telemetry
+0x0000400000000000  ms:Measures
+0x0000800000000000  ms:CriticalData
+0x0001000000000000  win:ResponseTime     Response Time
+0x0080000000000000  win:EventlogClassic  Classic
+0x8000000000000000  Microsoft-Windows-Winlogon/Diagnostic
+0x4000000000000000  Microsoft-Windows-Winlogon/Operational
+0x2000000000000000  System               System
+
+Value               Level                Description
+-------------------------------------------------------------------------------
+0x02                win:Error            Error
+0x03                win:Warning          Warning
+0x04                win:Informational    Information
+
+PID                 Image
+-------------------------------------------------------------------------------
+0x00001710
+0x0000025c
+
+
+The command completed successfully.
+</code></pre>
+<p>The Microsoft-Windows-Winlogon/Diagnostic and Microsoft-Windows-Winlogon/Operational keywords reference the event logs generated from this provider.</p>
+<p>GUI-based alternatives also exist. These are:</p>
+<ol>
+<li>Using the graphical interface of the Performance Monitor tool, you can visualize various running trace sessions. A detailed overview of a specific trace can be accessed simply by double-clicking on it. This reveals all pertinent data related to the trace, from the engaged providers and their activated features to the nature of the trace itself. Additionally, these sessions can be modified to suit your needs by incorporating or eliminating providers. Lastly, you can devise new sessions by opting for the &quot;User Defined&quot; category.</li>
+</ol>
+<p><img src="../../../images/windows_event_logs32.png" alt="windows event logs 32" /></p>
+<p><img src="../../../images/windows_event_logs33.png" alt="windows event logs 33" /></p>
+<ol start="2">
+<li>ETW Povider metadata can also be viewed through the <a href="https://github.com/zodiacon/EtwExplorer">EtwExplorer project</a>.</li>
+</ol>
+<p><img src="../../../images/windows_event_logs34.png" alt="windows event logs 34" /></p>
+<h3 id="useful-providers"><a class="header" href="#useful-providers">Useful Providers</a></h3>
+<ul>
+<li><strong>Microsoft-Windows-Kernel-Process</strong>: This ETW provider is instrumental in monitoring process-related activity within the Windows kernel. It can aid in detecting unusual process behaviors such as process injection, process hollowing, and other tactics commonly used by malware and APTs.</li>
+<li><strong>Microsoft-Windows-Kernel-File</strong>: As the name suggests, this provider focuses on file-related operations. It can be employed for detection scenarios involving unauthorized file access, changes to critical system files, or suspicious file operations indicative of exfiltration or ransomware activity.</li>
+<li><strong>Microsoft-Windows-Kernel-Network</strong>: This ETW provider offers visibility into network-related activity at the kernel level. It's especially useful in detecting network-based attacks such as data exfiltration, unauthorized network connections, and potential signs of command and control communication.</li>
+<li><strong>Microsoft-Windows-SMBClient-SMBServer</strong>: These providers monitor SMB client and server activity, providing insights into file sharing and network communication. They can be used to detect unusual SMB traffic patterns, potentially indicating lateral movement or data exfiltration.</li>
+<li><strong>Microsoft-Windows-DotNETRuntime</strong>: This provider focuses on .NET runtime events, making it ideal for identifying anomalies in .NET application execution, potential exploitation of .NET vulnerabilities, or malicious .NET assembly loading.</li>
+<li><strong>OpenSSH</strong>: Monitoring the OpenSSH ETW provider can provide important insights into SSH connection attempts, successful and failed authentications, and potential brute force attacks.</li>
+<li><strong>Microsoft-Windows-VPN-Client</strong>: This provider enables tracking of VPN client events. It can be useful for identifying unauthorized or suspicious VPN connections.</li>
+<li><strong>Microsoft-Windows-PowerShell</strong>: This ETW provider tracks PowerShell execution and command activity, making it invaluable for detecting suspicious PowerShell usage, script block logging, and potential misuse or exploitation.</li>
+<li><strong>Microsoft-Windows-Kernel-Registry</strong>: This provider monitors registry operations, making it useful for detection scenarios related to changes in registry keys, often associated with persistence mechanisms, malware installation, or system configuration changes.</li>
+<li><strong>Microsoft-Windows-CodeIntegrity</strong>: This provider monitors code and driver integrity checks, which can be key in identifying attempts to load unsigned or malicious drivers or code.</li>
+<li><strong>Microsoft-Antimalware-Service</strong>: This ETW provider can be employed to detect potential issues with the antimalware service, including disabled services, configuration changes, or potential evasion techniques employed by malware.</li>
+<li><strong>WinRM</strong>: Monitoring the Windows Remote Management provider can reveal unauthorized or suspicious remote management activity, often indicative of lateral movement or remote desktop activity.</li>
+<li><strong>Microsoft-Windows-TerminalServices-LocalSessionManager</strong>: This provider tracks local Terminal Services sessions, making it useful for detecting unauthorized or suspicious remote desktop activity.</li>
+<li><strong>Microsoft-Windows-Security-Mitigations</strong>: This provider keeps tabs on the effectiveness and operations of security mitigations in place. It's essential for identifying potential bypass attempts of these security controls.</li>
+<li><strong>Microsoft-Windows-DNS-Client</strong>: This ETW provider gives visibility into DNS client activity, which is crucial for detecting DNS-based attacks, including DNS tunneling or unusual DNS requests that may indicate C2 communications.</li>
+<li><strong>Microsoft-Antimalware-Protection</strong>: This provider monitors the operations of antimalware protection mechanisms. It can be used to detect any issues with these mechanisms, such as disabled protection features, configuration changes, or signs of evasion techniques employed by malicious actors.</li>
+</ul>
+<h3 id="restricted-providers"><a class="header" href="#restricted-providers">Restricted Providers</a></h3>
+<p>In the realm of Windows OS security, certain ETW providers are considered &quot;restricted&quot;. These providers offer valuable telemetry but are only accessible to processes that carry the requisite permissions. This exclusivity is designed to ensure that sensitive system data remains shielded from potential threats.</p>
+<p>One of these high-value, restricted providers is Microsoft-Windows-Threat-Intelligence. This provider offer crucial insights into potential security threats and is often leveraged in DFIR operations. However, to access this provider, processes must be privileged with a specific right, known as Protected Process Light (<em>PPL</em>).</p>
+<blockquote>
+<p><em>To be able to run as a PPL, an anti-malware vendor must apply to Microsoft, prove their identity, sign binding legal documents, implement an Early Launch Anti-Malware (<em>ELAM</em>) driver, run it through a test suite, and submit it to Microsoft for a special Authenticode signature. It is not a trivial process. Once this is complete, the vendor can use this ELAM driver to have Windows protect their anti-malware service by running it as a PPL.</em> - Elastic</p>
+</blockquote>
+<blockquote>
+<p>[!TIP]
+Workarounds to access the Microsoft-Windows-Threat-Intelligence provider exist. Take a look <a href="https://posts.specterops.io/uncovering-windows-events-b4b9db7eac54">here</a>.</p>
+</blockquote>
+<p>In the context of Microsoft-Windows-Threat-Intelligence, the benefits of this privileged access are manifold. This provider can record highly granular data about potential threats, enabling security professionals to detect and analyze sophisticated attacks that may have eluded other defenses. Its telemetry can serve as vital evidence in forensic investigations, revealing details about the origin of a threat, the systems and data it interacted with, and the alterations it made. Moreover, by monitoring this provider in real-time, security teams can potentially identify ongoing threats and intervene to mitigate damage.</p>
+<h2 id="tapping-into-etw"><a class="header" href="#tapping-into-etw">Tapping into ETW</a></h2>
+<h3 id="detection-example-1-detecting-strange-parent-child-relationships"><a class="header" href="#detection-example-1-detecting-strange-parent-child-relationships">Detection Example 1: Detecting Strange Parent-Child Relationships</a></h3>
+<p>Abnormal parent-child relationships among processes can be indicative of malicious activities. In standard Windows environments, certain processes never call or spawn others. For example, it is highly unlikely to see &quot;calc.exe&quot; spawning &quot;cmd.exe&quot; in a normal Windows environment. Understanding these typical parent-child relationships can assist in detecting anomalies.</p>
+<p>By utilizing Process Hacker, you can explore parent-child relationships within Windows. Sorting the processes by dropdowns in the Processes view reveals a hierarchical representation of the relationships.</p>
+<p><img src="../../../images/windows_event_logs35.png" alt="windows event logs 35" /></p>
+<p>Analyzing these relationships in standard and custom environments enables you to identify deviations from normal patterns. For example, if you observe the &quot;spoolsv.exe&quot; process creating &quot;whoami.exe&quot; instead of its expected behavior of creating a &quot;conhost&quot;, it raises suspicion.</p>
+<p><img src="../../../images/windows_event_logs36.png" alt="windows event logs 36" /></p>
+<p>To showcase a strange parent-child relationship, where &quot;cmd.exe&quot; appears to be created by &quot;spoolsv.exe&quot; with no accompanying arguments, you will utilize an attacking technique called Parent PID Spoofing. Parent PID Spoofing can be executed through the <a href="https://github.com/decoder-it/psgetsystem">psgetsystem project</a> in the following manner.</p>
+<pre><code class="language-powershell">PS C:\Tools\psgetsystem&gt; powershell -ep bypass
+PS C:\Tools\psgetsystem&gt; Import-Module .\psgetsys.ps1 
+PS C:\Tools\psgetsystem&gt; [MyProcess]::CreateProcessFromParent([Process ID of spoolsv.exe],&quot;C:\Windows\System32\cmd.exe&quot;,&quot;&quot;)
+</code></pre>
+<p><img src="../../../images/windows_event_logs37.png" alt="windows event logs 37" /></p>
+<p>Due to the parent PID spoofing technique you employed, Sysmon Event 1 incorrectly displays spoolsv.exe as the parent of cmd.exe. However, it was actually powershell.exe that created cmd.exe.</p>
+<p>Although Sysmon and event logs provide valuable telemetry for hunting and creating alert rules, they are not the only sources of information. Begin by collecting data from the Microsoft-Windows-Kernel-Process provider using SilkETW (<em>the provider can be identified using logman as described earlier, <code>logman.exe query providers | findstr &quot;Process&quot;</code></em>). After that, you can proceed to simulate the attack again to assess whether ETW can provide you with more accurate information regarding the execution of cmd.exe.</p>
+<pre><code>c:\Tools\SilkETW_SilkService_v8\v8\SilkETW&gt;SilkETW.exe -t user -pn Microsoft-Windows-Kernel-Process -ot file -p C:\windows\temp\etw.json
+</code></pre>
+<p><img src="../../../images/windows_event_logs38.png" alt="windows event logs 38" /></p>
+<p>The etw.json file seems to contain information about powershell.exe being the one who created cmd.exe.</p>
+<p><img src="../../../images/windows_event_logs39.png" alt="windows event logs 39" /></p>
+<p>It should be noted that SilkETW event logs can be ingested and viewed by Windows Event Viewer through SilkService to provide you with deeper and more extensive visibility into the actions performed on a system.</p>
+<h3 id="detection-example-2-detecting-malicious-net-assembly-loading"><a class="header" href="#detection-example-2-detecting-malicious-net-assembly-loading">Detection Example 2: Detecting Malicious .NET Assembly Loading</a></h3>
+<p>Traditionally, adversaries employed a strategy known as &quot;Living off the Land&quot;, exploiting legitimate system tools, such as PowerShell, to carry out their malicious operations. This approach reduces the risk of detection since it involves the use of tools that are native to the system, and therefore less likely to raise suspicion.</p>
+<p>However, the cybersecurity community has adapted and developed countermeasures against this strategy.</p>
+<p>Responding to these defensive advancements, attackers have developed a new approach that is labeled as &quot;Bring your own Land&quot;. Instead of relying on the tools already present on a victim's system, threat actors and pentesters emulating these tactics now employ .NET assemblies executed entirely in memory. This involves creating custom-built tools using languages like C#, rendering them independent of the pre-existing tools on the target system. The &quot;Bring your own Land&quot; lands is quite effective for the following reasons:</p>
+<ul>
+<li>Each Windows system comes equipped with a certain version of .NET pre-installed by default.</li>
+<li>A salient feature of .NET is its managed nature, alleviating the need for programmers to manually handle memory management. This attribute is part of the framework's managed code execution process, where the Common Language Runtime (<em>CLR</em>) takes responsibility for key system-level operations such as garbage collection, eliminating memory leaks and ensuring more efficient resource utilization.</li>
+<li>One of the intriguing advantages of using .NET assemblies is their ability to be loaded directly into memory. This means that an executable or DLL does not need to be written physically to the disk - instead, it is executed directly in the memory. This behavior minimizes the artifacts left behind on the system and can help bypass some forms of detection that rely on inspecting files written to disk.</li>
+<li>Microsoft has integrated a wide range of libraries into the .NET framework to address numerous common programming challenges. These libraries include functionalities for establishing HTTP connections, implementing cryptographic operations, and enabling inter-process communication (<em>IPC</em>), such as named pipes. These pre-built tools streamline the development process, reduce the likelihood of errors, and make it easier to build robust and efficient applications. Furthermore, for a threat actor, these rich features provide a toolkit for creating more sophisticated and covert attack methods.</li>
+</ul>
+<p>A poweful illustration of this BYOL strategy is the <a href="https://www.cobaltstrike.com/blog/cobalt-strike-3-11-the-snake-that-eats-its-tail/"><code>execute-assenbly</code></a> command implemented in CobaltStrike, a widely-used software platform for Adversary Simulations and Red Team Operations. CobaltStrike's <code>execute-assembly</code> command allows the user to execute .NET assemblies directly from memory, making it an ideal tool for implementing a BYOL strategy.</p>
+<p>In a manner akin to how you detected the execution of unmanaged PowerShell scripts through the observation of anomalous clr.dll and clrjit.dll loading activity in processes that ordinarily wouldn't require them, you can employ a similar approach to identify malicious .NET assembly loading. This is achieved by scrutinizing the activity related to the loading of <a href="https://redhead0ntherun.medium.com/detecting-net-c-injection-execute-assembly-1894dbb04ff7">.NET-associated DLLs</a>, specifically clr.dll and mscoree.dll.</p>
+<p>Monitoring the loading of such libraries can help reveal attempts to execute .NET assemblies in unusual or unexpected contexts, which can be a sign of malicious activity. This type of DLL loading behavior can often be detected by leveraging Sysmon's Event ID 7, which corresponds to &quot;Image Loaded&quot; events.</p>
+<p>For demonstrative purposes, emulate a malicious .NET assembly load by executing a precompiled version of <a href="https://github.com/GhostPack/Seatbelt">Seatbelt</a> that resides on disk. Seatbelt is a well-known .NET assembly, often employed by adversaries who load and execute it in memory to gain situational awareness of a compromised system.</p>
+<pre><code class="language-powershell">PS C:\Tools\GhostPack Compiled Binaries&gt;.\Seatbelt.exe TokenPrivileges
+
+                        %&amp;&amp;@@@&amp;&amp;
+                        &amp;&amp;&amp;&amp;&amp;&amp;&amp;%%%,                       #&amp;&amp;@@@@@@%%%%%%###############%
+                        &amp;%&amp;   %&amp;%%                        &amp;////(((&amp;%%%%%#%################//((((###%%%%%%%%%%%%%%%
+%%%%%%%%%%%######%%%#%%####%  &amp;%%**#                      @////(((&amp;%%%%%%######################(((((((((((((((((((
+#%#%%%%%%%#######%#%%#######  %&amp;%,,,,,,,,,,,,,,,,         @////(((&amp;%%%%%#%#####################(((((((((((((((((((
+#%#%%%%%%#####%%#%#%%#######  %%%,,,,,,  ,,.   ,,         @////(((&amp;%%%%%%%######################(#(((#(#((((((((((
+#####%%%####################  &amp;%%......  ...   ..         @////(((&amp;%%%%%%%###############%######((#(#(####((((((((
+#######%##########%#########  %%%......  ...   ..         @////(((&amp;%%%%%#########################(#(#######((#####
+###%##%%####################  &amp;%%...............          @////(((&amp;%%%%%%%%##############%#######(#########((#####
+#####%######################  %%%..                       @////(((&amp;%%%%%%%################
+                        &amp;%&amp;   %%%%%      Seatbelt         %////(((&amp;%%%%%%%%#############*
+                        &amp;%%&amp;&amp;&amp;%%%%%        v1.2.1         ,(((&amp;%%%%%%%%%%%%%%%%%,
+                         #%%%%##,
+
+
+====== TokenPrivileges ======
+
+Current Token's Privileges
+
+                     SeIncreaseQuotaPrivilege:  DISABLED
+                          SeSecurityPrivilege:  DISABLED
+                     SeTakeOwnershipPrivilege:  DISABLED
+                        SeLoadDriverPrivilege:  DISABLED
+                     SeSystemProfilePrivilege:  DISABLED
+                        SeSystemtimePrivilege:  DISABLED
+              SeProfileSingleProcessPrivilege:  DISABLED
+              SeIncreaseBasePriorityPrivilege:  DISABLED
+                    SeCreatePagefilePrivilege:  DISABLED
+                            SeBackupPrivilege:  DISABLED
+                           SeRestorePrivilege:  DISABLED
+                          SeShutdownPrivilege:  DISABLED
+                             SeDebugPrivilege:  SE_PRIVILEGE_ENABLED
+                 SeSystemEnvironmentPrivilege:  DISABLED
+                      SeChangeNotifyPrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                    SeRemoteShutdownPrivilege:  DISABLED
+                            SeUndockPrivilege:  DISABLED
+                      SeManageVolumePrivilege:  DISABLED
+                       SeImpersonatePrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                      SeCreateGlobalPrivilege:  SE_PRIVILEGE_ENABLED_BY_DEFAULT, SE_PRIVILEGE_ENABLED
+                SeIncreaseWorkingSetPrivilege:  DISABLED
+                          SeTimeZonePrivilege:  DISABLED
+                SeCreateSymbolicLinkPrivilege:  DISABLED
+    SeDelegateSessionUserImpersonatePrivilege:  DISABLED
+</code></pre>
+<p>Assuming you have Sysmon configured appropriately to log image loading events, executing &quot;Seatbelt.exe&quot; would trigger the loading of key .NET-related DLLs such as &quot;clr.dll&quot; and &quot;mscoree.dll&quot;. Sysmon, keenly observing system activities, will log these DLL load operations as Event ID 7 records.</p>
+<p><img src="../../../images/windows_event_logs40.png" alt="windows event logs 40" /></p>
+<p><img src="../../../images/windows_event_logs41.png" alt="windows event logs 41" /></p>
+<p>Relying solely on Sysmon Event ID 7 for detecting attacks can be challenging due to the large volume of events it generates. Additionally, while it informs you about the DLLs being loaded, it doesn't provide granular details about the actual content of the loaded .NET assembly.</p>
+<p>To augment your visibility and gain deeper insights into the actual assmebly being loaded, you can again leverage ETW and specifically the Microsoft-Windows-DotNETRuntime provider.</p>
+<p>Use SilkETW to collect data from the Microsoft-Windows-DotNETRuntime provider. After that, you can proceed to simulate the attack again to evaluate whether ETW can furnish you with more detailed and actionable intelligence regarding the loading and execution of the &quot;Seatbelt&quot; .NET assembly.</p>
+<pre><code>c:\Tools\SilkETW_SilkService_v8\v8\SilkETW&gt;SilkETW.exe -t user -pn Microsoft-Windows-DotNETRuntime -uk 0x2038 -ot file -p C:\windows\temp\etw.json
+</code></pre>
+<p>The etw.json file seems to contain a wealth of information about the loaded assembly, including method names.</p>
+<p><img src="../../../images/windows_event_logs42.png" alt="windows event logs 42" /></p>
+<p>It's worth noting that in your current SilkETW configuration, you're not capturing the entirety of events from the &quot;Microsoft-Windows-DotNETRuntime&quot; provider. Instead, you're selectively targeting a specific subset, which includes: JitKeyword, InteropKeyword, LoaderKeyword, and NGenKeyword.</p>
+<ul>
+<li>The <strong>JitKeyword</strong> relates to the Just-In-Time (<em>JIT</em>) compilation events, providing information on the methods being compiled at runtime. This could be particularly useful for understanding the execution flow of the .NET assembly.</li>
+<li>The <strong>InteropKeyword</strong> refers to Interoperability events, which come into play when managed code interacts with unmanaged code. These events could provide insights into potential interactions with native APIs or other unmanaged components.</li>
+<li><strong>LoaderKeyword</strong> events provide details on the assembly loading process within the .NET runtime, which can be vital for understanding what .NET assemblies are being loaded and potentially executed.</li>
+<li>The <strong>NGenKeyword</strong> corresponds to Native Image Generator events, which are concerned with the creation and usage of precompiled .NET assemblies. Monitoring these could help detect scenarios where attackers use precompiled .NET assemblies to evade JIT-related detections.</li>
+</ul>
+<h2 id="analyzing-windows-event-logs-en-masse-with-get-winevent"><a class="header" href="#analyzing-windows-event-logs-en-masse-with-get-winevent">Analyzing Windows Event Logs En Masse with Get-WinEvent</a></h2>
+<p>The <code>Get-WinEvent</code> cmdlet is an indispensable tool in PowerShell for querying Windows Event logs en masse. The cmdlet provides you with the capability to retrieve different types of event logs, including classic Windows event logs like System and Application logs, logs generated by Windows Event Log technology, and Event Tracing for Windows logs.</p>
+<p>To quickly identify the available logs, you can leverage the <code>-ListLog</code> parameter in conjunction with the Get-WinEvent cmdlet. By specifying <code>*</code> as the parameter value, you retrieve all logs without applying any filtering criteria. This allows you to obtain a comprehensive list of logs and their associated properties. By executing the following command, you can retrieve the list of logs and display essential properties such as LogName, RecordCount, IsClassicLog, IsEnabled, LogMode, and LogType.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -ListLog * | Select-Object LogName, RecordCount, IsClassicLog, IsEnabled, LogMode, LogType | Format-Table -AutoSize
+
+LogName                                                                                RecordCount IsClassicLog IsEnabled  LogMode        LogType
+-------                                                                                ----------- ------------ ---------  -------        -------
+Windows PowerShell                                                                            2916         True      True Circular Administrative
+System                                                                                        1786         True      True Circular Administrative
+Security                                                                                      8968         True      True Circular Administrative
+Key Management Service                                                                           0         True      True Circular Administrative
+Internet Explorer                                                                                0         True      True Circular Administrative
+HardwareEvents                                                                                   0         True      True Circular Administrative
+Application                                                                                   2079         True      True Circular Administrative
+Windows Networking Vpn Plugin Platform/OperationalVerbose                                                 False     False Circular    Operational
+Windows Networking Vpn Plugin Platform/Operational                                                        False     False Circular    Operational
+SMSApi                                                                                           0        False      True Circular    Operational
+Setup                                                                                           16        False      True Circular    Operational
+OpenSSH/Operational                                                                              0        False      True Circular    Operational
+OpenSSH/Admin                                                                                    0        False      True Circular Administrative
+Network Isolation Operational                                                                             False     False Circular    Operational
+Microsoft-WindowsPhone-Connectivity-WiFiConnSvc-Channel                                          0        False      True Circular    Operational
+Microsoft-Windows-WWAN-SVC-Events/Operational                                                    0        False      True Circular    Operational
+Microsoft-Windows-WPD-MTPClassDriver/Operational                                                 0        False      True Circular    Operational
+Microsoft-Windows-WPD-CompositeClassDriver/Operational                                           0        False      True Circular    Operational
+Microsoft-Windows-WPD-ClassInstaller/Operational                                                 0        False      True Circular    Operational
+Microsoft-Windows-Workplace Join/Admin                                                           0        False      True Circular Administrative
+Microsoft-Windows-WorkFolders/WHC                                                                0        False      True Circular    Operational
+Microsoft-Windows-WorkFolders/Operational                                                        0        False      True Circular    Operational
+Microsoft-Windows-Wordpad/Admin                                                                           False     False Circular    Operational
+Microsoft-Windows-WMPNSS-Service/Operational                                                     0        False      True Circular    Operational
+Microsoft-Windows-WMI-Activity/Operational                                                     895        False      True Circular    Operational
+Microsoft-Windows-wmbclass/Trace                                                                          False     False Circular    Operational
+Microsoft-Windows-WLAN-AutoConfig/Operational                                                    0        False      True Circular    Operational
+Microsoft-Windows-Wired-AutoConfig/Operational                                                   0        False      True Circular    Operational
+Microsoft-Windows-Winsock-WS2HELP/Operational                                                    0        False      True Circular    Operational
+Microsoft-Windows-Winsock-NameResolution/Operational                                                      False     False Circular    Operational
+Microsoft-Windows-Winsock-AFD/Operational                                                                 False     False Circular    Operational
+Microsoft-Windows-WinRM/Operational                                                            230        False      True Circular    Operational
+Microsoft-Windows-WinNat/Oper                                                                             False     False Circular    Operational
+Microsoft-Windows-Winlogon/Operational                                                         648        False      True Circular    Operational
+Microsoft-Windows-WinINet-Config/ProxyConfigChanged                                              2        False      True Circular    Operational
+--- SNIP ---
+</code></pre>
+<p>This command provides you with valuable information about each log, including the name of the log, the number of records present, whether the log is in the classic .evt format or the newer .evtx format, its enabled status, the log mode, and the log type.</p>
+<p>Additionally, you can explore the event log providers associated with each log using the <code>-ListProvider</code> parameter. Event log providers serve as the sources of events within the logs. Executing the following command allows you to retrieve the list of providers and their respective linked logs.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -ListProvider * | Format-Table -AutoSize
+
+Name                                                                       LogLinks
+----                                                                       --------
+PowerShell                                                                 {Windows PowerShell}
+Workstation                                                                {System}
+WMIxWDM                                                                    {System}
+WinNat                                                                     {System}
+Windows Script Host                                                        {System}
+Microsoft-Windows-IME-OEDCompiler                                          {Microsoft-Windows-IME-OEDCompiler/Analytic}
+Microsoft-Windows-DeviceSetupManager                                       {Microsoft-Windows-DeviceSetupManager/Operat...
+Microsoft-Windows-Search-ProfileNotify                                     {Application}
+Microsoft-Windows-Eventlog                                                 {System, Security, Setup, Microsoft-Windows-...
+Microsoft-Windows-Containers-BindFlt                                       {Microsoft-Windows-Containers-BindFlt/Operat...
+Microsoft-Windows-NDF-HelperClassDiscovery                                 {Microsoft-Windows-NDF-HelperClassDiscovery/...
+Microsoft-Windows-FirstUX-PerfInstrumentation                              {FirstUXPerf-Analytic}
+--- SNIP ---
+</code></pre>
+<p>This command provides you with an overview of the available providers and their associations with specific logs. It enables you to identify providers of interest for filtering purposes.</p>
+<p>Now, focus on retrieving specific event logs using the Get-WinEvent cmdlet. At its most basic, Get-WinEvent retrieves event logs from local or remote computers. The examples below demonstrate how to retrieve events from various logs.</p>
+<ol>
+<li>Retrieving events from the System log</li>
+</ol>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -LogName 'System' -MaxEvents 50 | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+TimeCreated            Id ProviderName                             LevelDisplayName Message
+-----------            -- ------------                             ---------------- -------
+6/2/2023 9:41:42 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\MicrosoftWindows.Client.CBS_cw5...
+6/2/2023 9:38:32 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.ShellExperien...
+6/2/2023 9:38:32 AM 10016 Microsoft-Windows-DistributedCOM         Warning          The machine-default permission settings do not grant Local Activation permission for the COM Server applicat...
+6/2/2023 9:37:31 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsAlarms_8wekyb3...
+6/2/2023 9:37:31 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\microsoft.windowscommunications...
+6/2/2023 9:37:31 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.ContentDelive...
+6/2/2023 9:36:35 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.YourPhone_8wekyb3d8bb...
+6/2/2023 9:36:32 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.AAD.BrokerPlugin_cw5n...
+6/2/2023 9:36:30 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.Search_cw5n1h...
+6/2/2023 9:36:29 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.StartMenuExpe...
+6/2/2023 9:36:14 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat was clear...
+6/2/2023 9:36:14 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Users\Administrator\ntuser.dat was cleared updating 2366 keys and creating...
+6/2/2023 9:36:14 AM  7001 Microsoft-Windows-Winlogon               Information      User Logon Notification for Customer Experience Improvement Program	
+6/2/2023 9:33:04 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Windows\AppCompat\Programs\Amcache.hve was cleared updating 920 keys and c...
+6/2/2023 9:31:54 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\Del...
+6/2/2023 9:30:23 AM    16 Microsoft-Windows-Kernel-General         Information      The access history in hive \??\C:\Windows\System32\config\COMPONENTS was cleared updating 54860 keys and cre...
+6/2/2023 9:30:16 AM    15 Microsoft-Windows-Kernel-General         Information      Hive \SystemRoot\System32\config\DRIVERS was reorganized with a starting size of 3956736 bytes and an ending...
+6/2/2023 9:30:10 AM  1014 Microsoft-Windows-DNS-Client             Warning          Name resolution for the name settings-win.data.microsoft.com timed out after none of the configured DNS serv...
+6/2/2023 9:29:54 AM  7026 Service Control Manager                  Information      The following boot-start or system-start driver(s) did not load: ...
+6/2/2023 9:29:54 AM 10148 Microsoft-Windows-WinRM                  Information      The WinRM service is listening for WS-Management requests. ...
+6/2/2023 9:29:51 AM 51046 Microsoft-Windows-DHCPv6-Client          Information      DHCPv6 client service is started
+--- SNIP ---
+</code></pre>
+<p>This example retrieves the first 50 events from the System log. It selects specific properties, including the event's creation time, ID, provider name, level display name, and message. This facilitates easier analysis and troubleshooting.</p>
+<ol start="2">
+<li>Retrieving events from Microsoft-Windows-WinRM/Operational</li>
+</ol>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -LogName 'Microsoft-Windows-WinRM/Operational' -MaxEvents 30 | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+TimeCreated            Id ProviderName            LevelDisplayName Message
+-----------            -- ------------            ---------------- -------
+6/2/2023 9:30:15 AM   132 Microsoft-Windows-WinRM Information      WSMan operation Enumeration completed successfully
+6/2/2023 9:30:15 AM   145 Microsoft-Windows-WinRM Information      WSMan operation Enumeration started with resourceUri...
+6/2/2023 9:30:15 AM   132 Microsoft-Windows-WinRM Information      WSMan operation Enumeration completed successfully
+6/2/2023 9:30:15 AM   145 Microsoft-Windows-WinRM Information      WSMan operation Enumeration started with resourceUri...
+6/2/2023 9:29:54 AM   209 Microsoft-Windows-WinRM Information      The Winrm service started successfully
+--- SNIP ---
+</code></pre>
+<p>In this example, events are retrieved from the Microsoft-Windows-WinRM/Operational log. The command retrieves the first 30 events and selects relevant properties for display, including the event's creation time, ID, provider name, level display name, and message.</p>
+<p>To retrieve the oldest events, instead of manually sorting the results, you can utilize the <code>-Oldest</code> parameter with the Get-WinEvent cmdlet. This parameter allows you to retrieve the first events based on their chronological order. The following command demonstrates how to retrieve the oldest 30 events from the Microsoft-Windows-WinRM/Operational log.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -LogName 'Microsoft-Windows-WinRM/Operational' -Oldest -MaxEvents 30 | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+TimeCreated           Id ProviderName            LevelDisplayName Message
+-----------            -- ------------            ---------------- -------
+8/3/2022 4:41:38 PM  145 Microsoft-Windows-WinRM Information      WSMan operation Enumeration started with resourceUri ...
+8/3/2022 4:41:42 PM  254 Microsoft-Windows-WinRM Information      Activity Transfer
+8/3/2022 4:41:42 PM  161 Microsoft-Windows-WinRM Error            The client cannot connect to the destination specifie...
+8/3/2022 4:41:42 PM  142 Microsoft-Windows-WinRM Error            WSMan operation Enumeration failed, error code 215085...
+8/3/2022 9:51:03 AM  145 Microsoft-Windows-WinRM Information      WSMan operation Enumeration started with resourceUri ...
+8/3/2022 9:51:07 AM  254 Microsoft-Windows-WinRM Information      Activity Transfer
+</code></pre>
+<ol start="3">
+<li>Retrieving events from .evtx Files</li>
+</ol>
+<p>If you have an exported .evtx file from another computer or you have backed up an existing log, you can utilize the Get-WinEvent cmdlet to read and query those logs. This capability is particularly useful for auditing purposes or when you need to analyze logs within scripts.</p>
+<p>To retrieve log entries from a .evtx file, you need to provide the log file's path using the <code>-Path</code> parameter. The example below demonstrates how to read events from the 'C:\Tools\chainsaw\EVTX-ATTACK-SAMPLES\Execution\exec_sysmon_1_lolbin_pcalua.evtx' file, which represents an exported Windows PowerShell log.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -Path 'C:\Tools\chainsaw\EVTX-ATTACK-SAMPLES\Execution\exec_sysmon_1_lolbin_pcalua.evtx' -MaxEvents 5 | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+TimeCreated           Id ProviderName             LevelDisplayName Message
+-----------           -- ------------             ---------------- -------
+5/12/2019 10:01:51 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+5/12/2019 10:01:50 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+5/12/2019 10:01:43 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+</code></pre>
+<p>By specifying the path of the log file using the <code>-Path</code> parameter, you can retrieve events from that specifc file. The command selects relevant properties and formats the output for easier analysis, displaying the event's creation time, ID, provider name, level display name, and message.</p>
+<ol start="4">
+<li>Filtering events with FilterHashtable</li>
+</ol>
+<p>To filter Windows event logs, you can use the <code>-FilterHashtable</code> parameter, which enables you to define specific conditions for the logs you want to retrieve.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=1,3} | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+TimeCreated           Id ProviderName             LevelDisplayName Message
+-----------           -- ------------             ---------------- -------
+6/2/2023 10:40:09 AM   1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 10:39:01 AM   1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 10:34:12 AM   1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 10:33:26 AM   1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 10:33:16 AM   1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 9:36:10 AM    3 Microsoft-Windows-Sysmon Information      Network connection detected:...
+5/29/2023 6:30:26 PM   1 Microsoft-Windows-Sysmon Information      Process Create:...
+5/29/2023 6:30:24 PM   3 Microsoft-Windows-Sysmon Information      Network connection detected:...
+</code></pre>
+<p>The command above retrieves events with IDs 1 and 3 from the Microsoft-Windows-Sysmon/Operational event log, selects specific properties from those events, and displays them in a table format.</p>
+<blockquote>
+<p>[!NOTE]
+If you observe Sysmon event IDs 1 and 3 occurring within a short time frame, it could potentially indicate the presence of a process communicating with a C2 server.</p>
+</blockquote>
+<p>For exported events the equivalent command is the following.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -FilterHashtable @{Path='C:\Tools\chainsaw\EVTX-ATTACK-SAMPLES\Execution\sysmon_mshta_sharpshooter_stageless_meterpreter.evtx'; ID=1,3} | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+TimeCreated           Id ProviderName             LevelDisplayName Message
+-----------           -- ------------             ---------------- -------
+6/15/2019 12:14:32 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/15/2019 12:13:44 AM  3 Microsoft-Windows-Sysmon Information      Network connection detected:...
+6/15/2019 12:13:42 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+</code></pre>
+<p>If you want the event logs based on a date range (<em>5/28/23 - 6/2/23</em>), this can be done as follows.</p>
+<pre><code class="language-powershell"> PS C:\Users\Administrator&gt; $startDate = (Get-Date -Year 2023 -Month 5 -Day 28).Date
+ PS C:\Users\Administrator&gt; $endDate   = (Get-Date -Year 2023 -Month 6 -Day 3).Date
+ PS C:\Users\Administrator&gt; Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=1,3; StartTime=$startDate; EndTime=$endDate} | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+ TimeCreated           Id ProviderName             LevelDisplayName Message
+-----------           -- ------------             ---------------- -------
+6/2/2023 3:26:56 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:25:20 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:25:20 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:24:13 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:24:13 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:23:41 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:20:27 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+6/2/2023 3:20:26 PM    1 Microsoft-Windows-Sysmon Information      Process Create:...
+--- SNIP ---
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+The above will filter between the start date inclusive and the end date exclusive.</p>
+</blockquote>
+<ol start="5">
+<li>Filtering events with FilterHashtable &amp; XML</li>
+</ol>
+<p>Consider an intrusion detection scenario where a suspicious network connection to a particular IP has been identified. With Sysmon installed, you can use Event ID 3 logs to investigate the potential threat.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=3} |
+`ForEach-Object {
+$xml = [xml]$_.ToXml()
+$eventData = $xml.Event.EventData.Data
+New-Object PSObject -Property @{
+    SourceIP = $eventData | Where-Object {$_.Name -eq &quot;SourceIp&quot;} | Select-Object -ExpandProperty '#text'
+    DestinationIP = $eventData | Where-Object {$_.Name -eq &quot;DestinationIp&quot;} | Select-Object -ExpandProperty '#text'
+    ProcessGuid = $eventData | Where-Object {$_.Name -eq &quot;ProcessGuid&quot;} | Select-Object -ExpandProperty '#text'
+    ProcessId = $eventData | Where-Object {$_.Name -eq &quot;ProcessId&quot;} | Select-Object -ExpandProperty '#text'
+}
+}  | Where-Object {$_.DestinationIP -eq &quot;52.113.194.132&quot;}
+
+DestinationIP  ProcessId SourceIP       ProcessGuid
+-------------  --------- --------       -----------
+52.113.194.132 9196      10.129.205.123 {52ff3419-51ad-6475-1201-000000000e00}
+52.113.194.132 5996      10.129.203.180 {52ff3419-54f3-6474-3d03-000000000c00}
+</code></pre>
+<p>This script will retrieve all Sysmon network connection events, parse the XML data for each event to retrieve specific details, and filter the results to include only events where the destination IP matches the suspected IP.</p>
+<p>Further, you can use the <code>ProcessGuid</code> to trace back the original process that made the connection, enabling you to understand the process tree and identify any malicious executables or scripts.</p>
+<p>You might wonder how you could have been aware of <code>Event.EventData.Data</code>. The Windows XML EventLog format can be found <a href="https://github.com/libyal/libevtx/blob/main/documentation/Windows%20XML%20Event%20Log%20(EVTX).asciidoc">here</a>.</p>
+<p>The command below is leveraging Sysmon's Event ID 7 to detect the loading of clr.dll and mscoree.dll.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; $Query = @&quot;
+	&lt;QueryList&gt;
+		&lt;Query Id=&quot;0&quot;&gt;
+			&lt;Select Path=&quot;Microsoft-Windows-Sysmon/Operational&quot;&gt;*[System[(EventID=7)]] and *[EventData[Data='mscoree.dll']] or *[EventData[Data='clr.dll']]
+			&lt;/Select&gt;
+		&lt;/Query&gt;
+	&lt;/QueryList&gt;
+	&quot;@
+PS C:\Users\Administrator&gt; Get-WinEvent -FilterXml $Query | ForEach-Object {Write-Host $_.Message `n}
+Image loaded:
+RuleName: -
+UtcTime: 2023-06-05 22:23:16.560
+ProcessGuid: {52ff3419-6054-647e-aa02-000000001000}
+ProcessId: 2936
+Image: C:\Tools\GhostPack Compiled Binaries\Seatbelt.exe
+ImageLoaded: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\clr.dll
+FileVersion: 4.8.4515.0 built by: NET48REL1LAST_C
+Description: Microsoft .NET Runtime Common Language Runtime - 	WorkStation
+Product: Microsoft® .NET Framework
+Company: Microsoft Corporation
+OriginalFileName: clr.dll
+Hashes: MD5=2B0E5597FF51A3A4D5BB2DDAB0214531,SHA256=8D09CE35C987EADCF01686BB559920951B0116985FE4FEB5A488A6A8F7C4BDB9,IMPHASH=259C196C67C4E02F941CAD54D9D9BB8A
+Signed: true
+Signature: Microsoft Corporation
+SignatureStatus: Valid
+User: DESKTOP-NU10MTO\Administrator
+
+Image loaded:
+RuleName: -
+UtcTime: 2023-06-05 22:23:16.544
+ProcessGuid: {52ff3419-6054-647e-aa02-000000001000}
+ProcessId: 2936
+Image: C:\Tools\GhostPack Compiled Binaries\Seatbelt.exe
+ImageLoaded: C:\Windows\System32\mscoree.dll
+FileVersion: 10.0.19041.1 (WinBuild.160101.0800)
+Description: Microsoft .NET Runtime Execution Engine
+Product: Microsoft® Windows® Operating System
+Company: Microsoft Corporation
+OriginalFileName: mscoree.dll
+Hashes: MD5=D5971EF71DE1BDD46D537203ABFCC756,SHA256=8828DE042D008783BA5B31C82935A3ED38D5996927C3399B3E1FC6FE723FC84E,IMPHASH=65F23EFA1EB51A5DAAB399BFAA840074
+Signed: true
+Signature: Microsoft Windows
+SignatureStatus: Valid
+User: DESKTOP-NU10MTO\Administrator
+--- SNIP ---
+</code></pre>
+<ol start="6">
+<li>Filtering event with FilterXPath</li>
+</ol>
+<p>To use XPath queries with Get-WinEvent, you need to use the <code>-FilterXPath</code> parameter. This allows you to craft an XPath query to filter the event logs.</p>
+<p>For instance, if you want to get Process Creation events in the Sysmon log to identify installation of any Sysinternals tool you can use the command below.</p>
+<blockquote>
+<p>[!NOTE]
+During the installation of a Sysinternals tool the user must accept the presented EULA. The acceptance action involves the registry key included in the command below.</p>
+</blockquote>
+<pre><code class="language-powershell"> PS C:\Users\Administrator&gt; Get-WinEvent -LogName 'Microsoft-Windows-Sysmon/Operational' -FilterXPath &quot;*[EventData[Data[@Name='Image']='C:\Windows\System32\reg.exe']] and *[EventData[Data[@Name='CommandLine']='`&quot;C:\Windows\system32\reg.exe`&quot; ADD HKCU\Software\Sysinternals /v EulaAccepted /t REG_DWORD /d 1 /f']]&quot; | Select-Object TimeCreated, ID, ProviderName, LevelDisplayName, Message | Format-Table -AutoSize
+
+ TimeCreated           Id ProviderName             LevelDisplayName Message
+-----------           -- ------------             ---------------- -------
+5/29/2023 12:44:46 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+5/29/2023 12:29:53 AM  1 Microsoft-Windows-Sysmon Information      Process Create:...
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+<code>Image</code> and <code>CommandLine</code> can be identified by browsing the XML representation of any Sysmon event with ID 1 through, for example, Event Viewer.</p>
+</blockquote>
+<p><img src="../../../images/windows_event_logs43.png" alt="windows event logs 43" /></p>
+<p>Lastly, suppose you want to investigate any network connections to a particular suspicious IP address that Sysmon has logged. To do that you could use the following command.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -LogName 'Microsoft-Windows-Sysmon/Operational' -FilterXPath &quot;*[System[EventID=3] and EventData[Data[@Name='DestinationIp']='52.113.194.132']]&quot;
+
+ProviderName: Microsoft-Windows-Sysmon
+
+TimeCreated                      Id LevelDisplayName Message
+-----------                      -- ---------------- -------
+5/29/2023 6:30:24 PM              3 Information      Network connection detected:...
+5/29/2023 12:32:05 AM             3 Information      Network connection detected:...
+</code></pre>
+<ol start="7">
+<li>Filtering events based on property values</li>
+</ol>
+<p>The <code>-Property *</code>, when used with <code>Select-Object</code>, instructs the command to select all properties of the objects passed to it. In the context of the Get-WinEvent command, these properties will include all available information about the event. Below an example that will present you with all properties of Sysmon event ID 1 logs.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=1} -MaxEvents 1 | Select-Object -Property *
+
+
+Message            : Process Create:
+                   RuleName: -
+                   UtcTime: 2023-06-03 01:24:25.104
+                   ProcessGuid: {52ff3419-9649-647a-1902-000000001000}
+                   ProcessId: 1036
+                   Image: C:\Windows\System32\taskhostw.exe
+                   FileVersion: 10.0.19041.1806 (WinBuild.160101.0800)
+                   Description: Host Process for Windows Tasks
+                   Product: Microsoft® Windows® Operating System
+                   Company: Microsoft Corporation
+                   OriginalFileName: taskhostw.exe
+                   CommandLine: taskhostw.exe -RegisterDevice -ProtectionStateChanged -FreeNetworkOnly
+                   CurrentDirectory: C:\Windows\system32\
+                   User: NT AUTHORITY\SYSTEM
+                   LogonGuid: {52ff3419-85d0-647a-e703-000000000000}
+                   LogonId: 0x3E7
+                   TerminalSessionId: 0
+                   IntegrityLevel: System
+                   Hashes: MD5=C7B722B96F3969EACAE9FA205FAF7EF0,SHA256=76D3D02B265FA5768294549C938D3D9543CC9FEF6927
+                   4728E0A72E3FCC335366,IMPHASH=3A0C6863CDE566AF997DB2DEFFF9D924
+                   ParentProcessGuid: {00000000-0000-0000-0000-000000000000}
+                   ParentProcessId: 1664
+                   ParentImage: -
+                   ParentCommandLine: -
+                   ParentUser: -
+Id                   : 1
+Version              : 5
+Qualifiers           :
+Level                : 4
+Task                 : 1
+Opcode               : 0
+Keywords             : -9223372036854775808
+RecordId             : 32836
+ProviderName         : Microsoft-Windows-Sysmon
+ProviderId           : 5770385f-c22a-43e0-bf4c-06f5698ffbd9
+LogName              : Microsoft-Windows-Sysmon/Operational
+ProcessId            : 2900
+ThreadId             : 2436
+MachineName          : DESKTOP-NU10MTO
+UserId               : S-1-5-18
+TimeCreated          : 6/2/2023 6:24:25 PM
+ActivityId           :
+RelatedActivityId    :
+ContainerLog         : Microsoft-Windows-Sysmon/Operational
+MatchedQueryIds      : {}
+Bookmark             : 		System.Diagnostics.Eventing.Reader.EventBookmark
+LevelDisplayName     : Information
+OpcodeDisplayName    : Info
+TaskDisplayName      : Process Create (rule: ProcessCreate)
+KeywordsDisplayNames : {}
+Properties           : {System.Diagnostics.Eventing.Reader.EventProperty,
+                   System.Diagnostics.Eventing.Reader.EventProperty,
+                   System.Diagnostics.Eventing.Reader.EventProperty,
+                   System.Diagnostics.Eventing.Reader.EventProperty...}
+</code></pre>
+<p>Now see an example of a command that retrieves <code>Process Create</code> events from the Microsoft-Windows-Sysmon/Operational log, checks the parent command line of each event for the string <code>-enc</code>, and then displays all properties of any matching events as a list.</p>
+<pre><code class="language-powershell">PS C:\Users\Administrator&gt; Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=1} | Where-Object {$_.Properties[21].Value -like &quot;*-enc*&quot;} | Format-List
+
+TimeCreated  : 5/29/2023 12:44:58 AM
+ProviderName : Microsoft-Windows-Sysmon
+Id           : 1
+Message      : Process Create:
+           RuleName: -
+           UtcTime: 2023-05-29 07:44:58.467
+           ProcessGuid: {52ff3419-57fa-6474-7005-000000000c00}
+           ProcessId: 2660
+           Image: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe
+           FileVersion: 4.8.4084.0 built by: NET48REL1
+           Description: Visual C# Command Line Compiler
+           Product: Microsoft® .NET Framework
+           Company: Microsoft Corporation
+           OriginalFileName: csc.exe
+           CommandLine: &quot;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe&quot; /noconfig /fullpaths
+           @&quot;C:\Users\ADMINI~1\AppData\Local\Temp\z5erlc11.cmdline&quot;
+           CurrentDirectory: C:\Users\Administrator\
+           User: DESKTOP-NU10MTO\Administrator
+           LogonGuid: {52ff3419-57f9-6474-8071-510000000000}
+           LogonId: 0x517180
+           TerminalSessionId: 0
+           IntegrityLevel: High
+           Hashes: MD5=F65B029562077B648A6A5F6A1AA76A66,SHA256=4A6D0864E19C0368A47217C129B075DDDF61A6A262388F9D2104
+           5D82F3423ED7,IMPHASH=EE1E569AD02AA1F7AECA80AC0601D80D
+           ParentProcessGuid: {52ff3419-57f9-6474-6e05-000000000c00}
+           ParentProcessId: 5840
+           ParentImage: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+           ParentCommandLine: &quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile
+           -NonInteractive -ExecutionPolicy Unrestricted -EncodedCommand JgBjAGgAYwBwAC4AYwBvAG0AIAA2ADUAMAAwADEAIA
+           A+ACAAJABuAHUAbABsAAoAaQBmACAAKAAkAFAAUwBWAGUAcgBzAGkAbwBuAFQAYQBiAGwAZQAuAFAAUwBWAGUAcgBzAGkAbwBuACAALQ
+           BsAHQAIABbAFYAZQByAHMAaQBvAG4AXQAiADMALgAwACIAKQAgAHsACgAnAHsAIgBmAGEAaQBsAGUAZAAiADoAdAByAHUAZQAsACIAbQ
+           BzAGcAIgA6ACIAQQBuAHMAaQBiAGwAZQAgAHIAZQBxAHUAaQByAGUAcwAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB2ADMALgAwACAAbw
+           ByACAAbgBlAHcAZQByACIAfQAnAAoAZQB4AGkAdAAgADEACgB9AAoAJABlAHgAZQBjAF8AdwByAGEAcABwAGUAcgBfAHMAdAByACAAPQ
+           AgACQAaQBuAHAAdQB0ACAAfAAgAE8AdQB0AC0AUwB0AHIAaQBuAGcACgAkAHMAcABsAGkAdABfAHAAYQByAHQAcwAgAD0AIAAkAGUAeA
+           BlAGMAXwB3AHIAYQBwAHAAZQByAF8AcwB0AHIALgBTAHAAbABpAHQAKABAACgAIgBgADAAYAAwAGAAMABgADAAIgApACwAIAAyACwAIA
+           BbAFMAdAByAGkAbgBnAFMAcABsAGkAdABPAHAAdABpAG8AbgBzAF0AOgA6AFIAZQBtAG8AdgBlAEUAbQBwAHQAeQBFAG4AdAByAGkAZQ
+           BzACkACgBJAGYAIAAoAC0AbgBvAHQAIAAkAHMAcABsAGkAdABfAHAAYQByAHQAcwAuAEwAZQBuAGcAdABoACAALQBlAHEAIAAyACkAIA
+           B7ACAAdABoAHIAbwB3ACAAIgBpAG4AdgBhAGwAaQBkACAAcABhAHkAbABvAGEAZAAiACAAfQAKAFMAZQB0AC0AVgBhAHIAaQBhAGIAbA
+           BlACAALQBOAGEAbQBlACAAagBzAG8AbgBfAHIAYQB3ACAALQBWAGEAbAB1AGUAIAAkAHMAcABsAGkAdABfAHAAYQByAHQAcwBbADEAXQ
+           AKACQAZQB4AGUAYwBfAHcAcgBhAHAAcABlAHIAIAA9ACAAWwBTAGMAcgBpAHAAdABCAGwAbwBjAGsAXQA6ADoAQwByAGUAYQB0AGUAKA
+           AkAHMAcABsAGkAdABfAHAAYQByAHQAcwBbADAAXQApAAoAJgAkAGUAeABlAGMAXwB3AHIAYQBwAHAAZQByAA==
+           ParentUser: DESKTOP-NU10MTO\Administrator
+
+TimeCreated  : 5/29/2023 12:44:57 AM
+ProviderName : Microsoft-Windows-Sysmon
+Id           : 1
+Message      : Process Create:
+           RuleName: -
+           UtcTime: 2023-05-29 07:44:57.919
+           ProcessGuid: {52ff3419-57f9-6474-6f05-000000000c00}
+           ProcessId: 3060
+           Image: C:\Windows\System32\chcp.com
+           FileVersion: 10.0.19041.1806 (WinBuild.160101.0800)
+           Description: Change CodePage Utility
+           Product: Microsoft® Windows® Operating System
+           Company: Microsoft Corporation
+           OriginalFileName: CHCP.COM
+           CommandLine: &quot;C:\Windows\system32\chcp.com&quot; 65001
+           CurrentDirectory: C:\Users\Administrator\
+           User: DESKTOP-NU10MTO\Administrator
+           LogonGuid: {52ff3419-57f9-6474-8071-510000000000}
+           LogonId: 0x517180
+           TerminalSessionId: 0
+           IntegrityLevel: High
+           Hashes: MD5=33395C4732A49065EA72590B14B64F32,SHA256=025622772AFB1486F4F7000B70CC51A20A640474D6E4DBE95A70
+           BEB3FD53AD40,IMPHASH=75FA51C548B19C4AD5051FAB7D57EB56
+           ParentProcessGuid: {52ff3419-57f9-6474-6e05-000000000c00}
+           ParentProcessId: 5840
+           ParentImage: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+           ParentCommandLine: &quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile
+           -NonInteractive -ExecutionPolicy Unrestricted -EncodedCommand JgBjAGgAYwBwAC4AYwBvAG0AIAA2ADUAMAAwADEAIA
+           A+ACAAJABuAHUAbABsAAoAaQBmACAAKAAkAFAAUwBWAGUAcgBzAGkAbwBuAFQAYQBiAGwAZQAuAFAAUwBWAGUAcgBzAGkAbwBuACAALQ
+           BsAHQAIABbAFYAZQByAHMAaQBvAG4AXQAiADMALgAwACIAKQAgAHsACgAnAHsAIgBmAGEAaQBsAGUAZAAiADoAdAByAHUAZQAsACIAbQ
+           BzAGcAIgA6ACIAQQBuAHMAaQBiAGwAZQAgAHIAZQBxAHUAaQByAGUAcwAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB2ADMALgAwACAAbw
+           ByACAAbgBlAHcAZQByACIAfQAnAAoAZQB4AGkAdAAgADEACgB9AAoAJABlAHgAZQBjAF8AdwByAGEAcABwAGUAcgBfAHMAdAByACAAPQ
+           AgACQAaQBuAHAAdQB0ACAAfAAgAE8AdQB0AC0AUwB0AHIAaQBuAGcACgAkAHMAcABsAGkAdABfAHAAYQByAHQAcwAgAD0AIAAkAGUAeA
+           BlAGMAXwB3AHIAYQBwAHAAZQByAF8AcwB0AHIALgBTAHAAbABpAHQAKABAACgAIgBgADAAYAAwAGAAMABgADAAIgApACwAIAAyACwAIA
+           BbAFMAdAByAGkAbgBnAFMAcABsAGkAdABPAHAAdABpAG8AbgBzAF0AOgA6AFIAZQBtAG8AdgBlAEUAbQBwAHQAeQBFAG4AdAByAGkAZQ
+           BzACkACgBJAGYAIAAoAC0AbgBvAHQAIAAkAHMAcABsAGkAdABfAHAAYQByAHQAcwAuAEwAZQBuAGcAdABoACAALQBlAHEAIAAyACkAIA
+           B7ACAAdABoAHIAbwB3ACAAIgBpAG4AdgBhAGwAaQBkACAAcABhAHkAbABvAGEAZAAiACAAfQAKAFMAZQB0AC0AVgBhAHIAaQBhAGIAbA
+           BlACAALQBOAGEAbQBlACAAagBzAG8AbgBfAHIAYQB3ACAALQBWAGEAbAB1AGUAIAAkAHMAcABsAGkAdABfAHAAYQByAHQAcwBbADEAXQ
+           AKACQAZQB4AGUAYwBfAHcAcgBhAHAAcABlAHIAIAA9ACAAWwBTAGMAcgBpAHAAdABCAGwAbwBjAGsAXQA6ADoAQwByAGUAYQB0AGUAKA
+           AkAHMAcABsAGkAdABfAHAAYQByAHQAcwBbADAAXQApAAoAJgAkAGUAeABlAGMAXwB3AHIAYQBwAHAAZQByAA==
+           ParentUser: DESKTOP-NU10MTO\Administrator
+--- SNIP ---
+</code></pre>
+<ul>
+<li><code>| Where-Object {$_.Properties[21].Value -like &quot;*-enc*&quot;}</code>: This portion of the command further filters the retrieved events. The <code>|</code> character passes the output of the previous command to the <code>Where-Object</code> cmdlet. The <code>Where-Object</code> cmdlet filters the output based on the script block that follows it.
+<ul>
+<li><code>$_</code>: In the script block, <code>$_</code> refers to the current object in the pipeline.</li>
+<li><code>.Properties[21].Value</code>: The <code>Properties</code> property of a &quot;Process Create&quot; Sysmon event is an array containing various data about the event. The specific index 21 corresponds to the ParentCommandLine property of the event, which holds the exact command line used to start the process.</li>
+<li><code>-like &quot;*-enc*&quot;</code>: This is a comparison operator that matches strings based on a wildcard string, where <code>*</code> represents any sequence of chars. In this case it's looking for any command lines that contain <code>-enc</code> anywhere within them. The <code>-enc-</code> string might be part of suspicious commands, for example, it's a common parameter in PowerShell commands to denote an encoded command which could be used to obfuscate malicious scripts.</li>
+<li><code>| Format-List</code>: Finally, the output of the previous command is passed to the <code>Format-List</code> cmdlet. This cmdlet displays the properties of the input objects as a list, making it easier to read and analyze.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></li>
+</ul>
+</li>
+</ul>
+<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -635,7 +1264,6 @@ Invoke-PSInject -ProcId [Process ID of spoolsv.exe] -PoshCode "V3JpdGUtSG9zdCAiS
 
         <!-- Custom JS scripts -->
         <script src="../../../theme/pagetoc.js"></script>
-
 
 
     </div>
