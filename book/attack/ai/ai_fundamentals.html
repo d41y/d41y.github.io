@@ -172,7 +172,286 @@
 
                 <div id="content" class="content">
                     <main>
-                        <p>test<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
+                        <h1 id="ai-fundamentals"><a class="header" href="#ai-fundamentals">AI Fundamentals</a></h1>
+<h2 id="intro-to-machine-learning"><a class="header" href="#intro-to-machine-learning">Intro to Machine Learning</a></h2>
+<h3 id="definitions-and-distinctions"><a class="header" href="#definitions-and-distinctions">Definitions and Distinctions</a></h3>
+<p>In CS, the terms &quot;Artificial Intelligence&quot; and &quot;Machine Learning&quot; are often used interchangeably, leading to confusion. While closely related, they represent distinct concepts with specific applications and theoretical underpinnings.</p>
+<p><img src="../../../images/ai_fundamentals1.png" alt="ai fundamentals 1" /></p>
+<h4 id="artificial-intelligence"><a class="header" href="#artificial-intelligence">Artificial Intelligence</a></h4>
+<p><strong>AI</strong> is a broad field focused on developing intelligent systems capable of performing tasks that typically require human intelligence. These tasks include understanding natural language, recognizing objects, making decisions, solving problems, and learning from experience. AI systems exhibit cognitive abilities like reasoning, perception, and problem-solving across various domains. Some key areas of AI include:</p>
+<ul>
+<li><strong>Natural Language Processing (<em>NLP</em>)</strong>: Enabling computers to understand, interpret, and generate human language.</li>
+<li><strong>Computer Vision</strong>: Allowing computers to &quot;see&quot; and interpret images and videos.</li>
+<li><strong>Robotics</strong>: Developing robots that can perform tasks autonomously or with human guidance.</li>
+<li><strong>Expert Systems</strong>: Creating systems that mimic the decision-making abilities of human experts.</li>
+</ul>
+<p>One of the primary goals of AI is to augment human capabilities, not just replace human efforts. AI systems are designed to enhance human decision-making and productivity, providing support in complex data analysis, prediction, and mechanical tasks.</p>
+<h4 id="machine-learning"><a class="header" href="#machine-learning">Machine Learning</a></h4>
+<p><strong>ML</strong> is a subfield of AI that focuses on enabling systems to learn from data and improve their performance on specific tasks without explicit programming. ML algorithms use statistical techniques to identify patterns, trends, and anomalies within datasets, allowing the system to make predictions, decisions, or classifications based on new input data.</p>
+<p>ML can be categorized into three main types:</p>
+<ul>
+<li><strong>Supervised Learning</strong>: The algorithm learnes from labeled data, where each data point is associated with a known outcome or label.
+<ul>
+<li>Image classification</li>
+<li>Spam detection</li>
+<li>Fraud prevention</li>
+</ul>
+</li>
+<li><strong>Unsupervised Learning</strong>: The algorithm learns from unlabeled data without providing an outcome or label.
+<ul>
+<li>Customer segmentation</li>
+<li>Anomaly detection</li>
+<li>Dimensionality reduction</li>
+</ul>
+</li>
+<li><strong>Reinforcement Learning</strong>: The algorithm learns through trial and error by interacting with an environment and receiving feedback as rewards or penalties.
+<ul>
+<li>Game playing</li>
+<li>Robotics</li>
+<li>Autonomous driving</li>
+</ul>
+</li>
+</ul>
+<p>ML is a rapidly evolving field with new algorithms, techniques, and applications emerging. It is a crucial enabler of AI, providing the learning and adaption capabilities that underpin many intelligent systems.</p>
+<h4 id="deep-learning"><a class="header" href="#deep-learning">Deep Learning</a></h4>
+<p><strong>DL</strong> is a subfield of ML that uses neural networks with multiple layers to learn and extract features from complex data. These deep neural networks can automatically identify intricate patterns and representations within large datasets, making them particularly powerful for tasks involving unstructured or high-dimensional data, such as images, audios, and text.</p>
+<p>Key characteristics include:</p>
+<ul>
+<li><strong>Hierarchical Feature Learning</strong>: DL models can learn hierarchical data representations, where each layer captures increasingly abstract features. For example, lower layers might detect edges and textures in image recognition, while higher layers identify more complex structures like shapes and objects.</li>
+<li><strong>End-to-End Learning</strong>: DL models can be trained end-to-end, meaning they can directly map raw input data to desired outputs without manual feature engineering.</li>
+<li><strong>Scalability</strong>: DL models can scale well with large datasets and computational resources, making them suitable for big data applications.</li>
+</ul>
+<p>Common types of neural networks used in DL include:</p>
+<ul>
+<li><strong>Convolutional Neural Networks (<em>CNNs</em>)</strong>: Specialized for image and video data, CNNs use convolutional layers to detect local patterns and spatial hierarchies.</li>
+<li><strong>Recurrent Neural Networks (<em>RNNs</em>)</strong>: Designed for sequential data like text and speech, RNNs have loops that allow information to persist across time steps.</li>
+<li><strong>Transformers</strong>: A recent advancement in DL, transformers are particularly effective for natural language processing tasks. They leverage self-attention mechanisms to handle long-range dependencies.</li>
+</ul>
+<h4 id="the-relationship-between-ai-ml-and-dl"><a class="header" href="#the-relationship-between-ai-ml-and-dl">The Relationship between AI, ML, and DL</a></h4>
+<p>ML and DL are subfields of AI that enable systems to learn from data and make intelligent decisions. They are crucial enablers of AI, providing the learning and adaption capabilities that underpin many intelligent systems.</p>
+<p>ML algorithms, including DL algorithms, allow machines to learn from data, recognize patterns, and make decisions. The various types of ML, such as supervised, unsupervised, and reinforcement learning, each contribute to achieving AI's broader goals. For instance:</p>
+<ul>
+<li>In computer vision, supervised learning algorithms and deep convolutional neural networks enable machines to &quot;see&quot; and interpret images accurately.</li>
+<li>In natural language processing, traditional ML algorithms and advanced DL models like transformers allow for understanding and generating human language, enabling applications like chatbots and translation services.</li>
+</ul>
+<p>DL has significantly enhanced the capabilities of ML by providing powerful tools for feature extraction and representation learning, particularly in domains with complex, unstructured data.</p>
+<p>The synergy between ML, DL, and AI is evident in their collaborative efforts to solve complex problems. For example:</p>
+<ul>
+<li>In autonomous driving, a combination of ML and DL techniques processes sensor data, recognizes objects, and makes real-time decisions, enabling vehicles to navigate safely.</li>
+<li>In robotics, reinforcement learning algorithms, often enhanced with DL, train robots to perform complex tasks in dynamic environments.</li>
+</ul>
+<p>ML and DL fuel AI's ability to learn, adapt, and evolve, driving progress across various domains and enhancing human cababilities. The synergy between these fields is essential for advancing the frontiers of AI and unlocking new levels of innovation and productivity.</p>
+<h3 id="mathematics-refresher"><a class="header" href="#mathematics-refresher">Mathematics Refresher</a></h3>
+<h4 id="basic-arithmetic-operations"><a class="header" href="#basic-arithmetic-operations">Basic Arithmetic Operations</a></h4>
+<h5 id="multiplication"><a class="header" href="#multiplication">Multiplication</a></h5>
+<p>The multiplication operator denotes the product of two numbers or expressions.</p>
+<pre><code class="language-python">3 * 4 = 12
+</code></pre>
+<h5 id="division"><a class="header" href="#division">Division</a></h5>
+<p>The division operator denotes dividing one number or expression by another.</p>
+<pre><code class="language-python">10 / 2 = 5
+</code></pre>
+<h5 id="addition"><a class="header" href="#addition">Addition</a></h5>
+<p>The addition operator represents the sum of two or more numbers or expressions.</p>
+<pre><code class="language-python">5 + 3 = 8
+</code></pre>
+<h5 id="subtraction"><a class="header" href="#subtraction">Subtraction</a></h5>
+<p>The subtraction operator represents the difference between two numbers or expressions.</p>
+<pre><code class="language-python">9 - 4 = 5
+</code></pre>
+<h4 id="algebraic-notations"><a class="header" href="#algebraic-notations">Algebraic Notations</a></h4>
+<h5 id="subscript-notation"><a class="header" href="#subscript-notation">Subscript Notation</a></h5>
+<p>The subscript notation represents a variable indexed by <code>t</code>, often indicating a specific time step or state in a sequence.</p>
+<pre><code class="language-python">x_t = q(x_t | x_{t-2})
+</code></pre>
+<p>This notation is commonly used in sequences and time series data, where each <code>x_t</code> represents the value of <code>x</code> at time <code>t</code>.</p>
+<h5 id="superscript-notation"><a class="header" href="#superscript-notation">Superscript Notation</a></h5>
+<p>Superscript notation is used to denote exponents or powers.</p>
+<pre><code class="language-python">x^2 = x * x
+</code></pre>
+<p>This notation is used in polynomial expressions and exponential functions.</p>
+<h5 id="norm"><a class="header" href="#norm">Norm</a></h5>
+<p>The norm measures the size or length of a vector. The most common norm is the Euclidean norm, which is calculated as follows:</p>
+<pre><code class="language-python">||v|| = sqrt{v_1^2 + v_2^2 + ... + v_n^2}
+</code></pre>
+<p>Other norms include the L1 norm and the L∞ norm.</p>
+<pre><code class="language-python">||v||_1 = |v_1| + |v_2| + ... + |v_n|
+||v||_∞ = max(|v_1|, |v_2|, ..., |v_n|)
+</code></pre>
+<p>Norms are used in various applications, such as measuring the distance between vectors, regularizing models to prevent overfitting, and normalizing data.</p>
+<h5 id="summation-symbol"><a class="header" href="#summation-symbol">Summation Symbol</a></h5>
+<p>The summation symbol indicates the sum of a sequence of terms.</p>
+<pre><code class="language-python">Σ_{i=1}^{n} a_i
+</code></pre>
+<p>This represents the sum of the terms <code>a_1, a_2, ..., a_n</code>. Summation is used in many mathematical formulas, including calculating means, variances, and series.</p>
+<h4 id="logarithms-and-exponentials"><a class="header" href="#logarithms-and-exponentials">Logarithms and Exponentials</a></h4>
+<h5 id="logarithms-base-2"><a class="header" href="#logarithms-base-2">Logarithms Base 2</a></h5>
+<p>The logarithm base 2 is the logarithm of <code>x</code> with base 2, often used in information theory to measure entropy.</p>
+<pre><code class="language-python">log2(8) = 3
+</code></pre>
+<p>Logarithms are used in information theory, cryptography, and algorithms for their properties in reducing large numbers and handling exponential growth.</p>
+<h5 id="natural-logarithm"><a class="header" href="#natural-logarithm">Natural Logarithm</a></h5>
+<p>The natural logarithm is the logarithm of <code>x</code> with base <code>e</code>.</p>
+<pre><code class="language-python">ln(e^2) = 2
+</code></pre>
+<p>Due to its smooth and continous nature, the natural logarithm is widely used in calculus, differential equations, and probability theory.</p>
+<h5 id="exponential-function"><a class="header" href="#exponential-function">Exponential Function</a></h5>
+<p>The exponential function represents Euler's number <code>e</code> raised to the power of <code>x</code>.</p>
+<pre><code class="language-python">e^{2} ≈ 7.389
+</code></pre>
+<p>The exponential function is used to model growth and decay processes, probability distributions, and various mathematical and physical models.</p>
+<h5 id="exponential-function-base-2"><a class="header" href="#exponential-function-base-2">Exponential Function (Base 2)</a></h5>
+<p>The exponential function (base 2) represents 2 raised to the power of <code>x</code>, often used in binary systems and information metrics.</p>
+<pre><code class="language-python">2^3 = 8
+</code></pre>
+<p>This function is used in CS, particularly in binary representations and information theory.</p>
+<h4 id="matrix-and-vector-operations"><a class="header" href="#matrix-and-vector-operations">Matrix and Vector Operations</a></h4>
+<h5 id="matrix-vector-multiplication"><a class="header" href="#matrix-vector-multiplication">Matrix-Vector Multiplication</a></h5>
+<p>Matrix-vector multiplication denotes the product of a matrix <code>A</code> and a vector <code>v</code>.</p>
+<pre><code class="language-python">A * v = [ [1, 2], [3, 4] ] * [5, 6] = [17, 39]
+</code></pre>
+<p>This operation is fundamental in linear algebra and is used in various applications, including transforming vectors, solving systems of linear equations, and in neural networks.</p>
+<h5 id="matrix-matrix-multiplication"><a class="header" href="#matrix-matrix-multiplication">Matrix-Matrix Multiplication</a></h5>
+<p>Matrix-matrix multiplication denotes the product of two matrices <code>A</code> and <code>B</code>.</p>
+<pre><code class="language-python">A * B = [ [1, 2], [3, 4] ] * [ [5, 6], [7, 8] ] = [ [19, 22], [43, 50] ]
+</code></pre>
+<p>This operation is used in linear transformations, solving systems of linear equations, and deep learning for operations between layers.</p>
+<h5 id="transpose"><a class="header" href="#transpose">Transpose</a></h5>
+<p>The transpose of a matrix <code>A</code> is denoted by <code>A^T</code> and swaps the rows and columns of <code>A</code>.</p>
+<pre><code class="language-python">A = [ [1, 2], [3, 4] ]
+A^T = [ [1, 3], [2, 4] ]
+</code></pre>
+<p>The transpose is used in various matrix operations, such as calculating the dot product and preparing data for certain algorithms.</p>
+<h5 id="inverse"><a class="header" href="#inverse">Inverse</a></h5>
+<p>The inverse of a matrix <code>A</code> is denoted by <code>A^{-1}</code> and is the matrix that, when multiplied by <code>A</code>, results in the identity matrix.</p>
+<pre><code class="language-python">A = [ [1, 2], [3, 4] ]
+A^{-1} = [ [-2, 1], [1.5, -0.5] ]
+</code></pre>
+<p>The inverse is used to solve systems of linear equations, inverting transformations, and various optimization problems.</p>
+<h5 id="determinant"><a class="header" href="#determinant">Determinant</a></h5>
+<p>The determinant of a square matrix <code>A</code> is a scalar value that can be computed and is used in various matrix operations.</p>
+<pre><code class="language-python">A = [ [1, 2], [3, 4] ]
+det(A) = 1 * 4 - 2 * 3 = -2
+</code></pre>
+<p>The determinant determines whether a matrix is invertible (<em>non-zero determinant</em>) in calculating volumes, areas, and geometric transformations.</p>
+<h5 id="trace"><a class="header" href="#trace">Trace</a></h5>
+<p>The trace of a square matrix <code>A</code> is the sum of the elements on the main diagonal.</p>
+<pre><code class="language-python">A = [ [1, 2], [3, 4] ]
+tr(A) = 1 + 4 = 5
+</code></pre>
+<p>The trace is used in various matrix properties and in calculcating eigenvalues.</p>
+<h4 id="set-theory"><a class="header" href="#set-theory">Set Theory</a></h4>
+<h5 id="cardinality"><a class="header" href="#cardinality">Cardinality</a></h5>
+<p>The cardinality represents the number of elements in a set <code>S</code>.</p>
+<pre><code class="language-python">S = {1, 2, 3, 4, 5}
+|S| = 5
+</code></pre>
+<p>Cardinality is used in counting elements, probability calculations, and various combinatorial problems.</p>
+<h5 id="union"><a class="header" href="#union">Union</a></h5>
+<p>The union of two sets <code>A</code> and <code>B</code> is the set of all elements in either <code>A</code> or <code>B</code> or both.</p>
+<pre><code class="language-python">A = {1, 2, 3}, B = {3, 4, 5}
+A ∪ B = {1, 2, 3, 4, 5}
+</code></pre>
+<p>The union is used in combining sets, data merging, and in various set operations.</p>
+<h5 id="intersection"><a class="header" href="#intersection">Intersection</a></h5>
+<p>The intersection of two sets <code>A</code> and <code>B</code> is the set of all elements in both <code>A</code> and <code>B</code>.</p>
+<pre><code class="language-python">A = {1, 2, 3}, B = {3, 4, 5}
+A ∩ B = {3}
+</code></pre>
+<p>The intersection finds common elements, data filerting, and various set operations.</p>
+<h5 id="complement"><a class="header" href="#complement">Complement</a></h5>
+<p>The complement of a set <code>A</code> is the set of all elements not in <code>A</code>.</p>
+<pre><code class="language-python">U = {1, 2, 3, 4, 5}, A = {1, 2, 3}
+A^c = {4, 5}
+</code></pre>
+<p>The complement is used in set operations, probability calculations, and various logical operations.</p>
+<h4 id="comparison-operators"><a class="header" href="#comparison-operators">Comparison Operators</a></h4>
+<h5 id="greater-than-or-equal-to"><a class="header" href="#greater-than-or-equal-to">Greater Than or Equal to</a></h5>
+<p>The greater than or equal to operator indicates that the value on the left is either greater than or equal to the value on the riht side.</p>
+<pre><code class="language-python">a &gt;= b
+</code></pre>
+<h5 id="less-than-or-equal-to"><a class="header" href="#less-than-or-equal-to">Less Than or Equal to</a></h5>
+<p>The less than or equal to operator indicates that the value on the left is either less than or equal to the value on the right.</p>
+<pre><code class="language-python">a &lt;= b
+</code></pre>
+<h5 id="equality"><a class="header" href="#equality">Equality</a></h5>
+<p>The equality operator checks if two values are equal.</p>
+<pre><code class="language-python">a == b
+</code></pre>
+<h5 id="inequality"><a class="header" href="#inequality">Inequality</a></h5>
+<p>The inequality operator checks if two values are not equal.</p>
+<pre><code class="language-python">a != b
+</code></pre>
+<h4 id="eigenvalues-and-scalars"><a class="header" href="#eigenvalues-and-scalars">Eigenvalues and Scalars</a></h4>
+<h5 id="lambda"><a class="header" href="#lambda">Lambda</a></h5>
+<p>The lambda symbol often represents an eigenvalue in linear algebra or a scalar parameter in equations.</p>
+<pre><code class="language-python">A * v = λ * v, where λ = 3
+</code></pre>
+<p>Eigenvalues are used to understand the behavior of linear transformations, principal component analysis, and various optimization problems.</p>
+<h5 id="eigenvector"><a class="header" href="#eigenvector">Eigenvector</a></h5>
+<p>An eigenvector is a non-zero vector that, when multiplied by a matrix, results in a scalar multiple of itself. The scalar is the eigenvalue.</p>
+<pre><code class="language-python">A * v = λ * v
+</code></pre>
+<p>Eigenvectors are used to understand the directions of maximum variance in data, dimensionality reduction techniques like PCA, and various machine learning algorithms.</p>
+<h4 id="functions-and-operators"><a class="header" href="#functions-and-operators">Functions and Operators</a></h4>
+<h5 id="maximum-function"><a class="header" href="#maximum-function">Maximum Function</a></h5>
+<p>The maximum function returns the largest value from a set of values.</p>
+<pre><code class="language-python">max(4, 7, 2) = 7
+</code></pre>
+<p>The maximum function is used in optimization, finding the best solution, and in various decision-making processes.</p>
+<h5 id="minimum-function"><a class="header" href="#minimum-function">Minimum Function</a></h5>
+<p>The minimum function returns the smallest value from a set of values.</p>
+<pre><code class="language-python">min(4, 7, 2) = 2
+</code></pre>
+<p>The minimum function is used in optimization, finding the best solution, and in various decision-making processes.</p>
+<h5 id="reciprocal"><a class="header" href="#reciprocal">Reciprocal</a></h5>
+<p>The reciprocal represents one divided by an expression, effectively inverting the value.</p>
+<pre><code class="language-python">1 / x where x = 5 results in 0.2
+</code></pre>
+<p>The reciprocal is used in various mathematical operations, such as calculating rates and proportions.</p>
+<h5 id="ellipsis"><a class="header" href="#ellipsis">Ellipsis</a></h5>
+<p>The ellipsis indicates the continuation of a pattern or sequence, often used to denote an indefinte or ongoing process.</p>
+<pre><code class="language-python">a_1 + a_2 + ... + a_n
+</code></pre>
+<p>The ellipsis is used in mathematical notation to represent sequences and series.</p>
+<h4 id="functions-and-probability"><a class="header" href="#functions-and-probability">Functions and Probability</a></h4>
+<h5 id="function-notation"><a class="header" href="#function-notation">Function Notation</a></h5>
+<p>Function notation represents a function <code>f</code> applied to an input <code>x</code>.</p>
+<pre><code class="language-python">f(x) = x^2 + 2x + 1
+</code></pre>
+<p>Function notation is used in defining mathematical relationships, modelling real-world phenomena, and in various algorithms.</p>
+<h5 id="conditional-probability-distribution"><a class="header" href="#conditional-probability-distribution">Conditional Probability Distribution</a></h5>
+<p>The conditional probability distribution denotes the probability distributions of <code>x</code> given <code>y</code>.</p>
+<pre><code class="language-python">P(Output | Input)
+</code></pre>
+<p>Conditional probabilities are used in Bayesian inference, decision-making under uncertainty, and various probabilistic models.</p>
+<h5 id="expectation-operator"><a class="header" href="#expectation-operator">Expectation Operator</a></h5>
+<p>The expectation operator represents a random variable's expected value or average over its probability distribution.</p>
+<pre><code class="language-python">E[X] = sum x_i P(x_i)
+</code></pre>
+<p>This expectation is used in calculating the mean, decision-making under uncertainty, and various statistical models.</p>
+<h5 id="variance"><a class="header" href="#variance">Variance</a></h5>
+<p>Variance measures the spread of a random variable <code>X</code> around its mean.</p>
+<pre><code class="language-python">Var(X) = E[(X - E[X])^2]
+</code></pre>
+<p>The variance is used to understand the dispersion of data, assess risk, and use various statistical models.</p>
+<h5 id="standard-deviation"><a class="header" href="#standard-deviation">Standard Deviation</a></h5>
+<p>Standard deviation is the square root of the variance and provides a measure of the dispersion of a random variable.</p>
+<pre><code class="language-python">σ(X) = sqrt(Var(X))
+</code></pre>
+<p>Standard deviation is used to understand the spread of data, assess risk, and use various statistical models.</p>
+<h5 id="covariance"><a class="header" href="#covariance">Covariance</a></h5>
+<p>Covariance measues how two random variables <code>X</code> and <code>Y</code> vary.</p>
+<pre><code class="language-python">Cov(X, Y) = E[(X - E[X])(Y - E[Y])]
+</code></pre>
+<p>Covariance is used to understand the relationship between two variables, portfolio optimization, and various statistical models.</p>
+<h5 id="correlation"><a class="header" href="#correlation">Correlation</a></h5>
+<p>The correlation is a normalized measure, ranging from -1 to 1. It indicates the strength and direction of the linear relationship between two random variables.</p>
+<pre><code class="language-python">ρ(X, Y) = Cov(X, Y) / (σ(X) * σ(Y))
+</code></pre>
+<p>Correlation is used to understand the linear relationship between two variables in data analysis and in various statistical models.</p>
+<h2 id="supervised-learning-algorithms"><a class="header" href="#supervised-learning-algorithms">Supervised Learning Algorithms</a></h2>
+<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} -->
 <div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
 <style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
