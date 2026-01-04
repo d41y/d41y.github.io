@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item expanded "><a href="../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item expanded "><a href="../../attack/initial_access/footprinting.html" class="active"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item "><a href="../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,487 +172,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#footprinting">Footprinting</a>
-<ul>
-<li><a href="#methodology">Methodology</a>
-<ul>
-<li><a href="#layers">Layers</a>
-<ul>
-<li><a href="#1---internet-presence">1 - Internet Presence</a></li>
-<li><a href="#2---gateway">2 - Gateway</a></li>
-<li><a href="#3---accessible-services">3 - Accessible Services</a></li>
-<li><a href="#4---processes">4 - Processes</a></li>
-<li><a href="#5---privileges">5 - Privileges</a></li>
-<li><a href="#6---os-setup">6 - OS Setup</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#infrastructure-based-enumeration">Infrastructure-Based Enumeration</a>
-<ul>
-<li><a href="#domain-information">Domain Information</a>
-<ul>
-<li><a href="#certificate-transparency">Certificate Transparency</a></li>
-<li><a href="#company-hosted-servers">Company Hosted Servers</a></li>
-<li><a href="#shodan---ip-list">Shodan - IP List</a></li>
-<li><a href="#dns-records">DNS Records</a></li>
-</ul>
-</li>
-<li><a href="#cloud-resources">Cloud Resources</a>
-<ul>
-<li><a href="#company-hosted-servers-1">Company Hosted Servers</a>
-<ul>
-<li><a href="#google-search-for-aws">Google Search for AWS</a></li>
-<li><a href="#google-search-for-azure">Google Search for Azure</a></li>
-</ul>
-</li>
-<li><a href="#domainglass">Domain.Glass</a></li>
-<li><a href="#grayhatwarfare">GrayHatWarfare</a></li>
-</ul>
-</li>
-<li><a href="#staff">Staff</a>
-<ul>
-<li><a href="#job-post">Job Post</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#host-based-enumeration">Host-Based Enumeration</a>
-<ul>
-<li><a href="#file-transfer-protocol-ftp">File Transfer Protocol (<em>FTP</em>)</a>
-<ul>
-<li><a href="#intro">Intro</a></li>
-<li><a href="#trivial-file-transfer-protocl-tftp">Trivial File Transfer Protocl (<em>TFTP</em>)</a></li>
-<li><a href="#enum">Enum</a>
-<ul>
-<li><a href="#nmap">Nmap</a></li>
-<li><a href="#nmap-ftp-scripts">Nmap FTP Scripts</a></li>
-<li><a href="#nmap-script-trace">Nmap Script Trace</a></li>
-<li><a href="#service-interaction">Service Interaction</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#server-message-block-smb">Server Message Block (<em>SMB</em>)</a>
-<ul>
-<li><a href="#intro-1">Intro</a></li>
-<li><a href="#samba">Samba</a></li>
-<li><a href="#enum-1">Enum</a>
-<ul>
-<li><a href="#nmap-1">Nmap</a></li>
-<li><a href="#rpc">RPC</a></li>
-<li><a href="#rpcclient">RPCclient</a></li>
-<li><a href="#impacket">Impacket</a></li>
-<li><a href="#smbmap">SMBmap</a></li>
-<li><a href="#crackmapexec">CrackMapExec</a></li>
-<li><a href="#enum4linux-ng">Enum4Linux-ng</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#network-file-system-nfs">Network File System (<em>NFS</em>)</a>
-<ul>
-<li><a href="#intro-2">Intro</a></li>
-<li><a href="#enum-2">Enum</a>
-<ul>
-<li><a href="#nmap-2">Nmap</a></li>
-<li><a href="#show-shares-mounting-list-content-unmounting">Show Shares, Mounting, List Content, Unmounting</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#domain-name-system-dns">Domain Name System (<em>DNS</em>)</a>
-<ul>
-<li><a href="#intro-3">Intro</a></li>
-<li><a href="#enum-3">Enum</a>
-<ul>
-<li><a href="#dig---ns">dig - ns</a></li>
-<li><a href="#dig---version">dig - version</a></li>
-<li><a href="#dig---any">dig - any</a></li>
-<li><a href="#dig---zone-transfer">dig - zone transfer</a></li>
-<li><a href="#subdomain-brute-forcing">Subdomain Brute Forcing</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#simple-mail-transfer-protocol-smtp">Simple Mail Transfer Protocol (<em>SMTP</em>)</a>
-<ul>
-<li><a href="#intro-4">Intro</a></li>
-<li><a href="#enum-4">Enum</a>
-<ul>
-<li><a href="#nmap-3">Nmap</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#internet-message-access-protocol-imap--post-office-protocol-pop3">Internet Message Access Protocol (<em>IMAP</em>) / Post Office Protocol (<em>POP3</em>)</a>
-<ul>
-<li><a href="#intro-5">Intro</a></li>
-<li><a href="#enum-5">Enum</a>
-<ul>
-<li><a href="#nmap-4">Nmap</a></li>
-<li><a href="#curl">cURL</a></li>
-<li><a href="#openssl---tls-encrypted-interaction-pop3">OpenSSl - TLS Encrypted Interaction POP3</a></li>
-<li><a href="#openssl---tls-encrypted-interaction-imap">OpenSSl - TLS Encrypted Interaction IMAP</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#simple-network-management-protocol-snmp">Simple Network Management Protocol (<em>SNMP</em>)</a>
-<ul>
-<li><a href="#intro-6">Intro</a></li>
-<li><a href="#enum-6">Enum</a>
-<ul>
-<li><a href="#snmpwalk">SNMPwalk</a></li>
-<li><a href="#onesixtyone">OneSixtyOne</a></li>
-<li><a href="#braa">Braa</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#mysql">MySQL</a>
-<ul>
-<li><a href="#intro-7">Intro</a></li>
-<li><a href="#enum-7">Enum</a>
-<ul>
-<li><a href="#nmap-5">Nmap</a></li>
-<li><a href="#interacting-with-the-mysql-server">Interacting with the MySQL Server</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#mssql">MSSQL</a>
-<ul>
-<li><a href="#intro-8">Intro</a></li>
-<li><a href="#enum-8">Enum</a>
-<ul>
-<li><a href="#nmap-6">Nmap</a></li>
-<li><a href="#metasploit">Metasploit</a></li>
-<li><a href="#interacting-with-mssqlclientpy">Interacting with mssqlclient.py</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#oracle-transparent-network-substrate-tns">Oracle Transparent Network Substrate (<em>TNS</em>)</a>
-<ul>
-<li><a href="#intro-9">Intro</a></li>
-<li><a href="#enum-9">Enum</a>
-<ul>
-<li><a href="#nmap-7">Nmap</a></li>
-<li><a href="#nmap---sid-bruteforcing">Nmap - SID Bruteforcing</a></li>
-<li><a href="#oracle-database-attacking-tool-odat">Oracle Database Attacking Tool (<em>ODAT</em>)</a></li>
-<li><a href="#sqlplus">SQLplus</a></li>
-<li><a href="#interacting-with-oracle-rdbms">Interacting with Oracle RDBMS</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#intelligent-platform-management-interface-ipmi">Intelligent Platform Management Interface (<em>IPMI</em>)</a>
-<ul>
-<li><a href="#intro-10">Intro</a></li>
-<li><a href="#enum-10">Enum</a>
-<ul>
-<li><a href="#nmap-8">Nmap</a></li>
-<li><a href="#metasploit-1">Metasploit</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#secure-shell-ssh">Secure Shell (<em>SSH</em>)</a>
-<ul>
-<li><a href="#intro-11">Intro</a></li>
-<li><a href="#enum-11">Enum</a>
-<ul>
-<li><a href="#ssh-audit">SSH-Audit</a></li>
-<li><a href="#change-authentication-method">Change Authentication Method</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#rsync">Rsync</a>
-<ul>
-<li><a href="#intro-12">Intro</a></li>
-<li><a href="#enum-12">Enum</a></li>
-</ul>
-</li>
-<li><a href="#r-services">R-Services</a>
-<ul>
-<li><a href="#intro-13">Intro</a></li>
-<li><a href="#enum-13">Enum</a>
-<ul>
-<li><a href="#nmap-9">Nmap</a></li>
-<li><a href="#interacting-with-r-commands">Interacting with R-Commands</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#remote-desktop-protocol-rdp">Remote Desktop Protocol (<em>RDP</em>)</a>
-<ul>
-<li><a href="#intro-14">Intro</a></li>
-<li><a href="#enum-14">Enum</a>
-<ul>
-<li><a href="#nmap-10">Nmap</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#windows-remote-management-winrm">Windows Remote Management (<em>WinRM</em>)</a>
-<ul>
-<li><a href="#intro-15">Intro</a></li>
-<li><a href="#enum-15">Enum</a></li>
-</ul>
-</li>
-<li><a href="#windows-management-instrumentation-wmi">Windows Management Instrumentation (<em>WMI</em>)</a>
-<ul>
-<li><a href="#intro-16">Intro</a></li>
-<li><a href="#enum-16">Enum</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="footprinting"><a class="header" href="#footprinting">Footprinting</a></h1>
+                        <h1 id="footprinting"><a class="header" href="#footprinting">Footprinting</a></h1>
 <h2 id="methodology"><a class="header" href="#methodology">Methodology</a></h2>
 <p>The whole enumeration process can be divided into three different levels:</p>
 <ul>
@@ -707,42 +225,42 @@
 
 [
   {
-    "issuer_ca_id": 23451835427,
-    "issuer_name": "C=US, O=Let's Encrypt, CN=R3",
-    "common_name": "matomo.inlanefreight.com",
-    "name_value": "matomo.inlanefreight.com",
-    "id": 50815783237226155,
-    "entry_timestamp": "2021-08-21T06:00:17.173",
-    "not_before": "2021-08-21T05:00:16",
-    "not_after": "2021-11-19T05:00:15",
-    "serial_number": "03abe9017d6de5eda90"
+    &quot;issuer_ca_id&quot;: 23451835427,
+    &quot;issuer_name&quot;: &quot;C=US, O=Let's Encrypt, CN=R3&quot;,
+    &quot;common_name&quot;: &quot;matomo.inlanefreight.com&quot;,
+    &quot;name_value&quot;: &quot;matomo.inlanefreight.com&quot;,
+    &quot;id&quot;: 50815783237226155,
+    &quot;entry_timestamp&quot;: &quot;2021-08-21T06:00:17.173&quot;,
+    &quot;not_before&quot;: &quot;2021-08-21T05:00:16&quot;,
+    &quot;not_after&quot;: &quot;2021-11-19T05:00:15&quot;,
+    &quot;serial_number&quot;: &quot;03abe9017d6de5eda90&quot;
   },
   {
-    "issuer_ca_id": 6864563267,
-    "issuer_name": "C=US, O=Let's Encrypt, CN=R3",
-    "common_name": "matomo.inlanefreight.com",
-    "name_value": "matomo.inlanefreight.com",
-    "id": 5081529377,
-    "entry_timestamp": "2021-08-21T06:00:16.932",
-    "not_before": "2021-08-21T05:00:16",
-    "not_after": "2021-11-19T05:00:15",
-    "serial_number": "03abe90104e271c98a90"
+    &quot;issuer_ca_id&quot;: 6864563267,
+    &quot;issuer_name&quot;: &quot;C=US, O=Let's Encrypt, CN=R3&quot;,
+    &quot;common_name&quot;: &quot;matomo.inlanefreight.com&quot;,
+    &quot;name_value&quot;: &quot;matomo.inlanefreight.com&quot;,
+    &quot;id&quot;: 5081529377,
+    &quot;entry_timestamp&quot;: &quot;2021-08-21T06:00:16.932&quot;,
+    &quot;not_before&quot;: &quot;2021-08-21T05:00:16&quot;,
+    &quot;not_after&quot;: &quot;2021-11-19T05:00:15&quot;,
+    &quot;serial_number&quot;: &quot;03abe90104e271c98a90&quot;
   },
   {
-    "issuer_ca_id": 113123452,
-    "issuer_name": "C=US, O=Let's Encrypt, CN=R3",
-    "common_name": "smartfactory.inlanefreight.com",
-    "name_value": "smartfactory.inlanefreight.com",
-    "id": 4941235512141012357,
-    "entry_timestamp": "2021-07-27T00:32:48.071",
-    "not_before": "2021-07-26T23:32:47",
-    "not_after": "2021-10-24T23:32:45",
-    "serial_number": "044bac5fcc4d59329ecbbe9043dd9d5d0878"
+    &quot;issuer_ca_id&quot;: 113123452,
+    &quot;issuer_name&quot;: &quot;C=US, O=Let's Encrypt, CN=R3&quot;,
+    &quot;common_name&quot;: &quot;smartfactory.inlanefreight.com&quot;,
+    &quot;name_value&quot;: &quot;smartfactory.inlanefreight.com&quot;,
+    &quot;id&quot;: 4941235512141012357,
+    &quot;entry_timestamp&quot;: &quot;2021-07-27T00:32:48.071&quot;,
+    &quot;not_before&quot;: &quot;2021-07-26T23:32:47&quot;,
+    &quot;not_after&quot;: &quot;2021-10-24T23:32:45&quot;,
+    &quot;serial_number&quot;: &quot;044bac5fcc4d59329ecbbe9043dd9d5d0878&quot;
   },
   { ... SNIP ...
 </code></pre>
 <p>If needed, you can also have them filtered by the unique subdomains:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ curl -s https://crt.sh/\?q\=inlanefreight.com\&amp;output\=json | jq . | grep name | cut -d":" -f2 | grep -v "CN=" | cut -d'"' -f2 | awk '{gsub(/\\n/,"\n");}1;' | sort -u
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -s https://crt.sh/\?q\=inlanefreight.com\&amp;output\=json | jq . | grep name | cut -d&quot;:&quot; -f2 | grep -v &quot;CN=&quot; | cut -d'&quot;' -f2 | awk '{gsub(/\\n/,&quot;\n&quot;);}1;' | sort -u
 
 account.ttn.inlanefreight.com
 blog.inlanefreight.com
@@ -769,7 +287,7 @@ www.inlanefreight.com
 </code></pre>
 <p>Next, you can identify the hosts directly accessible from the internet and not hosted by third-party providers. This is because you are not allowed to test the hosts without the permission of third-party providers.</p>
 <h4 id="company-hosted-servers"><a class="header" href="#company-hosted-servers">Company Hosted Servers</a></h4>
-<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f1,4;done
+<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep &quot;has address&quot; | grep inlanefreight.com | cut -d&quot; &quot; -f1,4;done
 
 blog.inlanefreight.com 10.129.24.93
 inlanefreight.com 10.129.27.33
@@ -779,7 +297,7 @@ s3-website-us-west-2.amazonaws.com 10.129.95.250
 </code></pre>
 <p>Once you see which hosts can be investigated further, you can generate a list of IP addresses and run them through Shodan.</p>
 <h4 id="shodan---ip-list"><a class="header" href="#shodan---ip-list">Shodan - IP List</a></h4>
-<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f4 &gt;&gt; ip-addresses.txt;done
+<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep &quot;has address&quot; | grep inlanefreight.com | cut -d&quot; &quot; -f4 &gt;&gt; ip-addresses.txt;done
 d41y@htb[/htb]$ for i in $(cat ip-addresses.txt);do shodan host $i;done
 
 10.129.24.93
@@ -876,13 +394,13 @@ inlanefreight.com.      3600    IN      MX      5 alt2.aspmx.l.google.com.
 inlanefreight.com.      21600   IN      NS      ns.inwx.net.
 inlanefreight.com.      21600   IN      NS      ns2.inwx.net.
 inlanefreight.com.      21600   IN      NS      ns3.inwx.eu.
-inlanefreight.com.      3600    IN      TXT     "MS=ms92346782372"
-inlanefreight.com.      21600   IN      TXT     "atlassian-domain-verification=IJdXMt1rKCy68JFszSdCKVpwPN"
-inlanefreight.com.      3600    IN      TXT     "google-site-verification=O7zV5-xFh_jn7JQ31"
-inlanefreight.com.      300     IN      TXT     "google-site-verification=bow47-er9LdgoUeah"
-inlanefreight.com.      3600    IN      TXT     "google-site-verification=gZsCG-BINLopf4hr2"
-inlanefreight.com.      3600    IN      TXT     "logmein-verification-code=87123gff5a479e-61d4325gddkbvc1-b2bnfghfsed1-3c789427sdjirew63fc"
-inlanefreight.com.      300     IN      TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.24.8 ip4:10.129.27.2 ip4:10.72.82.106 ~all"
+inlanefreight.com.      3600    IN      TXT     &quot;MS=ms92346782372&quot;
+inlanefreight.com.      21600   IN      TXT     &quot;atlassian-domain-verification=IJdXMt1rKCy68JFszSdCKVpwPN&quot;
+inlanefreight.com.      3600    IN      TXT     &quot;google-site-verification=O7zV5-xFh_jn7JQ31&quot;
+inlanefreight.com.      300     IN      TXT     &quot;google-site-verification=bow47-er9LdgoUeah&quot;
+inlanefreight.com.      3600    IN      TXT     &quot;google-site-verification=gZsCG-BINLopf4hr2&quot;
+inlanefreight.com.      3600    IN      TXT     &quot;logmein-verification-code=87123gff5a479e-61d4325gddkbvc1-b2bnfghfsed1-3c789427sdjirew63fc&quot;
+inlanefreight.com.      300     IN      TXT     &quot;v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.24.8 ip4:10.129.27.2 ip4:10.72.82.106 ~all&quot;
 inlanefreight.com.      21600   IN      SOA     ns.inwx.net. hostmaster.inwx.net. 2021072600 10800 3600 604800 3600
 
 ;; Query time: 332 msec
@@ -890,18 +408,15 @@ inlanefreight.com.      21600   IN      SOA     ns.inwx.net. hostmaster.inwx.net
 ;; WHEN: Mi Sep 01 18:27:22 CEST 2021
 ;; MSG SIZE  rcvd: 940
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p>Always have a look at the complete result of your <code>dig</code>. For example, They txt records from the above snippet helps further enumerating the company, including services used.</p>
-</div>
+<blockquote>
+<p>[!TIP]
+Always have a look at the complete result of your <code>dig</code>. For example, They txt records from the above snippet helps further enumerating the company, including services used.</p>
+</blockquote>
 <h3 id="cloud-resources"><a class="header" href="#cloud-resources">Cloud Resources</a></h3>
 <p>The use of cloud is now one of the essential components for many companies nowadays.</p>
 <p>Even though cloud providers secure their infrastructure centrall, this does not mean that companies are free from vulnerabilities. The configurations made by the administrators may nevertheless make the company's cloud resources vulnerable. This often starts with the S3 buckets (<em>AWS</em>), blobs (<em>Azure</em>), cloud storage (<em>GCP</em>), which can be accessed without authentication if configured incorrectly.</p>
 <h4 id="company-hosted-servers-1"><a class="header" href="#company-hosted-servers-1">Company Hosted Servers</a></h4>
-<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f1,4;done
+<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep &quot;has address&quot; | grep inlanefreight.com | cut -d&quot; &quot; -f1,4;done
 
 blog.inlanefreight.com 10.129.24.93
 inlanefreight.com 10.129.27.33
@@ -916,7 +431,7 @@ s3-website-us-west-2.amazonaws.com 10.129.95.250
 <h5 id="google-search-for-azure"><a class="header" href="#google-search-for-azure">Google Search for Azure</a></h5>
 <p><img src="../../images/footprinting_4.png" alt="footprinting 4" /></p>
 <h4 id="domainglass"><a class="header" href="#domainglass">Domain.Glass</a></h4>
-<p>Third-party providers such as <a href="https://domain.glass/">https://domain.glass/</a> can also tell you a lot about the company's infrastructure. As a positive side effect, you can also see that Cloudflare's security assessment status has been classified as "Safe". This means you have already found a security measure that can be noted for the second layer.</p>
+<p>Third-party providers such as <a href="https://domain.glass/">https://domain.glass/</a> can also tell you a lot about the company's infrastructure. As a positive side effect, you can also see that Cloudflare's security assessment status has been classified as &quot;Safe&quot;. This means you have already found a security measure that can be noted for the second layer.</p>
 <p><img src="../../images/footprinting_5.png" alt="footprinting 5" /></p>
 <h4 id="grayhatwarfare"><a class="header" href="#grayhatwarfare">GrayHatWarfare</a></h4>
 <p>Another very useful provider is <a href="https://buckets.grayhatwarfare.com/">GrayHatWarfare</a>. You can do many different searches, discover AWS, Azure, and GCP cloud storage, and even sort and filter by file format. Therefore, once you have found them through Google, you can also search for them on GrayHatWarfare and passively discover what files are stored on the given cloud storage.</p>
@@ -1086,13 +601,10 @@ MIIENTCCAx2gAwIBAgIUD+SlFZAWzX5yLs2q3ZcfdsRQqMYwDQYJKoZIhvcNAQEL
 <p>However, CIFS is considered a specific version of SMB protocol, primarily aligning with SMB version 1. When SMB commands are transmitted over Samba to an older NetBIOS service, connections typically occur over TCP ports 137, 138, and 139. In contrast, CIFS operates over TCP port 445 exclusively. There are several versions of SMB, including newer versions like SMB 2, and SMB 3, which offer improvements and are preffered in modern infrastructures, while oder versions like SMB 1 are considered outdated but may still be used in specific environments.</p>
 <p>With version 3, the Samba server gained the ability to be a full member of an AD. With version 4, Samba even provides an AD DC. It contains several so-called daemons for this purpose - which are Unix background programs. The SMB server daemon (<em>smbd</em>) belonging to Samba provides the first two functionalities, while the NetBIOS message block daemon (<em>nmbd</em>) implements the last two functionalities. The SMB service controls these two background programs.</p>
 <p>You know that Samba is suitable for both Linux and Windows systems. In a network, each host participates in the same workgroup. A workgroup is a group name that identifies an arbitrary collection of computers and their resources on an SMB network. There can be multiple workgroups on the network at any given time. IBM developed an application programming interface (<em>API</em>) for networking computers called the Network Basic Input/Ouput System (<em>NetBIOS</em>). The NetBIOS API provided a blueprint for an application to connect and share data with other computers. In a NetBIOS environment, when a machine goes online, it needs a name, which is done through the so-called name registration procedure. Either each host reserves its hostname on the network, or the NetBIOS Name Server (<em>NBNS</em>) is used for this purpose. It has also been enhanced to Windows Internet Name Service (<em>WINS</em>).</p>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p><code>smbclient</code> allows to execute local system commands using an exclamation mark at the beginning (<code>!&lt;cmd&gt;</code>) without interrupting the connection.</p>
-</div>
+<blockquote>
+<p>[!TIP]
+<code>smbclient</code> allows to execute local system commands using an exclamation mark at the beginning (<code>!&lt;cmd&gt;</code>) without interrupting the connection.</p>
+</blockquote>
 <h4 id="enum-1"><a class="header" href="#enum-1">Enum</a></h4>
 <h5 id="nmap-1"><a class="header" href="#nmap-1">Nmap</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo nmap 10.129.14.128 -sV -sC -p139,445
@@ -1121,7 +633,7 @@ Nmap done: 1 IP address (1 host up) scanned in 11.35 seconds
 <p>You can see from the results that it is not very much that Nmap provided you with. Therefore, you should resort to other tools that allow you to interact manually with the SMB and send specific requests for the information.</p>
 <h5 id="rpc"><a class="header" href="#rpc">RPC</a></h5>
 <p>The Remote Procedure Call (<em>RPC</em>) is a concept and, therefore, also a central tool to realize operational and work-sharing structures in networks and client-server architectures. The communication process via RPC includes passing parameters and the return of a function value.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ rpcclient -U "" 10.129.14.128
+<pre><code class="language-bash">d41y@htb[/htb]$ rpcclient -U &quot;&quot; 10.129.14.128
 
 Enter WORKGROUP\'s password:
 rpcclient $&gt; 
@@ -1287,7 +799,7 @@ rpcclient $&gt; queryuser 0x3e8
         Num Members:2
 </code></pre>
 <p>However, it can also happen that not all commands are available to you, and you have certain restrictions based on the user. However, the query <code>queryuser &lt;RID&gt;</code> is mostly allowed based on the RID. So you can use the rpcclient to brute force the RIDs to get information. Because you may not know who has been assigned which RID, you know that you will get information about it as soon as you query an assigned RID. There are several ways and tools you can use for this.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(seq 500 1100);do rpcclient -N -U "" 10.129.14.128 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" &amp;&amp; echo "";done
+<pre><code class="language-bash">d41y@htb[/htb]$ for i in $(seq 500 1100);do rpcclient -N -U &quot;&quot; 10.129.14.128 -c &quot;queryuser 0x$(printf '%x\n' $i)&quot; | grep &quot;User Name\|user_rid\|group_rid&quot; &amp;&amp; echo &quot;&quot;;done
 
         User Name   :   sambauser
         user_rid :      0x1f5
@@ -1699,13 +1211,10 @@ total 16
 -rw-r--r-- 1    0    0  348 Sep 19 17:28 id_rsa.pub
 -rw-r--r-- 1    0    0    0 Sep 19 17:22 nfs.share
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>If the <code>root_squash</code> option is set, you cannot edit the <code>backup.sh</code> file even as root.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+If the <code>root_squash</code> option is set, you cannot edit the <code>backup.sh</code> file even as root.</p>
+</blockquote>
 <p>You can also use NFS for further escalation. For example, if you have access to the system via SSH and want to read files from another folder that a specific user can read, you would need to upload a shell to the NFS share that has the SUID of that user and then run the shell via the SSH user.</p>
 <p>Unmounting:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ cd ..
@@ -1764,10 +1273,10 @@ ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 ;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
 ;; ANSWER SECTION:
-version.bind.       0       CH      TXT     "9.10.6-P1"
+version.bind.       0       CH      TXT     &quot;9.10.6-P1&quot;
 
 ;; ADDITIONAL SECTION:
-version.bind.       0       CH      TXT     "9.10.6-P1-Debian"
+version.bind.       0       CH      TXT     &quot;9.10.6-P1-Debian&quot;
 
 ;; Query time: 2 msec
 ;; SERVER: 10.129.120.85#53(10.129.120.85)
@@ -1791,9 +1300,9 @@ version.bind.       0       CH      TXT     "9.10.6-P1-Debian"
 ;inlanefreight.htb.             IN      ANY
 
 ;; ANSWER SECTION:
-inlanefreight.htb.      604800  IN      TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
-inlanefreight.htb.      604800  IN      TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
-inlanefreight.htb.      604800  IN      TXT     "MS=ms97310371"
+inlanefreight.htb.      604800  IN      TXT     &quot;v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all&quot;
+inlanefreight.htb.      604800  IN      TXT     &quot;atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU&quot;
+inlanefreight.htb.      604800  IN      TXT     &quot;MS=ms97310371&quot;
 inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
 inlanefreight.htb.      604800  IN      NS      ns.inlanefreight.htb.
 
@@ -1814,9 +1323,9 @@ ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 ; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; axfr inlanefreight.htb @10.129.14.128
 ;; global options: +cmd
 inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
-inlanefreight.htb.      604800  IN      TXT     "MS=ms97310371"
-inlanefreight.htb.      604800  IN      TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
-inlanefreight.htb.      604800  IN      TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
+inlanefreight.htb.      604800  IN      TXT     &quot;MS=ms97310371&quot;
+inlanefreight.htb.      604800  IN      TXT     &quot;atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU&quot;
+inlanefreight.htb.      604800  IN      TXT     &quot;v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all&quot;
 inlanefreight.htb.      604800  IN      NS      ns.inlanefreight.htb.
 app.inlanefreight.htb.  604800  IN      A       10.129.18.15
 internal.inlanefreight.htb. 604800 IN   A       10.129.1.6
@@ -1834,9 +1343,9 @@ inlanefreight.htb.      604800  IN      SOA     inlanefreight.htb. root.inlanefr
 ; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; axfr internal.inlanefreight.htb @10.129.14.128
 ;; global options: +cmd
 internal.inlanefreight.htb. 604800 IN   SOA     inlanefreight.htb. root.inlanefreight.htb. 2 604800 86400 2419200 604800
-internal.inlanefreight.htb. 604800 IN   TXT     "MS=ms97310371"
-internal.inlanefreight.htb. 604800 IN   TXT     "atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU"
-internal.inlanefreight.htb. 604800 IN   TXT     "v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all"
+internal.inlanefreight.htb. 604800 IN   TXT     &quot;MS=ms97310371&quot;
+internal.inlanefreight.htb. 604800 IN   TXT     &quot;atlassian-domain-verification=t1rKCy68JFszSdCKVpw64A1QksWdXuYFUeSXKU&quot;
+internal.inlanefreight.htb. 604800 IN   TXT     &quot;v=spf1 include:mailgun.org include:_spf.google.com include:spf.protection.outlook.com include:_spf.atlassian.net ip4:10.129.124.8 ip4:10.129.127.2 ip4:10.129.42.106 ~all&quot;
 internal.inlanefreight.htb. 604800 IN   NS      ns.inlanefreight.htb.
 dc1.internal.inlanefreight.htb. 604800 IN A     10.129.34.16
 dc2.internal.inlanefreight.htb. 604800 IN A     10.129.34.11
@@ -1870,11 +1379,11 @@ app.inlanefreight.htb.  604800  IN      A       10.129.18.15
 <p>On arrival at the destination SMTP server, the data packets are reassembled to form a complete email. From there, the Mail delivery agent (<em>MDA</em>) transfers it to the recipient's mailbox.</p>
 <pre><code class="language-mermaid">flowchart LR
 
-A["Client (MUA)"]
-B["Submission Agent (MSA)"]
-C["Open Relay (MTA)"]
-D["Mail Delivery Agent (MDA)"]
-E["Mailbox (POP3/IMAP)"]
+A[&quot;Client (MUA)&quot;]
+B[&quot;Submission Agent (MSA)&quot;]
+C[&quot;Open Relay (MTA)&quot;]
+D[&quot;Mail Delivery Agent (MDA)&quot;]
+E[&quot;Mailbox (POP3/IMAP)&quot;]
 
 A --&gt; B
 B --&gt; C
@@ -1936,10 +1445,10 @@ PORT   STATE SERVICE
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;relaytest@nmap.scanme.org&gt;
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;relaytest%nmap.scanme.org@[10.129.14.128]&gt;
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;relaytest%nmap.scanme.org@ESMTP&gt;
-|  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;"relaytest@nmap.scanme.org"&gt;
-|  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;"relaytest%nmap.scanme.org"&gt;
+|  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;&quot;relaytest@nmap.scanme.org&quot;&gt;
+|  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;&quot;relaytest%nmap.scanme.org&quot;&gt;
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;relaytest@nmap.scanme.org@[10.129.14.128]&gt;
-|  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;"relaytest@nmap.scanme.org"@[10.129.14.128]&gt;
+|  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;&quot;relaytest@nmap.scanme.org&quot;@[10.129.14.128]&gt;
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;relaytest@nmap.scanme.org@ESMTP&gt;
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;@[10.129.14.128]:relaytest@nmap.scanme.org&gt;
 |  MAIL FROM:&lt;antispam@[10.129.14.128]&gt; -&gt; RCPT TO:&lt;@ESMTP:relaytest@nmap.scanme.org&gt;
@@ -2000,8 +1509,8 @@ Nmap done: 1 IP address (1 host up) scanned in 12.74 seconds
 <p>If you successfully figure out the access creds for one of the employees, an attacker could log in to the mail server and read or even send the individual messages.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl -k 'imaps://10.129.14.128' --user user:p4ssw0rd
 
-* LIST (\HasNoChildren) "." Important
-* LIST (\HasNoChildren) "." INBOX
+* LIST (\HasNoChildren) &quot;.&quot; Important
+* LIST (\HasNoChildren) &quot;.&quot; INBOX
 </code></pre>
 <p>If you also use the <code>-v</code> option, you will see how the connection is made. From this, you can see the version of TLS used for encryption, further details of the SSL certificate, and even the banner, which will often contain the version of the mail server.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl -k 'imaps://10.129.14.128' --user cry0l1t3:1234 -v
@@ -2037,11 +1546,11 @@ Nmap done: 1 IP address (1 host up) scanned in 12.74 seconds
 &gt; A002 AUTHENTICATE PLAIN AGNyeTBsMXQzADEyMzQ=
 &lt; * CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE SORT SORT=DISPLAY THREAD=REFERENCES THREAD=REFS THREAD=ORDEREDSUBJECT MULTIAPPEND URL-PARTIAL CATENATE UNSELECT CHILDREN NAMESPACE UIDPLUS LIST-EXTENDED I18NLEVEL=1 CONDSTORE QRESYNC ESEARCH ESORT SEARCHRES WITHIN CONTEXT=SEARCH LIST-STATUS BINARY MOVE SNIPPET=FUZZY PREVIEW=FUZZY LITERAL+ NOTIFY SPECIAL-USE
 &lt; A002 OK Logged in
-&gt; A003 LIST "" *
-&lt; * LIST (\HasNoChildren) "." Important
-* LIST (\HasNoChildren) "." Important
-&lt; * LIST (\HasNoChildren) "." INBOX
-* LIST (\HasNoChildren) "." INBOX
+&gt; A003 LIST &quot;&quot; *
+&lt; * LIST (\HasNoChildren) &quot;.&quot; Important
+* LIST (\HasNoChildren) &quot;.&quot; Important
+&lt; * LIST (\HasNoChildren) &quot;.&quot; INBOX
+* LIST (\HasNoChildren) &quot;.&quot; INBOX
 &lt; A003 OK List completed (0.001 + 0.000 secs).
 * Connection #0 to host 10.129.14.128 left intact
 </code></pre>
@@ -2169,12 +1678,12 @@ read R BLOCK
 <h5 id="snmpwalk"><a class="header" href="#snmpwalk">SNMPwalk</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ snmpwalk -v2c -c public 10.129.14.128
 
-iso.3.6.1.2.1.1.1.0 = STRING: "Linux htb 5.11.0-34-generic #36~20.04.1-Ubuntu SMP Fri Aug 27 08:06:32 UTC 2021 x86_64"
+iso.3.6.1.2.1.1.1.0 = STRING: &quot;Linux htb 5.11.0-34-generic #36~20.04.1-Ubuntu SMP Fri Aug 27 08:06:32 UTC 2021 x86_64&quot;
 iso.3.6.1.2.1.1.2.0 = OID: iso.3.6.1.4.1.8072.3.2.10
 iso.3.6.1.2.1.1.3.0 = Timeticks: (5134) 0:00:51.34
-iso.3.6.1.2.1.1.4.0 = STRING: "mrb3n@inlanefreight.htb"
-iso.3.6.1.2.1.1.5.0 = STRING: "htb"
-iso.3.6.1.2.1.1.6.0 = STRING: "Sitting on the Dock of the Bay"
+iso.3.6.1.2.1.1.4.0 = STRING: &quot;mrb3n@inlanefreight.htb&quot;
+iso.3.6.1.2.1.1.5.0 = STRING: &quot;htb&quot;
+iso.3.6.1.2.1.1.6.0 = STRING: &quot;Sitting on the Dock of the Bay&quot;
 iso.3.6.1.2.1.1.7.0 = INTEGER: 72
 iso.3.6.1.2.1.1.8.0 = Timeticks: (0) 0:00:00.00
 iso.3.6.1.2.1.1.9.1.2.1 = OID: iso.3.6.1.6.3.10.3.1.1
@@ -2187,16 +1696,16 @@ iso.3.6.1.2.1.1.9.1.2.7 = OID: iso.3.6.1.2.1.4
 iso.3.6.1.2.1.1.9.1.2.8 = OID: iso.3.6.1.2.1.50
 iso.3.6.1.2.1.1.9.1.2.9 = OID: iso.3.6.1.6.3.13.3.1.3
 iso.3.6.1.2.1.1.9.1.2.10 = OID: iso.3.6.1.2.1.92
-iso.3.6.1.2.1.1.9.1.3.1 = STRING: "The SNMP Management Architecture MIB."
-iso.3.6.1.2.1.1.9.1.3.2 = STRING: "The MIB for Message Processing and Dispatching."
-iso.3.6.1.2.1.1.9.1.3.3 = STRING: "The management information definitions for the SNMP User-based Security Model."
-iso.3.6.1.2.1.1.9.1.3.4 = STRING: "The MIB module for SNMPv2 entities"
-iso.3.6.1.2.1.1.9.1.3.5 = STRING: "View-based Access Control Model for SNMP."
-iso.3.6.1.2.1.1.9.1.3.6 = STRING: "The MIB module for managing TCP implementations"
-iso.3.6.1.2.1.1.9.1.3.7 = STRING: "The MIB module for managing IP and ICMP implementations"
-iso.3.6.1.2.1.1.9.1.3.8 = STRING: "The MIB module for managing UDP implementations"
-iso.3.6.1.2.1.1.9.1.3.9 = STRING: "The MIB modules for managing SNMP Notification, plus filtering."
-iso.3.6.1.2.1.1.9.1.3.10 = STRING: "The MIB module for logging SNMP Notifications."
+iso.3.6.1.2.1.1.9.1.3.1 = STRING: &quot;The SNMP Management Architecture MIB.&quot;
+iso.3.6.1.2.1.1.9.1.3.2 = STRING: &quot;The MIB for Message Processing and Dispatching.&quot;
+iso.3.6.1.2.1.1.9.1.3.3 = STRING: &quot;The management information definitions for the SNMP User-based Security Model.&quot;
+iso.3.6.1.2.1.1.9.1.3.4 = STRING: &quot;The MIB module for SNMPv2 entities&quot;
+iso.3.6.1.2.1.1.9.1.3.5 = STRING: &quot;View-based Access Control Model for SNMP.&quot;
+iso.3.6.1.2.1.1.9.1.3.6 = STRING: &quot;The MIB module for managing TCP implementations&quot;
+iso.3.6.1.2.1.1.9.1.3.7 = STRING: &quot;The MIB module for managing IP and ICMP implementations&quot;
+iso.3.6.1.2.1.1.9.1.3.8 = STRING: &quot;The MIB module for managing UDP implementations&quot;
+iso.3.6.1.2.1.1.9.1.3.9 = STRING: &quot;The MIB modules for managing SNMP Notification, plus filtering.&quot;
+iso.3.6.1.2.1.1.9.1.3.10 = STRING: &quot;The MIB module for logging SNMP Notifications.&quot;
 iso.3.6.1.2.1.1.9.1.4.1 = Timeticks: (0) 0:00:00.00
 iso.3.6.1.2.1.1.9.1.4.2 = Timeticks: (0) 0:00:00.00
 iso.3.6.1.2.1.1.9.1.4.3 = Timeticks: (0) 0:00:00.00
@@ -2210,7 +1719,7 @@ iso.3.6.1.2.1.1.9.1.4.10 = Timeticks: (0) 0:00:00.00
 iso.3.6.1.2.1.25.1.1.0 = Timeticks: (3676678) 10:12:46.78
 iso.3.6.1.2.1.25.1.2.0 = Hex-STRING: 07 E5 09 14 0E 2B 2D 00 2B 02 00 
 iso.3.6.1.2.1.25.1.3.0 = INTEGER: 393216
-iso.3.6.1.2.1.25.1.4.0 = STRING: "BOOT_IMAGE=/boot/vmlinuz-5.11.0-34-generic root=UUID=9a6a5c52-f92a-42ea-8ddf-940d7e0f4223 ro quiet splash"
+iso.3.6.1.2.1.25.1.4.0 = STRING: &quot;BOOT_IMAGE=/boot/vmlinuz-5.11.0-34-generic root=UUID=9a6a5c52-f92a-42ea-8ddf-940d7e0f4223 ro quiet splash&quot;
 iso.3.6.1.2.1.25.1.5.0 = Gauge32: 3
 iso.3.6.1.2.1.25.1.6.0 = Gauge32: 411
 iso.3.6.1.2.1.25.1.7.0 = INTEGER: 0
@@ -2218,21 +1727,21 @@ iso.3.6.1.2.1.25.1.7.0 = No more variables left in this MIB View (It is past the
 
 ...SNIP...
 
-iso.3.6.1.2.1.25.6.3.1.2.1232 = STRING: "printer-driver-sag-gdi_0.1-7_all"
-iso.3.6.1.2.1.25.6.3.1.2.1233 = STRING: "printer-driver-splix_2.0.0+svn315-7fakesync1build1_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1234 = STRING: "procps_2:3.3.16-1ubuntu2.3_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1235 = STRING: "proftpd-basic_1.3.6c-2_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1236 = STRING: "proftpd-doc_1.3.6c-2_all"
-iso.3.6.1.2.1.25.6.3.1.2.1237 = STRING: "psmisc_23.3-1_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1238 = STRING: "publicsuffix_20200303.0012-1_all"
-iso.3.6.1.2.1.25.6.3.1.2.1239 = STRING: "pulseaudio_1:13.99.1-1ubuntu3.12_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1240 = STRING: "pulseaudio-module-bluetooth_1:13.99.1-1ubuntu3.12_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1241 = STRING: "pulseaudio-utils_1:13.99.1-1ubuntu3.12_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1242 = STRING: "python-apt-common_2.0.0ubuntu0.20.04.6_all"
-iso.3.6.1.2.1.25.6.3.1.2.1243 = STRING: "python3_3.8.2-0ubuntu2_amd64"
-iso.3.6.1.2.1.25.6.3.1.2.1244 = STRING: "python3-acme_1.1.0-1_all"
-iso.3.6.1.2.1.25.6.3.1.2.1245 = STRING: "python3-apport_2.20.11-0ubuntu27.21_all"
-iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64" 
+iso.3.6.1.2.1.25.6.3.1.2.1232 = STRING: &quot;printer-driver-sag-gdi_0.1-7_all&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1233 = STRING: &quot;printer-driver-splix_2.0.0+svn315-7fakesync1build1_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1234 = STRING: &quot;procps_2:3.3.16-1ubuntu2.3_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1235 = STRING: &quot;proftpd-basic_1.3.6c-2_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1236 = STRING: &quot;proftpd-doc_1.3.6c-2_all&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1237 = STRING: &quot;psmisc_23.3-1_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1238 = STRING: &quot;publicsuffix_20200303.0012-1_all&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1239 = STRING: &quot;pulseaudio_1:13.99.1-1ubuntu3.12_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1240 = STRING: &quot;pulseaudio-module-bluetooth_1:13.99.1-1ubuntu3.12_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1241 = STRING: &quot;pulseaudio-utils_1:13.99.1-1ubuntu3.12_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1242 = STRING: &quot;python-apt-common_2.0.0ubuntu0.20.04.6_all&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1243 = STRING: &quot;python3_3.8.2-0ubuntu2_amd64&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1244 = STRING: &quot;python3-acme_1.1.0-1_all&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1245 = STRING: &quot;python3-apport_2.20.11-0ubuntu27.21_all&quot;
+iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: &quot;python3-apt_2.0.0ubuntu0.20.04.6_amd64&quot; 
 
 ...SNIP...
 </code></pre>
@@ -2597,13 +2106,10 @@ Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
 
 SQL&gt; 
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p>If you come across the following error<br><code>sqlplus: error while loading shared libraries: libsqlplus.so: cannot open shared object file: No such file or directory</code><br>use:<br><code>sudo sh -c "echo /usr/lib/oracle/12.2/client64/lib &gt; /etc/ld.so.conf.d/oracle-instantclient.conf";sudo ldconfig</code></p>
-</div>
+<blockquote>
+<p>[!TIP]
+If you come across the following error<br><code>sqlplus: error while loading shared libraries: libsqlplus.so: cannot open shared object file: No such file or directory</code><br>use:<br><code>sudo sh -c &quot;echo /usr/lib/oracle/12.2/client64/lib &gt; /etc/ld.so.conf.d/oracle-instantclient.conf&quot;;sudo ldconfig</code></p>
+</blockquote>
 <h5 id="interacting-with-oracle-rdbms"><a class="header" href="#interacting-with-oracle-rdbms">Interacting with Oracle RDBMS</a></h5>
 <pre><code class="language-bash">SQL&gt; select table_name from all_tables;
 
@@ -2690,7 +2196,7 @@ LOGSTDBY_ADMINISTRATOR
 ...SNIP...
 </code></pre>
 <p>Another option is to upload a webshell to the target. However, this requires the server to run a web server, and you need to know the exact location of the root directory for the webserver.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo "Oracle File Upload Test" &gt; testing.txt
+<pre><code class="language-bash">d41y@htb[/htb]$ echo &quot;Oracle File Upload Test&quot; &gt; testing.txt
 d41y@htb[/htb]$ ./odat.py utlfile -s 10.129.204.235 -d XE -U scott -P tiger --sysdba --putFile C:\\inetpub\\wwwroot testing.txt ./testing.txt
 
 [1] (10.129.204.235:1521): Put the ./testing.txt local file in the C:\inetpub\wwwroot folder like testing.txt on the 10.129.204.235 server                                                                                                  
@@ -2769,7 +2275,7 @@ msf6 auxiliary(scanner/ipmi/ipmi_version) &gt; run
 [*] Scanned 1 of 1 hosts (100% complete)
 [*] Auxiliary module execution completed
 </code></pre>
-<p>To retrieve IPMI hashes, you can use the Metasploit "IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval" module.</p>
+<p>To retrieve IPMI hashes, you can use the Metasploit &quot;IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval&quot; module.</p>
 <pre><code class="language-bash">msf6 &gt; use auxiliary/scanner/ipmi/ipmi_dumphashes 
 msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; set rhosts 10.129.42.195
 msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; show options 
@@ -3139,7 +2645,7 @@ Port:      3389
 rdp-sec-check v0.9-beta completed at Sun Nov  7 16:50:33 2021
 </code></pre>
 <p>Authentication and connection to such RDP servers can be made in several ways. For example, you can connect to RDP servers on Linux using xfreerdp, rdesktop, or Remmina and interact with the GUI of the server accordingly.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ xfreerdp /u:cry0l1t3 /p:"P455w0rd!" /v:10.129.201.248
+<pre><code class="language-bash">d41y@htb[/htb]$ xfreerdp /u:cry0l1t3 /p:&quot;P455w0rd!&quot; /v:10.129.201.248
 
 [16:37:47:135] [95319:95320] [INFO][com.freerdp.core] - freerdp_connect:freerdp_set_last_error_ex resetting error state
 [16:37:47:135] [95319:95320] [INFO][com.freerdp.client.common.cmdline] - loading channelEx rdpdr
@@ -3218,17 +2724,17 @@ Info: Establishing connection to remote endpoint
 <p>... is Microsoft's implementation and also an extension of the Common Information Model (<em>CIM</em>), core functionality of the standardized Web-Based Enterprise Management (<em>WBEM</em>) for the Windows platform. WMI allows read and write access to almost all settings on Windows systems. Understandably, this makes it the most critical interface in the Windows environment for the administration and remote maintenance of Windows computers, regardless of whether they are PCs or servers. WMI is typically accessed via PowerShell, VBScript, or the Windows Management Instrumentation Console (<em>WMIC</em>). WMI is not a single program but consists of several programs and various databases, also known as repositories.</p>
 <h4 id="enum-16"><a class="header" href="#enum-16">Enum</a></h4>
 <p>The initialization of the WMI communication always takes place on TCP port 135, and after successful establishment of the connection, the communication is moved to a random port. For example, the program wmiexec.py from the Impacket toolkit can be used for this.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ /usr/share/doc/python3-impacket/examples/wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
+<pre><code class="language-bash">d41y@htb[/htb]$ /usr/share/doc/python3-impacket/examples/wmiexec.py Cry0l1t3:&quot;P455w0rD!&quot;@10.129.201.248 &quot;hostname&quot;
 
 Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
 
 [*] SMBv3.0 dialect used
 ILF-SQL-01
-```&lt;!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --&gt;
+```&lt;!-- {% embed footer message=&quot;2026 • Created by [d41y](https://github.com/d41y)&quot; %} --&gt;
 
-&lt;div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
+&lt;div data-embedify data-app=&quot;footer&quot; data-option-message=&quot;2026 • Created by [d41y](https://github.com/d41y)&quot; style=&quot;display:none&quot;&gt;&lt;/div&gt;
 
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2025 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href=&quot;https://github.com/d41y&quot;&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
 
                     </main>
 
@@ -3293,7 +2799,6 @@ ILF-SQL-01
 
         <!-- Custom JS scripts -->
         <script src="../../theme/pagetoc.js"></script>
-
 
 
     </div>

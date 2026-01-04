@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item "><a href="../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item expanded "><a href="../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item expanded "><a href="../../general/reporting/pt_reporting.html" class="active"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,284 +172,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#pentest-documentation--reporting">Pentest Documentation &amp; Reporting</a>
-<ul>
-<li><a href="#preparation">Preparation</a>
-<ul>
-<li><a href="#notetaking--organization">Notetaking &amp; Organization</a>
-<ul>
-<li><a href="#notetaking-sample-structure">Notetaking Sample Structure</a></li>
-<li><a href="#notetaking-tools">Notetaking Tools</a></li>
-<li><a href="#logging">Logging</a>
-<ul>
-<li><a href="#exploitation-attempts">Exploitation Attempts</a></li>
-</ul>
-</li>
-<li><a href="#artifacts-left-behind">Artifacts Left Behind</a>
-<ul>
-<li><a href="#account-creation--system-modifications">Account Creation / System Modifications</a></li>
-</ul>
-</li>
-<li><a href="#evidence">Evidence</a>
-<ul>
-<li><a href="#what-to-capture">What to Capture</a></li>
-<li><a href="#storage">Storage</a></li>
-</ul>
-</li>
-<li><a href="#formatting-and-redaction">Formatting and Redaction</a>
-<ul>
-<li><a href="#screenshots">Screenshots</a></li>
-<li><a href="#terminal">Terminal</a></li>
-</ul>
-</li>
-<li><a href="#what-not-to-archive">What Not to Archive</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="pentest-documentation--reporting"><a class="header" href="#pentest-documentation--reporting">Pentest Documentation &amp; Reporting</a></h1>
+                        <h1 id="pentest-documentation--reporting"><a class="header" href="#pentest-documentation--reporting">Pentest Documentation &amp; Reporting</a></h1>
 <h2 id="preparation"><a class="header" href="#preparation">Preparation</a></h2>
 <h3 id="notetaking--organization"><a class="header" href="#notetaking--organization">Notetaking &amp; Organization</a></h3>
 <h4 id="notetaking-sample-structure"><a class="header" href="#notetaking-sample-structure">Notetaking Sample Structure</a></h4>
@@ -536,7 +257,7 @@ run '~/.tmux/plugins/tpm/tpm'
 </ul>
 <p>It should go without saying, but as a professional and to prevent creating enemies out of the infrastructure team, you should get written approval from the client before making these types of system modifications or doing any sort of testing that might cause an issue with system stability or availability. This can typically be ironed out during the project kickoff call to determine the treshold beyond which the client is willing to tolerate without being notified.</p>
 <h4 id="evidence"><a class="header" href="#evidence">Evidence</a></h4>
-<p>No matter the assessment type, your client does not care about the cool exploit chains you pull off or how easily you "pwned" their network. Ultimately, they are paying for the report deliverable, which should clearly communicate the issues discovered and evidence that can be used for validation and reproduction. Without clear evidence, it can be challenging for internal security teams, sysadmins, devs, etc., to reproduce your work while working to implement a fix or even to understand the nature of the issue.</p>
+<p>No matter the assessment type, your client does not care about the cool exploit chains you pull off or how easily you &quot;pwned&quot; their network. Ultimately, they are paying for the report deliverable, which should clearly communicate the issues discovered and evidence that can be used for validation and reproduction. Without clear evidence, it can be challenging for internal security teams, sysadmins, devs, etc., to reproduce your work while working to implement a fix or even to understand the nature of the issue.</p>
 <h5 id="what-to-capture"><a class="header" href="#what-to-capture">What to Capture</a></h5>
 <p>As you know, each finding will need to have evidence. It may also be prudent to collect evidence of tests that were performed that were unsuccessful in case the client questions your thoroughness. If you're working on the command line, Tmux logs may be sufficient evidence to paste into the report as literal terminal output, but they can be horribly formatted. For this reason, capturing your terminal output for siginificant steps as you go along and tracking that separately alongside your findings is a good idea. For everything else, screenshots should be taken.</p>
 <h5 id="storage"><a class="header" href="#storage">Storage</a></h5>
@@ -600,7 +321,7 @@ run '~/.tmux/plugins/tpm/tpm'
 </li>
 <li>Logging output
 <ul>
-<li>Logging output from Tmux, Metasploit, and any other log output that does not fit the "Scan" subdirectories listed above.</li>
+<li>Logging output from Tmux, Metasploit, and any other log output that does not fit the &quot;Scan&quot; subdirectories listed above.</li>
 </ul>
 </li>
 <li>Misc files
@@ -653,10 +374,296 @@ ACME-IPT/
 <p>Typically the only thing that needs to be redacted from terminal output is credentials. This includes password hashes. For password hashes, you can usually just strip out the middle of them and leave the first and last 3 or 4 chars to show there was actually a hash there. For cleartext creds or any other human-readable content that needs to be obfuscated, you can just replace it with a <code>&lt;REDACTED&gt;</code> or <code>&lt;PASSWORD REDACTED&gt;</code> placeholder, or similar.</p>
 <p>You should also consider color-coded highlighting in your terminal output to highlight the command that was run and the interesting output from that command. This enhances the reader's ability to identify essential parts of the evidence and what to look for if they try to reproduce it on their own. If you're working on a complex web payload, it can be difficult to pick out the payload in a gigantic URL-encoded request wall of text if you don't do this for this for a living. You should take all opportunities to make the report clearer to your readers, who will often not have as deep an understanding of the environment as you do by the end of the assessment.</p>
 <h4 id="what-not-to-archive"><a class="header" href="#what-not-to-archive">What Not to Archive</a></h4>
-<p>When starting a pentest, you are being trusted by your customers to enter their network and "do no harm" wherever possible. This means not bringing down any hosts or affecting the availability of applications, not changing passwords, making significant or difficult-to-reverse configuration changes, or viewing or removing certain types of data from the environment. This data may include unredacted PII, potentially criminal info, anything considered legally "discoverable", etc. For example, if you gain access to a network share with sensitive data, it's probably best to just screenshot the directory with the files in it rather than opening individual files and screenshotting the file contents. If the files are as sensitive as you think, they'll get the message and know what's in them based on the file name. Collecting actual PII and extracting it from the target environment may have significant compliance obligations for storing and processing that data like GDPR and the like and could open up a slew of issues for your company and you.</p>
-<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} -->
-<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>When starting a pentest, you are being trusted by your customers to enter their network and &quot;do no harm&quot; wherever possible. This means not bringing down any hosts or affecting the availability of applications, not changing passwords, making significant or difficult-to-reverse configuration changes, or viewing or removing certain types of data from the environment. This data may include unredacted PII, potentially criminal info, anything considered legally &quot;discoverable&quot;, etc. For example, if you gain access to a network share with sensitive data, it's probably best to just screenshot the directory with the files in it rather than opening individual files and screenshotting the file contents. If the files are as sensitive as you think, they'll get the message and know what's in them based on the file name. Collecting actual PII and extracting it from the target environment may have significant compliance obligations for storing and processing that data like GDPR and the like and could open up a slew of issues for your company and you.</p>
+<h3 id="types-of-reports"><a class="header" href="#types-of-reports">Types of Reports</a></h3>
+<h4 id="differences-across-assessment-types"><a class="header" href="#differences-across-assessment-types">Differences Across Assessment Types</a></h4>
+<h5 id="vulnerability-assessment"><a class="header" href="#vulnerability-assessment">Vulnerability Assessment</a></h5>
+<p>Vulnerability assessments involve running an automated scan of an environment to enumerate vulnerabilities. These can be authenticated or unauthenticated. No exploitation is attempted, but you will often look to validate scanner results so your report may show a client which scanner results are actual issues and which are false positives. Validation may consist of performing an additional check to confirm a vulnerable version is in use or a setting/misconfig is in place, but the goal is not to gain a foothold and move laterally/vertically. Some customers will even ask for scan results with no validation.</p>
+<h5 id="internal-vs-external"><a class="header" href="#internal-vs-external">Internal vs External</a></h5>
+<p>An external scan is performed from the perspective of an anonymous user on the internet targeting the organization's public systems. An internal scan is conducted from the perspective of a scanner on the internal network and investigates hosts from behind the firewall. This can be done from the perspective of an anonymous user on the corporate user network, emulating a compromised server, or any number of different scenarios. A customer may even ask for an internal scan to be conducted with credentials, which can lead to considerably more scanner findings to sift through but will also produce more accurate and less generic results.</p>
+<h5 id="report-contents"><a class="header" href="#report-contents">Report Contents</a></h5>
+<p>These reports typically focus on themes that can be observed in the scan results and highlight the number of vulns and their severity levels. These scans can produce a LOT of data, so identifying patterns and mapping them to procedural deficiencies is important to prevent the information from becoming overwhelming.</p>
+<h4 id="pentesting"><a class="header" href="#pentesting">Pentesting</a></h4>
+<p>Pentesting goes beyond automated scans and can leverage vulnerability scan data to help guide exploitation. Like vulnerability scans, these can be performed from an internal or external perspective. Depending on the type of pentest, you may not perform any kind of vulnerability scanning at all.</p>
+<p>A pentest may be performed from various perspectives, such as &quot;black box&quot;, where you have no more information than the name of the company during an external or a network connection for an internal, &quot;grey box&quot; where you are given just in-scope IP addresses/CIDR network ranges, or &quot;white box&quot; where you may be given creds, source code, configurations, and more. Testing can be performed with zero evasion to attempt to uncover as many vulns as possible, from a hybrid evasive standpoint to test the customer's defenses by starting out evasive and gradually becoming &quot;noisier&quot; to see at what level internal security teams/monitoring tools detect and block you. Typically once you are detected in this type of assessment, the client will ask you to move to non-evasive testing for the remainder of the assessment. This is a great assessment type to recommend to clients with some defenses in place but not a highly mature defensive security posture. It can help to show gaps in their defenses and where they should concentrate efforts on enhancing their detection and prevention rules. For more mature clients, this type of assessment can be a great test of their defenses and internal procedures to ensure that all parties perform their roles properly in the event of an actual attack.</p>
+<p>Finally, you may be asked to perform evasive testing throughout the assessment. In this type of assessment, you will try to remain undetected for as long as possible and see what kind of access, if any, you can obtain while working stealthily. This can help to simulate a more advanced attacker. However, this type of assessment is often limited by time constraints that are not in place for a real-world attacker. A client may also opt for a longer-term adversary simulation that may occur over multiple months, with few company staff aware of the assessment and few or no client staff knowing the exact start day/time of the assessment. This assessment type is well-suited for more security mature organizations and requires a bit of a different skill set than a traditional network/application pentester.</p>
+<h5 id="internal-vs-external-1"><a class="header" href="#internal-vs-external-1">Internal vs External</a></h5>
+<p>Similar to vulnerability scanning perspectives, external pentesting will typically be conducted from the perspective of an anonymous attacker on the internet. It may leverage OSINT data/publicly available information to attempt to gain access to sensitive data via applications or the internal network by attacking internet-facing hosts. Internal pentesting may be conducted as an anonymous user on the internal network or as an authenticated user. It is typically conducted to find as many flaws as possible to obtain a foothold, perform horizontal and vertical privesc, move laterally, and compromise the internal network.</p>
+<h4 id="inter-disciplinary-assessments"><a class="header" href="#inter-disciplinary-assessments">Inter-Disciplinary Assessments</a></h4>
+<p>Some assessments may require involvement from people with diverse skillsets that complement one another. While logistically more complex, these tend to organically be more collaborative in nature between the consulting team and the client, which adds tremendous value to the assessment and trust in relationship. Some examples of these types of assessments include:</p>
+<ul>
+<li>Purple Team Style</li>
+<li>Cloud Focused Pentesting</li>
+<li>Comprehensive IoT</li>
+</ul>
+<h4 id="web-application-pentesting"><a class="header" href="#web-application-pentesting">Web Application Pentesting</a></h4>
+<p>Depending on the scope, this type of assessment may also be considered an inter-disciplinary assessment. Some application assessments may only focus on identifying and validating the vulnerabilities in an application with role-based, authenticated testing with no interest in evaluating the underlying server. Others may want to test both the application and the infrastructure with the intent of initial compromise being through the web application itself and then attempting to move beyond the application to see what other hosts and systems behind it exist that can be compromised. The latter type of assessment would benefit from someone with a development and application testing background for initial compromise and then perhaps a network-focused pentester to &quot;live off the land&quot; and move around or escalate privileges through AD or some other means beyond the application itself.</p>
+<h4 id="hardware-pentesting"><a class="header" href="#hardware-pentesting">Hardware Pentesting</a></h4>
+<p>This type of testing is often done on IoT-type devices but can be extended to testing the physical security of a laptop shipped by the client or an onsite kiosk or ATM. Each client will have different comfort level with the depth of testing here, so it's vital to establish the rules of engagement before the assessment begins, particularly when it comes to destructive testing. If the client expects their device back in one piece and functioning, it is likely inadvisable to try desoldering chips from the motherboard or similar attacks.</p>
+<h4 id="draft-report"><a class="header" href="#draft-report">Draft Report</a></h4>
+<p>It is becoming more commonplace for clients to expect to have a dialogue and incorporate their feedback into a report. This may come in many forms, whether they want to add comments on how they plan to address each finding, tweak potentially inflammatory language, or move things around to where it suits their needs better. For these reasons, it's best to plan on submitting a draft report first, giving the client time to review it on their own, and then offering a time slot where they can review it with you to ask questions, get clarification, or explain what they would like to see. The client is paying for the report deliverable in the end, and you must ensure it is as thorough and valuable to them as possible. Some will not comment on the report at all, while others will ask for significant changes/additions to help it suit their needs, whether it be to make it presentable to their board of directors for additional funding to use the report as an input to their security roadmap for performing remediation and hardening their security posture.</p>
+<h4 id="final-report"><a class="header" href="#final-report">Final Report</a></h4>
+<p>Typically, after reviewing the report with the client and confirming that they are satisfied with it, you can issue the final report with any necessary modifications. This may seem like a frivolous process, but several auditing firms will not accept a draft report to fulfill their compliance obligations, so it's important from the client's perspective.</p>
+<h5 id="post-remediation-report"><a class="header" href="#post-remediation-report">Post-Remediation Report</a></h5>
+<p>It is also common for a client to request that the findings you discovered during the original assessment be tested again again after they've had an opportunity to correct them. This is all but required for organizations beholden to a compliance standard such as PCI. You should not be redoing the entire assessment for this phase of the assessment. But instead, you should be focusing on retesting only the findings and only the hosts affected by those findings from the original assessment. You also want to ensure that there is a time limit on how long after the initial assessment you perform remediation testing. Here are some of the things that might happen if you don't.</p>
+<ul>
+<li>The client asks you to test their remediation several months or even a year or more later, and the environment has changed so much that it's impossible to get an &quot;apples to apples&quot; comparison.</li>
+<li>If you check the entire environment for new hosts affected by a given finding, you may discover new hosts that are affected and fall into an endless loop of remediation testing the new hosts you discovered last time.</li>
+<li>If you run new large-scale scans like vulnerability scans, you will likely find stuff that wasn't there before, and your scope will quickly get out of control.</li>
+<li>If a client has a problem with the &quot;snapshot&quot; nature of this type of testing, you could recommend a Breach and Attack Simulation (<em>BAS</em>) type tool to periodically run those scenarios to ensure they do not continue popping up.</li>
+</ul>
+<p>If any of these situations occur, you should expect more scrutiny around severity levels and perhaps pressure to modify things that should not be modified to help them out. In these situations, your response should be carefully crafted to be both clear that you're not going to cross ethical boundaries, but also commiserate with their situation and offer some ways out of it for them. This allows you to keep your integrity intact, fosters the feeling with the client that you sincerely care about their plight, and gives them a path forward without having to turn themselves inside out to make it happen.</p>
+<p>One approach could be to treat this as a new assessment in these situations. If the client is unwilling, then you would likely want to retest just the findings from the original report and carefully note in the report the length of time that has passed since the original assessment, that this is a point in time check to assess whether ONLY the previously reported vulns affect the originally reported host or hosts and that it's likely the client's environment has changed significantly, and a new assessment was not performed.</p>
+<p>In terms of report layout, some folks may prefer to update the original assessment by tagging affected hosts in each finding with a status, while others may prefer to issue a new report entirely that has some additional comparison content and an updated executive summary.</p>
+<h4 id="attestation-report"><a class="header" href="#attestation-report">Attestation Report</a></h4>
+<p>Some clients will request an Attestation Letter or Attestation Report that is suitable for their vendors or customers who require evidence that they've had a pentest done. The most significant difference is that your client will not want to hand over the specific technical details of all of the findings or credentials or other secret information that may be included to a third party. This document can be derived from the report. It should focus only on the number of findings discovered, the approach taken, and general comments about the environment itself. This document should likely only be a page or two long.</p>
+<h4 id="other-deliverables"><a class="header" href="#other-deliverables">Other Deliverables</a></h4>
+<h5 id="slide-deck"><a class="header" href="#slide-deck">Slide Deck</a></h5>
+<p>You may also be requested to prepare a presentation that can be given at several different levels. Your audience may be technical, or they may be more executive. The language and focus should be as different in your executive presentation as the executive summary is from the technical finding details in your report. Only including graphs and numbers will put your audience to sleep, so it's best to be prepared with some anecdotes from your own experience or perhaps some recent current events that correlate to a specific attack vector or compromise. Bonus points if said story is in the same industry as your client. The purpose of this is not fear-mongering, and you should be careful not to present it that way, but it will help hold your audience's attention. It will make the risk relatable enough to maximize their chances of doing something about it.</p>
+<h5 id="spreadsheet-of-findings"><a class="header" href="#spreadsheet-of-findings">Spreadsheet of Findings</a></h5>
+<p>The spreadsheet of findings should be pretty self-explanatory. This is all of the fields in the findings of your report, just in a tabular layout that the client can use for easier sorting and other data manipulation. This may also assist them with importing those findings into a ticketing system for internal tracking purposes. This document should not inlcude your executive summary or narratives. Ideally, learn how to use pivot tables and use them to create some interesting analytics that the client might find interesting. The most helpful objective in doing this is sorting findings by severity or category to help prioritize remediation.</p>
+<h4 id="vulnerability-notifications"><a class="header" href="#vulnerability-notifications">Vulnerability Notifications</a></h4>
+<p>Sometimes during an assessment, you will uncover a critical flaw that requires you to stop work and inform your clients of an issue so they can decide if they would like to issue an emergency fix or wait until after the assessment is over.</p>
+<h5 id="when-to-draft-one"><a class="header" href="#when-to-draft-one">When to draft one</a></h5>
+<p>At a minimum, this should be done for any finding that is directly exploitable that is exposed to the internet and results in unauthenticated remote code execution or sensitive data exposure, or leverage weak/default credentials for the same. Beyond that, expectations should be set for this during the project kickoff process. Some clients may want all high and critical findings reported out-of-band regardless of whether they're internal or external. Some folks may need mediums as well. It's usually best to set a baseline for yourself, tell the client what to expect, and let them ask for modifications to the process if they need them.</p>
+<h5 id="contents"><a class="header" href="#contents">Contents</a></h5>
+<p>Due to the nature of these notifications, it's important to limit the amount of fluff in these documents so the technical folks can get right to the details and begin fixing the issue. For this reason, it's probably best to limit this to the typical content you have in the technical details of your findings and provide tools-based evidence for the finding that the client can quickly reproduce if needed.</p>
+<h3 id="components-of-a-report"><a class="header" href="#components-of-a-report">Components of a Report</a></h3>
+<h4 id="prioritizing-your-efforts"><a class="header" href="#prioritizing-your-efforts">Prioritizing Your Efforts</a></h4>
+<p>During an assessment, especially large ones, you'll be faced with a lot of &quot;noise&quot; that you need to filter out to best focus your efforts and prioritize findings. As testers, you are required to disclose everything you find, but when there is a ton of information coming at you through scans and enumeration, it is easy to get lost or focus on the wrong things and waste time and potentially miss high-impact issues. This is why it is essential that you understand the output that your tools produce, have repeatable steps, to sift through all of this data, process it, and remove false positives or informational issues that could distract you from the goal of the assessment. Experience and a repeatable process are key so that you can sift through all of your data and focus your efforts on high-impact findings such as RCE flaws or others that may lead to sensitive data disclosure. It is worth it to report informational findings, but instead of spending the majority of your time validating these minor, non-exploitable issues, you may want to consider consolidating some of them into categories that show the client you were aware that the issues existed, but you were unable to exploit them in any meaningful way.</p>
+<p>When starting in pentesting, it can be difficult to know what to prioritize, and you may fall down rabbit holes trying to exploit a flaw that doesn't exist or getting a broken PoC exploit to work. Time and experience help here, but you should also lean on senior team members and mentors to help. Something that you may waste half a day on could be something that they have seen many times and could tell you quickly whether it is a false positive or worth running down. Even if they can't give you a really quick black and white answer, they can at least point you in a direction that saves you several hours. Surround yourself with people you're comfortable with asking for help that won't make you feel like an idiot if you don't know all the answers.</p>
+<h4 id="writing-an-attack-chain"><a class="header" href="#writing-an-attack-chain">Writing an Attack Chain</a></h4>
+<p>The attack chain is your chance to show off the cool exploitation chain you took to gain a foothold, move laterally, and compromise the domain. It can be a helpful mechanism to help the reader connect the dots when multiple findings are used in conjunction with each other and gain a better understanding of why certain findings are given the severity rating that they are assigned. For example, a particular finding on its own may be medium-risk but, combined with one or two other issues, could elevate to high-risk, and this section is your chance to demonstrate that. A common example is using Responder to intercept NBT-NS/LLMNR traffinc and relaying it to hosts where SMB signing is not present. It can get really interesting if some findings can be incorporated that might otherwise seem inconsequential, like using an information disclosure of some sort to help guide you through an LFI to read an interesting configuration file, log in to an external-facing application, and leverage functionality to gain remote code execution and a foothold inside the internal network.</p>
+<p>There are multiple ways to present this, and your style may differ. EXAMPLE: You will start with a summary of the attack chain and then walk through each step with supporting command output and screenshots to show the attack chain as clearly as possible. A bonus here is that you can re-use this as evidence for your individual findings so you don't have to format things twice and can copy/paste them into the relevant finding.</p>
+<h4 id="writing-a-strong-executive-summary"><a class="header" href="#writing-a-strong-executive-summary">Writing a Strong Executive Summary</a></h4>
+<p>The Executive Summary is one of the most important parts of the report. Your clients are ultimately paying for the report deliverable which has several purposes aside from showing weaknesses and reproduction steps that can be used by technical teams working on remediation. The report will likely be viewed in some part by other internal stakeholders such as Internal Audit, IT and IT Security management, C-level management, and even the Board of Directors. The report may be used to either validate funding from the prior year for infosec or to request additional funding for the following year. For this reason, you need to ensure that there is content in the report that can be easily understood by people without technical knowledge.</p>
+<h5 id="key-concepts"><a class="header" href="#key-concepts">Key Concepts</a></h5>
+<p>The intended audience for the Executive Summary is typically the person that is going to be responsible for allocating the budget to fixing the issues you discovered. For better or worse, some of your clients have likely been trying to get funding to fix the issues presented in the report for years and fully intend to use the report as ammunition to finally get some stuff done. This is your best chance to help them out. If you lose your audience here and there are budgetary limitations, the rest of the report can quickly become worthless. Some key things to assume to maximize the effectiveness of the Executive Summary are:</p>
+<ul>
+<li>It should be obvious, but this should be written for someone who isn't technical at all. The typical barometer for this is &quot;if your parents can't understand what the point is, then you need to try again&quot;.</li>
+<li>The reader doesn't do this every day. They don't know what Rubeus does, what password spraying means, or how it's possible that tickets can grant different tickets.</li>
+<li>This may be the first time they've ever been through a pentest.</li>
+<li>Much like the rest of the world in the instant gratification age, their attention span is small. When you lose it, you are extraordinarily unlikely to get it back.</li>
+<li>Along the same lines, no one likes to read something where they have to Google what things mean. Those are called distractions.</li>
+</ul>
+<h5 id="do"><a class="header" href="#do">Do</a></h5>
+<ul>
+<li>When talking about metrics, be as specific as possible.</li>
+<li>It's a summary. Keep it that way.</li>
+<li>Describe the types of things you managed to access.</li>
+<li>Describe the general things that need to improve to mitigate the risks you discovered.</li>
+<li>If you're feeling brave and have a decent amount of experience on both sides, provide a general expectation for how much effort will be necessary to fix some of this.</li>
+</ul>
+<h5 id="do-not"><a class="header" href="#do-not">Do Not</a></h5>
+<ul>
+<li>Name or recommend specific vendors.</li>
+<li>Use Acronyms.</li>
+<li>Spend more time talking about stuff that doesn't matter than you do about the significant findings in the report.</li>
+<li>Use words that no one has ever heard of before.</li>
+<li>Reference a more technical section of the report.</li>
+</ul>
+<h5 id="anatomy-of-the-executive-summary"><a class="header" href="#anatomy-of-the-executive-summary">Anatomy of the Executive Summary</a></h5>
+<p>The first thing you'll likely want to do is get a list of your findings together and try categorizing the nature of the risk of each one. These categories will be the foundation for what you're going to discuss in the executive summary.</p>
+<h4 id="summary-of-recommendations"><a class="header" href="#summary-of-recommendations">Summary of Recommendations</a></h4>
+<p>Before you get into the technical findings, it's a good idea to provide a Summary of Recommendations or Remediation Summary. Here you can list your short, medium, and long-term recommendations based on your findings and the current state of the client's environment. You'll need to use your experience and knowledge of the client's business, security budget, staffing considerations, etc., to make accurate recommendations. Your clients will often have input on this section, so you want to get it right, or the recommendations are useless. If you structure this properly, your clients can use it as the basis for a remediation roadmap. If you opt not to do this, be prepared for clients to ask you to prioritize remediation for them. It may not happen all the time, but if you have a report with 15 high-risk findings and nothing else, they're likely going to want to know which of them is &quot;the most high&quot;.</p>
+<p>You should tie each recommendation back to a specific finding and not include any short or medium-term recommendations that are not actionable by remediating findings reported later in the report. Long-term recommendations may map back to informational/best practice recommendations such as &quot;Create baseline security templates for Windows Server and Workstation hosts&quot; but may also be catch-all recommendations such as &quot;Perform periodic Social Engineering engagements with follow-on debriefings and security awareness training to build a security-focused culture within the organization from the top down.&quot;.</p>
+<p>Some findings could have an associated short and long-term recommendation. For example, if a particular patch is missing in some places, that is a sign that the organization struggles with patch management and perhaps does not have a strong patch management program, along with associated policies and procedures. The short-term solution would be to push out the relevant patches, while the long-term objective would be to review patch and vulnerability management processes to address any gaps that would prevent the same issue from cropping up again. In the application security world, it might instead be fixing the code in the short term and in the long term, reviewing the SDLC to ensure security is considered early enough in the development process to prevent issues from making it into production.</p>
+<h4 id="findings"><a class="header" href="#findings">Findings</a></h4>
+<p>After the Executive Summary, the Findings section is one of the most important. This section gives you a chance to show off your work, paint the client a picture of the risk to their environment, give technical teams the evidence to validate and reproduce issues and provide remediation advice.</p>
+<h4 id="appendices"><a class="header" href="#appendices">Appendices</a></h4>
+<p>There are appendices that should appear in every report, but others will be dynamic and may not be necessary for all reports. If any of these appendices bloat the size of the report unnecessarily, you may want to consider whether a supplemental spreadsheet would be a better way to present the data.</p>
+<h4 id="static-appendices"><a class="header" href="#static-appendices">Static Appendices</a></h4>
+<h5 id="scope"><a class="header" href="#scope">Scope</a></h5>
+<p>Shows the scope of the assessment. Most auditors that the client has to hand your report to will need to see this.</p>
+<h5 id="methodology"><a class="header" href="#methodology">Methodology</a></h5>
+<p>Explain the repeatable process you follow to ensure that your assessments are thorough and consistent.</p>
+<h5 id="severity-ratings"><a class="header" href="#severity-ratings">Severity Ratings</a></h5>
+<p>If your severity ratings don't directly map to a CVSS score or something similar, you will need to articulate the criteria necessary to meet your severity definitions. You will have to defend this occasionally, so make sure it is sound and can be backed up with logic and that the findings you inlcude in your report are rated accordingly.</p>
+<h5 id="biographies"><a class="header" href="#biographies">Biographies</a></h5>
+<p>If you perform assessments with the intent of fulfilling PCI compliance specifically, the report should inlcude a bio about the personnel performing the assessment with the specific goal of articulating that the consultant is adequately qualified to perform the assessment. Even without compliance obligations, it can help give the client peace of mind that the person doing their assessment knew what they were doing.</p>
+<h4 id="dynamic-appendices"><a class="header" href="#dynamic-appendices">Dynamic Appendices</a></h4>
+<h5 id="exploitation-attempts-and-payloads"><a class="header" href="#exploitation-attempts-and-payloads">Exploitation Attempts and Payloads</a></h5>
+<p>If you've ever done anything in incident response, you should know how many artifacts are left behind after a pentest for the forensics guys to try and sift through. Be respectful and keep track of the stuff you did so that if they experience an incident, they can differentiate what was you versus an actual attacker. If you generate custom payloads, particularly if you drop them on disk, you should also inlcude the details of those payloads here, so the client knows exactly where to go and what to look for to get rid of them. This is especially important for the payloads that you cannot clean up yourself.</p>
+<h5 id="compromised-credentials"><a class="header" href="#compromised-credentials">Compromised Credentials</a></h5>
+<p>If a large number of accounts were compromised, it is helpful to list them here so that the client can take action against them if necessary.</p>
+<h5 id="configuration-changes"><a class="header" href="#configuration-changes">Configuration Changes</a></h5>
+<p>If you made any configuration changes in the client environment, you should itemize all of them so that the client can revert them and elimante any risks you introduced into the environment. Obviously, it's ideal if you put things back the way you found them yourself and get approval in writing from the client to change things to prevent getting yelled at later on if your change has unintended consequences for a revenue-generating process.</p>
+<h5 id="additional-affected-scope"><a class="header" href="#additional-affected-scope">Additional Affected Scope</a></h5>
+<p>If you have a finding with a list of affected hosts that would be too much to include with the finding itself, you can usually reference an appendix in the finding to see a complete list of the affected hosts where you can create a table to display them in multiple columns. This helps keep the report clean instead of having a bulleted list several pages long.</p>
+<h5 id="information-gathering"><a class="header" href="#information-gathering">Information Gathering</a></h5>
+<p>If the assessment is an External Pentest, you may include additional data to help the client understand their external footprint. This could include whois data, domain ownership information, subdomains, discovered emails, accounts found in public breach data, an analysis of the client's SSL/TLS configurations, and even a listing of externally accessible ports/services. This data can be beneficial in a low-to-no-finding report but should convey some sort of value to the client and not just be &quot;fluff&quot;.</p>
+<h5 id="domain-password-analysis"><a class="header" href="#domain-password-analysis">Domain Password Analysis</a></h5>
+<p>If you're able to gain Domain Admin access and dump the NTDS database, it's a good idea to run this through Hashcat with multiple wordlists and rules and even brute-force NTLM up through eight characters if your password cracking rig is powerful enough. Once you've exhausted your cracking attempts, a tool such as <a href="https://github.com/clr2of8/DPAT">DPAT</a> can be used to produce a nice report with various statistics. You may want to include some key stats from this report. This can help drive home themes in the Executive Summary and Findings sections regarding weak passwords. You may also wish to provide the client with the entire DPAT report as supplementary data.</p>
+<h2 id="reporting"><a class="header" href="#reporting">Reporting</a></h2>
+<h3 id="how-to-write-up-a-finding"><a class="header" href="#how-to-write-up-a-finding">How to Write Up a Finding</a></h3>
+<p>The Findings section of your report is the &quot;meat&quot;. This is where you get to show off what you found, how you exploited them, and give the client guidance on how to remediate the issues. The more detail you can put into each finding, the better. This will help technical teams reproducde the finding on their own and then be able to test that their fix worked. Being detailed in this section will also help whoever is tasked with the post-remediation assessment if the client contracts your firm to perform it. While you'll often have &quot;stock&quot; findings in some sort of database, it's essential to tweak them to fit your client's environment to ensure you aren't mispresenting anything.</p>
+<h4 id="breakdown-of-a-finding"><a class="header" href="#breakdown-of-a-finding">Breakdown of a Finding</a></h4>
+<p>Each finding should have the same general type of information that should be customized to your client's specific circumstances. If a finding is written to suit several different scenarios or protocols, the final version should be adjusted to only reference the particular circumstances you identified. &quot;Default Credentials&quot; could have different meanings for risk if it affects a DeskJet printer versus the building's HVAC control or another high-impact web application. At a minimum, the following information should be included for each finding:</p>
+<ul>
+<li>Description of the finding and what platform(s) the vuln affects</li>
+<li>Impact if the finding is left unresolved</li>
+<li>Affected systems, networks, environments, or applications</li>
+<li>Recommendation for how to address the problem</li>
+<li>Reference links with additional information about the finding and resolving it</li>
+<li>Steps to reproduce the issue and the evidence that you collected</li>
+</ul>
+<p>Some additional, optional fields include:</p>
+<ul>
+<li>CVE</li>
+<li>OWASP, MITRE IDs</li>
+<li>CVSS or similar score</li>
+<li>Ease of exploitation and probability of attack</li>
+<li>Any other information that might help learn about and mitigate the attack</li>
+</ul>
+<h4 id="showing-finding-reproduction-steps-adequately"><a class="header" href="#showing-finding-reproduction-steps-adequately">Showing Finding Reproduction Steps Adequately</a></h4>
+<p>As mentioned in the previous section regarding the Executive Summary, it's important to remeber that even though your point-of-conract might be reasonable technical, if they don't have a background specifically in pentesting, there is a pretty decent chance they won't have any idea what they're looking at. They may have never even heard of the tool you used to exploit this vuln, much less understand what's important in the wall of text it spits out when the command runs. For this reason, it's crucial to guard yourself against taking things for granted and assuming people know how to fill in the blanks themselves. If you don't do this correctly, this will erode the effectiveness of your deliverable, but this time in the eyes of your technical audience. Some concepts to consider:</p>
+<ul>
+<li>Break each step into its own figure. If you perform multiple steps in the same figure, a reader unfamiliar with the tools being used may not understand what is taking place, much less have an idea of how to reproduce it themselves.</li>
+<li>If setup is required, capture the full configuration so the reader can see what the exploit config should look like before running the exploit. Create a second figure that shows what happens when you run the exploit.</li>
+<li>Write a narrative between figures describing what is happening and what is going through your head at this point in the assessment. Do not try to explaint what is happening in the figure with the caption and have a bunch of consecutive figures.</li>
+<li>After walking through your demonstration using your preferred toolkit, offer alternative tools that can be used to validate the finding if they exist.</li>
+</ul>
+<p>Your primary objective should be to present evidence in a way that is understandable and actionable to the client. Think about how the client will use the information you're presenting. If you're showing a vuln in a web application, a screenshot of Burp isn't the best way to present this information if you're crafting your own web requests. The client will probably want to copy/paste the payload from your testing to recreate it, and they can't do that if it's just a screenshot.</p>
+<p>Another critical thing to consider is whether your evidence is completely and utterly defensible. For example, if you're trying to demonstrate that information is being transmitted in clear text because of the use of basic authentication in a web application, it's insufficient just to screenshot the login prompt popup. That shows that basic auth is in place but offers no proof that information is being transmitted in the clear. In this instance, showing the login prompt with some fake credentials entered into it, and the clear text credentials in a Wireshark packet capture of the human-readable authentication request leaves no room for debate. Similarly, if you're trying to demonstrate the presence of a vuln in a particular web application or something else with a GUI, it's important to capture either the URL in the address bar or output from an <code>ifconfig</code> or <code>ipconfig</code> command to prove that it's on the client's host and not some random image you downloaded from Google. Also, if you're screenshotting your browser, turn your bookmarks bar off and disable any unprofessional extensions or dedicate a specific web browser to your testing.</p>
+<h4 id="effective-remediation-recommendations"><a class="header" href="#effective-remediation-recommendations">Effective Remediation Recommendations</a></h4>
+<h5 id="example"><a class="header" href="#example">Example</a></h5>
+<ul>
+<li><strong>Bad</strong>: Reconfigure your registry settings to harden against X.</li>
+<li><strong>Good</strong>: To fully remediate this finding, the following registry hives should be updated with the specific values. Note that changes to critical components like the registry should be approached with caution and tested in a small group prior to making large-scale changes.
+<ul>
+<li><code>[list the full path to the actual registry hive]</code>
+<ul>
+<li>Change value X to value Y</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="rationale"><a class="header" href="#rationale">Rationale</a></h5>
+<p>While the &quot;bad&quot; example is at least somewhat helpful, it's fairly lazy, and you're squandering a learning opportunity. Once again, the reader of this report may not have the depth of experience in Windows as you, and giving them a recommendation that will require hours' worth of work for them to figure out how to do it is only going to frustrate them. Do your homework and be as specific as reasonably possible. Doing so has the following benefits:</p>
+<ul>
+<li>You learn more this way and will be much more comfortable answering questions during the report review. This will reinforce the client's confidence in you and will be knowledge that you can leverage on future assessments and to help level up your team.</li>
+<li>The client will appreciate you doing the research for them and outlining specifically what needs to be done so they can be as efficient as possible. This will increase the likelihood that they will ask you to do future assessments and recommend you and your team to their friends.</li>
+</ul>
+<p>It's also worth drawing attention to the fact the &quot;good&quot; example includes a warning that changing something as important as the registry carries its own set of risks and should be performed with caution. Again, this indicates to the client that you have their best interests in mind an genuinely want them to succeed. For better or worse, there will be clients that will blindly to whatever you tell them to and will not hesitate to try and hold you accountable if doing so ends up breaking something.</p>
+<h4 id="selecting-quality-references"><a class="header" href="#selecting-quality-references">Selecting Quality References</a></h4>
+<p>Each finding should include one or more external references for further reading on a particular vuln or misconfig. Some criteria that enhances the usefulness or a reference:</p>
+<ul>
+<li>A vendor-agnostic source is helpful. Obviously, if you find a ASA vuln, a Cisco reference link makes sense, but you shouldn't lean on them for a writeup on anything outside of networking. If you reference an article written by a product vendor, chances are the article's focus will be telling the reader how their product can help when all the reader wants is to know how to fix it themselves.</li>
+</ul>
+<p>A thorough wakthrough or explanation of the finding and any recommended workarounds or mitigations is preferable. Don't choose articles behind a paywall or something where you only get part of what you need without paying.</p>
+<ul>
+<li>Use articles that get to the point quickly. This isn't a recipe website, and no one cares how often your grandmother used to make those cookies. You have problems to solve, and making someone dig through the entire NIST 800-53 document or an RFC is mor annoying than helpful.</li>
+<li>Choose sources that have clean websites and don't make you feel like a bunch of crypto miners that are running in the background or ads pop up everywhere.</li>
+<li>If possible, write some of your own source material and blog about it. The research will aid you in explaining the impact of the finding to your clients, and while the infosec community is pretty helpful, it'd be preferable not to send your clients to a competitor's website.</li>
+</ul>
+<h3 id="reporting-tips-and-tricks"><a class="header" href="#reporting-tips-and-tricks">Reporting Tips and Tricks</a></h3>
+<h4 id="templates"><a class="header" href="#templates">Templates</a></h4>
+<p>It's best to have a blank report template for every assessment type you perform. If you are not using a reporting tool and just working in old-fashioned MS Word, you can always build a report template with macros and placeholders to fill in some of the data points you fill out for every assessment. You should work with blank templates every time and not just modify a report from a previous client, as you could risk leaving another client's name in the report or other data that does not match your current environment. This type of error makes you look amateur and is easily avoidable.</p>
+<h4 id="ms-word-tips--tricks"><a class="header" href="#ms-word-tips--tricks">MS Word Tips &amp; Tricks</a></h4>
+<p>Microsoft Word can be a pain to work with, but there are several ways you can make it work for you to make your lives easier and it's easily the least of the available evils. Here are few tips &amp; tricks to becoming an MS Word guru.</p>
+<ul>
+<li><strong>Font Styles</strong>: You should be getting as close as you possibly can to a document without and &quot;direct formatting&quot; in it. Direct formatting is highlighting text and clicking the button to make it bold, italics, underlined, colored, highlighted, etc. If you use font styles and you find that you've overlooked a setting in one of your headings that messes up the placement or how it looks, if you update the style itself, it updates &quot;all&quot; instances of that style used in the entire document instead of you having to go manually update all 45 times you used your random heading.</li>
+<li><strong>Table Styles</strong>: Apply the same to tables. Same concept here. It makes global changes much easier and promotes consistency throughout the report. It also generally makes everyone using the document less miserable, both as an author and as QA.</li>
+<li><strong>Captions</strong>: Use the built-in capability if you're putting captions on things. Using this functionality will cause the captions to renumber themselves if you have to add or remove something from the report, which is a GIGANTIC headache. This typically has a built-in font style that allows you to control how the captions look.</li>
+<li><strong>Page numbers</strong>: Page numbers make it much easier to refer to specific areas of the document when collaborating with the client to answer questions or clarify the report's content. It's the same for clients working internally with their teams to address the findings.</li>
+<li><strong>TOC</strong>: A Table of Contents is a standard component of a professional report. The default TOC is probably fine, but if you want something custom, like hiding page numbers or changing the tab leader, you can select a custom TOC and tinker with the settings.</li>
+<li><strong>List of Figures/Tables</strong>: It's debatable whether a List of Figures or Tables should be put in the report. This is the same concept as a TOC, but it only lists the figures or tables in the report. These trigger off captions, so if you're not using captions on one or the other, or both, this won't work.</li>
+<li><strong>Bookmarks</strong>: Bookmarks are most commonly used to designate places in the document that you can create hyperlinks to. If you plan on using macros to combine templates, you can also use bookmarks to designate entire sections that can be automatically removed from the report.</li>
+<li><strong>Custom Dictionary</strong>: You can think of a custom dictionary as an extension of Word's built-in AutoCorrect feature. If you find yourself misspelling the same words every time you write a report or want to prevent embarrasing typos, you can add these words to a custom dictionary, and Word will automatically replace them for you. Unfortunately, this feature does not follow the template around, so people will have to configure their own.</li>
+<li><strong>Language Settings</strong>: The primary thing you want to use custom language settings for is most likely to apply it to the font style you created for your code/terminal/text-based evidence. You can select the option to ignore spelling and grammer checking within the language settings for this font style. This is helpful because after you build a report with a bunch of figures in it and you want to run the spell checker tool, you don't have to click ignore a billion times to skip all the stuff in your figures.</li>
+<li><strong>Custom Bullet/Numbering</strong>: You can set up custom numbering to automatically number things like your findings, appendices, and anything else that might benefit from automatic numbering.</li>
+<li><strong>Quick Access Toolbar Setup</strong>: There are many options and functions you can add to your Quick Access Toolbar that you should peruse at your leisure to determine how useful they will be for your workflow.
+<ul>
+<li>Back</li>
+<li>Undo/Redo</li>
+<li>Save</li>
+<li>...</li>
+</ul>
+</li>
+<li><strong>Useful Hotkeys</strong>: <code>[F4]</code> will apply the last action you took again. For example, if you highlight some text and apply a font style to it, you can highlight something else to which you want to apply the same font style and just hit <code>[F4]</code>, which will do the same thing. If you're using a TOC and lists of figures and tables, you can hit <code>[Ctrl+A]</code> to select all and <code>[F9]</code> to update all of them simultaneously. This will also update any other &quot;fields&quot; in the document and sometimes does not work as planned, so use it at your own risk. A more commonly known own is <code>[Ctrl+S]</code> to save. You should be doing it often in case Word crashes, so you don't lose data. If you need to look at two different areas of the report simultaneously and don't want to scroll back and forth, you can use <code>[Crtl+Alt+S]</code> to split the window into two panes. This may seem like a silly one, but if you accidentally hit your keyboard and you have no idea where your cursor is, you can hit <code>[Shift+F5]</code> to move the cursor to where the last revision was made.</li>
+</ul>
+<h4 id="automation"><a class="header" href="#automation">Automation</a></h4>
+<p>When developing report templates, you may get to a point where you have a reasonably mature document but not enough time or budget to acquire an automated reporting platform. A lot of automation can be gained through macros in MS Word documents. You will need to save your templates as .dotm files, and you will need to be in a Windows environment to get the most out of this. Some of the most common things you can do with macros are:</p>
+<ul>
+<li>Create a macro that will throw a pop-up for you to enter key pieces of information that will then get automatically inserted into the report template where designated placeholder variables are:
+<ul>
+<li>Client name</li>
+<li>Dates</li>
+<li>Scope details</li>
+<li>Type of testing</li>
+<li>Environment or application names</li>
+</ul>
+</li>
+<li>You can combine different report templates into a single document and have a macro go through and remove entire sections that don't belong in a particular assessment type.
+<ul>
+<li>This eases the task of maintaining your templates since you only have to maintain one instead of many</li>
+</ul>
+</li>
+<li>You may also be able to automate quality assurance tasks by correcting errors made often. Given that writing Word macros is basically a programming language on its own, it's left to you to use online resources to learn how to accomplish  these tasks.</li>
+</ul>
+<h4 id="reporting-toolsfindings-database"><a class="header" href="#reporting-toolsfindings-database">Reporting Tools/Findings Database</a></h4>
+<p>Once you do several assessments, you'll start to notice that many of the environments you target are afflicted by the same problems. If you do not have a database of findings, you'll waste a tremendous amount of time rewriting the same content repeatedly, and you risk introducing inconsistencies in your recommendations and how thoroughly or clearly you describe the finding itself. If you multiply these issues by an entire team, the quality of your reports will vary wildly from one consultant to the next. At a minimum, you should maintain a dedicated document with sanitized versions of your findings that can copy/paste into your reports. You should constantly strive to customize findings to a client environment whenever it makes sense but having templated findings saves a ton of time.</p>
+<p>However, it is time well spent to investigate and configure one of the available platforms designed for this purpose. Some are free, and some must be paid for, but they will most likely pay for themselves quickly in the amount of time and headache you save if you can afford the initial investment.</p>
+<ul>
+<li><a href="https://github.com/GhostManager/Ghostwriter">Ghostwriter</a></li>
+<li><a href="https://attackforge.com/">AttackForge</a></li>
+<li><a href="https://dradisframework.com/ce/">Dradis</a></li>
+<li><a href="https://plextrac.com/">PlexTrac</a></li>
+<li><a href="https://github.com/SecurityRiskAdvisors/VECTR">Security Risk Advisors VECTR</a></li>
+<li><a href="https://www.rootshellsecurity.net/why-prism/">Rootshell Prism</a></li>
+<li><a href="https://github.com/blacklanternsecurity/writehat">WriteHat</a></li>
+</ul>
+<h4 id="misctricks"><a class="header" href="#misctricks">Misc/Tricks</a></h4>
+<ul>
+<li>Aim to tell a story with your report. Why does it matter that you could perform Kerberoasting and crack a hash?</li>
+<li>Write as you go. Don't leave reporting until the end. Your report does not seed to be perfect as you test but documenting as much as you can as clearly as you can during testing will help you be as comprehensive as possible and not miss things or cut corners while rushing on the last day of the testing window.</li>
+<li>Stay organized. Keep things in chronological order, so working with your notes is easier. Make your notes clear and easy to navigate, so they provide value and don't cause you extra work.</li>
+<li>Show as much evidence as possible while not being overly verbose. Show enough screenshots/command output to clearly demonstrate and reproduce issues but do not add loads of extra screenshots or unecessary command output that will clutter up the report.</li>
+<li>Clearly show what is being presented in screenshots. Use a tool such as <a href="https://getgreenshot.org/">Greenshot</a> to add arrows/colored boxes to screenshots and add explanations under the screenshot if needed. A screenshot is useless if your audience has to guess what you're trying to show with it.</li>
+<li>Redact sensitive data wherever possible. This includes cleartext passwords, password hashes, other secrets, and any data that could be deemed sensitive to your clients. Reports may be sent around a company and even to third parties, so you want to ensure you've done your due diligence not to include any data in the report that could be misused. A tool such as Greenshot can be used to obfuscate parts of a screenshot (<em>NO BLURRING!</em>).</li>
+<li>Redact tool output wherever possible to remove elements that non-hackers may construe as unprofessional. In CME's case, you can change that value in your config file to print something else to the screen, so you don't have to change it in your report every time. Other tools may have similar customization.</li>
+<li>Check your Hashcat output to ensure that none of the candidate passwords is anything crude. Many wordlists will have words that can be considered crude/offensive, and if any of these are present in the Hashcat output, change them to something innocuous.</li>
+<li>Check grammer, spelling, and formatting, ensure font and font sizes are consistent and spell out acronyms the first time you use them in a report.</li>
+<li>Make sure screenshots are clear and do not capture extra parts of the screen that bloat their size. If your report is difficult to interpret due to poor formatting or the grammar and spelling are a mess, it will detract from the technical results of the assessment. Consider a tool such as Grammarly or LanguageTool, which is much more powerful than Microsoft Word's built-in spelling and grammer check.</li>
+<li>Use raw command output where possible, but when you need to screenshot a console, make sure it's not transparent and showing your background/other tools. The console should be solid black with a reasonable theme. Your client may print the report, so you may want to consider a light background with dark text, so you don't demolish their printer cartrigde.</li>
+<li>Keep your hostname and username professional. Don't show screenshots with a prompt like <code>azzkicker@clientsmasher</code>.</li>
+<li>Establish a QA process. Your report should go through at least one, but preferably two rounds of QA. You should never review your own work and want to put together the best possible deliverable, so pay attention to the QA process. At a minimum, if you're independent, you should sleep on it for a night and review it again. Stepping away from the report for a while can sometimes help you see things you overlook after staring at it for a long time.</li>
+<li>Establish a style guide and stick to it, so everyone on your team follows a similar format and reports look consistent across all assessments.</li>
+<li>Use autosave with your notetaking tool and MS Word. You don't want to lose hours of work because a program crashes. Also, backup your notes and other data as you go, and don't store everything on a single VM. VMs can fail, so you should move evidence to a secondary location as you go. This is a task that can and should be automated.</li>
+<li>Script and automate wherever possible. This will ensure your work is consistent across all assessments you perform, and you don't waste time on tasks repeated on every assessment.</li>
+</ul>
+<h4 id="client-communication"><a class="header" href="#client-communication">Client Communication</a></h4>
+<p>Strong written and verbal communication skills are paramount for anyone in a pentesting role. During your engagements, you must remain in constant contact with your clients and serve appropriately in your role as trusted advisors. They are hiring your company and paying a lot of money for you to identify issues in their networks, give remediation advice, and also to educate their staff on the issue you find through your report deliverable. At the start of every engagement, you should send a start notification email including information such as:</p>
+<ul>
+<li>Tester name</li>
+<li>Description of the type/scope of the engagement</li>
+<li>Source IP address for testing</li>
+<li>Dates anticipate for testing</li>
+<li>Primary and secondary contact information (<em>email and phone</em>)</li>
+</ul>
+<p>At the end of each day, you should send a stop notification to signal the end of testing. This can be a good time to give a high-level summary of findings so the report does not entirely blindside the client. You can also reiterate expectations for report delivery at this time. You should, of course, be working on the report as you go and not leave it 100% to the last minute, but it can take a few days to write up the entire attack chain, executive summary, findings, recommendations, and perform self-QA checks. After this, the report should go through at least one round of internal QA, which can take some time.</p>
+<p>The start and stop notifications also give the client a window for when your scans and testing activities were taking place in case they need to run down any alerts.</p>
+<p>Aside from formal communications, it is good to keep an open dialogue with your clients and build and strengthen the trusted advisor relationship. Did you discover an additional external subnet or subdomain? Check with the client to see if they'd like to add it to the scope. Did you discover a high-risk SQLi or RCE flaw on an external website? Stop testing and formally notify the client and see how they would like to proceed. A host seems down from scanning? It happens, and it's best to be upfront about it than try to hide it. Got Domain Admin/Enterprise Admin? Give the client a heads up in case they see alerts and get nervous or so they can prepare their management for the pending report. Also, at this point, let them know that you will keep testing and looking for other paths but ask them if there is anything else they'd like you to focus on or servers/databases that should still be limited even with DA privileges that you can target.</p>
+<p>You should discuss the importance of detailed notes and scanner logging/tool output. If your client asks you if you hit a specific host on X day, you should be able to, without a doubt, provide documented evidence of your exact activities. It stinks to get blamed for an outage, but it's even worse if you get blamed for one and have zero concrete evidence to prove that it was not a result of your testing.</p>
+<p>Keeping these communication tips in mind will go a long way towards building goodwill with your client and winning repeat business and even referrals. People will want to work with others who treat them well and work diligently and professionally, so this is your time to shine. With excellent technical skills and communication skills, you will be unstoppable.</p>
+<h4 id="presenting-your-report---the-final-product"><a class="header" href="#presenting-your-report---the-final-product">Presenting Your Report - The Final Product</a></h4>
+<p>Once the report is ready, it needs to go through review before delivery. Once delivered, it is customary to provide the client with a report review meeting to either go over the entire report, the findings alone, or answer that they may have.</p>
+<h5 id="qa-process"><a class="header" href="#qa-process">QA Process</a></h5>
+<p>A sloppy report will call into question everything about your assessment. If your report is a disorganized mess, is it even possible that you performed a thorough assessment? Ensure your report deliverable is a testament to your hard-earned knowledge and hard work on the assesssment and adequately reflects both. The client isn't going to see most of what you did during the assessment.</p>
+<p>The report is your highlight reel and is honestly what the client is paying for.</p>
+<p>You could have executed the most complex attack chain in the history of attack chains, but if you can't get it on paper in a way that someone else can understand, it may as well have never happened at all.</p>
+<p>If possible, every report should undergo at least one round of QA by someone who isn't the author. Some teams may also opt to break up the QA process into multiple steps. It will be up to you, your team, or your organization to choose the right approach that works for the size of your team. If you are just starting on your own and don't have the luxury of having someone else review your report, it is strongly recommended walking away from it for a while or sleeping on it and reviewing it again at a minimum. Once you read through a document 45 times, you start overlooking things. This mini-reset can help you catch things you didn't see after you had been staring at it for days.</p>
+<p>It is good practice to include a QA checklist as part of your report template. This should consist of all the checks the author should make regarding content and formatting and anything else that you may have in your style guide. This list will likely grow over time as you and your team's processes are refined, and you learn which mistakes people are most prone to making. Make sure that you check grammar, spelling, and formatting! A tool such as Grammarly or LanguageTool is excellent for this. Don't send a sloppy report to QA because it may get kicked back to you to fix before the reviewer even looks at it, and it can be a costly waste of time for you and others.</p>
+<p>If you have access to someone that can perform QA and you begin trying to implement a process, you may soon find that as the team grows and the number of reports being output increases, things can get difficult to track. At a basic level, a Google Sheet or some equivalent could be used to help make sure things don't get lost, but if you have many more people and you have access to a tool like Jira, that could be a much more scalable solution. You'll likely need a central place to store your reports so that other people can get to them to perform the QA process. There are many out there that should work.</p>
+<p>Ideally, the person performing QA should not be responsible for making significant modifications to the report. If there are minor typos, phrasing, or formatting issues to address that can be done more quickly than sending the report back to the author to change, that's likely fine. For missing or poorly illustrated evidence, missing findings, unusable executive summary content, etc., the author should bear the responsibility for getting that document into presentable condition.</p>
+<p>You obviously want to be diligent about reviewing the changes made to your report so that you can stop making the same mistakes in subsequent reports. It's absolutely a learning opportunity, so don't squander it. If it's something that happens across mutliple people, you may want to consider adding that item to your QA checklist to remind people to address those issues before sending reports to QA. There aren't many better feelings in this career than when the day comes that a report you wrote gets through QA without any changes.</p>
+<p>It may be considered strictly a formality, but it's reasonably common to initially issue a &quot;Draft&quot; copy of the report to the client once the QA has been completed. Once the client has the draft report, they should be expected to review it and let you know whether they would like an opportunity to walk through the report with you to discuss modifications and ask questions. If any changes or updates need to be made to the report after this conversation, they can be made to the report and a &quot;Final&quot; version issued. The final report is often going to be identical to the draft report, but it will just say &quot;FInal&quot; instead of &quot;Draft&quot;. It may seem frivolous, but some auditors will only consider accepting a final report as an artifact, so it could be quite important to some clients.</p>
+<h4 id="report-review-meeting"><a class="header" href="#report-review-meeting">Report Review Meeting</a></h4>
+<p>Once the report has been delivered, it's fairly customary to give the client a week or so to review the report, gather their thoughts, and offer to have a call to review it with them to collect any feedback they have on your work. Usually, this call covers the technical finding details one by one and allows the client to ask questions about what you found and how you found it. These calls can be immensely helpful in improving your ability to present this type of data, so pay careful attention to the conversation. If you find yourself answering the same questions every time, that could indicate that you need to tweak your workflow or the information you provide to help answer those questions before the client asks them.</p>
+<p>Once the report has been reviewed and accepted by both sides, it is customary to change the DRAFT designation to FINAL and deliver the final copy to the client. From here, you should archive all of your testing data per your company's retention policies until a retest of remediation findings is performed at the very least.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -665,7 +672,7 @@ ACME-IPT/
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../general/webdev/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../security_incident_reporting.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -679,7 +686,7 @@ ACME-IPT/
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../general/webdev/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../security_incident_reporting.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -720,7 +727,6 @@ ACME-IPT/
 
         <!-- Custom JS scripts -->
         <script src="../../theme/pagetoc.js"></script>
-
 
 
     </div>

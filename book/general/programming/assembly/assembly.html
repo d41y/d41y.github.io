@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item expanded "><a href="../../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../general/programming/assembly/assembly.html" class="active"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,443 +172,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#assembly">Assembly</a>
-<ul>
-<li><a href="#architecture">Architecture</a>
-<ul>
-<li><a href="#assembly-language">Assembly Language</a></li>
-<li><a href="#high-level-vs-low-level">High-Level vs. Low-Level</a></li>
-<li><a href="#compilation-stages">Compilation Stages</a></li>
-</ul>
-</li>
-<li><a href="#computer-architecture">Computer Architecture</a>
-<ul>
-<li><a href="#memory">Memory</a>
-<ul>
-<li><a href="#cache">Cache</a></li>
-<li><a href="#ram">RAM</a></li>
-</ul>
-</li>
-<li><a href="#iostorage">IO/Storage</a></li>
-<li><a href="#speed">Speed</a></li>
-</ul>
-</li>
-<li><a href="#cpu-architecture">CPU Architecture</a>
-<ul>
-<li><a href="#clock-speed--clock-cycle">Clock Speed &amp; Clock Cycle</a></li>
-<li><a href="#instruction-cycle">Instruction Cycle</a></li>
-<li><a href="#processor-specific">Processor Specific</a></li>
-</ul>
-</li>
-<li><a href="#instruction-set-architecture-isa">Instruction Set Architecture (ISA)</a>
-<ul>
-<li><a href="#cisc">CISC</a></li>
-<li><a href="#risc">RISC</a></li>
-<li><a href="#cisc-vs-risc">CISC vs RISC</a></li>
-</ul>
-</li>
-<li><a href="#registers-addresses-and-data-types">Registers, Addresses, and Data Types</a>
-<ul>
-<li><a href="#registers">Registers</a></li>
-<li><a href="#sub-registers">Sub-Registers</a></li>
-<li><a href="#memory-addresses">Memory Addresses</a></li>
-<li><a href="#address-endianness">Address Endianness</a></li>
-<li><a href="#data-types">Data Types</a></li>
-</ul>
-</li>
-<li><a href="#assembling--debugging">Assembling &amp; Debugging</a>
-<ul>
-<li><a href="#assembly-file-structure">Assembly File Structure</a></li>
-<li><a href="#directives">Directives</a></li>
-<li><a href="#variables">Variables</a></li>
-<li><a href="#code">Code</a></li>
-<li><a href="#assembling">Assembling</a></li>
-<li><a href="#linking">Linking</a></li>
-<li><a href="#disassembling">Disassembling</a></li>
-<li><a href="#gnu-debugger-gdb">GNU Debugger (GDB)</a>
-<ul>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#getting-started">Getting Started</a></li>
-<li><a href="#disassemble">Disassemble</a></li>
-</ul>
-</li>
-<li><a href="#debugging-with-gdb">Debugging with GDB</a>
-<ul>
-<li><a href="#break">Break</a></li>
-<li><a href="#examine">Examine</a>
-<ul>
-<li><a href="#instructions">Instructions</a></li>
-<li><a href="#strings">Strings</a></li>
-<li><a href="#addresses">Addresses</a></li>
-</ul>
-</li>
-<li><a href="#step">Step</a>
-<ul>
-<li><a href="#step-instruction">Step Instruction</a></li>
-<li><a href="#step-count">Step Count</a></li>
-<li><a href="#step-1">Step</a></li>
-</ul>
-</li>
-<li><a href="#modify">Modify</a>
-<ul>
-<li><a href="#addresses-1">Addresses</a></li>
-<li><a href="#registers-1">Registers</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#basic-instructions">Basic Instructions</a>
-<ul>
-<li><a href="#moving-data">Moving Data</a></li>
-<li><a href="#loading-data">Loading Data</a></li>
-<li><a href="#address-pointers">Address Pointers</a></li>
-<li><a href="#moving-pointer-values">Moving Pointer Values</a></li>
-<li><a href="#loading-value-pointer">Loading Value Pointer</a></li>
-<li><a href="#unary-instructions">Unary Instructions</a></li>
-<li><a href="#binary-instructions">Binary Instructions</a></li>
-<li><a href="#bitwise-instructions">Bitwise Instructions</a></li>
-</ul>
-</li>
-<li><a href="#control-instructions">Control Instructions</a>
-<ul>
-<li><a href="#loops">Loops</a></li>
-<li><a href="#uncoditional-branching">Uncoditional Branching</a></li>
-<li><a href="#conditional-branching">Conditional Branching</a>
-<ul>
-<li><a href="#reflags-register">REFLAGS Register</a></li>
-<li><a href="#cmp">CMP</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#functions">Functions</a>
-<ul>
-<li><a href="#using-the-stack">Using the Stack</a>
-<ul>
-<li><a href="#usage-with-functionssyscalls">Usage with Functions/Syscalls</a></li>
-<li><a href="#pushpop">PUSH/POP</a></li>
-</ul>
-</li>
-<li><a href="#syscalls">Syscalls</a>
-<ul>
-<li><a href="#linux-syscalls">Linux Syscalls</a></li>
-<li><a href="#syscall-function-arguments">Syscall Function Arguments</a></li>
-<li><a href="#syscall-calling-convention">Syscall Calling Convention</a>
-<ul>
-<li><a href="#syscall-arguments">Syscall Arguments</a></li>
-<li><a href="#callig-a-syscall">Callig a Syscall</a></li>
-</ul>
-</li>
-<li><a href="#exit-syscall">Exit Syscall</a></li>
-</ul>
-</li>
-<li><a href="#procedures">Procedures</a>
-<ul>
-<li><a href="#defining-procedures">Defining Procedures</a></li>
-<li><a href="#callret">CALL/RET</a></li>
-</ul>
-</li>
-<li><a href="#functions-1">Functions</a>
-<ul>
-<li><a href="#functions-calling-convetion">Functions Calling Convetion</a></li>
-<li><a href="#using-external-functions">Using External Functions</a></li>
-<li><a href="#importing-lib-functions">Importing lib Functions</a></li>
-<li><a href="#saving-registers">Saving Registers</a></li>
-<li><a href="#function-arguments">Function Arguments</a></li>
-<li><a href="#stack-alignment">Stack Alignment</a></li>
-<li><a href="#function-call">Function Call</a></li>
-<li><a href="#dynamic-linker">Dynamic Linker</a></li>
-</ul>
-</li>
-<li><a href="#libc-functions">Libc Functions</a>
-<ul>
-<li><a href="#importing-libc-functions">Importing libc Functions</a></li>
-<li><a href="#saving-registers-1">Saving Registers</a></li>
-<li><a href="#function-arguments-1">Function Arguments</a></li>
-<li><a href="#stack-alignment-1">Stack Alignment</a></li>
-<li><a href="#function-call-1">Function Call</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#shellcodes">Shellcodes</a>
-<ul>
-<li><a href="#use-in-pentesting">Use in Pentesting</a></li>
-<li><a href="#assembly-to-machine-code">Assembly to Machine Code</a></li>
-<li><a href="#extract-shellcode">Extract Shellcode</a></li>
-<li><a href="#loading-shell-code">Loading Shell code</a></li>
-<li><a href="#debugging-shellcode">Debugging Shellcode</a>
-<ul>
-<li><a href="#pwntools">pwntools</a></li>
-<li><a href="#gcc">GCC</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#shellcoding-techniques">Shellcoding Techniques</a>
-<ul>
-<li><a href="#shellcoding-requirements">Shellcoding Requirements</a>
-<ul>
-<li><a href="#remove-variables">Remove Variables</a></li>
-<li><a href="#remove-addresses">Remove Addresses</a></li>
-<li><a href="#remove-null">Remove NULL</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#shellcode-tools">Shellcode Tools</a>
-<ul>
-<li><a href="#shell-shellcode">Shell Shellcode</a></li>
-<li><a href="#shellcraft">Shellcraft</a></li>
-<li><a href="#msfvenom">Msfvenom</a></li>
-<li><a href="#shellcode-encoding">Shellcode Encoding</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="assembly"><a class="header" href="#assembly">Assembly</a></h1>
+                        <h1 id="assembly"><a class="header" href="#assembly">Assembly</a></h1>
 <h2 id="architecture"><a class="header" href="#architecture">Architecture</a></h2>
 <h3 id="assembly-language"><a class="header" href="#assembly-language">Assembly Language</a></h3>
 <p>Most of your interaction with your personal computers and smartphones is done through the OS and other applications. These applications are usually developed using high-level languages. You also know that each of these devices has a core processor that runs all of the necessary processes to execute systems and applications, along with Random Access Memory, Video Memory, and other similar components.</p>
@@ -624,7 +186,7 @@
 <h3 id="compilation-stages"><a class="header" href="#compilation-stages">Compilation Stages</a></h3>
 <p><img src="../../../images/assembly_1.png" alt="assembly 1" /></p>
 <h2 id="computer-architecture"><a class="header" href="#computer-architecture">Computer Architecture</a></h2>
-<p>Today most modern computers are built on the Von Neumann Architecture, which was developed back in 1945 by Von Neumann to enable the creation of "General Purpose Computers".</p>
+<p>Today most modern computers are built on the Von Neumann Architecture, which was developed back in 1945 by Von Neumann to enable the creation of &quot;General Purpose Computers&quot;.</p>
 <p>This architecture executes machine code to perform specific algorithms. It mainly consists of the following elements:</p>
 <ul>
 <li>Central Processing Unit (<em>CPU</em>)</li>
@@ -865,26 +427,21 @@ Byte Order:                      Little Endian
 <tr><td><strong>Indirect</strong></td><td>a reference pointer is given in the instruction</td><td><code>call 0x44d000</code> or <code>call [rax]</code></td></tr>
 <tr><td><strong>Stack</strong></td><td>address is on top of the stack</td><td><code>add rsp</code></td></tr>
 </tbody></table>
-</div><div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>The less immediate the value is, the slower it is to fetch!</p>
 </div>
+<blockquote>
+<p>[!NOTE]
+The less immediate the value is, the slower it is to fetch!</p>
+</blockquote>
 <h3 id="address-endianness"><a class="header" href="#address-endianness">Address Endianness</a></h3>
 <p>... is the order of its bytes in which they are stored or retrieved from memory. There are two types of endianness: <strong>Little-Endian</strong> and <strong>Big-Endian</strong>. With Little-Endian processors, the little-end byte of the address is filled/retrieved first right-to-left, while with Big-Endian processors, the big-end byte is filled/retrieved first left-to-right.</p>
 <p>If you have the address <code>0x0011223344556677</code> to be stored in memory, little-endian processors would store the <code>0x00</code> byte on the right-most bytes, and then the <code>0x11</code> byte would be filled after it, so it becomes <code>0x1100</code>, and then the <code>0x22</code> byte, so it becomes <code>0x221100</code>, and so on. Once all bytes are in place, they would look like <code>0x7766554433221100</code>, which is the reverse of the original value. Of course, when retrieving the value back, the processor will also use little-endian retrieval, so the value retrieved would be the same as the original value.</p>
 <p>Another example that shows how this can affect the stored values in binary. If you had the 2-byte integer <code>426</code>, its binary representation is <code>00000001 10101010</code>. The order in which these two bytes are stored would change its value. If you stored it in reverse as <code>10101010 00000001</code>, its value becomes <code>43521</code>.</p>
 <p>The big-endian processors would store these bytes as <code>00000001 10101010</code> left-to-right, while little-endian processors store them as <code>10101010 00000001</code> right-to-left. When retrieving the value, the processor has to use the same endianness used when storing them, or it will get the wrong value. This indicates that the order in which the bytes are stored/retrieved makes a big difference.</p>
 <p><img src="../../../images/assembly_8.png" alt="assembly 8" /></p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>Little-endian byte order is used with Intel/AMD x86 in most modern OS, so the shellcode is always represented right-to-left.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+Little-endian byte order is used with Intel/AMD x86 in most modern OS, so the shellcode is always represented right-to-left.</p>
+</blockquote>
 <h3 id="data-types"><a class="header" href="#data-types">Data Types</a></h3>
 <p>The x86 architecture supports many types of data sizes, which can be used with various instructions. The following are the most common data types:</p>
 <div class="table-wrapper"><table><thead><tr><th>Component</th><th>Length</th><th>Example</th></tr></thead><tbody>
@@ -893,13 +450,11 @@ Byte Order:                      Little Endian
 <tr><td>double word (dword)</td><td>32 bits - 4 bytes</td><td><code>0xabcdef12</code></td></tr>
 <tr><td>quad word (qword)</td><td>64 bits - 8 bytes</td><td><code>0xabcdef1234567890</code></td></tr>
 </tbody></table>
-</div><div class="mdbook-callouts mdbook-callouts-important">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  important
-</p>
-<p>Whenever you use a variable with a certain data type or use a data type with an instruction, both operands should be of the same size.</p>
 </div>
+<blockquote>
+<p>[!IMPORTANT]
+Whenever you use a variable with a certain data type or use a data type with an instruction, both operands should be of the same size.</p>
+</blockquote>
 <p>For example, you can't use a variable defined as byte with <code>rax</code>, as <code>rax</code> has a size of 8 bytes. In this case, you would have to use <code>al</code>, which has the same size of 1 byte.</p>
 <div class="table-wrapper"><table><thead><tr><th>Sub-Register</th><th>Data Type</th></tr></thead><tbody>
 <tr><td><code>al</code></td><td>byte</td></tr>
@@ -913,7 +468,7 @@ Byte Order:                      Little Endian
 <pre><code class="language-asm">         global  _start
 
          section .data
-message: db      "Hello HTB Academy!"
+message: db      &quot;Hello HTB Academy!&quot;
 
          section .text
 _start:
@@ -927,7 +482,7 @@ _start:
          mov     rdi, 0
          syscall
 </code></pre>
-<p>This Assembly code should print the string "Hello HTB Academy!" to the screen.</p>
+<p>This Assembly code should print the string &quot;Hello HTB Academy!&quot; to the screen.</p>
 <p>First, examine the way the code is distributed:</p>
 <p><img src="../../../images/assembly_9.png" alt="assembly 9" /></p>
 <p>Looking at the vertical parts of the code, each line can have three elements:</p>
@@ -969,32 +524,29 @@ _start:
 <div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>db 0x0a</code></td><td>defines the byte <code>0x0a</code>, which is a new line</td></tr>
 <tr><td><code>message db 0x41, 0x42, 0x43, 0x0a</code></td><td>defines the label <code>message =&gt; abc\n</code></td></tr>
-<tr><td><code>message db "Hello World!", 0x0a</code></td><td>defines the label <code>message =&gt; Hello World!\n</code></td></tr>
+<tr><td><code>message db &quot;Hello World!&quot;, 0x0a</code></td><td>defines the label <code>message =&gt; Hello World!\n</code></td></tr>
 </tbody></table>
 </div>
 <p>Furthermore, you can use the <code>equ</code> instruction with the <code>$</code> token to evaluate an expression, like the length of a defined variable's string. However, the labels defined with the <code>equ</code> instruction are constants, and they cannot be changed later.</p>
 <p>For example, the following code defines a variable and then defines a constant for its length.</p>
 <pre><code class="language-asm">section .data
-    message db "Hello World!", 0x0a
+    message db &quot;Hello World!&quot;, 0x0a
     length  equ $-message
 </code></pre>
 <h3 id="code"><a class="header" href="#code">Code</a></h3>
 <p>The second section is the <code>.text</code> section. This section holds all of the Assembly instructions and loads them to the text memory segment. Once all instructions are loaded into the text segment, the processor starts executing them one after another.</p>
 <p>The default convention is to have the <code>_start</code> label at the beginning of the <code>.text</code> section, which starts the main code that will be executed as the program runs.</p>
 <p>The text segment within the memory is read-only, so you cannot write any variables within it. The data section, on the other hand, is read/write, which is why we write your variables to it. However, the data segment within the memory is not executable, so any code you write to it cannot be executed. This separation is part of memory protections to mitigate things like buffer overflows and other types of binary exploitation.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>You can add comments to your Assembly code with a <code>;</code>.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+You can add comments to your Assembly code with a <code>;</code>.</p>
+</blockquote>
 <h3 id="assembling"><a class="header" href="#assembling">Assembling</a></h3>
 <p>First, you copy the code below into a file called <code>helloWorld.s</code>.</p>
 <pre><code class="language-asm">global _start
 
 section .data
-    message db "Hello HTB Academy!"
+    message db &quot;Hello HTB Academy!&quot;
     length equ $-message
 
 section .text
@@ -1012,39 +564,30 @@ _start:
 <p>Note the usage of <code>equ</code> to dynamically calculate the length of message, instead of using a static 18. Assemble the file using <code>nasm</code>:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ nasm -f elf64 helloWorld.s
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>The <code>-f elf64</code> flag is used to note that you want to assemble a 64-bit Assembly code. If you wanted to assemble a 32-bit code, you would use <code>-f elf</code>.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+The <code>-f elf64</code> flag is used to note that you want to assemble a 64-bit Assembly code. If you wanted to assemble a 32-bit code, you would use <code>-f elf</code>.</p>
+</blockquote>
 <p>This should output a <code>helloWorld.o</code> object file, which is then assembled into machine code, along with the details of all variables and sections. This file is not executable just yet.</p>
 <h3 id="linking"><a class="header" href="#linking">Linking</a></h3>
 <p>The final step is to link your file using <code>ld</code>. The <code>helloWorld.o</code> object file, though assembled, still cannot be executed. This is because many references and labels used by nasm need to be resolved into actual addresses, along with linking the file with various OS libraries that may be needed.</p>
 <p>This is why a Linux binary is called ELF, which stands for an Executable and Linkable Format. To link a file using <code>ld</code>, you can use the following command:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ld -o helloWorld helloWorld.o
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>To assemble a 32-bit binary, you need to add the <code>-m elf_i386</code>.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+To assemble a 32-bit binary, you need to add the <code>-m elf_i386</code>.</p>
+</blockquote>
 <p>Once you link the file with <code>ld</code>, you should have the final executable file:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ./helloWorld
 Hello HTB Academy!
 </code></pre>
 <h3 id="disassembling"><a class="header" href="#disassembling">Disassembling</a></h3>
 <p>To disassemble a file, you can use the <code>objdump</code> tool, which dumps machine code from a file and interprets the Assembly instruction of each hex code. You can disassemble a binary using the <code>-D</code> flag.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>You can use the <code>-M intel</code> flag, so that <code>objdump</code> would write the instructions in the Intel syntax.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+You can use the <code>-M intel</code> flag, so that <code>objdump</code> would write the instructions in the Intel syntax.</p>
+</blockquote>
 <pre><code class="language-bash">d41y@htb[/htb]$ objdump -M intel -d helloWorld
 
 helloWorld:     file format elf64-x86-64
@@ -1071,16 +614,13 @@ Contents of section .data:
  402000 48656c6c 6f204854 42204163 6164656d  Hello HTB Academ
  402010 7921                                 y!
 </code></pre>
-<p>As you can see, the <code>.data</code> section indeed contains the message variable with the string "Hello HTB Academy!".</p>
+<p>As you can see, the <code>.data</code> section indeed contains the message variable with the string &quot;Hello HTB Academy!&quot;.</p>
 <h3 id="gnu-debugger-gdb"><a class="header" href="#gnu-debugger-gdb">GNU Debugger (GDB)</a></h3>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>Debugging is a term used for finding and removing issues from your code. When you develop a program, you will very frequently run into bugs in your code. It is not efficient to keep changing your code until it does what you expect of it. Instead, you perform debugging by setting breakpoints and seeing how your program acts on each of them and how your input changes between them, which should give you a clear idea of what is causing the bug.<br>
+<blockquote>
+<p>[!NOTE]
+Debugging is a term used for finding and removing issues from your code. When you develop a program, you will very frequently run into bugs in your code. It is not efficient to keep changing your code until it does what you expect of it. Instead, you perform debugging by setting breakpoints and seeing how your program acts on each of them and how your input changes between them, which should give you a clear idea of what is causing the bug.<br>
 Programs written in high-level languages can set breakpoints on specific lines and run the program through a debugger to monitor how they act. With Assembly, you deal with machine code represented as Assembly instructions, so your breakpoints are set in the memory location in which your machine code is loaded.</p>
-</div>
+</blockquote>
 <h4 id="installation"><a class="header" href="#installation">Installation</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo apt-get update
 d41y@htb[/htb]$ sudo apt-get install gdb
@@ -1185,7 +725,7 @@ $rip   : 0x0000000000401000  →  &lt;_start+0&gt; mov eax, 0x1
 ...SNIP...
 ───────────────────────────────────────────────────────────────────────────────────────── stack ────
 0x00007fffffffe310│+0x0000: 0x0000000000000001	 ← $rsp
-0x00007fffffffe318│+0x0008: 0x00007fffffffe5a0  →  "./helloWorld"
+0x00007fffffffe318│+0x0008: 0x00007fffffffe5a0  →  &quot;./helloWorld&quot;
 ...SNIP...
 ─────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
      0x400ffa                  add    BYTE PTR [rax], al
@@ -1198,7 +738,7 @@ $rip   : 0x0000000000401000  →  &lt;_start+0&gt; mov eax, 0x1
      0x401019 &lt;_start+25&gt;      syscall 
      0x40101b &lt;_start+27&gt;      mov    eax, 0x3c
 ─────────────────────────────────────────────────────────────────────────────────────── threads ────
-[#0] Id 1, Name: "helloWorld", stopped 0x401000 in _start (), reason: BREAKPOINT
+[#0] Id 1, Name: &quot;helloWorld&quot;, stopped 0x401000 in _start (), reason: BREAKPOINT
 ───────────────────────────────────────────────────────────────────────────────────────── trace ────
 [#0] 0x401000 → _start()
 </code></pre>
@@ -1206,13 +746,10 @@ $rip   : 0x0000000000401000  →  &lt;_start+0&gt; mov eax, 0x1
 <pre><code class="language-bash">gef➤  b *0x40100a
 Breakpoint 1 at 0x40100a
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>To continue the execution of your programm, you can use <code>continue</code> or <code>c</code>. If you use <code>run</code> or <code>r</code> again, it will run the program frm the start.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+To continue the execution of your programm, you can use <code>continue</code> or <code>c</code>. If you use <code>run</code> or <code>r</code> again, it will run the program frm the start.</p>
+</blockquote>
 <p>If you want to see what breakpoints you have at any point of the execution, you can use the <code>info breakpoint</code> comman. You can also <code>disable</code>, <code>enable</code>, or <code>delete</code> any breakpoint. Furthermore, GDB also supports setting conditional breaks that stop the execution when a specific condition is met.</p>
 <h4 id="examine"><a class="header" href="#examine">Examine</a></h4>
 <p>The next step of debugging is examinig the values in registers and addresses. GEF automatically gives you a lot of helpful information when you hit your breakpoint.</p>
@@ -1233,10 +770,10 @@ Breakpoint 1 at 0x40100a
    0x401014 &lt;_start+20&gt;:	mov    edx,0x12
 </code></pre>
 <h5 id="strings"><a class="header" href="#strings">Strings</a></h5>
-<p>You can also examine variables stored at a specific memory address. You know that your <code>message</code> variable is stored at the <code>.data</code> section on address <code>0x402000</code>. You also see the upcoming command <code>movabs rsi, 0x402000</code>, so you may want to examine what is being moved from <code>0x402000</code>.</p>
+<p>You can also examine variables stored at a specific memory address. You know that your <code>message</code> variable is stored at the <code>.data</code> section on address <code>0x402000</code>. You also see the upcoming command <code>movabs rsi, 0x402000</code>, so you may want to examine what is being moved from <code>0x402000</code>. </p>
 <pre><code class="language-bash">gef➤  x/s 0x402000
 
-0x402000:	"Hello HTB Academy!"
+0x402000:	&quot;Hello HTB Academy!&quot;
 </code></pre>
 <h5 id="addresses"><a class="header" href="#addresses">Addresses</a></h5>
 <p>The most common format of examining is hex <code>x</code>. You often need to examine addresses and registers containing hex data, such as memory addresses, instructions, or binary data.</p>
@@ -1280,7 +817,7 @@ gef➤  si
      0x401014 &lt;_start+20&gt;      mov    edx, 0x12
      0x401019 &lt;_start+25&gt;      syscall 
 ─────────────────────────────────────────────────────────────────────────────────────── threads ────
-     [#0] Id 1, Name: "helloWorld", stopped 0x401005 in _start (), reason: SINGLE STEP
+     [#0] Id 1, Name: &quot;helloWorld&quot;, stopped 0x401005 in _start (), reason: SINGLE STEP
 </code></pre>
 <h5 id="step-count"><a class="header" href="#step-count">Step Count</a></h5>
 <p>Similarliy to examine, you can repeat the <code>si</code> command by adding a number after it. If you wanted to move 3 steps to reach the <code>syscall</code> instruction, you can do as follows:</p>
@@ -1295,7 +832,7 @@ gef➤  si
      0x401020 &lt;_start+32&gt;      mov    edi, 0x0
      0x401025 &lt;_start+37&gt;      syscall 
 ─────────────────────────────────────────────────────────────────────────────────────── threads ────
-[#0] Id 1, Name: "helloWorld", stopped 0x401019 in _start (), reason: SINGLE STEP
+[#0] Id 1, Name: &quot;helloWorld&quot;, stopped 0x401019 in _start (), reason: SINGLE STEP
 </code></pre>
 <h5 id="step-1"><a class="header" href="#step-1">Step</a></h5>
 <p>The <code>step</code> or <code>s</code> command will continue until the following line of code is reached or until it exits from the current function. If you run an Assembly code, it will break when you exit the current function <code>_start</code>.</p>
@@ -1308,13 +845,10 @@ Hello HTB Academy!
 [Inferior 1 (process 14732) exited normally]
 </code></pre>
 <p>You see that the execution continued until you reached the exit from the <code>_start</code> function, so you reached the end of the program and <code>exited normally</code> without any errors. You also see that GDB printed the program's output <code>Hello HTB Academy!</code> as well.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>There's also the <code>next</code> or <code>n</code> command, which will also continue until the next line, but will skip any functions called in the same line of code, instead of breaking at them like <code>step</code>. There's also the <code>nexti</code> or <code>ni</code>, which is similar to <code>si</code>, but skips function calls.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+There's also the <code>next</code> or <code>n</code> command, which will also continue until the next line, but will skip any functions called in the same line of code, instead of breaking at them like <code>step</code>. There's also the <code>nexti</code> or <code>ni</code>, which is similar to <code>si</code>, but skips function calls.</p>
+</blockquote>
 <h4 id="modify"><a class="header" href="#modify">Modify</a></h4>
 <p>The final step of debugging is modifying values in registers and addresses at a certain point of execution. This helps ypu in seeing how this would affect the execution of the program.</p>
 <h5 id="addresses-1"><a class="header" href="#addresses-1">Addresses</a></h5>
@@ -1323,7 +857,7 @@ Hello HTB Academy!
 
 Write specified values to the specified address.
 Syntax: patch (qword|dword|word|byte) LOCATION VALUES
-patch string LOCATION "double-escaped string"
+patch string LOCATION &quot;double-escaped string&quot;
 ...SNIP...
 </code></pre>
 <p>You have to provide the type/size of the new value, the location to be storedm and the value you want to use. Changing the string stored in the <code>.data</code> section to the string <code>Patched!\n</code> looks like this:</p>
@@ -1331,7 +865,7 @@ patch string LOCATION "double-escaped string"
 
 Breakpoint 1 at 0x401019
 gef➤  r
-gef➤  patch string 0x402000 "Patched!\\x0a"
+gef➤  patch string 0x402000 &quot;Patched!\\x0a&quot;
 gef➤  c
 
 Continuing.
@@ -1345,7 +879,7 @@ Patched!
 
 Breakpoint 1 at 0x401019
 gef➤  r
-gef➤  patch string 0x402000 "Patched!\\x0a"
+gef➤  patch string 0x402000 &quot;Patched!\\x0a&quot;
 gef➤  set $rdx=0x9
 gef➤  c
 
@@ -1418,13 +952,10 @@ _start:
     mov al, 0
     mov bl, 1
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>The <code>xchg</code> instruction will swap the data between the two registers when using <code>xchg rax, rbx</code>.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+The <code>xchg</code> instruction will swap the data between the two registers when using <code>xchg rax, rbx</code>.</p>
+</blockquote>
 <h3 id="address-pointers"><a class="header" href="#address-pointers">Address Pointers</a></h3>
 <p>In many cases, you would see that the first register or address you are using does not immediately contain the final value but contains another address that poits to the final value. This is always the case with pointer registers, but is also used with any other register or memory address.</p>
 <pre><code class="language-bash">gdb -q ./fib
@@ -1438,14 +969,11 @@ $rip   : 0x0000000000401000  →  &lt;_start+0&gt; mov eax, 0x0
 <p>You see that both registers contain pointer addresses to other locations. GEF does an excellent job of showing you the final destination value.</p>
 <h3 id="moving-pointer-values"><a class="header" href="#moving-pointer-values">Moving Pointer Values</a></h3>
 <p>You can see that the <code>rsp</code> register holds the final value of <code>0x1</code>, and its immediate value is a pointer address to to <code>0x1</code>. So, if you were to use <code>mov rax, rsp</code>, you won't be moving the value <code>0x1</code> to <code>rax</code>, but you will be moving the pointer address <code>0x00007fffffffe490</code> to <code>rax</code>.</p>
-<p>To move the actual value, you will have to use square brackets, which in x85_64 Assembly and Intel syntax means "load value at address". So, in the same above example, if you wanted to move the final value <code>rsp</code> is pointing to, you can wrap <code>rsp</code> in square brackets, like <code>mov rax, [rsp]</code>, and this <code>mov</code> instruction will move the final value rather than the immediate value.</p>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p>You can use square brackets to compute an address offset relative to a register or another address. For example, you can do <code>mov rax, [rsp+10]</code> to move the value stored 10 addresses away from <code>rsp</code>.</p>
-</div>
+<p>To move the actual value, you will have to use square brackets, which in x85_64 Assembly and Intel syntax means &quot;load value at address&quot;. So, in the same above example, if you wanted to move the final value <code>rsp</code> is pointing to, you can wrap <code>rsp</code> in square brackets, like <code>mov rax, [rsp]</code>, and this <code>mov</code> instruction will move the final value rather than the immediate value.</p>
+<blockquote>
+<p>[!TIP]
+You can use square brackets to compute an address offset relative to a register or another address. For example, you can do <code>mov rax, [rsp+10]</code> to move the value stored 10 addresses away from <code>rsp</code>.</p>
+</blockquote>
 <p>Example:</p>
 <pre><code class="language-asm">global  _start
 
@@ -1747,13 +1275,10 @@ $rax   : 0x5
 $rbx   : 0x8               
 $rcx   : 0xa               
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p><code>jmp</code> does not consider <code>rcx</code> as a counter, and so it will not automatically decrement it.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+<code>jmp</code> does not consider <code>rcx</code> as a counter, and so it will not automatically decrement it.</p>
+</blockquote>
 <p>... leads to:</p>
 <pre><code class="language-bash">gef➤  info break
 Num     Type           Disp Enb Address            What
@@ -1917,7 +1442,7 @@ $eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume
 <p>The stack has the last-in-first-out design, which means you can only pop out the last element pushed into the stack. For example, if you <code>push rax</code> into the stack, the top of the stack would now be the value of <code>rax</code> you just pushed. If you push anything on top of it, you would have to pop them out of the stack until that value of <code>rax</code> reaches the top of the stack, then you can pop that value back to <code>rax</code>.</p>
 <h4 id="usage-with-functionssyscalls"><a class="header" href="#usage-with-functionssyscalls">Usage with Functions/Syscalls</a></h4>
 <p>You will primarily be pushing data from registers into the stack before you call a function or call a syscall, and then restore them after the function and the syscall. This is because functions and syscalls ususally use the registers for their processing, and so if the values stored in the registers will get changed after a function call or a syscall, you will lose them.</p>
-<p>For example, if you wanted to call a syscall to print "Hello World" to the screen and retain the current value stored in <code>rax</code>, you would <code>push rax</code> into the stack. Then you can execute the syscall and afterward <code>pop</code> the value back to <code>rax</code>. This way, you would be able to both execute the syscall and retain the value of <code>rax</code>.</p>
+<p>For example, if you wanted to call a syscall to print &quot;Hello World&quot; to the screen and retain the current value stored in <code>rax</code>, you would <code>push rax</code> into the stack. Then you can execute the syscall and afterward <code>pop</code> the value back to <code>rax</code>. This way, you would be able to both execute the syscall and retain the value of <code>rax</code>.</p>
 <h4 id="pushpop"><a class="header" href="#pushpop">PUSH/POP</a></h4>
 <p>This is your current code:</p>
 <pre><code class="language-asm">global  _start
@@ -2140,7 +1665,7 @@ $rbx   : 0x1
 <pre><code class="language-asm">global  _start
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
 
 ...
 
@@ -2154,7 +1679,7 @@ mov rdx, 20      ; rdx: print length of 20 bytes
 <pre><code class="language-asm">global  _start
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
 
 section .text
 _start:
@@ -2195,7 +1720,7 @@ $rcx   : 0x0
 $rdx   : 0x14              
 $rsp   : 0x00007fffffffe410  →  0x0000000000000001
 $rbp   : 0x0               
-$rsi   : 0x0000000000402000  →  "Fibonacci Sequence:\n"
+$rsi   : 0x0000000000402000  →  &quot;Fibonacci Sequence:\n&quot;
 $rdi   : 0x1 
               
 gef➤  si
@@ -2225,7 +1750,7 @@ void _exit(int status);
 <pre><code class="language-asm">global  _start
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
 
 section .text
 _start:
@@ -2263,7 +1788,7 @@ d41y@htb[/htb]$ echo $?
 <pre><code class="language-asm">global  _start
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
 
 section .text
 _start:
@@ -2289,7 +1814,7 @@ loopFib:
 <pre><code class="language-asm">global  _start
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
 
 section .text
 _start:
@@ -2330,7 +1855,7 @@ Exit:
 <pre><code class="language-asm">global  _start
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
 
 section .text
 _start:
@@ -2384,13 +1909,10 @@ Exit:
 <li>align the stack</li>
 <li>return value in <code>rax</code></li>
 </ol>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>The caller is setting up things, and then the callee should retrieve those things and use them. These points are usually made at the beginning, and the end of the function and are called a function's prologue and epilogue. They allow functions to be called without worrying about the current state of the stack or the registers.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+The caller is setting up things, and then the callee should retrieve those things and use them. These points are usually made at the beginning, and the end of the function and are called a function's prologue and epilogue. They allow functions to be called without worrying about the current state of the stack or the registers.</p>
+</blockquote>
 <h4 id="using-external-functions"><a class="header" href="#using-external-functions">Using External Functions</a></h4>
 <p>There are external functions you can use. The <code>libc</code> library of functions used for <code>C</code> programs provides many functionalities that you can utilize without rewriting everything from scratch. Before you can use a function from <code>libc</code>, you have to import it first and then specify the <code>libc</code> library for dynamic linking when linking your code with <code>ld</code>.</p>
 <h4 id="importing-lib-functions"><a class="header" href="#importing-lib-functions">Importing lib Functions</a></h4>
@@ -2421,8 +1943,8 @@ extern  printf
 extern  printf
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
-    outFormat db  "%d", 0x0a, 0x00
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
+    outFormat db  &quot;%d&quot;, 0x0a, 0x00
 </code></pre>
 <p>... and then:</p>
 <pre><code class="language-asm">printFib:
@@ -2463,7 +1985,7 @@ section .data
 <p>This way, you are adding an extra 16-bytes to the top of the stack and then removing them after the call. If you had 8 bytes pushed, you can bring the boundary up to 16 by subtracting 8 from <code>rsp</code>.</p>
 <p>The critical thing to remember is that you should have 16-bytes on top of the stack before making a call. You can count the number of push instructions and call instructions, and you will get how many 8-bytes have been pushed to the stack.</p>
 <h4 id="function-call"><a class="header" href="#function-call">Function Call</a></h4>
-<p>Exmaple:</p>
+<p>Exmaple: </p>
 <pre><code class="language-asm">printFib:
     push rax            ; push registers to stack
     push rbx
@@ -2488,8 +2010,8 @@ section .data
 extern  printf
 
 section .data
-    message db "Fibonacci Sequence:", 0x0a
-    outFormat db  "%d", 0x0a, 0x00
+    message db &quot;Fibonacci Sequence:&quot;, 0x0a
+    outFormat db  &quot;%d&quot;, 0x0a, 0x00
 
 section .text
 _start:
@@ -2568,9 +2090,9 @@ int scanf(const char *format, ...);
 </code></pre>
 <p>... leads to:</p>
 <pre><code class="language-asm">section .data
-    message db "Please input max Fn", 0x0a
-    outFormat db  "%d", 0x0a, 0x00
-    inFormat db  "%d", 0x00
+    message db &quot;Please input max Fn&quot;, 0x0a
+    outFormat db  &quot;%d&quot;, 0x0a, 0x00
+    inFormat db  &quot;%d&quot;, 0x00
 </code></pre>
 <p>You also changed your intro message to 'Please input max Fn', to tell the user what input is expected from them.</p>
 <p>Next, you must set a buffer space for the input storage. Uninitialized buffer space must be stored in the <code>.bss</code> label, and use <code>resb 1</code> to tell nasm to reserver it 1 byte of buffer space:</p>
@@ -2621,9 +2143,9 @@ _start:
 extern  printf, scanf
 
 section .data
-    message db "Please input max Fn", 0x0a
-    outFormat db  "%d", 0x0a, 0x00
-    inFormat db  "%d", 0x00
+    message db &quot;Please input max Fn&quot;, 0x0a
+    outFormat db  &quot;%d&quot;, 0x0a, 0x00
+    inFormat db  &quot;%d&quot;, 0x00
 
 section .bss
     userInput resb 1
@@ -2684,7 +2206,7 @@ Please input max Fn:
 <pre><code class="language-asm">global _start
 
 section .data
-    message db "Hello HTB Academy!"
+    message db &quot;Hello HTB Academy!&quot;
 
 section .text
 _start:
@@ -2727,26 +2249,23 @@ d41y@htb[/htb]$ pwn asm 'push rax'  -c 'amd64'
 &gt;&gt;&gt; file = ELF('helloworld')
 </code></pre>
 <p>Now, you can run various pwntools functions on it. You need to dump machine code from the executable <code>.text</code> section, which you can do with the <code>section()</code> function:</p>
-<pre><code class="language-bash">&gt;&gt;&gt; file.section(".text").hex()
+<pre><code class="language-bash">&gt;&gt;&gt; file.section(&quot;.text&quot;).hex()
 '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05'
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>You can add <code>hex()</code> to encode the shellcode, instead of printing the raw bytes.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+You can add <code>hex()</code> to encode the shellcode, instead of printing the raw bytes.</p>
+</blockquote>
 <p>The following is an example Python3 script that extracts the shellcode of a given binary:</p>
 <pre><code class="language-python">#!/usr/bin/python3
 
 import sys
 from pwn import *
 
-context(os="linux", arch="amd64", log_level="error")
+context(os=&quot;linux&quot;, arch=&quot;amd64&quot;, log_level=&quot;error&quot;)
 
 file = ELF(sys.argv[1])
-shellcode = file.section(".text")
+shellcode = file.section(&quot;.text&quot;)
 print(shellcode.hex())
 </code></pre>
 <p>Example:</p>
@@ -2757,7 +2276,7 @@ print(shellcode.hex())
 <p>You could also use <code>objdump</code> for that:</p>
 <pre><code class="language-bash">#!/bin/bash
 
-for i in $(objdump -d $1 |grep "^ " |cut -f2); do echo -n $i; done; echo;
+for i in $(objdump -d $1 |grep &quot;^ &quot; |cut -f2); do echo -n $i; done; echo;
 </code></pre>
 <p>... leads to:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ./shellcoder.sh helloworld
@@ -2772,7 +2291,7 @@ for i in $(objdump -d $1 |grep "^ " |cut -f2); do echo -n $i; done; echo;
 <pre><code class="language-bash">d41y@htb[/htb]$ python3
 
 &gt;&gt;&gt; from pwn import *
-&gt;&gt;&gt; context(os="linux", arch="amd64", log_level="error")
+&gt;&gt;&gt; context(os=&quot;linux&quot;, arch=&quot;amd64&quot;, log_level=&quot;error&quot;)
 &gt;&gt;&gt; run_shellcode(unhex('4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05')).interactive()
 
 Hello HTB Academy!
@@ -2783,7 +2302,7 @@ Hello HTB Academy!
 import sys
 from pwn import *
 
-context(os="linux", arch="amd64", log_level="error")
+context(os=&quot;linux&quot;, arch=&quot;amd64&quot;, log_level=&quot;error&quot;)
 
 run_shellcode(unhex(sys.argv[1])).interactive()
 </code></pre>
@@ -2798,7 +2317,7 @@ run_shellcode(unhex(sys.argv[1])).interactive()
 import sys, os, stat
 from pwn import *
 
-context(os="linux", arch="amd64", log_level="error")
+context(os=&quot;linux&quot;, arch=&quot;amd64&quot;, log_level=&quot;error&quot;)
 
 ELF.from_bytes(unhex(sys.argv[1])).save(sys.argv[2])
 os.chmod(sys.argv[2], stat.S_IEXEC)
@@ -2827,7 +2346,7 @@ Breakpoint 1, 0x0000000000401000 in ?? ()
 
 int main()
 {
-    int (*ret)() = (int (*)()) "\x48\x31\xdb\x66\xbb\...SNIP...\x3c\x40\x30\xff\x0f\x05";
+    int (*ret)() = (int (*)()) &quot;\x48\x31\xdb\x66\xbb\...SNIP...\x3c\x40\x30\xff\x0f\x05&quot;;
     ret();
 }
 </code></pre>
@@ -2867,7 +2386,7 @@ Hello HTB Academy!
 <pre><code class="language-asm">global _start
 
 section .data
-    message db "Hello HTB Academy!"
+    message db &quot;Hello HTB Academy!&quot;
 
 section .text
 _start:
@@ -2916,17 +2435,17 @@ Hello HTB Academy!
 <pre><code class="language-bash">$ gdb -q ./helloworld
 ─────────────────────────────────────────────────────────────────────────────────────── registers ────
 $rax   : 0x1               
-$rbx   : 0x5448206f6c6c6548 ("Hello HT"?)
+$rbx   : 0x5448206f6c6c6548 (&quot;Hello HT&quot;?)
 $rcx   : 0x0               
 $rdx   : 0x12              
-$rsp   : 0x00007fffffffe3b8  →  "Hello HTB Academy!"
+$rsp   : 0x00007fffffffe3b8  →  &quot;Hello HTB Academy!&quot;
 $rbp   : 0x0               
-$rsi   : 0x00007fffffffe3b8  →  "Hello HTB Academy!"
+$rsi   : 0x00007fffffffe3b8  →  &quot;Hello HTB Academy!&quot;
 $rdi   : 0x1               
 ─────────────────────────────────────────────────────────────────────────────────────────── stack ────
-0x00007fffffffe3b8│+0x0000: "Hello HTB Academy!"	 ← $rsp, $rsi
-0x00007fffffffe3c0│+0x0008: "B Academy!"
-0x00007fffffffe3c8│+0x0010: 0x0000000000002179 ("y!"?)
+0x00007fffffffe3b8│+0x0000: &quot;Hello HTB Academy!&quot;	 ← $rsp, $rsi
+0x00007fffffffe3c0│+0x0008: &quot;B Academy!&quot;
+0x00007fffffffe3c8│+0x0010: 0x0000000000002179 (&quot;y!&quot;?)
 ───────────────────────────────────────────────────────────────────────────────────── code:x86:64 ────
 →   0x40102e &lt;_start+46&gt;      syscall 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -3024,7 +2543,7 @@ Hello HTB Academy!
 int execve(const char *pathname, char *const argv[], char *const envp[]);
 </code></pre>
 <p>As you can see, the <code>execve</code> syscall accepts 3 args. You need to execute <code>/bin/sh /bin/sh</code>, which would drop you in a <code>sh</code> shell:</p>
-<pre><code class="language-c">execve("/bin//sh", ["/bin//sh"], NULL)
+<pre><code class="language-c">execve(&quot;/bin//sh&quot;, [&quot;/bin//sh&quot;], NULL)
 </code></pre>
 <p>So, you will set your arguments as:</p>
 <ol>
@@ -3033,13 +2552,10 @@ int execve(const char *pathname, char *const argv[], char *const envp[]);
 <li><code>rsi</code> -&gt; <code>['/bin//sh']</code></li>
 <li><code>rdx</code> -&gt; <code>NULL</code></li>
 </ol>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>Added an extra <code>/</code> in <code>/bin//sh</code> so that the total char count is 8, which fills up a 64-bit register, so you don't have to worry about clearing the register beforehand or dealing with any leftovers. Any extra slashes are ignored in Linux, so this is a handy trick to even the total char count when needed, and it is used a lot in binary exploitation.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+Added an extra <code>/</code> in <code>/bin//sh</code> so that the total char count is 8, which fills up a 64-bit register, so you don't have to worry about clearing the register beforehand or dealing with any leftovers. Any extra slashes are ignored in Linux, so this is a handy trick to even the total char count when needed, and it is used a lot in binary exploitation.</p>
+</blockquote>
 <p>Using the same concepts you learned for calling a syscall, the following Assembly code should execute the syscall you need:</p>
 <pre><code class="language-asm">global _start
 
@@ -3153,15 +2669,12 @@ $ whoami
 root
 </code></pre>
 <p>You can see that the encoded shellcode is always significantly larger than the non-encoded one since encoding a shellcode adds a built-in decoder for runtime decoding. It may also encode each byte multiple times, which increases its size at every iteration.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>You can encode your shellcode multiple times with the <code>-i COUNT</code> flag, and specify the number of iterations you want.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+You can encode your shellcode multiple times with the <code>-i COUNT</code> flag, and specify the number of iterations you want.</p>
+</blockquote>
 <p>If you had a custom shellcode that you wrote, you could use msfvenom to encode it as well, by writing its bytes to a file and then passing it to msfvenom with <code>-p -</code>:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ python3 -c "import sys; sys.stdout.buffer.write(bytes.fromhex('b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05'))" &gt; shell.bin
+<pre><code class="language-bash">d41y@htb[/htb]$ python3 -c &quot;import sys; sys.stdout.buffer.write(bytes.fromhex('b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05'))&quot; &gt; shell.bin
 d41y@htb[/htb]$ msfvenom -p - -a 'x64' --platform 'linux' -f 'hex' -e 'x64/xor' &lt; shell.bin
 
 Attempting to read payload from STDIN...
@@ -3172,11 +2685,11 @@ x64/xor chosen with final size 71
 Payload size: 71 bytes
 Final size of hex file: 142 bytes
 4831c94881e9fcffffff488d05efffffff48bb5a63e4e17d0bac1348315827482df8ffffffe2f4ea58acd0af59e4ac75018d8f5224df7b0d2b6d062f5ce49abc6ce1e17d0bac13
-```&lt;!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --&gt;
+```&lt;!-- {% embed footer message=&quot;2026 • Created by [d41y](https://github.com/d41y)&quot; %} --&gt;
 
-&lt;div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
+&lt;div data-embedify data-app=&quot;footer&quot; data-option-message=&quot;2026 • Created by [d41y](https://github.com/d41y)&quot; style=&quot;display:none&quot;&gt;&lt;/div&gt;
 
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2025 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href=&quot;https://github.com/d41y&quot;&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
 
                     </main>
 
@@ -3241,7 +2754,6 @@ Final size of hex file: 142 bytes
 
         <!-- Custom JS scripts -->
         <script src="../../../theme/pagetoc.js"></script>
-
 
 
     </div>

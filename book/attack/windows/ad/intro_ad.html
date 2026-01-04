@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../../highlight.css">
+        <link rel="stylesheet" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item expanded "><a href="../../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../attack/windows/ad/intro_ad.html" class="active"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item "><a href="../../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,481 +172,12 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#introduction-to-active-directory">Introduction to Active Directory</a>
-<ul>
-<li><a href="#fundamentals">Fundamentals</a>
-<ul>
-<li><a href="#structure">Structure</a></li>
-<li><a href="#terminology">Terminology</a>
-<ul>
-<li><a href="#object">Object</a></li>
-<li><a href="#attributes">Attributes</a></li>
-<li><a href="#schema">Schema</a></li>
-<li><a href="#domain">Domain</a></li>
-<li><a href="#forest">Forest</a></li>
-<li><a href="#tree">Tree</a></li>
-<li><a href="#container">Container</a></li>
-<li><a href="#leaf">Leaf</a></li>
-<li><a href="#global-unique-identifier-guid">Global Unique Identifier (<em>GUID</em>)</a></li>
-<li><a href="#security-principals">Security Principals</a></li>
-<li><a href="#security-identifier-sid">Security Identifier (<em>SID</em>)</a></li>
-<li><a href="#distinguished-name-dn">Distinguished Name (<em>DN</em>)</a></li>
-<li><a href="#relative-distinguished-name-rnd">Relative Distinguished Name (<em>RND</em>)</a></li>
-<li><a href="#samaccountname">sAMAccountName</a></li>
-<li><a href="#userprincipalname">userPrincipalName</a></li>
-<li><a href="#fsmo-roles">FSMO Roles</a></li>
-<li><a href="#global-catalog">Global Catalog</a></li>
-<li><a href="#read-only-domain-controller-rodc">Read-Only Domain Controller (<em>RODC</em>)</a></li>
-<li><a href="#replication">Replication</a></li>
-<li><a href="#service-principal-name-spn">Service Principal Name (<em>SPN</em>)</a></li>
-<li><a href="#group-policy-object-gpo">Group Policy Object (<em>GPO</em>)</a></li>
-<li><a href="#access-control-list-acl">Access Control List (<em>ACL</em>)</a></li>
-<li><a href="#access-control-entries-aces">Access Control Entries (<em>ACEs</em>)</a></li>
-<li><a href="#discretionary-access-control-list-dacl">Discretionary Access Control List (<em>DACL</em>)</a></li>
-<li><a href="#system-access-control-lists-sacl">System Access Control Lists (<em>SACL</em>)</a></li>
-<li><a href="#fully-qualified-domain-name-fqdn">Fully Qualified Domain Name (<em>FQDN</em>)</a></li>
-<li><a href="#tombstone">Tombstone</a></li>
-<li><a href="#ad-recycle-bin">AD Recycle Bin</a></li>
-<li><a href="#sysvol">SYSVOL</a></li>
-<li><a href="#adminsdholder">AdminSDHolder</a></li>
-<li><a href="#dsheuristics">dsHeuristics</a></li>
-<li><a href="#admincount">adminCount</a></li>
-<li><a href="#ad-users-and-computer-aduc">AD Users and Computer (<em>ADUC</em>)</a></li>
-<li><a href="#adsi-edit">ADSI Edit</a></li>
-<li><a href="#sidhistory">sIDHistory</a></li>
-<li><a href="#ntdsdit">NTDS.DIT</a></li>
-<li><a href="#msbrowse">MSBROWSE</a></li>
-</ul>
-</li>
-<li><a href="#ad-objects">AD Objects</a>
-<ul>
-<li><a href="#users">Users</a></li>
-<li><a href="#contacts">Contacts</a></li>
-<li><a href="#printers">Printers</a></li>
-<li><a href="#computers">Computers</a></li>
-<li><a href="#shared-folders">Shared Folders</a></li>
-<li><a href="#groups">Groups</a></li>
-<li><a href="#ous">OUs</a></li>
-<li><a href="#domain-1">Domain</a></li>
-<li><a href="#domain-controllers">Domain Controllers</a></li>
-<li><a href="#sites">Sites</a></li>
-<li><a href="#built-in">Built-In</a></li>
-<li><a href="#foreign-security-principals">Foreign Security Principals</a></li>
-</ul>
-</li>
-<li><a href="#ad-functionality">AD Functionality</a>
-<ul>
-<li><a href="#domain-and-forest-functional-levels">Domain and Forest Functional Levels</a></li>
-<li><a href="#trusts">Trusts</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#protocols">Protocols</a>
-<ul>
-<li><a href="#kerberos-dns-ldap-msrpc">Kerberos, DNS, LDAP, MSRPC</a>
-<ul>
-<li><a href="#kerberos">Kerberos</a>
-<ul>
-<li><a href="#kerberos-authentication-process">Kerberos Authentication Process</a></li>
-</ul>
-</li>
-<li><a href="#dns">DNS</a>
-<ul>
-<li><a href="#forward-dns-lookup">Forward DNS Lookup</a></li>
-<li><a href="#reverse-dns-lookup">Reverse DNS Lookup</a></li>
-<li><a href="#finding-ip-address-of-a-host">Finding IP Address of a Host</a></li>
-</ul>
-</li>
-<li><a href="#ldap">LDAP</a>
-<ul>
-<li><a href="#ad-ldap-authentication">AD LDAP Authentication</a></li>
-</ul>
-</li>
-<li><a href="#msrpc">MSRPC</a></li>
-</ul>
-</li>
-<li><a href="#ntlm-authentication">NTLM Authentication</a>
-<ul>
-<li><a href="#hash-protocol-comparison">Hash Protocol Comparison</a></li>
-<li><a href="#lm">LM</a></li>
-<li><a href="#nthash-ntlm">NTHash (<em>NTLM</em>)</a>
-<ul>
-<li><a href="#ntlm-authentication-request">NTLM Authentication Request</a></li>
-</ul>
-</li>
-<li><a href="#ntlmv1v-net-ntlmv1">NTLMv1v (<em>Net-NTLMv1</em>)</a>
-<ul>
-<li><a href="#v1-challenge--response-algorithm">V1 Challenge &amp; Response Algorithm</a></li>
-<li><a href="#ntlmv1-hash-example">NTLMv1 Hash Example</a></li>
-</ul>
-</li>
-<li><a href="#ntlmv2-net-ntlmv2">NTLMv2 (<em>Net-NTLMv2</em>)</a>
-<ul>
-<li><a href="#v2-challenge--response-algorithm">V2 Challenge &amp; Response Algorithm</a></li>
-<li><a href="#ntlmv2-hash-example">NTLMv2 Hash Example</a></li>
-</ul>
-</li>
-<li><a href="#domain-cached-creds-mscache2">Domain Cached Creds (<em>MSCache2</em>)</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#users-1">Users</a>
-<ul>
-<li><a href="#user-and-machine-accounts">User and Machine Accounts</a></li>
-<li><a href="#local-accounts">Local Accounts</a></li>
-<li><a href="#domain-users">Domain Users</a></li>
-<li><a href="#user-naming-attributes">User Naming Attributes</a>
-<ul>
-<li><a href="#common-user-attributes">Common User Attributes</a></li>
-</ul>
-</li>
-<li><a href="#domain-joined-vs-non-domain-joined-machine">Domain-joined vs. Non-domain-joined Machine</a>
-<ul>
-<li><a href="#domain-joined">Domain joined</a></li>
-<li><a href="#non-domain-joined">Non-domain joined</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#groups-1">Groups</a>
-<ul>
-<li><a href="#types-of-groups">Types of Groups</a></li>
-<li><a href="#group-scopes">Group Scopes</a>
-<ul>
-<li><a href="#domain-local-group">Domain Local Group</a></li>
-<li><a href="#global-group">Global Group</a></li>
-<li><a href="#universal-group">Universal Group</a>
-<ul>
-<li><a href="#ad-group-scope-examples">AD Group Scope Examples</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#built-in-vs-custom-groups">Built-in vs. Custom Groups</a></li>
-<li><a href="#nested-group-membership">Nested Group Membership</a></li>
-<li><a href="#important-group-attributes">Important Group Attributes</a></li>
-</ul>
-</li>
-<li><a href="#rights-and-privileges">Rights and Privileges</a>
-<ul>
-<li><a href="#built-in-ad-groups">Built-in AD Groups</a>
-<ul>
-<li><a href="#server-operators-group-details">Server Operators Group Details</a></li>
-<li><a href="#domain-admins-group-membership">Domain Admins Group Membership</a></li>
-</ul>
-</li>
-<li><a href="#user-rights-assignment">User Rights Assignment</a></li>
-<li><a href="#viewing-a-users-privilege">Viewing a User's Privilege</a>
-<ul>
-<li><a href="#standard-domain-users-rights">Standard Domain User's Rights</a></li>
-<li><a href="#domain-admin-rights-non-elevated">Domain Admin Rights Non-Elevated</a></li>
-<li><a href="#domain-admin-rights-elevated">Domain Admin Rights Elevated</a></li>
-<li><a href="#backup-operator-rights">Backup Operator Rights</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#security">Security</a>
-<ul>
-<li><a href="#general-ad-hardening-measures">General AD Hardening Measures</a>
-<ul>
-<li><a href="#microsoft-local-administrator-password-solution-laps">Microsoft Local Administrator Password Solution (<em>LAPS</em>)</a></li>
-<li><a href="#audit-policy-settings-logging-and-monitoring">Audit Policy Settings (<em>Logging and Monitoring</em>)</a></li>
-<li><a href="#group-policy-security-settings">Group Policy Security Settings</a>
-<ul>
-<li><a href="#advanced-audit-policy">Advanced Audit Policy</a></li>
-</ul>
-</li>
-<li><a href="#update-management-sccmwsus">Update Management (<em>SCCM/WSUS</em>)</a></li>
-<li><a href="#group-managed-service-accounts-gmsa">Group Managed Service Accounts (<em>gMSA</em>)</a></li>
-<li><a href="#security-groups">Security Groups</a>
-<ul>
-<li><a href="#built-in-ad-security-groups">Built-in AD Security Groups</a></li>
-</ul>
-</li>
-<li><a href="#account-separation">Account Separation</a></li>
-<li><a href="#password-complexity-policies--passphrases--2fa">Password Complexity Policies + Passphrases + 2FA</a></li>
-<li><a href="#limiting-domain-admin-accout-usage">Limiting Domain Admin Accout Usage</a></li>
-<li><a href="#periodically-auditing-and-removing-stale-users-and-objects">Periodically Auditing and Removing Stale Users and Objects</a></li>
-<li><a href="#auditing-permissions-and-access">Auditing Permissions and Access</a></li>
-<li><a href="#audit-policies--logging">Audit Policies &amp; Logging</a></li>
-<li><a href="#using-restricted-groups">Using Restricted Groups</a></li>
-<li><a href="#limiting-server-roles">Limiting Server Roles</a></li>
-<li><a href="#limiting-local-admin-and-rdp-rights">Limiting Local Admin and RDP Rights</a></li>
-<li><a href="#more-best-practices">More Best Practices</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#group-policy">Group Policy</a>
-<ul>
-<li><a href="#gpos">GPOs</a>
-<ul>
-<li><a href="#rdp-gpo-settings">RDP GPO Settings</a></li>
-</ul>
-</li>
-<li><a href="#gpo-order-of-precedence">GPO Order of Precedence</a>
-<ul>
-<li><a href="#gpmc-hive-example">GPMC Hive Example</a></li>
-<li><a href="#enforced-gpo-policy-precedence">Enforced GPO Policy Precedence</a></li>
-<li><a href="#default-domain-policy-override">Default Domain Policy Override</a></li>
-<li><a href="#block-inheritance">Block Inheritance</a></li>
-</ul>
-</li>
-<li><a href="#group-policy-refresh-frequency">Group Policy Refresh Frequency</a></li>
-<li><a href="#security-considerations-of-gpos">Security Considerations of GPOs</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="introduction-to-active-directory"><a class="header" href="#introduction-to-active-directory">Introduction to Active Directory</a></h1>
-<p>Active Directory (<em>AD</em>) is a directory service for Windows network environments. It is a distributed, hierarchical structure that allows for centralized management of an organization's resources, including users, computers, groups, network devices, file shares, group policies, devices and trusts. AD provides authentication and authorization functions within a Windows domain environment. It has come under increasing attack in recent years. It is designed to be backward-compatible, and many features are arguably not "secure by default", and it can be easily misconfigured. This weakness can be leveraged to move laterally and vertically within a network and gain unauthorized access. AD is essentially a sizeable read-only database accessible to all users within the domain, regardless of their privilege level. A basic AD user account with no added privileges can enumerate most objects within AD. This fact makes it extremely important to properly secure an AD environment because ANY user account, regardless of their privilege level, can be used to enumerate the domain and hunt for misconfigurations and flaws thoroughly. Also, multiple attacks can be performed with only a standard domain user accout, showing the importance of a defense-in-depth strategy and careful planning focusing on security and hardening AD, network segmentation, and least privilege.</p>
+                        <h1 id="introduction-to-active-directory"><a class="header" href="#introduction-to-active-directory">Introduction to Active Directory</a></h1>
+<p>Active Directory (<em>AD</em>) is a directory service for Windows network environments. It is a distributed, hierarchical structure that allows for centralized management of an organization's resources, including users, computers, groups, network devices, file shares, group policies, devices and trusts. AD provides authentication and authorization functions within a Windows domain environment. It has come under increasing attack in recent years. It is designed to be backward-compatible, and many features are arguably not &quot;secure by default&quot;, and it can be easily misconfigured. This weakness can be leveraged to move laterally and vertically within a network and gain unauthorized access. AD is essentially a sizeable read-only database accessible to all users within the domain, regardless of their privilege level. A basic AD user account with no added privileges can enumerate most objects within AD. This fact makes it extremely important to properly secure an AD environment because ANY user account, regardless of their privilege level, can be used to enumerate the domain and hunt for misconfigurations and flaws thoroughly. Also, multiple attacks can be performed with only a standard domain user accout, showing the importance of a defense-in-depth strategy and careful planning focusing on security and hardening AD, network segmentation, and least privilege.</p>
 <p>AD makes information easy to find and use for admins and users. AD is highly scalable, supports millions of objects per domain, and allows the creation of additional domains as an organization grows.</p>
 <h2 id="fundamentals"><a class="header" href="#fundamentals">Fundamentals</a></h2>
 <h3 id="structure"><a class="header" href="#structure">Structure</a></h3>
-<p>AD is arranged in a hierarchical tree structure, with a forest at the top containing one or more domains, which can themselves have nested subdomains. A forest is the security within which all objects are under administrative control. A forest may contain multiple domains, and a domain may include further child or sub-domains. A domain is a structure within which contained objects (<em>users, computers, groups</em>) are accessible. It has many built-in Organizational Units (<em>OUs</em>), such as "Domain Controllers", "Users", "Computers", and new OUs can be created as required. OUs may contain objects and sub-OUs, allowing for the assignment of different group policies.</p>
+<p>AD is arranged in a hierarchical tree structure, with a forest at the top containing one or more domains, which can themselves have nested subdomains. A forest is the security within which all objects are under administrative control. A forest may contain multiple domains, and a domain may include further child or sub-domains. A domain is a structure within which contained objects (<em>users, computers, groups</em>) are accessible. It has many built-in Organizational Units (<em>OUs</em>), such as &quot;Domain Controllers&quot;, &quot;Users&quot;, &quot;Computers&quot;, and new OUs can be created as required. OUs may contain objects and sub-OUs, allowing for the assignment of different group policies.</p>
 <p>At a very simplistic high level, an AD structure may look as follows:</p>
 <pre><code>INLANEFREIGHT.LOCAL/
 ├── ADMIN.INLANEFREIGHT.LOCAL
@@ -674,7 +203,7 @@
 <h4 id="attributes"><a class="header" href="#attributes">Attributes</a></h4>
 <p>Every object in AD has an associated set of attributes used to define characteristics of the given object. A computer object contains attributes such as the hostname and DNS name. All attributes in AD have an associated LDAP name that can be used when performing LDAP queries, such as <code>displayName</code> for <code>Full Name</code> and <code>given name</code> for <code>First Name</code>.</p>
 <h4 id="schema"><a class="header" href="#schema">Schema</a></h4>
-<p>The AD schema is essentially the blueprint of any enterprise environment. It defines what types of objects can exist in the AD database and their associated attributes. It lists definitions corresponding to AD objects and holds information about each object. For example, users in AD belong to the class "user", and computer objects to "computer", and so on. Each object has its own information that are stored in Attributes. When an object is created from a class, this is called instantiation, and an object created from a specific class is called an instance of that class. For example, if you take the computer RDS01. This computer object is an instance of the "computer" class in AD.</p>
+<p>The AD schema is essentially the blueprint of any enterprise environment. It defines what types of objects can exist in the AD database and their associated attributes. It lists definitions corresponding to AD objects and holds information about each object. For example, users in AD belong to the class &quot;user&quot;, and computer objects to &quot;computer&quot;, and so on. Each object has its own information that are stored in Attributes. When an object is created from a class, this is called instantiation, and an object created from a specific class is called an instance of that class. For example, if you take the computer RDS01. This computer object is an instance of the &quot;computer&quot; class in AD.</p>
 <h4 id="domain"><a class="header" href="#domain">Domain</a></h4>
 <p>... is a logical group of objects such as computers, users, OUs, grous, etc. You can think of each domain as a different city within a state or country. Domains can operate entirely independently of one another or be connected via trust relationships.</p>
 <h4 id="forest"><a class="header" href="#forest">Forest</a></h4>
@@ -701,7 +230,7 @@
 <h4 id="userprincipalname"><a class="header" href="#userprincipalname">userPrincipalName</a></h4>
 <p>... attribute is another way to identify users in AD. This attribute consists of a prefix and a suffix in the format of <code>bjones@inlanefreight.local</code>. This attribute is not mandatory.</p>
 <h4 id="fsmo-roles"><a class="header" href="#fsmo-roles">FSMO Roles</a></h4>
-<p>In the early days of AD, if you had multiple DCs in an environment, they would fight over which DC gets to make changes, and sometimes changes would not be made properly. Microsoft then implemented "last writer wins", which could introduce its own problems if the last change breaks things. They then introduced a model in which a single "master" DC could apply changes to the domain while the others merely fulfilled authentication requests. This was a flawed design because if the master DC went down, no changes could be made to the environment until it was restored. To resolve this single point of failure model, Microsoft separated the various responsibilities that a DC can have into Flexible Single Master Operation (<em>FSMO</em>) roles. These give DCs the ability to continue authenticating users and granting permissions without interruption. There are five FSMO roles: Schema Master and Domain Naming Master (<em>one of each per forest</em>), Relative ID (RID) Master (<em>one per domain</em>), Primary Domain Controller (PDC) Emulator (<em>one per domain</em>), and Infrastructure Master (<em>one per domain</em>). All five roles are assigned to the first DC in the forest root domain in a new AD forest. Each time a new domain is added to a forest, only the RID Master, PDC Emulator, and Infrastructure Master roles are assigned to the new domain. FSMO roles are typically set when domain controllers are created, but sysadmins can transfer these roles if needed. These roles help replication in AD to run smoothly and ensure that critical services are operating correctly.</p>
+<p>In the early days of AD, if you had multiple DCs in an environment, they would fight over which DC gets to make changes, and sometimes changes would not be made properly. Microsoft then implemented &quot;last writer wins&quot;, which could introduce its own problems if the last change breaks things. They then introduced a model in which a single &quot;master&quot; DC could apply changes to the domain while the others merely fulfilled authentication requests. This was a flawed design because if the master DC went down, no changes could be made to the environment until it was restored. To resolve this single point of failure model, Microsoft separated the various responsibilities that a DC can have into Flexible Single Master Operation (<em>FSMO</em>) roles. These give DCs the ability to continue authenticating users and granting permissions without interruption. There are five FSMO roles: Schema Master and Domain Naming Master (<em>one of each per forest</em>), Relative ID (RID) Master (<em>one per domain</em>), Primary Domain Controller (PDC) Emulator (<em>one per domain</em>), and Infrastructure Master (<em>one per domain</em>). All five roles are assigned to the first DC in the forest root domain in a new AD forest. Each time a new domain is added to a forest, only the RID Master, PDC Emulator, and Infrastructure Master roles are assigned to the new domain. FSMO roles are typically set when domain controllers are created, but sysadmins can transfer these roles if needed. These roles help replication in AD to run smoothly and ensure that critical services are operating correctly.</p>
 <h4 id="global-catalog"><a class="header" href="#global-catalog">Global Catalog</a></h4>
 <p>... is a domain that stores copies of ALL objects in an AD forest. The GC stores a full copy of all objects in the current domain and a partial copy of objects that belong to other domains in the forest. Standard domain controllers hold a complete replica of objects belonging to its domain but not those of different domains in the forest. The GC allows both users and apps to find information about any objects in ANY domain in the forest. GC is a feature that is enabled on a domain controller and performs the following functions:</p>
 <ul>
@@ -745,7 +274,7 @@
 <h4 id="sidhistory"><a class="header" href="#sidhistory">sIDHistory</a></h4>
 <p>This attribute holds any SIDs that an object was assigned previously. It is usually used in migrations so a user can maintain the same level of access when migrated from one domain to another. This attribute can potentially be abused if set insecurely, allowing an attacker to gain prior elevated access that an account had before a migration if SID filtering is not enabled.</p>
 <h4 id="ntdsdit"><a class="header" href="#ntdsdit">NTDS.DIT</a></h4>
-<p>The NTDS.DIT file can be considered the heart of AD. It is stored on a DC at <code>C:\Windows\NTDS\</code> and is a database that stores AD data such as information about user and group objects, group membership, and, most important to attackers and pentesters, the password hashes for all users in the domain. Once full domain compromise is reached, an attacker can retrieve this file, extract the hashes, and either use them to perform a pass-the-hash attack or crack them offline to access additional resources in the domain. If the setting "Store password with reversible encryption" is enabled, then the NTDS.DIT will also store the cleartext passwords for all users created or who changed their passwords after this policy was set. While rare, some organizations may enable this setting if they use apps or protocols that need to use a user's existing password for authentication.</p>
+<p>The NTDS.DIT file can be considered the heart of AD. It is stored on a DC at <code>C:\Windows\NTDS\</code> and is a database that stores AD data such as information about user and group objects, group membership, and, most important to attackers and pentesters, the password hashes for all users in the domain. Once full domain compromise is reached, an attacker can retrieve this file, extract the hashes, and either use them to perform a pass-the-hash attack or crack them offline to access additional resources in the domain. If the setting &quot;Store password with reversible encryption&quot; is enabled, then the NTDS.DIT will also store the cleartext passwords for all users created or who changed their passwords after this policy was set. While rare, some organizations may enable this setting if they use apps or protocols that need to use a user's existing password for authentication.</p>
 <h4 id="msbrowse"><a class="header" href="#msbrowse">MSBROWSE</a></h4>
 <p>... is a Microsoft networking protocol that was used in early versions of Windows-based local area networks to provide browsing services. It was used to maintain a list of resources, such as shared printers and files, that were available on the network, and to allow users to easily browse and access these resources.</p>
 <p>In older versions of Windows you could use <code>nbtstat -A ip-address</code> to search for the Master Browser. If you see MSBROWSE it means that's the Master Browser. Additionally you could use <code>nltest</code> utility to query a Windows Master Browser for the names of the DCs.</p>
@@ -762,9 +291,9 @@
 <h4 id="shared-folders"><a class="header" href="#shared-folders">Shared Folders</a></h4>
 <p>A shared folder object points to a shared folder on a specific computer where the folder resides. Shared folders can have stringent access control applied to them and can either be accessible to everyone, open to only authenticated users, or be locked down to only allow certain users/groups access. Anyone not explicitly allowed access will be denied from listing or reading its contents. Shared folders are not security principals and only have a GUID. A shared folder's attribute can include the name, location on the system, security access rights.</p>
 <h4 id="groups"><a class="header" href="#groups">Groups</a></h4>
-<p>a group is considered a container object because it can contain other objects, including users, computers, and even other groups. A group is regarded as a security principal and has a SID and a GUID. In AD, groups are a way to manage user permissions and access to other securable objects. Say you want to give 20 help desk users access to tthe Remote Management Users group on a jump host. Instead of adding the users one by one, you could add the group, and the users would inherit the intended permissions via their membership in the group. In AD, you commonly see what are called "nested groups", which can lead to a user(s) obtaining unintended rights. Nested groups membership is something you see and often leverage during penetration tests. The tool BloodHound helps to discover attack paths within a network and illustrate them in a graphical interface. It is excellent for auditing group membership and unvovering/seeing the sometimes unintended impacts of nested group membership. Groups in AD can have many attributes, the most common being the name, description, membership, and other groups that the group belongs to. Many other attributes can be set.</p>
+<p>a group is considered a container object because it can contain other objects, including users, computers, and even other groups. A group is regarded as a security principal and has a SID and a GUID. In AD, groups are a way to manage user permissions and access to other securable objects. Say you want to give 20 help desk users access to tthe Remote Management Users group on a jump host. Instead of adding the users one by one, you could add the group, and the users would inherit the intended permissions via their membership in the group. In AD, you commonly see what are called &quot;nested groups&quot;, which can lead to a user(s) obtaining unintended rights. Nested groups membership is something you see and often leverage during penetration tests. The tool BloodHound helps to discover attack paths within a network and illustrate them in a graphical interface. It is excellent for auditing group membership and unvovering/seeing the sometimes unintended impacts of nested group membership. Groups in AD can have many attributes, the most common being the name, description, membership, and other groups that the group belongs to. Many other attributes can be set.</p>
 <h4 id="ous"><a class="header" href="#ous">OUs</a></h4>
-<p>... are containers that system administrators can use to store similar objects for ease of administration. OUs are often used for administrative delegation of tasks without granting a user account full administrative rights. For example, you may have a top-level OU called "Employees" and then child OUs under it for various departments such as "Marketing", "HR", "Finance", "Help Desk", etc. If an account were given the right to reset passwords over the top-level OU, this user would have the right to reset passwords for all users in the company. However, if the OU structure were such that specific departments were child OUs of the "Help Desk" OU, then any user placed in the "Help Desk" OU would have this right delegated to them if granted. Other tasks that may be delegated at the OU level include creating/deleting users, modifying group membership, managing Group Policy links, and performing password resets. OUs are very useful for managing Group Policy settings across a subset of users and groups within a domain. For example, you may want to set a specific policy for privileged service accounts so these accounts could be placed in a particular OU and then have a Group Policy object assigned to it, which would enforce this password policy on all accounts placed inside of it. A few OU attributes include its name, members, security settings, and more.</p>
+<p>... are containers that system administrators can use to store similar objects for ease of administration. OUs are often used for administrative delegation of tasks without granting a user account full administrative rights. For example, you may have a top-level OU called &quot;Employees&quot; and then child OUs under it for various departments such as &quot;Marketing&quot;, &quot;HR&quot;, &quot;Finance&quot;, &quot;Help Desk&quot;, etc. If an account were given the right to reset passwords over the top-level OU, this user would have the right to reset passwords for all users in the company. However, if the OU structure were such that specific departments were child OUs of the &quot;Help Desk&quot; OU, then any user placed in the &quot;Help Desk&quot; OU would have this right delegated to them if granted. Other tasks that may be delegated at the OU level include creating/deleting users, modifying group membership, managing Group Policy links, and performing password resets. OUs are very useful for managing Group Policy settings across a subset of users and groups within a domain. For example, you may want to set a specific policy for privileged service accounts so these accounts could be placed in a particular OU and then have a Group Policy object assigned to it, which would enforce this password policy on all accounts placed inside of it. A few OU attributes include its name, members, security settings, and more.</p>
 <h4 id="domain-1"><a class="header" href="#domain-1">Domain</a></h4>
 <p>a domain is the structure of an AD network. Domains contain objects such as users and computers, which are organized into container objects: groups, and OUs. Every domain has its own separate database and sets of policies that can be applied to any and all objects within the domain. Some policies are set by default, such as the domain password policy. In contrast, others are created and applied based on the organization's need, such as blocking access to cmd.exe for all-non administrative users or mapping shared drives at log in.</p>
 <h4 id="domain-controllers"><a class="header" href="#domain-controllers">Domain Controllers</a></h4>
@@ -880,13 +409,13 @@ Address:  172.16.6.5
 </code></pre>
 <h4 id="ldap"><a class="header" href="#ldap">LDAP</a></h4>
 <p>AD supports Lightweight Directory Access Protocol for directory lookups. LDAP is an open-source and cross-platform protocol used for authentication against various directory services. The latest LDAP specification is Version 3, published as RFC 4511. A firm understanding of how LDAP works in an AD environment is crucial for attackers and defenders. LDAP uses port 389, and LDAP over SSL (<em>LDAPS</em>) communicates over port 636.</p>
-<p>AD stores user account information and security information such as passwords and facilitates sharing this information with other devices on the network. LDAP is the language that applications use to communicate with other servers that provide directory services. In other words, LDAP is how systems in the network environment can "speak" to AD.</p>
+<p>AD stores user account information and security information such as passwords and facilitates sharing this information with other devices on the network. LDAP is the language that applications use to communicate with other servers that provide directory services. In other words, LDAP is how systems in the network environment can &quot;speak&quot; to AD.</p>
 <p>An LDAP session begins by first connecting to an LDAP server, also known as a Directory System Agent. The DC in AD actively listens for LDAP requests, such as security authentication requests.</p>
 <p><img src="../../../images/intro_ad7.png" alt="intro ad 7" /></p>
 <p>The relationship between AD and LDAP can be compared to Apache and HTTP. The same way Apache is a web server that uses HTTP protocol, AD is a directory server that uses the LDAP protocol.</p>
 <p>While uncommon, you may come across organizations while performing an assessment that do not have AD but are using LDAP, meaning that they most likely use another type of LDAP server such as OpenLDAP.</p>
 <h5 id="ad-ldap-authentication"><a class="header" href="#ad-ldap-authentication">AD LDAP Authentication</a></h5>
-<p>LDAP is set up to authenticate creds against AD using a "BIND" operation to set the authentication state for an LDAP session. There are two types of LDAP authentication:</p>
+<p>LDAP is set up to authenticate creds against AD using a &quot;BIND&quot; operation to set the authentication state for an LDAP session. There are two types of LDAP authentication:</p>
 <ol>
 <li>Simple Authentication
 <ol>
@@ -904,7 +433,7 @@ Address:  172.16.6.5
 <div class="table-wrapper"><table><thead><tr><th>Interface Name</th><th>Description</th></tr></thead><tbody>
 <tr><td>lsarpc</td><td>a set of RPC calls to the Local Security Authority system which manages the local security policy on a computer, controls the audit policy, and provides interactive authentication services; LSARPC is used to perform management on domain security policies</td></tr>
 <tr><td>netlogon</td><td>is a Windows process used to authenticate users and other services in the domain environment; it is a service that continuously runs in the background</td></tr>
-<tr><td>samr</td><td>remote SAM provides management functionality for the domain account database, storing information about users and groups; IT admins use the protocol to manage users, groups, and computers by enabling admins to create, read, update, and delete information about security principles; attackers can use the samr protocol to perform reconnaissance about the internal domain using tools like BloodHound to visually map out the AD network and create "attack paths" to illustrate visually how administrative access or full domain compromise could be achieved; organizations can protect against this type of reconnaissance by changing a Windwos registry key to only allow admins to perform remote SAM queries, by default, all authenticated domain users can make these queries to gather a considerable amount of information about the AD domain</td></tr>
+<tr><td>samr</td><td>remote SAM provides management functionality for the domain account database, storing information about users and groups; IT admins use the protocol to manage users, groups, and computers by enabling admins to create, read, update, and delete information about security principles; attackers can use the samr protocol to perform reconnaissance about the internal domain using tools like BloodHound to visually map out the AD network and create &quot;attack paths&quot; to illustrate visually how administrative access or full domain compromise could be achieved; organizations can protect against this type of reconnaissance by changing a Windwos registry key to only allow admins to perform remote SAM queries, by default, all authenticated domain users can make these queries to gather a considerable amount of information about the AD domain</td></tr>
 <tr><td>drsuapi</td><td>drsuapi is the Microsoft API that implements the Directory Replication Service Remote Protocol which is used to perform replication-related tasks across DCs in a multi-DC environment; attackers can utilize drsuapi to create a copy of the AD domain database file to retrieve password hashes for all accounts in the domain, which can then be used to perform Pass-the-Hash attacks to access more systems or cracked offline to obtain the cleartext password to log in to systems using remote management protocols such as RDP and WinRM</td></tr>
 </tbody></table>
 </div>
@@ -952,7 +481,7 @@ Address:  172.16.6.5
 </li>
 </ul>
 <h4 id="ntlmv1v-net-ntlmv1"><a class="header" href="#ntlmv1v-net-ntlmv1">NTLMv1v (<em>Net-NTLMv1</em>)</a></h4>
-<p>The NTLM protocol performs a challenge/response between a server and client using the NT hash. NTLMv1 uses both the NT and the LM hash, which can make it easier to "crack" offline after capturing a hash using a tool such as Responder or via an NTLM relay attack. The protocol is used for network authentication, and the Net-NTLMv1 hash itself is created from a challenge/response algorithm. The server sends the client an 8-byte random number, and the client returns a 24-byte response. These hashes can not be used for pass-the-hash attacks. The algorithm looks as follows:</p>
+<p>The NTLM protocol performs a challenge/response between a server and client using the NT hash. NTLMv1 uses both the NT and the LM hash, which can make it easier to &quot;crack&quot; offline after capturing a hash using a tool such as Responder or via an NTLM relay attack. The protocol is used for network authentication, and the Net-NTLMv1 hash itself is created from a challenge/response algorithm. The server sends the client an 8-byte random number, and the client returns a 24-byte response. These hashes can not be used for pass-the-hash attacks. The algorithm looks as follows:</p>
 <h5 id="v1-challenge--response-algorithm"><a class="header" href="#v1-challenge--response-algorithm">V1 Challenge &amp; Response Algorithm</a></h5>
 <pre><code>C = 8-byte server challenge, random
 K1 | K2 | K3 = LM/NT-hash | 5-bytes-0
@@ -977,7 +506,7 @@ response = LMv2 | CC | NTv2 | CC*
 <pre><code>admin::N46iSNekpT:08ca45b7d7ea58ee:88dcbe4446168966a153a0064958dac6:5c7830315c7830310000000000000b45c67103d07d7b95acd12ffa11230e0000000052920b85f78d013c31cdb3b92f5d765c783030
 </code></pre>
 <h4 id="domain-cached-creds-mscache2"><a class="header" href="#domain-cached-creds-mscache2">Domain Cached Creds (<em>MSCache2</em>)</a></h4>
-<p>In an AD environment, the authentication methods mentioned in this section and the previous require the host you are trying to access to communicate with the "brains" of the network, the DC. Microsoft developed the MS Cache v1 and v2 algorithm to solve the potential issue of a domain-joined host being unable to communicate with a DC and, hence, NTLM/Kerberos authentication not working to access the host in question. Hosts save the last ten hashes for any domain users that successfully log into the machine in the <code>HKEY_LOCAL_MACHINE\SECURITY\Cache</code> registry key. These hashes cannot be used in pass-the-hash attacks. Furthermore, the hash is very slow to crack with a tool such as Hashcat, even when using an extremely powerful GPU cracking rig, so attempts to crack these hashes typically need to be extremely targeted or rely on a very weak password in use. These hashes can be obtained by an attacker or pentester after gaining local admin access to a host and have the following format: <code>$DCC2$10240#bjones#e4e938d12fe5974dc42a90120bd9c90f</code>. It is vital as pentesters that you understand the varying types of hashes that you may encounter while assessing an AD environment, their strengths, weaknesses, how they can be abused, and when an attack may be futile.</p>
+<p>In an AD environment, the authentication methods mentioned in this section and the previous require the host you are trying to access to communicate with the &quot;brains&quot; of the network, the DC. Microsoft developed the MS Cache v1 and v2 algorithm to solve the potential issue of a domain-joined host being unable to communicate with a DC and, hence, NTLM/Kerberos authentication not working to access the host in question. Hosts save the last ten hashes for any domain users that successfully log into the machine in the <code>HKEY_LOCAL_MACHINE\SECURITY\Cache</code> registry key. These hashes cannot be used in pass-the-hash attacks. Furthermore, the hash is very slow to crack with a tool such as Hashcat, even when using an extremely powerful GPU cracking rig, so attempts to crack these hashes typically need to be extremely targeted or rely on a very weak password in use. These hashes can be obtained by an attacker or pentester after gaining local admin access to a host and have the following format: <code>$DCC2$10240#bjones#e4e938d12fe5974dc42a90120bd9c90f</code>. It is vital as pentesters that you understand the varying types of hashes that you may encounter while assessing an AD environment, their strengths, weaknesses, how they can be abused, and when an attack may be futile.</p>
 <h2 id="users-1"><a class="header" href="#users-1">Users</a></h2>
 <h3 id="user-and-machine-accounts"><a class="header" href="#user-and-machine-accounts">User and Machine Accounts</a></h3>
 <p>User accounts are created on both local systems and in AD to give a person or a program the ability to log on to a computer and access resources based on their rights. When a user logs in, the system verifies their password and creates an access token. This token describes the security content of a process or thread and includes the user's security identity and group membership. Whenever a user interacts with a process, this token is presented. User accounts are used to allow employees/contractors to log in to a computer and access resources, to run programs or services under a specific security context, and to manage access to objects and their properties such as netwotk file shares, files applications, etc. Users can be assigend to groups that can contain one or more members. These groups can also be used to control access to resources. It can be easier for an administrator to assign privileges once to a group instead of many times to each individual user. This helps simplify administration and makes it easier to grant and revoke user rights.</p>
@@ -1053,7 +582,7 @@ UserPrincipalName : htb-student@INLANEFREIGHT.LOCAL
 <p>Groups in AD have two fundamental characteristics: type and scope. The group type defines the group's purpose, while the group scope shows how the group can be used within the domain or forest. When creating a new group, you must select a group type. There are two main types: security and distribution groups.</p>
 <p><img src="../../../images/intro_ad10.png" alt="intro ad 10" /></p>
 <p>The Security Groups type is primarily for ease of assigning permissions and rights to a collection of users instead of one at a time. They simlify management and reduce overhead when assigning permissions and rights for a given resource. All users added to a security group will inherit any permissions assigned to the group, making it easier to move users in and out of groups while leaving the group's permissions unchanged.</p>
-<p>The Distribution Groups type is used by email applications such as Microsoft Exchange to distribute messages to group members. They function much like mailing lists and allow for auto-adding emails in the "To" field when creating an email in Microsoft Outlook. This type of group cannot be used to assign permissions to resources in a domain environment.</p>
+<p>The Distribution Groups type is used by email applications such as Microsoft Exchange to distribute messages to group members. They function much like mailing lists and allow for auto-adding emails in the &quot;To&quot; field when creating an email in Microsoft Outlook. This type of group cannot be used to assign permissions to resources in a domain environment.</p>
 <h3 id="group-scopes"><a class="header" href="#group-scopes">Group Scopes</a></h3>
 <p>There are three different group scopes that can be assigned when creating a new group:</p>
 <h4 id="domain-local-group"><a class="header" href="#domain-local-group">Domain Local Group</a></h4>
@@ -1171,7 +700,7 @@ Domain Guests                                Global
 </tbody></table>
 </div>
 <h4 id="server-operators-group-details"><a class="header" href="#server-operators-group-details">Server Operators Group Details</a></h4>
-<pre><code class="language-ps">PS C:\htb&gt;  Get-ADGroup -Identity "Server Operators" -Properties *
+<pre><code class="language-ps">PS C:\htb&gt;  Get-ADGroup -Identity &quot;Server Operators&quot; -Properties *
 
 adminCount                      : 1
 CanonicalName                   : INLANEFREIGHT.LOCAL/Builtin/Server Operators
@@ -1217,7 +746,7 @@ whenCreated                     : 10/27/2021 8:14:34 AM
 </code></pre>
 <p>As you can see above, the default state of the Server Operators group is to have no members and is a domain local group by default. In contrast, the Domain Admins group seen below has several members and service accounts assigned to it. Domain Admins are also Global groups instead of domain local.</p>
 <h4 id="domain-admins-group-membership"><a class="header" href="#domain-admins-group-membership">Domain Admins Group Membership</a></h4>
-<pre><code class="language-ps">PS C:\htb&gt;  Get-ADGroup -Identity "Domain Admins" -Properties * | select DistinguishedName,GroupCategory,GroupScope,Name,Members
+<pre><code class="language-ps">PS C:\htb&gt;  Get-ADGroup -Identity &quot;Domain Admins&quot; -Properties * | select DistinguishedName,GroupCategory,GroupScope,Name,Members
 
 DistinguishedName : CN=Domain Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL
 GroupCategory     : Security
@@ -1253,7 +782,7 @@ Privilege Name                Description                    State
 SeChangeNotifyPrivilege       Bypass traverse checking       Enabled
 SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
 </code></pre>
-<p>You can see that the rights are very limited, and none of the "dangerous" rights outlined above are present. Next, take a look at a privileged user.</p>
+<p>You can see that the rights are very limited, and none of the &quot;dangerous&quot; rights outlined above are present. Next, take a look at a privileged user.</p>
 <h4 id="domain-admin-rights-non-elevated"><a class="header" href="#domain-admin-rights-non-elevated">Domain Admin Rights Non-Elevated</a></h4>
 <p>You can see the following in a non-elevated console which does not appear to be anything more than available to the standard domain user. This is because, by default, Windows systems do not enable all rights to you unless you run the CMD or PowerShell console in an elevated context. This is to prevent every application from running with the highest possible privileges. This is controlled by UAC.</p>
 <pre><code class="language-ps">PS C:\htb&gt; whoami /priv
@@ -1413,22 +942,22 @@ SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
 <p>Regardless of which GPO is set to enforced, if the Default Domain Policy GPO is enforced, it will take precedence over all GPOs at all levels.</p>
 <h4 id="default-domain-policy-override"><a class="header" href="#default-domain-policy-override">Default Domain Policy Override</a></h4>
 <p><img src="../../../images/intro_ad18.png" alt="intro ad 18" /></p>
-<p>It is also possible to set the "Block inheritance" option on an OU. If this is specified for a particular OU, then policies higher up will not be applied to this OU. If both options are set, the "No override" option has precedence over the "Block inheritance" option. Here is a quick example. The <code>Computers</code> OU is inheriting GPOs set on the <code>Corp</code> OU in the below image.</p>
+<p>It is also possible to set the &quot;Block inheritance&quot; option on an OU. If this is specified for a particular OU, then policies higher up will not be applied to this OU. If both options are set, the &quot;No override&quot; option has precedence over the &quot;Block inheritance&quot; option. Here is a quick example. The <code>Computers</code> OU is inheriting GPOs set on the <code>Corp</code> OU in the below image.</p>
 <p><img src="../../../images/intro_ad19.png" alt="intro ad 19" /></p>
-<p>If the "Block inheritance" option is chosen, you can see that the 3 GPOs applied higher up to the <code>Corp</code> OU are no longer enforced on the <code>Computers</code> OU.</p>
+<p>If the &quot;Block inheritance&quot; option is chosen, you can see that the 3 GPOs applied higher up to the <code>Corp</code> OU are no longer enforced on the <code>Computers</code> OU.</p>
 <h4 id="block-inheritance"><a class="header" href="#block-inheritance">Block Inheritance</a></h4>
 <p><img src="../../../images/intro_ad20.png" alt="intro ad 20" /></p>
 <h3 id="group-policy-refresh-frequency"><a class="header" href="#group-policy-refresh-frequency">Group Policy Refresh Frequency</a></h3>
 <p>When a new GPO is created, the settings are not automatically applied right away. Windows performs periodic Group Policy updates, which by default is done every 90 minutes with a randomized offset of +/- 30 minutes for users and computers. The period is only 5 minutes for DCs to update by default. When a new GPO is created and linked, it could take up to 2 hours until the setings take effect. This random offset of +/- 30 minutes is set to avoid overwhelming DCs by having all clients request Group Policy from the DC simultaneously</p>
 <p>It is possible to change the default refresh interval within Group Policy itself. Furthermore, you can issue the command <code>gpupdate /force</code> to kick off the update process. This command will compare the GPOs currently applied on the machine against the DC and either modify or skip them depending on if they have changed since the last automatic update.</p>
-<p>You can modify the refresh rate interval via Group Policy by clicking on "Computer Configuration", "Policies", "Administrative Templates", "System", "Group Policy" and selecting "Set Group Policy refresh interval for computers". While it can be changed, it should not be set to occur too often, or it could cause network congestion leading to replication issues.</p>
+<p>You can modify the refresh rate interval via Group Policy by clicking on &quot;Computer Configuration&quot;, &quot;Policies&quot;, &quot;Administrative Templates&quot;, &quot;System&quot;, &quot;Group Policy&quot; and selecting &quot;Set Group Policy refresh interval for computers&quot;. While it can be changed, it should not be set to occur too often, or it could cause network congestion leading to replication issues.</p>
 <p><img src="../../../images/intro_ad21.png" alt="intro ad 21" /></p>
 <h3 id="security-considerations-of-gpos"><a class="header" href="#security-considerations-of-gpos">Security Considerations of GPOs</a></h3>
 <p>GPOs an be used to carry out attacks. These attacks may include adding additional rights to a user account that you control, adding a local administrator to a host, or creating an immediate scheduled task to run a malicious command such as modifying group membership, adding a new admin account, establishing a reverse shell connection, or even installing targeted malware throughout a domain. These attacks typically happen when a user has the rights required to modify a GPO that applies to an OU that contains either a user account that you control or a computer.</p>
 <p>Below is an example of a GPO attack path identified using the BloodHound tool. This example shows that the <code>Domain Users</code> group can modify the <code>Disconnect Idle RDP</code> GPO due to nested group membership. In this case, you would next look to see which OUs this GPO applies to and if you can leverage these rights to gain control over a high-value user or computer and move laterally to escalate privileges within the domain.</p>
-<p><img src="../../../images/intro_ad22.png" alt="intro ad 22" /><!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p><img src="../../../images/intro_ad22.png" alt="intro ad 22" /><!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -1492,7 +1021,6 @@ SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
 
         <!-- Custom JS scripts -->
         <script src="../../../theme/pagetoc.js"></script>
-
 
 
     </div>

