@@ -5,4 +5,5 @@
 - [Data Analysis with Kibana](data_analysis_with_kibana)
 - [Elasticsearch Engineer](elasticsearch_engineer)
 - [ES|QL for Security Analysts](esql_for_security_analysts.md)
+- [Introduction to Painless](intro_painless.md)
 - [Kubernetes Basics](kubernetes_basics.md)

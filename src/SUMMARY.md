@@ -168,6 +168,7 @@
 			- [Cluster Management](general/elastic_stack/elasticsearch_engineer/08_cluster_management.md)
 		- [ES|QL for Security Analysts](general/elastic_stack/esql_for_security_analysts.md)
 		- [Kubernetes Basics](general/elastic_stack/kubernetes_basics.md)
+		- [Introduction to Painless](general/elastic_stack/intro_painless.md)
 	- [Networking](general/networking/README.md)
 		- [0x00](general/networking/networking_introduction.md)
 		- [Cisco Network Technician](general/networking/cisco/README.md)
