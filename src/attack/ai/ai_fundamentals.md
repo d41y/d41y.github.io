@@ -489,7 +489,7 @@ Correlation is used to understand the linear relationship between two variables 
 
 ... algorithms form the cornerstone of many ML applications, enabling systems to learn from labeled data and make accurate predictions. Each data point is associated with a known outcome or label in supervised learning. Think of it as having a set of examples with the correct answers already provided.
 
-### How Supervised Learning Works
+#### How Supervised Learning Works
 
 Imagine you're teaching a child to identify different fruits. You show them an apple and say, "This is an apple". You then show them an orange and say, "This is an orange". By repeatedly presenting examples with labels, the child learns to distinguish between the fruits based on their characteristics, such as color, shape, and size.
 
@@ -500,17 +500,17 @@ Supervised learning problems can be broadly categorized into two main types:
 1. **Classification**: In classification problems, the goal is to predict a categorical label. For example, classifying emails as spam or not or identifying images of cats, dogs, or birds.
 2. **Regression**: In regression problems, the goal is to predict a continuous value. For example, one could predict the price of a house based on its size, location, and other features or forecast the stock market.
 
-### Core Concepts in Supervised Learning
+#### Core Concepts in Supervised Learning
 
 Understanding supervised learning's core concepts is essential for effectively grasping it. These concepts for the building blocks for comprehending how algorithms learn from labeled data to make accurate predictions.
 
-#### Training Data
+##### Training Data
 
 ... is the foundation of supervised learning. It is the labeled dataset used to train the ML model. This dataset consists of input features and their corresponding output lables. The quality and quantity of training data significantly impact the model's accuracy and ability to generalize to new, unseen data.
 
 Think of training data as a set of example problems with their correct solutions. The algorithm learns from these examples to develop a model that can solve similar problems in the future.
 
-#### Features
+##### Features
 
 ... are the measurable properties or characteristics of the data that serve as input to the model. They are the variables that the algorithm uses to learn and make predictions. Selecting relevant features is crucial for building an effective model.
 
@@ -521,31 +521,31 @@ For example, when predicting house prices, features might include:
 - Location
 - Age of the house
 
-#### Labels
+##### Labels
 
 ... are the known outcomes or target variables associated with each data point in the training set. They represent the "correct answers" that the model aims to predict.
 
 In the house price prediction, the label would be the actual price of the house.
 
-#### Model
+##### Model
 
 A model is a mathematical representation of the relationship between the features and the labels. It is learned from the training data and used to predict new, unseen data. The model can be considered a function that takes the features as input and outputs a prediction for the label.
 
-#### Training
+##### Training
 
 ... is the process of feeding the training data to the algorithm and adjusting the model's parameters to minimize prediction errors. The algorithm learn from the training data by iteratively adjusting its internal parameters to imporve its prediction accuracy.
 
-#### Prediction
+##### Prediction
 
 Once the model is trained, it can be used to predict new, unseen data. This involves providing the model with features of the new data point, and the model will output a prediction for the label. Prediction is a specific application of inference, focusing on generating actionable outputs such as classifying an email as spam or forecasting stock prices.
 
-#### Inference
+##### Inference
 
 ... is a broader concept that encompasses prediciton but also inlcudes understanding the underlying structure and patterns in the data. It involves using a trained model to derive insights, estimate parameters, and understand relationships between variables.
 
 For example, inference might involve determining which features are most important in a decision tree, estimating the coefficients in a linear regression model, or analyzing how different inputs impact the model's prediction. While prediction emphasizes actionable outputs, inference often focuses on explaining and interpreting the results.
 
-#### Evaluation
+##### Evaluation
 
 ... is a critical step in supervised learning. It involves assessing the model's performance to determine its accuracy and generalization ability to new data. Common evaluation metrics include:
 
@@ -554,26 +554,105 @@ For example, inference might involve determining which features are most importa
 - **Recall**: The proportion of true positive predictions among all actual positive instances.
 - **F1-Score**: A harmonic mean of precision and recall, providing a balanced measure of the model's performance.
 
-#### Generalization
+##### Generalization
 
 ... refers to the model's ability to accurately predict outcomes for new, unseen data not used during training. A model that generalizes well can effectively apply its learned knowledge to real-world scenarios.
 
-#### Overfitting
+##### Overfitting
 
 ... occurs when a model learns the training data too well, including noise and outliers. This can lead to poor generalization of new data, as the model has memorized the training set instead of learning the underlying patterns.
 
-#### Underfitting
+##### Underfitting
 
 ... occurs when a model is too simple to capture the underlying patterns in the data. This results in poor performance on both the training data and new, unseen data.
 
-#### Cross-Validation
+##### Cross-Validation
 
 ... is a technique used to assess how well a model will generalize to an independent dataset. It involves splitting the data into multiple subsets (_folds_) and training the model on different combinations of these folds while validating it on the remaining fold. This helps reduce overfitting and provides a more reliable estimate of the model's performance.
 
-#### Regularization
+##### Regularization
 
 ... is a technique used to prevent overfitting by adding a penalty to the loss function. This penalty discourages the model from learning overly complex patterns that might not generalize well. Common regularization techniques include:
 
 - **L1 Regularization**: Adds a penalty equal to the absolute value of the magnitude of coefficients.
 - **L2 Regularization**: Adds a penalty equal to the square of the magnitude of coefficients.
 
+### Linear Regression
+
+![ai fundamentals 2](../../../images/ai_fundamentals2.png)
+
+Linear Regression is a fundamental supervised learning algorithm that predicts a continuous target variable by establishing a linear relationship between the target and one or more predictor variables. The algorithm models this relationship using a linear equation, where changes in the predictor variables result in proportional changes in the target variable. The goal is to find the best-fitting line that minimizes the sum of the squared differences between the predicted values and the actual values.
+
+Imagine you're trying to predict a house's price based on size. Linear regression would attempt to find a straight line that best captures the relationship between these two variables. As the size of the house increases, the price generally tends to increase. Linear regression quantifies this relationship, allowing you to predict the price of a house given its size.
+
+#### What is Regression?
+
+Regression analysis is a type of supervised learning where the goal is to predict a continuous target variable. This target variable can take on any value within a given range. Think of it as estimating a number instead of classifying something into categories.
+
+Examples of regression problems include:
+
+- Predicting the price of a house based on its size, location, and age.
+- Forecasting the daily temperature based on historical weather data.
+- Estimating the number of website visitors based on marketing spend and time of year.
+
+In all these cases, the output you're trying to predict is a continuous value. This is what distinguishes regression from classification, where the output is a categorical label.
+
+Linear regression is simply one specific type of regression analysis where you assume a linear relationship between the predictor variabels and the target variables. This means you try to model the relationship using a straight line.
+
+#### Simple Linear Regression
+
+In its simplest form, simple linear regression involves one predictor variable and one target variable. A linear equation represents the relationship between them:
+
+```python
+y = mx + c
+```
+
+Where:
+
+- `y` is the predicted target variable
+- `x` is the predictor variable
+- `m` is the slope of the line (_representing the relationship between x and y_)
+- `c` is the y-intercept (_the value of y when is 0_)
+
+The algorithm aims to find the optimal values for `m` and `c` that minimizes the error between the predicted `y` values and the actual `y` values in the training data. This is typically done using Ordinary Least Squares (_OLS_), which aims to minimize the sum of squared errors.
+
+#### Multiple Linear Regression
+
+When multiple predictor variables are invovled, it's called multiple linear regression. The equation becomes:
+
+```python
+y = b0 + b1x1 + b2x2 + ... + bnxn
+```
+
+Where:
+
+- `y` is the predicted target variable
+- `x1`, `x2`, ..., `xn` are the predictor variables
+- `b0` is the y-intercept
+- `b1`, `b2`, ..., `bn` are the coefficients representing the relationship between each predictor variable and the target variable
+
+![ai fundamentals 3](../../../images/ai_fundamentals3.png)
+
+Ordinary Least Squares (_OLS_) is a common method for estimating the optimal value for the coefficients in linear regression. It aims to minimize the sum of the squared differences between the actual values and the values predicted by the model.
+
+Think of it as finding the line that minimizes the total area of the squares formed between the data points and the line. This "line of best fit" represents the relationship that best describes the data.
+
+Here's a breakdown of the OLS process:
+
+1. **Calculate Residuals**: For each data point, the residual is the difference between the actual `y` value and the `y` value predicted by the model.
+2. **Square the Residuals**: Each residual is squared to ensure that all values are positive and to give more weight to larger errors.
+3. **Sum the Squared Residuals**: All the squared residuals are summed to get a single value representing the model's overall error. This sum is called the Residual Sum of Squares (_RSS_).
+4. **Minimize the Sum of Squared Residuals**: The algorithm adjusts the coefficients to find the values that result in the smallest possible RSS.
+
+This process can be visualized as finding the line that minimizes the total area of the squares formed between the data points and the line.
+
+#### Assumption of Linear Regression
+
+Linear regression relies on several key assumptions about the data.
+
+- **Linearity**: A linear relationship exists between the predictor and target variables.
+- **Independence**: The observations in the dataset are independent of each other.
+- **Homoscedasticity**: The variance of the errors is constant across all levels of the predictor variables. This means the spread of the residuals should be roughly the same across the range of predicted values.
+- **Normality**: The errors are normally distributed. This assumption is important for making valid inferences about the model's coefficients.
+
+Assessing these assumptions before applying linear regression ensures the model's validity and reliability. If these assumptions are violated, the model's predictions may be inaccurate or misleading.
