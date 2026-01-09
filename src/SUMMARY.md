@@ -181,6 +181,7 @@
 	- [Programming](general/programming/README.md)
 		- [Assembly](general/programming/assembly/assembly.md)
 		- [Bash](general/programming/bash.md)
+		- [CMD](general/programming/cmd.md)
 		- [Python](general/programming/python/python.md)
 			- [573 Cheatsheet](general/programming/python/sans573/cheatsheet.md)
 	- [RegEx]()
