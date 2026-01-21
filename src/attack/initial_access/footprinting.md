@@ -614,8 +614,6 @@ All functions can be found [here](https://www.samba.org/samba/docs/current/man-h
 | ```enumdomusers``` | enumerates all domain users |
 | ```queryuser <RID>``` | provides information about a specific user |
 
-##### RPCclient
-
 ```bash
 rpcclient $> srvinfo
 
