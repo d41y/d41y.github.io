@@ -68,3 +68,78 @@ While useful, this also poses a potential risk. For example, on this Windows 7 m
 
 Once the machine is rebooted, you can press `[Shift]` five times on the Windows login screen to invoke Sticky Keys. Since the executable has been overwritte, what you get instead is another command prompt - this time with NT AUTHORITY\SYSTEM permissions. You have bypassed any authentication and now have access to the machine as the super user.
 
+## Getting Help
+
+The command prompt has a built-in help function that can provide you with detailed information about the available commands on your systems and how to utilize those functions.
+
+### How to Get Help
+
+When first looking at the command prompt interface, it can be overwhelming to stare at a blank prompt. Some initial questions might emerge, such as:
+
+- What commands do I have access to?
+- How do I use these commands?
+
+While utilizing the command prompt, finding help is as easy as typing `help`. Without any additional parameters, this command provides a list of built-in commands and basic information about each displayed command's usage.
+
+```
+C:\htb> help
+
+For more information on a specific command, type HELP command-name
+ASSOC          Displays or modifies file extension associations.
+ATTRIB         Displays or changes file attributes.
+BREAK          Sets or clears extended CTRL+C checking.
+BCDEDIT        Sets properties in boot database to control boot loading.
+CACLS          Displays or modifies access control lists (ACLs) of files.
+CALL           Calls one batch program from another.
+CD             Displays the name of or changes the current directory.
+CHCP           Displays or sets the active code page number.
+CHDIR          Displays the name of or changes the current directory.
+CHKDSK         Checks a disk and displays a status report.
+
+<snip>
+```
+
+From this output, you can see that it prints out a list of system commands (_builtins_) and provides a basic description of its functionality. This is important because you can quickly and efficiently parse the list of built-in functions provided by the command prompt to find the function that suits your needs. From here, you can transition into answering the second question on how these commands are used. To print out detailed information about a particular command, you can issue the following: `help [command name]`
+
+```
+C:\htb> help time
+
+Displays or sets the system time.
+
+TIME [/T | time]
+
+Type TIME with no parameters to display the current time setting and a prompt
+for a new one. Press ENTER to keep the same time.
+
+If Command Extensions are enabled, the TIME command supports
+the /T switch which tells the command to just output the
+current time, without prompting for a new time.
+```
+
+As you can see from the output above, when you issued the command `help time`, it printed the help details for time. This will work for any system command built-in but not for every command accessible on the system. Certain commands do not have a help page associated  with them. However, they will redirect you to running the proper command to retrieve the desired information. For example, running `help ipconfig` will give you the following output.
+
+```
+C:\htb> help ipconfig
+
+This command is not supported by the help utility. Try "ipconfig /?".
+```
+
+In the previous example, the help feature let you know that it could not provide more information as the help utility does not directly support it. However, utilizing the suggested `ipconfig /?` will provide you with the information you need to utilize the command correctly. Be aware that several commands use the `/?`modifier interchangeably with help.
+
+### Why Do You Need the Help Utility?
+
+**Example**: Imagine that you are tasked to assist in an internal on-site engagement for your company. You are immediately dropped into a command prompt session on a machine from within the internal network and have been tasked with enumerating the systems. As per the rules of engagement, you have been stripped of any devices on your person and told that the firewall is blocking all outbound network traffic. You begin your enumeration on the system but need help remembering the systax for a specific command you have in mind. You realize that you cannot reach the Internet by any means.
+
+Although this scenario might seem slightly exaggerated, there will be scenarios similar to this one as an attacker where your network access will be heavily limited, monitored, or strictly unavailable. Sometimes, you do not have every command and all parameters and syntax memorized; however, you will still be expected to perform even under these limitations. In instances where you are expected to perform, you will need alternate ways to gather the information you need instead of relying on the Internet as a quick fix to your problems.
+
+The `help` utility serves as an offline manual for CMD and DOS compatible Windows system commands. Offline refers to the fact that this utility can be used on a system without network access.
+
+There will be times, when you may not have direct access to the Internet. The `help` utility is meant to bridge that gap when you need assistance with commands or specific syntax for said commands on your system and may not have the external resources available to ask for help. This does not imply that the Internet is not a valuable tool to use in engagements. However, if you do not have the luxury of searching for answers to your questions, you need some way to retrieve said information.
+
+### Where Can You Find Additional Help?
+
+[Microsoft Documentation](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/windows-commands) has a complete listing of the commands that can be issued within the command-line interpreter as well as detailed descriptions of how to use them.
+
+[ss64](https://ss64.com/nt/) is a handy quick reference for anything command-line related, including cmd, PowerShell, Bash, and more.
+
+### Basic Tips & Tricks
