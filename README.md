@@ -104,7 +104,7 @@
 
 ### 0x00
 
-- [Fuzzing](./src/attack/web/fundamentals/fuzzing_fundamentals.md)
+- [Fuzzing](ffuf.md)
 - [HTTP/HTTPs](./src/attack/web/fundamentals/http_https_fundamentals.md)
 - [Proxies](./src/attack/web/fundamentals/web_proxy_fundamentals.md)
 - [Reconnaissance](./src/attack/web/fundamentals/web_recon_fundamentals.md)
