@@ -143,3 +143,204 @@ There will be times, when you may not have direct access to the Internet. The `h
 [ss64](https://ss64.com/nt/) is a handy quick reference for anything command-line related, including cmd, PowerShell, Bash, and more.
 
 ### Basic Tips & Tricks
+
+#### Clear Your Screen
+
+There are times during your interaction with the command prompt when the amount of output provided to you through multiple commands overcrowding the screen and becomes an unusable mess of information. In this case, you need some way to clear the screen and provide you with an empty prompt. You can use the command `cls` to clear your terminal window of your previous results. This comes in handy when you need to refresh your screen and want to avoid fighting to read the terminal and figuring out where your current output starts and the old input ends.
+
+![cmd 2](../../../images/cmd2.gif)
+
+You can see from the GIF above that your terminal was packed, and you issued the `cls` command providing you with a blank slate.
+
+#### History
+
+Command history is a dynamic thing. It allows you to view previously ran commands in your Command Prompt's current active session. To do this, CMD provides you with several different methods of interacting with your command history. For example, you can use the arrow keys to move up and down through your history, the page up and page down keys, and if working on a physical Windows host, you can use the function keys to interact with your session history. The last way you can view your history is by utilizing the command `doskey /history`. Doskey is an MS-DOS utility that keeps a history of commands issued and allows them to be referenced again.
+
+```
+C:\htb> doskey /history
+
+systeminfo
+ipconfig /all
+cls
+ipconfig /all
+systeminfo
+cls
+history
+help
+doskey /history
+ping 8.8.8.8
+doskey /history
+```
+
+The table below shows a list of some of the most valuable functions and commands that can be run to interact with your session history.
+
+| Key / Command | Description |
+| ------------- | ----------- |
+| `doskey /history` | will print the session's command history to the terminal or output it to a file when specified |
+| page up | places the first command in your session history to the prompt |
+| page down | places the last command in history to the prompt |
+| `[UP]` | allows you to scroll up through your command history to view previously run commands |
+| `[DOWN]` | allows you to scroll down to your most recent commands run |
+| `[RIGHT]` | types the previous command to prompt one character at a time |
+| F3 | will retype the entire previous entry to your prompt |
+| F5 | pressing F5 multiple times will allow you to cycle through previous commands |
+| F7 | opens an interactive list of previous commands |
+| F9 | enters a command to your prompt based on the number specified; the number corresponds to the commands' place in your history |
+
+> [!INFO]
+> One thing to remember is that unlike Bash or other shells, CMD does not keep a persistent record of the commands you issue through sessions. So once you close that instance, that history is gone. To save a copy of your issued commands, you can use `doskey` again to output the history to a file, show it on screen, and then copy it.
+
+#### Exit a Running Process
+
+At some point in your journey working with the Command Prompt, there will be times when you will need to be able to interrupt an actively running process, effectively killing it. This can be due to many different factors. However, a lot of the time, you might have the information that you need from a currently running command or find yourself dealing with an application that's locking up unexpectedly. Thus, you need some way of interrupting your current session and any process running in it. Take the following as an example:
+
+```
+C:\htb> ping 8.8.8.8
+
+Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=22ms TTL=114
+Reply from 8.8.8.8: bytes=32 time=25ms TTL=114
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 2, Received = 2, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 22ms, Maximum = 25ms, Average = 23ms
+Control-C
+^C
+```
+
+When running a command or process you want to interrupt, you can do so by pressing the `[CTRL + c]` key combination. As previously stated, this is useful for stopping a currently running process that may be non-responsive or just something you want to be completed immediately. Remember that whatever was running will be incomplete and may need more time to close itself out properly, so always be wary of what you are interrupting.
+
+## System Navigation
+
+### Listing a Directory
+
+One of the easiest things you can do when initially poking around on a Windows host is to get a listing of the directory you are currently working in. You do that with the `dir` command.
+
+```
+C:\Users\htb\Desktop> dir
+  
+ Volume in drive C has no label.
+ Volume Serial Number is DAE9-5896
+
+ Directory of C:\Users\htb\Desktop
+
+06/11/2021  11:59 PM    <DIR>          .
+06/11/2021  11:59 PM    <DIR>          ..
+06/11/2021  11:57 PM                 0 file1.txt
+06/11/2021  11:57 PM                 0 file2.txt
+06/11/2021  11:57 PM                 0 file3.txt
+04/13/2021  11:24 AM             2,391 Microsoft Teams.lnk
+06/11/2021  11:57 PM                 0 super-secret-sauce.txt
+06/11/2021  11:59 PM                 0 write-secrets.ps1
+               6 File(s)          2,391 bytes
+               2 Dir(s)  35,102,117,888 bytes free
+```
+
+### Finding Your Place
+
+Before doing anything on a host, it is helpful to know where you are in the filesystem. You can determine that by utilizing the `cd` or `chdir` commands.
+
+```
+C:\htb> cd 
+
+C:\htb  
+```
+
+### Moving Around Using CD/CHDIR
+
+Besides listing your current directory, both serve an additional function. These commands will move you to whatever directory you specify after the command. The specified directory can either be a directory relative to your current working directory or an absolute directory starting from the filesystem's root.
+
+```cmd-session
+# absolute
+C:\htb> cd C:\Users\htb\Pictures
+
+C:\Users\htb\Pictures> 
+
+# relative
+C:\htb> cd .\Pictures
+
+C:\Users\htb\Pictures> 
+```
+
+### Exploring the File System
+
+You can get a printout of the entire path you specify and its subdirectories by utilizing the `tree` command.
+
+```
+C:\htb\student\> tree
+
+Folder PATH listing
+Volume serial number is 26E7-9EE4
+C:.
+├───3D Objects
+├───Contacts
+├───Desktop
+├───Documents
+├───Downloads
+├───Favorites
+│   └───Links
+├───Links
+├───Music
+├───OneDrive
+├───Pictures
+│   ├───Camera Roll
+│   └───Saved Pictures
+├───Saved Games
+├───Searches
+└───Videos
+    └───Captures
+```
+
+You can utilize the `/F` parameter with the tree command to see a listing of each file and the directories along with the directory tree of the path.
+
+```
+C:\htb\student\> tree /F
+
+Folder PATH listing
+Volume serial number is 26E7-9EE4
+C:.
+├───3D Objects
+├───Contacts
+├───Desktop
+│       passwords.txt.txt
+│       Project plans.txt
+│       secrets.txt
+│
+├───Documents
+├───Downloads
+├───Favorites
+│   │   Bing.URL
+│   │
+│   └───Links
+├───Links
+│       Desktop.lnk
+│       Downloads.lnk
+│
+├───Music
+├───OneDrive
+├───Pictures
+│   ├───Camera Roll
+│   └───Saved Pictures
+├───Saved Games
+├───Searches
+│       winrt--{S-1-5-21-1588464669-3682530959-1994202445-1000}-.searchconnector-ms
+│
+└───Videos
+    └───Captures
+
+    <SNIP>
+```
+
+### Interesting Directories
+
+Below is a table of common directories that an attacker can abuse to drop files to disk, perform recon, and help facilitate attack surface mapping on a target host.
+
+| Name | Location | Description |
+| ---- | -------- | ----------- |
+| `%SYSTEMROOT%\Temp` | `C:\Windows\Temp` | Global directory containing temporary system files accessible to all users on the system. All users, regardless of authority, are provided full read, write, and execute permissions in this directory. Useful for dropping files as a low-privileged user on the system. |
+| `%TEMP%` | `C:\Users\<user>\AppData\Local\Temp` | Local directory containing a user's temporary files accessible only to the user account that it is attached to. Provides full ownership to the user that owns this folder. Useful when the attacker gains control of a local/domain joined user account. |
+| `%PUBLIC%` | `C:\Users\Public` | Publicly accessible directory allowing any interactive logon account full access to read, write, modify, execute, etc. files and subfolders within the directory. Alternative to the global Windows Temp Directory as it's less likely to be monitored for suspicious activity. |
+| `%ProgramFiles%` | `C:\Program Files` | Folder containing all 64-bit applications installed on the system. Useful for seeing what kind of applications are installed on the target system. |
+| `%ProgramFiles(x86)%` | `C:\Program Files (x86)` | Folder containing all 32-bit applications installed on the system. Useful for seeing what kind of applications are installed on the target system. |
+
