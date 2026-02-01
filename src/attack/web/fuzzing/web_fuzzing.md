@@ -83,3 +83,198 @@ Directory and file fuzzing are among the most effective methods for uncovering t
 
 ### Wordlists
 
+Wordlists are the lifeblood of directory and file fuzzing. They provide the potential directory and file names your chosen tool will use to probe the web application. Effective wordlists can significantly increase your chances of discovering hidden assets.
+
+Wordlists are typically compiled from various sources. This often includes scraping the web for common directly and file names, analyzing publicly available data breaches, and extracting directory information from known vulns. These wordlists are then meticulously curated, removing duplicates and irrelevant entries to ensure optimal efficiency and effectiveness during fuzzing operations. The goal is to create a comprehensive list of potential directories and file names that will likely be found on web servers, allowing you to thoroughly probe a target application for hidden assets.
+
+One of the most comprehensive and widely-used collections of wordlists is SecLists. This open-source project on GitHub provides a vast repository for various security testing purposes, including directory and file fuzzing.
+
+### Directory Fuzzing
+
+Directory fuzzing helps you discover hidden directories on the web server.
+
+```bash
+d41y@htb[/htb]$ ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://IP:PORT/FUZZ
+
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://IP:PORT/FUZZ
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200-399
+________________________________________________
+
+[...]
+
+w2ksvrus                [Status: 301, Size: 0, Words: 1, Lines: 1, Duration: 0ms]
+:: Progress: [220559/220559] :: Job [1/1] :: 100000 req/sec :: Duration: [0:00:03] :: Errors: 0 ::
+```
+
+- `-w`: Specifies the path to the wordlist you want to use. In this case, you're using a medium-sized directory list from SecLists.
+- `-u`: Specifies the base URL to fuzz. The `FUZZ` keyword acts as a placeholder where the fuzzer will insert words from the wordlist.
+
+### File Fuzzing
+
+While directory fuzzing focuses on finding folders, file fuzzing dives deeper into discovering specific files within those directories or even in the root of the web application. Web apps use various file types to serve content and perform different functions. Some common file extensions include:
+
+- `.php`: Files containing PHP code, a popular server-side scripting language.
+- `.html`: Files that define the structure and content of web pages.
+- `.txt`: Plain text files, often storing simple information or logs.
+- `.bak`: Backup files are created to preserve previous versions of files in case of errors or modifications.
+- `.js`: Files containing JS code add interactivity and dynamic functionality to web pages.
+
+By fuzzing for these common extensions with a wordlist of common file names, you increase your chances of discovering files that might be unintentionally exposed or misconfigured, potentially leading to information disclosure or other vulns.
+
+For example, if the website uses PHP, discovering a backup file like `config.php.bak` could reveal sensitive information such as database credentials or API keys. Similarly, finding an old or unused script like `test.php` might expose vulns that attackers could exploit.
+
+```bash
+d41y@htb[/htb]$ ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://IP:PORT/w2ksvrus/FUZZ -e .php,.html,.txt,.bak,.js -v 
+
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://IP:PORT/w2ksvrus/FUZZ.html
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/Web-Content/common.txt
+ :: Extensions       : .php .html .txt .bak .js 
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+________________________________________________
+
+[Status: 200, Size: 111, Words: 2, Lines: 2, Duration: 0ms]
+| URL | http://IP:PORT/w2ksvrus/dblclk.html
+    * FUZZ: dblclk
+
+[Status: 200, Size: 112, Words: 6, Lines: 2, Duration: 0ms]
+| URL | http://IP:PORT/w2ksvrus/index.html
+    * FUZZ: index
+
+:: Progress: [28362/28362] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Errors: 0 ::
+```
+
+The ffuf output shows that it discovered two files within the `/w2ksvrus` directory.
+
+## Recursive Fuzzing
+
+### How it works
+
+Recursive fuzzing is automated way to delve into the depths of a web application's directory structure. It's a pretty basic 3 step process:
+
+1. **Initial Fuzzing**:
+	1. The fuzzing process begins with the top-level directory, typically the web root.
+	2. The fuzzer starts sending requests based on the provided wordlist containing the potential directory and file names.
+	3. The fuzzer analyzes server responses, looking for successful results that indicate the existence of a directory.
+2. **Directory Discovery and Expansion**:
+	1. When a valid directory is found, the fuzzer doesn't just note it down. It creates a new branch for that directory, essentially appending the directory name to the base URL.
+	2. For example, if the fuzzer finds a directory named `admin` at the root level, it will create a new branch like `http://localhost/admin`.
+	3. This new branch becomes the starting point for a fresh fuzzing process. The fuzzer will again iterate through the wordlist, appending each entry to the new branch's URL.
+3. **Iterative Depth**:
+	1. The process repeats for each discovered directory, creating further branches and expanding the fuzzing scope deeper into the web application's structure.
+	2. This continues until a specified depth limit is reached or no more valid directories are found.
+
+Imagine a tree structure where the web root is the trunk, and each discovered directory is a branch. Recursive fuzzing systematically explores each branch, going deeper and deeper until it reaches the leaves (_files_) or encounters a predetermined stopping point.
+
+Using ffuf to demonstrate recursive fuzzing:
+
+```bash
+d41y@htb[/htb]$ ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -ic -v -u http://IP:PORT/FUZZ -e .html -recursion 
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://IP:PORT/FUZZ
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
+ :: Extensions       : .html 
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+________________________________________________
+
+[Status: 301, Size: 0, Words: 1, Lines: 1, Duration: 0ms]
+| URL | http://IP:PORT/level1
+| --> | /level1/
+    * FUZZ: level1
+
+[INFO] Adding a new job to the queue: http://IP:PORT/level1/FUZZ
+
+[INFO] Starting queued job on target: http://IP:PORT/level1/FUZZ
+
+[Status: 200, Size: 96, Words: 6, Lines: 2, Duration: 0ms]
+| URL | http://IP:PORT/level1/index.html
+    * FUZZ: index.html
+
+[Status: 301, Size: 0, Words: 1, Lines: 1, Duration: 0ms]
+| URL | http://IP:PORT/level1/level2
+| --> | /level1/level2/
+    * FUZZ: level2
+
+[INFO] Adding a new job to the queue: http://IP:PORT/level1/level2/FUZZ
+
+[Status: 301, Size: 0, Words: 1, Lines: 1, Duration: 0ms]
+| URL | http://IP:PORT/level1/level3
+| --> | /level1/level3/
+    * FUZZ: level3
+
+[INFO] Adding a new job to the queue: http://IP:PORT/level1/level3/FUZZ
+
+[INFO] Starting queued job on target: http://IP:PORT/level1/level2/FUZZ
+
+[Status: 200, Size: 96, Words: 6, Lines: 2, Duration: 0ms]
+| URL | http://IP:PORT/level1/level2/index.html
+    * FUZZ: index.html
+
+[INFO] Starting queued job on target: http://IP:PORT/level1/level3/FUZZ
+
+[Status: 200, Size: 126, Words: 8, Lines: 2, Duration: 0ms]
+| URL | http://IP:PORT/level1/level3/index.html
+    * FUZZ: index.html
+
+:: Progress: [441088/441088] :: Job [4/4] :: 100000 req/sec :: Duration: [0:00:06] :: Errors: 0 ::
+```
+
+Notice the addition of the `-recursive` flag. This tells ffuf to fuzz any directory recursively. For example, if ffuf discovers an admin directory, it will automatically start a new fuzzing process on `http://localhost/admin/FUZZ`. In fuzzing scenarios where wordlists contain comments, the `-ic` option proves invaluable. By enabling this option, ffuf intelligently ignores commented lines during fuzzing, preventing them from being treated as valid inputs.
+
+### Be Responsible
+
+While recursive fuzzing is a powerful technique, it can also be resource-intensive, especially on large web applications. Excessive requests can overwhelm the target server, potentially causing performance issues or triggering security mechanisms.
+
+To mitigate these risks, ffuf provides options for fine-tuning the recursive fuzzing process:
+
+- `-recursive-depth`: This flag allows you to set a maximum depth for recursive exploration.
+- `-rate`: You can control the rate at which ffuf sends requests per second, preventing the server from being overloaded.
+- `-timeout`: This option sets the timeout for individual requests, helping to prevent the fuzzer from hanging on unresponsive targets.
+
