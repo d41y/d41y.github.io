@@ -431,3 +431,106 @@ d41y@htb[/htb]$ curl -d "y=SU..." http://IP:PORT/post.php
 HTB{...}
 ```
 
+## Virtual Host and Subdomain Fuzzing
+
+Both virtual hosting and subdomains play pivotal roles in organizing and managing web content.
+
+Virtual hosting enables multiple websites or domains to be served from a single server or IP address. Each vhost is associated with a unique domain name or hostname. When a client sends an HTTP request, the web server examines the `Host` header to determine which vhost's content to deliver. This facilitates efficient utilization and cost reduction, as multiple websites can share the same server infrastructure.
+
+Subdomains, on the other hand, are extenstions of a primary domain name, creating a hierarchical structure within the domain. They are used to organize different sections or services within a website. For example, `blod.example.com` and `shop.example.com` are subdomains of the main domain `example.com`. Unlike vhosts, subdomains are resolved to specific IP addresses through DNS records.
+
+| Feature | vHosts | Subdomains |
+| ------- | ------ | ---------- |
+| Identifaction | Identified by the `Host` header in HTTP requests. | Identified by DNS records, pointing to specific IP addresses. |
+| Purpose | Primarily used to host multiple websites on a single server. | Used to organize different sections or services within a website. |
+| Security Risks | Misconfigured vhosts can expose internal applications or sensitive data. | Subdomain vulns can occur if DNS records are mismanaged. |
+
+### Gobuster
+
+... is a versatile command-line tool renowned for its directory/file and DNS capabilities. It systematically probes target web servers or domains to uncover hidden directories, files, and subdomains, making it a valuable asset in security assessments and pentesting.
+
+Gobuster's flexibility extends to fuzzing for various types of content:
+
+- **Directories**: Discover hidden directories on a web server.
+- **Files**: Identify files with specific extensions.
+- **Subdomains**: Enumerate subdomains of a given domain.
+- **vHosts**: Uncover hidden virtual hosts by manipulating the `Host` header.
+
+#### vHost Fuzzing
+
+```bash
+d41y@htb[/htb]$ gobuster vhost -u http://inlanefreight.htb:81 -w /usr/share/seclists/Discovery/Web-Content/common.txt --append-domain
+```
+
+- **`gobuster vhost`**: This flag activates Gobuster's vhost fuzzing mode, instructing it to focus on discovering virtual hosts rather than directories or files.
+- **`-u http://inlanefreight.htb:81`**: This specifies the base URL of the target server. Gobuster will use this URL as the foundation for constructing requests with different vhost names.
+- **`-w /usr/share/seclists/Discovery/Web-Content/common.txt`**: This points to the wordlist file that Gobuster will use to generate potential vhost names.
+- **`--append-domain`**: This crucial flag instructs Gobuster ot append the base domain to each word in the wordlist. This ensures that the `Host` header in each request includes a complete domain name, which is essential for vhost discovery.
+
+Running the command will execute a vhost scan against the target:
+
+```bash
+d41y@htb[/htb]$ gobuster vhost -u http://inlanefreight.htb:81 -w /usr/share/seclists/Discovery/Web-Content/common.txt --append-domain
+
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:             http://inlanefreight.htb:81
+[+] Method:          GET
+[+] Threads:         10
+[+] Wordlist:        /usr/share/SecLists/Discovery/Web-Content/common.txt
+[+] User Agent:      gobuster/3.6
+[+] Timeout:         10s
+[+] Append Domain:   true
+===============================================================
+Starting gobuster in VHOST enumeration mode
+===============================================================
+Found: .git/logs/.inlanefreight.htb:81 Status: 400 [Size: 157]
+...
+Found: admin.inlanefreight.htb:81 Status: 200 [Size: 100]
+Found: android/config.inlanefreight.htb:81 Status: 400 [Size: 157]
+...
+Progress: 4730 / 4730 (100.00%)
+===============================================================
+Finished
+===============================================================
+```
+
+#### Subdomain Fuzzing
+
+```bash
+d41y@htb[/htb]$ gobuster dns -d inlanefreight.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt 
+```
+
+- **`gobuster dns`**: Activates Gobuster's DNS fuzzing mode, directing it to focus on discovering subdomains.
+- **`-d inlanefreight.com`**: Specifies the target domain for which you want to discover subdomains.
+- **`-w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt`**: This points to the wordlist file that Gobuster will use to generate potential subdomain names.
+
+Running this command, Gobuster might produce output similar to:
+
+```bash
+d41y@htb[/htb]$ gobuster dns -d inlanefreight.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt 
+
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Domain:     inlanefreight.com
+[+] Threads:    10
+[+] Timeout:    1s
+[+] Wordlist:   /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+===============================================================
+Starting gobuster in DNS enumeration mode
+===============================================================
+Found: www.inlanefreight.com
+
+Found: blog.inlanefreight.com
+
+...
+
+Progress: 4989 / 4990 (99.98%)
+===============================================================
+Finished
+===============================================================
+```
