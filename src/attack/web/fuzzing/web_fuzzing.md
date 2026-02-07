@@ -534,3 +534,58 @@ Progress: 4989 / 4990 (99.98%)
 Finished
 ===============================================================
 ```
+
+## Filtering Fuzzing Output
+
+Web fuzzing tools like gobuster, ffuf, and wfuzz are designed to perform comprehensive scans, often generating a vast amount of data. Sifting through this output to identify the mose relevant findings can be a daunting task. However, these tools offer powerful filtering mechanisms to streamline your analysis and focus on the results that matter most.
+
+### Gobuster
+
+| Flag | Description |
+| ---- | ----------  |
+| `-s` | Include only responses with the specified status codes. |
+| `-b` | Exclude responses with the specified status codes. |
+| `--exclude-length` | Exclude responses with specific content lengths. |
+
+### Ffuf
+
+| Flag | Description |
+| ---- | ----------  |
+| `-mc` | Include only responses that match the specified status codes (_multiple sc can be comma separated_). |
+| `-fc` | Exclude responses that match the specified status codes, using the same format as `-mc`. |
+| `-fs` | Exclude responses with a specific size or range of sizes. |
+| `-ms` | Include only responses that match a specific size or range of sizes. |
+| `-fw` | Exclude responses containing the specified number of words in the response. |
+| `-mw` | Include only responses that have the specified amount of words in the response body. |
+| `-fl` | Exclude responses with a specific number of lines or range of lines. |
+| `-ml` | Include only responses that have the specified amount of lines in the response body. |
+| `-mt` | Include only responses that meet a specific time-to-first-byte condition. |
+
+### wenum
+
+| Flag | Description |
+| ---- | ----------  |
+| `--hc` | Exclude responses that match the specified status codes. |
+| `--sc` | Include only responses that match the specified status codes. |
+| `--hl` | Exclude responses with the specified content length. |
+| `--sl` | Include only responses with the specified content length. |
+| `--hw` | Exclude responses with the specified number of words. |
+| `--sw` | Include only responses with the specified number of words. |
+| `--hs` | Exclude responses with the specified response in size. |
+| `--ss` | Include only responses with the specified response size. |
+| `--hr` | Exclude responses whose body matches the specified regular expression. |
+| `--sr` | Include only respones whose body matches the specified regular expression. |
+| `--filter`/`--hard-filter` | General-purpose filter to show/hide responses or prevent their post-processing using a regex. |
+
+### Feroxbuster
+
+| Flag | Description |
+| ---- | ----------  |
+| `--dont-scan` | Exclude specific URLs or patterns from being scanned. |
+| `-S`, `--filter-size` | Exclude responses based on their size. |
+| `-X`, `--filter-regex` | Exclude responses whose body or headers match the specified regex. |
+| `-W`, `--filter-words` | Exclude responses with a specific word count or range of line counts. |
+| `-N`, `--filter-lines` | Exclude responses with a specific line count or range of line counts. |
+| `-C`, `--filter-status` | Exclude responses based on specific HTTP status codes. This operates as a denylist. |
+| `--filter-similar-to` | Exclude responses that are similar to a given webpage. |
+| `-s`, `--status-codes` | Include only responses with the specified status codes. |
