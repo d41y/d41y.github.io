@@ -108,6 +108,7 @@
 			- [JavaScript (De-)Obfuscation](attack/web/web_security_techniques/javascript_deobfuscation.md)
 			- [Session Security](attack/web/web_security_techniques/session_security.md)
 	- [Wi-Fi](attack/wifi/README.md)
+		- [0x00](attack/wifi/wifi_pentesting_basics)
 	- [Windows](attack/windows/README.md)
 		- [0x00](attack/windows/windows_fundamentals.md)
 		- [Active Directory](attack/windows/ad/README.md)

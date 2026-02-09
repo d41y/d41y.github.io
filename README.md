@@ -155,6 +155,11 @@ Web Service & API
 - [JavaScript (De-)Obfuscation](./src/attack/web/web_security_techniques/javascript_deobfuscation.md)
 - [Session Security](./src/attack/web/web_security_techniques/session_security.md)
 
+
+## Wi-Fi
+
+- [0x00](./src/attack/wifi/wifi_pentesting_basics.md)
+
 ## Windows
 
 - [0x00](./src/attack/windows/windows_fundamentals.md)
