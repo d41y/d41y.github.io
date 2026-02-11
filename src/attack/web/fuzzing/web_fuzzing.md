@@ -579,13 +579,30 @@ Web fuzzing tools like gobuster, ffuf, and wfuzz are designed to perform compreh
 
 ### Feroxbuster
 
-| Flag | Description |
-| ---- | ----------  |
-| `--dont-scan` | Exclude specific URLs or patterns from being scanned. |
-| `-S`, `--filter-size` | Exclude responses based on their size. |
-| `-X`, `--filter-regex` | Exclude responses whose body or headers match the specified regex. |
-| `-W`, `--filter-words` | Exclude responses with a specific word count or range of line counts. |
-| `-N`, `--filter-lines` | Exclude responses with a specific line count or range of line counts. |
+| Flag                    | Description                                                                         |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| `--dont-scan`           | Exclude specific URLs or patterns from being scanned.                               |
+| `-S`, `--filter-size`   | Exclude responses based on their size.                                              |
+| `-X`, `--filter-regex`  | Exclude responses whose body or headers match the specified regex.                  |
+| `-W`, `--filter-words`  | Exclude responses with a specific word count or range of line counts.               |
+| `-N`, `--filter-lines`  | Exclude responses with a specific line count or range of line counts.               |
 | `-C`, `--filter-status` | Exclude responses based on specific HTTP status codes. This operates as a denylist. |
-| `--filter-similar-to` | Exclude responses that are similar to a given webpage. |
-| `-s`, `--status-codes` | Include only responses with the specified status codes. |
+| `--filter-similar-to`   | Exclude responses that are similar to a given webpage.                              |
+| `-s`, `--status-codes`  | Include only responses with the specified status codes.                             |
+
+## Validating Findings
+
+### Why Validate?
+
+- **Confirming Vulns**: Ensures that the discovered issues are real vulns and not just false positives.
+- **Understanding Impact**: Helps you assess the severity of the vulnerability and the potential impact on the web application.
+- **Reproducing the Issue**: Provides a way to consistently replicate the vulnerability, aiding in developing a fix or mitigation strategy.
+- **Gather Evidence**: Collect proof of the vulnerability to share with developers.
+
+### Manual Verification
+
+1. **Reproducing the Request**: Use a tool like `curl` or your web browser to manually send the same request that triggered the unusual response during fuzzing.
+2. **Analyzing the Response**: Carefully examine the response to confirm whether it indicates vulnerability. Look for error messages, unexpected content, or behavior that deviates from the expected norm.
+3. **Exploitation**: If the finding seems promising, attempt to exploit the vulnerability in a controlled environment to assess its impact and severity. This step should be performed with caution and only after obtaining proper authorization.
+
+To responsibly validate and exploit a finding, avoiding actions that could harm the production system or compromise sensitive data is crucial. Instead, focus on creating a PoC that demonstrates the existence of the vulnerability without causing damage. For example, if you suspect a SQLi vulnerability, you could craft a harmless SQL query that returns the SQL server version string rather than trying to extract or modify sensitive data.
