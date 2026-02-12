@@ -606,3 +606,69 @@ Web fuzzing tools like gobuster, ffuf, and wfuzz are designed to perform compreh
 3. **Exploitation**: If the finding seems promising, attempt to exploit the vulnerability in a controlled environment to assess its impact and severity. This step should be performed with caution and only after obtaining proper authorization.
 
 To responsibly validate and exploit a finding, avoiding actions that could harm the production system or compromise sensitive data is crucial. Instead, focus on creating a PoC that demonstrates the existence of the vulnerability without causing damage. For example, if you suspect a SQLi vulnerability, you could craft a harmless SQL query that returns the SQL server version string rather than trying to extract or modify sensitive data.
+
+## Web APIs
+
+### Web APIs
+
+A Web API, or Web Application Programming Interface, is a set of rules and specifications that enable different software applications to communicate over the web. It functions as a universal language, allowing diverse software components to exchange data and services seamlessly, regardless of their underlying technologies or programming languages.
+
+Essentially, a Web API serves as a bridge between a server and a client that wants to access or utilize that data or functionality.
+
+#### Represential State Transfer (_REST_)
+
+REST APIs are a popular architecturual style for building web services. They use a stateless, client-server communication model where clients send requests to access or manipulate resources. REST APIs utilize standard HTTP methods to perform CRUD operations on resources identified by unique URLs. They typically exchange data in lightweight formats like JSON or XML, making them easy to integrate with various applications and platforms.
+
+```http
+GET /users/123
+```
+
+#### Simple Object Access Protocol (_SOAP_)
+
+SOAP APIs follow a more formal and standardized protocol for exchanging structured information. They use XML to define messages, which are then encapsulated in SOAP envelopes and transmitted over network protocols like HTTP or SMTP. SOAP APIs often include built-in security, reliability, and transaction management features, making them suitable for enterprise-level applications requiring strict data integrity and error handling.
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:GetStockPrice>
+         <tem:StockName>AAPL</tem:StockName>
+      </tem:GetStockPrice>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+#### GraphQL
+
+... is a relatively new query language and runtime for APIs. Unlike REST APIs, which expose multiple endpoints for different resources, GraphQL provides a single endpoint where clients can request the data they need using a flexible query language. This eliminates the problem of over-fetching or under-fetching data, which is common in REST APIs. GraphQL's strong typing and introspection capabilities make it easier to evolve APIs over time without breaking existing clients, making it a popular choice for modern web and mobile applications.
+
+```graphql
+query {
+  user(id: 123) {
+    name
+    email
+  }
+}
+```
+
+#### Advantages of Web APIs
+
+Web APIs have revolutionized application development and interaction by providing standardized ways for clients to access and manipulate server-stored data. They enable devs to expose specific features or services of their applications to external users or other applications, promoting code reusability and facilitating the creation of mashups and composite applications.
+
+Furthermore, Web APIs are instrumental in integrating third-party services, such as social media logins, secure payment processing, or mapping functionalities, into applications. This streamlined integration allows devs to incorporate external capabilities without reinventing the wheel.
+
+APIs are also the cornerstore of microservices architecture, where large, monolithic applications are broken down into smaller, independent services that communicate through well-defined APIs. This architectural approach enhances scalability, flexibility, and resilience, making it ideal for modern web applications.
+
+#### How APIs are different from a Web Server
+
+While both traditional web pages and Web APIs play vital roles in the web ecosystem, they have distinct structure, communication, and functionality characteristics.
+
+| Feature | Web Server | API |
+| ------- | ---------- | --- |
+| Purpose | Primarily designed to serve static content and dynamic web pages. | Primarily designed to provide a way for different software applications to communicate with eath other, exchange data, and trigger actions. |
+| Communication | Communicates with web browsers using the HTTP. | Can use various protocols for communication, including HTTP, HTTPS, SOAP, and others, depending on the specific API. |
+| Data Format | Primarily deals with HTML, CSS, JavaScript, and other web-related formats. | Can exchange data in various formats, including JSON, XML, and others, depending on the API specification. |
+| User Interaction | Users interact with web servers directly through web browsers to view web pages and content. | Users typically do not interact with APIs directly; instead applications use APIs to access data or functionality on behalf of the user. |
+| Access | Web servers are usually publicly accessible over the internet. | APIs can be publicly accessible, private, or partner. |
+| Example | When you access a website like `https://www.example.com`, you are interacting with a web server that sends you the HTML, CSS, and JavaScript code to render the web page in your browser. | A weather app on your phone might use a weather API to fetch weather data from a remote server. The app then processes this data and displays it to you in a user-friendly format. You are not directly interacting with the API, but the app is using it behind the scenes to provide you with the weather information. |
+
