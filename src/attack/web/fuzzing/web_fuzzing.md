@@ -672,3 +672,148 @@ While both traditional web pages and Web APIs play vital roles in the web ecosys
 | Access | Web servers are usually publicly accessible over the internet. | APIs can be publicly accessible, private, or partner. |
 | Example | When you access a website like `https://www.example.com`, you are interacting with a web server that sends you the HTML, CSS, and JavaScript code to render the web page in your browser. | A weather app on your phone might use a weather API to fetch weather data from a remote server. The app then processes this data and displays it to you in a user-friendly format. You are not directly interacting with the API, but the app is using it behind the scenes to provide you with the weather information. |
 
+### Identifying Endpoints
+
+#### REST
+
+REST APIs are built around the concept of resources, which are identified by unique URLs called endpoints. These endpoints are the targets for client requests, and they often include parameters to provide additional context or control over the requested operation.
+
+Endpoints in REST APIs are structured as URLs representing the resources you want to access or manipulate. For example:
+
+- `/users`: represents a collection of user resources
+- `/users/123`: represents a specific user with ID 123
+- `/products`: represents a collection of product resources
+- `/products/456`: represents a specific product with the ID 456
+
+The structure of these endpoints follows a hierarchical pattern, where more specific resources are nested under broader categories.
+
+Parameters are used to modify the behavior of API requests or provide additional information. In REST APIs, there are several types of parameters.
+
+| Parameter Type | Description | Example |
+| -------------- | ----------- | ------- |
+| Query Parameters | Appended to the endpoint URL after a question mark. Used for filtering, sorting, or pagination. | `/users?limit=10&sort=name` |
+| Path Parameters | Embedded directly within the endpoint URL. Used to identify specific resources. | `/products/{id}pen_spark` |
+| Request Body Parameters | Sent in the body of POST, PUT, or PATCH requests. Used to create or update resources. | `{ "name": "New Product", "price": 99.99 }` |
+
+##### Discovering Endpoints and Parameters
+
+Discovering the available endpoints and parameters of a REST API can be accomplished through several methods:
+
+1. **API Documentation**: The most reliable way to understand and API is to refer to its official documentation. This documentation often includes a list of available endpoints, their parameters, expected request/response formats, and example usage. Look for specifications like Swagger, or RAML, which provide machine-readable API descriptions.
+2. **Network Traffic Analysis**: If documentation is not available or incomplete, you can analyze network traffic to observe how the API is used. Tools like Burp Suite or your browser's developer tools allow you to intercept and inspect API requests and responses, revealing endpoints, parameters, and data formats.
+3. **Parameter Name Fuzzing**: Similar to fuzzing for directories and files, you can use the same tools and techniques to fuzz for parameter names within API requests. Tools like ffuf and wfuzz, combined with appropriate wordlists, can be used to discover hidden or undocumented parameters. This can be particularly useful when dealing with APIs that lack comprehensive documentation.
+
+#### SOAP
+
+SOAP APIs are structured differently from REST APIs. They rely on XML-based messages and Web Services Description Language files to define their interfaces and operations.
+
+Unlike REST APIs, which use distinct URLs for each resource, SOAP APIs typically expose a single endpoint. This endpoint is a URL where the SOAP servers listens for incoming requests. The content of the SOAP message itself determines the specific operation you want to perform.
+
+SOAP parameters are defined within the body of the SOAP message, an XML document. These parameters are organized into elements and attributes, forming a hierarchical structure. The specific structure of the parameters depends on the operation being invoked. The parameters are defined in the Web Services Description Language file, an XML-based document that describes the web's interface, operations, and message formats.
+
+Imagine a SOAP API for a library that offers a book search service. The WSDL file might define an operation called `SearchBooks` with the following input parameters:
+
+- `keywords`: the search terms to use
+- `author`: the name of the author
+- `genre`: the genre of the book
+
+A sample SOAP request to this API might look like:
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:lib="http://example.com/library">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <lib:SearchBooks>
+         <lib:keywords>cybersecurity</lib:keywords>
+         <lib:author>Dan Kaminsky</lib:author>
+      </lib:SearchBooks>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+In this request:
+
+- The `keywords` parameter is set to "cybersecurity" to search for books on that topic.
+- The `author` parameter is set to "Dan Kaminsky" to further refine the search.
+- The `genre` parameter is not included, meaning the search will not be filtered by genre.
+
+##### Discovering Endpoints and Parameters
+
+To identify the available endpoints (_operations_) and parameters for a SOAP API, you can utilize the following methods:
+
+1. **WSDL Analysis**: The WSDL file is the most valuable resource for understanding a SOAP API. It describes:
+	1. Available operations (_endpoints_)
+	2. Input parameters for each operation
+	3. Output parameters for each operation
+	4. Data types used for parameters
+	5. The location (_URL_) of the SOAP endpoint
+2. **Network Traffic Analysis**: Similar to REST APIs, you can intercept and analyze SOAP traffic to observe the requests and responses between clients and the server. Tools like Wireshark or tcpdump can capture SOAP traffic, allowing you to examine the structure of SOAP messages and extract information about endpoints and parameters.
+3. **Fuzzing for Parameter Names and Values**: While SOAP APIs typically have a well-defined structure, fuzzing can still be helpful in uncovering hidden or undocumented operations or parameters. You can use fuzzing tools to send malformed or unexpected values within SOAP requests and see how the server responds.
+
+#### GraphQL
+
+GraphQL APIs are designed to be more flexible and efficient than REST and SOAP APIs, allowing clients to request precisely the data they need in a single request.
+
+Unlike REST or SOAP APIs, which often expose multiple endpoints for different purposes, GraphQL APIs typically have a single endpoint. This endpoint is usually a URL like `/graphql` and serves as the entry point for all queries and mutations sent to the API.
+
+GraphQL uses a unique query language to specify the data requirements. Within this language, queries and mutations act as the vehicle for defining parameters and structuring the requested data.
+
+##### Queries
+
+Queries are designed to fetch data from the GraphQL server. They pinpoint the exact fields, relationships, and nested objects the client desires, eliminating the issue of over-fetching or under-fetching data common in REST APIs. Arguments within queries allow for further refinement, such as filtering or pagination.
+
+| Component | Description | Example |
+| --------- | ----------- | ------- |
+| Field | Represents a specific piece of data you want to retrieve. | `name`, `email` |
+| Relationship | Indicates a connection between different types of data. | `posts` | 
+| Nested Objects | A field that returns another object, allowing you to traverse deeper into the data graph. | `posts { title, body }` |
+| Argument | Modifies the behavior of a query or field. | `posts(limit: 5)` |
+
+```graphql
+query {
+  user(id: 123) {
+    name
+    email
+    posts(limit: 5) {
+      title
+      body
+    }
+  }
+}
+```
+
+In this example:
+
+- You query for information about a user with the ID 123.
+- You request their name and email.
+- You also fetch their first 5 posts, including the title and body of each post.
+
+##### Mutations
+
+Mutations are the counterparts to queries designed to modify data on the server. They encompass operations to create, update, or delete data. Like queries, mutations can also accept arguments to define the input values for these operations.
+
+| Component | Description | Example |
+| --------- | ----------- | ------- |
+| Operation | The action to perform. | `createPost` |
+| Argument | Input data required for the operation. | `title: "New Post", body: "This is the content of the new post"` |
+| Selection | Fields you want to retrieve in the response after the mutation completes. | `id`, `title` |
+
+```graphql
+mutation {
+  createPost(title: "New Post", body: "This is the content of the new post") {
+    id
+    title
+  }
+}
+```
+
+This mutation creates a new post with the specified title and body, returning the id and title of the newly created post in the response.
+
+##### Discovering Queries and Mutations
+
+There are a few ways to discover GraphQL Queries and Mutations:
+
+1. **Introspection**: GraphQL's introspection system is a powerful tool for discovery. By sending an introspection query to the GraphQL endpoint, you can retrieve a complete schema describing the API's capabalities. This includes availabe types, fields, queries, mutations, and arguments. Tools and IDEs can leverage this information to offer auto-completion, validation, and documentation for your GraphQL queries.
+2. **API Documentation**: Well-documented GraphQL APIs provide comprehensive guides and references alongside introspection. These typically explain the purpose and usage of different queries and mutations, offer examples of valid structures, and detail input arguments and response formats. Tools like GraphiQL or GraphQL Playground, often bundled with GraphQL servers, provide an interactive environment for exploring the schema and experimenting with queries.
+3. **Network Traffic Analysis**: Like REST and SOAP, analyzing network traffic can yield insights into GraphQL API structure and usage. By capturing and inspecting requests and responses sent to the graphql endpoint, you can observe real-world queries and mutations. This helps you understand the expected format of requests and the types of data returned, aiding in tailored fuzzing efforts.
+
