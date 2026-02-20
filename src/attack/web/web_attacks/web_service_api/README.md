@@ -2,4 +2,5 @@
 
 - [0x00](web_service_api.md)
 - [APIs](api_attacks.md)
+- [GraphQL](graphql.md)
 - [Web Service](web_service_attacks.md)

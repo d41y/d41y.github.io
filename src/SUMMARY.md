@@ -94,6 +94,7 @@
 			- [Web Service & API](attack/web/web_attacks/web_service_api/README.md)
 				- [0x00](attack/web/web_attacks/web_service_api/web_service_api.md)
 				- [APIs](attack/web/web_attacks/web_service_api/api_attacks.md)
+				- [GraphQL](attack/web/web_attacks/web_service_api/graphql.md)
 				- [Web Service](attack/web/web_attacks/web_service_api/web_service_attacks.md)
 		- [Authentication](attack/web/authentication/README.md)
 			- [Broken Authentication](attack/web/authentication/broken_authentication.md)
