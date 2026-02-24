@@ -720,3 +720,70 @@ In the result, you can see that the role `admin` is reflected, which indicates t
 ![graphql 24](../../../../images/graphql24.png)
 
 After logging in, you can now access the admin endpoint, meaning you have successfully escalated your privileges.
+
+## Tools of the Trade
+
+Already discussed:
+
+- [graphw00f](https://github.com/dolevf/graphw00f)
+- [graphql-voyager](https://github.com/graphql-kit/graphql-voyager)
+
+### [GraphQL-Cop](https://github.com/dolevf/graphql-cop)
+
+... is a security audit tool for GraphQL APIs. After cloning the GitHub repo and installing the required dependencies, you can run the `graphql-cop.py` Python script:
+
+```bash
+d41y@htb[/htb]$ python3 graphql-cop.py  -v
+
+version: 1.13
+```
+
+You can then specify the GraphQL API's URL with the `-t` flag. GraphQL-Cop then executes multiple basic security configuration checks and lists all identified issues, which is an excellent baseline for further manual tests:
+
+```bash
+d41y@htb[/htb]$ python3 graphql-cop/graphql-cop.py -t http://172.17.0.2/graphql
+
+[HIGH] Alias Overloading - Alias Overloading with 100+ aliases is allowed (Denial of Service - /graphql)
+[HIGH] Array-based Query Batching - Batch queries allowed with 10+ simultaneous queries (Denial of Service - /graphql)
+[HIGH] Directive Overloading - Multiple duplicated directives allowed in a query (Denial of Service - /graphql)
+[HIGH] Field Duplication - Queries are allowed with 500 of the same repeated field (Denial of Service - /graphql)
+[LOW] Field Suggestions - Field Suggestions are Enabled (Information Leakage - /graphql)
+[MEDIUM] GET Method Query Support - GraphQL queries allowed using the GET method (Possible Cross Site Request Forgery (CSRF) - /graphql)
+[LOW] GraphQL IDE - GraphiQL Explorer/Playground Enabled (Information Leakage - /graphql)
+[HIGH] Introspection - Introspection Query Enabled (Information Leakage - /graphql)
+[MEDIUM] POST based url-encoded query (possible CSRF) - GraphQL accepts non-JSON queries over POST (Possible Cross Site Request Forgery - /graphql)
+```
+
+### [InQL](https://github.com/doyensec/inql)
+
+... is a Burp extension you can install via the BApp Store in Burp. After a successful installation, an InQL tab is added in Burp.
+
+Furthermore, the extension adds GraphQL tabs in the Proxy History and Burp Repeater that enables simple modification of the GraphQL query without having to deal with the encompassing JSON syntax:
+
+![graphql 25](../../../../images/graphql25.png)
+
+Furthermore, you can right-click on a GraphQL request and select `Extension > InQL - GraphQL Scanner > Generate queries with InQL Scanner`:
+
+![graphql 26](../../../../images/graphql26.png)
+
+Afterward, InQL generates introspection information. The information regarding all mutations and queries is provided in the InQL tab for the scanned host:
+
+![graphql 27](../../../../images/graphql27.png)
+
+## Vulnerability Prevention
+
+### Information Disclosure
+
+General security best practices apply to prevent information disclosure vulns. These include preventing verbose error messages and displaying generic error messages instead. Furthermore, introspection queries are potent tools for obtaining information. As such, they should be disabled as possible. At the very least, whether any sensitive information is disclosed in introspection queries should be checked. If this is the case, all sensitive information needs to be removed.
+
+### Injection Attacks
+
+Proper input validation checks need to be implemented to prevent any injection-type attacks such as SQLi, command injection, or XSS. Any data the user supplies should be treated as untrusted until it has been appropriately sanitized. The use of allowlists should be preferred over denylists.
+
+### DoS
+
+Proper limits needs to be implemented to mitigate DoS / brute-force attacks. This can include limits on the GraphQL query depth or maximum GraphQL query size, as well as rate limits on the GraphQL endpoint to prevent multiple subsequent queries in quick succession. Additionally, batching should be disabled in GraphQL queries whenever possible. If batching is required, the query depth needs to limited.
+
+### API Design
+
+General API security best practices should be followed to prevent further attacks, such as attacks against improper access control or attacks resulting from improper authorization checks on mutations. These best practices include strict access control measures based on the principle of least privilege. In particular, the GraphQL endpoint should only be accessible after successful authentication, if possible, in accordance with the API's use case. Furthermore, authorization checks must be implemented to prevent actos from executing queries or mutations to which they are not authorized.
