@@ -198,3 +198,49 @@ Moreover, the web API should enforce a robust password policy for user credentia
 
 Additionally, the web API endpoint should implement multi-factor authentication for added security, requesting an OTP before fully authenticating users.
 
+### Broken Object Property Level Authorization
+
+Broken Object Property Level Authorization is a category of vulns that encompasses two subclasses: Excessive Date Exposure and Mass Assignment.
+
+An API endpoint is vulnerable to Excessive Data Exposre if it reveals sensitive data to authorized users that they are not supposed to access.
+
+On the other hand, an API endpoint is vulnerable to Mass Assignment if it permits authorized users to manipulate sensitive object properties beyond their authorized scope, including modifying, adding, or deleting values.
+
+#### [Exposure of Sensitive Information Due to Incompatible Policies](https://cwe.mitre.org/data/definitions/213.html)
+
+It is typical for e-commerce marketplaces to allow customers to view supplier details. However, after invoking the `/api/v1/suppliers` GET endpoint, you notice that the response includes not only the `id`, `companyID`, and `name` fields but also the `email` and `phoneNumber` fields of the suppliers:
+
+![api owasp 19](../../../../images/api_owasp19.png)
+
+These sensitive fields should not be exposed to customers, as this allows them to circumvent the marketplace entirely and contact suppliers directly to purchase goods. Additionally, this vuln benefits suppliers financially by enabling them to generate greater revenues without paying the marketplace fee. However, for the stakeholders, this will negatively impact their revenues.
+
+#### Prevention
+
+To mitigate the Excessive Data Exposure vuln, the `/api/v1/suppliers` endpoint should only return fields necessary from the customer's perspective. This can be achieved by returning a specific response Data Transfer Object (_DTO_) that includes only the fields intended for customer visibility, rather than exposing the entire domain model used for database interaction.
+
+#### [Improperly Controlled Modification of Dynamically-Determined Object Attributes](https://cwe.mitre.org/data/definitions/915.html)
+
+The `/api/v1/supplier-companies/current-user` endpoint shows that the supplier-company the currently authenticated supplier belongs to has the `isExemptedFromMarketplaceFee` field set to `0`, which equates to `false`:
+
+![api owasp 20](../../../../images/api_owasp20.png)
+
+Therefore, this implies that `Inlanefreight E-Commerce Marketplace` wil charge "PentesterCompany" a marketplace fee for each product they sell.
+
+When expanding the `/api/v1/supplier-companies` PATCH endpoint, you notice that it requires the `SupplierCompanies_Update` role, states that the suppliers performing the update must be a staff member, and allows sending a value for the `isExemptedFromMarketplaceFee` field:
+
+![api owasp 21](../../../../images/api_owasp21.png)
+
+Set it to `1`, such that "PentesterCompany" does not get included in the companies required to pay the marketplace fee; after invoking it, the endpoint returns a success message:
+
+![api owasp 22](../../../../images/api_owasp22.png)
+
+Then, when checking your company info again using `/api/v1/supplier-companies/current-user`, you will notice that the `isExemptedFromMarketplaceFee` field has become `1`:
+
+![api owasp 23](../../../../images/api_owasp23.png)
+
+Because the endpoint mistakenly allows suppliers to update the value of a field that they should not have access to, this vulnerability allows supplier-companies to generate more revenue from all sales performed over the Inlanefreight E-Commerce Marketplace, as they will not be charged a marketplace fee. However, similar to the repercussions of the previous Exposure of Sensitive Information Due to Incompatible Policies vuln, the revenues of the stakeholders will be negatively impacted.
+
+#### Prevention
+
+To mitigate the Mass Assignment vuln, the `/api/v1/supplier-companies` PATCH endpoint should restrict invokers from updating sensitive fields. Similar to addressing Excessive Data Exposure, this can be achieved by implementing a dedicated request DTO that includes only the fields intended for suppliers to modify.
+
