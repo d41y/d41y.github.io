@@ -324,3 +324,23 @@ Integrating AV scanning tools like ClamAV adds a layer of security by scanning f
 
 Moreover, enforcing robust authentication and authorization mechanisms ensures that only authenticated users with appropriate privileges can upload files and access resources in publicly accessible directories such as `wwwroot`.
 
+### Broken Function Level Authorization
+
+A web API is vulnerable to Broken Function Level Authorization if it allows unauthorized or unprivileged users to interact with and invoke privileged endpoints, granting access to sensitive operations or confidential information. The difference between BOLA and BFLA is that, in the case of BOLA, the user is authorized to interact with the vulnerable endpoint, whereas in the case of BFLA, the user is not.
+
+#### [Exposure of Sensitive Information to an Unauthorized Actor](https://cwe.mitre.org/data/definitions/200.html)
+
+After checking your roles using the `/api/v1/roles/current-user` endpoint, you will discover that the currently authenticated user does not have any assigned:
+
+![api owasp 30](../../../../images/api_owasp30.png)
+
+Despite not having any roles, if you attempt to invoke the `/api/v1/products/discounts` endpoint, you notice that it returns data containing all the discounts for products:
+
+![api owasp 31](../../../../images/api_owasp31.png)
+
+Although the web API devs intended that only authorized users with the `ProductDiscounts_GetAll` role could access this endpoint, they did not implement the role-based access control check.
+
+#### Prevention
+
+To mitigate the BFLA vuln, the `/api/v1/products/discounts` endpoint should enforce an authorization check at the source-code level to ensure that only users with the `ProductDiscounts_GetAll` role can interact with it. This involves verifying the user's roles before processing the request, ensuring that unauthorized users are denied access to the endpoint's functionality.
+
