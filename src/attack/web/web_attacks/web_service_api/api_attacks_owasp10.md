@@ -244,3 +244,83 @@ Because the endpoint mistakenly allows suppliers to update the value of a field 
 
 To mitigate the Mass Assignment vuln, the `/api/v1/supplier-companies` PATCH endpoint should restrict invokers from updating sensitive fields. Similar to addressing Excessive Data Exposure, this can be achieved by implementing a dedicated request DTO that includes only the fields intended for suppliers to modify.
 
+### Unrestricted Resource Consumption
+
+A web API is vulnerable to Unrestricted Resource Consumption if it fails to limit user-initiated requests that consume resources such as network bandwith, CPU, memory, and storage. These resources incur significant costs, and without adequate safeguards - particularly effective rate-limiting - against excessive usage, users can exploit these vulns and cause financial damage.
+
+#### [Uncontrolled Resource Consumption](https://cwe.mitre.org/data/definitions/400.html)
+
+Checking the Supplier-Companies group, you notice only one endpoint related to the second role: the `/api/v1/supplier-companies/certificates-of-incorporation` POST endpoint. When expanding it, you see that it requires the `SupplierCompanies_UploadCertificateOfIncorporation` role and allows the staff of a supplier company to uploadd its certificate of incorporation as a PDF file, storing it on disk indefinitely:
+
+![api owasp 24](../../../../images/api_owasp24.png)
+
+Attempt to upload a large PDF file containing random bytes. First, you will use `/api/v1/supplier-companies/current-user` to get the supplier-company ID of the current authenticated user, `b75a7c76-e149-4ca7-9c55-d9fc4ffa87be`:
+
+![api owasp 25](../../../../images/api_owasp25.png)
+
+Next, you will use `dd` to create a file containing 30 random megabytes and assign it the `.pdf` extension.
+
+```bash
+d41y@htb[/htb]$ dd if=/dev/urandom of=certificateOfIncorporation.pdf bs=1M count=30
+
+30+0 records in
+30+0 records out
+31457280 bytes (31 MB, 30 MiB) copied, 0.139503 s, 225 MB/s
+```
+
+Then, within the `/api/v1/supplier-companies/certificates-of-incorporation` POST endpoint, you will click on the "Choose File" button and upload the file:
+
+![api owasp 26](../../../../images/api_owasp26.png)
+
+After invoking the endpoint, you notice that the API returns a successful upload message, along with the size of the uploaded file:
+
+![api owasp 27](../../../../images/api_owasp27.png)
+
+Because the endpoint does not validate whether the file size is within a specified range, the backend will save files of any size to disk. Additionally, if the endpoint does not implement rate-limiting, you can attempt to cause DoS by sending the file upload request repeatedly, consuming all available disk storage. Exploiting this vulnerability to consume all the disk storage of the marketplace will result in financial losses for the stakeholders of Inlanefreight E-Commerce Marketplace.
+
+Additionally, you need to test whether the endpoint allows uploading files other than PDF files. Use `dd` again to generate a file with the `.exe` extension, filling it with random bytes:
+
+```bash
+d41y@htb[/htb]$ dd if=/dev/urandom of=reverse-shell.exe bs=1M count=10
+
+10+0 records in
+10+0 records out
+10485760 bytes (10 MB, 10 MiB) copied, 0.0398348 s, 263 MB/s
+```
+
+Within the `/api/v1/supplier-companies/certificates-of-incorporation` POST endpoint, you will click on the "Choose File" button and upload the file:
+
+![api owasp 28](../../../../images/api_owasp28.png)
+
+After invoking the endpoint, you notice that the API returns a successful upload message, indicating that the endpoint does not validate the file extension:
+
+![api owasp 29](../../../../images/api_owasp29.png)
+
+If you manage to social engineer a system administrator of Inlanefreight E-Commerce Marketplace to open the file, the executable will run, potentially granting you a reverse shell.
+
+#### Abusing Default Behaviors
+
+After each request to upload files, you noticed that the file URI points to `wwwroot/SupplierCompaniesCertificatesOfIncorporations`, which is within the `wwwroot` directory.
+
+The admin of Inlanefreight E-Commerce Marketplace has informed you that the web API is developed using ASP.NET Core. By default, static files in the `wwwroot` directory are publicly accessible. Try to download the previously uploaded exe file:
+
+```bash
+d41y@htb[/htb]$ curl -O http://94.237.51.179:51135/SupplierCompaniesCertificatesOfIncorporations/reverse-shell.exe
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 10.0M  100 10.0M    0     0  11.4M      0 --:--:-- --:--:-- --:--:-- 11.4M
+```
+
+If you can enumerate file names within the `SupplierCompaniesCertificatesOfIncorporations` directory, you could potentially access sensitive information about other customers of the company. Additionally, you could utilize the web API as cloud storage for malware that could be distributed to victims.
+
+#### Prevention
+
+To mitigate the Unrestricted Resource Consumption vuln, the `api/v1/supplier-companies/certificates-of-incorporation` POST endpoint should implement thorough validation mechanisms for both the size, extension and content of uploaded files. Validating the size of files prevents excessive consumption of server resources, such as disk space and memory, while ensuring that only authorized and expected file types are uploaded helps prevent potential security risks.
+
+Implementing file size validation ensures that the uploaded files do not exceed specified limits, thereby preventing excessive consumption of server resources. Alternatively, validating file extensions ensures that only authorized file types, such as PDF or specific image formats, are accepted. This prevents malicious uploads of executable files or other potentially harmful file types that could compromise server security. Implementing strict file extension validation, coupled with server-side checks, helps enforce security policies and prevents unauthorized access and execution of files.
+
+Integrating AV scanning tools like ClamAV adds a layer of security by scanning file contents for known malware signature before saving them to disk. This proactive measure helps detect and prevent the uploading of infected files that could potentially compromise server integrity.
+
+Moreover, enforcing robust authentication and authorization mechanisms ensures that only authenticated users with appropriate privileges can upload files and access resources in publicly accessible directories such as `wwwroot`.
+
