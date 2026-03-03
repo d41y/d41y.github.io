@@ -344,3 +344,67 @@ Although the web API devs intended that only authorized users with the `ProductD
 
 To mitigate the BFLA vuln, the `/api/v1/products/discounts` endpoint should enforce an authorization check at the source-code level to ensure that only users with the `ProductDiscounts_GetAll` role can interact with it. This involves verifying the user's roles before processing the request, ensuring that unauthorized users are denied access to the endpoint's functionality.
 
+### Unrestricted Access to Sensitive Business Flows
+
+If a web API exposes operations or data that allows users to abuse them and undermine the system, it becomes vulnerable to Unrestricted Access to Sensitive Business Flows. An API endpoint is vulnerable if it exposes a sensitive business flow without appropriately restricting access to it.
+
+In the previous Section (_[[api_attacks_owasp10#Broken Function Level Authorization]]_), you exploited a BFLA vuln and gained access to product discount data. This data exposure also leads to Unrestricted Access to Sensitive Business Flows because it allows you to know the dates when supplier companies will discount their products and the corresponding discount rates. For example, if you want to buy the product with ID `a923b706-0aaa-49b2-ad8d-21c97ff6fac7`, you should purchase it between `2023-03-15` and `2023-09-15` because it will be 70% off its original price.
+
+![api owasp 32](../../../../images/api_owasp32.png)
+
+Additionally, if the endpoint responsible for purchasing products does not implement rate-limiting, you can purchase all available stock on the day the discount starts and resell the products later at their original price or at a higher price after the discount ends.
+
+#### Prevention
+
+To mitigate the Unrestricted Access to Sensitive Business Flows vuln, endpoints exposing critical business operations, such as `/api/v1/products/discounts`, should implement strict access to ensure that only authorized users can view or interact with sensitive data.
+
+### SSRF
+
+A web API is vulnerable to Server-Side Request Forgery if it uses user-controlled input to fetch remote or local resources without validation. SSRF flaws occur when an API fetches a remote resource without validating the user-supplied URL. This allows an attacker to coerce the application to send a crafted request to an unexpected destination, bypassing firewalls or VPNs.
+
+#### [SSRF](https://cwe.mitre.org/data/definitions/918.html)
+
+Checking the Supplier-Companies group, you notice that there are three endpoints related to these roles, `/api/v1/supplier-companies`, `/api/v1/supplier-companies/{ID}/certificates-of-incorporation`, and `/api/v1/supplier-companies/certificates-of-incorporation`:
+
+![api owasp 33](../../../../images/api_owasp33.png)
+
+`/api/v1/supplier-companies/current-user` shows that the currently authenticated user belongs to the supplier-company with the ID `b75a7c76-e149-4ca7-9c55-d9fc4ffa87be`:
+
+![api owasp 34](../../../../images/api_owasp34.png)
+
+Expanding the `/api/v1/supplier-companies/certificates-of-incorporation` POST endpoint, you notice that it requires the `SupplierCompanies_UploadCertificateOfIncorporation` role and allows the staff of a supplier-company to upload its certificate of incorporation as a PDF file. You will provide any PDF file for the first field and the ID of your supplier-company:
+
+![api owasp 35](../../../../images/api_owasp35.png)
+
+After invoking the endpoint, you will notice that the response contains three fields, with the most interesting being the value of `fileURI`:
+
+![api owasp 36](../../../../images/api_owasp36.png)
+
+The web API stores the path of files using the file URI Scheme, which is used to represent local file paths and allows access to files on a local filesystem. If you use the `/api/v1/supplier-companies/current-user` again, you will notice that the value of `certificateOfIncorporationPDFFileURI` now has the file URI of the uploaded file:
+
+Expanding the `/api/v1/supplier-companies` PATCH endpoint, you notice that it requires the `SupplierCompanies_Update` role, that the update must be performed by staff belonging to the Supplier-Company, and that it allows modifying the value of the `CertificateOfIncorporationPDFFileURI` field:
+
+![api owasp 37](../../../../images/api_owasp37.png)
+
+Therefore, this endpoint is vulnerable to Improperly Controlled Modification of Dynamically-Determined Object Attributes, as the value of this field should only be set by the `/api/v1/supplier-companies/certificates-of-incorporation` POST endpoint. Perform an SSRF attack and update the `CertificateOfIncorporationPDFFileURI` field to point to the `/etc/passwd` file:
+
+![api owasp 38](../../../../images/api_owasp38.png)
+
+Because the web API's backend does not validate the path that the `CertificateOfIncorporationPDFFileURI` field points to, it will fetch and return the contents of local files, including sensitive ones such as `/etc/passwd`.
+
+Invoke the `/api/v1/supplier-companies/{ID}/certificates-of-incorporation` GET endpoint to retrieve the contents of the file that `CertificateOfIncorporationPDFFileURI` points to, which is `/etc/passwd`, as base64:
+
+![api owasp 39](../../../../images/api_owasp39.png)
+
+When using CyberChef to decode the value of the base64Data field, you obtain the contents of the `/etc/passwd` file from the backend server.
+
+![api owasp 40](../../../../images/api_owasp40.png)
+
+You can further compromise the system by viewing the contents of other critical files, such as `/etc/shadow`.
+
+#### Prevention
+
+To mitigate the SSRF vuln, the `/api/v1/supplier-companies/certificates-of-incorporation` POST, and `/api/v1/supplier-companies` PATCH endpoints must strictly prohibit file URIs that point to local resources on the server other than the intended ones. Implementing validation checks to ensure that file URIs only point to permissible local resources is crucial, which in this case is within the `wwwroot/SupplierCompaniesCertificatesOfIncorporations/` folder.
+
+Furthermore, the `/api/v1/supplier-companies/{ID}/certificates-of-incorporation` GET endpoint must be configured to serve content exclusively from the designated folder `wwwroot/SupplierCompaniesCertificatesOfIncorporations`. This ensures that only certificates of incorporation are accessible and that local resources or files outside this directory are never exposed. Additionally, this acts as a safeguard, if in case the validations performed by the `/api/v1/supplier-companies/certificates-of-incorporation` POST and `/api/v1/supplier-companies` PATCH endpoint fails.
+
