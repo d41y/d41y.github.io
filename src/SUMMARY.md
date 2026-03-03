@@ -179,6 +179,7 @@
 		- [0x00](general/networking/networking_introduction.md)
 		- [Cisco Network Technician](general/networking/cisco/README.md)
 			- [Networking Basics](general/networking/cisco/networking_basics.md)
+		- [Network Foundations](general/networking/network_foundations.md)
 	- [Processes](general/processes/README.md)
 		- [Bug Bounty Hunting Process](general/processes/bbh_process.md)
 		- [Incident Handling Process](general/processes/incident_handling_process.md)
