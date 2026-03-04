@@ -43,6 +43,8 @@
 		- [0x00](attack/linux/linux_fundamentals.md)
 	- [MacOS](attack/macos/README.md)
 		- [0x00](attack/macos/macos_fundamentals.md)
+	- [Malware Development](attack/malware_development/README.md)
+		- [Malware Development Essentials](attack/malware_development/malware_development_essentials.md)
 	- [Mobile]()
 	- [OSINT]()
 	- [Pivoting - old](attack/pivoting/README.md)

@@ -9,6 +9,7 @@
 - [Initial Access](initial_access/README.md)
 - [Linux](linux/README.md)
 - [MacOS](macos/README.md)
+- [Malware Development](malware_development/README.md)
 - [Mobile]()
 - [OSINT]()
 - [Pivoting](post_exploitation/pivoting.md)
