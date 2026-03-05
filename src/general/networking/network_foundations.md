@@ -393,4 +393,6 @@ Some of the different types of firewalls IDS/IPS are:
 
 IDS/IPS can be placed at several strategic locations in a network. One option is to position them behind the firewall, where the firewall filters obvious threats, and the IDS/IPS inspects any remaining traffic. Another common placement is in the DMZ, a separate network segment within the larger network directly exposed to the internet, where they monitor traffic moving in and out of publicly accessible servers. Finally, IDS/IPS solutions can also run directly on endpoint devices, such as servers or workstations, to detect suspicious activity at the host level.
 
-### Data Flow
+### Data Flow Example
+
+![network foundations 6](../../../../images/network_foundations6.png)
