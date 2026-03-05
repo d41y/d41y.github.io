@@ -173,6 +173,109 @@ A server is a powerful computer designed to provide services to other computers,
 
 ## Communication and Addressing
 
+### Network Communication
+
+#### MAC Addresses
+
+A MAC address is a unique identifier assigned to the network interface card of a device, allowing it to be recognized on a local network. Operating at the Data Link Layer of the OSI model, the MAC address is crucial for communication within a local network segment, ensuring that data reaches the correct physical device. Each MAC address is 48 bits long and is typically represented in hexadecimal format, appearing as six pairs of hexadecimal digits separated by colons or hyphens. The uniqueness of a MAC address comes from its structure: the first 24 bits represent the Organizationally Unique Identifier (_OUI_) assigned to the manufacturer, while the remaining 24 bits are specific to the individual device. This design ensures that every MAC address is globally unique, allowing devices worldwide to communicate without address conflicts.
+
+MAC addresses are fundamental for local communication within a local area network, as they are used to deliver data frames to the correct physical device. When a device sends data, it encapsulates the information in a frame containing the destination MAC address; network switches then use this address to forward the frame to the appropriate port. Additionally, the Address Resolution Protocol plays a crucial role by mapping IP addresses to MAC addresses, allowing devices to find the MAC address associated with a known IP address within the same network. This mapping is bridging the gap between logical IP addressing and physical hardware addressing within the LAN.
+
+#### IP Addresses
+
+An IP address is a numerical label assigned to each device connected to a network that utilizes the Internet Protocol for communication. Functioning at the Network Layer of the OSI model, IP addresses enable devices to locate and communicate with each other across various networks. There are two versions of IP addresses: IPv4 and IPv6. IPv4 addresses consist of a 32-bit address space, typically formatted as four decimal numbers separated by dots, such as `192.168.1.1.` In contrast, IPv6 addresses, which were developed to address the depletion of IPv4 addresses, have a 128-bit address space and are formatted in eight groups of four hexadecimal digits, an example being `2001:0db8:85a3:0000:0000:8a2e:0370:7334`.
+
+Routers use IP addresses to determine the optimal path for data to reach its intended destination across interconnected networks. Unlike MAC address, which are permanently tied to the device's network interface card, IP addresses are more flexible; they can change and are assigned based on the network topology and policies. A communication example between two devices on the same network can be similarly illustrated as shown previously in the MAC address subsection.
+
+#### Ports
+
+A port is a number assigned to specific processors or services on a network to help computers sort and direct network traffic correctly. It functions at the Transport Layer of the OSI model and works with protocols such as TCP and UDP. Ports facilitate the simultaneous operation of multiple network services on a single IP address by differentiating traffic intended for different applications.
+
+When a client application initiates a connection, it specifies the destination port number corresponding to the desired service. Client applications are those who request data or services, while server applications respond to those requests and provide the data or services. The OS then directs the incoming traffic to the correct application based on this port number. Consider a simple example where a user access a website: the user's browser initiates a connection to the server's IP address on port 80, which is designated for HTTP. The server, listening on this port, responds to the request. If the user needs to access a secure site, the browser instead connects to port 443, the standard for HTTPS, ensuring secure communication. Port numbers range from 0 to 65535, and it is divided into three main categories, each serving a specific function.
+
+##### Well-Known Ports (_0-1023_):
+
+Well-known ports, numbered from 0 to 1023, are reserved for common and universally recognized services and protocols, as standardized and managed by the Internet Assigned Numbers Authority (_IANA_). For instance, HTTP, which is the foundation of data communication for the WWW, uses port 80, although browsers typically do not display this port number to simplify user experience. Similarly, HTTPS uses port 443 for secure communications over networks, and this port is also generally not displayed by browsers. Another example is FTP, which facilitates file transfers between clients and servers, using port 20 and 21.
+
+##### Registered Ports (_1024-49151_):
+
+Registered ports, which range from 1024 to 49151, are not strictly regulated as well-known ports, but are still registered and assigned to specific services by the IANA. These ports are commonly used for external services that users might install on a device. For instance, many database services, such as MSQL, use port 1433. Software companies frequently register a port for their applications to ensure that their software consistently uses the same port on any system. This registration helps in managing network traffic and preventing port conflicts across different applications.
+
+##### Dynamic/Private Ports (_49152-65535_):
+
+Dynamic or private ports, also known as ephemeral ports, range from 49152 to 65535 and are typically used by client applications to send and receive data from servers, such as when a web browser connects to a server on the internet. These ports are called dynamic because they are not fixed; rather, they can be randomly selected by the client's OS as needed for each session. Generally used for temporary communication sessions, these ports are closed once the interaction ends. Additionally, dynamic ports can be assigned to custom server applications, often those handling short-term connections.
+
+### DHCP
+
+... is a network management protocol used to automate the process of configuring devices on IP networks. It allows devices to automatically receive an IP address and other networks configuration parameters, such as subnet mask, default gateway, and DNS servers, without manual intervention.
+
+DHCP simplifies network management by automatically assigning IP addresses, significantly reducing the administrative workload. This automation ensures that each device connectedd to the network receives a unique IP address, preventing conflicts and duplication of addresses. Furthermore, DHCP recycles IP addresses that are no longer in use when devices disconnect from the network, optimizing the available address pool.
+
+The DHCP process involves a series of interactions between the client and the DHCP server. This process is often referred to as DORA, an acronym for `Discover`, `Offer`, `Request`, and `Acknowledge`.
+
+| Role | Description |
+| ---  | ----------- |
+| DHCP Server | A network device that manages IP address allocation. It maintains a pool of available IP addresses and configuration parameters. |
+| DHCP Client | Any device that connects to the network and requests network configuration parameters from the DHCP server. |
+
+| Step | Description |
+| ---  | ----------- |
+| 1. Discover | When a device connects to the network, it broadcasts a **DHCP Discover** message to find available DHCP servers. |
+| 2. Offer | DHCP servers on the network receive the discover message and respond with a **DHCP Offer** message, proposing an IP address lease to the client. |
+| 3. Request | The client receives the offer and replies with a **DHCP Request** message, indicating that it accepts the offered IP address. |
+| 4. Acknowledge | The DHCP server sends a **DHCP Acknowledge** message, confirming that the client has been assigned the IP address. The client can now use the IP address to communicate on the network. |
+
+### NAT
+
+... allows multiple devices on a private network to share a single public IP address. This not only helps conserve the limited pool of public IP addresses but also adds a layer of security to the internal network.
+
+It is a process carried out by a router or a similar device that modifies the source or destination IP address in the headers of IP packets as they pass through. This modification is used to translate the private IP addresses of devices within a local network to a single public IP address that is assigned to the router.
+
+#### Private vs. Public IP Addresses
+
+**Public IP** addresses are globally unique identifiers assigned by ISPs. Devices equipped with these IP addresses can be accessed from anywhere on the Internet, allowing them to communicate across the global network. These addresses ensure that devices can uniquely identify and reach each other over the internet.
+
+**Private IP** addresses are designated for use within local networks such as homes, schools, and offices. These addresses are not routable on the global Internet, meaning packets sent to these addresses are not forwarded by internet backbone routers. Defined by RFC 1918, common IPv4 private address ranges include `10.0.0.0` to `10.255.255.255`, `172.16.0.0.` to `172.31.255.255`, and `192.168.0.0` to `192.168.255.255`. This setup ensures that these private networks operate independently of the internet while facilitating internal communication and device connectivity.
+
+#### Types of NAT
+
+| Type | Description |
+| ---- | ----------- |
+| Static NAT | Involves a one-to-one mapping, where each private IP address corresponds directly to a public IP address. |
+| Dynamic NAT | Assigns a public IP from a pool of available addresses to a private IP as needed, based on network demand. |
+| Port Address Translation | Also known as NAT Overload, is the most common form of NAT in home networks. Multiple private IP addresses share a single public IP address, differentiating connections by using unique port numbers. This method is widely used in home and small office networks, allowing multiple devices to share a single public IP address for internet access. |
+
+### DNS
+
+... is like the phonebook of the Internet. It helps finding the right number for a given name. Without DNS, you would need to memorize long, often complex IP addresses for every website you visit. DNS makes lives easier by allowing human-friendly names to access online resources.
+
+#### Hierarchy
+
+DNS is organized like a tree, starting from the root and branching out into different layers.
+
+| Layer | Description |
+| ----- | ----------- |
+| Root Servers | The top of the DNS hierarchy. |
+| Top-Level Domains | Such as `.com`, `.org`, `.net`, or country codes like `.uk`, `.de`. |
+| Second-Level Domains | For example, `example` in `example.com`. |
+| Subdomains or Hostname | For instance, `www` in `www.example.com`, or `accounts` in `accounts.google.com`. |
+
+#### DNS Resolution Process
+
+When you enter a domain name in your browser, the computer needs to find the corresponding IP address. This process is known as DNS resolution or domain translation.
+
+1) You type `www.example.com` into your browser.
+2) Your computer checks its local DNS cache to see if it already knows the IP address.
+3) If not found locally, it queries a recursive DNS server. This is often provided by your ISP or a third-party DNS service like Google DNS.
+4) The recursive DNS server contacts a root server, which points it to the appropriate TLD name server.
+5) The TLD name server directs the query to the authoritative name server for `example.com`.
+6) The authoritative name server responds with the IP address for `www.example.com`.
+7) The recursive server returns this IP address to your computer, which can then connect to the website's server directly.
+
 ## Internet Architecture and Wireless Technologies
+
+### Internet Architecture
+
+
 
 ## Network Security and Data Flow Analysis
