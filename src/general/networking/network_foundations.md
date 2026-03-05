@@ -276,6 +276,46 @@ When you enter a domain name in your browser, the computer needs to find the cor
 
 ### Internet Architecture
 
+#### Peer-to-Peer (_P2P_) Architecture
 
+In a P2P network, each node, whether it's a computer for any other device, acts as both a client and a server. This setup allows nodes to communicate directly with each other, sharing resources such as files, processing power, or bandwith, without the need for a central server. P2P networks can be fully decentralized, with no central server involved, or partially centralized, where a central server may coordinate some tasks but does not host data.
+
+#### Client-Server Architecture
+
+The Client-Server model is one of the most widely used architectures on the Internet. In this setup, clients, which are user devices, send requests, such as a web browser asking for a webpage, and servers respond to these requests, like a web server hosting the webpage. This model typically involves centralized servers where data and applications reside, with multiple clients connecting to these servers to access services and resources.
+
+A key component of this architecture is the tier model, which organizes server roles and responsibilities into layers. This enhances scalability and manageability, as well as security and performance.
+
+##### Single-Tier Architecture
+
+In a single-tier architecture, the client, server, and database all reside on the same machine. This setup is straightforward but is rarely used for large-scale applications due to significant limitations in scalability and security.
+
+##### Two-Tier Architecture
+
+The two-tier architecture splits the application environment into a client and a server. The client handles the presentation layer, and the server manages the data layer. This model is typically seen in desktop applications where the user interface is on the user's machine, and the database is on a server. Communication usually occurs directly between the client and the server. Communication usually occurs directly between the client and the server, which can be a database server with query-processing capabilities.
+
+##### Three-Tier Architecture
+
+A three-tier architecture introduces an additional layer between the client and the database server, known as the application server. In this model, the client manages the presentation layer, the application server handles all the business logic and processing, and the third tier is a database server. This separation provides added flexibility and scalability because each layer can be developed and maintained independently.
+
+##### N-Tier Architecture
+
+In more complex systems, an N-Tier architecture is used, where N refers to any number of separate tiers beyond three. This setup involves multiple levels of application servers, each responsible for different aspects of business logic, processing, or data management. N-tier architecture are highly scalable and allow for distributed deployment, making them ideal for web applications and services that demand robust, flexible solutions.
+
+While tiered client-server architectures offer many improvements, they also introduce complexity in deployment and maintenance. Each tier needs to be correctly configured and secured, and communication between tiers must be efficient and secure to avoid performance bottlenecks and security vulns.
+
+#### Hybrid Architecture
+
+A Hybrid model blends elements of both Client-Server and P2P architecture. In this setup, central servers are used to facilitate coordination and authentication tasks, while the actual data transfer occurs directly between peers. This combination leverages the strengths of both architectures to enhance efficiency and performance. The following example gives a high-level explanation of how hybrid architecture works.
+
+#### Cloud Architecture
+
+... refers to computing infrastructure that is hosted and managed by third-party providers, such as AWS, Azure, and Google Cloud. This architecture operates on a virtualized scale following a client-server model. It provides on-deman access to resources such as servers, storage, and applications, all accessible over the Internet. In this model, users interact with these services without controlling the underlying hardware.
+
+Services like Google Drive or Dropbox are some examples of Cloud Architecture operating under the SaaS model, where you access applications over the Internet without managing the underlying hardware.
+
+#### Software-Defined Architecture (_SDN_)
+
+Software-Defined Networking is a modern networking approach that separates the control plane, which makes decisions about where traffic is sent, from the data plane, which actually forwards the traffic. Traditionally, network devices like routers and switches housed both of these planes. However, in SDN, the control plane is centralized within a software-based controller. This config allows network devices to simply execute instructions they receive from the controller. SDN provides a programmable network management environment, enabling administrators to dynamically adjust network policies and routing as required. This separation makes the network more flexible and improves how it's managed.
 
 ## Network Security and Data Flow Analysis
