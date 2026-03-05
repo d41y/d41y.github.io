@@ -150,6 +150,7 @@
 		- [Assessment Standards](general/assessments/standards.md)
 		- [Security Assessment](general/assessments/security_assessment.md)
 		- [Vulnerability Assessment](general/assessments/vulnerability_assessment.md)
+	- [Cryptography](general/cryptography/README.md)
 	- [DBMS](general/dbms/README.md)
 		- [0x00](general/dbms/dbms_fundamentals.md)
 		- [MySQL](general/dbms/mysql_fundamentals.md)

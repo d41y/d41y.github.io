@@ -318,4 +318,44 @@ Services like Google Drive or Dropbox are some examples of Cloud Architecture op
 
 Software-Defined Networking is a modern networking approach that separates the control plane, which makes decisions about where traffic is sent, from the data plane, which actually forwards the traffic. Traditionally, network devices like routers and switches housed both of these planes. However, in SDN, the control plane is centralized within a software-based controller. This config allows network devices to simply execute instructions they receive from the controller. SDN provides a programmable network management environment, enabling administrators to dynamically adjust network policies and routing as required. This separation makes the network more flexible and improves how it's managed.
 
+### Wireless Network
+
+A wireless network is a sophisticated communication system that employs radio waves or other wireless signals to connect various devices such as computers, smartphones, and IoT gadgets, enabling them to communicate and exchange data without the need for physical cables. This technology allows devices to connect to the internet, share files, and access services seamlessly over the air, offering flexibility and convenience in personal and professional environments.
+
+#### Wireless Router
+
+A router is a device that forwards data packets between computer networks. In a home or small office setting, a wireless router combines the functions of:
+
+- **Routing**: Directing data to the internet destination.
+- **Wireless Access Point**: Providing Wi-Fi coverage.
+
+Below are the main components of a wireless router:
+
+- **WAN**: Connects to your internet source.
+- **LAN**: For wired connections to local devices.
+- **Antennae**: Transmit and receive wireless signals.
+- **Processor & Memory**: Handle routing and network management tasks.
+
+#### Mobile Hotspot
+
+A mobile hotspot allows a smartphone to share its cellular data connection via Wi-Fi. Other devices then connect to this hotspot just like they would to a regular Wi-Fi network. A mobile hotspot uses cellular data, connecting devices to the internet via a cellular network, such as 4G or 5G. The range of a hotspot is typically limited to just a few meters. Running a hotspot can also significantly drain the battery of the device creating the hotspot. For security, access to the hotspot is usually protected by a password, similar to the security measures used for a home Wi-Fi network.
+
+#### Cell Tower
+
+A cell tower is a structure where antennas and electronic communications equipment are placed to create a cellular network cell. This cell in a cellular network refers to the specific area of coverage provided by a single cell tower, which is designed to seamlessly connect with adjacent cells created by other towers. Each tower covers a certain geographic area, allowing mobile phones to send and receive signals.
+
+Cell towers function through a combination of radio transmitters and receivers, which are equipped with antennas to communicate over specific radio frequencies. These towers are managed by Base Station Controllers (_BSC_), which oversee the operation of multiple towers. BSCs handle the transfer of calls and data sessions from one tower to another when users move across different cells. Finally, these towers are connected to the core network via backhaul links, which are typically fiber optic or microwave links.
+
+Cell towers are differentiated by their coverage capacities and categorized primarily into macro cells and micro/small cells. Macro cells consist of large towers that provide extensive coverage over several kms, making them ideal for rural areas where wide coverage is necessary. On the other hand, micro and small cells are smaller installations typically located in urban centers. These towers are placed in densely populated areas and fill the coverage gaps left by macro cells.
+
+#### Frequencies in Wireless Communications
+
+Wireless communications utilize radio waves to enable devices to connect and communicate with each other. These radio waves are emitted at specific frequencies, known as oscillation rates, which are measured in hertz (_Hz_). Common frequency bands for wireless networks include:
+
+- **2.4 GHz**: Used by older Wi-Fi standards (_802.11b/g/n_). Better at penetrating walls, but can be more prone to interference.
+- **5 GHz**: Used by newer Wi-Fi standards (_802.11a/n/ac/ax_). Faster speeds, but shorter range.
+- **Cellular Bands**: For 4G and 5G. These range from lower frequencies (_700 MHz_) to mid-range (_2.6 GHz_) and even higher frequencies for some 5G services.
+
+Different frequencies play crucial roles in wireless communication due to their varying characteristics and the trade-offs between range and speed. Lower frequencies tend to travel farther but are limited in the amount of data they can carry, making them suitable for broader coverage with less data demand. In contrast, higher frequencies, while capable of carrying more data, have a much shorter range. Additionally, frequency bands can get congested as many devices operate on the same frequencies, leading to interference that degrade performance. To manage and mitigate these issues, government agencies regulate frequency allocations, ensuring orderly use of the airwaves and preventing interference among users.
+
 ## Network Security and Data Flow Analysis
