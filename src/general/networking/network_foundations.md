@@ -359,3 +359,38 @@ Wireless communications utilize radio waves to enable devices to connect and com
 Different frequencies play crucial roles in wireless communication due to their varying characteristics and the trade-offs between range and speed. Lower frequencies tend to travel farther but are limited in the amount of data they can carry, making them suitable for broader coverage with less data demand. In contrast, higher frequencies, while capable of carrying more data, have a much shorter range. Additionally, frequency bands can get congested as many devices operate on the same frequencies, leading to interference that degrade performance. To manage and mitigate these issues, government agencies regulate frequency allocations, ensuring orderly use of the airwaves and preventing interference among users.
 
 ## Network Security and Data Flow Analysis
+
+### Network Security
+
+#### Firewalls
+
+A firewall is a network security device, either hardware, software, or a comibination of both, that monitors incoming and outgoing network traffic. Firewalls enforce a set of rules to determine whether to allow or block specific traffic.
+
+Firewalls operate by analyzing packets of data according to predefined rules and policies, commonly focusing on factors such as IP addresses, port numbers, and protocols. This process, known as traffic filtering, is defined by system administrators as permitting or denying traffic based on specific conditions, ensuring that only authorized connections are allowed. Additionally, firewalls can log traffic events and generate alerts about any suspicious activity. Different types of firewalls are:
+
+- Packet Filtering Firewall
+- Stateful Inspection Firewall
+- Application Layer Firewall
+- Next-Gen Firewall
+
+Firewalls stand between the internet and the internal network, examining traffic before letting it through. In a home environment, your router/modem has a built-in firewall. In that case, it's all in one device, and the firewall is inside the router. In larger networks, the firewall is often a separate device placed after the modem/router and before the internal network, ensuring all traffic must pass through it.
+
+#### IDS/IPS
+
+Intrusion Detection and Prevention Systems are security solutions designed to monitor and respond to suspicious network or system activity. An IDS observes traffic or system events to identify malicious behavior or policy violations, generating alerts but not blocking the suspicious traffic. In contrast, an IPS operates similarily to an IDS but takes an additional step by preventing or rejecting malicious traffic in real time. The key difference lies in their actions: an IDS detects and alerts, while an IPS detects and prevents.
+
+Both IDS and IPS solutions analyze network packets and compare them to known attack signatures or typical traffic patterns. This process involves:
+
+- **Signature-based detection**: Matches traffic against a database of known exploits.
+- **Anomaly-based detection**: Detecs anything unusual compared to normal activity.
+
+When suspicious or malicious behavior is identified, an IDS will generate an alert for further investigation, while an IPS goes one step further by blocking or rejecting the malicious traffic in real time.
+
+Some of the different types of firewalls IDS/IPS are:
+
+- Network-Based IDS/IPS
+- Host-Based IDS/IPS
+
+IDS/IPS can be placed at several strategic locations in a network. One option is to position them behind the firewall, where the firewall filters obvious threats, and the IDS/IPS inspects any remaining traffic. Another common placement is in the DMZ, a separate network segment within the larger network directly exposed to the internet, where they monitor traffic moving in and out of publicly accessible servers. Finally, IDS/IPS solutions can also run directly on endpoint devices, such as servers or workstations, to detect suspicious activity at the host level.
+
+### Data Flow
