@@ -164,30 +164,6 @@ flowchart LR
 
 ### Key DNS Concepts
 
-In the DNS, a **zone** is a distinct part of the domain namespace that a specific entity or administrator manages. _For example, ```example.com``` and all its subdomains would typically belong to the same DNS zone._
-
-The zone file, a text file residing on a DNS Server, defines the resource records within this zone, providing crucial information for translating domain names into IP addresses.
-
-Example:
-```bash
-$TTL 3600 ; Default Time-To-Live (1 hour)
-@       IN SOA   ns1.example.com. admin.example.com. (
-                2024060401 ; Serial number (YYYYMMDDNN)
-                3600       ; Refresh interval
-                900        ; Retry interval
-                604800     ; Expire time
-                86400 )    ; Minimum TTL
-
-@       IN NS    ns1.example.com.
-@       IN NS    ns2.example.com.
-@       IN MX 10 mail.example.com.
-www     IN A     192.0.2.1
-mail    IN A     198.51.100.1
-ftp     IN CNAME www.example.com.
-```
-
-This file defines the authoritative name server (_NS records_), mail server (_MX record_), and IP addresses (_A records_) for various hosts within the ```example.com``` domain.
-
 **Key concepts**:
 
 | DNS concept | example | description |
@@ -226,7 +202,48 @@ This file defines the authoritative name server (_NS records_), mail server (_MX
 | **dnsrecon** | combines multiple DNS recon techniques and supports various output formats | comprehensive DNS enumeration, identifying subdomains, and gathering DNS records for further analysis |
 | **theHarvester** | OSINT tool that gathers information from various sources, including DNS records | collecting email addresses, employee information, and other data associated with a domain from multiple sources |  
 
-### DNS Zone Transfer
+### DNS Zones
+
+In the DNS, a **zone** is a distinct part of the domain namespace that a specific entity or administrator manages. _For example, ```example.com``` and all its subdomains would typically belong to the same DNS zone._
+
+#### Primary DNS Server
+
+The primary DNS server is the server of the zone file, which contains all authoritative information for a domain and is responsible for administering this zone. The DNS records of a zone can only be edited on the primary DNS server, which then updates the secondary DNS servers.
+
+#### Secondary DNS Server
+
+Secondary DNS servers contai read-only copies of the zone file from the primary DNS server. These servers compare their data with the primary DNS server at regular intervals and thus serve as a backup server. It is useful because a primary name server's failure means that connections without name resolution are no longer possible. To establish connections anyway, the user would have to know the IP addresses of the contacted servers.
+
+#### DNS Zone File
+
+The zone file, a text file residing on a DNS Server, defines the resource records within this zone, providing crucial information for translating domain names into IP addresses.
+
+Example:
+
+```bash
+$TTL 3600 ; Default Time-To-Live (1 hour)
+@       IN SOA   ns1.example.com. admin.example.com. (
+                2024060401 ; Serial number (YYYYMMDDNN)
+                3600       ; Refresh interval
+                900        ; Retry interval
+                604800     ; Expire time
+                86400 )    ; Minimum TTL
+
+@       IN NS    ns1.example.com.
+@       IN NS    ns2.example.com.
+@       IN MX 10 mail.example.com.
+www     IN A     192.0.2.1
+mail    IN A     198.51.100.1
+ftp     IN CNAME www.example.com.
+```
+
+This file defines the authoritative name server (_NS records_), mail server (_MX record_), and IP addresses (_A records_) for various hosts within the ```example.com``` domain.
+
+Also, you distinguish between **Primary Zone (_master zone_)** and **Secondary Zone (_slave zone_)**. The secondary zone on the secondary DNS server serves as a substitute for the primary zone on the primary DNS server if the primary DNS server should become unreachable. The creation and transfer of the primary Zone copy from the primary DNS server to the secondary DNS server is called a "zone transfer".
+
+The update of the zone files can only be done on the primary DNS server, which then updates the secondary DNS server. Each zone file can have only one primary DNS server and an unlimited number of secondary DNS servers.
+
+#### DNS Zone Transfer
 
 ![DNS Zone Transfer](../../../images/web_recon_zone_tranfer.png)
 
