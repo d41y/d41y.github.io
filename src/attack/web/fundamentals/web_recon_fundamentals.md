@@ -258,6 +258,7 @@ In the early days of the internet, allowing any client to request a zone tranfer
 Awareness of this vulnerability has grown, and most DNS server administrators have mitigated the risk. Modern DNS servers are typically configured to allow zone transfers only to trusted secondary severs, ensuring that sensitive zone data remains confidential.
 
 Dig example:
+
 ```bash
 d41y@htb[/htb]$ dig axfr @nsztm1.digi.ninja zonetransfer.me
 
@@ -285,6 +286,26 @@ canberra-office.zonetransfer.me. 7200 IN A	202.14.81.230
 ;; WHEN: Mon May 27 18:31:35 BST 2024
 ;; XFR size: 50 records (messages 1, bytes 2085)
 ```
+
+### DNS Security
+
+Many companies have already recognized DNS's vuln and try to close this gap with dedicated DNS servers, regular scans, and vulnerability assessment software. However, beyond that fact, more and more companies recognize the value of the DNS as an active line of defense, embedded in an in-depth and comprehensive security concept.
+
+This makes sense because the DNS is part of every network connection. The DNS is uniquely positioned in the network to act as a central control point to decide whether a benign or malicious request is received.
+
+DNS threat intelligence can be integrated with other open-source and other threat intelligence feeds. Analytics systems such as EDR and SIEM can provide a holistic and situation-based picture of the security situation. DNS Security Services support the coordination of incident response by sharing IOCs and IOAs with other security technologies such as firewalls, network proxies, endpoint security, Network Access Control and vulnerability scanners, providing them with information.
+
+#### DNSSEC
+
+Another feed used for the security of DNS servers is Domain Name System Security Extensions (_DNSSEC_), designed to ensure the authenticity and integrity of data transmitted through the DNS by securing resource records with digital certificates. DNSSEC ensures that the DNS data has not been manipulated and does not originate from any other source. Private keys are used to sign the resource records digitally. Resource records can be signed several times with different private keys, for example, to replace keys that expire in time.
+
+##### Private Keys
+
+The DNS server that manages a zone to be secured signs its sent resource records using its only known private key. Each zone has its zone keys, each consisting of a private and a public key. DNSSEC specifies a new resource record type with the RRSIG. It contains the signature of the respective DNS record, and these used keys have a specific validity period and are provided with a start and end date.
+
+##### Public Key
+
+The public key can be used to verify the signature of the recipients of the data. For the DNSSEC security mechanisms, it must be supported by the provider of the DNS information and the requesting client system. The requesting clients verify the signatures using the generally known public key of the DNS zone. If check is successful, manipulating the response is impossible, and the information comes from the requested source.
 
 ## Subdomains
 
