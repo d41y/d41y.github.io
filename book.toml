@@ -6,7 +6,7 @@ src = "src"
 
 [preprocessor.callouts]
 
-[preprocessor.pagetoc]
+#[preprocessor.pagetoc]
 
 [output.html]
 git-repository-url = "https://github.com/d41y/d41y.github.io"
