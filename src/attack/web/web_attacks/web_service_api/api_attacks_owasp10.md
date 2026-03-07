@@ -408,3 +408,84 @@ To mitigate the SSRF vuln, the `/api/v1/supplier-companies/certificates-of-incor
 
 Furthermore, the `/api/v1/supplier-companies/{ID}/certificates-of-incorporation` GET endpoint must be configured to serve content exclusively from the designated folder `wwwroot/SupplierCompaniesCertificatesOfIncorporations`. This ensures that only certificates of incorporation are accessible and that local resources or files outside this directory are never exposed. Additionally, this acts as a safeguard, if in case the validations performed by the `/api/v1/supplier-companies/certificates-of-incorporation` POST and `/api/v1/supplier-companies` PATCH endpoint fails.
 
+### Security Misconfiguration
+
+Wep APIs are susceptible to the same security misconfigs that can compromise traditional web applications. One typical example is a web API endpoint that accepts user-controlled input and incorporates it into SQL queries without proper validation, thereby allowing Injection attacks.
+
+#### [Improper Neutralization of Special Elements used in an SQL Command (_SQLi_)](https://cwe.mitre.org/data/definitions/89.html)
+
+After obtaining a JWT as a supplier from the `/api/v1/authentication/suppliers/sign-in` endpoint and authenticating with it, you observe that the `/api/v1/roles/current-user` endpoint reveals that you have the `Products_GetProductsTotalCountByNameSubstring` role.
+
+The only endpoint related to that role name is `/api/v1/products/{Name}/count`, which belongs to the Products group. When exploring this endpoint, you find that it returns the total count of products containing a user-provided substring in their name:
+
+![api owasp 41](../../../../images/api_owasp41.png)
+
+For example, if you use `laptop` as the `Name` substring parameter, you find that there are 18 matching products in total:
+
+![api owasp 42](../../../../images/api_owasp42.png)
+
+However, if you try using `latop'` as input, you observe that the endpoint returns an error message, indicating a potential vuln to SQLi attacks:
+
+![api owasp 43](../../../../images/api_owasp43.png)
+
+Attempt to retrieve the count of all records in the Products table using the payload `laptop' OR 1=1 --`;  you will discover that there are 720 products in the table:
+
+![api owasp 44](../../../../images/api_owasp44.png)
+
+#### HTTP Headers
+
+APIs can also suffer from security misconfigs if they do not use proper HTTP Security Response Headers. For example, suppose an API does not set a secure Access-Control-Allow-Origin as part of its `CORS` policy. In that case, it can be exposed to security risks, most notably, Cross-Site Request Forgery.
+
+#### Prevention
+
+To mitigate the Security Misconfiguration vulnerability, the `/api/v1/products/{Name}/count` endpoint should utilize parameterized queries or an Object Relational Mapper to safely insert user-controlled values into SQL queries. If that is not a choice, it must validate user-controlled input before concatenating it into the SQL query, which is never infallible.
+
+Furthermore, if the web API is using HTTP headers insecurely or omits security related ones, it should implement secure headers to prevent various security vulns from occuring.
+
+### Improper Inventory Management
+
+Maintaining accurate and up-to-date documentation is essential for web APIs, especially considering their reliance on third-party users who need to understand how to interact with the API effectively.
+
+However, as a web API matures and undergoes changes, it is crucial to implement proper versioning practices to avoid security pitfalls. Improper inventory management of APIs, including inadequate versioning, can introduce security misconfigs and increase the attack surface. This can manifest in various ways, such as outdated or incompatible API versions remaining accessible, creating potential entry points for unauthorized users.
+
+Upon examining the Swagger UI's drop-down list for "Select a definition", you discover the existence of an additional version v0.
+
+Upon reviewing the description of v0, it is indicated that this version contains legacy and deleted data, serving as an unmaintained backup that should be removed. However, upon inspecting the endpoints, you will notice that none of them display a "lock" icon, indicating that they do not require any form of authentication.
+
+![api owasp 45](../../../../images/api_owasp45.png)
+
+Upon invoking the `/api/v0/customers/deleted` endpoint, the API responds by exposing deleted customer data, including sensitive password hashes:
+
+![api owasp 46](../../../../images/api_owasp46.png)
+
+Due to oversight by the developers in neglecting to remove the v0 endpoints, you gained unauthorized access to deleted data of former customers. This issue was exacerbated by an Excessive Data Exposure vulnerability in the `/api/v0/customers/deleted` endpoint, which allowed you to view customer password hashes. With this exposed information, you could attempt password cracking. Given the common practice of password reuse, this could potentially compromise active accounts, particularly if the same customers re-registered using the same password.
+
+#### Prevention
+
+Effective versioning ensures that only the intended API versions are exposed to users, with older versions properly deprecated or sunset. By thoroughly managing the API inventory, Inlanefreight E-Commerce Marketplace can minimize the risk of exposing vulnerabilities and maintain a secure user interface.
+
+To mitigate the Improper Inventory Management vulnerability, developers at Inlanefreight E-Commerce Marketplace should either remove v0 entirely or, at a minimum, restrict access exclusively for local development and testing purposes, ensuring it remains inaccessible to external users. If neither option is viable, the endpoints should be protected with stringent authentication measures, permitting interaction solely by admins.
+
+### Unsafe Consumption of APIs
+
+APIs frequently interact with other APIs to exchange data, forming a complex ecosystem of interconnected services. While this interconnectivity enhances functionality and efficiency, it also introduces significant security risks if not managed properly. Developers may blindly trust data received from third-party APIs, especially when provided by reputable organizations, leading to relaxed security measures, particularly in input validation and data sanitization.
+
+Several critical vulns can arise from API-to-API communication:
+
+1) **Insecure Data Transmission**: APIs communicating over unencrypted channels expose sensitive data to interception, compromising confidentiality and integrity.
+2) **Inadequate Data Validation**: Failing to properly validate and sanitize data received from external APIs before processing or forwarding it to downstream components can lead to injection attacks, data corruption, or even remote code execution.
+3) **Weak Authentication**: Neglecting to implement robust authentication methods when communicating with other APIs can result in unauthorized access to sensitive data or critical functionality.
+4) **Insufficient Rate-Limiting**: An API can overwhelm another API by sending a continuous surge or requests, potentially leading to DoS.
+5) **Inadequate Monitoring**: Insufficient monitoring of API-to-API interactions can make it difficult to detect and respond to security incidents promptly.
+
+If an API consumes another API insecurely, it is vulnerable to [CWE-1357: Reliance on Insufficiently Trustworthy Component](https://cwe.mitre.org/data/definitions/1357.html).
+
+#### Prevention
+
+To prevent vulns arising from API-to-API communication, web API devs should implement the following measures:
+
+1) **Secure Data Transmission**: Use encrypted channels for data transmission to prevent exposure of sensitive data through MiTM attacks.
+2) **Adequate Data Validation**: Ensure proper validation and sanitization of data received from external APIs before processing or forwarding it to downstream components. This mitigates risks such as injection attacks, data corruption, or RCE.
+3) **Robust Authentication**: Employ secure authentication methods when communicating with other APIs to prevent unauthorized access to sensitive data or critical functionality.
+4) **Sufficient Rate-Limiting**: Implement rate-limiting mechanisms to prevent an API from overwhelming another API, thereby protecting against DoS attacks.
+5) **Adequate Monitoring**: Implement robust monitoring of API-to-API interactions to promptly detect and respond to security incidents.
