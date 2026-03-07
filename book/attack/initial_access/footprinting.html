@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="shortcut icon" href="../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -420,14 +423,20 @@
 <li>OS-based enumeration</li>
 </ul>
 <p>Which can be separated into layers:</p>
-<div class="table-wrapper"><table><thead><tr><th>Level</th><th>Layer</th><th>Description</th><th>Information Categories</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Layer</th><th>Description</th><th>Information Categories</th></tr>
+</thead>
+<tbody>
 <tr><td>Infrastructure</td><td>Internet Presence</td><td>identification of internet presence and externally accessible infrastructure</td><td>Domains, Subdomains, vHosts, Netblocks, IP Addresses, Cloud Instances, Security Measures</td></tr>
-<tr><td></td><td>Gateway</td><td>identify the possible measures to protect the company's external and internal infrastructure</td><td>Firewall, DMZ, IPS/IDS, Proxies, NAC, Network Segmentation, VPN, Cloudflare</td></tr>
+<tr><td></td><td>Gateway</td><td>identify the possible measures to protect the company’s external and internal infrastructure</td><td>Firewall, DMZ, IPS/IDS, Proxies, NAC, Network Segmentation, VPN, Cloudflare</td></tr>
 <tr><td>Host</td><td>Accessible Services</td><td>identify accessible interfaces and services that are hosted externally or internally</td><td>Service Type, Functionality, Configuration, Port, Version, Interface</td></tr>
 <tr><td></td><td>Processes</td><td>identify the internal processes, sources, and destinations associated with the service</td><td>PID, Processed Data, Tasks, Source, Destination</td></tr>
 <tr><td>OS</td><td>Privileges</td><td>identification of the internal permissions and privileges to the accessible services</td><td>Groups, Users, Permissions, Restrictions, Environment</td></tr>
 <tr><td></td><td>OS Setup</td><td>identification of the internal components and systems setup</td><td>OS Type, Patch Level, Network Config, OS Environment, Configuration Files, sensitive private Files</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="layers"><a class="header" href="#layers">Layers</a></h3>
 <h4 id="1---internet-presence"><a class="header" href="#1---internet-presence">1 - Internet Presence</a></h4>
@@ -446,19 +455,19 @@
 <p>Each service runs through a specific user in a particular group with permissions and privileges defined by the administrator or the system. These privileges often provide you with functions that administrators overlook. This often happens in AD infrastructures and many other case-specific administration environments and servers where users are responsible for multiple administration areas.</p>
 <p><em>It is crucial to identify these and understand what is and is not possible with these privileges.</em></p>
 <h4 id="6---os-setup"><a class="header" href="#6---os-setup">6 - OS Setup</a></h4>
-<p>Here you collect information about the actual OS and its setup using internal access. This gives you a good overview of the internal security of the systems and reflects the skills and capabilities of the company's administrative teams.</p>
+<p>Here you collect information about the actual OS and its setup using internal access. This gives you a good overview of the internal security of the systems and reflects the skills and capabilities of the company’s administrative teams.</p>
 <p><em>The goal here is to see how the administrators manage the systems and what sensitive internal information you can glean from them.</em></p>
 <h2 id="infrastructure-based-enumeration"><a class="header" href="#infrastructure-based-enumeration">Infrastructure-Based Enumeration</a></h2>
 <h3 id="domain-information"><a class="header" href="#domain-information">Domain Information</a></h3>
-<p>... is a core component of any pentest, and it is not just about the subdomains but about the entire presence on the internet. Therefore, you gather information and try to understand the company's functionality and which technologies and structures are necessary for services to be offered successfully and efficiently.</p>
+<p>… is a core component of any pentest, and it is not just about the subdomains but about the entire presence on the internet. Therefore, you gather information and try to understand the company’s functionality and which technologies and structures are necessary for services to be offered successfully and efficiently.</p>
 <p>This type of information is gathered passively without direct and active scans.</p>
-<p>However, when passively gathering information, you can use third-party services to understand the company better. The first thing you should do is scrutinize the company's main website. Then, you should read through the texts, keeping in mind what technologies and structures are needed for these services.</p>
+<p>However, when passively gathering information, you can use third-party services to understand the company better. The first thing you should do is scrutinize the company’s main website. Then, you should read through the texts, keeping in mind what technologies and structures are needed for these services.</p>
 <p>Once you have a basic understanding of the company and its services, you can get a first impression of its presence on the internet.</p>
 <h4 id="certificate-transparency"><a class="header" href="#certificate-transparency">Certificate Transparency</a></h4>
-<p>The first point of presence on the internet may be the SSL certificate from the company's main website that you can examine. Often, such a certificate includes more than just a subdomain, and this means that the certificate is used for several domains, and these are most likely still active.</p>
-<p><img src="../../images/footprinting_1.png" alt="footprinting 1" /></p>
-<p>Another source to find more subdomains is <a href="https://crt.sh/">crt.sh</a>. This source is Certificate Transparency logs. Certificate Transparency is a process that is intended to enable the verification of issued digital certificates for encrypted internet connections. The standard (<em>RFC 6962</em>) provides for the logging of all digital certificates issued by a certificate authority in audit-proof logs. This is intended to enable the detection of false or maliciously issued certificates for a domain. SSL certificate providers like Let's Encrypt share this with the web interface of crt.sh, which stores the new entries in the database to be accessed later.</p>
-<p><img src="../../images/footprinting_2.png" alt="footprinting 2" /></p>
+<p>The first point of presence on the internet may be the SSL certificate from the company’s main website that you can examine. Often, such a certificate includes more than just a subdomain, and this means that the certificate is used for several domains, and these are most likely still active.</p>
+<p><img src="../../images/footprinting_1.png" alt="footprinting 1"></p>
+<p>Another source to find more subdomains is <a href="https://crt.sh/">crt.sh</a>. This source is Certificate Transparency logs. Certificate Transparency is a process that is intended to enable the verification of issued digital certificates for encrypted internet connections. The standard (<em>RFC 6962</em>) provides for the logging of all digital certificates issued by a certificate authority in audit-proof logs. This is intended to enable the detection of false or maliciously issued certificates for a domain. SSL certificate providers like Let’s Encrypt share this with the web interface of crt.sh, which stores the new entries in the database to be accessed later.</p>
+<p><img src="../../images/footprinting_2.png" alt="footprinting 2"></p>
 <p>You can also output the results in JSON format:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl -s https://crt.sh/\?q\=inlanefreight.com\&amp;output\=json | jq .
 
@@ -652,11 +661,13 @@ inlanefreight.com.      21600   IN      SOA     ns.inwx.net. hostmaster.inwx.net
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>Always have a look at the complete result of your <code>dig</code>. For example, They txt records from the above snippet helps further enumerating the company, including services used.</p>
 </div>
+
 <h3 id="cloud-resources"><a class="header" href="#cloud-resources">Cloud Resources</a></h3>
 <p>The use of cloud is now one of the essential components for many companies nowadays.</p>
-<p>Even though cloud providers secure their infrastructure centrall, this does not mean that companies are free from vulnerabilities. The configurations made by the administrators may nevertheless make the company's cloud resources vulnerable. This often starts with the S3 buckets (<em>AWS</em>), blobs (<em>Azure</em>), cloud storage (<em>GCP</em>), which can be accessed without authentication if configured incorrectly.</p>
+<p>Even though cloud providers secure their infrastructure centrall, this does not mean that companies are free from vulnerabilities. The configurations made by the administrators may nevertheless make the company’s cloud resources vulnerable. This often starts with the S3 buckets (<em>AWS</em>), blobs (<em>Azure</em>), cloud storage (<em>GCP</em>), which can be accessed without authentication if configured incorrectly.</p>
 <h4 id="company-hosted-servers-1"><a class="header" href="#company-hosted-servers-1">Company Hosted Servers</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f1,4;done
 
@@ -669,21 +680,21 @@ s3-website-us-west-2.amazonaws.com 10.129.95.250
 <p>Often cloud storage is added to the DNS list when used for administrative purposes by other employees. This step makes it much easier for the employees to reach and manage them. <code>s3-website-us-west-2.amazonaws.com</code> is on example.</p>
 <p>However, there are many different ways to find such cloud storage. One of the easiest and most used is Google search combined with Google Dorks. You can use the Google Dorks <code>inurl:</code> and <code>intext:</code> to narrow your search to specific terms.</p>
 <h5 id="google-search-for-aws"><a class="header" href="#google-search-for-aws">Google Search for AWS</a></h5>
-<p><img src="../../images/footprinting_3.png" alt="footprinting 3" /></p>
+<p><img src="../../images/footprinting_3.png" alt="footprinting 3"></p>
 <h5 id="google-search-for-azure"><a class="header" href="#google-search-for-azure">Google Search for Azure</a></h5>
-<p><img src="../../images/footprinting_4.png" alt="footprinting 4" /></p>
+<p><img src="../../images/footprinting_4.png" alt="footprinting 4"></p>
 <h4 id="domainglass"><a class="header" href="#domainglass">Domain.Glass</a></h4>
-<p>Third-party providers such as <a href="https://domain.glass/">https://domain.glass/</a> can also tell you a lot about the company's infrastructure. As a positive side effect, you can also see that Cloudflare's security assessment status has been classified as "Safe". This means you have already found a security measure that can be noted for the second layer.</p>
-<p><img src="../../images/footprinting_5.png" alt="footprinting 5" /></p>
+<p>Third-party providers such as <a href="https://domain.glass/">https://domain.glass/</a> can also tell you a lot about the company’s infrastructure. As a positive side effect, you can also see that Cloudflare’s security assessment status has been classified as “Safe”. This means you have already found a security measure that can be noted for the second layer.</p>
+<p><img src="../../images/footprinting_5.png" alt="footprinting 5"></p>
 <h4 id="grayhatwarfare"><a class="header" href="#grayhatwarfare">GrayHatWarfare</a></h4>
 <p>Another very useful provider is <a href="https://buckets.grayhatwarfare.com/">GrayHatWarfare</a>. You can do many different searches, discover AWS, Azure, and GCP cloud storage, and even sort and filter by file format. Therefore, once you have found them through Google, you can also search for them on GrayHatWarfare and passively discover what files are stored on the given cloud storage.</p>
-<p><img src="../../images/footprinting_6.png" alt="footprinting 6" /></p>
-<p>Many companies also use abbreviations of the company's name, which are then used accordingly within the IT infrastructure. Such terms are also part of an excellent approach to discovering new cloud storage from the company. You can also search for files simultaneously to see the files that can be accessed at the same time.</p>
-<p><img src="../../images/footprinting_7.png" alt="footprinting 7" /></p>
+<p><img src="../../images/footprinting_6.png" alt="footprinting 6"></p>
+<p>Many companies also use abbreviations of the company’s name, which are then used accordingly within the IT infrastructure. Such terms are also part of an excellent approach to discovering new cloud storage from the company. You can also search for files simultaneously to see the files that can be accessed at the same time.</p>
+<p><img src="../../images/footprinting_7.png" alt="footprinting 7"></p>
 <p>Sometimes when employees are overworked or under high pressure, mistakes can be fatal for the entire company. These errors can even lead to SSH private keys being leaked, which anyone can download and log onto one or even more machines in the company without using a password.</p>
-<p><img src="../../images/footprinting_8.png" alt="footprinting 8" /></p>
+<p><img src="../../images/footprinting_8.png" alt="footprinting 8"></p>
 <h3 id="staff"><a class="header" href="#staff">Staff</a></h3>
-<p>Searching for and identifying employees on social media platforms can also reveal a lot about the teams' infrastructure and maekup. This, in turn, can lead to you identifying which technologies, programming languages, and even software applications are being used. To a large extent, you will also be able to assess each person's focus based on their skills. The posts and material shared with others are also a great indicator of what the person is currently engaged in and what that person currently feels is important to share with others.</p>
+<p>Searching for and identifying employees on social media platforms can also reveal a lot about the teams’ infrastructure and maekup. This, in turn, can lead to you identifying which technologies, programming languages, and even software applications are being used. To a large extent, you will also be able to assess each person’s focus based on their skills. The posts and material shared with others are also a great indicator of what the person is currently engaged in and what that person currently feels is important to share with others.</p>
 <p>Employees can be identified on various business networks such as LinkedIn or Xing. Job postings from companies can also tell you a lot about their infrastructure and give you clues about what you should be looking for.</p>
 <h4 id="job-post"><a class="header" href="#job-post">Job Post</a></h4>
 <pre><code>* 3-10+ years of experience on professional software development projects.
@@ -712,7 +723,7 @@ Desired Skills/Knowledge/ Experience:
 « NumPy.
 </code></pre>
 <p>From a job post like this, you can see which programming languages are preferred. It is also required that the applicant is familiar with different databases. In addition, you know that different frameworks are used for web applications development.</p>
-<p><img src="../../images/footprinting_9.png" alt="footprinting 9" /></p>
+<p><img src="../../images/footprinting_9.png" alt="footprinting 9"></p>
 <p>People try to make business contacts on social media sites and prove to visitors what skills they bring to the table, which inevitably leads them to sharing with the public what they know and what they have learned so far.</p>
 <p>Furthermore, showing projects can, of course, be of great advantage to make new business contacts and possibly even get a new job, but on the other hand, it can lead to mistakes that will be very difficult to fix.</p>
 <h2 id="host-based-enumeration"><a class="header" href="#host-based-enumeration">Host-Based Enumeration</a></h2>
@@ -724,7 +735,7 @@ Desired Skills/Knowledge/ Experience:
 <p>FTP knows different <a href="https://web.archive.org/web/20230326204635/https://www.smartfile.com/blog/the-ultimate-ftp-commands-list/">commands</a> and <a href="https://en.wikipedia.org/wiki/List_of_FTP_server_return_codes">status codes</a>. Not all of these commands are consistently implemented on the server.</p>
 <p>Usually, you need credentials to use FTP on a server. You also need to know that FTP is a clear-text protocol that can sometimes be sniffed if conditions on the network are right. However, there is also the possibility that a server offers anonymous FTP. The server operator then allows any user to upload or download file via FTP without using a password. Since there are security risks associated with such a public FTP server, the options for users are usually limited.</p>
 <h4 id="trivial-file-transfer-protocl-tftp"><a class="header" href="#trivial-file-transfer-protocl-tftp">Trivial File Transfer Protocl (<em>TFTP</em>)</a></h4>
-<p>... is simpler than FTP and performs file transfers between client and server processes. However, it does not provide user authentication and other valuable features supported by FTP. In addition, while FTP uses TCP, TFTP uses UDP, making it an unreliable protocol and causing it to use UDP-assissted application layer recovery.</p>
+<p>… is simpler than FTP and performs file transfers between client and server processes. However, it does not provide user authentication and other valuable features supported by FTP. In addition, while FTP uses TCP, TFTP uses UDP, making it an unreliable protocol and causing it to use UDP-assissted application layer recovery.</p>
 <p>It does not support protected login via passwords and sets limits on access based solely on the read and write permissions of a file in the OS. Practically, this lead to TFTP operating exclusively in directories and with files that have been shared with all users and can be read and written globally. Because of the lack of security, TFTP may only be used in local and protected networks.</p>
 <h4 id="enum"><a class="header" href="#enum">Enum</a></h4>
 <h5 id="nmap"><a class="header" href="#nmap">Nmap</a></h5>
@@ -803,7 +814,7 @@ NSE: TCP 10.10.14.4:54228 &lt; 10.129.14.136:21 | 220 Welcome to HTB-Academy FTP
 <h5 id="service-interaction"><a class="header" href="#service-interaction">Service Interaction</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ nc -nv 10.129.14.136 21
 </code></pre>
-<p>... or:</p>
+<p>… or:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ telnet 10.129.14.136 21
 </code></pre>
 <p>It looks slightly different if the FTP server runs with TLS/SSL encryption. Because then you need a client that can handle TLS/SSL. For this you can use the client <code>openssl</code> and communicate with the FTP server. The good thing about using openssl is that you can see the SSL certificate which can also be helpful.</p>
@@ -834,7 +845,7 @@ MIIENTCCAx2gAwIBAgIUD+SlFZAWzX5yLs2q3ZcfdsRQqMYwDQYJKoZIhvcNAQEL
 <p>This is because the SSL certificate allows you to recognize the hostname, for example, and in most cases also an email address for the organization or company. In addition, if the company has several locations worldwide, certificates can also be created for specific locations, which can also be identified usnig the SSL certificate.</p>
 <h3 id="server-message-block-smb"><a class="header" href="#server-message-block-smb">Server Message Block (<em>SMB</em>)</a></h3>
 <h4 id="intro-1"><a class="header" href="#intro-1">Intro</a></h4>
-<p>... is a client-server protocol that regulates access to files and entire directories and other network resources such as printers, routers, or interfaces released for the network. Information exchange between different system processes can also be handled based on the SMB protocol. SMB first became available to a broader public, for example, as part of the OS/2 network OS LAN Manager and LAN Server. Since then, the main application are of the protocol has been the Windows OS series in particular, whose network services support SMB in a downward-compatible manner - which means that devices with newer editions can easily communicate with devices that have an older Microsoft OS installed. With the free software project Samba, there is also a solution that enables the use of SMB in Linux and Unix distros and thus cross-platform communications via SMB.</p>
+<p>… is a client-server protocol that regulates access to files and entire directories and other network resources such as printers, routers, or interfaces released for the network. Information exchange between different system processes can also be handled based on the SMB protocol. SMB first became available to a broader public, for example, as part of the OS/2 network OS LAN Manager and LAN Server. Since then, the main application are of the protocol has been the Windows OS series in particular, whose network services support SMB in a downward-compatible manner - which means that devices with newer editions can easily communicate with devices that have an older Microsoft OS installed. With the free software project Samba, there is also a solution that enables the use of SMB in Linux and Unix distros and thus cross-platform communications via SMB.</p>
 <p>The SMB protocol enables the client to communicate with other participants in the same network to access files or services shared with it on the network. The other system must also have implemented the network protocol and received and processed the client request using an SMB server application. Before that, however, both parties must establish a connection, which is why they first exchange corresponding messages.</p>
 <p>In IP networks, SMB uses TCP protocol for this purpose, which provides for a three-way handshake between client and server before a connection is finally established. The specifications of the TCP protocol also govern the subsequent transport of data.</p>
 <p>An SMB server can provide arbitrary parts of its local file systems as shares. Therefore the hierarchy visible to a client is partially independent of the structure on the server. Access rights are defined by ACL. They can be controlled in a fine-grained manner based on attributes such as execute, read, and full access for individual users or user groups. The ACLs are defined based on the shares and therefore do not correspond to the rights assigned locally on the server.</p>
@@ -848,8 +859,10 @@ MIIENTCCAx2gAwIBAgIUD+SlFZAWzX5yLs2q3ZcfdsRQqMYwDQYJKoZIhvcNAQEL
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p><code>smbclient</code> allows to execute local system commands using an exclamation mark at the beginning (<code>!&lt;cmd&gt;</code>) without interrupting the connection.</p>
 </div>
+
 <h4 id="enum-1"><a class="header" href="#enum-1">Enum</a></h4>
 <h5 id="nmap-1"><a class="header" href="#nmap-1">Nmap</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo nmap 10.129.14.128 -sV -sC -p139,445
@@ -884,7 +897,12 @@ Enter WORKGROUP\'s password:
 rpcclient $&gt; 
 </code></pre>
 <p>All functions can be found <a href="https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html">here</a>. Some are listed below:</p>
-<div class="table-wrapper"><table><thead><tr><th>Query</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Query</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>srvinfo</code></td><td>server information</td></tr>
 <tr><td><code>enumdomains</code></td><td>enumerate all domains that are deployed in the network</td></tr>
 <tr><td><code>querydominfo</code></td><td>provides domain, server, and user information of deployed domains</td></tr>
@@ -892,9 +910,9 @@ rpcclient $&gt;
 <tr><td><code>netsharegetinfo &lt;share&gt;</code></td><td>provides information about a specific share</td></tr>
 <tr><td><code>enumdomusers</code></td><td>enumerates all domain users</td></tr>
 <tr><td><code>queryuser &lt;RID&gt;</code></td><td>provides information about a specific user</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
-<h5 id="rpcclient"><a class="header" href="#rpcclient">RPCclient</a></h5>
 <pre><code class="language-bash">rpcclient $&gt; srvinfo
 
         DEVSMB         Wk Sv PrQ Unx NT SNT DEVSM
@@ -969,7 +987,7 @@ DACL
                 Permissions: 0x101f01ff: Generic all access SYNCHRONIZE_ACCESS WRITE_OWNER_ACCESS WRITE_DAC_ACCESS READ_CONTROL_ACCESS DELETE_ACCESS 
                 SID: S-1-1-0
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-bash">rpcclient $&gt; enumdomusers
 
 user:[mrb3n] rid:[0x3e8]
@@ -1035,7 +1053,7 @@ rpcclient $&gt; queryuser 0x3e8
         padding1[0..7]...
         logon_hrs[0..21]...
 </code></pre>
-<p>You can then use the results to identify the group's RID, which you can then use to retrieve information from the entire group.</p>
+<p>You can then use the results to identify the group’s RID, which you can then use to retrieve information from the entire group.</p>
 <pre><code class="language-bash">rpcclient $&gt; querygroup 0x201
 
         Group Name:     None
@@ -1122,7 +1140,7 @@ SMB         10.129.14.128   445    DEVSMB           notes           READ,WRITE  
 SMB         10.129.14.128   445    DEVSMB           IPC$                            IPC Service (DEVSM)
 </code></pre>
 <h5 id="enum4linux-ng"><a class="header" href="#enum4linux-ng">Enum4Linux-ng</a></h5>
-<p>... is another tool worth mentioning, which is based on an older tool, enum4linux. This tool automates many of the queries, but not all, and can return a large amount of information.</p>
+<p>… is another tool worth mentioning, which is based on an older tool, enum4linux. This tool automates many of the queries, but not all, and can return a large amount of information.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ git clone https://github.com/cddmp/enum4linux-ng.git
 d41y@htb[/htb]$ cd enum4linux-ng
 d41y@htb[/htb]$ pip3 install -r requirements.txt
@@ -1318,9 +1336,9 @@ Completed after 0.61 seconds
 </code></pre>
 <h3 id="network-file-system-nfs"><a class="header" href="#network-file-system-nfs">Network File System (<em>NFS</em>)</a></h3>
 <h4 id="intro-2"><a class="header" href="#intro-2">Intro</a></h4>
-<p>... is a network file system developed by Sun Mircosystems and has the same purpose as SMB. Its purpose is to access file systems over a network as if they were local. However, it uses an entirely different protocol. NFS is used between Linux and Unix systems. This means that NFS clients cannot communicate directly with SMB servers. NFS is an internet standard that governs the procedures in a distributed file system. While NFS protocol version 3.0 (<em>NFSv3</em>), which has been in use for many years, authenticates the client computer, this changes with NFSv4. Here, as with the Windows SMB protocol, the user must authenticate.</p>
+<p>… is a network file system developed by Sun Mircosystems and has the same purpose as SMB. Its purpose is to access file systems over a network as if they were local. However, it uses an entirely different protocol. NFS is used between Linux and Unix systems. This means that NFS clients cannot communicate directly with SMB servers. NFS is an internet standard that governs the procedures in a distributed file system. While NFS protocol version 3.0 (<em>NFSv3</em>), which has been in use for many years, authenticates the client computer, this changes with NFSv4. Here, as with the Windows SMB protocol, the user must authenticate.</p>
 <p>NFS version 4.1 aims to provide protocol support to leverage cluster server deployments, including the ability to provide scalable parallel access to files distributed across multiple servers. In addition, NFSv4.1 includes a session trunking mechanism, also known as NFS multipathing. A significant advantage of NFSv4 over its predecessors is that only one UDP or TCP port 2049 is used to run the service, which simplifies the use of the protocol across firewalls.</p>
-<p>NFS is based on the Open Network Computing Remote Procedure Call protocol exposed on TCP and UDP ports 111, which uses External Data Reprensentation for the system-independent exchange of data. The NFS protocol has no mechanism for authentication or authorization. Instead, authentication is completely shifted to the RPC protocol's options. The authorization is derived from the available file system information. In this process, the server is responsible for translating the client's user information into the file system's format and converting the corresponding authorization details into the required UNIX syntax as accurately as possible.</p>
+<p>NFS is based on the Open Network Computing Remote Procedure Call protocol exposed on TCP and UDP ports 111, which uses External Data Reprensentation for the system-independent exchange of data. The NFS protocol has no mechanism for authentication or authorization. Instead, authentication is completely shifted to the RPC protocol’s options. The authorization is derived from the available file system information. In this process, the server is responsible for translating the client’s user information into the file system’s format and converting the corresponding authorization details into the required UNIX syntax as accurately as possible.</p>
 <p>The most common authentication is via UNIX UID/GID and group membership, which is why this syntax is most likely to be applied to the NFS protocol. One problem is that the client and server do not necessarily have to have the same mappings of UID/GID to users and groups, and the server does not need to do anything further. No further checks can be made on the part of the server. This is why NFS should only be used with this authentication method in trusted networks.</p>
 <h4 id="enum-2"><a class="header" href="#enum-2">Enum</a></h4>
 <h5 id="nmap-2"><a class="header" href="#nmap-2">Nmap</a></h5>
@@ -1461,8 +1479,10 @@ total 16
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>If the <code>root_squash</code> option is set, you cannot edit the <code>backup.sh</code> file even as root.</p>
 </div>
+
 <p>You can also use NFS for further escalation. For example, if you have access to the system via SSH and want to read files from another folder that a specific user can read, you would need to upload a shell to the NFS share that has the SUID of that user and then run the shell via the SSH user.</p>
 <p>Unmounting:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ cd ..
@@ -1470,18 +1490,24 @@ d41y@htb[/htb]$ sudo umount ./target-NFS
 </code></pre>
 <h3 id="domain-name-system-dns"><a class="header" href="#domain-name-system-dns">Domain Name System (<em>DNS</em>)</a></h3>
 <h4 id="intro-3"><a class="header" href="#intro-3">Intro</a></h4>
-<p>... is an integral part of the Internet. For example, through domain names, such as <code>academy.hackthebox.com</code> or <code>www.hackthebox.com</code>, you can reach the web servers that the hosting provider has assigned oner or more specific IP addresses. DNS is a system for resolving computer names into IP addresses, and it does not have a central database. Simplified, you can imagine it like a library with many different phone books. The information is distributed over many thousands of name servers. Globally distributed DNS servers translate domain names into IP addresses and thus control which server a user can reach via a particular domain. There are several types of DNS servers that are used worldwide:</p>
-<div class="table-wrapper"><table><thead><tr><th>Server Type</th><th>Description</th></tr></thead><tbody>
+<p>… is an integral part of the Internet. For example, through domain names, such as <code>academy.hackthebox.com</code> or <code>www.hackthebox.com</code>, you can reach the web servers that the hosting provider has assigned oner or more specific IP addresses. DNS is a system for resolving computer names into IP addresses, and it does not have a central database. Simplified, you can imagine it like a library with many different phone books. The information is distributed over many thousands of name servers. Globally distributed DNS servers translate domain names into IP addresses and thus control which server a user can reach via a particular domain. There are several types of DNS servers that are used worldwide:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Server Type</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>DNS Root Server</td><td>the root servers of the DNS are responsible for the top-level domains; as the last instance, they are only requested if the name server does not respond; thus, a root server is a central interface between users and content on the internet, as it links domain and IP addresses; the ICANN coordinates the work of the root name servers; there are 13 such root servers around the globe</td></tr>
-<tr><td>Authoritative Nameserver</td><td>authoritative nameservers hold authority for a particular zone; they only answer queries from their area of responsibility, and their information is binding; if an authoritative name server cannot answer a client's query, the root name server takes over at that point; based on the country, company, etc., authoritative nameservers provide answers to recursive DNS nameservers, assisting in finding the specific web server(s)</td></tr>
+<tr><td>Authoritative Nameserver</td><td>authoritative nameservers hold authority for a particular zone; they only answer queries from their area of responsibility, and their information is binding; if an authoritative name server cannot answer a client’s query, the root name server takes over at that point; based on the country, company, etc., authoritative nameservers provide answers to recursive DNS nameservers, assisting in finding the specific web server(s)</td></tr>
 <tr><td>Non-authoritative Nameserver</td><td>non-authoritative nameserver are not responsible for a particular DNS zone; instead, they collect information on specific DNS zones themselves, which is done using recursive or iterative DNS querying</td></tr>
 <tr><td>Caching DNS Server</td><td>caching DNS servers cache information from other name servers for a specified period; the authoritative name server determines the duration of this storage</td></tr>
 <tr><td>Forwarding Server</td><td>forwarding servers perform only one function: they forward DNS queries to another DNS server</td></tr>
 <tr><td>Resolver</td><td>resolvers are not authoritative DNS servers but perform name resolution locally in the computer or router</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>DNS is mainly unencrypted. Devices on the local WLAN and internet providers can therefore hack in and spy on DNS queries. Since this poses a privacy risk, there are now some solutions for DNS encryption. By default, IT security professionals apply DNS over TLS or DNS over HTTPS here. In addition, the network protocol DNSCrypt also encrypts the traffic between the computer and the name server.</p>
-<p>However, the DNS does not only link computer names and IP addresses. It also stores and outputs additional information about the services associated with a domain. A DNS query can therefore also be used, for example, to determine which computer serves as the e-mail server for the domain in question or what the domain's name servers are called.</p>
+<p>However, the DNS does not only link computer names and IP addresses. It also stores and outputs additional information about the services associated with a domain. A DNS query can therefore also be used, for example, to determine which computer serves as the e-mail server for the domain in question or what the domain’s name servers are called.</p>
 <h4 id="enum-3"><a class="header" href="#enum-3">Enum</a></h4>
 <p>The footprinting at DNS servers is done as a result of the requests you send. So, first of all, the DNS server can be queried as to which other name servers are known. You do this using the NS record and the specification of the DNS server you want to query using <code>@</code>. This is because if there are other DNS servers, you can also use them and query the records. However, other DNS servers may be configured differently, in addition, may be permanent for other zones.</p>
 <h5 id="dig---ns"><a class="header" href="#dig---ns">dig - ns</a></h5>
@@ -1511,7 +1537,7 @@ ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 ;; MSG SIZE  rcvd: 107
 </code></pre>
 <h5 id="dig---version"><a class="header" href="#dig---version">dig - version</a></h5>
-<p>Sometimes it is also possible to query a DNS server's version using a class CHAOS query and type TXT. However, this entry must exist on the DNS server:</p>
+<p>Sometimes it is also possible to query a DNS server’s version using a class CHAOS query and type TXT. However, this entry must exist on the DNS server:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ dig CH TXT version.bind 10.129.120.85
 
 ; &lt;&lt;&gt;&gt; DiG 9.10.6 &lt;&lt;&gt;&gt; CH TXT version.bind
@@ -1620,11 +1646,11 @@ app.inlanefreight.htb.  604800  IN      A       10.129.18.15
 </code></pre>
 <h3 id="simple-mail-transfer-protocol-smtp"><a class="header" href="#simple-mail-transfer-protocol-smtp">Simple Mail Transfer Protocol (<em>SMTP</em>)</a></h3>
 <h4 id="intro-4"><a class="header" href="#intro-4">Intro</a></h4>
-<p>... is a protocol for sending emails in an IP network. It can be used between an email client and an outgoing mail server or between two SMTP servers. SMTP is often combined with the IMAP or POP3 protocols, which can fetch emails and send emails. In principle, it is a client-server-based protocol, although SMTP can be used between a client and a server and between two SMTP servers. In this case, a server effectively acts as a client.</p>
-<p>By default, SMTP servers accept connection requests on port 25. However, newer SMTP servers also use other ports such as TCP port 587. This port is used to receive mail from authenticated users/servers, usually using the STARTTLS command to switch the existing plaintext connection to an encrypted connection. The authentication data is protected and no longer visible in plaintext over the network. At the beginning of the connection, authentication occurs when the client confirms its identity with a user name and password. The emails can then be transmitted. For this purpose, the client sends the server sender and recipient addresses, the email's content, and other information and parameters. After the email has been transmitted, the connection is terminated again. The email server then starts sending the email to another SMTP server.</p>
+<p>… is a protocol for sending emails in an IP network. It can be used between an email client and an outgoing mail server or between two SMTP servers. SMTP is often combined with the IMAP or POP3 protocols, which can fetch emails and send emails. In principle, it is a client-server-based protocol, although SMTP can be used between a client and a server and between two SMTP servers. In this case, a server effectively acts as a client.</p>
+<p>By default, SMTP servers accept connection requests on port 25. However, newer SMTP servers also use other ports such as TCP port 587. This port is used to receive mail from authenticated users/servers, usually using the STARTTLS command to switch the existing plaintext connection to an encrypted connection. The authentication data is protected and no longer visible in plaintext over the network. At the beginning of the connection, authentication occurs when the client confirms its identity with a user name and password. The emails can then be transmitted. For this purpose, the client sends the server sender and recipient addresses, the email’s content, and other information and parameters. After the email has been transmitted, the connection is terminated again. The email server then starts sending the email to another SMTP server.</p>
 <p>SMTP works unencrypted without any further measures and transmits all commands, data, or authentication information in plain text. To prevent unauthorized reading of data, the SMTP is used in conjunction with SSL/TLS encryption. Under certain circumstances, a server uses a port other than the standard TCP port 25 for the encrypted connection, for example, TCP port 465.</p>
 <p>An essential function of an SMTP server is preventing spam using authentication mechanisms that allow only authorized users to send emails. For this purpose, most modern SMTP servers support the protocol extension ESMTP with SMTP-Auth. After sending his email, the SMTP client, also known as Mail User Agent (<em>MUA</em>), converts it into a header and a body and uploads both to the SMTP server. This has a so-called Mail Transfer Agent (<em>MTA</em>), the software basis for sending and receiving emails. The MTA checks the email for size and spam and then stores it. To relieve the MTA, it is occasionally preceded by a Mail Submission Agent (<em>MSA</em>), which checks the validity, i. e., the origin of the email. This MSA is also called Relay server.</p>
-<p>On arrival at the destination SMTP server, the data packets are reassembled to form a complete email. From there, the Mail delivery agent (<em>MDA</em>) transfers it to the recipient's mailbox.</p>
+<p>On arrival at the destination SMTP server, the data packets are reassembled to form a complete email. From there, the Mail delivery agent (<em>MDA</em>) transfers it to the recipient’s mailbox.</p>
 <pre><code class="language-mermaid">flowchart LR
 
 A["Client (MUA)"]
@@ -1912,15 +1938,15 @@ read R BLOCK
 <p>Once you have successfully initiated a connection and logged in to the target mail server, you can navigate the server.</p>
 <h3 id="simple-network-management-protocol-snmp"><a class="header" href="#simple-network-management-protocol-snmp">Simple Network Management Protocol (<em>SNMP</em>)</a></h3>
 <h4 id="intro-6"><a class="header" href="#intro-6">Intro</a></h4>
-<p>... was created to monitor network devices. In addition, this protocol can also be used to handle configuration tasks and change settings remotely. SNMP-enabled hardware includes routers, switches, servers, IoT devices, and many other devices that can also be queried and controlled using this standard protocol. Thus, it is a protocol for monitoring and managing network devices. In addition, configuration tasks can be handled, and settings can be made remotely using this standard. The current version is SNMPv3, which increases the security of SNMP in particular, but also the complexity of using this protocol.</p>
+<p>… was created to monitor network devices. In addition, this protocol can also be used to handle configuration tasks and change settings remotely. SNMP-enabled hardware includes routers, switches, servers, IoT devices, and many other devices that can also be queried and controlled using this standard protocol. Thus, it is a protocol for monitoring and managing network devices. In addition, configuration tasks can be handled, and settings can be made remotely using this standard. The current version is SNMPv3, which increases the security of SNMP in particular, but also the complexity of using this protocol.</p>
 <p>In addition to the pure exchange of information, SNMP also transmits control commands using agents over UDP port 161. The client can set specific values in the device and change options and settings with these commands. While in classical communication, it is always the client who actively requests information from the server, SNMP also enables the use of so-called traps over UDP port 162. These are data packets sent from SMTP server to the client without being explicitly requested. If a device is configured accordingly, SNMP trap is sent to the client once a specific event occurs on the server-side.</p>
 <p>For the SNMP client and server to exchange the respective values, the available SNMP objects must have unique addresses known on both sides. This addressing mechanism is an absolute prerequisite for successfully transmitting data and network monitoring using SNMP.</p>
 <p>To ensure that SNMP access works across manufacturers and with different client-server combinations, the Management Information Base (<em>MIB</em>) was created. MIB is an independent format for storing device information. A MIB is a text file in which all queryable SNMP objects are listed in a standardized tree hierarchy. It contains at least one object identifier (<em>OID</em>), which, in addition to the necessary unique address and a name, also provides information about the type, access rights, and a description of the respective object. MIB files are written in the Abstract Syntax Notation One (<em>ASN.1</em>) based ASCII text format. The MIBs do not contain data, but they explain where to find which information and what it looks like, which returns values for the specific OID, or which data type is used.</p>
-<p>An OID represents a node in a hierarchical namespace. A sequence of numbers uniquely identifies each node, allowing the node's position in the tree to be determined. The longer the chain, the more specific the information. Many nodes in the OID tree contain nothing except references to those below them. The OIDs consist of integers and are usually concatenated by dot notation.</p>
+<p>An OID represents a node in a hierarchical namespace. A sequence of numbers uniquely identifies each node, allowing the node’s position in the tree to be determined. The longer the chain, the more specific the information. Many nodes in the OID tree contain nothing except references to those below them. The OIDs consist of integers and are usually concatenated by dot notation.</p>
 <p>SNMPv1 is used for network management and monitoring. SNMPv1 is the first version of the protocol and is still in use in many small networks. It supports the retrieval of information from network devices, allows for the configuration of devices, and provides traps, which are notifications of event.s However, SNMPv1 has no built-in authentication mechanism, meaning anyone accessing the network can read and modify network data. Another main flaw of SNMPv1 is that it does not support encryption, meaning that all data is sent in plain text and can be easily intercepted.</p>
 <p>SNMPv2 existed in different versions. The version still exists today is v2c, and the extension <code>c</code> means community-based SNMP. Regarding security, SNMPv2 is on par with SNMMPv1 and has been extended with additional functions from the party-based SNMP no longer in use. However, a significant problem with the initial execution of the SNMP protocol is that the community string that provides security is only transmitted in plain text, meaning it has no buil-in encryption.</p>
 <p>The security has been increased enormously for SNMPv3 by security features such as authentication using username and password and transmission encryption of the data. However, the complexity also increases to the same extent, with significantly more configuration options than v2c.</p>
-<p>Community strings can be seen as passwords that are used to determine whether the requested information can be viewed or not. It is important to note that many organizations are still using SNMPv2, as the transition to SNMPv3 can be very complex, but the services still need to remain active. This causes many administrators a great deal of concern and creates some problems they are keen to avoid. The lack of knowledge about how the information can be obtained and how you as attackers use it makes the administrator's approach seem inexplicable. At the same time, the lack of encryption of the data sent is also a problem. Because every time the community strings are sent over the network, they can be intercepted and read.</p>
+<p>Community strings can be seen as passwords that are used to determine whether the requested information can be viewed or not. It is important to note that many organizations are still using SNMPv2, as the transition to SNMPv3 can be very complex, but the services still need to remain active. This causes many administrators a great deal of concern and creates some problems they are keen to avoid. The lack of knowledge about how the information can be obtained and how you as attackers use it makes the administrator’s approach seem inexplicable. At the same time, the lack of encryption of the data sent is also a problem. Because every time the community strings are sent over the network, they can be intercepted and read.</p>
 <h4 id="enum-6"><a class="header" href="#enum-6">Enum</a></h4>
 <p><code>snmpwalk</code> is used to query the OIDs with their information. <code>onesixtyone</code> can be used to brute-force the names of the community strings since they can be named arbitrarily by the administrator.</p>
 <h5 id="snmpwalk"><a class="header" href="#snmpwalk">SNMPwalk</a></h5>
@@ -2019,7 +2045,7 @@ d41y@htb[/htb]$ braa public@10.129.14.128:.1.3.6.*
 </code></pre>
 <h3 id="mysql"><a class="header" href="#mysql">MySQL</a></h3>
 <h4 id="intro-7"><a class="header" href="#intro-7">Intro</a></h4>
-<p>... is an open-source SQL relational database management system developed and supported by Oracle. A database is simply a structured collection of data organized for easy use and retrieval. The database system can quickly process large amounts of data with high performance. Within the database, the storage is done in a manner to take up as little space as possible. The database is controlled using the SQL database language. MySQL works according to the client-server principle and consists of a MySQL server and one or more MySQL clients. The MySQL server is the actual database management system. It takes care of data storage and distribution. The data is stored in tables with different columns, rows, and data types. These databases are often stored in a single file with the file extension <code>.sql</code>.</p>
+<p>… is an open-source SQL relational database management system developed and supported by Oracle. A database is simply a structured collection of data organized for easy use and retrieval. The database system can quickly process large amounts of data with high performance. Within the database, the storage is done in a manner to take up as little space as possible. The database is controlled using the SQL database language. MySQL works according to the client-server principle and consists of a MySQL server and one or more MySQL clients. The MySQL server is the actual database management system. It takes care of data storage and distribution. The data is stored in tables with different columns, rows, and data types. These databases are often stored in a single file with the file extension <code>.sql</code>.</p>
 <p>The MySQL cliens can retrieve and edit the data using structured queries to the database engine. Inserting, deleting, modifying, and retrieving data, is done using the SQL database language. Therefore, MySQL is suitable for managing many different databases to which clients can send multiple queries simultaneously. Depending on the use of the database, access is possible via an internal network or the public internet.</p>
 <p>MySQL is ideally suited for applications such as dynamic websites, where efficient syntax and high response speed are essential. It is often combined with a Linux, PHP, and an Apache web server and is also known in this combination as LAMP, or when using Nginx, as LEMP.</p>
 <p>MariaDB, which is often connected with MySQL, is a fork of the original MySQL code. This is because the chief developer of MySQL left the company MySQL AB after it was acquised by Oracle and developed another open-source SQL database management system based on the source code of MySQL and called it MariaDB.</p>
@@ -2168,15 +2194,15 @@ mysql&gt; select host, unique_users from host_summary;
 <p>The information schema is also a database that contains metadata. However, this metadata is mainly retrieved from the system schema database. The reason for the existence of these two is the ANSI/ISO standard that has been established. System schema is a Microsoft system catalog for SQL servers and contains much more information than the information schema.</p>
 <h3 id="mssql"><a class="header" href="#mssql">MSSQL</a></h3>
 <h4 id="intro-8"><a class="header" href="#intro-8">Intro</a></h4>
-<p>... is Microsoft's SQL-based relational database management system. Unlike MySQL, MSSQL is closed source and was initially written to run on Windows OS. It is popular among database administration and developers when building applications that run on Microsoft's .NET framework due to its strong native support for .NET. There are versions of MSSQL that will run on Linux and MacOS, but you will more likely come accross MSSQL instances on targets running Windows.</p>
-<p>SQL Server Management Studio (<em>SSMS</em>) comes as a feature that can be installed with the MSSQL install package or can be downloaded &amp; installed separately. It is commonly installed on the server for initial configuration and long-term management of databases by admins. Keep in mind that since SSMS is a client-side application, it can be installed and used on any system and admin or developer is planning to manage the database from. It doesn't only exist on the server hosting the database. This means you could come across a vulnerable system with SSMS with saved creds that allow you to connect to the database.</p>
+<p>… is Microsoft’s SQL-based relational database management system. Unlike MySQL, MSSQL is closed source and was initially written to run on Windows OS. It is popular among database administration and developers when building applications that run on Microsoft’s .NET framework due to its strong native support for .NET. There are versions of MSSQL that will run on Linux and MacOS, but you will more likely come accross MSSQL instances on targets running Windows.</p>
+<p>SQL Server Management Studio (<em>SSMS</em>) comes as a feature that can be installed with the MSSQL install package or can be downloaded &amp; installed separately. It is commonly installed on the server for initial configuration and long-term management of databases by admins. Keep in mind that since SSMS is a client-side application, it can be installed and used on any system and admin or developer is planning to manage the database from. It doesn’t only exist on the server hosting the database. This means you could come across a vulnerable system with SSMS with saved creds that allow you to connect to the database.</p>
 <p>Many other clients can be used to access a database running on MSSQL. Including but not limited to:</p>
 <ul>
 <li>mssql-cli</li>
 <li>SQL Server PowerShell</li>
 <li>HeidiSQL</li>
 <li>SQLPro</li>
-<li>Impacket's mssqlclient.py</li>
+<li>Impacket’s mssqlclient.py</li>
 </ul>
 <p>MSSQL has default system databases that can help you understand the structure of all the databases that may be hosted on a target server. Some are:</p>
 <ul>
@@ -2188,7 +2214,7 @@ mysql&gt; select host, unique_users from host_summary;
 </ul>
 <h4 id="enum-8"><a class="header" href="#enum-8">Enum</a></h4>
 <h5 id="nmap-6"><a class="header" href="#nmap-6">Nmap</a></h5>
-<p>... has default mssql scripts that can be used to target the default tcp port 1433 that MSSQL listens on.</p>
+<p>… has default mssql scripts that can be used to target the default tcp port 1433 that MSSQL listens on.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.201.248
 
 Starting Nmap 7.91 ( https://nmap.org ) at 2021-11-08 09:40 EST
@@ -2301,7 +2327,7 @@ PORT     STATE SERVICE    VERSION
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 6.64 seconds
 </code></pre>
-<p>You can see that the port is open, and the service is running. In Oracle RDBMS, a System Identifier (<em>SID</em>) is a unique name that identifies a particular database instance. It can have multiple instances, each with its own System ID. An instance is a set of process and memory structures that interact to manage the database's data. When a client connects to an Oracle database, it specifies the database's SID along with its connection string. The client uses this SID to identify which database instance it wants to connect to. Suppose the client does not specify a SID. Then, the default value defined in the <code>tnsnames.ora</code> file is used.</p>
+<p>You can see that the port is open, and the service is running. In Oracle RDBMS, a System Identifier (<em>SID</em>) is a unique name that identifies a particular database instance. It can have multiple instances, each with its own System ID. An instance is a set of process and memory structures that interact to manage the database’s data. When a client connects to an Oracle database, it specifies the database’s SID along with its connection string. The client uses this SID to identify which database instance it wants to connect to. Suppose the client does not specify a SID. Then, the default value defined in the <code>tnsnames.ora</code> file is used.</p>
 <p>The SIDs are an essential part of the connection process, as it identifies the specific instance of the database the client wants to connect to. If the client specifies an incorrect SID, the connection attempt will fail. Database admins can use the SID to monitor and manage the individual instances of a database. For example, they can start, stop, or restart an instance, adjust its memory allocation or other configuration parameters, and monitor its performance using tools like Oracle Enterprise Manager.</p>
 <h5 id="nmap---sid-bruteforcing"><a class="header" href="#nmap---sid-bruteforcing">Nmap - SID Bruteforcing</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo nmap -p1521 -sV 10.129.204.235 --open --script oracle-sid-brute
@@ -2359,8 +2385,10 @@ SQL&gt;
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>If you come across the following error<br><code>sqlplus: error while loading shared libraries: libsqlplus.so: cannot open shared object file: No such file or directory</code><br>use:<br><code>sudo sh -c "echo /usr/lib/oracle/12.2/client64/lib &gt; /etc/ld.so.conf.d/oracle-instantclient.conf";sudo ldconfig</code></p>
 </div>
+
 <h5 id="interacting-with-oracle-rdbms"><a class="header" href="#interacting-with-oracle-rdbms">Interacting with Oracle RDBMS</a></h5>
 <pre><code class="language-bash">SQL&gt; select table_name from all_tables;
 
@@ -2461,7 +2489,7 @@ Oracle File Upload Test
 </code></pre>
 <h3 id="intelligent-platform-management-interface-ipmi"><a class="header" href="#intelligent-platform-management-interface-ipmi">Intelligent Platform Management Interface (<em>IPMI</em>)</a></h3>
 <h4 id="intro-10"><a class="header" href="#intro-10">Intro</a></h4>
-<p>... is a set of standardized specifications for hardware-based host management systems used for system management and monitoring. It acts as an autonomous subsystem and works independently of the host's BIOS, CPU, firmware, and underlying OS. IPMI provides sysadmins with the ability to manage and monitor systems even if they are powered off or in an unresponsive state. It operates using a direct network connection to the system's hardware and does not require access to the OS via a login shell. IPMI can also be used for remote upgrades to system without requiring physical access to the target host. IPMI is typically used in three ways:</p>
+<p>… is a set of standardized specifications for hardware-based host management systems used for system management and monitoring. It acts as an autonomous subsystem and works independently of the host’s BIOS, CPU, firmware, and underlying OS. IPMI provides sysadmins with the ability to manage and monitor systems even if they are powered off or in an unresponsive state. It operates using a direct network connection to the system’s hardware and does not require access to the OS via a login shell. IPMI can also be used for remote upgrades to system without requiring physical access to the target host. IPMI is typically used in three ways:</p>
 <ul>
 <li>before the OS has booted to modify BIOS settings</li>
 <li>when the host is fully powered down</li>
@@ -2477,13 +2505,19 @@ Oracle File Upload Test
 <li>Communications Interfaces</li>
 </ul>
 <h4 id="enum-10"><a class="header" href="#enum-10">Enum</a></h4>
-<p>IPMI communicates over port 623 UDP. System that use the IPMI protocol are called Baseboard Management Controllers (<em>BMCs</em>). BMCs are typically implemented as embedded ARM systems running Linux, and connected directly to the host's motherboard. BMCs are built into many motherboards but can also be added to a system as a PCI card. Most servers either come with a BMC or support adding a BMC. The most common BMCs you often see during internal pentests are HP iLO, Dell DRAC, and Supermicro IPMI. If you can access a BMC during an assessment, you would gain full access to the host motherboard and be able to monitor, reboot, power off, or even reinstall the host OS. Gaining access to a BMC is nearly equivalent to physical access to a system. Many BMCs expose a web-based management console, some sort of command-line remote access protocol such as Telnet or SSH, and the port 623 UDP, which, again is for the IPMI network protocol.</p>
+<p>IPMI communicates over port 623 UDP. System that use the IPMI protocol are called Baseboard Management Controllers (<em>BMCs</em>). BMCs are typically implemented as embedded ARM systems running Linux, and connected directly to the host’s motherboard. BMCs are built into many motherboards but can also be added to a system as a PCI card. Most servers either come with a BMC or support adding a BMC. The most common BMCs you often see during internal pentests are HP iLO, Dell DRAC, and Supermicro IPMI. If you can access a BMC during an assessment, you would gain full access to the host motherboard and be able to monitor, reboot, power off, or even reinstall the host OS. Gaining access to a BMC is nearly equivalent to physical access to a system. Many BMCs expose a web-based management console, some sort of command-line remote access protocol such as Telnet or SSH, and the port 623 UDP, which, again is for the IPMI network protocol.</p>
 <p>During internal pentests, you often find BMCs where the admins have not changed the default password. Some unique default passwords to keep are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Product</th><th>Username</th><th>Password</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Product</th><th>Username</th><th>Password</th></tr>
+</thead>
+<tbody>
 <tr><td>Dell iDRAC</td><td>root</td><td>calvin</td></tr>
 <tr><td>HP iLO</td><td>Administrator</td><td>randomized 8-character string consisting of numbers and uppercase letters</td></tr>
 <tr><td>Supermicro IPMI</td><td>ADMIN</td><td>ADMIN</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h5 id="nmap-8"><a class="header" href="#nmap-8">Nmap</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo nmap -sU --script ipmi-version -p 623 ilo.inlanfreight.local
@@ -2526,7 +2560,7 @@ msf6 auxiliary(scanner/ipmi/ipmi_version) &gt; run
 [*] Scanned 1 of 1 hosts (100% complete)
 [*] Auxiliary module execution completed
 </code></pre>
-<p>To retrieve IPMI hashes, you can use the Metasploit "IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval" module.</p>
+<p>To retrieve IPMI hashes, you can use the Metasploit “IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval” module.</p>
 <pre><code class="language-bash">msf6 &gt; use auxiliary/scanner/ipmi/ipmi_dumphashes 
 msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; set rhosts 10.129.42.195
 msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; show options 
@@ -2555,7 +2589,7 @@ msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) &gt; run
 </code></pre>
 <h3 id="secure-shell-ssh"><a class="header" href="#secure-shell-ssh">Secure Shell (<em>SSH</em>)</a></h3>
 <h4 id="intro-11"><a class="header" href="#intro-11">Intro</a></h4>
-<p>... enables two computers to establish an encrypted and direct connection within a possibly insecure network on the standard port 22. This is necessary to prevent third parties from intercepting the data and thus intercepting sensitive data. The SSH server can also be configured to only allow connections from specific clients. An advantage of SSH is that the protocol runs on all common OS. Since it is originally a Unix application, it is also implemented natively on all Linux distros and MacOS. SSH can also be used on Windows, provided you install an appropriate program. The well-known OpenBSD SSH server on Linux distros is an open-source fork of the original and commercial SSH server from SSH Communication Security. Accordingly, there are two competing protocols:</p>
+<p>… enables two computers to establish an encrypted and direct connection within a possibly insecure network on the standard port 22. This is necessary to prevent third parties from intercepting the data and thus intercepting sensitive data. The SSH server can also be configured to only allow connections from specific clients. An advantage of SSH is that the protocol runs on all common OS. Since it is originally a Unix application, it is also implemented natively on all Linux distros and MacOS. SSH can also be used on Windows, provided you install an appropriate program. The well-known OpenBSD SSH server on Linux distros is an open-source fork of the original and commercial SSH server from SSH Communication Security. Accordingly, there are two competing protocols:</p>
 <ul>
 <li>SSH-1</li>
 <li>SSH-2</li>
@@ -2632,7 +2666,7 @@ cry0l1t3@10.129.14.132's password:
 </code></pre>
 <h3 id="rsync"><a class="header" href="#rsync">Rsync</a></h3>
 <h4 id="intro-12"><a class="header" href="#intro-12">Intro</a></h4>
-<p>... is a fast and efficient tool for locally and remotely copying files. It can be used to copy files locally on a given machine and to/from remote hosts. It is highly versatile and well-known for its delta-transfer algorithm. This algorithm reduces the amount of data transmitted over the network when a version of the file already exists on the destination host. It does this by sending only the difference between the source files and the older version of the files that reside on the destination server. It is often used for backups and mirroring. It finds files that need to be transferred by looking at files that have changed in size or the last modified time. By default, it uses port 873 and can be configured to use SSH for secure file transfer by piggybacking on top of an established SSH server connection.</p>
+<p>… is a fast and efficient tool for locally and remotely copying files. It can be used to copy files locally on a given machine and to/from remote hosts. It is highly versatile and well-known for its delta-transfer algorithm. This algorithm reduces the amount of data transmitted over the network when a version of the file already exists on the destination host. It does this by sending only the difference between the source files and the older version of the files that reside on the destination server. It is often used for backups and mirroring. It finds files that need to be transferred by looking at files that have changed in size or the last modified time. By default, it uses port 873 and can be configured to use SSH for secure file transfer by piggybacking on top of an established SSH server connection.</p>
 <h4 id="enum-12"><a class="header" href="#enum-12">Enum</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo nmap -sV -p 873 127.0.0.1
 
@@ -2670,7 +2704,7 @@ total size is 0  speedup is 0.00
 </code></pre>
 <h3 id="r-services"><a class="header" href="#r-services">R-Services</a></h3>
 <h4 id="intro-13"><a class="header" href="#intro-13">Intro</a></h4>
-<p>... are a suite of services hosted to enable remote access or issue commands between Unix hosts over TCP/IP. Initially developed by the Computer Systems Research Group (<em>CSRG</em>) at the University of California, Berkeley, r-services were the de facto standard for remote access between Unix OS until they were replaced by the SSH protocols and commands due to inherent security flaws built into them. Much like telnet, r-services transmit information from client to server over the network in an unencrypted format, making it possible for attackers to intercept network traffic by performing MITM attacks.</p>
+<p>… are a suite of services hosted to enable remote access or issue commands between Unix hosts over TCP/IP. Initially developed by the Computer Systems Research Group (<em>CSRG</em>) at the University of California, Berkeley, r-services were the de facto standard for remote access between Unix OS until they were replaced by the SSH protocols and commands due to inherent security flaws built into them. Much like telnet, r-services transmit information from client to server over the network in an unencrypted format, making it possible for attackers to intercept network traffic by performing MITM attacks.</p>
 <p>R-services span across the ports 512, 513, and 513 and are only accessible through a suite of programs known as r-commands. They are most commonly used by commercial OS such as Solaris, HP-UX, and AIX. While less common nowadays, you do run into them from time to time during your internal pentests so it is worth understanding how to approach them.</p>
 <p>The r-commands suite consists of the following programs:</p>
 <ul>
@@ -2732,7 +2766,7 @@ htb-student     10.0.17.5:console          Dec 2 19:57     2:25
 </code></pre>
 <h3 id="remote-desktop-protocol-rdp"><a class="header" href="#remote-desktop-protocol-rdp">Remote Desktop Protocol (<em>RDP</em>)</a></h3>
 <h4 id="intro-14"><a class="header" href="#intro-14">Intro</a></h4>
-<p>... is a protocol developed by Microsoft for remote access to a computer running the Windows OS. This protocol allows display and control commands to be transmitted via the GUI encrypted over IP networks. RDP works at the application layer in the TCP/IP reference model, typically utilizing TCP port 3389 as the transport protocol. However, the connectionless UDP protocol can use port 3389 also for remote administration.</p>
+<p>… is a protocol developed by Microsoft for remote access to a computer running the Windows OS. This protocol allows display and control commands to be transmitted via the GUI encrypted over IP networks. RDP works at the application layer in the TCP/IP reference model, typically utilizing TCP port 3389 as the transport protocol. However, the connectionless UDP protocol can use port 3389 also for remote administration.</p>
 <p>For an RDP session to be established, both the network firewall and the firewall on the server must allow connections from the outside. If Network Address Translation (<em>NAT</em>) is used on the route between client and server, as is often the case with internet connections, the remote computer needs the public IP address to reach the server. In addition, port forwarding must be set up on the NAT router in the direction of the server.</p>
 <p>RDP has handled Transport Layer Security (<em>TLS/SSL</em>) since Windows Vista, which means that all data, and especially the login process, is protected in the network by its good encryption. However, many Windows systems do not insist on this but still accept inadequate encryption via RDP Security. Nevertheless, even with this, an attacker is still far from being locked out because the identity-providing certificates are merely self-signed by default. This means that the client cannot distinguish a genuine certificate from a forged one and generates a certificate warning for the user.</p>
 <p>The Remote Desktop service is installed by default on Windows servers and does not require additional external applications. This service can be activated using the Server Manager and comes with the default setting to allow connections to the service only to hosts with Network Level Authentication (<em>NLA</em>).</p>
@@ -2850,7 +2884,7 @@ Reading '/root/.cpan/sources/authors/01mailrc.txt.gz'
 ............................................................................DONE
 ...SNIP...
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ git clone https://github.com/CiscoCXSecurity/rdp-sec-check.git &amp;&amp; cd rdp-sec-check
 d41y@htb[/htb]$ ./rdp-sec-check.pl 10.129.201.248
 
@@ -2938,7 +2972,7 @@ Do you trust the above certificate? (Y/T/N) y
 </code></pre>
 <h3 id="windows-remote-management-winrm"><a class="header" href="#windows-remote-management-winrm">Windows Remote Management (<em>WinRM</em>)</a></h3>
 <h4 id="intro-15"><a class="header" href="#intro-15">Intro</a></h4>
-<p>... is a simple Windows integrated remote management protocol based on the command line. WinRM uses the Simple Object Access Protocol (<em>SOAP</em>) to establish connections to remote hosts and their applications. Therefore, WinRM must be explicitly enabled and configured starting with Windows 10. WinRM relies on TCP ports 5985 and 5986 for communication, with the last port 5986 using HTTPS, as ports 80 and 443 were previously used for this task. However, since port 80 was mainly blocked for security reasons, the newer ports 5985 and 5986 are used today.</p>
+<p>… is a simple Windows integrated remote management protocol based on the command line. WinRM uses the Simple Object Access Protocol (<em>SOAP</em>) to establish connections to remote hosts and their applications. Therefore, WinRM must be explicitly enabled and configured starting with Windows 10. WinRM relies on TCP ports 5985 and 5986 for communication, with the last port 5986 using HTTPS, as ports 80 and 443 were previously used for this task. However, since port 80 was mainly blocked for security reasons, the newer ports 5985 and 5986 are used today.</p>
 <p>Another component that fits WinRM for administration is Windows Remote Shell (<em>WinRS</em>), which lets you execute arbitrary commands on the remote system. The program is even included on Windows 7 by default. Thus, with WinRM, it is possible to execute a remote command on another server.</p>
 <p>Services like remote sessions using PowerShell and event log merging require WinRM. It is enabled by default starting with the Windows Server 2012 version, but it must be configured for older server versions and clients, and the necessary firewall exceptions created.</p>
 <h4 id="enum-15"><a class="header" href="#enum-15">Enum</a></h4>
@@ -2957,7 +2991,7 @@ Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 7.34 seconds
 </code></pre>
-<p>If you want to find out whether one or more remote servers can be reached via WinRM, you can easily do this with the help of PowerShell. The Test-WsMan cmdlet is responsible for this, and the host's name in question is passed to it. In Linux-based environments, you can use the tool called evil-winrm, another pentesting tool designed to interact with WinRM.</p>
+<p>If you want to find out whether one or more remote servers can be reached via WinRM, you can easily do this with the help of PowerShell. The Test-WsMan cmdlet is responsible for this, and the host’s name in question is passed to it. In Linux-based environments, you can use the tool called evil-winrm, another pentesting tool designed to interact with WinRM.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ evil-winrm -i 10.129.201.248 -u Cry0l1t3 -p P455w0rD!
 
 Evil-WinRM shell v3.3
@@ -2972,7 +3006,7 @@ Info: Establishing connection to remote endpoint
 </code></pre>
 <h3 id="windows-management-instrumentation-wmi"><a class="header" href="#windows-management-instrumentation-wmi">Windows Management Instrumentation (<em>WMI</em>)</a></h3>
 <h4 id="intro-16"><a class="header" href="#intro-16">Intro</a></h4>
-<p>... is Microsoft's implementation and also an extension of the Common Information Model (<em>CIM</em>), core functionality of the standardized Web-Based Enterprise Management (<em>WBEM</em>) for the Windows platform. WMI allows read and write access to almost all settings on Windows systems. Understandably, this makes it the most critical interface in the Windows environment for the administration and remote maintenance of Windows computers, regardless of whether they are PCs or servers. WMI is typically accessed via PowerShell, VBScript, or the Windows Management Instrumentation Console (<em>WMIC</em>). WMI is not a single program but consists of several programs and various databases, also known as repositories.</p>
+<p>… is Microsoft’s implementation and also an extension of the Common Information Model (<em>CIM</em>), core functionality of the standardized Web-Based Enterprise Management (<em>WBEM</em>) for the Windows platform. WMI allows read and write access to almost all settings on Windows systems. Understandably, this makes it the most critical interface in the Windows environment for the administration and remote maintenance of Windows computers, regardless of whether they are PCs or servers. WMI is typically accessed via PowerShell, VBScript, or the Windows Management Instrumentation Console (<em>WMIC</em>). WMI is not a single program but consists of several programs and various databases, also known as repositories.</p>
 <h4 id="enum-16"><a class="header" href="#enum-16">Enum</a></h4>
 <p>The initialization of the WMI communication always takes place on TCP port 135, and after successful establishment of the connection, the communication is moved to a random port. For example, the program wmiexec.py from the Impacket toolkit can be used for this.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ /usr/share/doc/python3-impacket/examples/wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
@@ -2981,22 +3015,18 @@ Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
 
 [*] SMBv3.0 dialect used
 ILF-SQL-01
-```&lt;!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --&gt;
-
-&lt;div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
-
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../attack/initial_access/attacking_common_services/attacking_sql.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../attack/initial_access/password_attacks/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -3006,15 +3036,21 @@ ILF-SQL-01
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../attack/initial_access/attacking_common_services/attacking_sql.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../attack/initial_access/password_attacks/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -3034,22 +3070,20 @@ ILF-SQL-01
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/pagetoc.js"></script>
 
 
 

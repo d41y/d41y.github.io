@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="shortcut icon" href="../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -538,7 +541,7 @@ esac
 <ol start="2">
 <li>Identify network range for the specified IP address(es)</li>
 </ol>
-<p>Here you have created a function that makes a "whois" query for each IP address and displays the line for the reserved network range, and stores it in the CIDR.txt.</p>
+<p>Here you have created a function that makes a “whois” query for each IP address and displays the line for the reserved network range, and stores it in the CIDR.txt.</p>
 <ol start="3">
 <li>Ping discovered IP address(es)</li>
 </ol>
@@ -598,7 +601,7 @@ else
 	The "domain" variable serves as the alias for the given argument 
 finish the if-condition
 </code></pre>
-<p>By default, an If-Else condition can contain only a single "If", as shown in the next example.</p>
+<p>By default, an If-Else condition can contain only a single “If”, as shown in the next example.</p>
 <pre><code class="language-bash">#!/bin/bash
 
 value=$1
@@ -688,7 +691,7 @@ fi
 
 &lt;SNIP&gt;
 </code></pre>
-<p>There are several ways how you can execute your script. However, you must first set the script's execution privileges before executing it with the interpreter defined in it.</p>
+<p>There are several ways how you can execute your script. However, you must first set the script’s execution privileges before executing it with the interpreter defined in it.</p>
 <pre><code class="language-bash"># Set Execution Privileges
 d41y@htb[/htb]$ chmod +x cidr.sh
 
@@ -709,17 +712,23 @@ Usage:
 	cidr.sh &lt;domain&gt;
 </code></pre>
 <h4 id="special-variables"><a class="header" href="#special-variables">Special Variables</a></h4>
-<p>... use the Internal Field Separator (<em>IFS</em>) to identify when an argument ends and the next begins. Bash provides various special variables that assist while scripting. Some of these variables are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Special Variable</th><th>Description</th></tr></thead><tbody>
+<p>… use the Internal Field Separator (<em>IFS</em>) to identify when an argument ends and the next begins. Bash provides various special variables that assist while scripting. Some of these variables are:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Special Variable</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>$#</code></td><td>This variable holds the number of arguments passed to the script.</td></tr>
 <tr><td><code>$@</code></td><td>This variable can be used to retrieve the list of command-line arguments.</td></tr>
 <tr><td><code>$n</code></td><td>Each command-line argument can be selectively retrieved using its position. For example, the first argument is found at <code>$1</code>.</td></tr>
 <tr><td><code>$$</code></td><td>The process ID of the currently executing process.</td></tr>
-<tr><td><code>$?</code></td><td>The exit status of the script. This variable is useful to determine a command's success. The value 0 represents successful execution, while 1 is a result of a failure.</td></tr>
-</tbody></table>
+<tr><td><code>$?</code></td><td>The exit status of the script. This variable is useful to determine a command’s success. The value 0 represents successful execution, while 1 is a result of a failure.</td></tr>
+</tbody>
+</table>
 </div>
 <h4 id="variables"><a class="header" href="#variables">Variables</a></h4>
-<p>You also see at the end of the if-else loop that you assign the value of the first argument to the variable called "domain". The assignment of variables takes place without the dollar sign. The dollar sign is only intended to allow this variable's corresponding value to be used in other code sections. When assigning variables, there must be no spaces between the names and values.</p>
+<p>You also see at the end of the if-else loop that you assign the value of the first argument to the variable called “domain”. The assignment of variables takes place without the dollar sign. The dollar sign is only intended to allow this variable’s corresponding value to be used in other code sections. When assigning variables, there must be no spaces between the names and values.</p>
 <pre><code class="language-bash">&lt;SNIP&gt;
 else
 	domain=$1
@@ -771,14 +780,20 @@ www.inlanefreight.com ftp.inlanefreight.com vpn.inlanefreight.com
 </ul>
 <h4 id="string-operators"><a class="header" href="#string-operators">String Operators</a></h4>
 <p>If you compare strings, then you know what you would like to have in the corresponding value.</p>
-<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>==</code></td><td>is equal to</td></tr>
 <tr><td><code>!=</code></td><td>is not equal to</td></tr>
 <tr><td><code>&lt;</code></td><td>is less than in ASCII alphabetical order</td></tr>
 <tr><td><code>&gt;</code></td><td>is greater than in ASCII alphabetical order</td></tr>
 <tr><td><code>-z</code></td><td>if the string is empty</td></tr>
 <tr><td><code>-n</code></td><td>if the string is not null</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>It is important to note here that you put the variable for the given argument in double quotes. This tells Bash that the content of the variable should be handled as a string. Otherwise, you would get an error.</p>
 <pre><code class="language-bash">#!/bin/bash
@@ -804,14 +819,20 @@ fi
 </code></pre>
 <h4 id="integer-operators"><a class="header" href="#integer-operators">Integer Operators</a></h4>
 <p>Comparing integer numbers can be very useful for you if know what values you want to compare. Accordingly, you define the next steps and commands how the script should handle the corresponding value.</p>
-<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>-eq</code></td><td>is equal to</td></tr>
 <tr><td><code>-ne</code></td><td>is not equal to</td></tr>
 <tr><td><code>-lt</code></td><td>is less than</td></tr>
 <tr><td><code>-le</code></td><td>is less than or equal to</td></tr>
 <tr><td><code>-gt</code></td><td>is greater than</td></tr>
 <tr><td><code>-ge</code></td><td>is greater than or equal to</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <pre><code class="language-bash">#!/bin/bash
 
@@ -840,7 +861,7 @@ fi
 | <code>-L</code> | tests if it is a symbolic link |
 | <code>-N</code> | checks if the file was modified after it was last read |
 | <code>-O</code> | if the current user owns the file |
-| <code>-G</code> | if the file's group id matches the current user's |
+| <code>-G</code> | if the file’s group id matches the current user’s |
 | <code>-s</code> | tests if the file has a size greater than 0 |
 | <code>-r</code> | tests if the file has read permissions |
 | <code>-w</code> | tests if the file has write permissions |
@@ -859,7 +880,7 @@ else
 fi
 </code></pre>
 <h4 id="boolean-and-logical-operators"><a class="header" href="#boolean-and-logical-operators">Boolean and Logical Operators</a></h4>
-<p>You get a boolean value "false" or "true" as a result with logical operators. Bash gives you the possibility to compare strings by using double square brackets. To get these boolean values, you can use the string operators. Whether the comparison matches or not, you get the boolean value "false" or "true".</p>
+<p>You get a boolean value “false” or “true” as a result with logical operators. Bash gives you the possibility to compare strings by using double square brackets. To get these boolean values, you can use the string operators. Whether the comparison matches or not, you get the boolean value “false” or “true”.</p>
 <pre><code class="language-bash">#!/bin/bash
 
 # Check the boolean value
@@ -880,11 +901,17 @@ fi
 </code></pre>
 <h4 id="logical-operators"><a class="header" href="#logical-operators">Logical Operators</a></h4>
 <p>With logical operators, you can define several conditions within one. This means that all the conditions you define must match before the corresponding code can be executed.</p>
-<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>!</code></td><td>logical negation NOT</td></tr>
 <tr><td><code>&amp;&amp;</code></td><td>logical AND</td></tr>
 <tr><td><code>||</code></td><td>logical OR</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <pre><code class="language-bash">#!/bin/bash
 
@@ -911,7 +938,12 @@ fi
 </code></pre>
 <h3 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h3>
 <p>In Bash, you have seven different arithemtic operators you can work with. These are used to perform different mathematical operations or to modify certain integers.</p>
-<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>+</code></td><td>Addition</td></tr>
 <tr><td><code>-</code></td><td>Subtraction</td></tr>
 <tr><td><code>*</code></td><td>Multiplication</td></tr>
@@ -919,7 +951,8 @@ fi
 <tr><td><code>%</code></td><td>Modulus</td></tr>
 <tr><td><code>variable++</code></td><td>Increase the value of the variable by 1</td></tr>
 <tr><td><code>variable--</code></td><td>Decrease the value of the variable by 1</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>You can summarize all these operators in a small script:</p>
 <pre><code class="language-bash">#!/bin/bash
@@ -961,7 +994,7 @@ echo ${#htb}
 
 10
 </code></pre>
-<p>If you look at your CIDR.sh script, you will see that you have used the increase and decrease operators several times. This ensures that the while loop runs and pings the hosts while the variable "stat" has a value of 1. If the ping command ends with code 0, you get a message that the host is up and the "stat" variable, as well as the variables "hosts_up" and "hosts_total" get changed.</p>
+<p>If you look at your CIDR.sh script, you will see that you have used the increase and decrease operators several times. This ensures that the while loop runs and pings the hosts while the variable “stat” has a value of 1. If the ping command ends with code 0, you get a message that the host is up and the “stat” variable, as well as the variables “hosts_up” and “hosts_total” get changed.</p>
 <pre><code class="language-bash">&lt;SNIP&gt;
 	echo -e "\nPinging host(s):"
 	for host in $cidr_ips
@@ -1006,7 +1039,7 @@ case $opt in
 	"*") exit 0 ;;
 esac
 </code></pre>
-<p>The first echo lines serve as a display menu for the options available to you. With the read command, the line with "Select your option:" is displayed, and the additional option <code>-p</code> ensures that you input remains on the same line. Your input is stored in the variable <code>opt</code>, which you then use to execute the corresponding functions with the case statement. Depending on the number you enter, the case statement determines which functions are executed.</p>
+<p>The first echo lines serve as a display menu for the options available to you. With the read command, the line with “Select your option:” is displayed, and the additional option <code>-p</code> ensures that you input remains on the same line. Your input is stored in the variable <code>opt</code>, which you then use to execute the corresponding functions with the case statement. Depending on the number you enter, the case statement determines which functions are executed.</p>
 <h4 id="output-control"><a class="header" href="#output-control">Output Control</a></h4>
 <pre><code class="language-bash">&lt;SNIP&gt;
 
@@ -1103,9 +1136,9 @@ function network_range {
 
 &lt;SNIP&gt;
 </code></pre>
-<p>For each IP address from the array "ipaddr" you make a "whois" request, whose output is filtered for "NetRange" and "CIDR". This helps you to determine which address range your target is located in. You can use this information to search for additional hosts during a pentest, if approved by the client. The results that you receive are displayed accordingly and stored in the file "CIDR.txt".</p>
+<p>For each IP address from the array “ipaddr” you make a “whois” request, whose output is filtered for “NetRange” and “CIDR”. This helps you to determine which address range your target is located in. You can use this information to search for additional hosts during a pentest, if approved by the client. The results that you receive are displayed accordingly and stored in the file “CIDR.txt”.</p>
 <h4 id="while-loops"><a class="header" href="#while-loops">While Loops</a></h4>
-<p>The while loop is conceptually simple and follows the following principle: "A statement is executed as long as a condition is fulfilled (<em>true</em>)".</p>
+<p>The while loop is conceptually simple and follows the following principle: “A statement is executed as long as a condition is fulfilled (<em>true</em>)”.</p>
 <p>You can also combine loops and merge their execution with different values. It is important to note that the excessive combination of several loops in each other can make the code very unclear and lead to errors that can be hard to find and follow.</p>
 <pre><code class="language-bash">&lt;SNIP&gt;
 		stat=1
@@ -1126,7 +1159,7 @@ function network_range {
 		done
 &lt;SNIP&gt;
 </code></pre>
-<p>The while loops also work with conditions like if-else. A while loop needs some sort of a counter to orientate itself when it has to stop executing the commands it contains. Otherwise, this leads to an endless loop. Such a counter can be a variable that you have declared with a specific value or boolean value. While loops run while the boolean value is true. Besides the counter, you can also use the command "break", which interrupts the loop when reaching this command like in the following example:</p>
+<p>The while loops also work with conditions like if-else. A while loop needs some sort of a counter to orientate itself when it has to stop executing the commands it contains. Otherwise, this leads to an endless loop. Such a counter can be a variable that you have declared with a specific value or boolean value. While loops run while the boolean value is true. Besides the counter, you can also use the command “break”, which interrupts the loop when reaching this command like in the following example:</p>
 <pre><code class="language-bash">#!/bin/bash
 
 counter=0
@@ -1154,8 +1187,8 @@ Counter: 3
 Counter: 4
 </code></pre>
 <h4 id="until-loops"><a class="header" href="#until-loops">Until Loops</a></h4>
-<p>There is also the until loop, which is relatively rare. Nevertheless, the until loop works precisely like the while loop, but with the difference: "The code inside a loop is executed as long as the particular condition is false".</p>
-<p>The other way is to let the loop run until the desired value is reached. The "until" loops are very well suited for this. This type of loop works similarily to the "while" loop but with the difference that it runs until the boolean value is false.</p>
+<p>There is also the until loop, which is relatively rare. Nevertheless, the until loop works precisely like the while loop, but with the difference: “The code inside a loop is executed as long as the particular condition is false”.</p>
+<p>The other way is to let the loop run until the desired value is reached. The “until” loops are very well suited for this. This type of loop works similarily to the “while” loop but with the difference that it runs until the boolean value is false.</p>
 <pre><code class="language-bash">#!/bin/bash
 
 counter=0
@@ -1182,7 +1215,7 @@ Counter: 10
 </code></pre>
 <h3 id="flow-control---branches"><a class="header" href="#flow-control---branches">Flow Control - Branches</a></h3>
 <h4 id="case-statements"><a class="header" href="#case-statements">Case Statements</a></h4>
-<p>... are also known as switch-case statements in other languages. The main difference between if-else and switch-case is that if-else constructs allow you to check any boolean expression, while switch-case always compares only the variable with the exact value. Therefore, the same condition as for if-else, such as "greater than", are not allowed for switch-case. The syntax for the switch-case statements looks like this:</p>
+<p>… are also known as switch-case statements in other languages. The main difference between if-else and switch-case is that if-else constructs allow you to check any boolean expression, while switch-case always compares only the variable with the exact value. Therefore, the same condition as for if-else, such as “greater than”, are not allowed for switch-case. The syntax for the switch-case statements looks like this:</p>
 <pre><code class="language-bash">case &lt;expression&gt; in
 	pattern_1 ) statements ;;
 	pattern_2 ) statements ;;
@@ -1222,7 +1255,7 @@ esac
 	&lt;commands&gt;
 }
 </code></pre>
-<p>You can choose the method to define a function that is most comfortable for you. In you CIDR.sh script, you used the first method because it is easier to read with the keyword "function".</p>
+<p>You can choose the method to define a function that is most comfortable for you. In you CIDR.sh script, you used the first method because it is easier to read with the keyword “function”.</p>
 <pre><code class="language-bash">&lt;SNIP&gt;
 # Identify Network range for the specified IP address(es)
 function network_range {
@@ -1248,7 +1281,7 @@ esac
 </code></pre>
 <h4 id="parameter-passing"><a class="header" href="#parameter-passing">Parameter Passing</a></h4>
 <p>Such functions should be designed so that they can be used with a fixed structure of the values or at least only with a fixed formatl. The parameters are optional, and therefore you can call the function without parameters. In principle, the same applies to the passed parameters passed to a shell script. These are $1-$9, or $variable. Each function has its own set of parameters. So they do not collide with those of other functions or the parameters of the shell script.</p>
-<p>An important difference between bash scripts and other programming languages is that all defined variables are always processed globally unless otherwise declared by "local". This means that the first time you have defined a variable in a function, you will call it in your main script. Passing the parameters to the functions is done the same way as you passed the arguments to your script and looks like this:</p>
+<p>An important difference between bash scripts and other programming languages is that all defined variables are always processed globally unless otherwise declared by “local”. This means that the first time you have defined a variable in a function, you will call it in your main script. Passing the parameters to the functions is done the same way as you passed the arguments to your script and looks like this:</p>
 <pre><code class="language-bash">#!/bin/bash
 
 function print_pars {
@@ -1267,16 +1300,22 @@ First parameter Second parameter Third parameter
 </code></pre>
 <h4 id="return-values"><a class="header" href="#return-values">Return Values</a></h4>
 <p>When you start a new process, each child process returns a return code to the parent process at its termination, informing it of the status of the execution. This information is used to determine whether the process ran successfully or whether specific errors occured. Based on this information, the parent process can decide on further program flow.</p>
-<div class="table-wrapper"><table><thead><tr><th>Return Code</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Return Code</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>1</td><td>General errors</td></tr>
 <tr><td>2</td><td>Misuse of shell builtins</td></tr>
 <tr><td>126</td><td>Command invoked cannot execute</td></tr>
 <tr><td>127</td><td>Command not found</td></tr>
 <tr><td>128</td><td>Invalid argument to exit</td></tr>
-<tr><td>128+n</td><td>Fatal error signal "n"</td></tr>
+<tr><td>128+n</td><td>Fatal error signal “n”</td></tr>
 <tr><td>130</td><td>Script terminated by Ctrl+C</td></tr>
 <tr><td>255\*</td><td>Exit status out of range</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>To get the value of a function back, you can use several methods like return, echo, or a variable. In the next example, you will see how to use <code>$?</code> to read the return code, how to pass the arguments to the function and how to assign the result to a variable.</p>
 <pre><code class="language-bash">#!/bin/bash
@@ -1356,22 +1395,18 @@ Usage:
 + echo -e '\tCIDR.sh &lt;domain&gt;'
 	CIDR.sh &lt;domain&gt;
 + exit 1
-```&lt;!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --&gt;
-
-&lt;div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
-
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../general/programming/assembly/assembly.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../general/programming/python/python.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                            <a rel="next prefetch" href="../../general/programming/cmd.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1381,15 +1416,21 @@ Usage:
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../general/programming/assembly/assembly.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../general/programming/python/python.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                    <a rel="next prefetch" href="../../general/programming/cmd.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -1409,22 +1450,20 @@ Usage:
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/pagetoc.js"></script>
 
 
 

@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="shortcut icon" href="../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -414,26 +417,43 @@
 <h1 id="linux-fundamentals"><a class="header" href="#linux-fundamentals">Linux Fundamentals</a></h1>
 <h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
 <h3 id="components"><a class="header" href="#components">Components</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Bootloader</td><td>a piece of code that runs to guide the booting process to start the OS</td></tr>
-<tr><td>OS Kernel</td><td>the kernel is the main component of an OS; it manages the resources for system's I/O devices at the hardware level</td></tr>
+<tr><td>OS Kernel</td><td>the kernel is the main component of an OS; it manages the resources for system’s I/O devices at the hardware level</td></tr>
 <tr><td>Daemons</td><td>background services; their purposes is to ensure that key functions such as scheduling, printing, and multimedia are working correctly; these small programs load after you booted or log into the computer</td></tr>
 <tr><td>OS Shell</td><td>the OS shell or the command language interpreter is the interface between the OS and the user; this interface allows the user to tell the OS what to do</td></tr>
-<tr><td>Graphics Server</td><td>provides a graphical sub-system called "X" or "X-Server" that allows graphical programs to run locally or remotely on the X-windowing system</td></tr>
+<tr><td>Graphics Server</td><td>provides a graphical sub-system called “X” or “X-Server” that allows graphical programs to run locally or remotely on the X-windowing system</td></tr>
 <tr><td>Windows Manager</td><td>also known as a graphical user interface (<em>GUI</em>); there are many options including GNOME, KDE, MATE, Unity, and Cinnamon; a desktop environment usually has several applications, including file and web browser; these allow the user to access and manage the essential and frequently accessed features and services of an OS</td></tr>
 <tr><td>Utilities</td><td>apps or utilities are programs that perform particular functions for the user or another program</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="architecture"><a class="header" href="#architecture">Architecture</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Layer</th><th>Description</th></tr></thead><tbody>
-<tr><td>Hardware</td><td>peripheral devices such as the system's RAM, hard drive, CPU and others</td></tr>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Layer</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Hardware</td><td>peripheral devices such as the system’s RAM, hard drive, CPU and others</td></tr>
 <tr><td>Kernel</td><td>the core of the linux OS whose function is to virtualize and control common computer hardware resources like CPU, allocated memory, accessed data, and others; the kernel gives each process its own virtual resources and prevents/mitigates conflicts between processes</td></tr>
-<tr><td>Shell</td><td>a command-line interface, also known as a shell that a user can enter commands into to execute the kernel's functions</td></tr>
-<tr><td>System Utility</td><td>makes available to the user all of the OS's functionality</td></tr>
-</tbody></table>
+<tr><td>Shell</td><td>a command-line interface, also known as a shell that a user can enter commands into to execute the kernel’s functions</td></tr>
+<tr><td>System Utility</td><td>makes available to the user all of the OS’s functionality</td></tr>
+</tbody>
+</table>
 </div>
 <h3 id="file-system-hierarchy"><a class="header" href="#file-system-hierarchy">File System Hierarchy</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Path</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Path</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>/</code></td><td>the top-level directory is the root filesystem and contains all of the files required to boot the OS before other filesystems are mounted, as well as the files required to boot the other filesystems; after boot, all of the other filesystems are mounted at standard mount points as subdirectories of the root</td></tr>
 <tr><td><code>/bin</code></td><td>contains essential command binaries</td></tr>
 <tr><td><code>/boot</code></td><td>consists of the static bootloader, kernel executable, and files required to boot the Linux OS</td></tr>
@@ -449,11 +469,12 @@
 <tr><td><code>/tmp</code></td><td>the OS and many programs use this directory to store temporary files; this directory is generally cleared upon system boot and may be deleted at other times without any warning</td></tr>
 <tr><td><code>/usr</code></td><td>contains executables, libraries, man files, etc.</td></tr>
 <tr><td><code>/var</code></td><td>this directory contains variable data files such as log files, email in-boxes, web app related files, cron files, and more</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="the-shell"><a class="header" href="#the-shell">The Shell</a></h2>
 <h3 id="prompt-description"><a class="header" href="#prompt-description">Prompt Description</a></h3>
-<p>The bash prompt is simple to understand. By default, it shows information like your username, your computer's name, and the folder/directory you're currently working in. It's a line of text that appears on the screen to let you know the system is ready for you. The prompt appears on a new line, and the cursor is placed right after it, waiting for you to type a command.</p>
+<p>The bash prompt is simple to understand. By default, it shows information like your username, your computer’s name, and the folder/directory you’re currently working in. It’s a line of text that appears on the screen to let you know the system is ready for you. The prompt appears on a new line, and the cursor is placed right after it, waiting for you to type a command.</p>
 <h4 id="unprivileged"><a class="header" href="#unprivileged">Unprivileged</a></h4>
 <pre><code class="language-bash">$
 </code></pre>
@@ -461,12 +482,12 @@
 <pre><code class="language-bash">#
 </code></pre>
 <h4 id="ps1"><a class="header" href="#ps1">PS1</a></h4>
-<p>The <code>PS1</code> variable in Linux systems controls how your command prompt looks in the terminal. It's like a template that defines the text you see each time the system is ready for you to type a command. By customizing the PS1 variable, you can change the prompt to display information such as your username, your computer's name, the current folder you're in, or even add colors and special chacters. This allows you to personalize the command-line interface to make it more informative or visually appealing.</p>
+<p>The <code>PS1</code> variable in Linux systems controls how your command prompt looks in the terminal. It’s like a template that defines the text you see each time the system is ready for you to type a command. By customizing the PS1 variable, you can change the prompt to display information such as your username, your computer’s name, the current folder you’re in, or even add colors and special chacters. This allows you to personalize the command-line interface to make it more informative or visually appealing.</p>
 <p><a href="https://bash-prompt-generator.org/">This</a> can help you.</p>
 <p>Further customization can be done by editing <code>.bashrc</code>.</p>
 <h3 id="getting-help"><a class="header" href="#getting-help">Getting Help</a></h3>
 <h4 id="man"><a class="header" href="#man">man</a></h4>
-<p>... displays the manual pages for commands and provides detailed information about their usage.</p>
+<p>… displays the manual pages for commands and provides detailed information about their usage.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ man ls
 
 ...
@@ -514,11 +535,13 @@ visudo (8)           - edit the sudoers file
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>You can get a detailed explanation of each shell command with this <a href="https://explainshell.com/">tool</a>.</p>
 </div>
+
 <h3 id="system-information"><a class="header" href="#system-information">System Information</a></h3>
 <h4 id="hostname"><a class="header" href="#hostname">hostname</a></h4>
-<p>... prints the name of the computer that you are logged into.</p>
+<p>… prints the name of the computer that you are logged into.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ hostname
 
 nixfund
@@ -587,7 +610,7 @@ Linux box 4.15.0-99-generic #100-Ubuntu SMP Wed Apr 22 20:32:56 UTC 2020 x86_64 
 <h2 id="workflow"><a class="header" href="#workflow">Workflow</a></h2>
 <h3 id="editing-files"><a class="header" href="#editing-files">Editing Files</a></h3>
 <h4 id="vimtutor"><a class="header" href="#vimtutor">vimtutor</a></h4>
-<p>... to practice and get familiar with the editor.</p>
+<p>… to practice and get familiar with the editor.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ vimtutor
 
 ...
@@ -798,7 +821,12 @@ Mai 14 02:04:49 inlane systemd[1]: Stopped OpenBSD Secure Shell server.
 11) SIGRTMAX-1  64) SIGRTMAX
 </code></pre>
 <p>Most commonly used signals are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Signal</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Signal</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>1</td><td>SIGHUP - is sent to a process when the terminal that controls it is closed</td></tr>
 <tr><td>2</td><td>SIGINT - sent when a user presses <code>[Ctrl] + C</code> in the controlling terminal to interrupt a process</td></tr>
 <tr><td>3</td><td>SIGQUIT - sent when a user presses <code>[Ctrl] + D</code> to quit</td></tr>
@@ -806,7 +834,8 @@ Mai 14 02:04:49 inlane systemd[1]: Stopped OpenBSD Secure Shell server.
 <tr><td>15</td><td>SIGTERM - program termination</td></tr>
 <tr><td>19</td><td>SIGSTOP - stop the program; it cannot be handled anymore</td></tr>
 <tr><td>20</td><td>SIGTSTP - sent when a user presses <code>[Ctrl] + Z</code> to request for a service to suspend; the user can handle it afterward</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>To force a kill:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ kill 9 &lt;PID&gt; 
@@ -832,7 +861,7 @@ d41y@htb[/htb]$
 [ENTER]
 [1]+  Exit 1                  ping -c 10 www.hackthebox.eu
 </code></pre>
-<p>... or automatically set the process with an <code>&amp;</code> at the end of the command:</p>
+<p>… or automatically set the process with an <code>&amp;</code> at the end of the command:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ping -c 10 www.hackthebox.eu &amp;
 
 [1] 10825
@@ -877,7 +906,7 @@ ls: cannot access 'MISSING_FILE': No such file or directory
 </code></pre>
 <h3 id="task-scheduling"><a class="header" href="#task-scheduling">Task Scheduling</a></h3>
 <h4 id="systemd"><a class="header" href="#systemd">systemd</a></h4>
-<p>... is a service used in Linux systems such as Ubuntu, Redhat Linux, and Solaris to start processes and scripts at a specifc time. With it, you can set up processes and scripts to run at a specific time or time interval and can also specify events and triggers that will trigger a specific task. To do this, you need to take some steps and precautions before your scripts or processes are automatically executed by the system.</p>
+<p>… is a service used in Linux systems such as Ubuntu, Redhat Linux, and Solaris to start processes and scripts at a specifc time. With it, you can set up processes and scripts to run at a specific time or time interval and can also specify events and triggers that will trigger a specific task. To do this, you need to take some steps and precautions before your scripts or processes are automatically executed by the system.</p>
 <ol>
 <li>create a timer</li>
 <li>create a service</li>
@@ -888,7 +917,7 @@ ls: cannot access 'MISSING_FILE': No such file or directory
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo mkdir /etc/systemd/system/mytimer.timer.d
 d41y@htb[/htb]$ sudo vim /etc/systemd/system/mytimer.timer
 </code></pre>
-<p>The timer file must contain "Unit", "Timer", and "Install".</p>
+<p>The timer file must contain “Unit”, “Timer”, and “Install”.</p>
 <ul>
 <li><strong>Unit</strong>: specifies a description for the timer</li>
 <li><strong>Timer</strong>: specifies when to start the timer and when to activate it</li>
@@ -909,7 +938,7 @@ WantedBy=timers.target
 <h5 id="create-a-service"><a class="header" href="#create-a-service">Create a Service</a></h5>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo vim /etc/systemd/system/mytimer.service
 </code></pre>
-<p>Here you set a description and specify the full path to the script you want to run. The "multi-user.target" is the unit system that is activated when starting a normal multi-user mode. It defines the services that should be started on a normal system startup.</p>
+<p>Here you set a description and specify the full path to the script you want to run. The “multi-user.target” is the unit system that is activated when starting a normal multi-user mode. It defines the services that should be started on a normal system startup.</p>
 <pre><code class="language-bash">[Unit]
 Description=My Service
 
@@ -930,7 +959,7 @@ d41y@htb[/htb]$ sudo systemctl enable mytimer.timer
 </code></pre>
 <p>This way mytimer.service will be launched according to the intervals you set in mytimer.timer.</p>
 <h4 id="cron"><a class="header" href="#cron">cron</a></h4>
-<p>... is another tool that can be used in Linux systems to schedule and automate processes. It allows users and admins to execute tasks at a specific time or specific intervals. For the above examples, you can also use cron to automate the same tasks. You just need to create script and then tell the cron daemon to call it at a specific time.</p>
+<p>… is another tool that can be used in Linux systems to schedule and automate processes. It allows users and admins to execute tasks at a specific time or specific intervals. For the above examples, you can also use cron to automate the same tasks. You just need to create script and then tell the cron daemon to call it at a specific time.</p>
 <p>To set up the cron daemon, you need to store the tasks in a file called crontab and then tell the daemon when to run the tasks. Then you can schedule and automate the tasks by configuring the cron daemon accordingly.</p>
 <p>Example:</p>
 <pre><code class="language-bash"># System Update
@@ -948,7 +977,7 @@ d41y@htb[/htb]$ sudo systemctl enable mytimer.timer
 <p>It is also possible to receive notifications when a task is executed successfully or unsuccessfully. In addition, you can create logs to monitor the execution of the tasks.</p>
 <h3 id="network-services"><a class="header" href="#network-services">Network Services</a></h3>
 <h4 id="network-file-system-nfs"><a class="header" href="#network-file-system-nfs">Network File System (<em>NFS</em>)</a></h4>
-<p>... is a network protocol that allows you to store and manage files on remote systems as if they were stored on the local system. It enables easy and efficient management of file across networks. For example, admins use NFS to store and manage files centrally to enable easy collaboration of data. For Linux, there are several NFS servers, including NFS-UTILS, NFS-Ganesha, and OpenNFS.</p>
+<p>… is a network protocol that allows you to store and manage files on remote systems as if they were stored on the local system. It enables easy and efficient management of file across networks. For example, admins use NFS to store and manage files centrally to enable easy collaboration of data. For Linux, there are several NFS servers, including NFS-UTILS, NFS-Ganesha, and OpenNFS.</p>
 <p>It can also be used to share and manage resources efficiently, e. g., to replicate file systems between servers. It also offers features such as access controls, real-time file transfer, and support for multiple users accessing data simultaneously. You can use this service just like FTP in case there is no FTP client installed on the target system, or NFS is running instead of FTP.</p>
 <pre><code class="language-bash"># installing
 d41y@htb[/htb]$ sudo apt install nfs-kernel-server -y
@@ -964,14 +993,20 @@ d41y@htb[/htb]$ systemctl status nfs-kernel-server
         CPU: 10ms
 </code></pre>
 <p>You can configure NFS via the config file <code>/etc/exports</code>. This file specifies which directories should be shared and the access rights for users and systems. It is also possible to configure settins such as the transfer speed and the use of encryption. NFS access rights determine which users and systems can access the shared directories and what actions they can perform. Here are some important access rights that can be configured in NFS:</p>
-<div class="table-wrapper"><table><thead><tr><th>Permission</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Permission</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>rw</td><td>gives users and systems read and write permissions to the shared directory</td></tr>
 <tr><td>ro</td><td>gives users and systems read-only access to the shared directory</td></tr>
 <tr><td>no_root_squash</td><td>prevents the root user on the client from being restricted to the rights of a normal user</td></tr>
 <tr><td>root_squash</td><td>restricts the rights of the root user on the client to the rights of a normal user</td></tr>
 <tr><td>sync</td><td>synchronizes the transfer of data to ensure that changes are only transferred after they have been saved on the file system</td></tr>
 <tr><td>async</td><td>transfers data asynchronously, which makes the transfer faster, but may cause inconsistencies in the file systemif changes have not been fully committed</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <pre><code class="language-bash"># create NFS share
 cry0l1t3@htb:~$ mkdir nfs_sharing
@@ -1070,8 +1105,8 @@ d41y@htb[/htb]$ crontab -e
 </ul>
 </li>
 </ul>
-<p>When selecting a file system, it's essential to analyze the needs of the application or user factors such as performance, data integrity, compatibility, and storage requirements will influence the decision.</p>
-<p>Linux's file system architecture is based on the Unix model, organized in a hierarchical structure. This structure consists of several components, the most critical being inodes. Inodes are data structures that store metadata about each file and directory, including permissions, ownership, size, and timestamps. Inodes do not store the file's actual data or name, but they contain pointers to the blocks where the file's data is stored on the disk.</p>
+<p>When selecting a file system, it’s essential to analyze the needs of the application or user factors such as performance, data integrity, compatibility, and storage requirements will influence the decision.</p>
+<p>Linux’s file system architecture is based on the Unix model, organized in a hierarchical structure. This structure consists of several components, the most critical being inodes. Inodes are data structures that store metadata about each file and directory, including permissions, ownership, size, and timestamps. Inodes do not store the file’s actual data or name, but they contain pointers to the blocks where the file’s data is stored on the disk.</p>
 <p>The inode table is a collection of these inodes, essentially acting as a database that the Linux kernel uses to track every file and directory on the system. This structure allows the OS to efficiently access and manage files. Understanding and managing inodes is a crucial aspect of file system management in Linux, especially in scenarios where a disk is running out of inode space before running out of actual storage capacity.</p>
 <p>In Linux, files can be stored in one of several key types:</p>
 <ul>
@@ -1080,12 +1115,12 @@ d41y@htb[/htb]$ crontab -e
 <li>symbolic links</li>
 </ul>
 <h4 id="regular-files"><a class="header" href="#regular-files">Regular Files</a></h4>
-<p>... are the most common type and typically consist of text data and/or binary data. They reside in various directories throughout the file system, not just in the root directory. The root directory is simply the top of the hierarchical directory tree, and files can exist in any directory within that structure.</p>
+<p>… are the most common type and typically consist of text data and/or binary data. They reside in various directories throughout the file system, not just in the root directory. The root directory is simply the top of the hierarchical directory tree, and files can exist in any directory within that structure.</p>
 <h4 id="directories"><a class="header" href="#directories">Directories</a></h4>
-<p>... are special types of files that act as containers for other files. When a file is stored in a directory, that directory is referred to as the file's parent directory. Directories help organize files within the Linux file system, allowing for an efficient way to manage collections of files.</p>
+<p>… are special types of files that act as containers for other files. When a file is stored in a directory, that directory is referred to as the file’s parent directory. Directories help organize files within the Linux file system, allowing for an efficient way to manage collections of files.</p>
 <h4 id="symbolic-links"><a class="header" href="#symbolic-links">Symbolic Links</a></h4>
-<p>... act as shortcuts or references to other files or directories. Symbolic links allow quick access to files located in different parts of the file system without duplicating the file itself. Symlinks can be used to streamline access or organize complex directory structures by pointing to important files across various locations.</p>
-<p>Each category of user can have different permission levels. For example, the owner of a file may have permission to read, write, and execute it, while others may only have read access. These permissions are independent for each category, meaning changes to one user's permissions do not necessarily affect others.</p>
+<p>… act as shortcuts or references to other files or directories. Symbolic links allow quick access to files located in different parts of the file system without duplicating the file itself. Symlinks can be used to streamline access or organize complex directory structures by pointing to important files across various locations.</p>
+<p>Each category of user can have different permission levels. For example, the owner of a file may have permission to read, write, and execute it, while others may only have read access. These permissions are independent for each category, meaning changes to one user’s permissions do not necessarily affect others.</p>
 <pre><code class="language-bash"># -i for inode
 d41y@htb[/htb]$ ls -il
 
@@ -1194,13 +1229,13 @@ vncserver 6006        cry0l1t3  mem       REG      0,24       402324 /usr/lib/x8
 </li>
 </ul>
 <h5 id="sizing-and-managing-swap-space"><a class="header" href="#sizing-and-managing-swap-space">Sizing and Managing Swap Space</a></h5>
-<p>The size of the swap space is not fixed and depends on your system's physical memory and intended usage. For example, a system with less RAM or running memory-intensive apps might need more swap space. However, modern systems with large amounts of RAM may require less or even no swap space, depending on specific use cases.</p>
-<p>When setting up swap space, it's important to allocate it on a dedicated partition or file, seperate from the rest of the file system. This prevents fragmentation and ensures efficient use of the swap are when needed. Additionally, because sensitive data can be temporarily stored in swap space, it's recommended to encrypt the swap space to safeguard against potential data exposure.</p>
+<p>The size of the swap space is not fixed and depends on your system’s physical memory and intended usage. For example, a system with less RAM or running memory-intensive apps might need more swap space. However, modern systems with large amounts of RAM may require less or even no swap space, depending on specific use cases.</p>
+<p>When setting up swap space, it’s important to allocate it on a dedicated partition or file, seperate from the rest of the file system. This prevents fragmentation and ensures efficient use of the swap are when needed. Additionally, because sensitive data can be temporarily stored in swap space, it’s recommended to encrypt the swap space to safeguard against potential data exposure.</p>
 <h5 id="swap-space-for-hibernation"><a class="header" href="#swap-space-for-hibernation">Swap Space for Hibernation</a></h5>
-<p>Besides extending physical memory, swap space is also used for hibernation. Hibernation is a power-saving feature that saves the system's state to the swap space and powers of the system. When the system is powered back on, it restores its previous state from the swap space, resuming exactly where it left off.</p>
+<p>Besides extending physical memory, swap space is also used for hibernation. Hibernation is a power-saving feature that saves the system’s state to the swap space and powers of the system. When the system is powered back on, it restores its previous state from the swap space, resuming exactly where it left off.</p>
 <h3 id="containerization"><a class="header" href="#containerization">Containerization</a></h3>
-<p>... is the process of packaging and running apps in isolated environments, typically referred to as containers. These containers provide lightweight, consistent environments for apps to run, ensuring that they behave the same way, regardless of where they are deployed.</p>
-<p>Containers differ from VMs in that they share the host system's kernel, making them far more lightweight and efficient.</p>
+<p>… is the process of packaging and running apps in isolated environments, typically referred to as containers. These containers provide lightweight, consistent environments for apps to run, ensuring that they behave the same way, regardless of where they are deployed.</p>
+<p>Containers differ from VMs in that they share the host system’s kernel, making them far more lightweight and efficient.</p>
 <p>Containers are highly configurable, allowing users to tailor them to their specific needs, and their lightweight nature makes it easy to run multiple containers simultaneously on the same host system.</p>
 <p>Security is a critical aspect of containerization. Containers isolate apps from the host and from each other, providing a barrier that reduces the risk of malicious activities affecting the host or other containers. This isolation, along with proper configuration and hardening techniques, adds an additional layer of security. However, it is important to note that containers do not offer the same level of isolation as traditional VMs.</p>
 <h4 id="dockers"><a class="header" href="#dockers">Dockers</a></h4>
@@ -1227,7 +1262,7 @@ echo '[!] You need to log out and log back in for the group changes to take effe
 docker run hello-world
 </code></pre>
 <p>The Docker engine and specific Docker images are needed to run a container. These can be obtained from the Docker Hub, a repo of pre-made images, or created by the user. The Docker Hub is a cloud-based registry for software repos or a library for Docker images. It is divided into a public and a private area. The public area allows users to upload and share images with the community. It also contains official images from the Docker development team and established open-source projects. Images uploaded to a private area of the registry are not publicly accessible. They can be shared within a company or with teams and acquaintances.</p>
-<p>Creating a Docker image is done by creating a Dockerfile, which contains all the instructions the Docker engine needs to create the container. You can use Docker containers as your "file hosting" server when transferring specific files to your target system. Therefore, you must create a Dockerfile based on Ubuntu 22.04 with Apache and SSH server running. With this, you can use <code>scp</code> to transfer files to the docker image, and Apache allows you to host files and use tools <code>curl</code>, <code>wget</code>, and others on the target system to donwload the required files. Such a Dockerfile could look like the following:</p>
+<p>Creating a Docker image is done by creating a Dockerfile, which contains all the instructions the Docker engine needs to create the container. You can use Docker containers as your “file hosting” server when transferring specific files to your target system. Therefore, you must create a Dockerfile based on Ubuntu 22.04 with Apache and SSH server running. With this, you can use <code>scp</code> to transfer files to the docker image, and Apache allows you to host files and use tools <code>curl</code>, <code>wget</code>, and others on the target system to donwload the required files. Such a Dockerfile could look like the following:</p>
 <pre><code class="language-bash"># Use the latest Ubuntu 22.04 LTS as the base image
 FROM ubuntu:22.04
 
@@ -1307,31 +1342,37 @@ d41y@htb[/htb]$ docker run -p 8022:22 -p 8080:80 -d FS_docker
 </li>
 </ul>
 <p>It is important to note that Docker commands can be combined with various options to add extra functionality. For example, you can specify which ports to expose, mount volumes to retain data, or set environment variables to configure your containers. This flexibility allows you to customize your Docker containers to meet specific needs and requirements.</p>
-<p>When working with Docker images, it's crucial to understand that any changes made to a running container based on an image are not automatically saved to the image. To preverse these changes, you need to create a new image that inlcudes them. This is done by writing a new Dockefile, which starts with the <code>FROM</code> statement and then includes the necessary commands to apply the changes. Once the Dockerfile is ready, you can use the <code>docker build</code> command to build the new image and assign it a uniqe tag to identify it. This process ensures that the original image remains unchanged, while the new image reflects the upadtes.</p>
-<p>It's also important to note that Docker containers are stateless by design, meaning that any changes made inside a running container are lost once the container is stopped or removed. For this reason, it's best practice to use volumes to persist data outside of the container or store application state.</p>
+<p>When working with Docker images, it’s crucial to understand that any changes made to a running container based on an image are not automatically saved to the image. To preverse these changes, you need to create a new image that inlcudes them. This is done by writing a new Dockefile, which starts with the <code>FROM</code> statement and then includes the necessary commands to apply the changes. Once the Dockerfile is ready, you can use the <code>docker build</code> command to build the new image and assign it a uniqe tag to identify it. This process ensures that the original image remains unchanged, while the new image reflects the upadtes.</p>
+<p>It’s also important to note that Docker containers are stateless by design, meaning that any changes made inside a running container are lost once the container is stopped or removed. For this reason, it’s best practice to use volumes to persist data outside of the container or store application state.</p>
 <p>In production environments, managing containers at scale becomes more complex. Tools like Docker Compose or Kubernetes help orchestrate containers, enabling you to manage, scale, and link mulitple containers efficiently.</p>
 <h4 id="linux-containers-lxc"><a class="header" href="#linux-containers-lxc">Linux Containers (<em>LXC</em>)</a></h4>
-<p>... is a lightweight virtualization technology that allows multiple isolated Linux systems to run on a single host. LXC uses key resource isolation features, such as control groups (<em>cgroups</em>) and namespaces, to ensure that each container operates independently. Unlike traditional VMs, which require a full OS for each instance, containers share the host's kernel, making LXC more efficient in terms of resource usage.</p>
+<p>… is a lightweight virtualization technology that allows multiple isolated Linux systems to run on a single host. LXC uses key resource isolation features, such as control groups (<em>cgroups</em>) and namespaces, to ensure that each container operates independently. Unlike traditional VMs, which require a full OS for each instance, containers share the host’s kernel, making LXC more efficient in terms of resource usage.</p>
 <p>LXC provides a comprehensive set of tools and APIs for managing and configuring containers, making it a popular choice for containerization on Linux systems. However, while LXC and Docker are both containerizations technologies, they serve different purposes and have unique features.</p>
-<p>Docker builds upen the idea of containerization by adding ease of use and portability, which has made it highly popular in the world of DevOps, Docker emphasizes packaging apps with all their dependencies in a portable "image", allowing them to be easily deployed across different environments. However, there are some differences between the two that can be distinguished based on the following categories:</p>
-<div class="table-wrapper"><table><thead><tr><th>Category</th><th>Description</th></tr></thead><tbody>
+<p>Docker builds upen the idea of containerization by adding ease of use and portability, which has made it highly popular in the world of DevOps, Docker emphasizes packaging apps with all their dependencies in a portable “image”, allowing them to be easily deployed across different environments. However, there are some differences between the two that can be distinguished based on the following categories:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Category</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Approach</td><td>LXC is often seen as a more traditional, system-level containerization tool, focusing on creating Linux environments that behave like lightweight VMs; docker is app-focused, meaning it is optimized for packaging and deploying single apps or microservices</td></tr>
 <tr><td>Image building</td><td>Docker uses a standardized image format that includes everything needed to run an app; LXC, while capable of similar functionality, typically requires more manual setup for building and managing environments</td></tr>
-<tr><td>Portability</td><td>Docker excels in portability, its container images can be easily shared across different systems via Dockeer Hub or other registries; LXC environments are less portable in this sense, as they are more tightly integrated with the host system's configuration</td></tr>
+<tr><td>Portability</td><td>Docker excels in portability, its container images can be easily shared across different systems via Dockeer Hub or other registries; LXC environments are less portable in this sense, as they are more tightly integrated with the host system’s configuration</td></tr>
 <tr><td>Easy of use</td><td>Docker is designed with simplicity in mind, offering a user-friendly CLI and extensive community support; LXC, while powerful, may require more in-depth knowledge of Linux system administration, making it less straightforward for beginners</td></tr>
 <tr><td>Security</td><td>Docker containers are generally more secure out of the box, thanks to additional isolation layers like AppArmor and SELinux, along with its read-only filesystem feature; LXC containers, while secure, may need additional configurations to match the level of isolation Docker offers by default; interestingly, when misconfigured, both Docker and LXC can present a vector for local privilege escalation</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>In LXC, images are manually built by creating a root filesystem and installing the necessary packages and configurations. Those containers are tied to the host system, may not be easily portable, and may require more technical expertise to configure and manage.</p>
 <p>On the other hand, Docker is an app-centric platform that builds on top of LXC and provides a more user-friendly interface for containerization. Its images are built using a Dockerfile, which specifies the base image and the steps required to build the image. Those images are designed to be portable so they can be easily moved from on environment to another.</p>
-<p>To install LXC on a Linux distro, you can use the distro's package manager.</p>
+<p>To install LXC on a Linux distro, you can use the distro’s package manager.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo apt-get install lxc lxc-utils -y
 </code></pre>
 <p>Once LXC is installed, you can start creating and managing containers on the Linux host. It is worth noting that LXC requires the Linux kernel to support the necessary features for containerization. Most modern Linux kernels have built-in support for containerization, but some older kernels may require additional configuration or patching to enable support for LXC.</p>
-<p>To create a new LXC container, you can use the <code>lxc-create</code> command followed by the container's name and the template to use.</p>
+<p>To create a new LXC container, you can use the <code>lxc-create</code> command followed by the container’s name and the template to use.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo lxc-create -n linuxcontainer -t ubuntu
 </code></pre>
-<p>When working with LXC containers, several tasks are involved in managing them. These tasks include creating new containers, configuring their settings, starting and stopping them as necessary, and monitoring their performance. Fortunately, there are many command-line tools and configuration files available that can assist with these tasks. These tools enable you to quickly and easily manage your containers, ensuring they are optimized for your specific needs and requirements. By leveraging these tools effectively, you can ensure that your LXC containers run efficiently allowing you to maximize your system's performance and capabilities.</p>
+<p>When working with LXC containers, several tasks are involved in managing them. These tasks include creating new containers, configuring their settings, starting and stopping them as necessary, and monitoring their performance. Fortunately, there are many command-line tools and configuration files available that can assist with these tasks. These tools enable you to quickly and easily manage your containers, ensuring they are optimized for your specific needs and requirements. By leveraging these tools effectively, you can ensure that your LXC containers run efficiently allowing you to maximize your system’s performance and capabilities.</p>
 <ul>
 <li><code>lxc-ls</code>
 <ul>
@@ -1390,13 +1431,13 @@ d41y@htb[/htb]$ docker run -p 8022:22 -p 8080:80 -d FS_docker
 lxc.cgroup.memory.limit_in_bytes = 512M
 </code></pre>
 <p>When working with containers, it is important to understand the <code>lxc.cgroup.cpu.shares</code> parameter. This parameter determines the CPU time a container can use in relation to the other containers on the system. By default, this value is set to 1024, meaning the container can use up to its fair share of CPU time. However, if you set this value to 512, for example, the container can only use half of the CPU time available on the system. This can be a useful way to manage resources and ensure all containers have the necessary access to CPU time.</p>
-<p>One of the key parameters in controlling the resource allocation of a container is the <code>lxc.cgroup.memory.limit_in_bytes</code> parameter. This parameter allows you to set the maximum amount of memory a container can use. It's important to note that this value can be specified in a variety of units, including bytes, kilobytes (<em>K</em>), megabytes (<em>M</em>), gigabytes (<em>G</em>), or terabytes (<em>T</em>), allowing for a high degree of granularity in defining container resource limits. After adding these two lines, you can save and close the file.</p>
+<p>One of the key parameters in controlling the resource allocation of a container is the <code>lxc.cgroup.memory.limit_in_bytes</code> parameter. This parameter allows you to set the maximum amount of memory a container can use. It’s important to note that this value can be specified in a variety of units, including bytes, kilobytes (<em>K</em>), megabytes (<em>M</em>), gigabytes (<em>G</em>), or terabytes (<em>T</em>), allowing for a high degree of granularity in defining container resource limits. After adding these two lines, you can save and close the file.</p>
 <p>To apply these changes, you must restart the LXC service:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo systemctl restart lxc.service
 </code></pre>
 <p>LXC uses namespaces to provide an isolated environment for processes, networks, and file systems from the host system. Namespaces are a feature of the Linux kernel that allows for creating isolated environments by providing an abstraction of system resources.</p>
-<p>Namespaces are a crucial aspect of containerization as they provide a high degree of isolation for the container's processes, network interfaces, routing tables, and firewall rules. Each container is allocated a unique process id (<em>pid</em>) number space, isolated from the host system's process IDs. This ensures that the container's processes cannot interfere with the host system's processes, enhancing system stability and reliability. Additionally, each container has its own network interface, routing tables, and firewall rules, which are completely separate from the host system's network interfaces. Any network-related activity within the container is cordoned off from the host system's network, providing an extra layer of network security.</p>
-<p>Moreover, containers come with their own root file system, which is entirely different from the host system's root file system. This separation between the two ensures that any changes or modifications made within the container's file system do not affect the host system's file system. However, it's important to remember that while namespaces provide a high level of isolation, they do not provide complete security. Therefore, it is always advisable to implement additional security measures to further protect the container and the host system from potential security breaches.</p>
+<p>Namespaces are a crucial aspect of containerization as they provide a high degree of isolation for the container’s processes, network interfaces, routing tables, and firewall rules. Each container is allocated a unique process id (<em>pid</em>) number space, isolated from the host system’s process IDs. This ensures that the container’s processes cannot interfere with the host system’s processes, enhancing system stability and reliability. Additionally, each container has its own network interface, routing tables, and firewall rules, which are completely separate from the host system’s network interfaces. Any network-related activity within the container is cordoned off from the host system’s network, providing an extra layer of network security.</p>
+<p>Moreover, containers come with their own root file system, which is entirely different from the host system’s root file system. This separation between the two ensures that any changes or modifications made within the container’s file system do not affect the host system’s file system. However, it’s important to remember that while namespaces provide a high level of isolation, they do not provide complete security. Therefore, it is always advisable to implement additional security measures to further protect the container and the host system from potential security breaches.</p>
 <h2 id="networking"><a class="header" href="#networking">Networking</a></h2>
 <h3 id="configuration"><a class="header" href="#configuration">Configuration</a></h3>
 <h4 id="configuring-network-interfaces"><a class="header" href="#configuring-network-interfaces">Configuring Network Interfaces</a></h4>
@@ -1480,9 +1521,11 @@ nameserver 8.8.4.4
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>After completing the necessary modifications to the network configuration, it is essential to ensure that these changes are saved to persist across reboots. This can be achieved by editing the <code>/etc/network/interfaces</code> file, which defines network interfaces for Linux-based OS. Thus, it is vital to save any changes made to this file to avoid any potential issues with network connectivity.<br><br>
-It's important to note that changes made directly to the <code>/etc/resolv.conf</code> file are not persistent across reboots or network configuration changes. This is because the file may be automatically overwritten by network management services like NetworkManageer or systemd-resolved. To make DNS changes permanent, you should configure DNS settings through the appropriate network management tool, such as editing network configuration files or using network management utilities that store persistent settings.</p>
+It’s important to note that changes made directly to the <code>/etc/resolv.conf</code> file are not persistent across reboots or network configuration changes. This is because the file may be automatically overwritten by network management services like NetworkManageer or systemd-resolved. To make DNS changes permanent, you should configure DNS settings through the appropriate network management tool, such as editing network configuration files or using network management utilities that store persistent settings.</p>
 </div>
+
 <h4 id="editing-interfaces"><a class="header" href="#editing-interfaces">Editing Interfaces</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo vim /etc/network/interfaces
 </code></pre>
@@ -1498,20 +1541,26 @@ iface eth0 inet static
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo systemctl restart networking
 </code></pre>
 <h3 id="network-access-control-nac"><a class="header" href="#network-access-control-nac">Network Access Control (<em>NAC</em>)</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Discretionary Access Control (<em>DAC</em>)</td><td>this model allows the owner of the resource to set permissions for who can access it</td></tr>
 <tr><td>Mandatory Access Control (<em>MAC</em>)</td><td>permissions are enforced by the OS, not the owner of the resource, making it more secure but less flexible</td></tr>
 <tr><td>Role-Based Access Control (<em>RBAC</em>)</td><td>permissions are assigned based on the roles within an organization, making it easier to manage user privileges</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Configuring Linux network devices for NAC involves setting up security policies like SELinux, AppArmor profiles for application security, and using TCP wrappers to controll access to services based on IP addresses.</p>
 <p>Tools such as syslog, rsyslog, ss, lsof, and the ELK stack can be used to monitor and analyze network traffic. These tools help identify anomalies, potential information disclosure/expose, security breaches, and other critical network issues.</p>
 <h4 id="discretionary-access-control"><a class="header" href="#discretionary-access-control">Discretionary Access Control</a></h4>
-<p>... is a crucial component of modern security systems as it helps organizations provide access to their resources while managing the associated risks of unauthorized access. It is a widely used access control system that enables users to manage acces to their resources by granting resource owners the responsibility of controlling access permissions to their resources. This means that users and groups who own a specific resource can decide who access to their resource and what actions they are authorized to perform. These permissions can be set for reading, writing, executing, or deleting the resource.</p>
+<p>… is a crucial component of modern security systems as it helps organizations provide access to their resources while managing the associated risks of unauthorized access. It is a widely used access control system that enables users to manage acces to their resources by granting resource owners the responsibility of controlling access permissions to their resources. This means that users and groups who own a specific resource can decide who access to their resource and what actions they are authorized to perform. These permissions can be set for reading, writing, executing, or deleting the resource.</p>
 <h4 id="mandatory-access-control"><a class="header" href="#mandatory-access-control">Mandatory Access Control</a></h4>
-<p>... is used in infrastructure that provides more fine-grained control over resource access than DAC systems. Those systems define rules that determine resource access based on the resource's security level and the user's security level or process requesting access. Each resource is assigned a security label that identifies its security level, and each user or process is assigend a security clearance that identifies its security level. Access to a resource is only granted if the user's or process's security level is equal to or greater than the security level of the resource. MAC is often used in OS and apps that require a high level of security, such as military or government systems, financial systems, and healthcare systems. MAC systems are designed to prevent unauthorized access to resources and minimize the impact of security breaches.</p>
+<p>… is used in infrastructure that provides more fine-grained control over resource access than DAC systems. Those systems define rules that determine resource access based on the resource’s security level and the user’s security level or process requesting access. Each resource is assigned a security label that identifies its security level, and each user or process is assigend a security clearance that identifies its security level. Access to a resource is only granted if the user’s or process’s security level is equal to or greater than the security level of the resource. MAC is often used in OS and apps that require a high level of security, such as military or government systems, financial systems, and healthcare systems. MAC systems are designed to prevent unauthorized access to resources and minimize the impact of security breaches.</p>
 <h4 id="role-based-access-control"><a class="header" href="#role-based-access-control">Role-Based Access Control</a></h4>
-<p>... assigns permissions to users based on their roles within an organization. Users are assigned roles based on their job responsibilities or other criteria, and each role is granted a set of permissions that determine the actions they can perform. RBAC simplifies the management of access permissions, reduces the risk of errors, and ensures that users can access only the resources necessary to perform their job functions. It can restrict access to sensitive resources and data, limit the impact of security breaches, and ensure compliance with regulatory requirements. Compared to DAC systems, RBAC provides a more flexible and scalable approach to managing resource access. In an RBAC system, each user is assigned one or more roles, and each role is assigned a set of permissions that define the user's action. Resource access it granted based on the user's assigned role rather than their identity or ownership of the resource. RBAC systems are typically used in environments with many users and resources, such as large organizations, government agencies, and financial institutions.</p>
+<p>… assigns permissions to users based on their roles within an organization. Users are assigned roles based on their job responsibilities or other criteria, and each role is granted a set of permissions that determine the actions they can perform. RBAC simplifies the management of access permissions, reduces the risk of errors, and ensures that users can access only the resources necessary to perform their job functions. It can restrict access to sensitive resources and data, limit the impact of security breaches, and ensure compliance with regulatory requirements. Compared to DAC systems, RBAC provides a more flexible and scalable approach to managing resource access. In an RBAC system, each user is assigned one or more roles, and each role is assigned a set of permissions that define the user’s action. Resource access it granted based on the user’s assigned role rather than their identity or ownership of the resource. RBAC systems are typically used in environments with many users and resources, such as large organizations, government agencies, and financial institutions.</p>
 <h3 id="monitoring"><a class="header" href="#monitoring">Monitoring</a></h3>
 <p>Network monitoring involves capturing, analyzing, and interpreting network traffic to identify security threats, performance issues, and suspicious behavior. The primary goal of analyzing and monitoring network traffic is identifying security threats and vulns.</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
@@ -1527,16 +1576,16 @@ iface eth0 inet static
 <h3 id="hardening"><a class="header" href="#hardening">Hardening</a></h3>
 <p>By implementing the following security measures and ensuring that you set up corresponding protection against potential attackers, you can significantly reduce the risk of data leaks and ensure your system remains secure.</p>
 <h4 id="selinux"><a class="header" href="#selinux">SELinux</a></h4>
-<p>... is a mandatory access control system integrated into the Linux kernel.</p>
+<p>… is a mandatory access control system integrated into the Linux kernel.</p>
 <h4 id="apparmor"><a class="header" href="#apparmor">AppArmor</a></h4>
-<p>... is a MAC system that controls access to system resources and apps, but it operates in a simpler, more user-friendly manner.</p>
+<p>… is a MAC system that controls access to system resources and apps, but it operates in a simpler, more user-friendly manner.</p>
 <h4 id="tcp-wrappers"><a class="header" href="#tcp-wrappers">TCP Wrappers</a></h4>
-<p>... are a host-based network access control tool that restricts access to network services based on the IP address of incoming connections.</p>
+<p>… are a host-based network access control tool that restricts access to network services based on the IP address of incoming connections.</p>
 <h3 id="remote-desktop-protocols"><a class="header" href="#remote-desktop-protocols">Remote Desktop Protocols</a></h3>
-<p>... are used in Windows, Linux, and MacOS to provide graphical remote access to a system. These protocols allow admins to manage, troubleshoot, and update systems remotely.</p>
+<p>… are used in Windows, Linux, and MacOS to provide graphical remote access to a system. These protocols allow admins to manage, troubleshoot, and update systems remotely.</p>
 <h4 id="xserver"><a class="header" href="#xserver">XServer</a></h4>
-<p>... is the user-side part of the X Window System network protocol (<em>X11 / X</em>). The X11 is a fixed system that consists of a collection of protocols and applications that allow you to call application windows on displays in a graphical user interface. X11 is predominant on Unix systems, but X servers are also available for other OS. Nowadays, the XServer is part of almost every desktop installation of Ubuntu and its derivatives and does not need to be installed.</p>
-<p>When a desktop is started on a Linux computer, the communication of the graphical user interface with the OS happens via an X server. The computer's internal network is used, even if the computer should not be in a network. The practical thing about the X protocol is network transparency. This protocol mainly uses TCP/IP as transport base but can also be used on pure Unix sockets. The ports that are utilized for X server are typically located in the range of TCP/6001-6009, allowing communication between the client and server. When starting a new desktop session via X server the TCP port 6000 would be opened for the first X display <code>:0</code>. This range of ports enables the server to perform its tasks such as hosting apps, as well as providing services to clients. They are often used to provide remote access to a system, allowing users to access apps and data from anywhere in the world. Additionally, these ports are also essential for the secure sharing of files and data, making them an integral part of the Open X Server. Thus an X server is not dependent on the local computer, it can be used to access other computers, and other computers can use the local X server. Provided that both local and remote computers contain Unix/Linux systems, additional protocols such as VNC and RDP generate the graphical output on the remote computer and transport it over the network. Whereas with X11, it is rendered on the local computer. This saves traffic and a load on the remote computer. However, X11's significant disadvantage is the unencrypted data transmission. However, this can be overcome by tunneling the SSH protocol.</p>
+<p>… is the user-side part of the X Window System network protocol (<em>X11 / X</em>). The X11 is a fixed system that consists of a collection of protocols and applications that allow you to call application windows on displays in a graphical user interface. X11 is predominant on Unix systems, but X servers are also available for other OS. Nowadays, the XServer is part of almost every desktop installation of Ubuntu and its derivatives and does not need to be installed.</p>
+<p>When a desktop is started on a Linux computer, the communication of the graphical user interface with the OS happens via an X server. The computer’s internal network is used, even if the computer should not be in a network. The practical thing about the X protocol is network transparency. This protocol mainly uses TCP/IP as transport base but can also be used on pure Unix sockets. The ports that are utilized for X server are typically located in the range of TCP/6001-6009, allowing communication between the client and server. When starting a new desktop session via X server the TCP port 6000 would be opened for the first X display <code>:0</code>. This range of ports enables the server to perform its tasks such as hosting apps, as well as providing services to clients. They are often used to provide remote access to a system, allowing users to access apps and data from anywhere in the world. Additionally, these ports are also essential for the secure sharing of files and data, making them an integral part of the Open X Server. Thus an X server is not dependent on the local computer, it can be used to access other computers, and other computers can use the local X server. Provided that both local and remote computers contain Unix/Linux systems, additional protocols such as VNC and RDP generate the graphical output on the remote computer and transport it over the network. Whereas with X11, it is rendered on the local computer. This saves traffic and a load on the remote computer. However, X11’s significant disadvantage is the unencrypted data transmission. However, this can be overcome by tunneling the SSH protocol.</p>
 <p>For this, you have to allow X11 fowarding in the SSH config file <code>/etc/ssh/sshd_config</code> on the server that provides the application by changing this option to yes.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ cat /etc/ssh/sshd_config | grep X11Forwarding
 
@@ -1630,7 +1679,7 @@ Same machine: preferring raw encoding
 </code></pre>
 <h2 id="hardening-1"><a class="header" href="#hardening-1">Hardening</a></h2>
 <h3 id="security"><a class="header" href="#security">Security</a></h3>
-<p>One of the Linux OS's most important security measures is keeping the OS and installed packages up to date:</p>
+<p>One of the Linux OS’s most important security measures is keeping the OS and installed packages up to date:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ apt update &amp;&amp; apt dist-upgrade
 </code></pre>
 <p>Moreover, you can use:</p>
@@ -1650,10 +1699,10 @@ Same machine: preferring raw encoding
 <li>for handling high amounts of failed logins</li>
 </ul>
 </li>
-<li>...</li>
+<li>…</li>
 </ul>
 <h4 id="tcp-wrappers-1"><a class="header" href="#tcp-wrappers-1">TCP Wrappers</a></h4>
-<p>... are a security mechanism used in Linux system that allow the system admins to control which services are allowed access to the system. It works by restricting access to certain services based on the hostname or IP address of the user requesting access. When a client attempts to connect to a service the system will first consult the rules defined in the TCP wrappers configuration files to determine the IP address of the client. If the IP address matches the criteria specified in the configuration files, the system will then grant the client access to the service. However, if the criteria are not met, the connection will be denied, providing an additional layer of security for the service. TCP wrappers use the following configuration files:</p>
+<p>… are a security mechanism used in Linux system that allow the system admins to control which services are allowed access to the system. It works by restricting access to certain services based on the hostname or IP address of the user requesting access. When a client attempts to connect to a service the system will first consult the rules defined in the TCP wrappers configuration files to determine the IP address of the client. If the IP address matches the criteria specified in the configuration files, the system will then grant the client access to the service. However, if the criteria are not met, the connection will be denied, providing an additional layer of security for the service. TCP wrappers use the following configuration files:</p>
 <ul>
 <li><code>/etc/hosts.allow</code></li>
 <li><code>/etc/hosts.deny</code></li>
@@ -1686,23 +1735,35 @@ ftpd : 10.129.22.0/24
 <h3 id="firewall-setup"><a class="header" href="#firewall-setup">Firewall Setup</a></h3>
 <p>The primary goal of firewalls is to provide a security mechanism for controlling and monitoring network traffic between different network segments, such as internal and external networks or different network zones. Firewalls play a crucial role in protecting computer networks from unauthorized access, malicious traffic, and other security threats. Linux provides built-in firewall capabilities that can be used to control network traffic.</p>
 <h4 id="iptables"><a class="header" href="#iptables">iptables</a></h4>
-<p>... provides a flexible set of rules for filtering network traffic based on various criteria such as source and destination IP address, port numbers, protocols, and more.</p>
+<p>… provides a flexible set of rules for filtering network traffic based on various criteria such as source and destination IP address, port numbers, protocols, and more.</p>
 <p>The main components of iptables are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Description</th></tr></thead><tbody>
-<tr><td>Tables</td><td>... are used to organize and categorize firewall rules</td></tr>
-<tr><td>Chains</td><td>... are used to group a set of firewall rules applied to a specific type of network traffic</td></tr>
-<tr><td>Rules</td><td>... define the criteria for filtering network traffic and the actions to take for packets that match the criteria</td></tr>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>Tables</td><td>… are used to organize and categorize firewall rules</td></tr>
+<tr><td>Chains</td><td>… are used to group a set of firewall rules applied to a specific type of network traffic</td></tr>
+<tr><td>Rules</td><td>… define the criteria for filtering network traffic and the actions to take for packets that match the criteria</td></tr>
 <tr><td>Matches</td><td>are used to match specific criteria for filtering network traffic, such as source or destination IP addresses, ports, protocols, and more</td></tr>
-<tr><td>Targets</td><td>... specify the action for packets that match a specific rule</td></tr>
-</tbody></table>
+<tr><td>Targets</td><td>… specify the action for packets that match a specific rule</td></tr>
+</tbody>
+</table>
 </div>
 <h5 id="tables"><a class="header" href="#tables">Tables</a></h5>
 <p>When working with firewalls on Linux systems, it is important to understand how tables work in iptables. Tables in iptables are used to categorize and organize firewall rules based on the type of traffic that they are designed to handle. Each table is responsible for performing a specific set of tasks.</p>
-<div class="table-wrapper"><table><thead><tr><th>Table Name</th><th>Description</th><th>Built-In Chains</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Table Name</th><th>Description</th><th>Built-In Chains</th></tr>
+</thead>
+<tbody>
 <tr><td>filter</td><td>used to filter network traffic based on IP addresses, ports, and protocols</td><td>INPUT, OUTPUT, FORWARD</td></tr>
 <tr><td>nat</td><td>used to modify the source or destination IP addresses of network packets</td><td>PREROUTING, POSTROUTING</td></tr>
 <tr><td>mangle</td><td>used to modify the header fields of network packets</td><td>PREROUTING, OUTPUT, INPUT, FORWARD, POSTROUTING</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>In addition to the built-in tables, iptables provides a fourth table called the raw table, which is used to configure special packet processing options. The raw table contains two built-in chains: PREROUTING, and OUTPUT.</p>
 <h5 id="chains"><a class="header" href="#chains">Chains</a></h5>
@@ -1716,7 +1777,12 @@ ftpd : 10.129.22.0/24
 <h5 id="rules-and-targets"><a class="header" href="#rules-and-targets">Rules and Targets</a></h5>
 <p>Iptables rules are used to define the criteria for filtering network traffic and the actions to take for packets that match the criteria. Rules are added to chains using the <code>-A</code> option followed by the chain name, and they can be modified or deleted using various other options.</p>
 <p>Each rule consists of a set of criteria or matches and a target specifying the action for packets that match the criteria. The criteria or matches match specific fields in the IP header, such as the source or destination IP address, protocol, source, destination port number, and more. The target specifies the action for packets that match the criteria. They specify the action to take for packets that match a specific rule. For example, targets can accept, drop, reject, or modify the packets. Some of the common targets used in iptables rules include the following:</p>
-<div class="table-wrapper"><table><thead><tr><th>Target Name</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Target Name</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>ACCEPT</td><td>allows the packet to pass through the firewall and continue to its destination</td></tr>
 <tr><td>DROP</td><td>drops the packet, effectively blocking it from passing through the firewall</td></tr>
 <tr><td>REJECT</td><td>drops the packet and sends an error message back to the source address, notifying them that the packet was blocked</td></tr>
@@ -1726,15 +1792,21 @@ ftpd : 10.129.22.0/24
 <tr><td>MASQUERADE</td><td>similar to SNAT but used when the source IP address is not fixed, such as in a dynamic IP address scenario</td></tr>
 <tr><td>REDIRECT</td><td>redirects packets to another port or IP address</td></tr>
 <tr><td>MARK</td><td>adds or modifies the Netfilter mark value of the packet, which can be used for advanced routing or other purposes</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Example:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 # allows incoming TCP traffic on port 22 to be accepted
 </code></pre>
 <h5 id="matches"><a class="header" href="#matches">Matches</a></h5>
-<p>... are used to specify the criteria that determine whether a firewall rule should be applied to a particular packet or connection. Matches are used to match specific characteristics of network traffic, such as the source or destination IP address, protocol, port number, and more.</p>
-<div class="table-wrapper"><table><thead><tr><th>Match Name</th><th>Description</th></tr></thead><tbody>
+<p>… are used to specify the criteria that determine whether a firewall rule should be applied to a particular packet or connection. Matches are used to match specific characteristics of network traffic, such as the source or destination IP address, protocol, port number, and more.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Match Name</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>-p</code> / <code>--protocol</code></td><td>specifies the protocol to match</td></tr>
 <tr><td><code>--dport</code></td><td>specifies the destination port to match</td></tr>
 <tr><td><code>--sport</code></td><td>specifies the source port to match</td></tr>
@@ -1750,14 +1822,15 @@ ftpd : 10.129.22.0/24
 <tr><td><code>-m mark</code></td><td>matches packets based on their Netfilter mark value</td></tr>
 <tr><td><code>-m mac</code></td><td>matches packets based on their MAC address</td></tr>
 <tr><td><code>-m iprange</code></td><td>matches packets based on a range of IP addresses</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Example:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 # adds a rule to the INPUT chain in the filter table that matches incoming TCP traffic on port 80
 </code></pre>
 <h3 id="system-logs"><a class="header" href="#system-logs">System Logs</a></h3>
-<p>... on Linux are a set of files that contain information about the system and the activities taking place on it. These logs are important for monitoring and troubleshooting the system, as they can provide insights into system behavior, application security, and security events. These system logs can be a valuable source of information for identifying potential security weaknesses and vulnerabilities within a Linux system as well. By analyzing the logs on your target systems, you can gain insights into the system's behavior, network activity, and user activity and can use this information to identify any abnormal activity, such as unauthorized logins, attempted attacks, clear text credentials, or unusual file access, which could indicate a potential security breach.</p>
+<p>… on Linux are a set of files that contain information about the system and the activities taking place on it. These logs are important for monitoring and troubleshooting the system, as they can provide insights into system behavior, application security, and security events. These system logs can be a valuable source of information for identifying potential security weaknesses and vulnerabilities within a Linux system as well. By analyzing the logs on your target systems, you can gain insights into the system’s behavior, network activity, and user activity and can use this information to identify any abnormal activity, such as unauthorized logins, attempted attacks, clear text credentials, or unusual file access, which could indicate a potential security breach.</p>
 <p>As pentesters, you can also use system logs to monitor the effectiveness of your security testing activities. By reviewing the logs after performing security testing, you can determine if your activities triggered any security events, such as intrusion detection alerts or system warnings. This information can help you refine your testing strategies and improve overall security of the system.</p>
 <p>In order to ensure the security of a Linux system, it is important to configure system logs properly. This includes setting the appropriate log levels, configuring log rotation to prevent log files from becoming too large, and ensuring that the logs are stored securely and protected from unauthorized access. In addition, it is important to regularly review and analyze the logs to identify potential security risks and respond to any security events in a timely manner. There are several different types of system logs on Linux:</p>
 <ul>
@@ -1768,9 +1841,9 @@ ftpd : 10.129.22.0/24
 <li>Security logs</li>
 </ul>
 <h4 id="kernel-logs"><a class="header" href="#kernel-logs">Kernel Logs</a></h4>
-<p>... contain information about the system's kernel, including hardware drivers, system calls, and kernel events. They are stored in <code>/var/log/kern.log</code>. They can also provide insights into system crashes, resource limitations, and other events that could lead to a denial of service or other security issues. In addition, kernel logs can help you identify suspicious system calls or other activities that could indicate the presence of malware or other malicious software on the system. By monitoring this file, you can detect any unusual behavior and take appropriate action to prevent further damage to the system.</p>
+<p>… contain information about the system’s kernel, including hardware drivers, system calls, and kernel events. They are stored in <code>/var/log/kern.log</code>. They can also provide insights into system crashes, resource limitations, and other events that could lead to a denial of service or other security issues. In addition, kernel logs can help you identify suspicious system calls or other activities that could indicate the presence of malware or other malicious software on the system. By monitoring this file, you can detect any unusual behavior and take appropriate action to prevent further damage to the system.</p>
 <h4 id="system-logs-1"><a class="header" href="#system-logs-1">System Logs</a></h4>
-<p>... contain information about system-level events, such as service starts and stops, login attempts, and system reboots. They are stored in the <code>/var/log/syslog</code> file. By analyzing login attempts, service starts and stops, and other system-level events, you can detect any possible access or activities on the system. This can help you identify any vulnerabilities that could be exploited and help you recommend security measures to mitigate these risks. In addition, you can use the <code>syslog</code> to identify potential issues that could impact the availability or performance of the system, such as failed service starts or system reboots.</p>
+<p>… contain information about system-level events, such as service starts and stops, login attempts, and system reboots. They are stored in the <code>/var/log/syslog</code> file. By analyzing login attempts, service starts and stops, and other system-level events, you can detect any possible access or activities on the system. This can help you identify any vulnerabilities that could be exploited and help you recommend security measures to mitigate these risks. In addition, you can use the <code>syslog</code> to identify potential issues that could impact the availability or performance of the system, such as failed service starts or system reboots.</p>
 <p>Example:</p>
 <pre><code class="language-bash">Feb 28 2023 15:00:01 server CRON[2715]: (root) CMD (/usr/local/bin/backup.sh)
 Feb 28 2023 15:04:22 server sshd[3010]: Failed password for htb-student from 10.14.15.2 port 50223 ssh2
@@ -1781,7 +1854,7 @@ Feb 28 2023 15:09:54 server kernel: [  367.543975] EXT4-fs (sda1): re-mounted. O
 Feb 28 2023 15:12:07 server systemd[1]: Started Clean PHP session files.
 </code></pre>
 <h4 id="authentication-logs"><a class="header" href="#authentication-logs">Authentication Logs</a></h4>
-<p>... contain information about user authentication attempts, including successful and failes attempts. They are stored in the <code>/var/log/auth.log</code> file. It is important to note that while the <code>/var/log/syslog</code> file may contain similar login information, the <code>/var/log/auth.log</code> file specifically focuses on user authentication attempts, making it a more valuable resource for identifying potential security threats. Therefore, it is essential for penetration testers to review the logs stored in the <code>/var/log/auth.log</code> file to ensure that the system is secure and has not been compromised.</p>
+<p>… contain information about user authentication attempts, including successful and failes attempts. They are stored in the <code>/var/log/auth.log</code> file. It is important to note that while the <code>/var/log/syslog</code> file may contain similar login information, the <code>/var/log/auth.log</code> file specifically focuses on user authentication attempts, making it a more valuable resource for identifying potential security threats. Therefore, it is essential for penetration testers to review the logs stored in the <code>/var/log/auth.log</code> file to ensure that the system is secure and has not been compromised.</p>
 <p>Example:</p>
 <pre><code class="language-bash">Feb 28 2023 18:15:01 sshd[5678]: Accepted publickey for admin from 10.14.15.2 port 43210 ssh2: RSA SHA256:+KjEzN2cVhIW/5uJpVX9n5OB5zVJ92FtCZxVzzcKjw
 Feb 28 2023 18:15:03 sudo:   admin : TTY=pts/1 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash
@@ -1794,17 +1867,17 @@ Feb 28 2023 18:15:21 CRON[2345]: pam_unix(cron:session): session opened for user
 Feb 28 2023 18:15:24 CRON[2345]: pam_unix(cron:session): session closed for user root
 </code></pre>
 <h4 id="application-logs"><a class="header" href="#application-logs">Application Logs</a></h4>
-<p>... contain information about the activities of specific applications running on the system. They are often stored in their own files. These logs are particularly important when you are targeting specific applications, such as web servers or databases, as they can provide insights into how these apps are processing and handling data. By examining these logs, you can identify potential vulnerabilities or misconfigurations. These logs can be used to identify unauthorized login attempts, data exfiltration, or other suspicious activity.</p>
+<p>… contain information about the activities of specific applications running on the system. They are often stored in their own files. These logs are particularly important when you are targeting specific applications, such as web servers or databases, as they can provide insights into how these apps are processing and handling data. By examining these logs, you can identify potential vulnerabilities or misconfigurations. These logs can be used to identify unauthorized login attempts, data exfiltration, or other suspicious activity.</p>
 <p>Besides, access and audit logs are critical logs that record information about the actions of users and processes on the system. They are crucial for security and compliance purposes, and you can use them to identify potential security issues and attack vectors.</p>
 <p>Example:</p>
 <pre><code class="language-bash">2023-03-07T10:15:23+00:00 servername privileged.sh: htb-student accessed /root/hidden/api-keys.txt
 </code></pre>
 <h4 id="security-logs"><a class="header" href="#security-logs">Security Logs</a></h4>
-<p>... are often recorded in a variety of log files, depending on the specific security application or tool in use. As pentesters, you can use log analysis tools and techniques to search for specific events or patterns of activity that may indicate a security issue and use that information to further test the system for vulnerabilities or potential attack vectors.</p>
+<p>… are often recorded in a variety of log files, depending on the specific security application or tool in use. As pentesters, you can use log analysis tools and techniques to search for specific events or patterns of activity that may indicate a security issue and use that information to further test the system for vulnerabilities or potential attack vectors.</p>
 <p>It is important to be familiar with the default locations for access logs and other log files on the Linux system, as this information can be useful when performing a security assessment or penetration test. By understanding how security related events are recorded and stored, you can more effectively analyze log data and identify potential security issues.</p>
 <h2 id="distros"><a class="header" href="#distros">Distros</a></h2>
 <h3 id="solaris"><a class="header" href="#solaris">Solaris</a></h3>
-<p>... is a Unix-based OS developed by Sun Microsystems in the 1990s. It is known for its robustness, scalability, and support for high-end hardware and software systems. Solaris is widely used in enterprise environments for mission-critical applications, such as database management, cloud computing, and virtualization. Overall, it is designed to handle large amounts of data and provide reliable and secure services to users and is often used in enterprise environments where security, performance, and stability are key requirements.</p>
+<p>… is a Unix-based OS developed by Sun Microsystems in the 1990s. It is known for its robustness, scalability, and support for high-end hardware and software systems. Solaris is widely used in enterprise environments for mission-critical applications, such as database management, cloud computing, and virtualization. Overall, it is designed to handle large amounts of data and provide reliable and secure services to users and is often used in enterprise environments where security, performance, and stability are key requirements.</p>
 <h4 id="differences-to-other-linux-distros"><a class="header" href="#differences-to-other-linux-distros">Differences to other Linux Distros</a></h4>
 <ul>
 <li>proprietary OS; source code not available to the general public</li>
@@ -1858,22 +1931,18 @@ $ truss ls
 
 execve("/usr/bin/ls", 0xFFBFFDC4, 0xFFBFFDC8)  argc = 1
 ...SNIP...
-```&lt;!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --&gt;
-
-&lt;div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
-
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../attack/linux/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../attack/macos/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1883,15 +1952,21 @@ execve("/usr/bin/ls", 0xFFBFFDC4, 0xFFBFFDC8)  argc = 1
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../attack/linux/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../attack/macos/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -1911,22 +1986,20 @@ execve("/usr/bin/ls", 0xFFBFFDC4, 0xFFBFFDC8)  argc = 1
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/pagetoc.js"></script>
 
 
 

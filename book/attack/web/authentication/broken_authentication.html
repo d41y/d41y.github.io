@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../../favicon.png">
-        <link rel="stylesheet" href="../../../css/variables.css">
-        <link rel="stylesheet" href="../../../css/general.css">
-        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="shortcut icon" href="../../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex.js";
+            window.path_to_searchindex_js = "../../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc.js"></script>
+        <script src="../../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -415,44 +418,56 @@
 <h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
 <p><em><strong>Authentication</strong> is the process of verifying a claim that a system entity or resource has a certain attribute value.</em><br>
 <em><strong>Authorization</strong> is an approval that is granted to a system entity or access a system resource.</em></p>
-<div class="table-wrapper"><table><thead><tr><th>Authentication</th><th>Authorization</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Authentication</th><th>Authorization</th></tr>
+</thead>
+<tbody>
 <tr><td>determines whether users are who they claim to be</td><td>determines what users can and cannot access</td></tr>
 <tr><td>challenges the user to validate credentials</td><td>verifies whether access is allowed through policies and rules</td></tr>
 <tr><td>usually done before authorization</td><td>usually done after successful authentication</td></tr>
-<tr><td>it usually needs the user's login details</td><td>while it needs user's privileges or security levels</td></tr>
+<tr><td>it usually needs the user’s login details</td><td>while it needs user’s privileges or security levels</td></tr>
 <tr><td>generally, transmits info through an ID token</td><td>generally, transmits info through an Access Token</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>The most widespread authentication method in web apps is login forms, where users enter their username and password to prove their identity.</p>
 <h3 id="common-authentication-methods"><a class="header" href="#common-authentication-methods">Common Authentication Methods</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>knowledge-based authentication</td><td>relies on something that the user knows to prove their identity (<em>passwords, passphrases, PINs, etc.</em>)</td></tr>
 <tr><td>ownership-based authentication</td><td>relies on something the user posseses (<em>ID cards, security tokens, smartphones with authentication apps, etc.</em>)</td></tr>
 <tr><td>inherence-based authentication</td><td>relies on something the user is or does (<em>fingerprints, facial patterns, voice recognition, etc.</em>)</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="single-factor-vs-multi-factor-authentication"><a class="header" href="#single-factor-vs-multi-factor-authentication">Single-Factor vs Multi-Factor Authentication</a></h3>
 <p>Single-factor authentication relies solely on a single method like a password while multi-factor authentication involves multiple authentication methods like a password plus a time-based one-time password.</p>
 <h3 id="knowledge-based-authentication"><a class="header" href="#knowledge-based-authentication">Knowledge-based Authentication</a></h3>
-<p>... is prevalent and comparatively easy to attack. This authentication method suffers from reliance on static personal information that can be potentially obtained, guessed, or brute-forced.</p>
+<p>… is prevalent and comparatively easy to attack. This authentication method suffers from reliance on static personal information that can be potentially obtained, guessed, or brute-forced.</p>
 <h3 id="ownership-based-authentication"><a class="header" href="#ownership-based-authentication">Ownership-based Authentication</a></h3>
-<p>...(s) are inherently more secure. This is because physical items are more diffcult for attackers to acquire or replicate compared to information that can be phished, guessed or obtained through data breaches. These systems can be vulnerable to physical attacks, such as stealing or cloning the object, as well as cryptographic attacks on the algorithm it uses.</p>
+<p>…(s) are inherently more secure. This is because physical items are more diffcult for attackers to acquire or replicate compared to information that can be phished, guessed or obtained through data breaches. These systems can be vulnerable to physical attacks, such as stealing or cloning the object, as well as cryptographic attacks on the algorithm it uses.</p>
 <h3 id="inherence-based-authentication"><a class="header" href="#inherence-based-authentication">Inherence-based Authentication</a></h3>
-<p>... provides convenience and user-friendliness. Users don't need to remember complex passwords or carry physical tokens; they simply provide biometric data, such as a fingerprint or facial scan, to gain access. This streamlined authentication process enhances user experience and reduces the likelihood of security breaches resulting from weak passwords or stolen tokens. However, inherence-based authentication systems must address concerns regarding privacy, data security, and potential biases in biometric recognition algorithms to ensure widespread adoption and trust among users.</p>
+<p>… provides convenience and user-friendliness. Users don’t need to remember complex passwords or carry physical tokens; they simply provide biometric data, such as a fingerprint or facial scan, to gain access. This streamlined authentication process enhances user experience and reduces the likelihood of security breaches resulting from weak passwords or stolen tokens. However, inherence-based authentication systems must address concerns regarding privacy, data security, and potential biases in biometric recognition algorithms to ensure widespread adoption and trust among users.</p>
 <h2 id="brute-force-attacks"><a class="header" href="#brute-force-attacks">Brute-Force Attacks</a></h2>
 <h3 id="enumerating-users"><a class="header" href="#enumerating-users">Enumerating Users</a></h3>
-<p>User enumeration vulnerabilities arise when a web application responds differently to registered/valid and invalid inputs for authentication endpoints. User enumeration vulnerabilities frequently occur in functions on the user's name, such a user login, user registration, and password reset. A web app revealing whether a username exists may help a legitimate user identify that they failed to type their username correctly. The same applies to an attacker trying to determine valid usernames.</p>
+<p>User enumeration vulnerabilities arise when a web application responds differently to registered/valid and invalid inputs for authentication endpoints. User enumeration vulnerabilities frequently occur in functions on the user’s name, such a user login, user registration, and password reset. A web app revealing whether a username exists may help a legitimate user identify that they failed to type their username correctly. The same applies to an attacker trying to determine valid usernames.</p>
 <p>Unknown user example:</p>
-<p><img src="../../../images/broken_authentication_1.png" alt="broken authentication 1" /></p>
+<p><img src="../../../images/broken_authentication_1.png" alt="broken authentication 1"></p>
 <p>Valid user example:</p>
-<p><img src="../../../images/broken_authentication_2.png" alt="broken authentication 2" /></p>
+<p><img src="../../../images/broken_authentication_2.png" alt="broken authentication 2"></p>
 <p>As you can see, user enumeration can be a security risk that a web application deliberately accepts to provide a service.</p>
 <h4 id="enumerating-users-via-different-error-messages"><a class="header" href="#enumerating-users-via-different-error-messages">Enumerating Users via Different Error Messages</a></h4>
 <p>To obtain a list of valid users, an attacker typically requires a wordlist of usernames to test. Usernames are often less complicated than passwords. They rarely contain special chars when they are not email addresses. A list of common users allows an attacker to narrow the scope of a brute-force attack or carry out targeted attacks against support employees or users. Also, a common password could be easily sprayed against valid accounts, often leading to a successful account compromise. Further ways of harvesting usernames are crawling a web application or using public information, such as company profiles on social networks.</p>
 <p>Invalid user example:</p>
-<p><img src="../../../images/broken_authentication_3.png" alt="broken authentication 3" /></p>
+<p><img src="../../../images/broken_authentication_3.png" alt="broken authentication 3"></p>
 <p>Valid user example:</p>
-<p><img src="../../../images/broken_authentication_4.png" alt="broken authentication 4" /></p>
+<p><img src="../../../images/broken_authentication_4.png" alt="broken authentication 4"></p>
 <p>To exploit this difference in error messages returned:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ffuf -w /opt/useful/seclists/Usernames/xato-net-10-million-usernames.txt -u http://172.17.0.2/index.php -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=FUZZ&amp;password=invalid" -fr "Unknown user"
 
@@ -462,12 +477,12 @@
     * FUZZ: consuelo
 </code></pre>
 <h4 id="user-enumeration-via-side-channel-attacks"><a class="header" href="#user-enumeration-via-side-channel-attacks">User Enumeration via Side-Channel Attacks</a></h4>
-<p>Side-channel attacks do not directly target the web application's response but rather extra information that can be obtained or inferred from the response. An example of a side channel is the response timing, the time it takes for the web application's response to reach you. Suppose a web app does database lookups only for valid usernames. In that case, you might be able to measure a difference in the response time and enumerate valid usernames this way, even if the response is the same.</p>
+<p>Side-channel attacks do not directly target the web application’s response but rather extra information that can be obtained or inferred from the response. An example of a side channel is the response timing, the time it takes for the web application’s response to reach you. Suppose a web app does database lookups only for valid usernames. In that case, you might be able to measure a difference in the response time and enumerate valid usernames this way, even if the response is the same.</p>
 <h3 id="brute-forcing-passwords"><a class="header" href="#brute-forcing-passwords">Brute-Forcing Passwords</a></h3>
 <p>After succesfully identifying valid users, password-based authentication relies on the password as a sole measure for authenticating the user. Since users tend to select an easy-to-remember password, attackers may be able to guess or brute-force it.</p>
-<p>You can either directly start using a wordlist or, maybe, you're lucky enough to see messages like this when visiting a website:</p>
-<p><img src="../../../images/broken_authentication_5.png" alt="broken authentication 5" /></p>
-<p>By using <code>grep</code> you're able to narrow down the wordlist (<em>rockyou.txt</em>) to about 150000 passwords.</p>
+<p>You can either directly start using a wordlist or, maybe, you’re lucky enough to see messages like this when visiting a website:</p>
+<p><img src="../../../images/broken_authentication_5.png" alt="broken authentication 5"></p>
+<p>By using <code>grep</code> you’re able to narrow down the wordlist (<em>rockyou.txt</em>) to about 150000 passwords.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ grep '[[:upper:]]' /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt | grep '[[:lower:]]' | grep '[[:digit:]]' | grep -E '.{10}' &gt; custom_wordlist.txt
 
 d41y@htb[/htb]$ wc -l custom_wordlist.txt
@@ -486,9 +501,9 @@ d41y@htb[/htb]$ wc -l custom_wordlist.txt
 <p>Many web apps implement a password-recovery functionality if a user forgets their password. This password-recovery functionality typically relies on a one-time reset token, which is transmitted to the user via SMS or E-Mail. The user can then authenticate using this token, enabling them to reset their password and access their account.</p>
 <h4 id="identifying-weak-reset-tokens"><a class="header" href="#identifying-weak-reset-tokens">Identifying Weak Reset Tokens</a></h4>
 <p>Reset Tokens are secret data generated by an application when a user requests a password reset. The user can then change their password by representing the reset token.</p>
-<p>Since password reset tokens enable an attacker to reset an account's password without knowlegde of the password, they can be leveraged as an attack vector to take over a victim's account if implemented incorrectly. Password reset flows can be complicated because they consist of several sequential steps.</p>
+<p>Since password reset tokens enable an attacker to reset an account’s password without knowlegde of the password, they can be leveraged as an attack vector to take over a victim’s account if implemented incorrectly. Password reset flows can be complicated because they consist of several sequential steps.</p>
 <p>Reset flow example:</p>
-<p><img src="../../../images/broken_authentication_6.png" alt="broken authentication 6" /></p>
+<p><img src="../../../images/broken_authentication_6.png" alt="broken authentication 6"></p>
 <p>To identify weak reset tokens, you typically need to create an account on the web app, request a password reset token, and then analyze it.</p>
 <pre><code>Hello,
 
@@ -502,7 +517,7 @@ Please note that this link will expire in 24 hours, so please complete the passw
 
 Thank you.
 </code></pre>
-<p>The example reset link contains the reset token in the GET-parameter token. In this example the token is <code>7351</code>. Given that the token consists of only a 4-digit number, there can be only 10000 possible values. This allows you to hijack users' accounts by requesting a password reset and then brute-forcing the token.</p>
+<p>The example reset link contains the reset token in the GET-parameter token. In this example the token is <code>7351</code>. Given that the token consists of only a 4-digit number, there can be only 10000 possible values. This allows you to hijack users’ accounts by requesting a password reset and then brute-forcing the token.</p>
 <h4 id="attacking-weak-reset-tokens"><a class="header" href="#attacking-weak-reset-tokens">Attacking Weak Reset Tokens</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ seq -w 0 9999 &gt; tokens.txt
 d41y@htb[/htb]$ head tokens.txt
@@ -527,10 +542,10 @@ d41y@htb[/htb]$ head tokens.txt
     * FUZZ: 6182
 </code></pre>
 <h3 id="brute-forcing-2fa-codes"><a class="header" href="#brute-forcing-2fa-codes">Brute-Forcing 2FA Codes</a></h3>
-<p>2FA provides an additional layer of security to protect user accounts from unauthorized access. Typically, this is achieved by combining knowledge-based authentication with ownership-based authentication. However, 2FA can also be achieved by combining any other two of the major three authentication categories. Therefore, 2FA makes it significantly more difficult for attackers to access an account even if they manage to obtain the user's credentials. By requiring users to provide a second form of authentication, such a a one-time code generated by an authentication app or sent via SMS, 2FA mitigates the risk of unauthorized access. This extra layer of security significantly enhances the overall security posture of an account, reducing the likelihood of successful account breaches.</p>
+<p>2FA provides an additional layer of security to protect user accounts from unauthorized access. Typically, this is achieved by combining knowledge-based authentication with ownership-based authentication. However, 2FA can also be achieved by combining any other two of the major three authentication categories. Therefore, 2FA makes it significantly more difficult for attackers to access an account even if they manage to obtain the user’s credentials. By requiring users to provide a second form of authentication, such a a one-time code generated by an authentication app or sent via SMS, 2FA mitigates the risk of unauthorized access. This extra layer of security significantly enhances the overall security posture of an account, reducing the likelihood of successful account breaches.</p>
 <h4 id="attacking-2fa"><a class="header" href="#attacking-2fa">Attacking 2FA</a></h4>
-<p>One of the most common 2FA implementations relies on the user's password and a time-based one-time password provided to the user's smartphone by an authentication app or via SMS. These TOTPs typically consist only of digits, making them potentially guessable if the length is insufficient and the web app does not implement measures against successive submission of incorrect TOTPs.</p>
-<p><img src="../../../images/broken_authentication_7.png" alt="broken authentication 7" /></p>
+<p>One of the most common 2FA implementations relies on the user’s password and a time-based one-time password provided to the user’s smartphone by an authentication app or via SMS. These TOTPs typically consist only of digits, making them potentially guessable if the length is insufficient and the web app does not implement measures against successive submission of incorrect TOTPs.</p>
+<p><img src="../../../images/broken_authentication_7.png" alt="broken authentication 7"></p>
 <p>In this example, the TOTP is passed in the <code>opt</code> POST parameter, and you also need to specify the session token in the <code>PHPSESSID</code>.</p>
 <p>To attack:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ seq -w 0 9999 &gt; tokens.txt
@@ -550,11 +565,11 @@ d41y@htb[/htb]$ ffuf -w ./tokens.txt -u http://bf_2fa.htb/2fa.php -X POST -H "Co
 <h4 id="rate-limits"><a class="header" href="#rate-limits">Rate Limits</a></h4>
 <p>Rate limiting is a crucial technique employed in software development and network management to control the rate of incoming requests to a system or API. Its primary purpose is to prevent servers from being overwhelmed by too many requests at once, prevent system downtime, and prevent brute-force attacks. By limiting the number of requests allowed within a specified time frame, rate limiting helps maintain stability and ensures fair usage of resources for all users. It safeguards against abuse, such as DoS attacks or excessive usage by individual clients, by enforcing a maximum threshold on the frequency of requests.</p>
 <p>When an attacker conducts a brute-force attack and hits the rate limit, the attack will be thwarted. A rate limit typically increments the response time iteratively until a brute-force attack becomes infeasible or blocks the attacker from accessing the service for a certain amount of time.</p>
-<p>A rate limit should only be enforced on an attacker, not regular users, to prevent Dos scenarios. Many rate limit implementations rely on the IP address to identify the attacker. However, in a real-world scenario, obtaining the attacker's IP address might not always be as simple as it seems. For instance, if there are middleboxes such as reverse proxies, load balancers, or web caches, a request's source IP address will belong to the middelbox, not the attacker. Thus, some rate limits rely on HTTP headers such as <code>X-Forwarded-For</code> to otain the actual source IP address.</p>
+<p>A rate limit should only be enforced on an attacker, not regular users, to prevent Dos scenarios. Many rate limit implementations rely on the IP address to identify the attacker. However, in a real-world scenario, obtaining the attacker’s IP address might not always be as simple as it seems. For instance, if there are middleboxes such as reverse proxies, load balancers, or web caches, a request’s source IP address will belong to the middelbox, not the attacker. Thus, some rate limits rely on HTTP headers such as <code>X-Forwarded-For</code> to otain the actual source IP address.</p>
 <p>However, this causes an issue as an attacker can set arbitrary HTTP headers in request, bypassing the rate limit entirely. This enables an attacker to conduct a brute-force attack by randomizing the <code>X-Forwarded-For</code> header in each HTTP request to avoid the rate limit.</p>
 <h4 id="captchas"><a class="header" href="#captchas">CAPTCHAs</a></h4>
 <p>A <strong>Completely Automated Public Turing test to tell Computers and Humans Apart (CAPTCHA)</strong> is a security measure to prevent bots from submitting requests. By forcing humans to make requests instead of bots or scripts, brute-force attacks become a manual task, making them infeasible in most cases. CAPTCHAs typically present challenges that are easy for humans to solve but difficult for bots, such as identifying distorted text, selecting particular objects from images, or solving simple puzzles. By requiring users to complete these challenges before accessing certain features or submitting forms, CAPTCHAs help prevent automated scripts from performing actions that could be harmful, such as spamming forums, creating fake accounts, or launching brute-force attacks on the login pages. While CAPTCHAs serve an essential purpose in deterring automated abuse, they can also present usability challenges for some users, particularly those with visual impairments or specific cognitive disabilities.</p>
-<p>From a security perspective, it is essential not to reveal a CAPTCHA's solution in the response.</p>
+<p>From a security perspective, it is essential not to reveal a CAPTCHA’s solution in the response.</p>
 <p>Additionally, tools and browser extensions to solve CAPTCHAs automatically are rising. Many open-source CAPTCHA solvers can be found. In particular, the rise of AI-driven tools provides CAPTCHA-solving capabilities by utilizing powerful image recognition or voice recognition machine learning models.</p>
 <h2 id="password-attacks"><a class="header" href="#password-attacks">Password Attacks</a></h2>
 <h3 id="default-credentials"><a class="header" href="#default-credentials">Default Credentials</a></h3>
@@ -571,16 +586,16 @@ d41y@htb[/htb]$ ffuf -w ./tokens.txt -u http://bf_2fa.htb/2fa.php -X POST -H "Co
 <p>Often web apps authenticate users who have lost their passwords by requesting that they answer one or multiple security questions. During registration, users provide answers to predefined and generic security questions, disallowing users from entering custom ones. Therefore, within the same web app, the security question of all users will be the same, allowing attackers to abuse them.</p>
 <p>Assuming you found such functionality on a target website, you should try abusing it to bypass authentication, Often, the weak link in a question-based password reset functionality is the predictability of the answers. It is common to find questions like the following:</p>
 <ul>
-<li>What is your mother's maiden name?</li>
+<li>What is your mother’s maiden name?</li>
 <li>What city were you born in?</li>
 </ul>
 <p>While these questions seem tied to the individual user, they can often be obtained through OSINT or guessed, given a sufficient number of attempts, i.e., a lack of brute-force protection.</p>
-<p>'What city were you born in?' example:</p>
+<p>‘What city were you born in?’ example:</p>
 <ol>
 <li>get a <a href="https://github.com/datasets/world-cities/blob/main/data/world-cities.csv">wordlist</a></li>
 <li>analyze request and response</li>
 </ol>
-<p><img src="../../../images/broken_authentication_8.png" alt="broken authentication 8" /></p>
+<p><img src="../../../images/broken_authentication_8.png" alt="broken authentication 8"></p>
 <ol start="3">
 <li>ffuf</li>
 </ol>
@@ -594,7 +609,7 @@ d41y@htb[/htb]$ ffuf -w ./tokens.txt -u http://bf_2fa.htb/2fa.php -X POST -H "Co
 <h4 id="manipulating-the-reset-request"><a class="header" href="#manipulating-the-reset-request">Manipulating the Reset Request</a></h4>
 <p>Another instance of a flawed password reset logic occurs when a user can manipulate a potentially hidden parameter to reset the password of a different account.</p>
 <p>Consider the following password reset flow:</p>
-<p><img src="../../../images/broken_authentication_9.png" alt="broken authentication 9" /></p>
+<p><img src="../../../images/broken_authentication_9.png" alt="broken authentication 9"></p>
 <p>Use the demo account creds:</p>
 <pre><code class="language-bash">POST /reset.php HTTP/1.1
 Host: pwreset.htb
@@ -605,8 +620,8 @@ Cookie: PHPSESSID=39b54j201u3rhu4tab1pvdb4pv
 username=htb-stdnt
 </code></pre>
 <p>Afterwards, supply the response to the security question:</p>
-<p><img src="../../../images/broken_authentication_10.png" alt="broken authentication 10" /></p>
-<p>Supplying the security response 'London' results in the following request:</p>
+<p><img src="../../../images/broken_authentication_10.png" alt="broken authentication 10"></p>
+<p>Supplying the security response ‘London’ results in the following request:</p>
 <pre><code class="language-bash">POST /security_question.php HTTP/1.1
 Host: pwreset.htb
 Content-Length: 43
@@ -615,8 +630,8 @@ Cookie: PHPSESSID=39b54j201u3rhu4tab1pvdb4pv
 
 security_response=London&amp;username=htb-stdnt
 </code></pre>
-<p>The username is contained in the form as a hidden parameter and sent along with the security response. Now, you can reset the user's password:</p>
-<p><img src="../../../images/broken_authentication_11.png" alt="broken authentication 11" /></p>
+<p>The username is contained in the form as a hidden parameter and sent along with the security response. Now, you can reset the user’s password:</p>
+<p><img src="../../../images/broken_authentication_11.png" alt="broken authentication 11"></p>
 <p>The final request looks like this:</p>
 <pre><code class="language-bash">POST /reset_password.php HTTP/1.1
 Host: pwreset.htb
@@ -626,7 +641,7 @@ Cookie: PHPSESSID=39b54j201u3rhu4tab1pvdb4pv
 
 password=P@$$w0rd&amp;username=htb-stdnt
 </code></pre>
-<p>Like in the previous request, the request contains the username in a separate POST parameter. Suppose the web app does properly verify that the usernames in both requests match. In that case, you can skip the security question or supply the answer to your security question and then set the password of an entirely different account. For instance, you can change the admin user's password by manipulating the <code>username</code> parameter of the password reset request:</p>
+<p>Like in the previous request, the request contains the username in a separate POST parameter. Suppose the web app does properly verify that the usernames in both requests match. In that case, you can skip the security question or supply the answer to your security question and then set the password of an entirely different account. For instance, you can change the admin user’s password by manipulating the <code>username</code> parameter of the password reset request:</p>
 <pre><code class="language-bash">POST /reset_password.php HTTP/1.1
 Host: pwreset.htb
 Content-Length: 32
@@ -635,7 +650,7 @@ Cookie: PHPSESSID=39b54j201u3rhu4tab1pvdb4pv
 
 password=P@$$w0rd&amp;username=admin
 </code></pre>
-<p>To prevent this vuln, keeping a consistent state during the entire password reset process is essential. Resetting an account's password is a sensitive process where minor implementation flaws or logic bugs can enable an attacker to take over other user's accounts. As such, you should investigate the password reset functionality of any web app closely and keep an eye out for potential security issues.</p>
+<p>To prevent this vuln, keeping a consistent state during the entire password reset process is essential. Resetting an account’s password is a sensitive process where minor implementation flaws or logic bugs can enable an attacker to take over other user’s accounts. As such, you should investigate the password reset functionality of any web app closely and keep an eye out for potential security issues.</p>
 <h2 id="authentication-bypasses"><a class="header" href="#authentication-bypasses">Authentication Bypasses</a></h2>
 <h3 id="via-direct-access"><a class="header" href="#via-direct-access">via Direct Access</a></h3>
 <p>The most straightforwarded way of bypassing authentication checks is to request the protected resource from an unauthenticated context. An unauthenticated attacker can access protected information if the web app does not properly verify that the request is authenticated.</p>
@@ -647,11 +662,11 @@ password=P@$$w0rd&amp;username=admin
 }
 </code></pre>
 <p>This code redirects the user to <code>/index.php</code> if the session is not active, i.e., if the user is not authenticated. However, the PHP script does not stop execution, resulting in protected information within the page being sent in the response body.</p>
-<p><img src="../../../images/broken_authentication_12.png" alt="broken authentication" /></p>
+<p><img src="../../../images/broken_authentication_12.png" alt="broken authentication"></p>
 <p>You can see, the entire admin page is contained in the response body. However, if you attempt to access the page in your web browser, the browser follows the redirect and display the login prompt instead of the protected admin page. You can easily trick the browser into displaying the admin page by intercepting the response and changing the status code from <code>302</code> to <code>200</code>.</p>
-<p><img src="../../../images/broken_authentication_13.png" alt="broken authentication 13" /></p>
+<p><img src="../../../images/broken_authentication_13.png" alt="broken authentication 13"></p>
 <p>Afterward, forward the request by clicking on <code>Forward</code>. Since you intercepted the response, you can now edit it. To force the browser to display the content, you need to change the status code from <code>302</code> to <code>200</code>.</p>
-<p><img src="../../../images/broken_authentication_14.png" alt="broken authentication 14" /></p>
+<p><img src="../../../images/broken_authentication_14.png" alt="broken authentication 14"></p>
 <p>Afterward, you can forward the response. If you switch back to your browser window, you can see that the protected information is rendered.</p>
 <p>To prevent the protected information from being returned in the body of the redirect response, the PHP script needs to exit after issuing the redirect.</p>
 <pre><code class="language-php">if(!$_SESSION['active']) {
@@ -663,21 +678,21 @@ password=P@$$w0rd&amp;username=admin
 <p>An authentication implementation can be flawed if it depends on the presence or value of an HTTP parameter, introducing authentication vulnerabilities.</p>
 <p>This type of vulnerability is closely related to authorization issues such as <strong>Insecure Direct Object Reference (IDOR)</strong> vulns.</p>
 <p>In this example you are provided with credentials. After loggnig in, you are being redirected to <code>/admin.php?user_id=183</code>.</p>
-<p><img src="../../../images/broken_authentication_15.png" alt="broken authentication 15" /></p>
+<p><img src="../../../images/broken_authentication_15.png" alt="broken authentication 15"></p>
 <p>In your web browser, you can see that you seem to be lacking privileges, as you can only see a part of the available data.</p>
-<p><img src="../../../images/broken_authentication_16.png" alt="broken authentication 16" /></p>
+<p><img src="../../../images/broken_authentication_16.png" alt="broken authentication 16"></p>
 <p>To investigate the purpose of the <code>user_id</code> parameter, remove it from your request to <code>/admin.php</code>. When doing so, you are redirected back to the login screen at <code>/index.php</code>, even though your session provided in the <code>PHPSESSID</code> cookie is still valid.</p>
 <p>Thus, you can assume that the parameter <code>user_id</code> is related to authentication. You can bypass authentication entirely by accessing the URL <code>/admin.php?user_id=183</code> directly.</p>
-<p><img src="../../../images/broken_authentication_17.png" alt="broken authentication 17" /></p>
+<p><img src="../../../images/broken_authentication_17.png" alt="broken authentication 17"></p>
 <p>Based on the parameter name <code>user_id</code>, you can infer that the parameter specifies the ID of the user accessing the page. If you can guess or brute-force the user ID of an administrator, you might be able to access the page with administrative privileges, thus revealing the admin information.</p>
 <h2 id="session-token-attacks"><a class="header" href="#session-token-attacks">Session (Token) Attacks</a></h2>
-<p>Session Tokens are unique identifiers a web app uses to identify a user. More specifically, the session token is tied to the user's session. If an attacker can obtain a valid session token of another user, the attacker can impersonate the user to the web app, thus taking over their session.</p>
+<p>Session Tokens are unique identifiers a web app uses to identify a user. More specifically, the session token is tied to the user’s session. If an attacker can obtain a valid session token of another user, the attacker can impersonate the user to the web app, thus taking over their session.</p>
 <h3 id="brute-force-attack"><a class="header" href="#brute-force-attack">Brute-Force Attack</a></h3>
 <p>Suppose a session token does not provide sufficient randomness and is cryptographically weak. In that case, you can brute-force valid session tokens. This can happen if a session token is too short or contains static data that does not provide randomness to the token, i.e., the token provides insufficient entropy.</p>
 <p>For instance, consider a web app that assigns a four-character session token. A four-character string can easily be brute-forced.</p>
 <p>This scenario is relatively uncommon in the real world. In a slightly more common variant, the session token itself provides sufficient lenght; however, the token consists of hardcoded prepended and appended values, while only a small part of the session token is dynamic to provide randomness. For instance, consider the following token assigned by a web app:</p>
-<p><img src="../../../images/broken_authentication_18.png" alt="broken authentication 18" /></p>
-<p>The session token is 32 characters long; thus, it seems infeasible to enumerate other users' valid sessions. However, send the login request multiple times and take note of the session tokens assigned by the web application. This results in the following session tokens:</p>
+<p><img src="../../../images/broken_authentication_18.png" alt="broken authentication 18"></p>
+<p>The session token is 32 characters long; thus, it seems infeasible to enumerate other users’ valid sessions. However, send the login request multiple times and take note of the session tokens assigned by the web application. This results in the following session tokens:</p>
 <pre><code>2c0c58b27c71a2ec5bf2b4b6e892b9f9
 2c0c58b27c71a2ec5bf2b4546092b9f9
 2c0c58b27c71a2ec5bf2b497f592b9f9
@@ -692,7 +707,7 @@ password=P@$$w0rd&amp;username=admin
 141238
 141240
 </code></pre>
-<p>The session tokens seem to be incrementing numbers. This makes enumeration of all past and future sessions trivial, as you simply need to increment or decrement your session token to obtain active sessions and hijack other users' accounts.</p>
+<p>The session tokens seem to be incrementing numbers. This makes enumeration of all past and future sessions trivial, as you simply need to increment or decrement your session token to obtain active sessions and hijack other users’ accounts.</p>
 <p>As such, it is crucial to capture multiple session tokens and analyze them to ensure that session tokens provide sufficient randomness to disallow brute-force attacks against them.</p>
 <h3 id="attacking-predictable-session-tokens"><a class="header" href="#attacking-predictable-session-tokens">Attacking Predictable Session Tokens</a></h3>
 <p>In a more realistic scenario, the session token does provide sufficient randomness on the surface. However, the generation of session tokens is not truly random, it can be predicted by an attacker with insight into the session token generation logic.</p>
@@ -719,8 +734,8 @@ dXNlcj1odGItc3RkbnQ7cm9sZT1hZG1pbg==
 <p>Another variant of session tokens contains the result of an encryption of a data sequence. A weak cryptographic algorithm could lead to privilege escalation or authentication bypass, just like plain encoding. Improper handling of cryptographic algorithms or injection of user-provided data into the input of an encryption function can lead to vulnerabilities in the session token generation. However, it is often challenging to attack encryption-based session tokens in a black box approach without access to the source code responsible for session token generation.</p>
 <h2 id="further-session-attacks"><a class="header" href="#further-session-attacks">Further Session Attacks</a></h2>
 <h3 id="session-fixation"><a class="header" href="#session-fixation">Session Fixation</a></h3>
-<p>... is an attack that enables an attacker to obtain a victim's valid session. A web app vulnerable to session fixation does not assign a new session token after a successful authentication. If an attacker can coerce the victim into using a session token chosen by the attacker, session fixation enables an attacker to steal the victim's session and access their account.</p>
-<p>For instance, assume a web app vulnerable to session fixation uses a session token in the HTTP cookie <code>session</code>. Furthermore, the web app sets the user's session cookie to a value provided in the <code>sid</code> GET parameter. Under these circumstances, a session fixation attack could look like this.</p>
+<p>… is an attack that enables an attacker to obtain a victim’s valid session. A web app vulnerable to session fixation does not assign a new session token after a successful authentication. If an attacker can coerce the victim into using a session token chosen by the attacker, session fixation enables an attacker to steal the victim’s session and access their account.</p>
+<p>For instance, assume a web app vulnerable to session fixation uses a session token in the HTTP cookie <code>session</code>. Furthermore, the web app sets the user’s session cookie to a value provided in the <code>sid</code> GET parameter. Under these circumstances, a session fixation attack could look like this.</p>
 <ol>
 <li>An attacker obtains a valid session token by authenticating to the web app. For instance, assume the session token is <code>a1b2c3d4e5f6</code>. Afterward, the attacker invalidates their session by logging out.</li>
 <li>The attacker tricks the victim to use the known session token by sending the following link: <code>http://vulnerable.htb/?sid=a1b2c3d4e5f6</code>. When the victim clicks that link, the web app sets the <code>session</code> cookie to the provided value.</li>
@@ -731,25 +746,24 @@ Set-Cookie: session=a1b2c3d4e5f6
 [...]
 </code></pre>
 <ol start="3">
-<li>The victim authenticates to the vulnerable web application. The victim's browser already stores the attacker-provided session cookie, so it is sent along with the login request. The victim uses the attacker-provided session token since the web app does not assign a new one.</li>
-<li>Since the attacker knows the victim's session token <code>a1b2c3d4e5f6</code>, they can hijack the victim's session.</li>
+<li>The victim authenticates to the vulnerable web application. The victim’s browser already stores the attacker-provided session cookie, so it is sent along with the login request. The victim uses the attacker-provided session token since the web app does not assign a new one.</li>
+<li>Since the attacker knows the victim’s session token <code>a1b2c3d4e5f6</code>, they can hijack the victim’s session.</li>
 </ol>
 <p>A web app must assign a new randomly generated session token after successful authentication to prevent fixation attacks.</p>
 <h3 id="improper-session-timeout"><a class="header" href="#improper-session-timeout">Improper Session Timeout</a></h3>
 <p>A web app must define a proper Session Timeout for a session token. After the time interval defined in the session timeout has passed, the session will expire, and the session token is no longer accepted. If a web application does not define a session timeout, the session token would be valid infinitely, enabling an attacker to use hijacked session effectively forever.</p>
-<p>For the security of a web app, the session timeout must be appropriately set. Because each web app has different business requirements, there is no universal session timeout value. For instance, a web app dealing with sensitive health data should probably set a session timeout in the range of minutes. In contrast, a social media app might set a session timeout of multiple hours.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>For the security of a web app, the session timeout must be appropriately set. Because each web app has different business requirements, there is no universal session timeout value. For instance, a web app dealing with sensitive health data should probably set a session timeout in the range of minutes. In contrast, a social media app might set a session timeout of multiple hours.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../../attack/web/authentication/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../../attack/web/authentication/login_brute_forcing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -759,15 +773,21 @@ Set-Cookie: session=a1b2c3d4e5f6
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../../attack/web/authentication/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../../attack/web/authentication/login_brute_forcing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -787,22 +807,20 @@ Set-Cookie: session=a1b2c3d4e5f6
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../../elasticlunr.min.js"></script>
-        <script src="../../../mark.min.js"></script>
-        <script src="../../../searcher.js"></script>
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
 
-        <script src="../../../clipboard.min.js"></script>
-        <script src="../../../highlight.js"></script>
-        <script src="../../../book.js"></script>
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../../theme/pagetoc.js"></script>
 
 
 

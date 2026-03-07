@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="shortcut icon" href="../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -415,22 +418,22 @@
 <h2 id="structure"><a class="header" href="#structure">Structure</a></h2>
 <h3 id="network-types"><a class="header" href="#network-types">Network Types</a></h3>
 <h4 id="wide-area-network-wan"><a class="header" href="#wide-area-network-wan">Wide Area Network (<em>WAN</em>)</a></h4>
-<p>... is commonly referred to as the internet. When dealing with networking equipment, you'll often have a WAN address and LAN address. The WAN one is the address that is generally accessed by the internet. It is not exclusive to the internet; a WAN is just a large number of LANs joined together. Many large companies or government agencies will have an "Internal WAN". Generally speaking, the primaty way you identify if the network is a WAN is to use a WAN specific routing protocol such as BGP and if the IP schema in use is not within RFC 1918.</p>
+<p>… is commonly referred to as the internet. When dealing with networking equipment, you’ll often have a WAN address and LAN address. The WAN one is the address that is generally accessed by the internet. It is not exclusive to the internet; a WAN is just a large number of LANs joined together. Many large companies or government agencies will have an “Internal WAN”. Generally speaking, the primaty way you identify if the network is a WAN is to use a WAN specific routing protocol such as BGP and if the IP schema in use is not within RFC 1918.</p>
 <h4 id="local-area-netwotks-lan--wireless-local-area-network-wlan"><a class="header" href="#local-area-netwotks-lan--wireless-local-area-network-wlan">Local Area Netwotks (<em>LAN</em>) / Wireless Local Area Network (<em>WLAN</em>)</a></h4>
-<p>LANs and WLANs will typically assign IP addresses designated for local use. In some cases you may be assigned a routable IP address from joining their LAN, but that is much less common. There's nothing different bewteen a LAN or WLAN, other than WLAN's introduce the ability to transmit data without cables.</p>
+<p>LANs and WLANs will typically assign IP addresses designated for local use. In some cases you may be assigned a routable IP address from joining their LAN, but that is much less common. There’s nothing different bewteen a LAN or WLAN, other than WLAN’s introduce the ability to transmit data without cables.</p>
 <h4 id="virtual-private-network-vpn"><a class="header" href="#virtual-private-network-vpn">Virtual Private Network (<em>VPN</em>)</a></h4>
-<p>... has the goal of making the user feel as if they were plugged into a different network.</p>
+<p>… has the goal of making the user feel as if they were plugged into a different network.</p>
 <h5 id="site-to-site-vpn"><a class="header" href="#site-to-site-vpn">Site-to-Site VPN</a></h5>
 <p>Both the client and server are Network Devices, typically either Routers or Firewalls, and share entire network ranges. This is the most commonly used to join company networks together over the internet, allowing multiple locations to communicate over the internet as if they were local.</p>
 <h5 id="remote-access-vpn"><a class="header" href="#remote-access-vpn">Remote Access VPN</a></h5>
-<p>This involves the client's computer creating a virtual interface that behaves as if it is on a client's network. When analyizing these VPNs, an important piece to consider is the routing table that is created when joining the VPN. If the VPN only creates routes for specific networks, this is called a split-tunnel VPN, meaning the internet connection is not going out of the VPN.</p>
+<p>This involves the client’s computer creating a virtual interface that behaves as if it is on a client’s network. When analyizing these VPNs, an important piece to consider is the routing table that is created when joining the VPN. If the VPN only creates routes for specific networks, this is called a split-tunnel VPN, meaning the internet connection is not going out of the VPN.</p>
 <h5 id="ssl-vpn"><a class="header" href="#ssl-vpn">SSL VPN</a></h5>
 <p>This is essentially a VPN that is done within your web browser and is becoming increasingly common as web browsers are becoming capable of doing anything. Typically these will stream applications or entire desktop sessions to your web browser.</p>
 <h3 id="book-terms"><a class="header" href="#book-terms">Book Terms</a></h3>
 <h4 id="global-area-network-gan"><a class="header" href="#global-area-network-gan">Global Area Network (<em>GAN</em>)</a></h4>
 <p>A worldwide network such as the internet is known as a GAN. However, the internet is not the only computer network of this kind. Internationally active companies also maintain isolated networks that span several WANs and connect company computers worldwide. GANs use the glass fibers infrastructure of wide-are networks and interconnect them by international undersea cables or satellite transmission.</p>
 <h4 id="metropolitan-area-network-man"><a class="header" href="#metropolitan-area-network-man">Metropolitan Area Network (<em>MAN</em>)</a></h4>
-<p>... is a broadband telecommunications network that connects several LANs in geographical proximity. As a rule, these are individual branches of a company connected to a MAN via leased lines. High-performance routers and high-performance connections based on glass fibers are used, which enable a significantly higher data throughput than the internet. The transmission speed between two remote nodes is comparable to communication within a LAN.</p>
+<p>… is a broadband telecommunications network that connects several LANs in geographical proximity. As a rule, these are individual branches of a company connected to a MAN via leased lines. High-performance routers and high-performance connections based on glass fibers are used, which enable a significantly higher data throughput than the internet. The transmission speed between two remote nodes is comparable to communication within a LAN.</p>
 <p>Internationally operating network operators provide the infrastructure for MANs. Cities wired as MANs can be integrated supra-regionally in WANs and internationally in GANs.</p>
 <h4 id="personal-area-network-pan--wireless-personal-area-network-wpan"><a class="header" href="#personal-area-network-pan--wireless-personal-area-network-wpan">Personal Area Network (<em>PAN</em>) / Wireless Personal Area Network (<em>WPAN</em>)</a></h4>
 <p>Modern end devices such as smartphones, tablets, laptops, or desktop computers can be connected ad hoc to form a network to enable data exchange. This can be done by cable in the form of a PAN.</p>
@@ -439,15 +442,21 @@
 <h3 id="topologies"><a class="header" href="#topologies">Topologies</a></h3>
 <p>A network topology is a typical arrangement and physical or logical connection of devices in a network. Computers are hosts, such as clients and servers, that actively use the network. They also include network components such as switches, bridges, routers, which have a distribution function and ensure that all network hosts can establish a logical connection with each other. The network topology determines the components to be used and the access methods to the transmission media.</p>
 <h4 id="connections"><a class="header" href="#connections">Connections</a></h4>
-<div class="table-wrapper"><table><thead><tr><th>Wired</th><th>Wireless</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Wired</th><th>Wireless</th></tr>
+</thead>
+<tbody>
 <tr><td>Coaxial cabling</td><td>Wi-Fi</td></tr>
 <tr><td>Glass fiber cabling</td><td>Cellular</td></tr>
 <tr><td>Twisted-pair cabling</td><td>Satellite</td></tr>
 <tr><td>and others</td><td>and others</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="nodes---network-interface-controller-nics"><a class="header" href="#nodes---network-interface-controller-nics">Nodes - Network Interface Controller (<em>NICs</em>)</a></h4>
-<p>Network nodes are the transmission medium's connection points to transmitters and receivers of electrical, optical, or radio signals in the medium. A node may be connected to a computer, but certain types may have only one microcontroller on a node or may have no programmable device at all.</p>
+<p>Network nodes are the transmission medium’s connection points to transmitters and receivers of electrical, optical, or radio signals in the medium. A node may be connected to a computer, but certain types may have only one microcontroller on a node or may have no programmable device at all.</p>
 <ul>
 <li>repeaters</li>
 <li>hubs</li>
@@ -471,18 +480,18 @@
 </ul>
 <h3 id="proxies"><a class="header" href="#proxies">Proxies</a></h3>
 <h4 id="dedicated-proxy--forward-proxy"><a class="header" href="#dedicated-proxy--forward-proxy">Dedicated Proxy / Forward Proxy</a></h4>
-<p>... is what most people imagine a proxy to be. A forward proxy is when a client makes a request to a computer, and that computer carries out the request.</p>
-<p><img src="../../images/network_fundamentals1.png" alt="network fundamentals 1" /></p>
+<p>… is what most people imagine a proxy to be. A forward proxy is when a client makes a request to a computer, and that computer carries out the request.</p>
+<p><img src="../../images/network_fundamentals1.png" alt="network fundamentals 1"></p>
 <h4 id="reverse-proxy"><a class="header" href="#reverse-proxy">Reverse Proxy</a></h4>
 <p>Instead of being designed to filter outgoing requests, it filters incoming ones. The most common goal with a reverse proxy, is to listen on an address and forward it to a closed-off network.</p>
-<p><img src="../../images/network_fundamentals2.png" alt="network fundamentals 2" /></p>
+<p><img src="../../images/network_fundamentals2.png" alt="network fundamentals 2"></p>
 <h4 id="non--transparent-proxy"><a class="header" href="#non--transparent-proxy">(Non-) Transparent Proxy</a></h4>
-<p>With a transparent proxy, the client doesn't know about its existence. The transparent proxy intercepts the client's communication requests to the internet and acts as a substitute instance. To the outside, the transparent proxy, like the non-transparent proxy, acts as a communication partner.</p>
+<p>With a transparent proxy, the client doesn’t know about its existence. The transparent proxy intercepts the client’s communication requests to the internet and acts as a substitute instance. To the outside, the transparent proxy, like the non-transparent proxy, acts as a communication partner.</p>
 <p>If it is a non-transparent proxy, you must be informed about its existence. For this purpose, you and the software you want to use are given a special proxy configuration that ensures that traffic to the internet is first addressed to the proxy. If this configuration does not exist, you cannot communicate via the proxy. However, since the proxy usually provides the only communication path to other networks, communication to the internet is generally cut off without a corresponding proxy configuration.</p>
 <h2 id="workflow"><a class="header" href="#workflow">Workflow</a></h2>
 <h3 id="networking-models"><a class="header" href="#networking-models">Networking Models</a></h3>
 <p>Two networking models describe the communication and transfer of data from one host to another, called <a href="https://www.geeksforgeeks.org/open-systems-interconnection-model-osi/">ISO/OSI</a> model and the <a href="https://www.geeksforgeeks.org/computer-networks/tcp-ip-model/">TCP/IP</a> model. This is a simplified representation of the so-called layers representing transferred Bits in readable contents.</p>
-<p><img src="../../images/network_fundamentals3.png" alt="network fundamentals 3" /></p>
+<p><img src="../../images/network_fundamentals3.png" alt="network fundamentals 3"></p>
 <h2 id="addressing"><a class="header" href="#addressing">Addressing</a></h2>
 <h3 id="network-layer"><a class="header" href="#network-layer">Network Layer</a></h3>
 <p>The network layer of OSI controls the exchange of data packets, as these cannot be directly routed to the receiver and therefore have to be provided with routing nodes. The data packets are then transferred from node to node until they reach their target. To implement this, the network layer identifies the individual network nodes, sets up and clears connection channels, and takes care of routing and data flow control. When sending the packets, addresses are evaluated, and the data is routed through the network from node to node. There is usually no processing of the data in the layers above the Layer 3 in the nodes. Based on the addresses, the routing and the construction of routing tables are done.</p>
@@ -507,7 +516,7 @@
 <ul>
 <li>IPv4 / IPv6
 <ul>
-<li>describes the unique postal address and district of the receiver's building</li>
+<li>describes the unique postal address and district of the receiver’s building</li>
 </ul>
 </li>
 <li>MAC
@@ -518,22 +527,28 @@
 </ul>
 <h4 id="structure-1"><a class="header" href="#structure-1">Structure</a></h4>
 <p>An IPv4 address consists of a 32-bit binary number combined into 4 bytes consisting of 8-bit groups (<em>octets</em>) ranging from 0-255. These are converted into more easily readable decimal numbers, separated by dots and represented as dotted-decimal notation.</p>
-<div class="table-wrapper"><table><thead><tr><th>Notation</th><th>Presentation</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Notation</th><th>Presentation</th></tr>
+</thead>
+<tbody>
 <tr><td>Binary</td><td>0111 1111.0000 0000.0000 0000.0000 0001</td></tr>
 <tr><td>Decimal</td><td>127.0.0.1</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Each network interface is assigned a unique IP address.</p>
 <p>The IPv4 format allows for 4,294,967,296 unique addresses. The IP address is divided into a host part and a network part. The router assigns the host part of the IP address at home or by an administrator. The respective network administrator assigns the network part. On the internet, this is IANA, which allocates and manages the unique IPs.</p>
-<p>The IP network blocks were divided into <a href="https://www.geeksforgeeks.org/computer-networks/introduction-of-classful-ip-addressing/">classes A - E</a>. The different classes differed in the host and network shares' respective lengths.</p>
+<p>The IP network blocks were divided into <a href="https://www.geeksforgeeks.org/computer-networks/introduction-of-classful-ip-addressing/">classes A - E</a>. The different classes differed in the host and network shares’ respective lengths.</p>
 <h4 id="subnet-mask"><a class="header" href="#subnet-mask">Subnet Mask</a></h4>
 <p>A further separation of these classes into small networks is done with the help of subnetting. This separation is done using the netmasks, which is as long as an IPv4 address. As with classes, it describes which bit positions within the IP address act as network part or host part.</p>
 <h4 id="network-and-gateway-addresses"><a class="header" href="#network-and-gateway-addresses">Network and Gateway Addresses</a></h4>
 <p>Two additional IPs are reserved for the so-called network address (<em>usually the first</em>) and the broadcast address (<em>usually the last</em>). An important role plays the default gateway, which is the name for the IPv4 address of the router that couples networks and systems with different protocols and manages addresses and transmission methods. It is common for the default gateway to be assigned the first or last assignable IPv4 address in a subnet. This is not a technical requirement, but has become a de-facto standard in network environments of all sizes.</p>
 <h4 id="broadcast-address"><a class="header" href="#broadcast-address">Broadcast Address</a></h4>
-<p>The broadcast IP address's tasks is to connect all devices in a network with each other. Broadcast in a network is a message that is transmitted to all participants of a network and does not require any response. In this way, a host sends a data packet to all other participants on the network simultaneously and, in doing so, communicates its IP address, which the receivers can use to contact it.</p>
+<p>The broadcast IP address’s tasks is to connect all devices in a network with each other. Broadcast in a network is a message that is transmitted to all participants of a network and does not require any response. In this way, a host sends a data packet to all other participants on the network simultaneously and, in doing so, communicates its IP address, which the receivers can use to contact it.</p>
 <h4 id="classless-inter-domain-routing---cidr"><a class="header" href="#classless-inter-domain-routing---cidr">Classless Inter-Domain Routing - (<em>CIDR</em>)</a></h4>
-<p>... is a method of representation and replaces the fixed assignment between IPv4 address and network classes. The division is based on the subnet mask or the so-called CIDR suffix, which allows the bitwise division of the IPv4 address space and thus into subnets of any size. The CIDR suffix indicates how many bits from the beginning of the IPv4 address belong to the network. It is a notation that represents the subnet mask by specifying the number of 1-bits in the subnet mask.</p>
+<p>… is a method of representation and replaces the fixed assignment between IPv4 address and network classes. The division is based on the subnet mask or the so-called CIDR suffix, which allows the bitwise division of the IPv4 address space and thus into subnets of any size. The CIDR suffix indicates how many bits from the beginning of the IPv4 address belong to the network. It is a notation that represents the subnet mask by specifying the number of 1-bits in the subnet mask.</p>
 <ul>
 <li>IPv4 Address
 <ul>
@@ -562,9 +577,15 @@
 <li>Number of Hosts</li>
 </ul>
 <p>Example:</p>
-<div class="table-wrapper"><table><thead><tr><th>Network Address</th><th>First Host</th><th>Last Host</th><th>Broadcast Address</th><th>CIDR</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Network Address</th><th>First Host</th><th>Last Host</th><th>Broadcast Address</th><th>CIDR</th></tr>
+</thead>
+<tbody>
 <tr><td>192.168.12.176</td><td>192.168.12.177</td><td>192.168.12.190</td><td>192.168.12.191</td><td>192.168.12.176/28</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="mac-address"><a class="header" href="#mac-address">MAC Address</a></h3>
 <p>Each host in a network has its own 48-bit (<em>6 octets</em>) Media Access Control (<em>MAC</em>) address, represented in hexadecimal format. MAC is the physical address for your network interfaces. There are several different standards for the MAC address:</p>
@@ -573,11 +594,11 @@
 <li>Bluetooth</li>
 <li>WLAN</li>
 </ul>
-<p>This is because the MAC address addresses the physical connection of a host. Each network card has its individual MAC address, which is configured once on the manufacturer's hardware side but can always be changed, at least temporarily.</p>
-<p>When an IP packet is delivered, must be addressed on Layer 2 to the destination host's physical address or to the router / NAT, which is responsible for routing. Each packet has a sender address and a destination address.</p>
+<p>This is because the MAC address addresses the physical connection of a host. Each network card has its individual MAC address, which is configured once on the manufacturer’s hardware side but can always be changed, at least temporarily.</p>
+<p>When an IP packet is delivered, must be addressed on Layer 2 to the destination host’s physical address or to the router / NAT, which is responsible for routing. Each packet has a sender address and a destination address.</p>
 <p>The MAC address consists of a total of 6 bytes. The first half is the so called Organization Unique Identifier (<em>OUI</em>) defined by the Institute of Electrical and Electronics Engineers (<em>IEEE</em>) for the respective manufacturers.</p>
 <p>The last half of the MAC address is called the Individual Address Part or Network Interface Controller (<em>NIC</em>), which the manufacturers assign. The manufacturer sets this bit sequence only once and thus ensures that the complete address is unique.</p>
-<p>If a host with the IP target address is located in the same subnet, the delivery is made directly to the target computer's physical address. However, if this host belongs to a different subnet, the Ethernet frame is addressed to the MAC address of the responsible router. If the Ethernet frame's destination address matches its own layer 2 address, the router will forward the frame to the higher layers. Adress Resolution Protocol (<em>ARP</em>) is used in IPv4 to determine the MAC addresses associated with the IP addresses.</p>
+<p>If a host with the IP target address is located in the same subnet, the delivery is made directly to the target computer’s physical address. However, if this host belongs to a different subnet, the Ethernet frame is addressed to the MAC address of the responsible router. If the Ethernet frame’s destination address matches its own layer 2 address, the router will forward the frame to the higher layers. Adress Resolution Protocol (<em>ARP</em>) is used in IPv4 to determine the MAC addresses associated with the IP addresses.</p>
 <p>As with IPv4 addresses, there are also certain reserved areas for the MAC address. These include, for example, the local range for the MAC:</p>
 <ul>
 <li>02:00:00:00:00:00</li>
@@ -589,12 +610,12 @@
 <p>With multicast, the packet is sent only once to all hosts on the local network, which then decides whether or not to accept the packet based on their configuration. The multicast address is a unique address, just like the broadcast address, which has fixed octet values. Broadcast in a network represents a broadcasted call, where data packets are transmitted simultaneously from one point to all members of a network. It is mainly used if the address of the receiver of the packet is not yet known. An example is the ARP and DHCP protocols.</p>
 <p>The second last bit in the first octet identifies whether it is a global OUI, defined by the IEEE, or a locally administrated MAC address (<em>0 = Global OUI; 1 = Locally Administrated</em>).</p>
 <h4 id="adress-resolution-protocol-arp"><a class="header" href="#adress-resolution-protocol-arp">Adress Resolution Protocol (<em>ARP</em>)</a></h4>
-<p>... is a network protocol. It is an important part of the network communication used to resolve a network layer IP address to a link layer MAC address. It maps a host's IP address to its corresponding MAC address to facilitate communication between devices on a Local Area Network. When a device on a LAN wants to communicate with another device, it sends a broadcast message containing the destination IP address and its own MAC address. The device with the matching IP address responds with its own MAC address, and the devices can then communicate directly using their MAC addresses. This process is known as ARP resolution.</p>
+<p>… is a network protocol. It is an important part of the network communication used to resolve a network layer IP address to a link layer MAC address. It maps a host’s IP address to its corresponding MAC address to facilitate communication between devices on a Local Area Network. When a device on a LAN wants to communicate with another device, it sends a broadcast message containing the destination IP address and its own MAC address. The device with the matching IP address responds with its own MAC address, and the devices can then communicate directly using their MAC addresses. This process is known as ARP resolution.</p>
 <p>ARP is an important part of the network communication process because it allows devices to send and receive data using MAC addresses rather than IP addresses, which can be more efficient. Two types of request messages can be used:</p>
 <ul>
 <li>ARP Request
 <ul>
-<li>When a device wants to communicate with another device on a LAN, it sends an ARP request to resolve the destination device's IP address to its MAC address. The request is broadcast to all devices on the LAN and contains the IP address of the destination device. The device with the matching IP address responds with its MAC address.</li>
+<li>When a device wants to communicate with another device on a LAN, it sends an ARP request to resolve the destination device’s IP address to its MAC address. The request is broadcast to all devices on the LAN and contains the IP address of the destination device. The device with the matching IP address responds with its MAC address.</li>
 </ul>
 </li>
 <li>ARP Reply
@@ -633,9 +654,9 @@
 <h2 id="protocols-and-terminology"><a class="header" href="#protocols-and-terminology">Protocols and Terminology</a></h2>
 <h3 id="common-protocols"><a class="header" href="#common-protocols">Common Protocols</a></h3>
 <h4 id="tcp"><a class="header" href="#tcp">TCP</a></h4>
-<p>... is a connection-oriented protocol that establishes a virtual connection between two devices before transmitting data by using a Three-Way-Handshake. This connection is maintained until the data transfer is complete, and the devices can continue to send data back and forth as long as the connection is active.</p>
+<p>… is a connection-oriented protocol that establishes a virtual connection between two devices before transmitting data by using a Three-Way-Handshake. This connection is maintained until the data transfer is complete, and the devices can continue to send data back and forth as long as the connection is active.</p>
 <h4 id="udp"><a class="header" href="#udp">UDP</a></h4>
-<p>... is a connectionless protocol, which means it does not establish a virtual connection before transmitting data. Instead, it sends the data packets to the destination without checking to see if they were received.</p>
+<p>… is a connectionless protocol, which means it does not establish a virtual connection before transmitting data. Instead, it sends the data packets to the destination without checking to see if they were received.</p>
 <h4 id="icmp"><a class="header" href="#icmp">ICMP</a></h4>
 <p>Internet Control Message Protocol is a protocol used by devices to communicate with each other on the internet for various purposes, including error reporting and status information. It sends requests and messages between devices, which can be used to report errors or provide status information.</p>
 <h5 id="icmp-requests"><a class="header" href="#icmp-requests">ICMP Requests</a></h5>
@@ -662,9 +683,9 @@
 <li>Parameter Problem</li>
 <li>Source Quench</li>
 </ul>
-<p>Another crucial part of ICMP is the Time-to-Live field in the ICMP packet header that limits the packet's lifetime as it travels through the network. It prevents packets from circulating indefinitely on the network in the event of routing loops. Each time a packet passes through a router, the router decrements the TTL value by 1. When the TTL value reaches 0, the router discards the packet and sends an ICMP Time Exceeded message back to the sender.</p>
+<p>Another crucial part of ICMP is the Time-to-Live field in the ICMP packet header that limits the packet’s lifetime as it travels through the network. It prevents packets from circulating indefinitely on the network in the event of routing loops. Each time a packet passes through a router, the router decrements the TTL value by 1. When the TTL value reaches 0, the router discards the packet and sends an ICMP Time Exceeded message back to the sender.</p>
 <p>You can also use the TTL to determine the number of hops a packet has taken and the approximate distance to the destination. For example, if a packet has a TTL of 10 and takes 5 hops to reach its destination, it can be inferred that the destination is approximately 5 hops away. For example, if you see a ping with the TTL value of 122, it could mean that you are dealing with a Windows system that is 6 hops away.</p>
-<p>However, it is also possible to guess the OS based on the default TTL value used by the device. Each OS typically has a default TTL value when sending packets. This value is set in the packet's header and is decremented by 1 each time the packet passes through a router. Therefore, examining a device's default TTL value makes it possible to infer which OS the device is using.</p>
+<p>However, it is also possible to guess the OS based on the default TTL value used by the device. Each OS typically has a default TTL value when sending packets. This value is set in the packet’s header and is decremented by 1 each time the packet passes through a router. Therefore, examining a device’s default TTL value makes it possible to infer which OS the device is using.</p>
 <p>Typical default TTL:</p>
 <ul>
 <li><strong>Windows</strong>: 128</li>
@@ -675,7 +696,7 @@
 <h4 id="voip"><a class="header" href="#voip">VOIP</a></h4>
 <p>Voice over Internet Protocol (<em>VoIP</em>) is a method of transmitting voice and multimedia communications. For example, it allows you to make phone calls using a broadband internet connection instead of a traditional phone line, like Skype, Whatsapp, Google Hangouts, Slack, Zoom, and others.</p>
 <h3 id="wireless-networks"><a class="header" href="#wireless-networks">Wireless Networks</a></h3>
-<p>... are computer networks that use wireless data connections between network nodes. These networks allow devices such as laptops, smartphones, and tablets to communicate with each other and the internet without needing physical connections such as cables.</p>
+<p>… are computer networks that use wireless data connections between network nodes. These networks allow devices such as laptops, smartphones, and tablets to communicate with each other and the internet without needing physical connections such as cables.</p>
 <p>Wireless networks use radio frequency tech to transmit data between devices. Each device on a wireless network has a wirless adapter that converts data into RF signals and sends them over the air. Other devices on the network receive these signals with their own wireless adapters, and the data is then converted back into a usable form. Those can operate over various ranges, depending on the technology used. For example, a LAN that covers a small area, such as a home or small office, might use wireless technology called WiFi, which has a range of a few hundred feet. On the other hand, a wireles WAN might use mobile telecommunication technology such as cellular data, which can cover a much larger area, such as entire city or region.</p>
 <p>Communication between devices occurs over RF in the 2.4 GHz or 5 GHz bands in a WiFi network. When a device, like a laptop, wants to send data over the network, it first communicates with the Wireless Access Point (<em>WAP</em>) to request permission to transmit. The WAP is a central device, like a router, that connects the wireless network to a wired network and controls access to the network. Once the WAP grants permission, the transmitting device sends the data as RF signals, which are received by the wireless adapters of other devices on the network. The data is then converted back into a usable form and passed on to the appropriate application or system.</p>
 <h4 id="wifi-connection"><a class="header" href="#wifi-connection">WiFi Connection</a></h4>
@@ -690,14 +711,20 @@
 <p>The device then uses this information to configure its wireless adapter and connect to the WAP. Once the connection is established, the device can communicate with the WAP and other network devices. It can also access the internet and other online resources through the WAP, which acts as a gateway to the wired network. However, the SSID can be hidden by disabling broadcasting. That means that devices that search for that specific WAP will not be able to identify its SSID. Nevertheless, the SSID can still be found in the authentication packet.</p>
 <h4 id="wep-challenge-response-handshake"><a class="header" href="#wep-challenge-response-handshake">WEP Challenge-Response Handshake</a></h4>
 <p>The challenge-response handshake is a process to establish a secure connection between a WAP and a client device in a wireless network that uses the WEP security protocol. This involves exchanging packets between the WAP and the client device to authenticate the device and establish a secure connection.</p>
-<div class="table-wrapper"><table><thead><tr><th>Step</th><th>Who</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Step</th><th>Who</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>1</td><td>Client</td><td>sends an association request packet to the WAP, requesting access</td></tr>
 <tr><td>2</td><td>WAP</td><td>responds with an association response packet to the client, which includes a challenge string</td></tr>
 <tr><td>3</td><td>Client</td><td>calculates a response to the challenge string and a shared secret key and sends it back to the WAP</td></tr>
 <tr><td>4</td><td>WAP</td><td>calculates the expected response to the challenge with the same shared secret key and sends and authentication response packet to the client</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
-<p>Nevertheless, some packets can get lost, so the so-called CRC checksum has been integrated. Cyclic Redundancy Check is an error-detection mechanism used in the WEP protocol to protect against data corruption in wireless communications. A CRC value is calculated for each packet transmitted over the wireless network based on the packet's data. It is used to verify the integrity of the data. When the destination device receives the packet, the CRC value is recalculated and compared to the original value. If the values match, the data has been transmitted successfully without any errors. However, if the values do not match, the data has been corrupted and needs to be retransmitted.</p>
+<p>Nevertheless, some packets can get lost, so the so-called CRC checksum has been integrated. Cyclic Redundancy Check is an error-detection mechanism used in the WEP protocol to protect against data corruption in wireless communications. A CRC value is calculated for each packet transmitted over the wireless network based on the packet’s data. It is used to verify the integrity of the data. When the destination device receives the packet, the CRC value is recalculated and compared to the original value. If the values match, the data has been transmitted successfully without any errors. However, if the values do not match, the data has been corrupted and needs to be retransmitted.</p>
 <h4 id="security-features"><a class="header" href="#security-features">Security Features</a></h4>
 <p>Some of the leading security features include but are not limited to:</p>
 <ul>
@@ -711,7 +738,7 @@
 <li>Firewall</li>
 </ul>
 <h3 id="vpn"><a class="header" href="#vpn">VPN</a></h3>
-<p>... is a technology that allows a secure and encrypted connection between a private network and a remote device. This allows the remote machine to access the private network directly, providing secure and confidential access to the network's resources and services. For example, an admin from another location has to manage the internal servers so that the employees can continue to use the internal services. Many companies limit servers' access, so clients can only reach those servers from the local network. This is where VPN comes intp play, where the admin connects to the VPN server via the internet, authenticates himself, and thus creates an encrypted tunnel so that others cannot read the data transfer. In addition, the admin's computer is also assigned a local IP address through which he can access and manage the internal servers. Admins commonly use VPNs to provide secure and cost-effective remote access to a company's network.</p>
+<p>… is a technology that allows a secure and encrypted connection between a private network and a remote device. This allows the remote machine to access the private network directly, providing secure and confidential access to the network’s resources and services. For example, an admin from another location has to manage the internal servers so that the employees can continue to use the internal services. Many companies limit servers’ access, so clients can only reach those servers from the local network. This is where VPN comes intp play, where the admin connects to the VPN server via the internet, authenticates himself, and thus creates an encrypted tunnel so that others cannot read the data transfer. In addition, the admin’s computer is also assigned a local IP address through which he can access and manage the internal servers. Admins commonly use VPNs to provide secure and cost-effective remote access to a company’s network.</p>
 <h4 id="ipsec"><a class="header" href="#ipsec">IPsec</a></h4>
 <p>Internet Protocol Security (<em>IPsec</em>) is a network security protocol that provides encryption and authentication for internet communications. It is a powerful and widely-used security protocol that provides encryption and authentication for internet communications and works by encrypting the data payload of each IP packet and adding an authentication header, which is used to verify the integrity and authenticity of the packet. IPsec uses a combination of two protocols to provide encryption and authentication:</p>
 <ol>
@@ -728,15 +755,21 @@
 <p>However, due to its known vulns, PPTP is no longer considered secure. It can tunnel protocols such as IP, IPX, or NetBEUI via IP, but has been largely replaced by more secure VPN protocols. Since 2012, the use of PPTP has declined because of its authentication method, MSCHAPv2, employs the outdated DES encryption, which can easily be cracked with specialized hardware.</p>
 <h2 id="connection-establishment"><a class="header" href="#connection-establishment">Connection Establishment</a></h2>
 <h3 id="key-exchange-mechanisms"><a class="header" href="#key-exchange-mechanisms">Key Exchange Mechanisms</a></h3>
-<p>Key exchange methods are used to exchange cryptographic keys between two parties securely. There are many key exchange methods, each with unique characteristics and strengths. Some key exchange methods are more secure than others, and the appropriate method depends on the situation's specific circumstances and requirements.</p>
+<p>Key exchange methods are used to exchange cryptographic keys between two parties securely. There are many key exchange methods, each with unique characteristics and strengths. Some key exchange methods are more secure than others, and the appropriate method depends on the situation’s specific circumstances and requirements.</p>
 <p>These methods typically work by allowing the two parties to agree on a shared secret key over an insecure communication channel that encrypts the communication between them. This is generally done using some form of mathematical operation, such as a computation based on the properties of a mathematical function or a series of simple manipulations of the key.</p>
 <p>Some algorithms are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Algorithm</th><th>Acronym</th><th>Security</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Algorithm</th><th>Acronym</th><th>Security</th></tr>
+</thead>
+<tbody>
 <tr><td>Diffie-Hellmam</td><td>DH</td><td>relatively secure and computationally efficient</td></tr>
 <tr><td>Rivest-Shamir-Adleman</td><td>RSA</td><td>widely used and considered secure, but computationally intensive</td></tr>
 <tr><td>Elliptic Curve Diffie-Hellman</td><td>ECDH</td><td>provides enhanced security compared to traditional Diffie-Hellman</td></tr>
 <tr><td>Elliptic Curve Digital Signature Algorithm</td><td>ECDSA</td><td>provides enhanced security and efficiency for digital signature generation</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="authentication-protocols"><a class="header" href="#authentication-protocols">Authentication Protocols</a></h3>
 <p>Many different authentication protocols are used in networking to verify the identity of devices and users. Those protocols are essential because they provide a secure and standardized way of verifying the identity of users, devices, and other entities in a network. Without authentication protocols, it would be difficult to securely and reliably identify entities in a network, making it easy for attackers to gain unauthorized access and potentially compromise the network.</p>
@@ -748,7 +781,7 @@
 <h4 id="ip-packet"><a class="header" href="#ip-packet">IP Packet</a></h4>
 <p>An IP packet is the data area used by the network layer of the Open Systems Interconnection model to transmit data from one computer to another. It consists of a header and the payload, the actual payload data.</p>
 <h5 id="ip-header"><a class="header" href="#ip-header">IP Header</a></h5>
-<p>... contains of several fields that have important information:</p>
+<p>… contains of several fields that have important information:</p>
 <ul>
 <li>Version</li>
 <li>Internet Header Length</li>
@@ -775,7 +808,7 @@ IP 10.129.2.200.5060 &gt; 10.129.1.1.5060: SIP, length: 1329, id 1342
 </code></pre>
 <p>You can see from the output that two different IP addresses are sending packets to IP address 10.129.1.1. However, from the IP ID, you can see that the packets are continuous. This strongly indicates that the two IP addresses belong to the same host in the network.</p>
 <h5 id="ip-record-route-field"><a class="header" href="#ip-record-route-field">IP Record-Route Field</a></h5>
-<p>... also records the route to a destination device. When the destination device sends back the ICMP Echo Reply packet, the IP addresses of all devices that pass through the packet are listed in the Record-Route field of the IP header. This happens when you use the following command:</p>
+<p>… also records the route to a destination device. When the destination device sends back the ICMP Echo Reply packet, the IP addresses of all devices that pass through the packet are listed in the Record-Route field of the IP header. This happens when you use the following command:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ping -c 1 -R 10.129.143.158
 
 PING 10.129.143.158 (10.129.143.158) 56(124) bytes of data.
@@ -795,28 +828,27 @@ rtt min/avg/max/mdev = 11.688/11.688/11.688/0.000 ms
 <p>The output indicates that a ping request was sent and a response was received from the destination device and also shows the Record-Route field in the IP header of the ICMP Echo Request packet. The Record-Route field contains the IP addresses of all devices that passed through the ICMP Echo Request packet on the way to the destination device.</p>
 <p>The <code>traceroute</code> command can also be used to trace the route to a destination more accurately, which uses the TCO timeout method to determine when the route has been fully traced.</p>
 <h5 id="ip-payload"><a class="header" href="#ip-payload">IP Payload</a></h5>
-<p>... is the actual payload of the packet. It contains the data from various protocols, such as TCP or UDP, that are being transmitted, just like the contents of the letter in the envelope.</p>
+<p>… is the actual payload of the packet. It contains the data from various protocols, such as TCP or UDP, that are being transmitted, just like the contents of the letter in the envelope.</p>
 <h4 id="tcp-1"><a class="header" href="#tcp-1">TCP</a></h4>
 <p>TCP packets, also known as segments, are divided into several sections called headers and payloads. The TCP segments are wrapped in the sent IP packet.</p>
 <p>The header contains several fields that contain important information. The source port indicates the computer from which the packet was sent. The destination port indicates to which computer the packet is sent. The sequence number indicates the order in which the data was sent. The confirmation number is used to confirm that all data was received successfully. The control flags indicate whether the packet marks the end of a message, whether it is an acknowledgment that data has been received, or whether it contains a request to repeat data. The window size indicates how much data the receiver can receive. The checksum is used to detect errors in the header and payload. The Urgent Pointer alerts the receiver that important data is in the payload.</p>
 <p>The payload is the actual payload of the packet and contains the data that is being transmitted, just like the content of a conversation between two people.</p>
 <h4 id="udp-1"><a class="header" href="#udp-1">UDP</a></h4>
-<p>... transfers datagrams between two hosts. It is a connectionless protocol, meaning it does not need to establish a connection between the sender and the receiver before sending data. Instead, the data is sent directly to the target host without any prior connection.</p>
+<p>… transfers datagrams between two hosts. It is a connectionless protocol, meaning it does not need to establish a connection between the sender and the receiver before sending data. Instead, the data is sent directly to the target host without any prior connection.</p>
 <p>When <code>traceroute</code> is used with UDP, you will receive a Destination Unreachable and Port Unreachable message when the UDP datagram packet reaches the target device. Generally, UDP packets are sent using <code>traceroute</code> on Unix hosts.</p>
 <h3 id="cryptography"><a class="header" href="#cryptography">Cryptography</a></h3>
-<p>Encryption is used on the internet to transmit data, such as payment information, e-mails, or personal data confidentially and protected against manipulation. Data is encrypted using various cryptographic algorithms based on mathematical operations. With the help of encryption, data can be transformed into a form that unauthorized persons can no longer read. Digital keys in symmetric or asymmetric encryption processes are used for encryption. It is easier to crack cipher texts or keys depending on the encryption methods used. If state-of-the-art cryptographic methods with extensive key lengths are used, they work very securely and are almost impossible to compromise for the time being. In principle, you can distinguish between symmetric and asymmetric encryption techniques. Asymmetric methods have only been known for a few decades. Nevertheless, they are the most frequently used methods in digital communications.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>Encryption is used on the internet to transmit data, such as payment information, e-mails, or personal data confidentially and protected against manipulation. Data is encrypted using various cryptographic algorithms based on mathematical operations. With the help of encryption, data can be transformed into a form that unauthorized persons can no longer read. Digital keys in symmetric or asymmetric encryption processes are used for encryption. It is easier to crack cipher texts or keys depending on the encryption methods used. If state-of-the-art cryptographic methods with extensive key lengths are used, they work very securely and are almost impossible to compromise for the time being. In principle, you can distinguish between symmetric and asymmetric encryption techniques. Asymmetric methods have only been known for a few decades. Nevertheless, they are the most frequently used methods in digital communications.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../general/networking/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../general/networking/cisco/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -826,15 +858,21 @@ rtt min/avg/max/mdev = 11.688/11.688/11.688/0.000 ms
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../general/networking/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../general/networking/cisco/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -854,22 +892,20 @@ rtt min/avg/max/mdev = 11.688/11.688/11.688/0.000 ms
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/pagetoc.js"></script>
 
 
 
