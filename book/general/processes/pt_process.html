@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="shortcut icon" href="../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -447,25 +450,31 @@ classDef red stroke: red
 classDef purple stroke: purple
 </code></pre>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
-<p>A Penetration Test is an organized, targeted, and authorized attack attempt to test IT infrastructure and its defenders to determine their susceptibility to IT security vulns. A pentest uses methods and techniques that real attackers use. As penetration testers, you apply various techniques and analyses to gauge the impact that a particular vuln or chain of vulns may have on the confidentiality, integrity, and availability of an organization's IT systems and data.</p>
+<p>A Penetration Test is an organized, targeted, and authorized attack attempt to test IT infrastructure and its defenders to determine their susceptibility to IT security vulns. A pentest uses methods and techniques that real attackers use. As penetration testers, you apply various techniques and analyses to gauge the impact that a particular vuln or chain of vulns may have on the confidentiality, integrity, and availability of an organization’s IT systems and data.</p>
 <p>A pentest aims to uncover and identify all vulns in the systems under investigation and improve the security for the tested systems.</p>
 <h3 id="risk-management"><a class="header" href="#risk-management">Risk Management</a></h3>
-<p>In general, it is part of risk management for a company. The main goal of IT security risk management is to identify, evaluate, and mitigate any potential risks that could damage the confidentiality, integrity, and availability of an organization's information system and data and reduce the overall risk to an acceptable level. This includes identifying potential threats, evaluating their risks, and taking the necessary steps to reduce or eliminate them. This is done by implementing the appropriate security protocols and policies, including access control, encryption, and other security measures. By taking the time to properly manage the security risks of an organization's IT systems, it is possible to ensure that the data is kept safe and secure.</p>
-<p>However, you cannot eliminate every risk. There's still the nature of the inherent risk of a security breach that is present even when the company has taken all steps to manage the risk. Therefore, some risks will remain. Inherent risk is the level of risk that is present even when the appropriate security controls are in place. Companies can accept, transfer, avoid and mitigate risks on various ways.</p>
-<p>During a pentest, you prepare detailed documentation on the steps taken and the results achieved. However, it is the client's responsibility or the operator of their systems under investigation to rectify the vulns found. Your role is as trusted advisors to report vulns, detailed reproduction steps, and provide appropriate remediation recommendations, but you do not go in and apply patches or make code changes, etc. It is important to note that a pentest is not monitoring the IT infrastructure or systems but a momentary snapshot of the security status. A statement to this regard should be reflected in your pentest report deliverable.</p>
+<p>In general, it is part of risk management for a company. The main goal of IT security risk management is to identify, evaluate, and mitigate any potential risks that could damage the confidentiality, integrity, and availability of an organization’s information system and data and reduce the overall risk to an acceptable level. This includes identifying potential threats, evaluating their risks, and taking the necessary steps to reduce or eliminate them. This is done by implementing the appropriate security protocols and policies, including access control, encryption, and other security measures. By taking the time to properly manage the security risks of an organization’s IT systems, it is possible to ensure that the data is kept safe and secure.</p>
+<p>However, you cannot eliminate every risk. There’s still the nature of the inherent risk of a security breach that is present even when the company has taken all steps to manage the risk. Therefore, some risks will remain. Inherent risk is the level of risk that is present even when the appropriate security controls are in place. Companies can accept, transfer, avoid and mitigate risks on various ways.</p>
+<p>During a pentest, you prepare detailed documentation on the steps taken and the results achieved. However, it is the client’s responsibility or the operator of their systems under investigation to rectify the vulns found. Your role is as trusted advisors to report vulns, detailed reproduction steps, and provide appropriate remediation recommendations, but you do not go in and apply patches or make code changes, etc. It is important to note that a pentest is not monitoring the IT infrastructure or systems but a momentary snapshot of the security status. A statement to this regard should be reflected in your pentest report deliverable.</p>
 <h3 id="testing-methods"><a class="header" href="#testing-methods">Testing Methods</a></h3>
 <h4 id="external-pentest"><a class="header" href="#external-pentest">External Pentest</a></h4>
-<p>Many pentests are performed from an external perspective or as an anonymous user on the internet. Most customers want to ensure that they are as protected as possible against attacks on their external network perimeter. You can perform testing from your own host or from a VPS. Some clients don't care about stealth, while others request that you proceed as quietly as possible, approaching the target systems in a way that avoids firewall bans, IDS/IPS detection, and alarm triggers. They may ask for a stealthy or "hybrid" approach where you gradually become "noisier" to test their detection capabilities. Ultimately your goal here is to access external-facing hosts, obtain sensitive data, or gain access to the internal network.</p>
+<p>Many pentests are performed from an external perspective or as an anonymous user on the internet. Most customers want to ensure that they are as protected as possible against attacks on their external network perimeter. You can perform testing from your own host or from a VPS. Some clients don’t care about stealth, while others request that you proceed as quietly as possible, approaching the target systems in a way that avoids firewall bans, IDS/IPS detection, and alarm triggers. They may ask for a stealthy or “hybrid” approach where you gradually become “noisier” to test their detection capabilities. Ultimately your goal here is to access external-facing hosts, obtain sensitive data, or gain access to the internal network.</p>
 <h4 id="internal-pentest"><a class="header" href="#internal-pentest">Internal Pentest</a></h4>
-<p>In contrast to an external pentest, an internal pentest is when you perform testing from within the corporate network. This stage may be executed after successfully penetrating the corporate network via the external pentest or starting from an assumed breach scenario. Internal pentests may also access isolated systems with no internet access whatsoever, which usually requires your physical presence at the client's facility.</p>
+<p>In contrast to an external pentest, an internal pentest is when you perform testing from within the corporate network. This stage may be executed after successfully penetrating the corporate network via the external pentest or starting from an assumed breach scenario. Internal pentests may also access isolated systems with no internet access whatsoever, which usually requires your physical presence at the client’s facility.</p>
 <h3 id="types-of-pentests"><a class="header" href="#types-of-pentests">Types of Pentests</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Information Provided</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Information Provided</th></tr>
+</thead>
+<tbody>
 <tr><td>Blackbox</td><td>minimal; only the essential information, such as IP addresses and domains, is provided</td></tr>
 <tr><td>Greybox</td><td>extended; in this case, you are provided with additional information, such as specific URLs, hostnames, subnets, and similar</td></tr>
 <tr><td>Whitebox</td><td>Maximum; here everythin is disclosed to you; this gives you an internal view of the entire structure, which allows you to prepare an attack using internal information; you may be given detailed configs, admin creds, web app source code, etc.</td></tr>
 <tr><td>Red-Teaming</td><td>May include physical testing and social engineering, among other things; can be combined wit any of the above types</td></tr>
 <tr><td>Purple-Teaming</td><td>It can be combined with any of the above; however, it focuses on working closely with the defenders</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="types-of-testing-environments"><a class="header" href="#types-of-testing-environments">Types of Testing Environments</a></h3>
 <ul>
@@ -490,22 +499,16 @@ classDef purple stroke: purple
 <p>It is essential to follow these laws to protect individuals from unauthorized access and exploitation of their data and to ensure their privacy.</p>
 <h3 id="checklist"><a class="header" href="#checklist">Checklist</a></h3>
 <ul>
-<li><input disabled="" type="checkbox"/>
-Obtain written consent from the owner or authorized representive of the computer being tested</li>
-<li><input disabled="" type="checkbox"/>
-Conduct the testing within the scope of the consent obtained only and respect any limitations specified</li>
-<li><input disabled="" type="checkbox"/>
-Take measure to prevent causing damage to the systems or networks being tested</li>
-<li><input disabled="" type="checkbox"/>
-Do not access, use or disclose personal data or any other information obtained during the testing without permission</li>
-<li><input disabled="" type="checkbox"/>
-DO not intercept electronic communication without the consent of one of the parties to the communication</li>
-<li><input disabled="" type="checkbox"/>
-Do not conduct testing on systems or networks that are covered by the Health Insurance Portability and Accountability Act (<em>HIPAA</em>) without proper authorization</li>
+<li><input disabled="" type="checkbox"> Obtain written consent from the owner or authorized representive of the computer being tested</li>
+<li><input disabled="" type="checkbox"> Conduct the testing within the scope of the consent obtained only and respect any limitations specified</li>
+<li><input disabled="" type="checkbox"> Take measure to prevent causing damage to the systems or networks being tested</li>
+<li><input disabled="" type="checkbox"> Do not access, use or disclose personal data or any other information obtained during the testing without permission</li>
+<li><input disabled="" type="checkbox"> DO not intercept electronic communication without the consent of one of the parties to the communication</li>
+<li><input disabled="" type="checkbox"> Do not conduct testing on systems or networks that are covered by the Health Insurance Portability and Accountability Act (<em>HIPAA</em>) without proper authorization</li>
 </ul>
 <h2 id="pentest-phases"><a class="header" href="#pentest-phases">Pentest Phases</a></h2>
 <h3 id="pre-engagement"><a class="header" href="#pre-engagement">Pre-Engagement</a></h3>
-<p>... is the stage of preparation for the actual penetration test. During this stage, many questions are asked, and some contractual agreements are made. The client informs you about what they want to be tested, and you explain in detail how to make the test as efficient as possible.</p>
+<p>… is the stage of preparation for the actual penetration test. During this stage, many questions are asked, and some contractual agreements are made. The client informs you about what they want to be tested, and you explain in detail how to make the test as efficient as possible.</p>
 <p>It consists of three essential components:</p>
 <ol>
 <li>Scoping questionnaire</li>
@@ -531,26 +534,16 @@ Do not conduct testing on systems or networks that are covered by the Health Ins
 <h4 id="scoping-questionnaire"><a class="header" href="#scoping-questionnaire">Scoping Questionnaire</a></h4>
 <p>After initial contact is made with the client, you typically send them a Scoping Questionnaire to better understand the services they are seeking:</p>
 <ul>
-<li><input disabled="" type="checkbox"/>
-Internal Vulnerability Assessment</li>
-<li><input disabled="" type="checkbox"/>
-Internal Pentest</li>
-<li><input disabled="" type="checkbox"/>
-Wireless Security Assessment</li>
-<li><input disabled="" type="checkbox"/>
-Physical Security Assessment</li>
-<li><input disabled="" type="checkbox"/>
-Red Team Assessment</li>
-<li><input disabled="" type="checkbox"/>
-External Vulnerability Assessment</li>
-<li><input disabled="" type="checkbox"/>
-External Pentest</li>
-<li><input disabled="" type="checkbox"/>
-Application Security Assessment</li>
-<li><input disabled="" type="checkbox"/>
-Social Engineering Assessment</li>
-<li><input disabled="" type="checkbox"/>
-Web App Security Assessment</li>
+<li><input disabled="" type="checkbox"> Internal Vulnerability Assessment</li>
+<li><input disabled="" type="checkbox"> Internal Pentest</li>
+<li><input disabled="" type="checkbox"> Wireless Security Assessment</li>
+<li><input disabled="" type="checkbox"> Physical Security Assessment</li>
+<li><input disabled="" type="checkbox"> Red Team Assessment</li>
+<li><input disabled="" type="checkbox"> External Vulnerability Assessment</li>
+<li><input disabled="" type="checkbox"> External Pentest</li>
+<li><input disabled="" type="checkbox"> Application Security Assessment</li>
+<li><input disabled="" type="checkbox"> Social Engineering Assessment</li>
+<li><input disabled="" type="checkbox"> Web App Security Assessment</li>
 </ul>
 <p>Aside from the assessment type, client name, address, and key personal contact information, some other crucial pieces of information include:</p>
 <ul>
@@ -567,128 +560,75 @@ Web App Security Assessment</li>
 <li>Do you need to bypass Network Access Control?</li>
 </ul>
 <h4 id="pre-engagement-meeting"><a class="header" href="#pre-engagement-meeting">Pre-Engagement Meeting</a></h4>
-<p>Once you have an initial idea of the client's project requirements, you can move on to the pre-engagement meeting. This meeting discusses all relevant and essential components with the customer before the pentest, explaining them to your customer. The information you gather during this phase, along with the data collected from the scoping questionnaire, will server as inputs to the Penetration Testin Proposal, also known as the Contract or Scope of Work.</p>
+<p>Once you have an initial idea of the client’s project requirements, you can move on to the pre-engagement meeting. This meeting discusses all relevant and essential components with the customer before the pentest, explaining them to your customer. The information you gather during this phase, along with the data collected from the scoping questionnaire, will server as inputs to the Penetration Testin Proposal, also known as the Contract or Scope of Work.</p>
 <h5 id="contract-checklist"><a class="header" href="#contract-checklist">Contract Checklist</a></h5>
 <ul>
-<li><input disabled="" type="checkbox"/>
-NDA</li>
-<li><input disabled="" type="checkbox"/>
-Goals</li>
-<li><input disabled="" type="checkbox"/>
-Scope</li>
-<li><input disabled="" type="checkbox"/>
-Pentest Type</li>
-<li><input disabled="" type="checkbox"/>
-Methodologies</li>
-<li><input disabled="" type="checkbox"/>
-Pentesting Locations</li>
-<li><input disabled="" type="checkbox"/>
-Time Estimation</li>
-<li><input disabled="" type="checkbox"/>
-Third Parties</li>
-<li><input disabled="" type="checkbox"/>
-Evasive Testing</li>
-<li><input disabled="" type="checkbox"/>
-Risks</li>
-<li><input disabled="" type="checkbox"/>
-Scope Limitations &amp; Restrictions</li>
-<li><input disabled="" type="checkbox"/>
-Information Handling</li>
-<li><input disabled="" type="checkbox"/>
-Contact Information</li>
-<li><input disabled="" type="checkbox"/>
-Lines of Communication</li>
-<li><input disabled="" type="checkbox"/>
-Reporting</li>
-<li><input disabled="" type="checkbox"/>
-Payment Terms</li>
+<li><input disabled="" type="checkbox"> NDA</li>
+<li><input disabled="" type="checkbox"> Goals</li>
+<li><input disabled="" type="checkbox"> Scope</li>
+<li><input disabled="" type="checkbox"> Pentest Type</li>
+<li><input disabled="" type="checkbox"> Methodologies</li>
+<li><input disabled="" type="checkbox"> Pentesting Locations</li>
+<li><input disabled="" type="checkbox"> Time Estimation</li>
+<li><input disabled="" type="checkbox"> Third Parties</li>
+<li><input disabled="" type="checkbox"> Evasive Testing</li>
+<li><input disabled="" type="checkbox"> Risks</li>
+<li><input disabled="" type="checkbox"> Scope Limitations &amp; Restrictions</li>
+<li><input disabled="" type="checkbox"> Information Handling</li>
+<li><input disabled="" type="checkbox"> Contact Information</li>
+<li><input disabled="" type="checkbox"> Lines of Communication</li>
+<li><input disabled="" type="checkbox"> Reporting</li>
+<li><input disabled="" type="checkbox"> Payment Terms</li>
 </ul>
 <h5 id="roe"><a class="header" href="#roe">RoE</a></h5>
 <p>Based on the Contract Checklist and the input shared in scoping, the Pentesting Proposal and the associated RoE are created.</p>
 <ul>
-<li><input disabled="" type="checkbox"/>
-Introduction</li>
-<li><input disabled="" type="checkbox"/>
-Contractor</li>
-<li><input disabled="" type="checkbox"/>
-Pentesters</li>
-<li><input disabled="" type="checkbox"/>
-Contact Information</li>
-<li><input disabled="" type="checkbox"/>
-Purpose</li>
-<li><input disabled="" type="checkbox"/>
-Goals</li>
-<li><input disabled="" type="checkbox"/>
-Scope</li>
-<li><input disabled="" type="checkbox"/>
-Lines of Communication</li>
-<li><input disabled="" type="checkbox"/>
-Time Estimation</li>
-<li><input disabled="" type="checkbox"/>
-Time of the Day to Test</li>
-<li><input disabled="" type="checkbox"/>
-Pentest Type</li>
-<li><input disabled="" type="checkbox"/>
-Pentest Locations</li>
-<li><input disabled="" type="checkbox"/>
-Methodologies</li>
-<li><input disabled="" type="checkbox"/>
-Objectives / Flags</li>
-<li><input disabled="" type="checkbox"/>
-Evidence Handling</li>
-<li><input disabled="" type="checkbox"/>
-System Backups</li>
-<li><input disabled="" type="checkbox"/>
-Information Handling</li>
-<li><input disabled="" type="checkbox"/>
-Incidident Handling and Reporting</li>
-<li><input disabled="" type="checkbox"/>
-Status Meeting</li>
-<li><input disabled="" type="checkbox"/>
-Reporting</li>
-<li><input disabled="" type="checkbox"/>
-Retesting</li>
-<li><input disabled="" type="checkbox"/>
-Disclaimers and Limitation of Liability</li>
-<li><input disabled="" type="checkbox"/>
-Permission to Test</li>
+<li><input disabled="" type="checkbox"> Introduction</li>
+<li><input disabled="" type="checkbox"> Contractor</li>
+<li><input disabled="" type="checkbox"> Pentesters</li>
+<li><input disabled="" type="checkbox"> Contact Information</li>
+<li><input disabled="" type="checkbox"> Purpose</li>
+<li><input disabled="" type="checkbox"> Goals</li>
+<li><input disabled="" type="checkbox"> Scope</li>
+<li><input disabled="" type="checkbox"> Lines of Communication</li>
+<li><input disabled="" type="checkbox"> Time Estimation</li>
+<li><input disabled="" type="checkbox"> Time of the Day to Test</li>
+<li><input disabled="" type="checkbox"> Pentest Type</li>
+<li><input disabled="" type="checkbox"> Pentest Locations</li>
+<li><input disabled="" type="checkbox"> Methodologies</li>
+<li><input disabled="" type="checkbox"> Objectives / Flags</li>
+<li><input disabled="" type="checkbox"> Evidence Handling</li>
+<li><input disabled="" type="checkbox"> System Backups</li>
+<li><input disabled="" type="checkbox"> Information Handling</li>
+<li><input disabled="" type="checkbox"> Incidident Handling and Reporting</li>
+<li><input disabled="" type="checkbox"> Status Meeting</li>
+<li><input disabled="" type="checkbox"> Reporting</li>
+<li><input disabled="" type="checkbox"> Retesting</li>
+<li><input disabled="" type="checkbox"> Disclaimers and Limitation of Liability</li>
+<li><input disabled="" type="checkbox"> Permission to Test</li>
 </ul>
 <h4 id="kick-off-meeting"><a class="header" href="#kick-off-meeting">Kick-Off Meeting</a></h4>
 <p>The kick-off meeting usually occurs at a scheduled time and in-person after signing all contractual documents. This meeting usually includes POCs, client technical support staff, and the pentester team, the actual pentesters, and sometimes a project manager or even the sales account executive. Together, you will go over the nature of the pentest.</p>
 <p>You should also inform your customers about potential risks during a pentest.</p>
 <p>Explaining the pentest process gives everyone involved a clear idea of your entire process. This demonstrates your professional approach and convinces your questioners that you know what you are doing.</p>
 <h4 id="contractos-agreement"><a class="header" href="#contractos-agreement">Contractos Agreement</a></h4>
-<p>If the pentest also includes physical testing, then an additional contractor's agreement is required. Since it is not only a virtual environment but also a physical intrusion, completely different laws apply. It is also possible that many of the employees have not been informed about the test.</p>
+<p>If the pentest also includes physical testing, then an additional contractor’s agreement is required. Since it is not only a virtual environment but also a physical intrusion, completely different laws apply. It is also possible that many of the employees have not been informed about the test.</p>
 <h5 id="checklist-for-physical-assessments"><a class="header" href="#checklist-for-physical-assessments">Checklist for Physical Assessments</a></h5>
 <ul>
-<li><input disabled="" type="checkbox"/>
-Introduction</li>
-<li><input disabled="" type="checkbox"/>
-Contractor</li>
-<li><input disabled="" type="checkbox"/>
-Purpose</li>
-<li><input disabled="" type="checkbox"/>
-Goal</li>
-<li><input disabled="" type="checkbox"/>
-Pentesters</li>
-<li><input disabled="" type="checkbox"/>
-Contact Information</li>
-<li><input disabled="" type="checkbox"/>
-Physical Addresses</li>
-<li><input disabled="" type="checkbox"/>
-Building Name</li>
-<li><input disabled="" type="checkbox"/>
-Floors</li>
-<li><input disabled="" type="checkbox"/>
-Physical Room Identifications</li>
-<li><input disabled="" type="checkbox"/>
-Phyiscal Components</li>
-<li><input disabled="" type="checkbox"/>
-Timeline</li>
-<li><input disabled="" type="checkbox"/>
-Notarization</li>
-<li><input disabled="" type="checkbox"/>
-Permission to Test</li>
+<li><input disabled="" type="checkbox"> Introduction</li>
+<li><input disabled="" type="checkbox"> Contractor</li>
+<li><input disabled="" type="checkbox"> Purpose</li>
+<li><input disabled="" type="checkbox"> Goal</li>
+<li><input disabled="" type="checkbox"> Pentesters</li>
+<li><input disabled="" type="checkbox"> Contact Information</li>
+<li><input disabled="" type="checkbox"> Physical Addresses</li>
+<li><input disabled="" type="checkbox"> Building Name</li>
+<li><input disabled="" type="checkbox"> Floors</li>
+<li><input disabled="" type="checkbox"> Physical Room Identifications</li>
+<li><input disabled="" type="checkbox"> Phyiscal Components</li>
+<li><input disabled="" type="checkbox"> Timeline</li>
+<li><input disabled="" type="checkbox"> Notarization</li>
+<li><input disabled="" type="checkbox"> Permission to Test</li>
 </ul>
 <h3 id="information-gathering"><a class="header" href="#information-gathering">Information Gathering</a></h3>
 <p>You obtain the necessary information relevant to you in many different ways. They can be divided into the following categories:</p>
@@ -699,18 +639,18 @@ Permission to Test</li>
 <li>Host Enumeration</li>
 </ul>
 <h4 id="osint"><a class="header" href="#osint">OSINT</a></h4>
-<p>... is a process for finding publicly available information on a target company or individuals that allows the identification of events, external and internal dependencies, and connections. OSINT uses public information from freely available sources to obtain the desired results.</p>
+<p>… is a process for finding publicly available information on a target company or individuals that allows the identification of events, external and internal dependencies, and connections. OSINT uses public information from freely available sources to obtain the desired results.</p>
 <p>It is possible to find highly sensitive information such as passwords, hashes, keys, and much more that can give you access to the network within just a few minutes.</p>
 <h4 id="infrastructure-enumeration"><a class="header" href="#infrastructure-enumeration">Infrastructure Enumeration</a></h4>
-<p>During the infrastructure enumeration, you try to overview the company's position on the internet and intranet. You use services such as DNS to create a map of the client's servers and hosts and develop an understanding of how their infrastructure is structured. This includes name servers, mail servers, web servers, cloud instances, and more.</p>
-<p>In this phase, you also try to determine the company's security measures. The more precise this information is, the easier it will be to disguise your attacks. But identifying firewalls, such as WAFs, also gives you an excellent understanding of what techniques could trigger an alarm for your customer and what methods can be used to avoid that alarm.</p>
+<p>During the infrastructure enumeration, you try to overview the company’s position on the internet and intranet. You use services such as DNS to create a map of the client’s servers and hosts and develop an understanding of how their infrastructure is structured. This includes name servers, mail servers, web servers, cloud instances, and more.</p>
+<p>In this phase, you also try to determine the company’s security measures. The more precise this information is, the easier it will be to disguise your attacks. But identifying firewalls, such as WAFs, also gives you an excellent understanding of what techniques could trigger an alarm for your customer and what methods can be used to avoid that alarm.</p>
 <h4 id="service-enumeration"><a class="header" href="#service-enumeration">Service Enumeration</a></h4>
 <p>in service enumeration, you identify services that allow you to interact with the host or server over the network. Therefore, it is crucial to find out about the service, what version it is, what information it provides you, and the reason it can be used. Once you understand the background of what this service has been provisioned for, some logical conclusions can be drawn to provide you with several options.</p>
 <h4 id="host-enumeration"><a class="header" href="#host-enumeration">Host Enumeration</a></h4>
-<p>Once you have a detailed list of the customer's infrastructure, you examine every single host listed in the scoping document. You try to identify which OS is running on the host or server, which services it uses, which versions of the services, and much more. Again, apart from the active scans, you can also use various OSINT methods to tell you how this host or server may be configured.</p>
+<p>Once you have a detailed list of the customer’s infrastructure, you examine every single host listed in the scoping document. You try to identify which OS is running on the host or server, which services it uses, which versions of the services, and much more. Again, apart from the active scans, you can also use various OSINT methods to tell you how this host or server may be configured.</p>
 <p>During internal host enumeration, which in most cases comes after the successful exploitation of one or more vulns, you also examine the host or server from the inside. This means you look for sensitive files, local services, scripts, apps, information, and other things that could be stored on the host. This is also an essential part of the post-exploitation phase, where you try to exploit and elevate privileges.</p>
 <h4 id="pillaging"><a class="header" href="#pillaging">Pillaging</a></h4>
-<p>... is performed after hitting the post-exploitation stage to collect sensitive information locally on the already exploited host, such as employee names, customer data, and much more.</p>
+<p>… is performed after hitting the post-exploitation stage to collect sensitive information locally on the already exploited host, such as employee names, customer data, and much more.</p>
 <h3 id="vulnerability-assessment"><a class="header" href="#vulnerability-assessment">Vulnerability Assessment</a></h3>
 <p>During the vulnerability assessment, you examine and analyze the information gathered during the information gathering phase. The vulnerability assessment phase is an analytical process based on the findings.</p>
 <p>An analysis is a detailed examination of an event or process, describing its origin and impact, that with the help of precautious and actions, can be triggered to support or prevent future occurences.</p>
@@ -747,19 +687,25 @@ Permission to Test</li>
 <p>Complexity represents the effort of exploiting a specific vuln. This is used to estimate how much time, effort and research is required to execute the attack on the system successfully. Your experience plays an important role here because if you are to carry out an attack that you have never used before, this will logically require much more research and effort since you must understand the attack and the exploit structure in detail before applying it.</p>
 <p>Estimating the probability of damage caused by the execution of an exploit plays a critical role, as you must avoid any damage to the target systems. Generally, you do not perform DoS attacks unless your client requires them. Nevertheless, attacking running services live with exploits that can cause damage to the software or the OS is something that you must avoid at all times.</p>
 <p>In addition, you can assign these factors to a personal point system which will allow the evaluation to be more accurately calculated basen on your skills and knowledge:</p>
-<div class="table-wrapper"><table><thead><tr><th>Factor</th><th>Points</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Factor</th><th>Points</th></tr>
+</thead>
+<tbody>
 <tr><td>Probability of Success</td><td>10</td></tr>
 <tr><td>Complexity - Easy</td><td>5</td></tr>
 <tr><td>Complexity - Medium</td><td>3</td></tr>
 <tr><td>Complexity - Hard</td><td>1</td></tr>
 <tr><td>Probability of Damage</td><td>-5</td></tr>
 <tr><td><strong>Summary</strong></td><td><strong>max. 15</strong></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="preparation-for-the-attack"><a class="header" href="#preparation-for-the-attack">Preparation for the Attack</a></h4>
-<p>Sometimes you will run into a situation where you can't find high-quality, known working PoC exploit code. Therefore, it may be necessary to reconstruct the exploit locally on a VM representing your target host to figure out precisely what needs to be adapted and changed. Once you have set up the system locally and installed known components to mirror the target environment as closely as possible, you can start preparing the exploit by following the steps described in the exploit. Then you test this on a locally hosted VM to ensure it works and does not damage significantly. In other situations, you will encounter misconfigurations and vulns that you see very often and know exactly which tool or exploit to use and whether the exploit or technique is "safe" or can cause instability.</p>
-<p>If ever in doubt before running an attack, it's always best to check with your client, providing them all necessary data so they can make an informed decision on whether they would like you to attempt exploitation or just mark the finding as an issue. If they opt for you but not to proceed with exploitation, you can note in the report that it was not confirmed actively but is likely an issue that needs to be addressed. You have a certain amount of leeway during pentests and should always use your best judgement if a particular attack seems too risky or could potentially cause a disruption. When in doubt, communicate. Your team lead/manager, the client, will almost certainly prefer extra communication that run into a situation where they are trying to bring a system back online after a failed exploit attempt.</p>
-<p>Once you have successfully exploited a target and have initial access, you'll move on to the post-exploitation and lateral movement stages.</p>
+<p>Sometimes you will run into a situation where you can’t find high-quality, known working PoC exploit code. Therefore, it may be necessary to reconstruct the exploit locally on a VM representing your target host to figure out precisely what needs to be adapted and changed. Once you have set up the system locally and installed known components to mirror the target environment as closely as possible, you can start preparing the exploit by following the steps described in the exploit. Then you test this on a locally hosted VM to ensure it works and does not damage significantly. In other situations, you will encounter misconfigurations and vulns that you see very often and know exactly which tool or exploit to use and whether the exploit or technique is “safe” or can cause instability.</p>
+<p>If ever in doubt before running an attack, it’s always best to check with your client, providing them all necessary data so they can make an informed decision on whether they would like you to attempt exploitation or just mark the finding as an issue. If they opt for you but not to proceed with exploitation, you can note in the report that it was not confirmed actively but is likely an issue that needs to be addressed. You have a certain amount of leeway during pentests and should always use your best judgement if a particular attack seems too risky or could potentially cause a disruption. When in doubt, communicate. Your team lead/manager, the client, will almost certainly prefer extra communication that run into a situation where they are trying to bring a system back online after a failed exploit attempt.</p>
+<p>Once you have successfully exploited a target and have initial access, you’ll move on to the post-exploitation and lateral movement stages.</p>
 <h3 id="post-exploitation"><a class="header" href="#post-exploitation">Post-Exploitation</a></h3>
 <p>Assume you successfully exploited the target system during the exploitation stage. As with the exploitation stage, you must again consider whether or not to utilize evasive testing in the post-exploitation stage. You are already on the system in the post-exploitation phase, making it much more difficult to avoid an alert. The post-exploitation stage aims to obtain sensitive and security-relevant information from a local perspective and business-relevant information that, in most cases, requires higher privileges than a standard user. This stage includes:</p>
 <ul>
@@ -783,7 +729,7 @@ Permission to Test</li>
 <p>Since you have gained a new perspective on the system and the network of your target system in the exploitation stage, you are basically in a new environment. This means you first have to to reacquaint yourself with what you are working with and what options are available. Therefore, in the post-exploitation stage, you go through the information gathering and vulnerability assessment stages again, which you can consider as part of the current stage. This is because the information you had up to this point was gathered from an external perspective, not an internal one.</p>
 <p>From the inside (<em>local</em>) perspective, you have many more possibilities and alternatives to access certain information that is relevant to you. Therefore, the information gathering stage starts all over again from the local perspective. You search and gather as much information as you can. The difference here is that you also enumerate the local network and local services such as printers, database servers, virtualization services, etc. Often you will find shares intended for employees to use to exchange and share data and files. The investigation of these services and network components is called Pillaging.</p>
 <h4 id="pillaging-1"><a class="header" href="#pillaging-1">Pillaging</a></h4>
-<p>... is the stage where you examine the role of the host in the corporate network. You analyze the network configurations, including but not limited to:</p>
+<p>… is the stage where you examine the role of the host in the corporate network. You analyze the network configurations, including but not limited to:</p>
 <ul>
 <li>Interfaces</li>
 <li>Routing</li>
@@ -795,8 +741,8 @@ Permission to Test</li>
 <li>Shares</li>
 <li>Network Traffic</li>
 </ul>
-<p>Understanding the role of the system you are on also gives you an excellent understanding of how it communicates with other network devices and its purpose. From this, you can find out, for example, what alternative subdomains exist, whether it has multiple network interfaces, whether there are other hosts with which this system communicates, if admins are connecting to other hosts from it, and if you can potentially reuse credentials or steal an SSH key to further access or establish persistence, etc. This helps, above all, to get an overview of the network's structure.</p>
-<p>For example, you can use the policies installed on this system to determine what other hosts are using on the network. Because admins often use particular schemas to secure their network and prevent users from changing anything on it. For example, suppose you discover that the password policy requires only eight chars but no special chars. In that case, you can conclude that you have a relatively high probability of guessing other users' passwords on this and other systems.</p>
+<p>Understanding the role of the system you are on also gives you an excellent understanding of how it communicates with other network devices and its purpose. From this, you can find out, for example, what alternative subdomains exist, whether it has multiple network interfaces, whether there are other hosts with which this system communicates, if admins are connecting to other hosts from it, and if you can potentially reuse credentials or steal an SSH key to further access or establish persistence, etc. This helps, above all, to get an overview of the network’s structure.</p>
+<p>For example, you can use the policies installed on this system to determine what other hosts are using on the network. Because admins often use particular schemas to secure their network and prevent users from changing anything on it. For example, suppose you discover that the password policy requires only eight chars but no special chars. In that case, you can conclude that you have a relatively high probability of guessing other users’ passwords on this and other systems.</p>
 <p>During the pillaging stage, you will also hunt for sensitive data such as passwords on shares, local machines, in scripts, configurations files, password vaults, documents, and even email.</p>
 <p>Your main goals with pillaging are to show the impact of successful exploitation and, if you have not yet reached the goal of the assessment, to find additional data such as passwords that can be inputs to other stages such as lateral movement.</p>
 <h4 id="persistence"><a class="header" href="#persistence">Persistence</a></h4>
@@ -806,7 +752,7 @@ Permission to Test</li>
 <p>If you can maintain access and have good overview of the system, you can use the information about the system and its services and any other data stored on it to repeat the vulnerability assessment stage, but this time from inside the system. You analyze the information and prioritize it accordingly. The goal you pursue next is the escalation of privileges.</p>
 <p>Again, it is essential to distinguish between exploits that can harm the system and attacks against the services that do not cause any disruption. In doing so, you weigh the components you have already gone through in the first vulnerability assessment.</p>
 <h4 id="privesc"><a class="header" href="#privesc">PrivEsc</a></h4>
-<p>... is significant, and in most cases, it represents a critical moment that can open many more new doors for you. Getting the highest privileges on the system or domain is often crucial. Therefore you want to get the privileges of the root or the domain administrator/local administrator/SYSTEM because this will often allow you to move through the entire network without any restrictions.</p>
+<p>… is significant, and in most cases, it represents a critical moment that can open many more new doors for you. Getting the highest privileges on the system or domain is often crucial. Therefore you want to get the privileges of the root or the domain administrator/local administrator/SYSTEM because this will often allow you to move through the entire network without any restrictions.</p>
 <p>However, it is essential to remember that the escalation of privileges does not always have to occur locally on the system. You can also obtain stored credentials during the information gathering stage from other users who are members of a higher privileged group. Exploiting these privileges to log in as another user is also part of PrivEsc because you have escalated your privileges using the new set of creds.</p>
 <h4 id="data-exfiltration"><a class="header" href="#data-exfiltration">Data Exfiltration</a></h4>
 <p>During the data exfiltration and pillaging stage, you will often be able to find, among other things, considerable personal information and customer data. Some clients will want to check whether it is possible to exfiltrate these types of data. This means you try to transfer this information from the target system to your own. Security systems such as Data Loss Prevention (<em>DLP</em>) and Endpoint Detection Response (<em>EDR</em>) help detect and prevent data exfiltration. In addition to network monitoring, many companies use encryption on hard drives to prevent external parties from viewing such information. Before exfiltrating any actual data, you should check with the customer and your manager. It can often be enough to create some bogus data and exfiltrate it to your system. That way, the protection mechanisms that look for patterns in data leaving the network will be tested, but you will not be responsible for any live sensitive data on your testing machine.</p>
@@ -832,7 +778,7 @@ Permission to Test</li>
 <p>Before you target the internal network, you must first get an overview of which systems and how many can be reached from your system. This information may already be available to you from the last post-exploitation stage, where you took a closer look at the settings and configurations of the system.</p>
 <p>You return to the information gathering stage, but this time, you do it from inside the network with a different view of it. Once you have discovered all hosts and servers, you can enumerate them individually.</p>
 <h4 id="vulnerability-assessment-2"><a class="header" href="#vulnerability-assessment-2">Vulnerability Assessment</a></h4>
-<p>... from the inside of the network differs from the previous procedures. This is because far more errors occur inside a network than on hosts and servers exposed to the internet. Here, the groups to which one has been assigned and the rights to different system components play an essential role. In addition, it is common for users to share information and documents and work on them together.</p>
+<p>… from the inside of the network differs from the previous procedures. This is because far more errors occur inside a network than on hosts and servers exposed to the internet. Here, the groups to which one has been assigned and the rights to different system components play an essential role. In addition, it is common for users to share information and documents and work on them together.</p>
 <p>This type of information is of particular interest to you when planning your attacks. For example, if you compromise a user account assigned to a dev group, you may gain access to most of the resources used by company devs. This will likely provide you with crucial internal information about the systems and could help you to identify flaws or further your access.</p>
 <h4 id="privesc-1"><a class="header" href="#privesc-1">PrivEsc</a></h4>
 <p>Once you have found and prioritized these paths, you can jump to the step where you use these to access the other systems. You often find ways to crack passwords and hashes and gain higher privileges. Another standard method is to use your existing creds on other systems. There will also be situations where you do not even have to crack hashes but can use them directly. For example, you can use the tool Responder to intercept NTLMv2 hashes. If you can intercept a hash from an admin, then you can use the pass-the-hash technique to log in as that admin on multiple hosts and servers.</p>
@@ -840,18 +786,18 @@ Permission to Test</li>
 <h4 id="post-exploitation-1"><a class="header" href="#post-exploitation-1">Post-Exploitation</a></h4>
 <p>Once you have reached one or more hosts or servers, you go through the steps of the post-exploitation stage again for each system. Here you again collect system information, data from created users, and business information that can be presented as evidence. However, you must again consider how this different information must be handled and the rules defined around sensitive data in the contract.</p>
 <h3 id="poc"><a class="header" href="#poc">PoC</a></h3>
-<p>... is a project management term. In project management, it serves as proof that a project is feasible in principle. The criteria for this can lie in technical or business factors. Therefore, it is the basis for further work, in your case, the necessary steps to secure the corporate network by confirming the discovered vulns. In other words, it serves as a decision-making basis for the further course of action. At the same time, it enables risks to be identified and minimized.</p>
+<p>… is a project management term. In project management, it serves as proof that a project is feasible in principle. The criteria for this can lie in technical or business factors. Therefore, it is the basis for further work, in your case, the necessary steps to secure the corporate network by confirming the discovered vulns. In other words, it serves as a decision-making basis for the further course of action. At the same time, it enables risks to be identified and minimized.</p>
 <p>A PoC can have many different representations. For example, documentation of the vulns found can also consitute a PoC. The more practical version of a PoC is a script or code that automatically exploits the vulns found. This demonstrates the flawless exploitation of the vulnerabilities. This variant is straightforward for an admin or dev because they can see what steps your script takes to exploit the vuln.</p>
 <h3 id="post-engagement"><a class="header" href="#post-engagement">Post-Engagement</a></h3>
 <h4 id="cleanup"><a class="header" href="#cleanup">Cleanup</a></h4>
 <p>Once testing is complete, you should perform any necessary cleanup, such as deleting tools/scripts uploaded to target systems, reverting any (<em>minor</em>) configuration changes you may have made, etc. You should have detailed notes of all your activities, making any cleanup activities easy and efficient. If you cannot access a system where an artifact needs to be deleted, or another change reverted, you should alert the client and list these issues in the report appendices. Even if you can remove any uploaded files and revert changes, you should document these changes in your report appendices in case the client receives alerts that they need to follow up on and confirm that the activity in question was part of your sanctioned testing.</p>
 <h4 id="documenting-and-reporting"><a class="header" href="#documenting-and-reporting">Documenting and Reporting</a></h4>
 <p>You must make sure to have adequate documentation for all findings that you plan to include in your report. This includes command output, screenshots, a listing of affected hosts, and anything else specific to the client environment or finding. You should also make sure that you have retrieved all scan and log output if the client hosted a VM in their infrastructure for an internal pentest and any other data that may be included as part of the report or as supplementary documentation. You should not keep any Personal Identifiable Information (<em>PII</em>), potentially incriminating info, or other sensitive data you came across throughout testing.</p>
-<p>You should already have a detailed list of the findings you will include in the report and all necessary details to tailor the findings to the client's environment. Your report deliverable should consist of the following:</p>
+<p>You should already have a detailed list of the findings you will include in the report and all necessary details to tailor the findings to the client’s environment. Your report deliverable should consist of the following:</p>
 <ul>
 <li>An attack chain detailing steps taken to achieve compromise</li>
 <li>A strong executive summary that a non-technical audience can understand</li>
-<li>Detailed findings specific to the client's environment that include a risk rating, finding impact, remediation recommendations, and high-quality external references related to the issue</li>
+<li>Detailed findings specific to the client’s environment that include a risk rating, finding impact, remediation recommendations, and high-quality external references related to the issue</li>
 <li>Adequate steps to reproduce each finding so the team responsible for remediation can understand and test the issue while putting fixes in place</li>
 <li>Near, medium, and long-term recommendations specific to the environment</li>
 <li>Appendices which include information such as the target scope, OSINT data, password cracking analysis, discovered ports/services, compromised hosts, compromised accounts, files transferred to client-owned systems, any account creation/system modifications, an Acitve Directory security analysis, relevant scan data/supplementary documentation, and any other information necessary to explain a specific finding or recommendation further</li>
@@ -861,25 +807,24 @@ Permission to Test</li>
 <h4 id="deliverable-acceptance"><a class="header" href="#deliverable-acceptance">Deliverable Acceptance</a></h4>
 <p>The scope of work should clearly define the acceptance of any project deliverables. In pentest assessments, generally, you deliver a report marked DRAFT and give the client a chance to review and comment. Once the client has submitted feedback either by email or during a report review meeting, you can issue them a new version of the report marked FINAL. Some audit firms that clients may be beholden to will not accept a pentest report with a DRAFT designation. Other companies will not care, but keeping a uniform approach all customers is best.</p>
 <h4 id="post-remediation-testing"><a class="header" href="#post-remediation-testing">Post-Remediation Testing</a></h4>
-<p>Since a pentest is essentially an audit, you must remain impartial third parties and not perform remediation on your findings. You must maintain a degree of independence and can serve as trusted advisors by giving general remediation advice on how a specific issue could be fixed or be available to explain further/demonstrate a finding so the team assigned to remediate it has a better understanding. You should not be implementing changes yourself or even giving precise remediation advice. This will help maintain the assessment's integrity and not introduce any potential conflict of interest into the process.</p>
+<p>Since a pentest is essentially an audit, you must remain impartial third parties and not perform remediation on your findings. You must maintain a degree of independence and can serve as trusted advisors by giving general remediation advice on how a specific issue could be fixed or be available to explain further/demonstrate a finding so the team assigned to remediate it has a better understanding. You should not be implementing changes yourself or even giving precise remediation advice. This will help maintain the assessment’s integrity and not introduce any potential conflict of interest into the process.</p>
 <h4 id="data-retention"><a class="header" href="#data-retention">Data Retention</a></h4>
 <p>After a pentest concludes, you will have a considerable amount of client-specific data such as scan results, log output, credentials, screenshots, and more. Data retention and destruction requirements may differ from county to country and firm to firm, and procedures surrounding each should be outlined clearly in the contract language of the scope of work and the RoE.</p>
-<p>You should retain evidence for some time after the penstest in case questions arise about specific findings or to assist with retesting "closed" findings after the client has performed remediation activities. Any data retained after the assessment should be stored in a secure location owned and controlled by the firm and encrypted at rest. All data should be wiped from tester systems at the conclusion of an assessment. A new virtual machine specific to the client in question should be created for any post-remediation testing or investigation of findings related to client inquiries.</p>
+<p>You should retain evidence for some time after the penstest in case questions arise about specific findings or to assist with retesting “closed” findings after the client has performed remediation activities. Any data retained after the assessment should be stored in a secure location owned and controlled by the firm and encrypted at rest. All data should be wiped from tester systems at the conclusion of an assessment. A new virtual machine specific to the client in question should be created for any post-remediation testing or investigation of findings related to client inquiries.</p>
 <h4 id="close-out"><a class="header" href="#close-out">Close Out</a></h4>
-<p>Once you have delivered the final report, assisted the client with questions regarding remediation, and performed post-remediation testing/issued a new report, you can finally close the project. At this stage, you should ensure that any systems used to connect to the client's systems or process data have been wiped or destroyed and that any artifacts leftover from the engagement are stored securely (<em>encrypted</em>) per your firm's policy and per contractual obligations to your client. The final steps would be invoicing the client and collecting payment for services rendered. Finally, it is always good to follow up with a post-assessment client satisfaction survey so the team and management, in particular, can see what went well during the engagement and what could be improved upon from a company process standpoint and the individual consultant assigned to the project. Discussions for follow-on work may arise in the weeks or months after if the client was pleased with your work and day-to-day interactions.</p>
-<p>As you continually grow your technical skillset, you should always look for ways to improve your soft skills and become more well-rounded professional consultants. In the end, the client will usually remember interactions during the assessment, communication, and how they were treated/valued by the firm they engage, not the fancy exploit chain the pentester pulled of to pwn their systems. Take time to self-reflect and work on continuous improvement in all aspects of your role as a professional pentester.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>Once you have delivered the final report, assisted the client with questions regarding remediation, and performed post-remediation testing/issued a new report, you can finally close the project. At this stage, you should ensure that any systems used to connect to the client’s systems or process data have been wiped or destroyed and that any artifacts leftover from the engagement are stored securely (<em>encrypted</em>) per your firm’s policy and per contractual obligations to your client. The final steps would be invoicing the client and collecting payment for services rendered. Finally, it is always good to follow up with a post-assessment client satisfaction survey so the team and management, in particular, can see what went well during the engagement and what could be improved upon from a company process standpoint and the individual consultant assigned to the project. Discussions for follow-on work may arise in the weeks or months after if the client was pleased with your work and day-to-day interactions.</p>
+<p>As you continually grow your technical skillset, you should always look for ways to improve your soft skills and become more well-rounded professional consultants. In the end, the client will usually remember interactions during the assessment, communication, and how they were treated/valued by the firm they engage, not the fancy exploit chain the pentester pulled of to pwn their systems. Take time to self-reflect and work on continuous improvement in all aspects of your role as a professional pentester.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../general/processes/incident_handling_process.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../general/programming/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -889,15 +834,21 @@ Permission to Test</li>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../general/processes/incident_handling_process.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../general/programming/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -917,22 +868,20 @@ Permission to Test</li>
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/pagetoc.js"></script>
 
 
 

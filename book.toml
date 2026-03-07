@@ -2,34 +2,19 @@
 authors = ["d41y"]
 title = "Cybersecurity Notes"
 language = "en"
-src = "src"
-
-# added
-[preprocessor.embedify]
-footer.enable = true
-footer.message = "2026 • Created by [d41y](https://github.com/d41y)"
+src = "src" 
 
 [preprocessor.callouts]
 
-[preprocessor.wikilinks]
-
-[preprocessor.wikilinks.options]
-extension = ".md"
-pretty-links = false
-use-link-labels = true
-
 [preprocessor.pagetoc]
+
+[output.html]
+git-repository-url = "https://github.com/d41y/d41y.github.io"
+#git-repository-icon = "fa-github"
+#additional-css = ["theme/pagetoc.css"]
+#additional-js = ["theme/pagetoc.js"]
+additional-css = ["theme/custom.css"]
 
 [output.html.fold]
 enable = true
 level = 1
-
-[output.html.print]
-enable = false
-
-[output.html]
-git-repository-url = "https://github.com/d41y/d41y.github.io"
-git-repository-icon = "fa-github"
-additional-css = ["theme/pagetoc.css"]
-additional-js  = ["theme/pagetoc.js"]
-

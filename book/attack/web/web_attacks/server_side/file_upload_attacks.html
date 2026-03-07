@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../../../favicon.png">
-        <link rel="stylesheet" href="../../../../css/variables.css">
-        <link rel="stylesheet" href="../../../../css/general.css">
-        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="shortcut icon" href="../../../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../../searchindex.js";
+            window.path_to_searchindex_js = "../../../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../../toc.js"></script>
+        <script src="../../../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -413,14 +416,14 @@
 </style>
 <h1 id="file-upload-attacks"><a class="header" href="#file-upload-attacks">File Upload Attacks</a></h1>
 <p>Uploading a file has become a key feature for most modern web applications to allow the extensibility of web apps with user information. A social media website allows the upload of user profile images and other social media, while a corporate website may allow users to upload PDFs and other documents for corporate use.</p>
-<p>However, as web application developers enable this feature, they also take the risk of allowing end-users to store their potentially malicious data on the web application's back-end server. If the user input and uploaded files are not correctly filtered and validated, attackers may be able to exploit the file upload feature to perform malicious activities, like executing arbitrary commands on the back-end server to take control over it.</p>
+<p>However, as web application developers enable this feature, they also take the risk of allowing end-users to store their potentially malicious data on the web application’s back-end server. If the user input and uploaded files are not correctly filtered and validated, attackers may be able to exploit the file upload feature to perform malicious activities, like executing arbitrary commands on the back-end server to take control over it.</p>
 <p>The worst possbile kind of file upload vulnerability is an unauthenticated arbitrary file upload. With this type of vulnerability, a web application allows any unauthenticated user to upload any file type, making it one step away from allowing any user to execute code on the back-end server.</p>
 <h2 id="absent-validation"><a class="header" href="#absent-validation">Absent Validation</a></h2>
 <p>The most basic type of file upload vulnerability occurs when the web application does not have any form of validation filters on the uploaded files, allowing the upload of any file type by default.</p>
 <p>With these types of vulnerable web apps, you may directly upload your web shell or reverse shell script to the web application, and then by just visiting the uploaded script, you can interact with you web shell or send the reverse shell.</p>
 <h3 id="arbitrary-file-upload"><a class="header" href="#arbitrary-file-upload">Arbitrary File Upload</a></h3>
 <p>The following web app allows you to upload personal files. The web app does not mention anythin about what file types are allowed, and you can drag and drop any file you want. Furthermore, if you click on the form to select a file, the file selector dialog does not specify any file type, as it says <code>All Files</code> for the file type, which may also suggest that no type of restrictions or limitations are specified for the web application.</p>
-<p><img src="../../../../images/file_upload1.png" alt="upload" /></p>
+<p><img src="../../../../images/file_upload1.png" alt="upload"></p>
 <p>All of this tells you that the programm appears to have no file type restrictions on the front-end, and if no restrictions were specified on the back-end, you might be able to upload arbitrary file type to the back-end server to gain complete control over it.</p>
 <h3 id="identifying-web-framework"><a class="header" href="#identifying-web-framework">Identifying Web Framework</a></h3>
 <p>You need to upload a malicious script to test whether you can upload any file type to the back-end and test whether you can use this to exploit the back-end server. Many kinds of scripts can help you exploit web applications through arbitrary file upload, most commonly a Web Shell script and a Reverse Shell script.</p>
@@ -436,7 +439,7 @@
 <pre><code class="language-php">&lt;?php echo "Hello HTB";?&gt; 
 </code></pre>
 <p>To verify that it worked:</p>
-<p><img src="../../../../images/file_upload2.png" alt="hello htb" /></p>
+<p><img src="../../../../images/file_upload2.png" alt="hello htb"></p>
 <h2 id="upload-exploitation"><a class="header" href="#upload-exploitation">Upload Exploitation</a></h2>
 <h3 id="web-shells"><a class="header" href="#web-shells">Web Shells</a></h3>
 <p>One good option for a PHP web shell is <a href="https://github.com/Arrexel/phpbash">phpbash</a>, which provides a terminal-like, semi-interactive web shell. Furthermore, SecLists provides a plethora of web shells for different frameworks and languages.</p>
@@ -446,7 +449,7 @@
 <pre><code class="language-php">&lt;?php system($_REQUEST['cmd']); ?&gt;
 </code></pre>
 <p>If you write the above script to <code>shell.php</code> and upload it to your web application, you can execute system commands with the <code>?cmd=</code> GET parameter:</p>
-<p><img src="../../../../images/file_upload3.png" alt="uid" /></p>
+<p><img src="../../../../images/file_upload3.png" alt="uid"></p>
 <h3 id="reverse-shell"><a class="header" href="#reverse-shell">Reverse Shell</a></h3>
 <p>To receive reverse shells through the vulnerable upload functionality, you should start by downloading a reverse shell script in the language of the web app. One reliable reverse shell for PHP is the <a href="https://github.com/pentestmonkey/php-reverse-shell">pentestmonkey</a> PHP reverse shell. After downloading the pentestmonkey script, you need to change the values for IP and PORT.</p>
 <p>At this point you should start a netcat listener on your machine, upload the script to the web app, and then visit its link to execute the script and get a reverse shell.</p>
@@ -467,19 +470,21 @@ Payload size: 3033 bytes
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>You can generate reverse shell scripts for several languages. You can use many reverse shell payloads with the <code>-p</code> flag and specify the output language with the <code>-f</code> flag.</p>
 </div>
+
 <h2 id="client-side-validation"><a class="header" href="#client-side-validation">Client-Side Validation</a></h2>
 <p>Many web apps only rely on front-end JavaScript code to validate the selected file format before it is uploaded and would not upload it if the file is not in the required format.</p>
-<p>However, as the file format validation is happening on the client-side, you can easily bypass it by directly interacting with the server, skipping the front-end validations altogether. You may also modify the front-end code through your browser's dev tools to disable any validation in place.</p>
+<p>However, as the file format validation is happening on the client-side, you can easily bypass it by directly interacting with the server, skipping the front-end validations altogether. You may also modify the front-end code through your browser’s dev tools to disable any validation in place.</p>
 <p>This time, when trying to upload a file, you cannot see your PHP scripts, as the dialog appears to be limited to image formats only.</p>
-<p><img src="../../../../images/file_upload4.png" alt="limited" /></p>
-<p>You may still select the <code>All Files</code> option to select your PHP script anyway, but when you do so, you get an error message saying "Only images are allowed!", and the "Upload" button gets disabled.</p>
+<p><img src="../../../../images/file_upload4.png" alt="limited"></p>
+<p>You may still select the <code>All Files</code> option to select your PHP script anyway, but when you do so, you get an error message saying “Only images are allowed!”, and the “Upload” button gets disabled.</p>
 <p>This indicates some form of file type validation, so you cannot just upload a web shell through the upload form, as you did before. Luckily, all validation appears to be happening on the front-end, as the page never refreshes or sends any HTTP requests after selecting your file. So, you should be able to have complete control over these client-side validations.</p>
 <p>Any code that runs on the client-side is under your control. While the web server is responsible for sending the front-end code, the rendering and execution of the front-end code happen within your browser. If the web app does not apply any of these validations on the back-end, you should be able to upload any file type.</p>
 <h3 id="back-end-request-modification"><a class="header" href="#back-end-request-modification">Back-End Request Modification</a></h3>
 <p>Start by examining a normal request through Burp. When you select an image, you see that it gets reflected as your profile image, and when you click on <code>Upload</code>, your profile image gets updated and persists through refreshes. This indicates that your image was uploaded to the server, which is now displaying it back to you.</p>
-<p><img src="../../../../images/file_upload5.png" alt="png" /></p>
+<p><img src="../../../../images/file_upload5.png" alt="png"></p>
 <p>The web app appears to be sending a standard HTTP upload request to <code>upload.php</code>. This way, you can now modify the request to meet your needs without having the front-end type validation restrictions. If the back-end server does not validate the uploaded file, then you should theoretically be able to send any file type/content, and it would be uploaded to the server.</p>
 <ul>
 <li><code>filename=</code>
@@ -493,14 +498,14 @@ Payload size: 3033 bytes
 </ul>
 </li>
 </ul>
-<p><img src="../../../../images/file_upload6.png" alt="burp" /></p>
+<p><img src="../../../../images/file_upload6.png" alt="burp"></p>
 <h3 id="disabling-front-end-validation"><a class="header" href="#disabling-front-end-validation">Disabling Front-End Validation</a></h3>
 <p>Another method to bypass client-side validations is through manipulating the front-end code. As these functions are being completely processed within your web browser, you have complete control over them. So, you can modify these scripts or disable them entirely. Then, you may use the upload functionality to upload any file type without needing to utilize Burp to capture and modify your requests.</p>
-<p>To start, you can open the browser's Page Inspector, and then click on the profile image, which is where you trigger the file selector for upload form.</p>
+<p>To start, you can open the browser’s Page Inspector, and then click on the profile image, which is where you trigger the file selector for upload form.</p>
 <pre><code class="language-html">&lt;input type="file" name="uploadFile" id="uploadFile" onchange="checkFile(this)" accept=".jpg,.jpeg,.png"&gt;
 </code></pre>
 <p>You see that the file input specifies (<code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>) as the allowed file types within the file selection dialog. However, you can easily modify this and select <code>All Files</code> as you did before, so it is unnecessary to change this part of the page.</p>
-<p>The more interesting part is <code>onchange="checkFile(this)"</code>, which appears to run a JavaScript code whenever you select a file, which appears to be doing the file type validation. To get the details of this function, you can go to the browser's console, and then you can type the function's name to get its details.</p>
+<p>The more interesting part is <code>onchange="checkFile(this)"</code>, which appears to run a JavaScript code whenever you select a file, which appears to be doing the file type validation. To get the details of this function, you can go to the browser’s console, and then you can type the function’s name to get its details.</p>
 <pre><code class="language-javascript">function checkFile(File) {
 ...SNIP...
     if (extension !== 'jpg' &amp;&amp; extension !== 'jpeg' &amp;&amp; extension !== 'png') {
@@ -511,7 +516,7 @@ Payload size: 3033 bytes
     }
 }
 </code></pre>
-<p>Luckily, you don't need to get into writing and modifying JavaScript code. You can remove this function from the HTML code since its primary use appears to be file type validation, and removing it should not break anything.</p>
+<p>Luckily, you don’t need to get into writing and modifying JavaScript code. You can remove this function from the HTML code since its primary use appears to be file type validation, and removing it should not break anything.</p>
 <p>To do so, you can go back to your inspector, click on the profile image again, double-click on the function name, and delete it.</p>
 <p>With the <code>checkFile</code> function removed from the file input, you should be able to select your PHP web shell through the file selection dialog and upload it normally with no validations.</p>
 <p>Once you upload your web shell, you can use the Page Inspector once more, click on the profile image, and you should see the URL of your uploaded web shell.</p>
@@ -538,22 +543,24 @@ if (in_array($extension, $blacklist)) {
 <p>The code is taking the file extension from the uploaded file name and then comparing it against a list of blacklisted extensions. However, this validation method has a major flaw. It is not comprehensive, as many other extensions are not included in this list, which may still be used to execute PHP code on the back-end server if uploaded.</p>
 <h3 id="fuzzing-extensions"><a class="header" href="#fuzzing-extensions">Fuzzing Extensions</a></h3>
 <p>If a web app seems to be testing the file extensions, your first step is to fuzz the upload functionality with a list of potential extensions and see which of them return the previous error message. Any upload requests that do not return an error message, return a differetn message, or succeed in uploading the file, may indicate an allowed file extension.</p>
-<p><img src="../../../../images/file_upload7.png" alt="fuzzing" /></p>
+<p><img src="../../../../images/file_upload7.png" alt="fuzzing"></p>
 <p>You should keep the file content for this attack, as you are only interested in fuzzing file extensions. You can use this <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Upload%20Insecure%20Files/Extension%20PHP/extensions.lst">list</a> to test for possible php extensions.</p>
-<p><img src="../../../../images/file_upload8.png" alt="success" /></p>
+<p><img src="../../../../images/file_upload8.png" alt="success"></p>
 <p>You can sort the result by length, and you will see that all requests with the Content-Length of 193 passed the extension validation, as they all responded with <code>File successfully uploaded</code>. In contrast, the rest responded with an error message saying <code>Extension not allowed</code>.</p>
 <div class="mdbook-callouts mdbook-callouts-note">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>Now, you can try uploading a file using any of the allowed extensions, and some of them may allow you to execute PHP code. Not all extensions will work with all web server configurations, so you may need to try several extensions to get one that successfully executes PHP code.</p>
 </div>
+
 <h2 id="whitelist-filters"><a class="header" href="#whitelist-filters">Whitelist Filters</a></h2>
 <h3 id="whitelisting-extensions"><a class="header" href="#whitelisting-extensions">Whitelisting Extensions</a></h3>
 <p>If you try the same approach you did before, you will now get <code>Only Images are allowed</code>, which may be more common in web apps than seeing a blocked extension type. However, error messages do not always reflect which form of validation is being utilized.</p>
-<p><img src="../../../../images/file_upload9.png" alt="only images" /></p>
-<p>All variations of PHP extensions are blocked. However, the wordlist you used also contained other 'malicious' extensions that were not blocked and were successfully uploaded.</p>
+<p><img src="../../../../images/file_upload9.png" alt="only images"></p>
+<p>All variations of PHP extensions are blocked. However, the wordlist you used also contained other ‘malicious’ extensions that were not blocked and were successfully uploaded.</p>
 <pre><code class="language-php">$fileName = basename($_FILES["uploadFile"]["name"]);
 
 if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
@@ -564,7 +571,7 @@ if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
 <p>You see that the script uses a regex to test whether the filename contains any whitelisted image extensions. The issue here lies within the regex, as it only checks whether the file name contains the extension and not if it actually ends with it.</p>
 <h3 id="double-extensions"><a class="header" href="#double-extensions">Double Extensions</a></h3>
 <p>A straightforward method of passing the regex test is through Double Extensions. For example, if the <code>.jpg</code> extension was allowed, you can add it in your uploaded file name and still end your filename with <code>.php</code>, in which case you should be able to pass the whitelist test, while still uploading a PHP script that can execute PHP code.</p>
-<p><img src="../../../../images/file_upload10.png" alt="whitelist" /></p>
+<p><img src="../../../../images/file_upload10.png" alt="whitelist"></p>
 <p>However, this may not always work, as some web applications may use a strict regex pattern.</p>
 <pre><code class="language-php">if (!preg_match('/^.*\.(jpg|jpeg|png|gif)$/', $fileName)) { ...SNIP... }
 </code></pre>
@@ -577,9 +584,9 @@ if (!preg_match('^.*\.(jpg|jpeg|png|gif)', $fileName)) {
 &lt;/FilesMatch&gt;
 </code></pre>
 <p>The above configuration is how the web server determines which files to allow PHP code execution. It specifies a whitelist with a regex pattern that matches <code>.phar</code>, <code>.php</code>, and <code>phtml</code>. However, this regex pattern can have the same mistake you saw earlier if you forgot to end it with <code>$</code>. In such cases, any file that contains the above extensions will be allowed PHP code execution, even if it does not end with the PHP extension. For example, <code>shell.php.jpg</code> should pass the earlier whitelist test as it ends with <code>.jpg</code>, and it would be able to execute PHP code due to the above misconfiguration, as it contains <code>.php</code> in its name.</p>
-<p><img src="../../../../images/file_upload11.png" alt="php.jpg" /></p>
+<p><img src="../../../../images/file_upload11.png" alt="php.jpg"></p>
 <h3 id="character-injection"><a class="header" href="#character-injection">Character Injection</a></h3>
-<p>... is another method of bypassing a whitelist validation test.</p>
+<p>… is another method of bypassing a whitelist validation test.</p>
 <p>You can inject several characters before or after the final extension to cause the web application to misinterpret the filename and execute the uploaded file as a PHP file.</p>
 <p>Some are:</p>
 <ul>
@@ -607,7 +614,7 @@ done
 <h2 id="type-filters"><a class="header" href="#type-filters">Type Filters</a></h2>
 <p>While extension filters may accept several extensions, content filters usually specify a single category, which is why they do not typically use blacklists or whitelists. This is because web servers provide functions to check for the file content type, and it usually falls under a specific category.</p>
 <h3 id="content-type"><a class="header" href="#content-type">Content-Type</a></h3>
-<p><img src="../../../../images/file_upload12.png" alt="only images" /></p>
+<p><img src="../../../../images/file_upload12.png" alt="only images"></p>
 <p>You get a message saying <code>Only images are allowed</code>. The error message persists, and your file fails to upload. If you change the file name to <code>shell.jpg.phtml</code> or <code>shell.php.jpg</code>, or even if you use <code>shell.jpg</code> with a web shell content, your upload will fail. As the file extension does not affect the error message, the web application muste be testing the file content for type validation.</p>
 <p>The following is an example of how a PHP web app tests the Content-Type header to validate the file type:</p>
 <pre><code class="language-php">$type = $_FILES['uploadFile']['type'];
@@ -617,20 +624,22 @@ if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))
     die();
 }
 </code></pre>
-<p>The code sets the <code>$type</code> variable from the uploaded file's <code>Content-Type</code> header. Your browser automatically set the Content-Type header when selecting a file through the file selector dialog, usually derived from the file extension. However, since your browsers set this, this operation is a client-side operation, and you can manipulate it to change the perceived file type and potentially bypass the type filter.</p>
+<p>The code sets the <code>$type</code> variable from the uploaded file’s <code>Content-Type</code> header. Your browser automatically set the Content-Type header when selecting a file through the file selector dialog, usually derived from the file extension. However, since your browsers set this, this operation is a client-side operation, and you can manipulate it to change the perceived file type and potentially bypass the type filter.</p>
 <p>You may start by fuzzing the Content-Type header with <a href="https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-all-content-types.txt">Content-Type Wordlist</a> through Burp Intruder, to see which types are allowed. However, the message tells you that only images are allowed, so you can limit your scan to image types, which reduces the wordlist to 45 types only.</p>
-<p><img src="../../../../images/file_upload13.png" alt="content type" /></p>
+<p><img src="../../../../images/file_upload13.png" alt="content type"></p>
 <p>Now you get a <code>File successfully uploaded</code>.</p>
 <div class="mdbook-callouts mdbook-callouts-note">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
-<p>A file upload HTTP request has two Content-Type headers, one for the attached file (<em>at the bottom</em>), and one for the full request (<em>at the top</em>). You usually need to modify the file's Content-Type header, but in some cases the request will only contain the main Content-Type header, in which case you will need to modify the main Content-Type header.</p>
+
+<p>A file upload HTTP request has two Content-Type headers, one for the attached file (<em>at the bottom</em>), and one for the full request (<em>at the top</em>). You usually need to modify the file’s Content-Type header, but in some cases the request will only contain the main Content-Type header, in which case you will need to modify the main Content-Type header.</p>
 </div>
+
 <h3 id="mime-type"><a class="header" href="#mime-type">MIME-Type</a></h3>
 <p><em>Multipurpose Internet Mail Extensions (MIME)</em> is an internet standard that determines the type of a file through its general format and bytes structure.</p>
-<p>This is usually done by inspecting the first few bytes of the file's content, which contain the File Signature or Magic Bytes. For example, if a file starts with <code>GIF87a</code> this indicates that it is a GIF image, while a file starting with plaintext is usually considered a Text file. If you change the first bytes of any file to the GIF magic bytes, its MIME type would be changed to a GIF image, regardless of its remaining content or extension.</p>
+<p>This is usually done by inspecting the first few bytes of the file’s content, which contain the File Signature or Magic Bytes. For example, if a file starts with <code>GIF87a</code> this indicates that it is a GIF image, while a file starting with plaintext is usually considered a Text file. If you change the first bytes of any file to the GIF magic bytes, its MIME type would be changed to a GIF image, regardless of its remaining content or extension.</p>
 <p>Example:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ echo "this is a text file" &gt; text.jpg 
 d41y@htb[/htb]$ file text.jpg 
@@ -650,21 +659,21 @@ if (!in_array($type, array('image/jpg', 'image/jpeg', 'image/png', 'image/gif'))
 }
 </code></pre>
 <p>Burp example:</p>
-<p><img src="../../../../images/file_upload14.png" alt="mime" /></p>
+<p><img src="../../../../images/file_upload14.png" alt="mime"></p>
 <p>You can use a combination of the two methods, which may help bypass some more robust content filters.</p>
 <h2 id="limited-file-uploads"><a class="header" href="#limited-file-uploads">Limited File Uploads</a></h2>
 <p>While file upload forms with weak filters can be exploited to upload arbitrary files, some upload forms have secure filters that may not be exploitable with the techniques discussed. However, even if you are dealing with a limited file upload form, which only allows you to upload specific file types, you may still be able to perform attacks on the web app.</p>
 <p>Certain file types, like <code>SVG</code>, <code>HTML</code>, <code>XML</code> and even some image and document files, may allow you to introduce new vulnerabilities to the web application by uploading malicious versions of these files. This is why fuzzing allowed file extensions is an important exercise for any file upload attack. It enables you to explore what attacks may be achievable on the web server.</p>
 <h3 id="xss"><a class="header" href="#xss">XSS</a></h3>
 <p>Many file types may allow you to introduce a Stored XSS vulnerability to the web application maliciously crafted versions of them.</p>
-<p>The most basic example is when a web application allows you to upload HTML files. Although HTML files won't allow you to execute code, it would still be possible to implement JavaScript code within them to carry an XSS or CSRF attack on whoever visits the uploaded HTML page. If the target sees a link from a website they trust, and the website is vulnerable to uploading HTML documents, it may be possible to trick them into visiting the link and carry the attack on their machines.</p>
-<p>Another example of XSS attacks is web applications that display an image's metadata after its upload. For such web apps, you can include an XSS payload in one of the Metadata parameters that accept raw text, like the <code>Comment</code> or <code>Artist</code>.</p>
+<p>The most basic example is when a web application allows you to upload HTML files. Although HTML files won’t allow you to execute code, it would still be possible to implement JavaScript code within them to carry an XSS or CSRF attack on whoever visits the uploaded HTML page. If the target sees a link from a website they trust, and the website is vulnerable to uploading HTML documents, it may be possible to trick them into visiting the link and carry the attack on their machines.</p>
+<p>Another example of XSS attacks is web applications that display an image’s metadata after its upload. For such web apps, you can include an XSS payload in one of the Metadata parameters that accept raw text, like the <code>Comment</code> or <code>Artist</code>.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ exiftool -Comment=' "&gt;&lt;img src=1 onerror=alert(window.origin)&gt;' HTB.jpg
 d41y@htb[/htb]$ exiftool HTB.jpg
 ...SNIP...
 Comment                         :  "&gt;&lt;img src=1 onerror=alert(window.origin)&gt;
 </code></pre>
-<p>You can see that the Comment parameter was updated to your XSS payload. When the image's metadata is displayed, the XSS payload should be triggered, and the JavaScript code will be executed to carry the XSS attack. Furthermore, if you change the image's MIME-Type to <code>text/html</code>, some web apps may show it as an HTML document instead of an image, in which case the XSS payload would be triggered even if the metadata wasn't directly displayed.</p>
+<p>You can see that the Comment parameter was updated to your XSS payload. When the image’s metadata is displayed, the XSS payload should be triggered, and the JavaScript code will be executed to carry the XSS attack. Furthermore, if you change the image’s MIME-Type to <code>text/html</code>, some web apps may show it as an HTML document instead of an image, in which case the XSS payload would be triggered even if the metadata wasn’t directly displayed.</p>
 <p>XSS attacks can also be carried with <code>SVG</code> images, along with several other attacks. Scalable Vector Graphics images are XML-based, and they describe 2D vector graphics, which the browser renders into an image. For this reason, you can modify their XML data to include an XSS payload.</p>
 <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
@@ -681,7 +690,7 @@ Comment                         :  "&gt;&lt;img src=1 onerror=alert(window.origi
 &lt;svg&gt;&amp;xxe;&lt;/svg&gt;
 </code></pre>
 <p>Once the above SVG image is uploaded and viewed, the XML document would get processed, and you should get the info of <code>/etc/passwd</code> printed on the page or shown in the page source. Similarly, if the web app allows the upload of XML documents, then the same payload can carry the same attack when the XML data is displayed on the web app.</p>
-<p>While reading systems files like <code>/etc/passwd</code> can be very useful for server enumeration, it can have an even more significant benefit for the web penetration testing, as it allows you to read the web application's source files. Access to the source code will enable you to find more vulnerabilities to exploit within the web application through Whitebox Penetration Testing. For File Upload exploitation, it may allow you to locate the upload directory, identify allowed extensions, or find the file naming scheme, which may become handy for further exploitation.</p>
+<p>While reading systems files like <code>/etc/passwd</code> can be very useful for server enumeration, it can have an even more significant benefit for the web penetration testing, as it allows you to read the web application’s source files. Access to the source code will enable you to find more vulnerabilities to exploit within the web application through Whitebox Penetration Testing. For File Upload exploitation, it may allow you to locate the upload directory, identify allowed extensions, or find the file naming scheme, which may become handy for further exploitation.</p>
 <p>Example for reading source code in PHP web applications:</p>
 <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE svg [ &lt;!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"&gt; ]&gt;
@@ -699,7 +708,7 @@ Comment                         :  "&gt;&lt;img src=1 onerror=alert(window.origi
 <p>For example, if you name a file <code>file$(whoami).jpg</code> or <code>file`whoami`.jpg</code> or <code>file.jpg||whoami</code>, and then the web application attempts to move the uploaded file with an OS command, then your file name would inject the <code>whoami</code> command, which would get executed, leading to remote code execution.</p>
 <p>Similarly, you may use an XSS payload in the file name (<code>&lt;script&gt;alert(window.origin);&lt;/script&gt;</code>), which would get executed on the target`s machine if the file name is displayed to them. You may also inject an SQL query in the file name, which may lead to an SQLi if the file name is insecurely used in an SQL query.</p>
 <h3 id="upload-directory-disclosure"><a class="header" href="#upload-directory-disclosure">Upload Directory Disclosure</a></h3>
-<p>In some file upload forms, like a feedback form or a submission form, you may not have access to the link of your uploaded file and may not know the uploads directory. In such cases, you may utilize fuzzing to look for the uploads directory or even use other vulnerabilities to find where the uploaded files are by reading the web application's source code.</p>
+<p>In some file upload forms, like a feedback form or a submission form, you may not have access to the link of your uploaded file and may not know the uploads directory. In such cases, you may utilize fuzzing to look for the uploads directory or even use other vulnerabilities to find where the uploaded files are by reading the web application’s source code.</p>
 <p>Another method you can use to disclose the uploads directory is through forcing error messages, as they often reveal helpful information for further exploitation. One attack you can use to cause such errors is uploading a file with a name that already exists or sending two identical requests silmutaneously. This may lead the web server to show an error that it could not write the file, which may disclose the uploads directory. You may also try uploading a file with an overly long name. If the web application does not handle this correcty, it may also error out and disclose the upload directory.</p>
 <h3 id="windows-specific-attacks"><a class="header" href="#windows-specific-attacks">Windows-specific Attacks</a></h3>
 <p>One such attack is using reserved characters, such as <code>| &lt; &gt; * ?</code>, which are usually reserved for special uses like wildcards. If the web application does not properly sanitize these names or wrap them within quotes, they may refer to another file and cause an error that discloses the upload directory. Similarly, you may use Windows reserved names for the uploaded file name, like <code>CON COM1 LPT1</code>, or <code>NUL</code>, which may also cause an error as the web application will not be allowed to write a file with this name.</p>
@@ -724,7 +733,7 @@ if (!preg_match('/^.*\.(jpg|jpeg|png|gif)$/', $fileName)) {
 }
 </code></pre>
 <h3 id="content-validation"><a class="header" href="#content-validation">Content Validation</a></h3>
-<p>You should also validate the file content, since extension validation is not enough. You cannot validate one without the other and must always validate both the file extension and its content. Furthermore, you should always make sure that the file extension matches the file's content.</p>
+<p>You should also validate the file content, since extension validation is not enough. You cannot validate one without the other and must always validate both the file extension and its content. Furthermore, you should always make sure that the file extension matches the file’s content.</p>
 <p>PHP example:</p>
 <pre><code class="language-php">$fileName = basename($_FILES["uploadFile"]["name"]);
 $contentType = $_FILES['uploadFile']['type'];
@@ -757,20 +766,19 @@ foreach (array($contentType, $MIMEtype) as $type) {
 <li>limit file size</li>
 <li>update any used libraries</li>
 <li>scan uploaded files for malware or malicious strings</li>
-<li>utilize a WAF as a secondary layer of protection<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></li>
+<li>utilize a WAF as a secondary layer of protection</li>
 </ul>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../../../attack/web/web_attacks/server_side/file_inclusion.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -780,15 +788,21 @@ foreach (array($contentType, $MIMEtype) as $type) {
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../../../attack/web/web_attacks/server_side/file_inclusion.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -808,22 +822,20 @@ foreach (array($contentType, $MIMEtype) as $type) {
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../../../elasticlunr.min.js"></script>
-        <script src="../../../../mark.min.js"></script>
-        <script src="../../../../searcher.js"></script>
+        <script src="../../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../../searcher-c2a407aa.js"></script>
 
-        <script src="../../../../clipboard.min.js"></script>
-        <script src="../../../../highlight.js"></script>
-        <script src="../../../../book.js"></script>
+        <script src="../../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../../highlight-abc7f01d.js"></script>
+        <script src="../../../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../../../theme/pagetoc.js"></script>
 
 
 

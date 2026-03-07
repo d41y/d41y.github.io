@@ -12,22 +12,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="shortcut icon" href="../../../../favicon.png">
-        <link rel="stylesheet" href="../../../../css/variables.css">
-        <link rel="stylesheet" href="../../../../css/general.css">
-        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="shortcut icon" href="../../../../favicon-7514936c.png">
+        <link rel="stylesheet" href="../../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../../../theme/pagetoc.css">
+        <link rel="stylesheet" href="../../../../theme/custom-81a920ab.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -35,10 +35,10 @@
             const path_to_root = "../../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../../searchindex.js";
+            window.path_to_searchindex_js = "../../../../searchindex-6205a3f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../../toc.js"></script>
+        <script src="../../../../toc-eceb7dc6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -81,12 +81,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -101,78 +101,81 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
                     <h1 class="menu-title">Cybersecurity Notes</h1>
 
                     <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
                         <a href="https://github.com/d41y/d41y.github.io" title="Git repository" aria-label="Git repository">
-                            <i id="git-repository-button" class="fa fa-github"></i>
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <style>
 .mdbook-callouts {
@@ -412,7 +415,7 @@
 }
 </style>
 <h1 id="insecure-direct-object-reference-idor"><a class="header" href="#insecure-direct-object-reference-idor">Insecure Direct Object Reference (IDOR)</a></h1>
-<p>... vulnerabilities occur when a web app exposes a direct reference to an object, like a file or database resource, which the end-user can directly control to obtain access to other similar objects. If any user can access any resource due to the lack of a solid access control system, the system is considered to be vulnerable.</p>
+<p>… vulnerabilities occur when a web app exposes a direct reference to an object, like a file or database resource, which the end-user can directly control to obtain access to other similar objects. If any user can access any resource due to the lack of a solid access control system, the system is considered to be vulnerable.</p>
 <p>For example, if users request access to a file they recently uploaded, they may get a link to it such as <code>download.php?file_id=123</code>. So, as the link directly references the file, what would happen if you tried to access another file with <code>download.php?file_id=124</code>? If the web app does not have a proper access control system on the back-end, you may be able to access any file by sending a request with its <code>file_id</code>. In many cases, you may find that the <code>id</code> is easily guessable, making it possible to retrieve many files or resources that you should not have access to based on your permissions.</p>
 <h2 id="identifying-idors"><a class="header" href="#identifying-idors">Identifying IDORs</a></h2>
 <h3 id="url-parameters--apis"><a class="header" href="#url-parameters--apis">URL Parameters &amp; APIs</a></h3>
@@ -464,26 +467,26 @@
 
 }
 </code></pre>
-<p>The second user may not have all of these API parameters to replicate the call and should not be able to make the same call as <code>User1</code>. However, with these details at hand, you can try repeating the same API call while logged in as <code>User2</code> to see if the web app returns anything. Such cases may work if the web app only requires a valid logged-in session to make the API call but has no access control on the back-end to compare the caller's session with the data being called.</p>
+<p>The second user may not have all of these API parameters to replicate the call and should not be able to make the same call as <code>User1</code>. However, with these details at hand, you can try repeating the same API call while logged in as <code>User2</code> to see if the web app returns anything. Such cases may work if the web app only requires a valid logged-in session to make the API call but has no access control on the back-end to compare the caller’s session with the data being called.</p>
 <p>If this is the case, and you can calculate the API parameters for other users, this would be an IDOR vulnerability. Even if you could not calculate the API parameters for other users, you would still have identified a vulnerability in the back-end access control system and may start looking for other object references to exploit.</p>
 <h2 id="mass-idor-enumeration"><a class="header" href="#mass-idor-enumeration">Mass IDOR Enumeration</a></h2>
 <h3 id="insecure-parameters"><a class="header" href="#insecure-parameters">Insecure Parameters</a></h3>
-<p><img src="../../../../images/IDOR_1.png" alt="idor 1" /></p>
+<p><img src="../../../../images/IDOR_1.png" alt="idor 1"></p>
 <p>The web app assumes that you are logged in as an employee with user id <code>uid=1</code> to simplify things. This would require you to log in with credentials in a real web app, but the rest of the attack would be the same. Once you click on <code>Documents</code>, you are redirected to <code>/documents.php</code>:</p>
-<p><img src="../../../../images/IDOR_2.png" alt="idor 2" /></p>
+<p><img src="../../../../images/IDOR_2.png" alt="idor 2"></p>
 <p>When you get to the documents page, you see several documents that belong to your user. These can be files uploaded by your user or files set for you to by another department. Checking the file links, you see that they have individual names:</p>
 <pre><code class="language-html">/documents/Invoice_1_09_2021.pdf
 /documents/Report_1_10_2021.pdf
 </code></pre>
-<p>You see that the files have a predictable naming pattern, as the file names appear to be using the user <code>uid</code> and the month/year as part of the file name, which may allow you to fuzz for other users. This is the most basic type of IDOR vuln and is called static file IDOR. However, to successfully fuzz other files, you would assume that they all start with 'Invoice' or 'Report', which may reveal some files but not all.</p>
-<p>You see that the page is setting your <code>uid</code> with a GET parameter in the URL as <code>documents.php?uid=1</code>. If the web application uses this <code>uid</code> GET parameter as a direct reference to the employee records it should show, you may be able to view other employees' documents by simply changing this value. If the back-end server of the web app does have a proper access control system, you will get some form of <code>Access Denied</code>. However, given that the web app passes as our <code>uid</code> in clear text as a direct reference, this may indicate poor web application design, leading to arbitrary access to employee records.</p>
-<p>When trying to change the <code>uid</code> to <code>?uid=2</code>, you don't notice any difference in the page output, as you are still getting the same list of documents, and may assume that it still returns your own documents.</p>
-<p><img src="../../../../images/IDOR_3.png" alt="idor 3" /></p>
+<p>You see that the files have a predictable naming pattern, as the file names appear to be using the user <code>uid</code> and the month/year as part of the file name, which may allow you to fuzz for other users. This is the most basic type of IDOR vuln and is called static file IDOR. However, to successfully fuzz other files, you would assume that they all start with ‘Invoice’ or ‘Report’, which may reveal some files but not all.</p>
+<p>You see that the page is setting your <code>uid</code> with a GET parameter in the URL as <code>documents.php?uid=1</code>. If the web application uses this <code>uid</code> GET parameter as a direct reference to the employee records it should show, you may be able to view other employees’ documents by simply changing this value. If the back-end server of the web app does have a proper access control system, you will get some form of <code>Access Denied</code>. However, given that the web app passes as our <code>uid</code> in clear text as a direct reference, this may indicate poor web application design, leading to arbitrary access to employee records.</p>
+<p>When trying to change the <code>uid</code> to <code>?uid=2</code>, you don’t notice any difference in the page output, as you are still getting the same list of documents, and may assume that it still returns your own documents.</p>
+<p><img src="../../../../images/IDOR_3.png" alt="idor 3"></p>
 <p>However, if you look at the linked files, or if you click on them to view them, you will notice that these are indeed different files, which appear to be the documents belonging to the employee with <code>uid=2</code>.</p>
 <pre><code class="language-html">/documents/Invoice_2_08_2020.pdf
 /documents/Report_2_12_2020.pdf
 </code></pre>
-<p>This is a common mistake found in web apps suffering from IDOR vulns, as they place the parameter that controls which user documents to show under your control while having no access control system on the back-end server. Another example is using a filter parameter to only display a specific user's documents, which can also be manipulated to show other users' documents or even completely removed to show all documents at once.</p>
+<p>This is a common mistake found in web apps suffering from IDOR vulns, as they place the parameter that controls which user documents to show under your control while having no access control system on the back-end server. Another example is using a filter parameter to only display a specific user’s documents, which can also be manipulated to show other users’ documents or even completely removed to show all documents at once.</p>
 <h3 id="mass-enumeration"><a class="header" href="#mass-enumeration">Mass Enumeration</a></h3>
 <p>Manually accessing files is not efficient in a real work environment with hundreds or thousands of employees. So, you can either use a tool like Burp or ZAP to retrieve all files or write a small bash script to download all files.</p>
 <p>Example for getting all documents:</p>
@@ -516,9 +519,9 @@ done
 <p>When you run the script, it will download all documents from all employees with uids between 1-10, thus successfully exploiting the IDOR vuln to mass enumerate the documents of all employees.</p>
 <h2 id="bypassing-encoded-references"><a class="header" href="#bypassing-encoded-references">Bypassing Encoded References</a></h2>
 <p>In some cases, web apps make hashes or encode their object reference, making enumeration more difficult, but it may still be possible.</p>
-<p><img src="../../../../images/IDOR_4.png" alt="idor 4" /></p>
+<p><img src="../../../../images/IDOR_4.png" alt="idor 4"></p>
 <p>If you click on the <code>Employment_contract.pdf</code> file, it starts downloading the file. The intercepted request in Burp looks as follows:</p>
-<p><img src="../../../../images/IDOR_5.png" alt="idor 5" /></p>
+<p><img src="../../../../images/IDOR_5.png" alt="idor 5"></p>
 <p>You see that it is sending a POST request to download.php with the following data:</p>
 <pre><code class="language-php">contract=cdd96d3cc73d1dbdaffa03cc6cd7339b
 </code></pre>
@@ -530,7 +533,7 @@ c4ca4238a0b923820dcc509a6f75849b -
 </code></pre>
 <p>Unfortunately, the hashes do not match. You can attempt this with various other fields, but none of them matches the hash. In advanced cases, you may also utilize Burp Comparer and fuzz various values and then compare each to your hash to see if you find any matches. In this case, the md5 hash could be for a unique value or combination of values, which would be very difficult to predict, making this direct reference a Secure Direct Object Reference.</p>
 <h3 id="function-disclosure"><a class="header" href="#function-disclosure">Function Disclosure</a></h3>
-<p>As most modern web apps are developed using JS frameworks, like Angular, React, or Vue.js, many web devs may make the mistake or performing sensitive functions on the front-end, which would expose them to attackers. For example, if the above hash was being calculated on the front-end, you can study the function and then replicate what it's doing to calculate the same hash.</p>
+<p>As most modern web apps are developed using JS frameworks, like Angular, React, or Vue.js, many web devs may make the mistake or performing sensitive functions on the front-end, which would expose them to attackers. For example, if the above hash was being calculated on the front-end, you can study the function and then replicate what it’s doing to calculate the same hash.</p>
 <p>If you take a look at the link in the source code, you see that it is calling a JS function with <code>javascript:downloadContract('1')</code>. Looking at the <code>downloadContract()</code> function in the source code, you see the following:</p>
 <pre><code class="language-javascript">function downloadContract(uid) {
     $.redirect("/download.php", {
@@ -550,9 +553,11 @@ cdd96d3cc73d1dbdaffa03cc6cd7339b -
   <span class="mdbook-callouts-icon"></span>
   tip
 </p>
+
 <p>Use <code>-n</code> with <code>echo</code>, and <code>-w 0</code> with <code>base64</code> to avoid adding newlines.<br><br><em>Adding newlines would change the final md5 hash.</em></p>
 </div>
-<p>As you can see, this hash matches the hash in your request, meaning that you have successfully reversed the hashing technique used on the object reference, turning them into IDORs. With that, you can begin enumerating other employees' contracts using the same hashing method you used above.</p>
+
+<p>As you can see, this hash matches the hash in your request, meaning that you have successfully reversed the hashing technique used on the object reference, turning them into IDORs. With that, you can begin enumerating other employees’ contracts using the same hashing method you used above.</p>
 <h3 id="mass-enumeration-1"><a class="header" href="#mass-enumeration-1">Mass Enumeration</a></h3>
 <p>Write a little script to retrieve all employee contracts more efficiently.</p>
 <pre><code class="language-bash">#!/bin/bash
@@ -564,13 +569,13 @@ for i in {1..10}; do
 done
 </code></pre>
 <h2 id="idor-in-insecure-apis"><a class="header" href="#idor-in-insecure-apis">IDOR in Insecure APIs</a></h2>
-<p>IDOR insecure function calls enable you to call APIs or execute functions as another user. Such functions and APIs can be used to change another user's private information, reset another user's password, or even buy items using another user's payment information. In many cases, you may be obtaining certain information through an information disclosure IDOR vulnerability and then using this information with IDOR insecure function call vulnerabilities.</p>
+<p>IDOR insecure function calls enable you to call APIs or execute functions as another user. Such functions and APIs can be used to change another user’s private information, reset another user’s password, or even buy items using another user’s payment information. In many cases, you may be obtaining certain information through an information disclosure IDOR vulnerability and then using this information with IDOR insecure function call vulnerabilities.</p>
 <h3 id="identifying-insecure-apis"><a class="header" href="#identifying-insecure-apis">Identifying Insecure APIs</a></h3>
-<p>Going back to the 'Employee Manager' web app, you can start testing the <code>Edit Profile</code> page for IDOR vulnerabilities:</p>
-<p><img src="../../../../images/IDOR_6.png" alt="idor 6" /></p>
+<p>Going back to the ‘Employee Manager’ web app, you can start testing the <code>Edit Profile</code> page for IDOR vulnerabilities:</p>
+<p><img src="../../../../images/IDOR_6.png" alt="idor 6"></p>
 <p>When you click on the <code>Edit Profile</code> button, you are taken to a page to edit information of your user profile, namely <code>Full Name</code>, <code>Email</code>, and <code>About Me</code>, which is a common feature in many web applications:</p>
-<p><img src="../../../../images/IDOR_7.png" alt="idor 7" /></p>
-<p>You can change any of the details in your profile and click <code>Update profile</code>, and you'll see that they get updated and persist through refreshes, which means they get updated in a database somewhere.</p>
+<p><img src="../../../../images/IDOR_7.png" alt="idor 7"></p>
+<p>You can change any of the details in your profile and click <code>Update profile</code>, and you’ll see that they get updated and persist through refreshes, which means they get updated in a database somewhere.</p>
 <p>When intercepting with Burp, you can see that the page is sending a PUT request to the <code>/profile/api.php/profile/1</code> API endpoint. PUT requests are usually used in APIs to update item details, while POST is used to create new items, DELETE to delete items, and GET to retrieve item details. So, a PUT request for the <code>Update Profile</code> function is expected. The interesting bit is the JSON parameters it is sending:</p>
 <pre><code class="language-json">{
     "uid": 1,
@@ -581,36 +586,36 @@ done
     "about": "A Release is like a boat. 80% of the holes plugged is not good enough."
 }
 </code></pre>
-<p>You can see that the PUT request includes a few hidden parameters, like <code>uid</code>, <code>uuid</code>, and most interestingly <code>role</code>, which is set to 'employee'. The web app also appears to be setting the user access privileges on the client-side, in the form of your <code>Cookie: role=employee</code> cookie, which appears to reflect the <code>role</code> specified for your user. This is a common security issue. The access control privileges are sent as part of the client's HTTP request, either as a cookie or as part of the JSON request, leaving it under the client's control, which could be manipulated to gain more privileges.</p>
+<p>You can see that the PUT request includes a few hidden parameters, like <code>uid</code>, <code>uuid</code>, and most interestingly <code>role</code>, which is set to ‘employee’. The web app also appears to be setting the user access privileges on the client-side, in the form of your <code>Cookie: role=employee</code> cookie, which appears to reflect the <code>role</code> specified for your user. This is a common security issue. The access control privileges are sent as part of the client’s HTTP request, either as a cookie or as part of the JSON request, leaving it under the client’s control, which could be manipulated to gain more privileges.</p>
 <p>So, unless the web app has a solid access control system on the back-end, you should be able to set an arbitrary role for your user, which may grant you more privileges.</p>
 <h3 id="exploiting-insecure-apis"><a class="header" href="#exploiting-insecure-apis">Exploiting Insecure APIs</a></h3>
 <p>You know you can change the <code>full_name</code>, <code>email</code>, and <code>about</code> parameters, as these are the ones under your control in the HTML form in the <code>/profile</code> web page. Trying to manipulate the other parameters:</p>
 <p>There are a few things you could try in this case:</p>
 <ol>
-<li>Change your <code>uid</code> to another user's <code>uid</code>, such that you can take over their accounts</li>
-<li>Change another user's details, which may follow you to perform several web attacks</li>
+<li>Change your <code>uid</code> to another user’s <code>uid</code>, such that you can take over their accounts</li>
+<li>Change another user’s details, which may follow you to perform several web attacks</li>
 <li>Create new users with arbitrary details, or delete existing users</li>
 <li>Change your role to a more privileged role to be able to perform more actions</li>
 </ol>
-<p>Starting by changing the <code>uid</code> to another user's <code>uid</code>. However, any number you set other than your own <code>uid</code> gets you a response of <code>uid mismatch</code>.</p>
-<p><img src="../../../../images/IDOR_8.png" alt="idor 8" /></p>
-<p>The web app appears to be comparing the request's <code>uid</code> to the API endpoint. This means that a form of access control on the back-end prevents you from arbitrary changing some JSON parameters, which might be necessary to prevent the web app from crashing returning errors.</p>
-<p>Perhaps you can try changing another user's details. You'll change the API endpoint to <code>/profile/api.php/profile/2</code>, and change <code>"uid": 2</code> to avoid the previous uid mismatch:</p>
-<p><img src="../../../../images/IDOR_9.png" alt="idor 9" /></p>
-<p>As you can see, this time you get an error saying uuid mismatch. The web app appears to be checking if the <code>uuid</code> value you are sending matches the user's <code>uuid</code>. Since you are sending your own <code>uuid</code>, your request is failing. This appears to be another form of access control to prevent users from changing another user's details.</p>
-<p>Next, let's see if you can create a new user with a POST request to the API endpoint. You can change the request method to POST, change the <code>uid</code> to a new one, and send the request to the API endpoint of the new <code>uid</code>:</p>
-<p><img src="../../../../images/IDOR_10.png" alt="idor 10" /></p>
-<p>You get an error message saying "Creating new employees is for admins only". The same thing happens when you send a DELETE request, as you get "Deleting employees is for admins only". The web app might be checking your authorization through the <code>role=employee</code> cookie because this appears to be the only form of authorization in the HTTP request.</p>
-<p>Finally, let's try to change your <code>role</code> to admin/administrator to gain higher privileges. Unfortunately, without knowing a valid <code>role</code> name, you get "Invalid role" in the HTTP response, and your <code>role</code> does not update.</p>
-<p><img src="../../../../images/IDOR_11.png" alt="idor 11" /></p>
-<p>So, all of your attempts appear to have failed. You cannot create or delete users as you cannot change your <code>role</code>. You cannot change your own <code>uid</code>, as there are preventive measures on the back-end that you cannot control, nor change another user's details for the same reason. So, is the web application secure against IDOR attacks?</p>
-<p>So far, you have only been testing IDOR Insecure Function Calls. However, you have not tested the API's GET request for IDOR Information Disclosure Vulnerabilites. If there was no robust access control system in place, you might be able to read other users' details, which may help you with the previous attacks you attempted.</p>
+<p>Starting by changing the <code>uid</code> to another user’s <code>uid</code>. However, any number you set other than your own <code>uid</code> gets you a response of <code>uid mismatch</code>.</p>
+<p><img src="../../../../images/IDOR_8.png" alt="idor 8"></p>
+<p>The web app appears to be comparing the request’s <code>uid</code> to the API endpoint. This means that a form of access control on the back-end prevents you from arbitrary changing some JSON parameters, which might be necessary to prevent the web app from crashing returning errors.</p>
+<p>Perhaps you can try changing another user’s details. You’ll change the API endpoint to <code>/profile/api.php/profile/2</code>, and change <code>"uid": 2</code> to avoid the previous uid mismatch:</p>
+<p><img src="../../../../images/IDOR_9.png" alt="idor 9"></p>
+<p>As you can see, this time you get an error saying uuid mismatch. The web app appears to be checking if the <code>uuid</code> value you are sending matches the user’s <code>uuid</code>. Since you are sending your own <code>uuid</code>, your request is failing. This appears to be another form of access control to prevent users from changing another user’s details.</p>
+<p>Next, let’s see if you can create a new user with a POST request to the API endpoint. You can change the request method to POST, change the <code>uid</code> to a new one, and send the request to the API endpoint of the new <code>uid</code>:</p>
+<p><img src="../../../../images/IDOR_10.png" alt="idor 10"></p>
+<p>You get an error message saying “Creating new employees is for admins only”. The same thing happens when you send a DELETE request, as you get “Deleting employees is for admins only”. The web app might be checking your authorization through the <code>role=employee</code> cookie because this appears to be the only form of authorization in the HTTP request.</p>
+<p>Finally, let’s try to change your <code>role</code> to admin/administrator to gain higher privileges. Unfortunately, without knowing a valid <code>role</code> name, you get “Invalid role” in the HTTP response, and your <code>role</code> does not update.</p>
+<p><img src="../../../../images/IDOR_11.png" alt="idor 11"></p>
+<p>So, all of your attempts appear to have failed. You cannot create or delete users as you cannot change your <code>role</code>. You cannot change your own <code>uid</code>, as there are preventive measures on the back-end that you cannot control, nor change another user’s details for the same reason. So, is the web application secure against IDOR attacks?</p>
+<p>So far, you have only been testing IDOR Insecure Function Calls. However, you have not tested the API’s GET request for IDOR Information Disclosure Vulnerabilites. If there was no robust access control system in place, you might be able to read other users’ details, which may help you with the previous attacks you attempted.</p>
 <h2 id="chaining-idor-vulnerabilities"><a class="header" href="#chaining-idor-vulnerabilities">Chaining IDOR Vulnerabilities</a></h2>
-<p>Usually, a GET request to the API endpoint should return the details of the requested user, so you may try calling it to see if you can retrieve your user's details. You also notice that after the page loads, it fetches the user details with a GET request to the same API endpoint:</p>
-<p><img src="../../../../images/IDOR_12.png" alt="idor 12" /></p>
+<p>Usually, a GET request to the API endpoint should return the details of the requested user, so you may try calling it to see if you can retrieve your user’s details. You also notice that after the page loads, it fetches the user details with a GET request to the same API endpoint:</p>
+<p><img src="../../../../images/IDOR_12.png" alt="idor 12"></p>
 <h3 id="information-disclosure"><a class="header" href="#information-disclosure">Information Disclosure</a></h3>
-<p>Let's send a GET request with another <code>uid</code>:</p>
-<p><img src="../../../../images/IDOR_13.png" alt="idor 13" /></p>
+<p>Let’s send a GET request with another <code>uid</code>:</p>
+<p><img src="../../../../images/IDOR_13.png" alt="idor 13"></p>
 <p>As you can see, this returned the details of another user, with their own <code>uuid</code> and <code>role</code>, confirming an IDOR Information Disclosure Vulnerability.</p>
 <pre><code class="language-json">{
     "uid": "2",
@@ -621,13 +626,13 @@ done
     "about": "It takes 20 years to build a reputation and few minutes of cyber-incident to ruin it."
 }
 </code></pre>
-<p>This provides you with new details, most notably the <code>uuid</code>, which you could not calculate before, and thus could not change other users' details.</p>
-<h3 id="modifying-other-users-details"><a class="header" href="#modifying-other-users-details">Modifying Other Users' Details</a></h3>
-<p>Now, with the user's <code>uid</code> at hand, you can change this user's details by sending a PUT request to <code>/profile/api.php/profile/2</code> with the above details along with any modifications you made, as follows:</p>
-<p><img src="../../../../images/IDOR_14.png" alt="idor 14" /></p>
-<p>You don't get any access control error messages this time, and when trying to GET the user details again, you see that you did indeed update their details:</p>
-<p><img src="../../../../images/IDOR_15.png" alt="idor 15" /></p>
-<p>In addition to allowing you to view potentially sensitive details, the ability to modify another user's details also enables you to perform several other attacks. One type of attack is modifying a user's email address and then requesting a password reset link, which will be sent to the email address you specified, thus allowing you to take control over their account. Another potential attack is placing an XSS payload in the <code>about</code> field, which would get executed once the user visits their <code>Edit profile</code> page, enabling you to attack the user in different ways.</p>
+<p>This provides you with new details, most notably the <code>uuid</code>, which you could not calculate before, and thus could not change other users’ details.</p>
+<h3 id="modifying-other-users-details"><a class="header" href="#modifying-other-users-details">Modifying Other Users’ Details</a></h3>
+<p>Now, with the user’s <code>uid</code> at hand, you can change this user’s details by sending a PUT request to <code>/profile/api.php/profile/2</code> with the above details along with any modifications you made, as follows:</p>
+<p><img src="../../../../images/IDOR_14.png" alt="idor 14"></p>
+<p>You don’t get any access control error messages this time, and when trying to GET the user details again, you see that you did indeed update their details:</p>
+<p><img src="../../../../images/IDOR_15.png" alt="idor 15"></p>
+<p>In addition to allowing you to view potentially sensitive details, the ability to modify another user’s details also enables you to perform several other attacks. One type of attack is modifying a user’s email address and then requesting a password reset link, which will be sent to the email address you specified, thus allowing you to take control over their account. Another potential attack is placing an XSS payload in the <code>about</code> field, which would get executed once the user visits their <code>Edit profile</code> page, enabling you to attack the user in different ways.</p>
 <h3 id="chaining-two-idor-vulnerabilites"><a class="header" href="#chaining-two-idor-vulnerabilites">Chaining Two IDOR Vulnerabilites</a></h3>
 <p>Since you have identified an IDOR Information Disclosure Vulnerability, you may also enumerate all users and look for other roles, ideally an admin role.</p>
 <pre><code class="language-json">{
@@ -639,9 +644,9 @@ done
     "about": "HTB{FLAG}"
 }
 </code></pre>
-<p>You may modify the admin's details and then perform one of the above attacks to take over their account. However, as you know the admin role name, you can set it to your user so you can create new users or delete current users. To do so, you will intercept the request when you click on the <code>Update profile</code> button and change your role to <code>web_admin</code>.</p>
-<p><img src="../../../../images/IDOR_16.png" alt="idor 16" /></p>
-<p>This time, you don't get the "Invalid role" error message, nor do you get any access control error messages, meaning that there are no back-end access control measures to what roles you can set for your user. If you GET your user details, you see that your <code>role</code> has indeed been set to <code>web_admin</code>.</p>
+<p>You may modify the admin’s details and then perform one of the above attacks to take over their account. However, as you know the admin role name, you can set it to your user so you can create new users or delete current users. To do so, you will intercept the request when you click on the <code>Update profile</code> button and change your role to <code>web_admin</code>.</p>
+<p><img src="../../../../images/IDOR_16.png" alt="idor 16"></p>
+<p>This time, you don’t get the “Invalid role” error message, nor do you get any access control error messages, meaning that there are no back-end access control measures to what roles you can set for your user. If you GET your user details, you see that your <code>role</code> has indeed been set to <code>web_admin</code>.</p>
 <pre><code class="language-json">{
     "uid": "1",
     "uuid": "40f5888b67c748df7efba008e7c2f9d2",
@@ -651,25 +656,25 @@ done
     "about": "A Release is like a boat. 80% of the holes plugged is not good enough."
 }
 </code></pre>
-<p>Now, you can refresh the page to update your cookie, or manually set it as <code>Cookie: role=web_admin</code>, and then intercept the <code>Update</code> request to create a new user and see if you'd be allowed to do so.</p>
-<p><img src="../../../../images/IDOR_17.png" alt="idor 17" /></p>
+<p>Now, you can refresh the page to update your cookie, or manually set it as <code>Cookie: role=web_admin</code>, and then intercept the <code>Update</code> request to create a new user and see if you’d be allowed to do so.</p>
+<p><img src="../../../../images/IDOR_17.png" alt="idor 17"></p>
 <p>You did not get an error message this time. If you send a GET request for the new user, you see that it has been successfully created.</p>
-<p><img src="../../../../images/IDOR_18.png" alt="idor 18" /></p>
-<p>By combining the information you gained from the IDOR Information Disclosure Vulnerability with and IDOR Insecure Function Calls attack on an API endpoint, you could modify other users' details and create/delete users while bypassing various access control checks in place. On many occasions, the information you leak through IDOR vulnerabilites can be utilized in other attacks, like IDOR or XSS, leading to more sophisticated attacks or bypassing existing security mechanisms.</p>
+<p><img src="../../../../images/IDOR_18.png" alt="idor 18"></p>
+<p>By combining the information you gained from the IDOR Information Disclosure Vulnerability with and IDOR Insecure Function Calls attack on an API endpoint, you could modify other users’ details and create/delete users while bypassing various access control checks in place. On many occasions, the information you leak through IDOR vulnerabilites can be utilized in other attacks, like IDOR or XSS, leading to more sophisticated attacks or bypassing existing security mechanisms.</p>
 <p>With your new role, you may also perform mass assignments to change specific fields for all users, like placing XSS payloads in their profiles or changing their email to an email you specify.</p>
 <h2 id="idor-prevention"><a class="header" href="#idor-prevention">IDOR Prevention</a></h2>
 <h3 id="object-level-access-control"><a class="header" href="#object-level-access-control">Object Level Access Control</a></h3>
 <p>An Access Control system should be at the core of any web application since it can affect its entire design and structure. To properly control each area of the web application, its design has to support the segmentation of roles and permissions in a centralied manner. However, Access Control is a vast topic.</p>
-<p>User roles and permissions are a vital part of any access control system, which is fully realized in a Role-Based Access Control (<em>RBAC</em>) system. To avoid exploiting IDOR vulnerabilities, you must map the RBAC to all objects and resources. The back-end server can allow or deny every request, depending on whether the requester's role has enough privileges to access the object or the resource.</p>
+<p>User roles and permissions are a vital part of any access control system, which is fully realized in a Role-Based Access Control (<em>RBAC</em>) system. To avoid exploiting IDOR vulnerabilities, you must map the RBAC to all objects and resources. The back-end server can allow or deny every request, depending on whether the requester’s role has enough privileges to access the object or the resource.</p>
 <p>Once an RBAC has been implemented, each user would be assigned a role that has certain privileges. Upon every request the user makes, their roles and privileges would be tested to see if they have access to the object they are requesting. They would only be allowed to access it if they have the right to do so.</p>
-<p>There are many ways to implement an RBAC system and map it to the web application's objects and resources, and designing it in the core of the web app's structure is an art to perfect. The following is a sample code of how a web app may compare user roles to objects to allow or deny access control:</p>
+<p>There are many ways to implement an RBAC system and map it to the web application’s objects and resources, and designing it in the core of the web app’s structure is an art to perfect. The following is a sample code of how a web app may compare user roles to objects to allow or deny access control:</p>
 <pre><code class="language-javascript">match /api/profile/{userId} {
     allow read, write: if user.isAuth == true
     &amp;&amp; (user.uid == userId || user.roles == 'admin');
 }
 </code></pre>
-<p>The above example uses the <code>user</code> token ´, which can be mapped from the HTTP request made to the RBAC to retrieve the user's various roles and privileges. Then, it only allows read/write access if the user's <code>uid</code> in the RBAC system matches the <code>uid</code> in the API endpoint they are requesting. Furthermore, if a user has <code>admin</code> as their role in the back-end RBAC, they are allowed read/write access.</p>
-<p>In your previous attacks, you saw examples of the user role being stored in the user's details or in their cookie, both of which are under the user's control and can be manipulated to escalate their access privileges. The above example demonstrates a safer approach to mapping user roles, as the user privileges were not passed through the HTTP request, but mapped directly from the RBAC on the back-end using the user's logged-in session token as an authentication.</p>
+<p>The above example uses the <code>user</code> token ´, which can be mapped from the HTTP request made to the RBAC to retrieve the user’s various roles and privileges. Then, it only allows read/write access if the user’s <code>uid</code> in the RBAC system matches the <code>uid</code> in the API endpoint they are requesting. Furthermore, if a user has <code>admin</code> as their role in the back-end RBAC, they are allowed read/write access.</p>
+<p>In your previous attacks, you saw examples of the user role being stored in the user’s details or in their cookie, both of which are under the user’s control and can be manipulated to escalate their access privileges. The above example demonstrates a safer approach to mapping user roles, as the user privileges were not passed through the HTTP request, but mapped directly from the RBAC on the back-end using the user’s logged-in session token as an authentication.</p>
 <h3 id="object-referencing"><a class="header" href="#object-referencing">Object Referencing</a></h3>
 <p>While the core issue with IDOR lies in broken access control, having access to direct references to objects makes it possible to enumerate and exploit these access control vulnerabilities. You may still use direct references, but only if you have a solid access control system implemented.</p>
 <p>Even after building a solid access control system, you should never use object reference in clear text or simple patterns. You should always use strong and unique references, like salted hashes or <code>UUID</code>s. For example, you can use <code>UUID V4</code> to generate a strongly randomized id for any element, which looks something like <code>89c9b29b-d19f-4515-b2dd-abb6e693eb20</code>. Then, you can map this <code>UUID</code> to the object it is referencing in the back-end database, and whenever this <code>UUID</code> is called, the back-end database would know which object to return. The following example PHP code shows you how this may work:</p>
@@ -680,19 +685,18 @@ $row = mysqli_fetch_array($result));
 echo "&lt;a href='" . $row['url'] . "' target='_blank'&gt;&lt;/a&gt;";
 </code></pre>
 <p>Furthermore, as you have seen previously, you should never calculate the hashes on the front-end. You should generate them when an object is created and store them in the back-end database. Then, you should create database maps to enable quick cross-referencing of objects and references.</p>
-<p>Finally, you must note that using <code>UUID</code>s may let IDOR vulnerabilities go undetected since it makes it more challenging to test for IDOR vulnerabilites. This is why strong object referencing is always the second step after implementing a strong access control system.<!-- {% embed footer message="2026 • Created by [d41y](https://github.com/d41y)" %} --></p>
-<div data-embedify data-app="footer" data-option-message="2026 • Created by [d41y](https://github.com/d41y)" style="display:none"></div>
-<style>footer { text-align: center; text-wrap: balance; margin-top: 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; } footer p { margin: 0; }</style><footer><p>2026 • Created by <a href="https://github.com/d41y">d41y</a></p></footer>
+<p>Finally, you must note that using <code>UUID</code>s may let IDOR vulnerabilities go undetected since it makes it more challenging to test for IDOR vulnerabilites. This is why strong object referencing is always the second step after implementing a strong access control system.</p>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/ssi.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -702,15 +706,21 @@ echo "&lt;a href='" . $row['url'] . "' target='_blank'&gt;&lt;/a&gt;";
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../../../attack/web/web_attacks/server_side/http_verb_tampering.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../../../attack/web/web_attacks/server_side/ssi.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
         <!-- Livereload script (if served using the cli tool) -->
         <script>
@@ -730,22 +740,20 @@ echo "&lt;a href='" . $row['url'] . "' target='_blank'&gt;&lt;/a&gt;";
         </script>
 
 
-
         <script>
             window.playground_copyable = true;
         </script>
 
 
-        <script src="../../../../elasticlunr.min.js"></script>
-        <script src="../../../../mark.min.js"></script>
-        <script src="../../../../searcher.js"></script>
+        <script src="../../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../../searcher-c2a407aa.js"></script>
 
-        <script src="../../../../clipboard.min.js"></script>
-        <script src="../../../../highlight.js"></script>
-        <script src="../../../../book.js"></script>
+        <script src="../../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../../highlight-abc7f01d.js"></script>
+        <script src="../../../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../../../theme/pagetoc.js"></script>
 
 
 
