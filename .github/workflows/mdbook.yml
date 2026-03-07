@@ -36,7 +36,7 @@ jobs:
           # Install mdBook binary
           curl -L https://github.com/rust-lang/mdBook/releases/download/v0.4.36/mdbook-v0.4.36-x86_64-unknown-linux-gnu.tar.gz | tar xz -C /usr/local/bin
           # Install preprocessors
-          cargo install mdbook-callouts || true
+          cargo install mdbook-callouts --version 0.7.0 || true
           cargo install mdbook-pagetoc || true
 
       - name: Setup Pages
