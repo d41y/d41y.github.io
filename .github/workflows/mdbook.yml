@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MDBOOK_VERSION: 0.4.36
-      PATH: $HOME/.cargo/bin:/usr/local/bin:$PATH
     steps:
       - uses: actions/checkout@v4
 
