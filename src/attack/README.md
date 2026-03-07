@@ -19,4 +19,5 @@
 - [Tools](tools/README.md)
 - [Vuln Scanning](vuln_scanning/README.md)
 - [Web](web/README.md)
+- [Wi-Fi](wifi/README.md)
 - [Windows](windows/README.md)
