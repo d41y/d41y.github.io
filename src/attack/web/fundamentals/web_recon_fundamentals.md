@@ -164,30 +164,6 @@ flowchart LR
 
 ### Key DNS Concepts
 
-In the DNS, a **zone** is a distinct part of the domain namespace that a specific entity or administrator manages. _For example, ```example.com``` and all its subdomains would typically belong to the same DNS zone._
-
-The zone file, a text file residing on a DNS Server, defines the resource records within this zone, providing crucial information for translating domain names into IP addresses.
-
-Example:
-```bash
-$TTL 3600 ; Default Time-To-Live (1 hour)
-@       IN SOA   ns1.example.com. admin.example.com. (
-                2024060401 ; Serial number (YYYYMMDDNN)
-                3600       ; Refresh interval
-                900        ; Retry interval
-                604800     ; Expire time
-                86400 )    ; Minimum TTL
-
-@       IN NS    ns1.example.com.
-@       IN NS    ns2.example.com.
-@       IN MX 10 mail.example.com.
-www     IN A     192.0.2.1
-mail    IN A     198.51.100.1
-ftp     IN CNAME www.example.com.
-```
-
-This file defines the authoritative name server (_NS records_), mail server (_MX record_), and IP addresses (_A records_) for various hosts within the ```example.com``` domain.
-
 **Key concepts**:
 
 | DNS concept | example | description |
@@ -226,7 +202,48 @@ This file defines the authoritative name server (_NS records_), mail server (_MX
 | **dnsrecon** | combines multiple DNS recon techniques and supports various output formats | comprehensive DNS enumeration, identifying subdomains, and gathering DNS records for further analysis |
 | **theHarvester** | OSINT tool that gathers information from various sources, including DNS records | collecting email addresses, employee information, and other data associated with a domain from multiple sources |  
 
-### DNS Zone Transfer
+### DNS Zones
+
+In the DNS, a **zone** is a distinct part of the domain namespace that a specific entity or administrator manages. _For example, ```example.com``` and all its subdomains would typically belong to the same DNS zone._
+
+#### Primary DNS Server
+
+The primary DNS server is the server of the zone file, which contains all authoritative information for a domain and is responsible for administering this zone. The DNS records of a zone can only be edited on the primary DNS server, which then updates the secondary DNS servers.
+
+#### Secondary DNS Server
+
+Secondary DNS servers contai read-only copies of the zone file from the primary DNS server. These servers compare their data with the primary DNS server at regular intervals and thus serve as a backup server. It is useful because a primary name server's failure means that connections without name resolution are no longer possible. To establish connections anyway, the user would have to know the IP addresses of the contacted servers.
+
+#### DNS Zone File
+
+The zone file, a text file residing on a DNS Server, defines the resource records within this zone, providing crucial information for translating domain names into IP addresses.
+
+Example:
+
+```bash
+$TTL 3600 ; Default Time-To-Live (1 hour)
+@       IN SOA   ns1.example.com. admin.example.com. (
+                2024060401 ; Serial number (YYYYMMDDNN)
+                3600       ; Refresh interval
+                900        ; Retry interval
+                604800     ; Expire time
+                86400 )    ; Minimum TTL
+
+@       IN NS    ns1.example.com.
+@       IN NS    ns2.example.com.
+@       IN MX 10 mail.example.com.
+www     IN A     192.0.2.1
+mail    IN A     198.51.100.1
+ftp     IN CNAME www.example.com.
+```
+
+This file defines the authoritative name server (_NS records_), mail server (_MX record_), and IP addresses (_A records_) for various hosts within the ```example.com``` domain.
+
+Also, you distinguish between **Primary Zone (_master zone_)** and **Secondary Zone (_slave zone_)**. The secondary zone on the secondary DNS server serves as a substitute for the primary zone on the primary DNS server if the primary DNS server should become unreachable. The creation and transfer of the primary Zone copy from the primary DNS server to the secondary DNS server is called a "zone transfer".
+
+The update of the zone files can only be done on the primary DNS server, which then updates the secondary DNS server. Each zone file can have only one primary DNS server and an unlimited number of secondary DNS servers.
+
+#### DNS Zone Transfer
 
 ![DNS Zone Transfer](../../../images/web_recon_zone_tranfer.png)
 
@@ -241,6 +258,7 @@ In the early days of the internet, allowing any client to request a zone tranfer
 Awareness of this vulnerability has grown, and most DNS server administrators have mitigated the risk. Modern DNS servers are typically configured to allow zone transfers only to trusted secondary severs, ensuring that sensitive zone data remains confidential.
 
 Dig example:
+
 ```bash
 d41y@htb[/htb]$ dig axfr @nsztm1.digi.ninja zonetransfer.me
 
@@ -268,6 +286,26 @@ canberra-office.zonetransfer.me. 7200 IN A	202.14.81.230
 ;; WHEN: Mon May 27 18:31:35 BST 2024
 ;; XFR size: 50 records (messages 1, bytes 2085)
 ```
+
+### DNS Security
+
+Many companies have already recognized DNS's vuln and try to close this gap with dedicated DNS servers, regular scans, and vulnerability assessment software. However, beyond that fact, more and more companies recognize the value of the DNS as an active line of defense, embedded in an in-depth and comprehensive security concept.
+
+This makes sense because the DNS is part of every network connection. The DNS is uniquely positioned in the network to act as a central control point to decide whether a benign or malicious request is received.
+
+DNS threat intelligence can be integrated with other open-source and other threat intelligence feeds. Analytics systems such as EDR and SIEM can provide a holistic and situation-based picture of the security situation. DNS Security Services support the coordination of incident response by sharing IOCs and IOAs with other security technologies such as firewalls, network proxies, endpoint security, Network Access Control and vulnerability scanners, providing them with information.
+
+#### DNSSEC
+
+Another feed used for the security of DNS servers is Domain Name System Security Extensions (_DNSSEC_), designed to ensure the authenticity and integrity of data transmitted through the DNS by securing resource records with digital certificates. DNSSEC ensures that the DNS data has not been manipulated and does not originate from any other source. Private keys are used to sign the resource records digitally. Resource records can be signed several times with different private keys, for example, to replace keys that expire in time.
+
+##### Private Keys
+
+The DNS server that manages a zone to be secured signs its sent resource records using its only known private key. Each zone has its zone keys, each consisting of a private and a public key. DNSSEC specifies a new resource record type with the RRSIG. It contains the signature of the respective DNS record, and these used keys have a specific validity period and are provided with a start and end date.
+
+##### Public Key
+
+The public key can be used to verify the signature of the recipients of the data. For the DNSSEC security mechanisms, it must be supported by the provider of the DNS information and the requesting client system. The requesting clients verify the signatures using the generally known public key of the DNS zone. If check is successful, manipulating the response is impossible, and the information comes from the requested source.
 
 ## Subdomains
 

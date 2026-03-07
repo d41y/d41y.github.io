@@ -75,6 +75,10 @@
 - [SSH und Proxychains](./src/attack/pivoting/ssh_und_proxychains.md)
 - [Sshuttle](./src/attack/pivoting/sshuttle.md)
 
+## PoCs
+
+- [test](./src/attack/pocs/test.md)
+
 ## Post-Exploitation
 
 - [File Transfer](./src/attack/post_exploitation/file_transfers.md)
@@ -104,7 +108,7 @@
 
 ### 0x00
 
-- [Fuzzing](./src/attack/web/fundamentals/fuzzing_fundamentals.md)
+- [Fuzzing](./src/attack/web/fuzzing/README.md)
 - [HTTP/HTTPs](./src/attack/web/fundamentals/http_https_fundamentals.md)
 - [Proxies](./src/attack/web/fundamentals/web_proxy_fundamentals.md)
 - [Reconnaissance](./src/attack/web/fundamentals/web_recon_fundamentals.md)
@@ -150,6 +154,11 @@ Web Service & API
 
 - [JavaScript (De-)Obfuscation](./src/attack/web/web_security_techniques/javascript_deobfuscation.md)
 - [Session Security](./src/attack/web/web_security_techniques/session_security.md)
+
+
+## Wi-Fi
+
+- [0x00](./src/attack/wifi/wifi_pentesting_basics.md)
 
 ## Windows
 

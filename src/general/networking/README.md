@@ -1,4 +1,5 @@
 # Networking
 
 - [0x00](networking_introduction.md)
-- [Cisco Network Technician](cisco)
+- [Cisco Network Technician](cisco/README.md)
+- [Network Foundations](network_foundations.md)

@@ -1,4 +1,4 @@
-# Fuzzing
+# Attacking Web Apps with Ffuf
 
 ... refers to a testing technique that sends various types of user input to a certain interface to study how it would react. If you were fuzzing for SQLi vulnerabilities, you would be sending random special characters and seeing how the server would react. If you were fuzzing for a buffer overflow, you would be sending long strips and incrementing their length to see if and when the binary would break.
 
