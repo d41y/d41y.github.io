@@ -42,7 +42,7 @@ jobs:
           key: cargo-${{ hashFiles('**/Cargo.toml') }}
       - name: Install mdBook
         run: |
-          curl -L https://github.com/rust-lang/mdBook/releases/download/v0.5.2/mdbook-v0.4.36-x86_64-unknown-linux-gnu.tar.gz | tar xz -C /usr/local/bin
+          curl -L https://github.com/rust-lang/mdBook/releases/download/v0.5.2/mdbook-v0.5.2-x86_64-unknown-linux-gnu.tar.gz | tar xz -C /usr/local/bin
           cargo install mdbook-callouts --version 0.3.0 || true
           # cargo install mdbook-pagetoc || true
       - name: Setup Pages
