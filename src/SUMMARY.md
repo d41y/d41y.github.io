@@ -142,7 +142,8 @@
 		- [0x00](defend/malware_analysis/intro_malware_analysis.md)
 	- [SIEM](defend/siem/README.md)
 		- [0x00](defend/siem/siem_fundamentals.md)
-	- [Threat Hunting]()
+	- [Threat Hunting](defend/threat_hunting/README.md)
+		- [0x00](defend/threat_hunting/threat_hunting_fundamentals.md)
 
 - [General](general/README.md)
 	- [Assessments](general/assessments/README.md)
