@@ -144,6 +144,7 @@
 		- [0x00](defend/siem/siem_fundamentals.md)
 	- [Threat Hunting](defend/threat_hunting/README.md)
 		- [0x00](defend/threat_hunting/threat_hunting_fundamentals.md)
+		- [Threat Hunting with Elastic](defend/threat_hunting/threat_hunting_with_elastic.md)
 
 - [General](general/README.md)
 	- [Assessments](general/assessments/README.md)
