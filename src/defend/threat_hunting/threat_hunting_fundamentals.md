@@ -112,3 +112,64 @@ The Diamond Model of Intrusion Analysis is a conceptual framework designed to il
 ![threat hunting fundamentals 2](../../../images/threat_hunting_fundamentals2.png)
 
 ## Threat Intelligence Fundamentals
+
+Cyber Threat Intelligence represents a vital asset in your arsenal, providing essential insights to fortify your defenses against cyberattacks. The primary objective of your CTI team is to transition your defense from merely reactive measures to a more proactive, anticipatory stance. They contribute crucial insights to your SOC.
+
+For fundamental principles make CTI an integral part of your cybersecurity strategy:
+
+- **Relevance**: The cyber world is awash with diverse sources of information, from social media posts and security vendor reports to shared insights from similar organizations. However, the true value of this information lies in its relevance to your organization. For instance, if there is a reported vulnerability in a software that you, or your trusted partner organizations, do not use, the urgency to implement defensive measures is naturally diminished.
+- **Timelines**: Swift communication of intelligence to your defense team is crucial for the implementation of effective mitigation measures. The value of information depreciates over time - freshly discovered data is more valuable, and "aged" indicators lose their relevance as they might no longer be used by the adversary or may have been resolved by the affected organization.
+- **Actionability**: Data under analysis by a CTI analyst should yied actionable insights for your defense team. If the intelligence doesn't offer clear directives for action, its value diminishes. Intelligence must be scrutinized until it yields relevant, timely, and actionable insights for your network defense. Unactionable intelligence can lead to a self-perpetuating cycle of non-productive analysis, often referred to as a "self-licking ice cream cone".
+- **Accuracy**: Before disseminating any intelligence, it must be verified for accuracy. Incorrect indicators, misattributions, or flawed TTPs can result in wastage of valuable time and resources. If the accuracy of any information is uncertain, it should be labeled with a confidence indicator, ensuring that your defense team is aware of potential inaccuracies.
+
+When these for synergize, the intelligence gleaned allows you to:
+
+- Gain insights into potential adversary operations and campaigns that be targeting your organization.
+- Enrich your data pool through analysis by CTI analysts and other network defenders.
+- Uncover adversary TTPs, enabling the development of effective mitigation measures and enhancing your understanding of adversary behavior.
+- Provide decision-makers within your organization with pertinent information for informed, impactful decision-making related to business operations.
+
+### The Difference Between Threat Intelligence & Threat Hunting
+
+Threat Intelligence and Threat Hunting represent two distinct, yet intrinsically interconnected, specialties within the realm of cybersecurity. While they server separate functions, they both contribute significantly to the development of a comprehensive security analyst. However, it's important to note that they are not substitutes for each other.
+
+**Threat Intelligence** (_predictive_): The primary aim here is to anticipate the adversary's moves, ascertain their targets, and discern their methods of information acquisition. The adversary has a specific objective, and as a team involved in Threat Intelligence, your mission is to predict:
+
+- The location of the intended attack
+- The timing of the attack
+- The operational strategies the adversary will employ
+- The ultimate objectives of the adversary
+
+**Threat Hunting** (_reactive and proactive_): An initiating event or incident, whether it occurs within your network or in a network of a similar industry, prompts your team to launch an operation to ascertain whether an adversary is present in the network, or if one was present and evaded detection.
+
+### Criteria of CTI
+
+CTI can be categorized into three different categories, each having varying degress of relevance for different teams within your organization:
+
+- **Strategic Intelligence**
+	- Being consumed by C-suite executives, VPs, and other company leaders
+	- Aiming to align intelligence directly with company risks to inform decisions
+	- Providing an overview of the adversary's operations over time
+	- Mapping TTPs and Modus Operandi of the adversary
+	- Striving to answer the Who and Why
+- **Operational Intelligence**
+	- Also including TTPs of an adversary
+	- Providing information on adversary campaigns
+	- Offering more detail than what's found in strategic intelligence reports
+	- Being produced for mid-level management personnel
+	- Working towards answering the How and Where
+- **Tactical Intelligence**
+	- Delivering immediate actionable information
+	- Being provided to network defenders for swift action
+	- Including technical details on attacks that have occured or could occur in the near future
+
+### How To Go Through a Tactical Threat Intelligence Report
+
+Interpreting threat intelligence reports loaded with tactical intelligence and IoCs is a task that requires a structured methodology to optimize your responsiveness as SOC analysts or threat hunters.
+
+- Comprehending the Report's Scope and Narrative
+- Spotting and Classifying the IoCs
+- Comprehending and Validation of IoCs
+- Incorporating the IoCs into your Security Infra
+- Proactive Threat Hunting
+- Continuous Monitoring and Learning
