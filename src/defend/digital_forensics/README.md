@@ -1,6 +1,6 @@
 # Digital Forensics
 
-- [0x00](intro_dfir.md)
+- [0x00](intro_difr.md)
 
 ---
 

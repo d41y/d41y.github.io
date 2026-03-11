@@ -133,7 +133,7 @@
 		- [AD](defend/defensive_considerations/ad_defensive_considerations.md)
 		- [Common Applications](defend/defensive_considerations/common_application_hardening.md)
 	- [Digital Forensics](defend/digital_forensics/README.md)
-		- [0x00](defend/digital_forensics/intro_dfir.md)
+		- [0x00](intro_difr.md)
 		- [Disk Forensics]()
 		- [Log Forensics](defend/digital_forensics/log_forensics/README.md)
 			- [Windows Event Logs](defend/digital_forensics/log_forensics/windows_event_logs.md)
