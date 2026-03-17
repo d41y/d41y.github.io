@@ -640,4 +640,22 @@ To utilize this feature:
 - select follow -> TCP
 - this will open a new window with the stream stitched back together; from here, you can see the entire conversation
 
-Alternatively, you can utilize the filter `tcp.stream eq #` to find 
+Alternatively, you can utilize the filter `tcp.stream eq #` to find and track conversations captured in the pcap file.
+
+##### Extracting Data and Files From a Capture
+
+Wireshark can recover many different types of data from streams. It requires you to have captured the entire conversation. Otherwise, this ability will fail to put an incomplete datagram back together.
+
+To extract files from a stream:
+
+- stop your capture
+- Select the File radial -> Export ->, then select the protocol format to extract from
+- (DICOM, HTTP, SMB, etc.)
+
+##### FTP
+
+Another exciting way to grab data out of the pcap file comes from FTP.
+
+- `ftp`: will display anything about the FTP protocol
+- `ftp.request.command`: will show any commands sent across the ftp-control channel
+- `ftp-data`: will show any data transferred over the data channel
