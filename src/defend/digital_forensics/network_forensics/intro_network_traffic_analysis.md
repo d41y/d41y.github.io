@@ -504,3 +504,140 @@ d41y@htb[/htb]$ sudo tcpdump -r sus.pcap not icmp
 14:54:16.670559 IP 172.16.146.2.55592 > ec2-52-211-164-46.eu-west-1.compute.amazonaws.com.https: Flags [.], ack 34, win 501, options [nop,nop,TS val 713253120 ecr 12294021], length 0
 ```
 
+## Wireshark
+
+### Analysis
+
+#### TShark vs. Wireshark
+
+Both options have their merits. TShark is a purpose-built terminal tool based on Wireshark. TShark shares many of the same features that are included in Wireshark and even shares syntax and options. TShark is perfect for use on machines with little or no desktop environment and can easily pass the capture information it receives to another tool via the command line. Wireshark is the feature-rich GUI option for traffic capture and analysis.
+
+**Basic TShark Switches**:
+
+| Switch | Command |
+| ------ | ------- |
+| `D` | will display any interfaces available to capture from and then exit out |
+| `L` | will list the Link-layer mediums you can capture from and then exit out |
+| `i` | choose an interface to capture from |
+| `f` | packet filter in libcap syntax; used during capture |
+| `c` | grab a specific number of packets, then quit the program; defines a stop condition |
+| `a` | defines an autostop condition; can be after a duration, specific file size, or after a certain number of packets |
+| `r [pcap-file]` | read from a file |
+| `w [pcap-file]` | write into a file using the pcapng format |
+| `P` | will print the packet summary while writing into a file |
+| `x` | will add Hex and ASCII output into the capture |
+| `h` | see the help menu |
+
+##### Selecting an Interface & Writing to a File
+
+```bash
+d41y@htb[/htb]$ sudo tshark -i eth0 -w /tmp/test.pcap
+```
+
+##### Applying Filter
+
+```bash
+d41y@htb[/htb]$ sudo tshark -i eth0 -f "host 172.16.146.2"
+
+Capturing on 'eth0'
+    1 0.000000000 172.16.146.2 → 172.16.146.1 DNS 70 Standard query 0x0804 A github.com
+    2 0.258861645 172.16.146.1 → 172.16.146.2 DNS 86 Standard query response 0x0804 A github.com A 140.82.113.4
+    3 0.259866711 172.16.146.2 → 140.82.113.4 TCP 74 48256 → 443 [SYN] Seq=0 Win=64240 Len=0 MSS=1460 SACK_PERM=1 TSval=1321417850 TSecr=0 WS=128
+    4 0.299681376 140.82.113.4 → 172.16.146.2 TCP 74 443 → 48256 [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0 MSS=1436 SACK_PERM=1 TSval=3885991869 TSecr=1321417850 WS=1024
+    5 0.299771728 172.16.146.2 → 140.82.113.4 TCP 66 48256 → 443 [ACK] Seq=1 Ack=1 Win=64256 Len=0 TSval=1321417889 TSecr=3885991869
+    6 0.306888828 172.16.146.2 → 140.82.113.4 TLSv1 579 Client Hello
+    7 0.347570701 140.82.113.4 → 172.16.146.2 TLSv1.3 2785 Server Hello, Change Cipher Spec, Application Data, Application Data, Application Data, Application Data
+    8 0.347653593 172.16.146.2 → 140.82.113.4 TCP 66 48256 → 443 [ACK] Seq=514 Ack=2720 Win=63488 Len=0 TSval=1321417937 TSecr=3885991916
+    9 0.358887130 172.16.146.2 → 140.82.113.4 TLSv1.3 130 Change Cipher Spec, Application Data
+   10 0.359781588 172.16.146.2 → 140.82.113.4 TLSv1.3 236 Application Data
+   11 0.360037927 172.16.146.2 → 140.82.113.4 TLSv1.3 758 Application Data
+   12 0.360482668 172.16.146.2 → 140.82.113.4 TLSv1.3 258 Application Data
+   13 0.397331368 140.82.113.4 → 172.16.146.2 TLSv1.3 145 Application Data
+```
+
+#### [Termshark](https://github.com/gcla/termshark)
+
+... is a Text-based User Interface application that provides the user with a Wireshark-like interface right in your terminal window.
+
+![intro network traffic analysis 3](../../../images/intro_network_traffic_analysis3.png)
+
+For help navigating this TUI:
+
+![intro network traffic analysis 4](../../../images/intro_network_traffic_analysis4.png)
+
+#### Wireshark GUI Walkthrough
+
+![intro network traffic analysis 5](../../../images/intro_network_traffic_analysis5.png)
+
+1. **Packet List (_orange_)**: In this window, you see a summary line of each packet that includes the fields listed below by default. You can add or remove columns to change what information is presented.
+	- **Number** - Order the packet arrived in Wireshark
+	- **Time** - Unix time format
+	- **Source** - Source IP
+	- **Destination** - Destination IP
+	- **Protocol** - The protocol used
+	- **Information** - Information about the packet. This field can vary based on the type of protocol used within. It will show, for example, what type of query it is for a DNS packet.
+2. **Packet Details (_blue_)**:
+	- The Packet Details window allows you to drill down into the packet to inspect the protocols with greater detail. It will break down into chunks that you would expect following the typical OSI Model reference. The packet is dissected into different encapsulation layers for inspection.
+	- Keep in mind, Wireshark will show this encapsulation in reverse order with lower layer encapsulation at the top of the window and higher levels at the bottom.
+3. **Packet Bytes (_green_)**:
+	- The Packet Bytes window allows you to look at the packet contents in ASCII or hex output. As you select a field from the windows above, it will be highlighted in the Packet Bytes window and show you where that bit or byte falls within the overall packet.
+	- This is a great way to validate that what you see in the Details pane is accurate and the interpretation Wireshark made matches the packet output.
+	- Each line in the output contains the data offset, sixteen hexadecimal bytes, and sixteen ASCII bytes. Non-printable bytes are replaced with a period in the ASCII format.
+
+#### Pre-capture and Post-capture Processing and Filtering
+
+##### Capture Filters
+
+... are entered before the capture is started. These use BPF syntax. You have fewer filter options this way, and a capture filter will drop all other traffic not explicitly meeting the criteria set. This is a great way to trim down the data you write to disk when troubleshooting a connection, such as capturing the conversations between two hosts.
+
+| Capture Filter                        | Result                                                                                                               |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `host x.x.x.x`                        | capture only traffic pertaining to a certain host                                                                    |
+| `net x.x.x.x/24`                      | capture traffic to or from a specific network                                                                        |
+| `src/dst net x.x.x.x/24`              | using src or dst net will only capture traffic sourcing from the specified network or destined to the target network |
+| `port #`                              | will filter out all traffic except the port you specify                                                              |
+| `not port #`                          | will capture everything except the port specified                                                                    |
+| `port # and #`                        | AND will concatenate your specified ports                                                                            |
+| `portrange x-x`                       | portrange will grab traffic from all ports within the range only                                                     |
+| `ip`/ `ether` / `tcp`                 | these filters will only grab traffic from specified protocol headers                                                 |
+| `broadcast` / `multicast` / `unicast` | grabs a specific type of traffic; one to one, one to many, or one to all                                             |
+
+##### Display Filters
+
+... are used while the capture is running and after the capture has stopped. Display filters are proprietary to Wireshark, which offers many different options for almost any protocol.
+
+| Capture Filter                       | Result                                                                                       |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `ip.addr == x.x.x.x`                 | capture only traffic pertaining to a certain host; this is an OR statement                   |
+| `ip.addr == x.x.x.x/24`              | capture traffic pertaining to a specific network; this is an OR statement                    |
+| `ip.src/dst == x.x.x.x`              | capture traffic to or from a specific host                                                   |
+| `dns` / `tcp` / `ftp` / `arp` / `ip` | filter traffic by a specific protocol; there are many more options                           |
+| `tcp.port == x`                      | filter by a specific tcp port                                                                |
+| `tcp.port / udp.port != x`           | will capture everything except the port specified                                            |
+| `and` / `or` / `not`                 | AND will concatenate, OR will find either of two options, NOT will exclude your input option |
+
+### Advanced Usage
+
+#### Plugins
+
+##### The Statistics and Analyze Tabs
+
+... can provide you with great insight into the data you are examining. From these points, you can utilize many of the baked-in plugins Wireshark has to offer.
+
+The plugins here can give you detailed reports about the network traffic being utilized. It can show you everything from the top talkers in your environment to specific conversations and even breakdown by IP and protocol.
+
+![intro network traffic analysis 6](../../../images/intro_network_traffic_analysis6.png)
+
+From the Analyze tab, you can utilize plugins that allow you to do things such as following TCP streams, filter on conversation types, prepare new packet filters and examine the expert info Wireshark generates about the traffic.
+
+![intro network traffic analysis 7](../../../images/intro_network_traffic_analysis7.png)
+
+Wireshark can stitch TCP packets back together to recreate the entire stream in a readable format. This ability also allows you to pull data out of the capture. This works for almost any protocol that utilizes TCP as a transport mechanism.
+
+To utilize this feature:
+
+- right-click on a packet from the stream you wish to recreate
+- select follow -> TCP
+- this will open a new window with the stream stitched back together; from here, you can see the entire conversation
+
+Alternatively, you can utilize the filter `tcp.stream eq #` to find 
