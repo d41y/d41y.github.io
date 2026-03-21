@@ -36,7 +36,12 @@ In **passive recon** information about the target is gathered **without directly
 
 ... is a widely used query and response protocol designed to access databases that store information about registered internet resources.
 
-Example:
+> [!INFO]
+> A forward search means querying WHOIS with a domain name to discover who owns it.
+> 
+> Reverse WHOIS queries are especially useful when you begin with an IP address but want to learn more about the entity behind it.
+
+Forward example:
 
 ```bash
 d41y@htb[/htb]$ whois inlanefreight.com
@@ -60,6 +65,7 @@ A WHOIS record typically contains:
 - **Technical Contact**: person handling technical issues related to the domain
 - **Creation and Expiration Dates**: when the domain was registered and when it's set to expire
 - **Name Servers**: servers that translate the domain name into an IP address
+- **Registrant**: who legally owns the domain
 
 Facebook Example:
 
@@ -97,6 +103,29 @@ Registrant Name: Domain Admin
 Registrant Organization: Meta Platforms, Inc.
 [...]
 ```
+
+Reverse example:
+
+```bash
+kali@kali:~$ whois 38.100.193.70 -h 192.168.50.251 # The host (-h) flag specifies the host running the WHOIS service
+...
+NetRange:       38.0.0.0 - 38.255.255.255
+CIDR:           38.0.0.0/8
+NetName:        COGENT-A
+...
+OrgName:        PSINet, Inc.
+OrgId:          PSI
+Address:        2450 N Street NW
+City:           Washington
+StateProv:      DC
+PostalCode:     20037
+Country:        US
+RegDate:        
+Updated:        2015-06-04
+...
+```
+
+The reverse WHOIS lookup reveals that this IP address falls within the 38.0.0.0/8 CIDR block and is registered to PSINET, Inc., the ISP hosting that address.
 
 ## Domain Name System (DNS)
 
@@ -597,6 +626,14 @@ d41y@htb[/htb]$ nikto -h inlanefreight.com -Tuning b
 + 1 host(s) tested
 ```
 
+#### Netcraft
+
+... is an internet service company based in England offering a free web portal that performs various information gathering functions, such as discovering which technologies are running on a given website and finding which other hosts share the same IP netblock.
+
+After querying the target domain on the [DNS search page](https://searchdns.netcraft.com/) you can view a "site report" for each server found that provides additional information and history about the server by clicking on the file icon next to each site URL.
+
+The start of the report covers registration information. If you scroll down, you discover various "site technology" entries.
+
 ## Crawling
 
 ... often called spidering, is the automated process of systematically browsing the World Wide Web. It follows links from one page to another, collecting information.
@@ -836,4 +873,3 @@ facebook-amex-sign-enc-dev.facebook.com
 newdev.facebook.com
 secure.dev.facebook.com
 ```
-
