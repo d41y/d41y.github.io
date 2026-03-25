@@ -66,6 +66,7 @@
 			- [Windows PrivEsc](attack/post_exploitation/privesc/windows_privesc.md)
 	- [Reversing]()
 	- [Tools](attack/tools/README.md)
+		- [Hashcat](attack/tools/hashcat.md)
 		- [Metasploit](attack/tools/metasploit.md)
 		- [nmap](attack/tools/nmap.md)
 	- [Vuln Scanning](attack/vuln_scanning/README.md)
