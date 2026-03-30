@@ -518,3 +518,337 @@ Candidates.#1....: 2001123456 -> 2017charlie
 
 ### Creating Custom Wordlists
 
+#### Crunch
+
+... can create wordlists based on parameters such as words of a specific length, a limited charset, or a certain pattern. It can generate both permutations and combinations.
+
+```bash
+d41y@htb[/htb]$ crunch <minimum length> <maximum length> <charset> -t <pattern> -o <output file>
+```
+
+The `-t` option is used to specify the pattern for generated passwords. The pattern can contain `@`, representing lower case chars, `,` will insert upper case chars, `%` will insert numbers, and `^` will insert symbols.
+
+```bash
+d41y@htb[/htb]$ crunch 4 8 -o wordlist
+```
+
+The command above creates a wordlist consisting of words with a length of 4 to 8 chars, using the default charset.
+
+Assume that Inlane Freight user passwords are of the form `ILFREIGHTYYYYXXXX`, where `XXXX` is the employee ID containing letters, and `YYYY` is the year. You can use crunch to create a list of such passwords.
+
+```bash
+d41y@htb[/htb]$ crunch 17 17 -t ILFREIGHT201%@@@@ -o wordlist
+```
+
+The pattern `ILFREIGHT201%@@@@` will create words with the years 2010-2019 followed by four letters. The length here is 17, which is constant for all words.
+
+If you know a user's birthdate is 10/03/1998, you can include this in their password, followed by a string of letters. Crunch can be used to create a wordlist of such words. The `-d` option is used to specify the amount of repetition.
+
+```bash
+d41y@htb[/htb]$ crunch 12 12 -t 10031998@@@@ -d 1 -o wordlist
+```
+
+#### CUPP
+
+... stands for Common User Password Profiler, and is used to create highly targeted and customized wordlists based on information gained from social engineering and OSINT. People tend to use personal information while creating passwords, such as phone numbers, pet names, birth dates, etc. CUPP takes in this information and creates passwords from them. These wordlists are mostly used to gain access to social media accounts. The `-i` option is used to run in interactive mode, prompting CUPP to ask you for information on the target.
+
+```bash
+d41y@htb[/htb]$ python3 cupp.py -i
+
+[+] Insert the information about the victim to make a dictionary
+[+] If you don't know all the info, just hit enter when asked! ;)
+
+> First Name: roger
+> Surname: penrose
+> Nickname:      
+> Birthdate (DDMMYYYY): 11051972
+
+> Partners) name: beth
+> Partners) nickname:
+> Partners) birthdate (DDMMYYYY):
+
+> Child's name: john
+> Child's nickname: johnny
+> Child's birthdate (DDMMYYYY):
+
+> Pet's name: tommy
+> Company name: INLANE FREIGHT
+
+> Do you want to add some key words about the victim? Y/[N]: Y
+> Please enter the words, separated by comma. [i.e. hacker,juice,black], spaces will be removed: sysadmin,linux,86391512
+> Do you want to add special chars at the end of words? Y/[N]:
+> Do you want to add some random numbers at the end of words? Y/[N]:
+> Leet mode? (i.e. leet = 1337) Y/[N]:
+
+[+] Now making a dictionary...
+[+] Sorting list and removing duplicates...
+[+] Saving dictionary to roger.txt, counting 2419 words.
+[+] Now load your pistolero with roger.txt and shoot! Good luck!
+```
+
+The command above shows how the data for the user Roger Penrose, was provided to CUPP. The unknown fields can be just left empty. After taking in all data, CUPP creates a wordlist based on it. It also supports appending random chars and a "Leet" mode, which uses combinations of letters and numbers in common words. CUPP can also fetch common names from various online databases using the `-l` option.
+
+#### KWPROCESSOR
+
+... is a tool that creates wordlists with keyboard walks. Another common password generation technique is to follow patterns on the keyboard. These passwords are called keyboard walks, as they look like a walk along the keys. For example, the string `qwertyasdfg` is created by using the first five chars from the keyboard's first two rows. This seems complex to the normal eye but can be easily predicted. KWPROCESSOR uses various algorithms to guess patterns such as these.
+
+The tool can be found [here](https://github.com/hashcat/kwprocessor) and has to be installed manually.
+
+```bash
+d41y@htb[/htb]$ git clone https://github.com/hashcat/kwprocessor
+d41y@htb[/htb]$ cd kwprocessor
+d41y@htb[/htb]$ make
+```
+
+The help menu shows the various options supported by kwp. The pattern is based on the geographical directions a user could choose on the keyboard. For example, the `--keywalk-west` option is used to specify movement towards the west from the base char. The program takes in base chars as a parameter, which is the char set the pattern will start with.  Next, it needs a keymap, which maps the locations of keys on language-specific keyboard layouts. The final option is used to specify the route to be used. A route is a pattern to be followed by passwords. It defines how passwords will be formed, starting from the base characters. For example, the route 222 can denote the path `2 * EAST + 2 * SOUTH + 2 * WEST` from the base char. If the base char is considered to be `T` then the password generated by the route would be `TYUJNBV` on a US keymap.
+
+```bash
+d41y@htb[/htb]$ kwp -s 1 basechars/full.base keymaps/en-us.keymap  routes/2-to-10-max-3-direction-changes.route
+```
+
+The command above generates words with chars reachable while holding `-S`, using the full base, the standard en-us keymap, and 3 direction changes route.
+
+#### Princeprocessor
+
+Prince or PRobability INfinite Chained Elements is an efficient password guessing algorithm to improve password cracking rates. [Princeprocessor](https://github.com/hashcat/princeprocessor) is a tool that generates passwords using the PRINCE algorithm. The program takes in a wordlist and creates a chain of words taken from this wordlist. For example, if a wordlist contains the words:
+
+```
+dog
+cat
+ball
+```
+
+The generated wordlist would be of the form:
+
+```
+dog
+cat
+ball
+dogdog
+catdog
+dogcat
+catcat
+dogball
+catball
+balldog
+ballcat
+ballball
+dogdogdog
+catdogdog
+dogcatdog
+catcatdog
+dogdogcat
+<SNIP>
+```
+
+The PRINCE algorithm considers various permutation and combinations while creating each word. The binary can be downloaded from the [releases](https://github.com/hashcat/princeprocessor/releases) page.
+
+```bash
+d41y@htb[/htb]$ wget https://github.com/hashcat/princeprocessor/releases/download/v0.22/princeprocessor-0.22.7z
+d41y@htb[/htb]$ 7z x princeprocessor-0.22.7z
+d41y@htb[/htb]$ cd princeprocessor-0.22
+d41y@htb[/htb]$ ./pp64.bin -h
+```
+
+The `--keyspace` option can be used to find the number of combinations produced from the input wordlist.
+
+```bash
+d41y@htb[/htb]$ ./pp64.bin --keyspace < words
+
+232
+```
+
+According to princeprocessor, 232 unique words can be formed from your wordlist above.
+
+```bash
+d41y@htb[/htb]$ ./pp64.bin -o wordlist.txt < words
+```
+
+The command above writes the output words to a file named `wordlist.txt`. By default, princeprocessor only outputs words up to 16 in length. This can be controlled using the `--pw-min` and `--pw-max` arguments.
+
+```bash
+d41y@htb[/htb]$ ./pp64.bin --pw-min=10 --pw-max=25 -o wordlist.txt < words
+```
+
+The command above will output words between 10 and 25 in length. The number of elements per word can be controlled using `--elem-cnt-min` and `--elem-cnt-max`. These values ensure that number of elements in an output word is above or below the given value.
+
+```bash
+d41y@htb[/htb]$ ./pp64.bin --elem-cnt-min=3 -o wordlist.txt < words
+```
+
+The command above will output words with three elements or more.
+
+#### CeWL
+
+... is another tool that can be used to create custom wordlists. It spiders and scrapes a website and creates a list of the words that are present. This kind of wordlist is effective, as people tend to use passwords associated with the content they write or operate on. For example, a blogger who blogs about nature, wildlife, etc. could have a password associated with those topics. This is due to human nature, as such passwords are also easy to remember. Organizations often have passwords associated with their branding and industry-specific vocabulary. For example, users of a networking company may have passwords consisting of words like `router`, `switch`, `server` and so on. Such words can be found on their website under blogs, testimonials, and product descriptions.
+
+```bash
+d41y@htb[/htb]$ cewl -d <depth to spider> -m <minimum word length> -w <output wordlist> <url of website>
+```
+
+CeWL can spider multiple pages present on a given website. The length of the outputted words can be altered using the `-m` parameter, depending on the password requirements.
+
+CeWL also supports the extraction of emails from websites with the `-e` option. It's helpful to get this information when phishing, password spraying, or brute-forcing passwords later.
+
+```bash
+d41y@htb[/htb]$ cewl -d 5 -m 8 -e http://inlanefreight.com/blog -w wordlist.txt
+```
+
+The command above scrapes up to a depth of five pages from `http://inlanefreight.com/blog`, and includes only words greater than 8 in length.
+
+#### Previously Cracked Passwords
+
+By default, hashcat stores all cracked passwords in the `hashcat.potfile` file. The format is `hash:password`. The main purpose of this file is to remove previously cracked hashes from the work log and display cracked passwords with the `--show`  command. However, it can be used to create new wordlists of previously cracked passwords, and when combined with rule files, it can prove quite effective at cracking themed passwords.
+
+#### Hashcat-utils
+
+The Hashcat-utils repo contains many utilities that can be useful for more advanced password cracking. The tool [maskprocessor](https://github.com/hashcat/maskprocessor), for example, can be used to create wordlists using a given mask. Detailed usage for this tool can be found [here](https://hashcat.net/wiki/doku.php?id=maskprocessor).
+
+For example, maskprocessor can be used to append all special chars to the end of a word:
+
+```bash
+d41y@htb[/htb]$ /mp64.bin Welcome?s
+Welcome 
+Welcome!
+Welcome"
+Welcome#
+Welcome$
+Welcome%
+Welcome&
+Welcome'
+Welcome(
+Welcome)
+Welcome*
+Welcome+
+
+<SNIP>
+```
+
+## Rules
+
+The rule-based attack is the most advanced and complex password cracking mode. Rules help perform various operations on the input wordlist, such as prefixing, suffixing, toggling case, cutting, reversing, and much more. Rules take mask-based attacks to another level and provide increased cracking rates. Additionally, the usage of rules saves disk space and processing time incurred as a result of larger wordlists.
+
+A rule can be created using functions, which take a word as input and output it's modified version. The following table describes some functions which are compatible with JtR as well as Hashcat.
+
+| Function                | Description                                                   | Input                                 | Output                                                                                                            |
+| ----------------------- | ------------------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `l`                     | Convert all letters to lowercase                              | InlaneFreight2020                     | inlanefreight2020                                                                                                 |
+| `u`                     | Convert all letters to uppercase                              | InlaneFreight2020                     | INLANEFREIGHT2020                                                                                                 |
+| `c` / `C`               | capitalize / lowercase first letter an invert the rest        | inlaneFreight2020 / Inlanefreight2020 | Inlanefreight2020 / iNLANEFREIGHT2020                                                                             |
+| `t` / `TN`              | Toggle case: whole word / at position N                       | InlaneFreight2020                     | iNLANEfREIGHT2020                                                                                                 |
+| `d` / `q` / `zN` / `ZN` | Duplicate word / all chars / first character / last character | InlaneFreight2020                     | InlaneFreight2020InlaneFreight2020 / IInnllaanneeFFrreeiigghhtt22002200 / IInlaneFreight2020 / InlaneFreight20200 |
+| `{` / `}`               | Rotate word left / right                                      | InlaneFreight2020                     | nlaneFreight2020I / 0InlaneFreight202                                                                             |
+| `^X` / `$X`             | Prepend / Append char X                                       | InlaneFreight2020 (^! / $! )          | !InlaneFreight2020 / InlaneFreight2020!                                                                           |
+| `r`                     | Reverse                                                       | InlaneFreight2020                     | 0202thgierFenalnI                                                                                                 |
+
+A complete list of functions can be found [here](https://hashcat.net/wiki/doku.php?id=rule_based_attack#implemented_compatible_functions). Sometimes, the input wordlists contain words that don't match your target specifications. In such cases, rejection rules can be used to prevent the processing of such words.
+
+Words of length less than N can be rejected with `>N`, while words greater than N can be rejected with `<N`. A list of rejection rules can be found [here](https://hashcat.net/wiki/doku.php?id=rule_based_attack#rules_used_to_reject_plains).
+
+### Example Rule Creation
+
+Create a rule to generate words that match leetspeak or/and are prepended or/and appended by a year:
+
+```
+c so0 si1 se3 ss5 sa@ $2 $0 $1 $9
+```
+
+The first letter word is capitalized with the `c` function. Then rule uses the substitute function `S` to replace `o` with `0`, `i` with `1`, `e` with `3` and `a` with `@`. At the end, the year `2019` is appended to it.
+
+Create the file:
+
+```bash
+d41y@htb[/htb]$ echo 'c so0 si1 se3 ss5 sa@ $2 $0 $1 $9' > rule.txt
+```
+
+Storing the password:
+
+```bash
+d41y@htb[/htb]$ echo 'password_ilfreight' > test.txt
+```
+
+Rules can be debugged using the `-r` flag to specify the rule, followed by the wordlist.
+
+```bash
+d41y@htb[/htb]$ hashcat -r rule.txt test.txt --stdout
+
+P@55w0rd_1lfr31ght2019
+```
+
+Now consider the password `St@r5h1p2019`. Creating the SHA1 hash of it:
+
+```bash
+d41y@htb[/htb]$ echo -n 'St@r5h1p2019' | sha1sum | awk '{print $1}' | tee hash
+```
+
+You can then use the custom rule created above and the rockyou.txt dictionary file to crack the hash using Hashcat.
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 100 hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt -r rule.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+08004e35561328e357e34d07c53c7e4f41944e28:St@r5h1p2019
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: SHA1
+Hash.Target......: 08004e35561328e357e34d07c53c7e4f41944e28
+Time.Started.....: Fri Aug 28 22:17:13 2020, (3 secs)
+Time.Estimated...: Fri Aug 28 22:17:16 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Mod........: Rules (rule.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  3519.2 kH/s (0.39ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 10592256/14344385 (73.84%)
+Rejected.........: 0/10592256 (0.00%)
+Restore.Point....: 10586112/14344385 (73.80%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: St0p69692019 -> S0r051x53nt2019
+```
+
+You were able to crack the hash with your custom rule and rockyou.txt. Hashcat supports the usage of multi-rules with repeated use of the `-r` flag. Hashcat installs with a variety of rules by default. They can be found in the rules folder:
+
+```bash
+d41y@htb[/htb]$ ls -l /usr/share/hashcat/rules/
+
+total 2576
+-rw-r--r-- 1 root root    933 Jun 19 06:20 best64.rule
+-rw-r--r-- 1 root root    633 Jun 19 06:20 combinator.rule
+-rw-r--r-- 1 root root 200188 Jun 19 06:20 d3ad0ne.rule
+-rw-r--r-- 1 root root 788063 Jun 19 06:20 dive.rule
+-rw-r--r-- 1 root root 483425 Jun 19 06:20 generated2.rule
+-rw-r--r-- 1 root root  78068 Jun 19 06:20 generated.rule
+drwxr-xr-x 1 root root   2804 Jul  9 21:01 hybrid
+-rw-r--r-- 1 root root 309439 Jun 19 06:20 Incisive-leetspeak.rule
+-rw-r--r-- 1 root root  35280 Jun 19 06:20 InsidePro-HashManager.rule
+-rw-r--r-- 1 root root  19478 Jun 19 06:20 InsidePro-PasswordsPro.rule
+-rw-r--r-- 1 root root    298 Jun 19 06:20 leetspeak.rule
+-rw-r--r-- 1 root root   1280 Jun 19 06:20 oscommerce.rule
+-rw-r--r-- 1 root root 301161 Jun 19 06:20 rockyou-30000.rule
+-rw-r--r-- 1 root root   1563 Jun 19 06:20 specific.rule
+-rw-r--r-- 1 root root  64068 Jun 19 06:20 T0XlC-insert_00-99_1950-2050_toprules_0_F.rule
+-rw-r--r-- 1 root root   2027 Jun 19 06:20 T0XlC-insert_space_and_special_0_F.rule
+-rw-r--r-- 1 root root  34437 Jun 19 06:20 T0XlC-insert_top_100_passwords_1_G.rule
+-rw-r--r-- 1 root root  34813 Jun 19 06:20 T0XlC.rule
+-rw-r--r-- 1 root root 104203 Jun 19 06:20 T0XlCv1.rule
+-rw-r--r-- 1 root root     45 Jun 19 06:20 toggles1.rule
+-rw-r--r-- 1 root root    570 Jun 19 06:20 toggles2.rule
+-rw-r--r-- 1 root root   3755 Jun 19 06:20 toggles3.rule
+-rw-r--r-- 1 root root  16040 Jun 19 06:20 toggles4.rule
+-rw-r--r-- 1 root root  49073 Jun 19 06:20 toggles5.rule
+-rw-r--r-- 1 root root  55346 Jun 19 06:20 unix-ninja-leetspeak.rule
+```
+
+It is always better to try using these rules before going ahead and creating custom rules.
+
+Hashcat provides an option to generate rules on the fly and apply them to the input wordlist. The following command will generate 1000 random rules and apply them to each word from rockyou.txt by specifying the `-g` flag. There is no certainty to the success rate of this attack as the generated rules are not constant.
+
+```
+d41y@htb[/htb]$ hashcat -a 0 -m 100 -g 1000 hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+```
+
+There are a variety of publicly available rules as well, such as the [nsa-rules](https://github.com/NSAKEY/nsa-rules), [Hob0Rules](https://github.com/praetorian-code/Hob0Rules), and the [corporate.rule](https://github.com/sparcflow/HackLikeALegend/blob/master/old/chap3/corporate.rule). These are curated rulesets generally targeted at common Windows password policies or based on statistics and probably industry password patterns.
+
