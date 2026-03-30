@@ -852,3 +852,218 @@ d41y@htb[/htb]$ hashcat -a 0 -m 100 -g 1000 hash /opt/useful/seclists/Passwords/
 
 There are a variety of publicly available rules as well, such as the [nsa-rules](https://github.com/NSAKEY/nsa-rules), [Hob0Rules](https://github.com/praetorian-code/Hob0Rules), and the [corporate.rule](https://github.com/sparcflow/HackLikeALegend/blob/master/old/chap3/corporate.rule). These are curated rulesets generally targeted at common Windows password policies or based on statistics and probably industry password patterns.
 
+## Cracking
+
+### Cracking Common Hashes
+
+#### Common Hash Types
+
+| Hashmode | Hash Name                   | Example Hash                                                                                         |
+| -------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `0`      | MD5                         | 8743b52063cd84097a65d1633f5c74f5                                                                     |
+| `100`    | SHA1                        | b89eaac7e61417341b710b727768294d0e6a277b                                                             |
+| `1000`   | NTLM                        | b4b9b02e6f09a9bd760f388b67351e2b                                                                     |
+| `1800`   | sha512crypt, SHA512         | $6\$52450745\$k5ka2p8bFuSmoVT1tzOyyuaREkkKBcCNqoDKzYiJL9RaE8yMnPgh2XzzF0NDrUhgrcLwg78xs1w5pJiypEdFX/ |
+| `3200`   | bcrypt, Blowfish            | $2a\$05\$LhayLxezLhK1LhWvKxCyLOj0j1u.Kj0jZ0pEmm134uzrQlFvQJLF6                                       |
+| `5500`   | NetNTLMv1 / NetNTLMv1+ESS   | u4-netntlm::kNS:338d08f8e26de93300000000000000000000000000000000:9526fb8c23a9075                     |
+| `5600`   | NetNTLMv2                   | admin::N46iSNekpT:08ca45b7d7ea58ee:88dcbe4446168966a153a0064958dac6:5c7830                           |
+| `13100`  | Kerberos 5 TGS-REP etype 23 | $krb5tgs\$23\$_user\$realm\$test/spn_\$63386d22d359fe42230300d56852c9eb\$ < SNIP >                   |
+#### Example 1 - Database Dumps
+
+MD5, SHA1, and bcrypt hashes are often seen in database dumps. These hashes may be retrieved following a successful SQLi attack or found in publicly available password data breach database dumps. MD5 and SHA1 are typically easier to crack than bcrypt, which may have many rounds of the Blowfish algorithm applied.
+
+To crack some SHA1 hashes, you take the following wordlist and convert them to SHA1:
+
+```
+winter!
+baseball1
+waterslide
+summertime
+baconandeggs
+beach1234
+sunshine1
+welcome1
+password123
+```
+
+```bash
+d41y@htb[/htb]$ for i in $(cat words); do echo -n $i | sha1sum | tr -d ' -';done
+
+fa3c9ecfc251824df74026b4f40e4b373fd4fc46
+e6852777c0260493de41fb43918ab07bbb3a659c
+0c3feaa16f73493f998970e22b2a02cb9b546768
+b863c49eada14e3a8816220a7ab7054c28693664
+b0feedd70a346f7f75086026169825996d7196f9
+f47f832cba913ec305b07958b41babe2e0ad0437
+08b314f0e1e2c41ec92c3735910658e5a82c6ba7
+e35bece6c5e6e0e86ca51d0440e92282a9d6ac8a
+cbfdac6008f9cab4083784cbd1874f76618d2a97
+```
+
+You can then run these through a Hashcat dictionary attack using the rockyou.txt wordlist.
+
+```bash
+d41y@htb[/htb]$ hashcat -m 100 SHA1_hashes /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+08b314f0e1e2c41ec92c3735910658e5a82c6ba7:sunshine1
+e35bece6c5e6e0e86ca51d0440e92282a9d6ac8a:welcome1
+e6852777c0260493de41fb43918ab07bbb3a659c:baseball1
+b863c49eada14e3a8816220a7ab7054c28693664:summertime
+fa3c9ecfc251824df74026b4f40e4b373fd4fc46:winter! 
+b0feedd70a346f7f75086026169825996d7196f9:baconandeggs
+f47f832cba913ec305b07958b41babe2e0ad0437:beach1234
+0c3feaa16f73493f998970e22b2a02cb9b546768:waterslide
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: SHA1
+Hash.Target......: SHA1_hashes
+Time.Started.....: Fri Aug 28 22:22:56 2020, (1 sec)
+Time.Estimated...: Fri Aug 28 22:22:57 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  2790.2 kH/s (0.33ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 9/9 (100.00%) Digests
+Progress.........: 1173504/14344385 (8.18%)
+Rejected.........: 0/1173504 (0.00%)
+Restore.Point....: 1167360/14344385 (8.14%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: whitenerdy -> warut69
+```
+
+The above hashes cracked very quickly as they are common words/phrases with little to no complexity. Variations on the above list, such as `Bas3b@ll1` or `Wat3rSl1de` would likely take longer to crack and may require additional techniques such as mask and hybrid attacks.
+
+#### Example 2 - Linux Shadow File
+
+Sha512crypt hashes are commonly found in the `/etc/shadow` file on Linux systems. This file contains the password hashes for all accounts with a login shell assigned to them. You may gain access to a Linux system during a pentest via a web application attack or successful exploitation of a vulnerable service. You may exploit a service that is already running in the context of the highest privileged root account and perform a successful privesc attack and access the `/etc/shadow` file. Password re-use is widespread. A cracked password may give you access to other servers, network devices, or even be used as a foothold into a target's AD environment.
+
+Look at a hash from a standard Ubuntu installation. The corresponding plaintext for the following hash is `password123`:
+
+```bash
+root:$6$tOA0cyybhb/Hr7DN$htr2vffCWiPGnyFOicJiXJVMbk1muPORR.eRGYfBYUnNPUjWABGPFiphjIjJC5xPfFUASIbVKDAHS3vTW1qU.1:18285:0:99999:7:::
+```
+
+The hash contains nine fields separated by colons. The first two fields contain the username and its encrypted hash. The rest of the fields contain various attributes such as password creation time, last change time, and expiry.
+
+Coming to the hash, you already know that it contains three fields delimited by `$`. The value `6` stands for the SHA-512 hashing algorithm; the next 16 chars represent the salt, while the rest of it is the actual hash.
+
+Cracking it:
+
+```bash
+d41y@htb[/htb]$ hashcat -m 1800 nix_hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+$6$tOA0cyybhb/Hr7DN$htr2vffCWiPGnyFOicJiXJVMbk1muPORR.eRGYfBYUnNPUjWABGPFiphjIjJC5xPfFUASIbVKDAHS3vTW1qU.1:password123
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: sha512crypt $6$, SHA512 (Unix)
+Hash.Target......: $6$tOA0cyybhb/Hr7DN$htr2vffCWiPGnyFOicJiXJVMbk1muPO...W1qU.1
+Time.Started.....: Fri Aug 28 22:25:26 2020, (1 sec)
+Time.Estimated...: Fri Aug 28 22:25:27 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:      955 H/s (4.62ms) @ Accel:32 Loops:256 Thr:1 Vec:4
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 1536/14344385 (0.01%)
+Rejected.........: 0/1536 (0.00%)
+Restore.Point....: 1344/14344385 (0.01%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:4864-5000
+Candidates.#1....: teacher -> mexico1
+```
+
+#### Example 3 - Common AD Password Hash Types
+
+Credential theft and password re-use are widespread tactics during assessments against organizations using AD to manage their environment. It is often possible to obtain credentials in cleartext or re-use password hashes to further access via PtH or SMB Relay attacks. Still, some techniques will result in a password hash that must be cracked offline to further your access. Some examples include a NetNTLMv1 or NetNTLMv2 obtained through a MiTM attack, a Kerberos 5 TGS-REP hash obtained through a Kerberoasting attack, or an NTLM hash obtained either by dumping credentials from memory using the Mimikatz tool or obtained from a Windows machine's local SAM database.
+
+##### NTLM
+
+Creating the hash for the `Password01`:
+
+```bash
+d41y@htb[/htb]$ python3
+
+Python 3.8.3 (default, May 14 2020, 11:03:12) 
+[GCC 9.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+
+>>> import hashlib,binascii
+>>> hash = hashlib.new('md4', "Password01".encode('utf-16le')).digest()
+>>> print (binascii.hexlify(hash))
+
+b'7100a909c7ff05b266af3c42ec058c33'
+```
+
+Cracking it:
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 1000 ntlm_example /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+7100a909c7ff05b266af3c42ec058c33:Password01      
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: NTLM
+Hash.Target......: 7100a909c7ff05b266af3c42ec058c33
+Time.Started.....: Fri Aug 28 22:27:40 2020, (0 secs)
+Time.Estimated...: Fri Aug 28 22:27:40 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  2110.5 kH/s (0.62ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 61440/14344385 (0.43%)
+Rejected.........: 0/61440 (0.00%)
+Restore.Point....: 55296/14344385 (0.39%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: gonoles -> sinead1
+```
+
+##### NetNTLMv2
+
+Consider a password hash like the one below retrieved using Responder:
+
+```
+sqladmin::INLANEFREIGHT:f54d6f198a7a47d4:7FECABAE13101DAAA20F1B09F7F7A4EA:0101000000000000C0653150DE09D20126F3F71DF13C1FD8000000000200080053004D004200330001001E00570049004E002D00500052004800340039003200520051004100460056000400140053004D00420033002E006C006F00630061006C0003003400570049004E002D00500052004800340039003200520051004100460056002E0053004D00420033002E006C006F00630061006C000500140053004D00420033002E006C006F00630061006C0007000800C0653150DE09D201060004000200000008003000300000000000000000000000003000001A67637962F2B7BF297745E6074934196D5F4371B6BA3E796F2997306FD4C1C00A001000000000000000000000000000000000000900280063006900660073002F003100390032002E003100360038002E003100390035002E00310037003000000000000000000000000000
+```
+
+Cracking it:
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 5600 inlanefreight_ntlmv2 /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+SQLADMIN::INLANEFREIGHT:f54d6f198a7a47d4:7fecabae13101daaa20f1b09f7f7a4ea:0101000000000000c0653150de09d20126f3f71df13c1fd8000000000200080053004d004200330001001e00570049004e002d00500052004800340039003200520051004100460056000400140053004d00420033002e006c006f00630061006c0003003400570049004e002d00500052004800340039003200520051004100460056002e0053004d00420033002e006c006f00630061006c000500140053004d00420033002e006c006f00630061006c0007000800c0653150de09d201060004000200000008003000300000000000000000000000003000001a67637962f2b7bf297745e6074934196d5f4371b6ba3e796f2997306fd4c1c00a001000000000000000000000000000000000000900280063006900660073002f003100390032002e003100360038002e003100390035002e00310037003000000000000000000000000000:Database99
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: NetNTLMv2
+Hash.Target......: SQLADMIN::INLANEFREIGHT:f54d6f198a7a47d4:7fecabae13...000000
+Time.Started.....: Fri Aug 28 22:29:26 2020, (6 secs)
+Time.Estimated...: Fri Aug 28 22:29:32 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  1754.7 kH/s (2.32ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 11237376/14344385 (78.34%)
+Rejected.........: 0/11237376 (0.00%)
+Restore.Point....: 11231232/14344385 (78.30%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: Devanique -> Darrylw
+```
+
+>[!INFO]
+>NTLMv2 challenge-response captures cannot be directly reused or efficiently cracked because they are computed as an HMAC-MD5 over the server challenge and blob using the NTLM hash as the key. Instead of brute-forcing the password, an effective approach is to leverage an available NTDS dump: extract all NTLM hashes and use them as candidates in Hashcat mode 27100. In this mode, Hashcat treats each NTLM hash as the key, recomputes the NTLMv2 response, and compares it to the captured value. A match reveals the correct NTLM hash without recovering the plaintext password, providing a usable credential for pass-the-hash authentication.
+>
+>Can also work for other hash types than NTLMv2. See [here](https://trustedsec.com/blog/holy-shuck-weaponizing-ntlm-hashes-as-a-wordlist).
+
+
