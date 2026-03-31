@@ -744,6 +744,57 @@ The Internet Assigned Numbers Authority (IANA) maintains a [registry](https://ww
 
 _OffSec maintains the [Exploit Database](https://www.exploit-db.com/google-hacking-database) which has lots of different approaches to a various amount of google dorks._
 
+### Shodan
+
+... is a search engine that crawls devices connected to the internet, including the servers that run websites, as well as devices like routers and IoT devices.
+
+Before using Shodan, you mus register a free account, which provides limited access.
+
+Search operators are also to some extent implemented into Shodan. For example, you can use `hostname:megacorpone.com`.
+
+![web recon offsec 2](../../../images/web_recon_offsec2.png)
+
+In this case, Shodan lists the IPs, services, and banner information. All of this is gathered passively, avoiding interacting with the client's web site.
+
+This information gives you a snapshot of your target's internet footprint. For example, there are four servers running SSH. You can drill down to refine your results by clicking on "SSH" under "Top Ports" on the left pane.
+
+![web recon offsec 3](../../../images/web_recon_offsec3.png)
+
+Based on Shodan's results, you know exactly which version of OpenSSH is running on each server. If you click on an IP address, you can retrieve a summary of the host.
+
+![web recon offsec 4](../../../images/web_recon_offsec4.png)
+
+You can review the ports, services, and technologies used by the server on this page. Shodan will also reveal if there are any published vulns for any of the identified services or technologies running on the same host. This information is invaluable when determining where to start when you move to active testing.
+
+## Open-Source Code
+
+Code stored online can provide a glimpse into the programming languages and frameworks used by an organization. On a few rare occasions, devs have even accidentally committed sensitive data and creds to public repos. The following resources could help you:
+
+- GitHub
+- GitHub Gist
+- GitLab
+- SourceForge
+
+The search tools for some of these platforms will support the Google search operators.
+
+### GitHub
+
+To perform any GitHub search, you first need to register a basic account. Once you've logged in to your GitHub account, you can perform multiple keyword-based searches by typing into the top-right search field.
+
+Doing this manually will work best on small repos. For larger repos, you can use several methods to help automate some of the searching, such as [Gitrob](https://github.com/michenriksen/gitrob) and [Gitleaks](https://github.com/zricethezav/gitleaks). Most of these tools require an [access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) to use the source code-hosting provider's API.
+
+> [!INFO]
+> Don't forget that GitHub rate-limits unauthenticated API requests. If you're using automated tools like Gitleaks, a personal access token is often required.
+
+The following screenshot shows an example of Gitleaks finding an AWS Access Key ID in a file.
+
+![web recon offsec 1](../../../images/web_recon_offsec1.png)
+
+Tools that search through source code for secrets, like Gitrob or Gitleaks, generally rely on regex or entropy-based detections to identify potentially useful information.
+
+> [!INFO]
+> Entropy-based tools scan for values that appear highly random - often a sign of keys, passwords, or tokens.
+
 ## Web Archives
 
 With the [Internet Archive's Wayback Machine](http://web.archive.org/), you have a unique oppurtunity to revisit the past and explore the digital footprints of websites as they once were.
@@ -754,6 +805,65 @@ It can help with:
 - tracking changes and identifying patterns
 - gathering intel
 - stealthy recon
+
+## Certificate Transparency Logs
+
+... are public, append-only ledgers that record the issuance of SSL/TLS certificates. Whenever a Certificate Authority (CA) issues a new certificate, it must submit it to multiple CT logs. Independent organisations maintain these logs and are open for anyone to inspect.
+
+You can think of CT logs as a **global registry of certificates**. They provide a transparent and verifiable record of every SSL/TLS certificate issued for a website. This transparency serves several crucial purposes:
+
+- Early Detection of Rogue Certificates
+- Accountability for Certificate Authorities
+- Strengthening the Web PKI
+
+### CT Logs and Web Recon
+
+CT logs offer a unique advantage in subdomain enumeration compared to other methods. Unlike brute-forcing or wordlist-based approaches, which rely on guessing or predicting subdomain names, CT logs provide a definitive record of certificates issued for a domain and its subdomains. This means you're not limited by the scope of your wordlist or the effectiveness of your brute-forcing algorithm. Instead, you gain access to a historical and comprehensive view of a domain's subdomains, including those that might not be actively used or easily guessable.
+
+Furthermore, CT logs can unveil subdomains associated with old or expired certificates. These subdomains might host outdated software or configurations, making them potentially vulnerable to exploitation.
+
+In essence, CT logs provide a reliable and efficient way to discover subdomains without the need for exhaustive brute-forcing or relying on the completeness of wordlists. They offer a unique window into a domain's history and can reveal subdomains that might otherwise remain hidden, significantly enhancing your recon capabilities.
+
+Two popular options for searching CT logs:
+
+- [crt.sh](https://crt.sh/)
+- [Censys](https://search.censys.io/)
+
+Crt.sh lookup example:
+```bash
+d41y@htb[/htb]$ curl -s "https://crt.sh/?q=facebook.com&output=json" | jq -r '.[]
+ | select(.name_value | contains("dev")) | .name_value' | sort -u
+ 
+*.dev.facebook.com
+*.newdev.facebook.com
+*.secure.dev.facebook.com
+dev.facebook.com
+devvm1958.ftw3.facebook.com
+facebook-amex-dev.facebook.com
+facebook-amex-sign-enc-dev.facebook.com
+newdev.facebook.com
+secure.dev.facebook.com
+```
+
+## Security Headers and SSL/TLS
+
+... can help in gathering information about a website or domain's security posture.
+
+One such site, [Security Headers](https://securityheaders.com/), will analyze HTTP response headers and provide basic analysis of the target site's security posture. You can use this to get an idea of an organization's coding and security practices based on the results.
+
+Scanning `www.megacorpone.com`:
+
+![web recon offsec 5](../../../images/web_recon_offsec5.png)
+
+The site is missing several defensive headers, such as `Content-Security-Policy` and `X-Frame-Options`. These missing headers are not necessarily vulns in and of themselves, but they could indicate web devs or server admins that are not familiar with server hardening.
+
+Another scanning tool you can use is the SSL Server Test from [Qualys SSL Labs](https://www.ssllabs.com/ssltest/). This tool analyzes a server's SSL/TLS configuration and compares it against current best practices. It will also identify some SSL/TLS related vulnerabilities, such as Poodle or Heartbleed.
+
+Scanning `www.megacorpone.com`:
+
+![web recon offsec 6](../../../images/web_recon_offsec6.png)
+
+These results seem better than the Security Header check. However, this shows that the server supports TLS versions such as 1.0 and 1.1, which are deemed legacy as they implement insecure sipher suites - this ultimately suggests that your target is not applying current best practices for SSL/TLS hardening. Disabling the `_TLS_DHE_RSA_WITH_AES_256_CBC_SHA_` suite has been recommended for several years, for example, due to multiple vulns both on AES cipher block chaining mode and the SHA1 algorithm. You can use these findings to gain insights about the security practices, or lack thereof, within the target organization.
 
 ## Automating Recon
 
@@ -833,43 +943,4 @@ Content-Type : text/html; charset=UTF-8
 [+] Completed in 0:00:00.257780
 
 [+] Exported : /home/htb-ac-643601/.local/share/finalrecon/dumps/fr_inlanefreight.com_11-06-2024_11:07:59
-```
-
-## Certificate Transparency Logs
-
-... are public, append-only ledgers that record the issuance of SSL/TLS certificates. Whenever a Certificate Authority (CA) issues a new certificate, it must submit it to multiple CT logs. Independent organisations maintain these logs and are open for anyone to inspect.
-
-You can think of CT logs as a **global registry of certificates**. They provide a transparent and verifiable record of every SSL/TLS certificate issued for a website. This transparency serves several crucial purposes:
-
-- Early Detection of Rogue Certificates
-- Accountability for Certificate Authorities
-- Strengthening the Web PKI
-
-### CT Logs and Web Recon
-
-CT logs offer a unique advantage in subdomain enumeration compared to other methods. Unlike brute-forcing or wordlist-based approaches, which rely on guessing or predicting subdomain names, CT logs provide a definitive record of certificates issued for a domain and its subdomains. This means you're not limited by the scope of your wordlist or the effectiveness of your brute-forcing algorithm. Instead, you gain access to a historical and comprehensive view of a domain's subdomains, including those that might not be actively used or easily guessable.
-
-Furthermore, CT logs can unveil subdomains associated with old or expired certificates. These subdomains might host outdated software or configurations, making them potentially vulnerable to exploitation.
-
-In essence, CT logs provide a reliable and efficient way to discover subdomains without the need for exhaustive brute-forcing or relying on the completeness of wordlists. They offer a unique window into a domain's history and can reveal subdomains that might otherwise remain hidden, significantly enhancing your recon capabilities.
-
-Two popular options for searching CT logs:
-
-- [crt.sh](https://crt.sh/)
-- [Censys](https://search.censys.io/)
-
-Crt.sh lookup example:
-```bash
-d41y@htb[/htb]$ curl -s "https://crt.sh/?q=facebook.com&output=json" | jq -r '.[]
- | select(.name_value | contains("dev")) | .name_value' | sort -u
- 
-*.dev.facebook.com
-*.newdev.facebook.com
-*.secure.dev.facebook.com
-dev.facebook.com
-devvm1958.ftw3.facebook.com
-facebook-amex-dev.facebook.com
-facebook-amex-sign-enc-dev.facebook.com
-newdev.facebook.com
-secure.dev.facebook.com
 ```
