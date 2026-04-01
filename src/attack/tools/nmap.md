@@ -1,5 +1,9 @@
 # Network Enumeration with Nmap
 
+## TCP/UDP Port Scanning Theory
+
+
+
 ## Host Discovery
 
 When you need to conduct an internal pentest for the entire network of a company, then you should, first of all, get an overview of which systems are online that you can work with. To actively discover such systems on the network, you can use various nmap host discovery options. There are many options nmap provides to determine whether your target is alive or not. The most effective host discovery method is to use ICMP echo requests.
