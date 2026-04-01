@@ -946,3 +946,181 @@ Content-Type : text/html; charset=UTF-8
 ```
 
 ## LLM-Powered Recon
+
+### ChatGPT - Free Version
+
+To begin with, you can perform a prompt to query whois information about the megacopone domain:
+
+```
+whois megacorpone.com
+```
+
+You receive the following response:
+
+```
+The domain megacorpone.com was registered on January 22, 2013, and is set to expire on January 22, 2025. The registrar for this domain is Gandi SAS. (Whois)
+
+The registrant's contact information is as follows:
+
+	•	Name: Alan Grofield
+	•	Organization: MegaCorpOne
+	•	Address: 2 Old Mill St, Rachel, Nevada, 89001, United States
+	•	Phone: +1.9038836342
+	•	Email: [email protected]
+
+The domain's name servers are:
+	•	ns1.megacorpone.com
+	•	ns2.megacorpone.com
+	•	ns3.megacorpone.com
+
+The domain status is listed as "clientTransferProhibited," which means the domain is locked to prevent unauthorized transfers. (Whois)
+
+Please note that WHOIS information can change over time, and some details may be protected for privacy reasons.
+```
+
+You discovered some valuable information. You identified the name of the contact associated with the domain, as well as details about its domain name servers. The first piece of information can be used to pursue further OSINT recon and the latter to run active enumeration/footprinting.
+
+In a similar fashion, you could now emply ChatGPT to retrieve all the public information about MegaCorp One, including company structure and employee data.
+
+```
+Can you print out all the public information about company structure and employees of megacorpone?
+```
+
+In response, a wealth of organized information is returned, which includes contacts and social media handles of about every company employee.
+
+```
+MegaCorp One is a company specializing in disruptive innovation within the nanotechnology industry.  The company's headquarters are located at 2 Old Mill St, Rachel, Nevada, 89001, United States. 
+
+Company Structure and Leadership:
+	•	Chief Executive Officer (CEO): Joe Sheer
+	•	Email: joe@megacorpone.com
+	•	Twitter: @Joe_Sheer
+	•	Background: Joe Sheer has been featured in the Journal of NanoTimes, stating: "Our team is creating the building blocks of modern society, where technology and life are inseparable." 
+	•	Vice President of Legal Affairs: Mike Carlow
+	•	Email: Not publicly available
+	•	Phone: +5-********03 
+	•	Marketing Director: Matt Smith
+	•	Email: msmith@megacorpone.com
+	•	Twitter: @MattSmithMCO 
+	•	Web Designer: Tom Hudson
+	•	Email: thudson@megacorpone.com
+	•	Twitter: @TomHudsonMCO 
+	•	Senior Developer: Tanya Rivera
+	•	Email: trivera@megacorpone.com
+	•	Twitter: @TanyaRiveraMCO 
+	•	Electrical Specialist: Mutunga Muli
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	System Analyst: Soum Test
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	System Administrator: Steve Wong
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	Investments: Fred Ducasse
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	Collections: Stan Denvers
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	Employee: Johnny Five
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	Employee: Ga Rod Boss
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+	•	Employee: Alan Grofield
+	•	Email: Not publicly available
+	•	Phone: Not publicly available 
+
+Employee Count:
+	•	Total Employees: Approximately 237 
+
+...
+```
+
+You can now feed and tune your phishing strategies based on this valuable information. For instance, targeted phone calls and phishing campaigns can be set up in parallel to maximize results.
+
+Even though ChatGPT cannot directly perform Google dorks, it would still be an invaluable tool just to generate a quick setlist of readymade ones, based on your target.
+
+```
+can you provide the best 20 google dorks for megacorpone.com website tailored for a penetration test?
+```
+
+```
+...
+Basic Information Gathering
+
+	1.	site:megacorpone.com
+	2.	site:megacorpone.com -www
+(To identify subdomains.)
+
+Directory and File Discovery
+
+	3.	site:megacorpone.com intitle:"index of"
+	4.	site:megacorpone.com ext:php | ext:html | ext:asp | ext:jsp
+	5.	site:megacorpone.com filetype:pdf | filetype:doc | filetype:docx | filetype:xls | filetype:xlsx
+
+Vulnerable Pages or Parameters
+
+	6.	site:megacorpone.com inurl:"admin"
+	7.	site:megacorpone.com inurl:"login"
+	8.	site:megacorpone.com inurl:"signup"
+	9.	site:megacorpone.com inurl:"register"
+	10.	site:megacorpone.com inurl:"forgot password"
+	11.	site:megacorpone.com inurl:"upload"
+
+Configuration Files and Sensitive Data
+
+	12.	site:megacorpone.com ext:env | ext:yaml | ext:json | ext:xml
+	13.	site:megacorpone.com ext:conf | ext:ini | ext:log
+	14.	site:megacorpone.com "password" filetype:txt | filetype:csv
+
+Leaked Information
+
+	15.	site:megacorpone.com "username" "password"
+	16.	site:megacorpone.com "confidential"
+	17.	site:megacorpone.com "private"
+
+Source Code and Repositories
+
+	18.	site:megacorpone.com ext:sql | ext:db
+	19.	site:megacorpone.com "gitlab" | "github" | "bitbucket"
+	20.	site:megacorpone.com "source code"
+
+Bonus Tips
+
+	•	Combine dorks with cache: for cached versions of pages.
+	•	Use related:megacorpone.com to discover similar sites, potentially for third-party apps or vendors.
+	•	Include the site: dork with -ext:pdf to filter out irrelevant documents.
+...
+```
+
+You can also passively gather a website's technology stack via LLMs.
+
+```
+Retrieve the technology stack of the megacorpone.com website
+```
+
+The following response shows the different technologies making up the `megacorpone.com` website, each one listed along with a brief description.
+
+```
+The website megacorpone.com utilizes the following technologies:
+•	Programming Languages and Frameworks:
+	•	jQuery: A cross-platform JavaScript library designed to simplify client-side scripting.
+	•	Bootstrap: A free and open-source front-end framework for designing websites and web applications.
+	•	Font Awesome: A toolkit for adding vector icons and social logos to websites.
+	•	ECMAScript: A scripting-language specification standardized by Ecma International.
+	•	JavaScript: The programming language of HTML and the web.
+	•	HTML: The standard markup language for documents designed to be displayed in a web browser.
+•	Content Delivery Networks (CDNs):
+	•	Google Hosted Libraries: A content distribution network for the most popular, open-source JavaScript libraries.
+•	Web and Application Servers:
+	•	Apache HTTP Server: A free and open-source cross-platform web server software.
+•	Other IT Infrastructure Software:
+	•	GitHub Pages: A static site hosting service designed to host personal, organization, or project pages directly from a GitHub repository.
+
+These technologies collectively support the functionality and performance of the megacorpone.com website. 
+```
+
+When performing passive information gathering, LLMs outperform traditional tools by synthesizing unstructured data from diverse sources at scale. They provide faster aggregation, uncover subtle correlations, and reveal insights often missed by conventional methods, enabling more precise and efficient recon.
