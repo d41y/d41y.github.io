@@ -2,7 +2,7 @@
 
 ## TCP/UDP Port Scanning Theory
 
-
+...
 
 ## Host Discovery
 
@@ -61,7 +61,6 @@ d41y@htb[/htb]$ sudo nmap -sn -oA tnet -iL hosts.lst | grep for | cut -d" " -f5
 In this example, you see that only 3 of 7 hosts are active. This may mean that the other hosts ignore the default ICMP echo requests because of their firewall configuration. Since nmap does not receive a response, it marks those hosts as inactive.
 
 ### Scan Multiple IPs
-
 
 It can also happen that you only need to scan a small part of a network. An alternative to the method you used last time is to specify mulitple IP addresses.
 
