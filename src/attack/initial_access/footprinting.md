@@ -3024,3 +3024,5 @@ Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
 [*] SMBv3.0 dialect used
 ILF-SQL-01
 ```
+
+## LLM-Powered Enumeration
