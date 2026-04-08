@@ -1067,3 +1067,212 @@ Candidates.#1....: Devanique -> Darrylw
 >Can also work for other hash types than NTLMv2. See [here](https://trustedsec.com/blog/holy-shuck-weaponizing-ntlm-hashes-as-a-wordlist).
 
 
+### Cracking Misc Files & Hashes
+
+#### Tools
+
+Various tools exist to help you extract the password hashes from these files in a format that Hashcat can understand. The password cracking tool John comes with many of these tools written in C that are available when installing John or compiling it from its source code.
+
+#### Example 1 - Cracking Password Protected Microsoft Office Documents
+
+Hashcat can be used to attempt to crack password hashes extracted from some Microsoft Office documents using the [office2john.py](https://raw.githubusercontent.com/magnumripper/JohnTheRipper/bleeding-jumbo/run/office2john.py) tool.
+
+Hashcat supports the following hash modes for Microsoft Office documents:
+
+| Mode | Target |
+| ---- | ------ |
+| 9400 | MS Office 2007 |
+| 9500 | MS Office 2010 |
+| 9600 | MS Office 2013 |
+
+There are also several `$oldoffice$` hash modes for MS Office documents older than 2003. Take a Word document protected with the password `pa55word`. You can first extract the hash from the document using office2john.py.
+
+```bash
+d41y@htb[/htb]$ python office2john.py hashcat_Word_example.docx 
+
+hashcat_Word_example.docx:$office$*2013*100000*256*16*6e059661c3ed733f5730eaabb41da13a*aa38e007ee01c07e4fe95495934cf68f*2f1e2e9bf1f0b320172cd667e02ad6be1718585b6594691907b58191a6
+```
+
+You can the run the hash through Hashcat using mode 9600 and make short work of it with the rockyou.txt wordlist. This is a rather slow hash to crack and will take over 12 hours to run through the rockyou.txt wordlist on a single CPU. This will be much faster on a GPU or several GPUs but still much slower than other hashes such as MD5 and NTLM.
+
+```bash
+d41y@htb[/htb]$ hashcat -m 9600 office_hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+$office$*2013*100000*256*16*6e059661c3ed733f5730eaabb41da13a*aa38e007ee01c07e4fe95495934cf68f*2f1e2e9bf1f0b320172cd667e02ad6be1718585b6594691907b58191a6489940:pa55word
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: MS Office 2013
+Hash.Target......: $office$*2013*100000*256*16*6e059661c3ed733f5730eaa...489940
+Time.Started.....: Fri Aug 28 22:32:08 2020, (18 secs)
+Time.Estimated...: Fri Aug 28 22:32:26 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:      327 H/s (5.58ms) @ Accel:1024 Loops:32 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 6144/14344385 (0.04%)
+Rejected.........: 0/6144 (0.00%)
+Restore.Point....: 0/14344385 (0.00%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: 123456 -> iheartyou
+```
+
+#### Example 2 - Cracking Password Protected Zip Files
+
+Hashcat supports a variety of compressed file formats such as:
+
+| Mode | Target |
+| ---- | ------ |
+| 11600 | 7-Zip |
+| 13600 | WinZip |
+| 17200 | PKZIP (Compressed) |
+| 17210 | PKZIP (Uncompressed) |
+| 17220 | PKZIP (Compressed Multi-File) |
+| 17225 | PKZIP (Mixed Multi-File) |
+| 17230 | PKZIP (Compressed Multi-File Checksum-Only) |
+| 23001 | SecureZIP AES-128 |
+| 23002 | SecureZIP AES-192 |
+| 23003 | SecureZIP AES-256 |
+
+You can take any document and add it to a password protected zip file:
+
+```bash
+d41y@htb[/htb]$ zip --password zippyzippy blueprints.zip dummy.pdf 
+
+adding: dummy.pdf (deflated 7%)
+```
+
+You can the use the compiled version of [zip2john](https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/src/zip2john.c) to extract the hash in a format that can be run through Hashcat.
+
+```bash
+d41y@htb[/htb]$ zip2john ~/Desktop/HTB/Academy/Cracking\ with\ Hashcat/blueprints.zip 
+
+ver 2.0 efh 5455 efh 7875 blueprints.zip/dummy.pdf PKZIP Encr: 2b chk, TS_chk, cmplen=12324, decmplen=13264, crc=7EB29321
+blueprints.zip/dummy.pdf:$pkzip2$1*2*2*0*3024*33d0*7eb29321*0*43*8*3024*7eb2*69f2*d796[SNIP]ab11ae13299cc27f5530753820c*$/pkzip2$:dummy.pdf:blueprints.zip::/home/ben/Desktop/HTB/Academy/Cracking with Hashcat/blueprints.zip
+```
+
+You can see from that hash that this is mode 18200. To run this through Hashcat, you need the entire hash starting from `$pkzip2$1` and ending with `/pkzip2$`.
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 17200 pdf_hash_to_crack /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+$pkzip2$1*2 <FULL HASH SNIPPED> k*$/pkzip2$:zippyzippy
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: PKZIP (Compressed)
+Hash.Target......: $pkzip2$1*2*2*0*3024*33d0*7eb29321*0*43*8*3024*7eb2...kzip2$
+Time.Started.....: Fri Aug 28 22:34:46 2020, (1 sec)
+Time.Estimated...: Fri Aug 28 22:34:47 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  3665.1 kH/s (0.32ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 2500608/14344385 (17.43%)
+Rejected.........: 0/2500608 (0.00%)
+Restore.Point....: 2494464/14344385 (17.39%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: zj4usm0z -> zietz5632
+
+Started: Fri Aug 28 22:34:24 2020
+Stopped: Fri Aug 28 22:34:48 2020
+```
+
+You can now use this password to extract the contents from the zip file.
+
+#### Example 3 - Cracking Password Protected KeePass Files
+
+You can extract the hashes using the compiled version of [keepass2john](https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/src/keepass2john.c) tool or using the Python port [keepass2john.py](https://gist.githubusercontent.com/HarmJ0y/116fa1b559372804877e604d7d367bbc/raw/c0c6f45ad89310e61ec0363a69913e966fe17633/keepass2john.py).
+
+Hashcat supports the following hash names for KeePass databases, all designated by the same hash mode (`13400`):
+
+- KeePass 1 AES / without keyfile
+- KeePass 2 AES / without keyfile
+- KeePass 1 Twofish / with keyfile
+- KeePass 2 AES / with keyfile
+
+```bash
+d41y@htb[/htb]$ python keepass2john.py Master.kdbx 
+
+Master:$keepass$*2*60000*222*d14132325949a3b4efacdb2e729ec54403308c85654fe4ababccfb8ddc185d09*5c09bed9c98f8ee08aa7a71fe735b30849ec87e6cb7f1caa96d606ce9f077f7e*bd372d79d8aceea9689ad49428b8efde*28d21caedf25617db0833bd721a42c963e874e0b9fbe7fe1187a4a8ecb3b1d19*a539abd3cfd7ee5982fa28c44dd226ce05a1102d04a5f590eabf5138cd2a6403
+```
+
+Cracking the hash:
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 13400 keepass_hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+$keepass$*2*60000*222*d14132325949a3b4efacdb2e729ec54403308c85654fe4ababccfb8ddc185d09*5c09bed9c98f8ee08aa7a71fe735b30849ec87e6cb7f1caa96d606ce9f077f7e*bd372d79d8aceea9689ad49428b8efde*28d21caedf25617db0833bd721a42c963e874e0b9fbe7fe1187a4a8ecb3b1d19*a539abd3cfd7ee5982fa28c44dd226ce05a1102d04a5f590eabf5138cd2a6403:1qazzaq1
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: KeePass 1 (AES/Twofish) and KeePass 2 (AES)
+Hash.Target......: $keepass$*2*60000*222*d14132325949a3b4efacdb2e729ec...2a6403
+Time.Started.....: Fri Aug 28 22:37:08 2020, (2 mins, 12 secs)
+Time.Estimated...: Fri Aug 28 22:39:20 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:      430 H/s (3.75ms) @ Accel:256 Loops:64 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 56832/14344385 (0.40%)
+Rejected.........: 0/56832 (0.00%)
+Restore.Point....: 55296/14344385 (0.39%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:59968-60000
+Candidates.#1....: gonoles -> jacoblee
+```
+
+#### Example 4 - Cracking Protected PDF Files
+
+You can extract the hash of the passphrase using [pdf2john.py](https://raw.githubusercontent.com/truongkma/ctf-tools/master/John/run/pdf2john.py).
+
+```bash
+d41y@htb[/htb]$ python pdf2john.py inventory.pdf | awk -F":" '{ print $2}'
+
+$pdf$4*4*128*-1028*1*16*f7d77b3d22b9f92829d49ff5d78b8f28*32*d33f35f776215527d65155f79d9ed79800000000000000000000000000000000*32*6cfb859c107acaae8c0ca9ceec56fd91ff75fe7b1cddb03f629ca3583f59e52f
+```
+
+Hashcat supports a variety of compressed file formats such as:
+
+| Mode | Target |
+| ---- | ------ |
+| 10400 | PDF 1.1 - 1.3 (Acrobat 2-4) |
+| 10410 | PDF 1.1 - 1.3 (Acrobat 2-4), collider #1 |
+| 10420 | PDF 1.1 - 1.3 (Acrobat 2-4), collider #2 |
+| 10500 | PDF 1.4 - 1.6 (Acrobat 5-8) |
+| 10600 | PDF 1.7 Level 3 (Acrobat 9) |
+| 10700 | PDF 1.7 Level 8 (Acrobat 10-11) |
+
+```bash
+d41y@htb[/htb]$ hashcat -a 0 -m 10500 pdf_hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt
+
+hashcat (v6.1.1) starting...
+<SNIP>
+
+$pdf$4*4*128*-1028*1*16*f7d77b3d22b9f92829d49ff5d78b8f28*32*d33f35f776215527d65155f79d9ed79800000000000000000000000000000000*32*6cfb859c107acaae8c0ca9ceec56fd91ff75fe7b1cddb03f629ca3583f59e52f:puppydog1
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Name........: PDF 1.4 - 1.6 (Acrobat 5 - 8)
+Hash.Target......: $pdf$4*4*128*-1028*1*16*f7d77b3d22b9f92829d49ff5d78...59e52f
+Time.Started.....: Fri Aug 28 22:41:07 2020, (0 secs)
+Time.Estimated...: Fri Aug 28 22:41:07 2020, (0 secs)
+Guess.Base.......: File (/opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:   244.2 kH/s (20.86ms) @ Accel:128 Loops:8 Thr:64 Vec:8
+Recovered........: 1/1 (100.00%) Digests
+Progress.........: 49153/14344385 (0.34%)
+Rejected.........: 1/49153 (0.00%)
+Restore.Point....: 0/14344385 (0.00%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:64-70
+Candidates.#1....: 123456 -> truckin
+```
+
