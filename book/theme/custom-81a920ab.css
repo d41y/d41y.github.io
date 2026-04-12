@@ -1,8 +1,0 @@
-.page-wrapper .page {
-    max-width: 95% !important; /* Uses most of the screen */
-}
-
-.content main {
-    max-width: 1400px; /* Limits it just enough so lines aren't miles long */
-    margin: 0 auto;
-}

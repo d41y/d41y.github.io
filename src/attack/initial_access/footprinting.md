@@ -1257,7 +1257,7 @@ DNS is mainly unencrypted. Devices on the local WLAN and internet providers can 
 
 However, the DNS does not only link computer names and IP addresses. It also stores and outputs additional information about the services associated with a domain. A DNS query can therefore also be used, for example, to determine which computer serves as the e-mail server for the domain in question or what the domain's name servers are called.
 
-#### Enum
+#### Enum - dig
 
 The footprinting at DNS servers is done as a result of the requests you send. So, first of all, the DNS server can be queried as to which other name servers are known. You do this using the NS record and the specification of the DNS server you want to query using ```@```. This is because if there are other DNS servers, you can also use them and query the records. However, other DNS servers may be configured differently, in addition, may be permanent for other zones.
 
@@ -1418,6 +1418,233 @@ d41y@htb[/htb]$ for sub in $(cat /opt/useful/seclists/Discovery/DNS/subdomains-t
 ns.inlanefreight.htb.   604800  IN      A       10.129.34.136
 mail1.inlanefreight.htb. 604800 IN      A       10.129.18.201
 app.inlanefreight.htb.  604800  IN      A       10.129.18.15
+```
+
+#### Enum - host
+
+##### host
+
+Finding an IP address:
+
+```bash
+kali@kali:~$ host www.megacorpone.com
+www.megacorpone.com has address 149.56.244.87
+```
+
+##### host -t \[RECORD TYPE\]
+
+By default, the host command searches for an A record, but you can also query other fields, such as MX or TXT records, by specifying the record type in your query using the `-t` option.
+
+```bash
+kali@kali:~$ host -t mx megacorpone.com
+megacorpone.com mail is handled by 10 fb.mail.gandi.net.
+megacorpone.com mail is handled by 20 spool.mail.gandi.net.
+megacorpone.com mail is handled by 50 mail.megacorpone.com.
+megacorpone.com mail is handled by 60 mail2.megacorpone.com.
+```
+
+In thise case, you first fetched only MX records, which returned four different mail server records. Each server has a different priority (_10, 20, 50, 60_) and the server with the lowest priority number will be used first to forward mail addressed to the `megacorpone.com` domain.
+
+To retrieve TXT records:
+
+```bash
+kali@kali:~$ host -t txt megacorpone.com
+megacorpone.com descriptive text "Try Harder"
+megacorpone.com descriptive text "google-site-verification=U7B_b0HNeBtY4qYGQZNsEYXfCJ32hMNV3GtC0wWq5pA"
+```
+
+##### host - Brute-Forcing
+
+To discover more hostnames and IP addresses belonging to the same domain, try to understand the difference in query responses when querying a non-existent hostname.
+
+```bash
+kali@kali:~$ host idontexist.megacorpone.com
+Host idontexist.megacorpone.com not found: 3(NXDOMAIN)
+```
+
+An error `NXDOMAIN` is returned - indicating a public DNS record does not exist for that hostname. Since you now understand how to search for valid hostnames, you can automate your efforts to brute-force DNS hostnames.
+
+```bash
+kali@kali:~$ cat list.txt
+www
+ftp
+mail
+owa
+proxy
+router
+
+kali@kali:~$ for ip in $(cat list.txt); do host $ip.megacorpone.com; done
+www.megacorpone.com has address 149.56.244.87
+Host ftp.megacorpone.com not found: 3(NXDOMAIN)
+mail.megacorpone.com has address 167.114.21.68
+Host owa.megacorpone.com not found: 3(NXDOMAIN)
+Host proxy.megacorpone.com not found: 3(NXDOMAIN)
+router.megacorpone.com has address 167.114.21.70
+```
+
+Your brute force enum revealed a set of scattered IP addresses in the same approximate range (_167.114.21.X_). If the DNS admin configured PTR records for the domain, you could scan the approximate range with reverse lookups to request the hostname for each IP.
+
+```bash
+kali@kali:~$ for ip in $(seq 64 79); do host 167.114.21.$ip; done | grep -Ev "not found|timed out"
+64.21.114.167.in-addr.arpa domain name pointer admin.megacorpone.com.
+65.21.114.167.in-addr.arpa domain name pointer beta.megacorpone.com.
+66.21.114.167.in-addr.arpa domain name pointer fs1.megacorpone.com.
+67.21.114.167.in-addr.arpa domain name pointer intranet.megacorpone.com.
+68.21.114.167.in-addr.arpa domain name pointer mail.megacorpone.com.
+69.21.114.167.in-addr.arpa domain name pointer mail2.megacorpone.com.
+70.21.114.167.in-addr.arpa domain name pointer router.megacorpone.com.
+71.21.114.167.in-addr.arpa domain name pointer siem.megacorpone.com.
+72.21.114.167.in-addr.arpa domain name pointer snmp.megacorpone.com.
+73.21.114.167.in-addr.arpa domain name pointer syslog.megacorpone.com.
+74.21.114.167.in-addr.arpa domain name pointer support.megacorpone.com.
+75.21.114.167.in-addr.arpa domain name pointer test.megacorpone.com.
+76.21.114.167.in-addr.arpa domain name pointer vpn.megacorpone.com.
+77.21.114.167.in-addr.arpa domain name pointer vpn2.megacorpone.com.
+78.21.114.167.in-addr.arpa domain name pointer vpndev.megacorpone.com.
+79.21.114.167.in-addr.arpa domain name pointer vpnprod.megacorpone.com.
+```
+
+#### Enum - [DNSRecon](https://github.com/darkoperator/dnsrecon)
+
+DNSRecon is an advanced DNS enumeration script written in Python. `-d` specifies the domain, `-t` specifies the type of enumeration (_`std` is a standard scan_).
+
+```bash
+kali@kali:~$ dnsrecon -d megacorpone.com -t std
+2025-11-05T09:29:45.290363-0800 INFO Starting enumeration for domain: megacorpone.com
+2025-11-05T09:29:45.290668-0800 INFO std: Performing General Enumeration against: megacorpone.com...
+2025-11-05T09:29:45.519861-0800 ERROR No answer for DNSSEC query for megacorpone.com
+2025-11-05T09:29:45.882832-0800 INFO     SOA ns1.megacorpone.com 51.79.37.18
+2025-11-05T09:29:46.741122-0800 INFO     NS ns1.megacorpone.com 51.79.37.18
+2025-11-05T09:29:46.955101-0800 INFO     Bind Version for 51.79.37.18 "9.18.24-1-Debian"
+2025-11-05T09:29:46.955579-0800 INFO     NS ns3.megacorpone.com 66.70.207.180
+2025-11-05T09:29:47.159697-0800 INFO     Bind Version for 66.70.207.180 "9.18.24-1-Debian"
+2025-11-05T09:29:47.160241-0800 INFO     NS ns2.megacorpone.com 51.222.39.63
+2025-11-05T09:29:47.360733-0800 INFO     Bind Version for 51.222.39.63 "9.18.24-1-Debian"
+2025-11-05T09:29:48.214191-0800 INFO     MX mail.megacorpone.com 167.114.21.68
+2025-11-05T09:29:48.214759-0800 INFO     MX spool.mail.gandi.net 217.70.178.1
+2025-11-05T09:29:48.214859-0800 INFO     MX mail2.megacorpone.com 167.114.21.69
+2025-11-05T09:29:48.214928-0800 INFO     MX fb.mail.gandi.net 217.70.178.217
+2025-11-05T09:29:48.214989-0800 INFO     MX fb.mail.gandi.net 217.70.178.215
+2025-11-05T09:29:48.215132-0800 INFO     MX fb.mail.gandi.net 217.70.178.216
+2025-11-05T09:29:48.215216-0800 INFO     MX spool.mail.gandi.net 2001:4b98:e00::1
+2025-11-05T09:29:48.215285-0800 INFO     MX fb.mail.gandi.net 2001:4b98:dc4:8::216
+2025-11-05T09:29:48.215358-0800 INFO     MX fb.mail.gandi.net 2001:4b98:dc4:8::215
+2025-11-05T09:29:48.215454-0800 INFO     MX fb.mail.gandi.net 2001:4b98:dc4:8::217
+2025-11-05T09:29:48.435467-0800 INFO     A megacorpone.com 149.56.244.87
+2025-11-05T09:29:48.790016-0800 INFO     TXT megacorpone.com google-site-verification=U7B_b0HNeBtY4qYGQZNsEYXfCJ32hMNV3GtC0wWq5pA
+2025-11-05T09:29:48.790608-0800 INFO     TXT megacorpone.com Try Harder
+2025-11-05T09:29:49.037780-0800 INFO Enumerating SRV Records
+2025-11-05T09:29:50.050759-0800 ERROR No SRV Records Found for megacorpone.com
+2025-11-05T09:29:50.051673-0800 INFO Completed enumeration for domain: megacorpone.com
+```
+
+Based on the output above you have managed to perform a successful DNS scan on the main record types against the `megacorpone.com` domain.
+
+To perform a brute force attempt, you will use the `-D` to specify a file name containing potential subdomain strings, and the `brt` type of enumeration to perform.
+
+```bash
+kali@kali:~$ dnsrecon -d megacorpone.com -D ~/list.txt -t brt
+2025-11-05T09:31:17.105002-0800 INFO Using the dictionary file: /home/kali/list.txt (provided by user)
+2025-11-05T09:31:17.105225-0800 INFO Starting enumeration for domain: megacorpone.com
+2025-11-05T09:31:17.105415-0800 INFO brt: Performing host and subdomain brute force against megacorpone.com...
+2025-11-05T09:31:17.472625-0800 INFO     A router.megacorpone.com 167.114.21.70
+2025-11-05T09:31:17.473573-0800 INFO     A www.megacorpone.com 149.56.244.87
+2025-11-05T09:31:17.518546-0800 INFO     A mail.megacorpone.com 167.114.21.68
+2025-11-05T09:31:17.519863-0800 INFO 3 Records Found
+2025-11-05T09:31:17.520273-0800 INFO Completed enumeration for domain: megacorpone.com
+```
+
+#### Enum - [DNSEnum](https://www.kali.org/tools/dnsenum/)
+
+DNSEnum is another popular DNS enumeration tool that can be used to further automate DNS enum. Only passing the target domain parameter:
+
+```bash
+kali@kali:~$ dnsenum megacorpone.com
+dnsenum VERSION:1.3.1
+
+-----   megacorpone.com   -----
+
+Host's addresses:
+__________________
+
+megacorpone.com.                         300      IN    A        149.56.244.87                                
+...
+
+Trying Zone Transfers and getting Bind Versions:
+_________________________________________________
+
+...
+megacorpone.com.                         300      IN    NS       ns1.megacorpone.com.
+megacorpone.com.                         300      IN    NS       ns2.megacorpone.com.
+megacorpone.com.                         300      IN    NS       ns3.megacorpone.com.
+admin.megacorpone.com.                   300      IN    A        167.114.21.64
+ai.megacorpone.com.                      300      IN    A        149.56.244.87
+beta.megacorpone.com.                    300      IN    A        167.114.21.65
+fs1.megacorpone.com.                     300      IN    A        167.114.21.66
+intranet.megacorpone.com.                300      IN    A        167.114.21.67
+mail.megacorpone.com.                    300      IN    A        167.114.21.68
+mail2.megacorpone.com.                   300      IN    A        167.114.21.69
+ns1.megacorpone.com.                     300      IN    A        51.79.37.18
+ns2.megacorpone.com.                     300      IN    A        51.222.39.63
+ns3.megacorpone.com.                     300      IN    A        66.70.207.180
+router.megacorpone.com.                  300      IN    A        167.114.21.70
+siem.megacorpone.com.                    300      IN    A        167.114.21.71
+snmp.megacorpone.com.                    300      IN    A        167.114.21.72
+support.megacorpone.com.                 300      IN    A        167.114.21.74
+syslog.megacorpone.com.                  300      IN    A        167.114.21.73
+test.megacorpone.com.                    300      IN    A        167.114.21.75
+vpn.megacorpone.com.                     300      IN    A        167.114.21.76
+vpn2.megacorpone.com.                    300      IN    A        167.114.21.77
+vpndev.megacorpone.com.                  300      IN    A        167.114.21.78
+vpnprod.megacorpone.com.                 300      IN    A        167.114.21.79
+www.megacorpone.com.                     300      IN    A        149.56.244.87
+www2.megacorpone.com.                    300      IN    A        149.56.244.87
+
+          
+megacorpone.com class C netranges:
+___________________________________
+
+ 51.79.37.0/24
+ 51.222.39.0/24
+ 66.70.207.0/24
+ 149.56.244.0/24
+ 167.114.21.0/24
+...
+```
+
+You have discovered several previously-unknown hosts as the result of your extensive DNS enumeration. This set of hostnames can now be used for service enumeration, port scanning, or validating exposure.
+
+#### Enum - From Windows Perspective
+
+`nslookup` is a great utility for Windows DNS enumeration and commonly used during LOTL scenarios.
+
+Once connected to a Windows 11 client, you can open a command prompt window and run a simple query to resolve the `A` record for the `mail.megacorpone.com` host.
+
+```
+C:\Users\student>nslookup mail.megacorptwo.com
+DNS request timed out.
+    timeout was 2 seconds.
+Server:  UnKnown
+Address:  192.168.50.151
+
+Name:    mail.megacorptwo.com
+Address:  192.168.50.154
+```
+
+This confirms the DNS resolution succeeded and shows the domain's IP.
+
+The output above shows you queried the default DNS server (_192.168.50.151_) to resolve the IP address of `mail.megacorpone.com`, which the DNS server then answered with `192.168.50.154`.
+
+Similarly to the Linux host command, nslookup can perform more granular queries. For instance, you can query a given DNS about a TXT record that belongs to a specific host.
+
+```
+C:\Users\student>nslookup -type=TXT info.megacorptwo.com 192.168.50.151
+Server:  UnKnown
+Address:  192.168.50.151
+
+info.megacorptwo.com    text =
+
+        "greetings from the TXT record body"
 ```
 
 ### Simple Mail Transfer Protocol (_SMTP_)
@@ -3024,3 +3251,5 @@ Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
 [*] SMBv3.0 dialect used
 ILF-SQL-01
 ```
+
+## LLM-Powered Enumeration
