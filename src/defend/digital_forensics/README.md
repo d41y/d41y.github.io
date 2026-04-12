@@ -8,3 +8,4 @@
 - [Log Forensics](log_forensics/)
 - [Memory Forensics]()
 - [Network Forensics](network_forensics/)
+- [OS Forensics](os_forensics/)
