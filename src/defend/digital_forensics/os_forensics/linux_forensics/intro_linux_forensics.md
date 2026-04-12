@@ -239,3 +239,5 @@ Tools like `chconfig` or `update-rc.d` can be used to manage services and their 
 #### User Session Startup Scripts
 
 In some cases, you may want to execute scripts or programs at the start of a user session. You can achieve this by adding commands to the appropriate shell startup files, such as `~/.xprofile`, or by using the desktop environment's session manager.
+
+## Forensics Arsenal
