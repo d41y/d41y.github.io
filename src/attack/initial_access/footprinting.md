@@ -2134,6 +2134,8 @@ Community strings can be seen as passwords that are used to determine whether th
 > 
 > `1.3.6.1.4.1` : vendor-specific
 > `1.3.6.1.2.1` : standard MIB
+> 
+> Further read: [here](https://www.luleey.com/common-oids-of-snmp/?srsltid=AfmBOope8OovlS_WKg4bLwQuSL2uc8Yj-IXnzMHRXRoD9BARQn_-KHfv)
 
 #### Enum
 
