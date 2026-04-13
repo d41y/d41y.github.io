@@ -634,7 +634,7 @@ With version 3, the Samba server gained the ability to be a full member of an AD
 You know that Samba is suitable for both Linux and Windows systems. In a network, each host participates in the same workgroup. A workgroup is a group name that identifies an arbitrary collection of computers and their resources on an SMB network. There can be multiple workgroups on the network at any given time. IBM developed an application programming interface (_API_) for networking computers called the Network Basic Input/Ouput System (_NetBIOS_). The NetBIOS API provided a blueprint for an application to connect and share data with other computers. In a NetBIOS environment, when a machine goes online, it needs a name, which is done through the so-called name registration procedure. Either each host reserves its hostname on the network, or the NetBIOS Name Server (_NBNS_) is used for this purpose. It has also been enhanced to Windows Internet Name Service (_WINS_).
 
 > [!TIP]
-> ```smbclient``` allows to execute local system commands using an exclamation mark at the beginning (```!<cmd>```) without interrupting the connection.
+> ```smbclient``` allows to execute local system commands using an exclamation mark at the beginning (`!<cmd>`) without interrupting the connection.
 
 #### Enum
 
@@ -680,15 +680,15 @@ rpcclient $>
 
 All functions can be found [here](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html). Some are listed below:
 
-| Query | Description |
-| ----- | ----------- |
-| ```srvinfo``` | server information |
-| ```enumdomains``` | enumerate all domains that are deployed in the network |
-| ```querydominfo``` | provides domain, server, and user information of deployed domains |
-| ```netshareenumall``` | enumerates all available shares |
-| ```netsharegetinfo <share>``` | provides information about a specific share |
-| ```enumdomusers``` | enumerates all domain users |
-| ```queryuser <RID>``` | provides information about a specific user |
+| Query                         | Description                                                       |
+| ----------------------------- | ----------------------------------------------------------------- |
+| ```srvinfo```                 | server information                                                |
+| ```enumdomains```             | enumerate all domains that are deployed in the network            |
+| ```querydominfo```            | provides domain, server, and user information of deployed domains |
+| ```netshareenumall```         | enumerates all available shares                                   |
+| ```netsharegetinfo <share>``` | provides information about a specific share                       |
+| ```enumdomusers```            | enumerates all domain users                                       |
+| ```queryuser <RID>```         | provides information about a specific user                        |
 
 ```bash
 rpcclient $> srvinfo
@@ -1136,6 +1136,49 @@ domain_logoff_information:
 [+] No printers returned (this is not an error)
 
 Completed after 0.61 seconds
+```
+
+### NetBIOS
+
+#### Intro
+
+NetBIOS uses multiple ports: UDP 137 (_name service_), UDP 138 (_datagram service_), and TCP 139 (_session service_). It should be noted that SMB and NetBIOS are two separate protocols. NetBIOS is an independent session layer protocol that allows computers on a local network to communicate with each other.
+
+While modern implementations of SMB can operate without NetBIOS, NetBIOS over TCP/IP (_NBT_) is used for backward compatibility with older systems and is often enabled alongside SMB. As a result, enumeration of these two services is commonly performed together.
+
+Systems exposing TCP port 139 often indicate legacy configurations and may provide additional enumeration opportunities compared to SMB over TCP 445 alone.
+
+#### Enum
+
+These services can be scanned with tools like nmap, using syntax such as the following:
+
+```bash
+kali@kali:~$ nmap -v -p 139,445 -oG smb.txt 192.168.50.1-254
+
+kali@kali:~$ cat smb.txt
+# Nmap 7.92 scan initiated Thu Mar 17 06:03:12 2022 as: nmap -v -p 139,445 -oG smb.txt 192.168.50.1-254
+# Ports scanned: TCP(2;139,445) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+Host: 192.168.50.1 ()	Status: Down
+...
+Host: 192.168.50.21 ()	Status: Up
+Host: 192.168.50.21 ()	Ports: 139/closed/tcp//netbios-ssn///, 445/closed/tcp//microsoft-ds///
+...
+Host: 192.168.50.217 ()	Status: Up
+Host: 192.168.50.217 ()	Ports: 139/closed/tcp//netbios-ssn///, 445/closed/tcp//microsoft-ds///
+# Nmap done at Thu Mar 17 06:03:18 2022 -- 254 IP addresses (15 hosts up) scanned in 6.17 seconds
+```
+
+There are more specialized tools for specifically identifying NetBIOS information, such as `nbtscan`. You can use this to query the NetBIOS name service for valid NetBIOS names, specifying the originating UDP port as 138 with the `-r` option.
+
+```bash
+kali@kali:~$ sudo nbtscan -r 192.168.50.0/24
+Doing NBT name scan for addresses from 192.168.50.0/24
+
+IP address       NetBIOS Name     Server    User             MAC address
+------------------------------------------------------------------------------
+192.168.50.124   SAMBA            <server>  SAMBA            00:00:00:00:00:00
+192.168.50.134   SAMBAWEB         <server>  SAMBAWEB         00:00:00:00:00:00
+...
 ```
 
 ### Network File System (_NFS_)
