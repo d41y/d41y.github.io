@@ -2112,7 +2112,7 @@ In addition to the pure exchange of information, SNMP also transmits control com
 
 For the SNMP client and server to exchange the respective values, the available SNMP objects must have unique addresses known on both sides. This addressing mechanism is an absolute prerequisite for successfully transmitting data and network monitoring using SNMP.
 
-To ensure that SNMP access works across manufacturers and with different client-server combinations, the Management Information Base (_MIB_) was created. MIB is an independent format for storing device information. A MIB is a text file in which all queryable SNMP objects are listed in a standardized tree hierarchy. It contains at least one object identifier (_OID_), which, in addition to the necessary unique address and a name, also provides information about the type, access rights, and a description of the respective object. MIB files are written in the Abstract Syntax Notation One (_ASN.1_) based ASCII text format. The MIBs do not contain data, but they explain where to find which information and what it looks like, which returns values for the specific OID, or which data type is used.
+To ensure that SNMP access works across manufacturers and with different client-server combinations, the [Management Information Base (_MIB_)](https://www.ibm.com/docs/en/aix/7.1.0?topic=management-information-base) was created. MIB is an independent format for storing device information. A MIB is a text file in which all queryable SNMP objects are listed in a standardized tree hierarchy. It contains at least one object identifier (_OID_), which, in addition to the necessary unique address and a name, also provides information about the type, access rights, and a description of the respective object. MIB files are written in the Abstract Syntax Notation One (_ASN.1_) based ASCII text format. The MIBs do not contain data, but they explain where to find which information and what it looks like, which returns values for the specific OID, or which data type is used.
 
 An OID represents a node in a hierarchical namespace. A sequence of numbers uniquely identifies each node, allowing the node's position in the tree to be determined. The longer the chain, the more specific the information. Many nodes in the OID tree contain nothing except references to those below them. The OIDs consist of integers and are usually concatenated by dot notation.
 
@@ -2123,6 +2123,17 @@ SNMPv2 existed in different versions. The version still exists today is v2c, and
 The security has been increased enormously for SNMPv3 by security features such as authentication using username and password and transmission encryption of the data. However, the complexity also increases to the same extent, with significantly more configuration options than v2c.
 
 Community strings can be seen as passwords that are used to determine whether the requested information can be viewed or not. It is important to note that many organizations are still using SNMPv2, as the transition to SNMPv3 can be very complex, but the services still need to remain active. This causes many administrators a great deal of concern and creates some problems they are keen to avoid. The lack of knowledge about how the information can be obtained and how you as attackers use it makes the administrator's approach seem inexplicable. At the same time, the lack of encryption of the data sent is also a problem. Because every time the community strings are sent over the network, they can be intercepted and read.
+
+> [!INFO]
+> Some interesting MIB sub-trees for targets:
+> 
+> **Users (_Windows_)** : `1.3.6.1.4.1.77.1.2.25`
+> **Currently-running processes** : `1.3.6.1.2.1.25.4.2.1.2`
+> **Installed software** : `1.3.6.1.2.1.25.6.3.1.2`
+> **Current TCP listening ports** : `1.3.6.1.2.1.6.13.1.3`
+> 
+> `1.3.6.1.4.1` : vendor-specific
+> `1.3.6.1.2.1` : standard MIB
 
 #### Enum
 
@@ -2202,6 +2213,24 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 ```
 
 Once you know the community string and the SNMP service that does not require authentication, you can query internal system information like in the previous example.
+
+Also takes a specific MIB sub-trees as an argument:
+
+```bash
+kali@kali:~$ snmpwalk -c public -v1 192.168.50.151 1.3.6.1.2.1.6.13.1.3
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.88.0.0.0.0.0 = INTEGER: 88
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.135.0.0.0.0.0 = INTEGER: 135
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.389.0.0.0.0.0 = INTEGER: 389
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.445.0.0.0.0.0 = INTEGER: 445
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.464.0.0.0.0.0 = INTEGER: 464
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.593.0.0.0.0.0 = INTEGER: 593
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.636.0.0.0.0.0 = INTEGER: 636
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.3268.0.0.0.0.0 = INTEGER: 3268
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.3269.0.0.0.0.0 = INTEGER: 3269
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.5357.0.0.0.0.0 = INTEGER: 5357
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.5985.0.0.0.0.0 = INTEGER: 5985
+...
+```
 
 ##### OneSixtyOne
 
