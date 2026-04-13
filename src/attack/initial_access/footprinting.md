@@ -383,6 +383,51 @@ Furthermore, showing projects can, of course, be of great advantage to make new 
 
 ## Host-Based Enumeration
 
+### Port Scanning
+
+... is the process of inspecting TCP or UDP ports on a remote machine with the intention of detecting what services are running on the target and what potential attack vectors may exist.
+
+#### TCP/UDP Theory
+
+Netcat is not a port scanner, but it can be used as such in a rudimentary way to showcase how a typical port scanner works.
+
+##### TCP
+
+The simplest TCP port scanning method, usually called CONNECT scanning, relies on the [three-way TCP handshake](http://support.microsoft.com/kb/172983) mechanism. This mechanism is designed so that two hosts attempting to communicate can negotiate the parameters of the network TCP socket connection before transmitting any data.
+
+In basic terms, a host sends a TCP SYN packet to a server on a destination port. If the destination port is open, the server responds with a SYN-ACK packet and the client host sends an ACK packet to complete the handshake. If the handshake completes successfully, the port is considered open.
+
+```bash
+kali@kali:~$ nc -nvv -w 1 -z 192.168.50.152 3388-3390
+(UNKNOWN) [192.168.50.152] 3390 (?) : Connection refused
+(UNKNOWN) [192.168.50.152] 3389 (ms-wbt-server) open
+(UNKNOWN) [192.168.50.152] 3388 (?) : Connection refused
+ sent 0, rcvd 0
+```
+
+![footprinting offsec 1](../../images/footprinting_offsec1.png)
+
+Netcat sent several TCP SYN packets to port 3390, 3389, and 3388 on packets 1, 3, and 7, respectively. Due to a variety of factors, including timing issues, the packets may appear out of order in Wireshark. You observe that the server sent a TCP SYN-ACK packet from port 3389 on packet 4, indicating that the port is open. The other ports did not reply with a similar SYN-ACK packet, and actively rejected the connection attempt via an RST-ACK packet. Finally, on packet 6, Netcat closed this connection by sending a FIN-ACK packet.
+
+##### UDP
+
+Since UDP is stateless and does not involve a three-way-handshake, the mechanism behind UDP port scanning is different from TCP.
+
+```bash
+kali@kali:~$ nc -nv -u -z -w 1 192.168.50.149 120-123
+(UNKNOWN) [192.168.50.149] 123 (ntp) open
+```
+
+![footprinting offsec 2](../../images/footprinting_offsec2.png)
+
+An empty UDP packet is sent to a specific port. If the destination UDP port is open, the packet will be passed to the application layer. The response received will depend on how the application is programmed to respond to empty packets. In this exampl, the application sends no response. However, if the destination port is closed, the target should respond with an ICMP port unreachable (_packets 5, 7, and 9_), sent by the UDP/IP stack of the target machine.
+
+Most UDP scanners tend to use the standard "ICMP port unreachable" message to infer the status of a target port. However, this method can be completely unreliable when the target port is filtered by a firewall. In fact, in these cases, the scanner will report the target port as open because of the absence of the ICMP message.
+
+#### Nmap
+
+Look at [nmap](/src/attack/tools/nmap.md)
+
 ### File Transfer Protocol (_FTP_)
 
 #### Intro
