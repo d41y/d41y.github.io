@@ -424,6 +424,37 @@ An empty UDP packet is sent to a specific port. If the destination UDP port is o
 
 Most UDP scanners tend to use the standard "ICMP port unreachable" message to infer the status of a target port. However, this method can be completely unreliable when the target port is filtered by a firewall. In fact, in these cases, the scanner will report the target port as open because of the absence of the ICMP message.
 
+#### Windows LOTL
+
+If you are conducting initial network enumeration from a Windows laptop with no internet access, you are prevented from installing any extra tools that might help you, like the Windows nmap version. In such a limited scenario, you are forced to pursue the 'living of the land' strategy.
+
+The `Test-NetConnection` function checks if an IP responds to ICMP and whether a specified TCP port on the target host is open.
+
+For instance, from the Windows 11 client, you can verify if the SMB port 445 is open on a DC, as follows:
+
+```powershell
+PS C:\Users\student> Test-NetConnection -Port 445 192.168.50.151
+
+ComputerName     : 192.168.50.151
+RemoteAddress    : 192.168.50.151
+RemotePort       : 445
+InterfaceAlias   : Ethernet0
+SourceAddress    : 192.168.50.152
+TcpTestSucceeded : True
+```
+
+The returned value in the `TcpTestSucceeded` parameter indicates that port 445 is open.
+
+You can further script the whole process to scan the first 1024 ports on the DC with the PowerShell one-liner shown below. To do so, you need to instantiate a TcpClient Socket object as Test-NetConnection to send additional traffic that is not needed for your purpose.
+
+```powershell
+PS C:\Users\student> 1..1024 | % {echo ((New-Object Net.Sockets.TcpClient).Connect("192.168.50.151", $_)) "TCP port $_ is open"} 2>$null
+TCP port 88 is open
+...
+```
+
+You start by piping the first 1024 integer into a for-loop, which assigns the incremental integer value to the `$_` variable. Then, you create a Net.Sockets.TcpClient object and perform a TCP connection against the target IP on that specified port, and if the connection is successful, it prompts a log message that includes the open TCP port.
+
 #### Nmap
 
 Look at [nmap](/src/attack/tools/nmap.md)
