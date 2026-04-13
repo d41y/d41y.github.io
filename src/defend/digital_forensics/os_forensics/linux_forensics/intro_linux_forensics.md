@@ -241,3 +241,199 @@ Tools like `chconfig` or `update-rc.d` can be used to manage services and their 
 In some cases, you may want to execute scripts or programs at the start of a user session. You can achieve this by adding commands to the appropriate shell startup files, such as `~/.xprofile`, or by using the desktop environment's session manager.
 
 ## Forensics Arsenal
+
+### Linux Logging
+
+There are several notable mechanisms of logging in Linux:
+
+- **Syslog**: Syslog is a standard logging protocol used to collect and send log messages within a network. Linux systems often use syslog to store log data in various log files, typically located in the `/var/log` directory. Common log files include `/var/log/messages`, `/var/log/auth.log`, and `/var/log/syslog`. These logs can provide valuable information about system and application activities, such as failed login attempts or service startups.
+- **Systemd Journal**: Systemd, a common init system on many Linux distros, uses the systemd journal for logging. Journalctl is the command-line tool for querying and examining these logs. The journal provides structured and more comprehensive information compared to traditional flat text log files, including metadata like timestamps, process IDs, and severity levels.
+- **Auditd**: The Linux Audit framework allows for detailed monitoring of system activities, including file access, process creation, and user authentication. Auditd is the user-space component, and it logs its data to `/var/log/audit/audit.log`. This is a powerful tool for tracking changes and potential security incidents, often used in compliance-heavy environments.
+- **SysmonForLinux**: This is a tool that monitors and logs system activity, including processes, network connections and file system writes to what Sysmon for Windows does. SysfmonForLinux logs events into `/var/log/syslog` using XML format. It's particularly useful for endpoint detection and response (_EDR_) scenarios.
+
+#### Syslog
+
+The traditional logging system on Unix and Unix-like OS, such as Linux, is syslog. Syslog enables the separation of software that generates log messages from the systems that store, process, or forward those messages. In Linux, Syslog is implemented through daemons like syslogd, rsyslog, or syslog-ng, which handle the collection and management of logs. It's essentially a way for the system to record events, errors, and other important information in a structured manner. While traditional Syslog refers to the protocol defined in [RFC 5424](https://datatracker.ietf.org/doc/html/rfc5424), in Linux contexts, it often encompasses the entire logging ecosystem, including the daemon and configuration files. Note that modern Linux distros may integrate or replace parts of Syslog with tools like Systemd Journal, but Syslog remains widely used for compatibility and flexibility.
+
+Syslog operates by having applications, services, or the kernel generate log messages that are sent to daemon like rsyslog or syslog-ng via local sockets, the logger command, or network protocols. These messages follow a standardized format including a priority code, a header with timestamp and hostname, and the actual content. The daemon processes incoming messages according to rules defined in configuration files, where selectors match facility.priority patterns to actions like writing to specific log files in `/var/log`, forwarding to another server for centralized logging, discarding, or piping to external programs. Logs are stored persistently, with tools like logrotate handling rotation and compression to manage disk space, ensuring efficient, categorized recording of system events for troubleshooting, monitoring, and auditing while supporting both local and networked environments.
+
+Syslog is typically implemented as a daemon that listens for log messages from multiple sources, such as packets arriving over network sockets, local named pipes, or syslog library calls.
+
+Here's a breakdown of key components:
+
+|Component|Description|
+|---|---|
+|Log originator|Programs with syslog support kernel messages|
+|Config files location|`/etc/rsyslogd.conf /etc/rsyslogd.d/conf /etc/syslog-ng/`|
+|Daemon|`/usr/sbin/rsyslogd` (Service started by systemd)|
+|Network log host|UDP port 514 (Configured with @host)|
+|Local logfiles|`/var/log/*` (By facility and severity)|
+
+For example, to view recent syslog entries on a Debian-based system:
+
+```bash
+d41y@htb[/htb]$ tail -n 10 /var/log/syslog
+
+Feb 26 15:45:01 ubuntu CRON[12345]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 26 15:46:12 ubuntu systemd[1]: Started Time & Date Service.
+Feb 26 15:47:23 ubuntu kernel: [ 1234.567890] eth0: link up
+Feb 26 15:48:34 ubuntu sshd[67890]: Accepted publickey for john from 10.10.16.14 port 22 ssh2
+Feb 26 15:49:45 ubuntu sudo: john : TTY=pts/0 ; PWD=/home/john ; USER=root ; COMMAND=/usr/bin/apt update
+Feb 26 15:50:56 ubuntu apt[23456]: Updating package lists...
+Feb 26 15:51:07 ubuntu systemd-logind[789]: New session 1 of user john.
+Feb 26 15:52:18 ubuntu NetworkManager[890]: <info>  [1234567890.123] dhcp4 (eth0): state changed unknown -> bound
+Feb 26 15:53:29 ubuntu rsyslogd: [origin software="rsyslogd" swVersion="8.32.0" x-pid="7785" x-info="<https://www.rsyslog.com>"] rsyslogd was HUPed
+Feb 26 15:54:40 ubuntu anacron[34567]: Job `cron.daily' terminated
+```
+
+This output can reveal patterns like unauthorized access or cron job executions. In forensics, you often use tools like grep to filter for specific events.
+
+#### Extending to Additional Mechanisms
+
+There are also some advanced or specialized logging options commonly encountered in Linux forensics:
+
+1. **Kernel Ring Buffer (_dmesg_)**: This logs kernel messages, such as hardware detections or driver issues, stored in a circular buffer. Access it via the `dmesg` command or `/var/log/dmesg` on boot. Useful for investigating boot-time anomalies or device attachments.
+2. **Application-Specific Logs**: Many services maintain their own logs, like Apache or MySQL. These provide granular details on web traffic or database queries, often rotated via logrotate in `/etc/logrotate.d/`.
+3. **ELK Stack or Splunk Integration**: In enterprise setups, logs are forwarded to centralized systems like ES, Logstash, Kibana, or Splunk for aggregation and analysis. Check `/etc/rsyslog.d/` for forwarding configs to detect exfiltration or monitoring setups.
+
+For instance, to check kernel logs, you can use the following command:
+
+```bash
+d41y@htb[/htb]$ dmesg | tail -n 5
+
+[12345.678901] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+[12345.789012] usb 1-1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
+[12345.890123] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[12345.901234] usb 1-1: Product: Ultra
+[12345.912345] usb-storage 1-1:1.0: USB Mass Storage device detected
+```
+
+When investigating logs, always preserve originals by copying to a forensic image. Use tools like `log2timeline` from Plaso to create super timelines correlating logs with file timestamps. Rotating and compressing logs can hide older events, so check archived files in `/var/logs/*.gz`.
+
+### Systemd Journal
+
+Systemd is a comprehensive suite of software tools that serve as the system and service manager for modern Linux distros, acting as the init system to bootstrap the user space and manage subsequent processes. For initializing and managing the Linux system after the kernel boots, systemd offers features like:
+
+- Service Management
+- Resource Control
+- Hardware and Device Management
+- Timers and Scheduling
+- Logging Integration
+- System State Management
+
+It replaces older init systems like SysVinit or Upstart and is the default in distros such as Ubuntu, Fedora, Debian, and Arch Linux. It encompasses a wide range of components, including daemons for handling services, devices, mounts, timers, and logging, providing a unified framework for system initialization and management.
+
+#### Overview
+
+The shortcomings of the aging syslog system have resulted in a number of security and availability enhancements. Many of these enhancements have been added to existing syslog daemons as non-standard features and never gained widespread use among Linux distros. The systemd journal was developed from scratch as an alternative logging system with additional features missing from syslog, such as structured logging, forward-secure sealing, and efficient querying. Therefore, systemd-journal is the logging component of systemd, functioning as a system service daemon that collects, processes, and stores loggin data from the kernel, system services, applications, and other sources. It maintains structured, indexed journals in a binary format, which is more efficient than traditional text-based logs, and it conforms to standards like the Syslog protocol for message classification by priority and facility. The terms "journald" and "systemd-journald" are used interchangeably to describe this daemon.
+
+Here's a breakdown of its key components:
+
+|Component|escription|
+|---|---|
+|`Log originator`|All of the messages produced by the kernel, initrd, services, etc.|
+|`Config files location`|`/etc/systemd/journald.conf`|
+|`Daemon`|`systemd-journald` (Service managed by systemd)|
+|`Local audit log`|`/var/log/journal/* /run/log/journal/*`|
+|`Tool used to search`|`journalctl`|
+
+One of the benefits of using a binary journal for logging is the ability to view log records in local time and in UTC if you want. By default, systemd will display results in local time.
+
+```bash
+linuxforensics@ubuntu:~$ sudo timedatectl site-timezone UTC
+```
+
+You can run the `journalctl` utility to show initial results:
+
+```bash
+linuxforensics@ubuntu:~$ journalctl
+
+Oct 23 10:40:20 ubuntu kernel: Linux version 5.15.0-87-generic (buildd@bos03-amd64-016) (gcc (Ubuntu 9.4.0-1ubuntu1~20.0>
+Oct 23 10:40:20 ubuntu kernel: Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-87-generic root=UUID=4af306c1-ff64-48b1-944>
+Oct 23 10:40:20 ubuntu kernel: KERNEL supported cpus:
+Oct 23 10:40:20 ubuntu kernel:   Intel GenuineIntel
+Oct 23 10:40:20 ubuntu kernel:   AMD AuthenticAMD
+Oct 23 10:40:20 ubuntu kernel:   Hygon HygonGenuine
+Oct 23 10:40:20 ubuntu kernel:   Centaur CentaurHauls
+Oct 23 10:40:20 ubuntu kernel:   zhaoxin   Shanghai
+Oct 23 10:40:20 ubuntu kernel: Disabled fast string operations
+Oct 23 10:40:20 ubuntu kernel: BIOS-provided physical RAM map:
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009e7ff] usable
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x000000000009e800-0x000000000009ffff] reserved
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x00000000000dc000-0x00000000000fffff] reserved
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x0000000000100000-0x000000007fedffff] usable
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x000000007fee0000-0x000000007fefefff] ACPI data
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x000000007feff000-0x000000007fefffff] ACPI NVS
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x000000007ff00000-0x000000007fffffff] usable
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x00000000f0000000-0x00000000f7ffffff] reserved
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x00000000fec00000-0x00000000fec0ffff] reserved
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
+Oct 23 10:40:20 ubuntu kernel: BIOS-e820: [mem 0x00000000fffe0000-0x00000000ffffffff] reserved
+Oct 23 10:40:20 ubuntu kernel: NX (Execute Disable) protection: active
+Oct 23 10:40:20 ubuntu kernel: SMBIOS 2.7 present.
+<SNIP>
+```
+
+#### Journalctl
+
+... is a command-line utility that is using systemd that allows you to query, view, and manage logs collected by the systemd-journald daemon, providing a centralized interface to access structured binary journal files containing detailed system events, kernel messages, service outputs, and metadata like timestamps, priorities, and process IDs.
+
+|Command|Description|
+|---|---|
+|`journalctl --utc`|Display timestamps in UTC|
+|`journalctl -b`|Display logs from current boot|
+|`journalctl --list-boots`|List previous boots|
+|`journalctl -b -1`|See journal from the previous boot (you can use boot ID instead -1)|
+|`journalctl --utc -D /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c`|Use external journal folder to retrieve results from|
+|`journalctl --utc --since "2023-10-15 18:00:00" --until "2023-10-15 19:00:00" -D /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c`|Use time windows for your logs (format: YYYY-MM-DD HH:MM:SS)|
+|`journalctl --utc --since "2023-10-15 18:00:00" --until "2023-10-15 19:00:00" -D /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c/ -u httpd.service`|Filter results by unit (http.service as an example)|
+|`journalctl --utc --since "2023-10-15 18:00:00" --until "2023-10-15 19:00:00" -D /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c/ -u httpd.service _PID=27804`|Filter results by Process ID (PID)|
+|`journalctl /usr/bin/bash`|Filter results by executable|
+|`journalctl -p err --no-pager`|Filter results by priority (You can use either the priority name or its corresponding numeric value) • 0: emerg • 1: alert • 2: crit • 3: err • 4: warning • 5: notice • 6: info • 7: debug|
+|`journalctl -o json-pretty`|Output journalctl in json or any other formats: • cat: Displays only the message field itself. • export: A binary format suitable for transferring or backing up. • json: Standard JSON with one entry per line. • json-pretty: JSON formatted for better human-readability • json-sse: JSON formatted output wrapped to make add server-sent event compatible • short: The default syslog style output • short-iso: The default format augmented to show ISO 8601 wallclock timestamps. • short-monotonic: The default format with monotonic timestamps. • short-precise: The default format with microsecond precision • verbose: Shows every journal field available for the entry, including those usually hidden internally.|
+
+You can sue `man systemd.journal-fields` to identify fields that can be used for search:
+
+|Trusted Journal Fields|Description|
+|---|---|
+|`_PID`, `_UID`, `_GID`|The PID, UID, and group ID of the process the journal entry originates from, formatted as a decimal string. Note that entries obtained via "stdout" or "stderr" of forked processes will contain credentials valid for a parent process (that initiated the connection to systemd-journal).|
+|`_COMM`, `_EXE`, `_CMDLINE`|The name, executable path, and command line of the process the journal entry originates from.|
+|`_CAP_EFFECTIVE=`|The effective capabilities(7) of the process the journal entry originates from.|
+|`_AUDIT_SESSION`, `_AUDIT_LOGINUID`|The session and login UID of the process the journal entry originates from, as maintained by the kernel audit subsystem.|
+|`_SYSTEMD_CGROUP=`, `_SYSTEMD_SLICE=`, `_SYSTEMD_UNIT=`, `_SYSTEMD_USER_UNIT=`|The control group path in session, systemd hierarchy owner UID, the systemd slice unit name, the unit name in the systemd user manager (if any), the owner ID (if any) of the systemd user unit or systemd session (if any), and the owner UID of the systemd user.|
+|`_SELINUX_CONTEXT=`|The SELinux security context (label) of the process the journal entry originates from.|
+
+Usage example:
+
+```bash
+d41y@htb[/htb]$ journalctl --utc --since "2023-10-15 18:00:00" --until "2023-10-15 19:00:00" -D /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c/ -u httpd.service _PID=27804 -o json-pretty
+
+{
+        "__CURSOR" : "s=abcdef1234567890;i=1234;b=567890abcdef1234;m=123456789;t=5f1234567890a;x=bcdef1234567890",
+        "__REALTIME_TIMESTAMP" : "1697383200000000",
+        "__MONOTONIC_TIMESTAMP" : "123456789",
+        "_BOOT_ID" : "567890abcdef1234",
+        "PRIORITY" : "6",
+        "_UID" : "0",
+        "_GID" : "0",
+        "_SYSTEMD_SLICE" : "system.slice",
+        "_MACHINE_ID" : "894062f9af204645a289e8016977fe6c",
+        "_HOSTNAME" : "ubuntu",
+        "SYSLOG_FACILITY" : "3",
+        "SYSLOG_IDENTIFIER" : "httpd",
+        "MESSAGE" : "Server started successfully",
+        "_TRANSPORT" : "journal",
+        "_PID" : "27804",
+        "_COMM" : "httpd",
+        "_EXE" : "/usr/sbin/httpd",
+        "_CMDLINE" : "/usr/sbin/httpd -DFOREGROUND",
+        "_CAP_EFFECTIVE" : "0",
+        "_SYSTEMD_CGROUP" : "/system.slice/httpd.service",
+        "_SYSTEMD_UNIT" : "httpd.service",
+        "_SYSTEMD_INVOCATION_ID" : "12345678-90ab-cdef-1234-567890abcdef"
+}
+<SNIP>
+```
+
+To enhance forensic analysis, consider exporting journals for offline review. Use `journalctl -o export > journal.export` to create a binary export file, which can be imported elsewhere with `journalctl --import journal.export`. For persistence, configure `/etc/systemd/journal.conf` to set `Storage=persistent`, ensuring logs survive reboots in `/var/log/journal/`. In investigations, combine filters for targeted searches, like `journalctl -U ssh.service -p err` to spot SSH errors. Tools like `journalctl --vacuum-time=2weeks` can clean old entries, but in forensics, disable this to preserve data. For remote journals, enable forwarding with SystemLogSocket in `journald.conf`, sending to a central server for aggregation.
+
