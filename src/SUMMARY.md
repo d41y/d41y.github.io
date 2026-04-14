@@ -70,6 +70,7 @@
 		- [Metasploit](attack/tools/metasploit.md)
 		- [nmap](attack/tools/nmap.md)
 	- [Vuln Scanning](attack/vuln_scanning/README.md)
+		- [0x00](attack/vuln_scanning/vuln_scanning_fundamentals.md)
 		- [Nessus](attack/vuln_scanning/nessus.md)
 		- [OpenVAS](attack/vuln_scanning/openvas.md)
 	- [Web](attack/web/README.md)
