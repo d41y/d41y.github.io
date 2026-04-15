@@ -100,6 +100,56 @@ After the upload and analysis of the file is done, you notice that many AV produ
 
 ### On-Disk Evasion
 
+Modern on-disk malware obfuscation can take many forms. One of the earliest ways of avoiding detection involved the use of **packers**. Given the high cost of disk space and slow network speeds during the early days of the internet, packers were originally designed to reduce the size of an executable. Unlike modern "zip" compression techniques, packers generate an executable that is not only smaller but is also functionally equivalent with a completely new binary structure. The file produced has a new hash signature and as a result, can effectively bypass older and more simplistic AV scanners. Even though some modern malware uses a variation of this technique, the use of UPX and other popular packers alone is not sufficient to evade modern AV scanners.
+
+**Obfuscators** reorganize and mutate code in a way that makes it more difficult to reverse-engineer. This includes replacing instructions with semantically equivalent ones, inserting irrelevant instructions or dead code, splitting or reordering functions, and so on. Although primarily used by software developers to protect their intellectual property, this technique is also marginally effective against signature-based AV detection. Modern obfuscators also have runtime in-memory capabilities, which aims to hinder AV detection even further.
+
+**Crypter** software cryptographically alters executable code, adding a decryption stub that restores the original code upon execution. This decryption happens in-memory, leaving only the encrypted code on-disk. Encryption has become foundational in modern malware as one of the most effective AV evasion techniques.
+
+Highly effective AV evasion requires a combination of all the previous techniques in addition to other advanced ones, including anti-reversing, anti-debugging, virtual machine emulation detection, and so on. In most cases, software protectors were designed for legitimate purposes, like anti-copy, but can also be used to bypass AV detection.
+
 ### In-Memory Evasion
 
+In-Memory injections, also known as PE Injection, is a popular technique used to bypass AV products on Windows machines. Rather than obfuscating a malicious binary, creating new sections, or changing existing permissions, this technique instead focuses on the manipulation of volatile memory. One of the main benefits of this technique is that it does not writy any files to disk, which is a commonly focused area for most AV products.
+
+There are several [evasion techniques](https://blog.f-secure.com/memory-injection-like-a-boss/) that do not write files to disk.
+
+The first technique, **Remote Process Memory Injection**, attempts to inject the payload into another valid PE that is not malicious. The most common method of doing this is by leveraging a set of Windows APIs. First, you would use the OpenProcess function to obtain a valid HANDLE to a target process that you have permission to access. After obtaining the HANDLE, you would allocate memory in the context of that process by calling a Windows API such as VirtualAllocEx. Once the memory has been allocated in the remote process, you would copy the malicious payload to the newly allocated memory using WriteProcessMemory. After the payload has been successfully copied, it is usually executed in memory with a separate thread using the CreateRemoteThread API.
+
+Unlike regular DLL injection, which involves loading a malicious DLL from disk using the LoadLibrary API, the **Reflective DLL Injection** technique attempts to load a DLL stored by the attacker in the process memory. The main challenge of implementing this technique is that LoadLibrary does not support loading a DLL from memory. Furthermore, the Windows OS does not expose any APIs that can handle this either. Attackers who choose to use this technique must write their own version of the API that does not rely on a disk-based DLL.
+
+The third technique is **Process Hollowing**. When using process hollowing to bypass AV software, attackers first launch a non-malicious process in a suspended state. Once launched, the image of the process is removed from memory and replaced with a malicious executable image. Finally, the process is then resumed, and malicious code is executed instead of the legitimate process.
+
+Ultimately, **Inline Hooking**, involves modifying memory and introducing a hook (_an instruction that redirects the code execution_) into a function to make it point to your malicious code. Upon executing your malicious code, the flow will return to the modified function and resume execution, appearing as if only the original code had executed.
+
+> [!INFO]
+> Hooking is a technique often employed by rootkits, a stealthier kind of malware. Rootkits aim to provide the malware author dedicated and persistent access to the target system through modification of system components in user space, kernel, or even at lower OS protection rings such as boot or hypervisor. Since rootkits need administrative privileges to implant its hooks, it is often installed from an elevated shell or by exploiting a privesc vuln.
+
 ## AV Evasion in Practice
+
+### Testing for AV Evasion
+
+The term SecOps defines the collaboration between the enterprise IT department and the SOC. The goal of the SecOps team is to provide continuous protection and detection against both well-known and novel threats.
+
+As pentesters, you want to develop a realistic understanding of the considerations facing SecOps teams when dealing with AV products. For this reason, you should start considering a few extra implications regarding AV evasion development that could help you on your engagements.
+
+As an initial example, VirusTotal can give you a good glimpse of how stealthy your malware could be, once scanned, the platform sends your sample to every AV vendor that has an active membership.
+
+This means shortly after you have submitted your sample, most of the AV vendors will be able to run it inside their custom sandbox and machine learning engines to build specific detection signatures, thus regarding your offensive tooling unusable.
+
+As an alternative to VirusTotal, you should resort to [Kleenscan.com](https://kleenscan.com/). This service scans your sample against 30 different AV engines and claims to not divulge any submitted sample to third parties. The service offers up to four scans a day and additional ones at a small fee after the daily limit has been reached.
+
+However, relying on tools such as Kleenscan.com is considered a last resort when you don't know the specifics of your target's AV vendor. If you do know those specifics on the other hand, you should build a dedicated VM that resembles the customer environment as closely as possibe.
+
+Regardless of the tested AV product, you should always make sure to disable sample submission so that you don't incur the same drawback as VirusTotal. For instance, Windows Defender's Automatic Sample Submission can be disabled by navigating to Windows Security > Virus & threat protection > Manage Settins and deselecting the relative option as illustrated below.
+
+![av evasion offsec 1](../../images/av_evasion_offsec1.png)
+
+Having such a simulated target scenario allows you to freely test AV evasion vectors without worrying about your sample being submitte for further analysis.
+
+Since automatic sample submission allows Windows Defender to get your sample analyzed by its machine learning cloud engines, you should only enable it once you are confident your bypasses will be effective and only if your target has sample submission enabled.
+
+Another rule of thumb you should follow when developing AV bypasses is to always prefer custom code. AV signatures are extrapolated from the malware sample and thus, the more novel and diversified your code is, the fewer chances you must incur any existing detection.
+
+### Evading AV with Threat Injection
+
