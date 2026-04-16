@@ -229,7 +229,7 @@ d41y@htb[/htb]$ hydra [options] target http-post-form "path:params:condition_str
 
 > [!NOTE]
 > For http-post-form:<br><br>
-> ```"Syntax: <url>:<form parameters>[:<optional>[:<optional>]:<condition string>"```<br><br>
+> `"Syntax: <url>:<form parameters>[:<optional>[:<optional>]:<condition string>"`<br><br>
 > Last is the string that it checks for an invalid login (by default). Invalid condition login check can be preceded by ```F=```, successful condition login check must be preceded by ```S=```.<br><br>
 > **Example**:<br>
 > ```"/login.php:user=^USER^&pass=^PASS^:incorrect"```<br>
