@@ -202,6 +202,9 @@ You can sort the result by length, and you will see that all requests with the C
 > [!NOTE]
 > Now, you can try uploading a file using any of the allowed extensions, and some of them may allow you to execute PHP code. Not all extensions will work with all web server configurations, so you may need to try several extensions to get one that successfully executes PHP code.
 
+> [!INFO]
+> Sometimes only changing one letter of the extension (_.php -> .pHp_) might work.
+
 ## Whitelist Filters
 
 ### Whitelisting Extensions
@@ -447,6 +450,70 @@ One such attack is using reserved characters, such as ```| < > * ?```, which are
 Finally, you may utilize the [Windows 8.3 Filename Convention](https://en.wikipedia.org/wiki/8.3_filename) to overwrite existing files or refer to files that do not exist. Older versions of Windows were limited to a short length for file names, so they used a ```~```  to complete the file name, which you can use to your advantage.
 
 For example, to refer to a file called ```hackthebox.txt``` you can use ```HAC~1.TXT``` or ```HAC~2.TXT```, where the digit represents the order of the matching files that start with ```HAC```. As windows still supports this convention, you can write a file called ```WEB~.CONF``` to overwrite the ```web.conf``` file. Similarly, you may write a file that replaces sensitive system files. This attack can lead to several outcomes, like causing information disclosure through errors, causing a DoS on the back-end server, or even accessing private files.
+
+### Using Non-Executable Files
+
+If you can safely assume a web server is not using PHP but still allows file uploads you might be able to leverage privileges.
+
+When trying to upload a `test.txt` you get:
+
+![file upload attacks offsec 1](../../../../images/file_upload_attacks_offsec1.png)
+
+Indicating that the file was successfully uploaded.
+
+> [!TIP]
+> When testing a file upload form, you should always determine what happens when a file is uploaded twice. If the web application indicates that the file already exists, you can use this method to brute force the contents of a web server. Alternatively, if the web application displays an error message, this may provide valuable informaiton such as the programming language or web technologies in use.
+
+Review the the `test.txt` upload request in Burp. Select the POST request in HTTP history, send it to Repeater, and click on Send.
+
+![file upload attacks offsec 2](../../../../images/file_upload_attacks_offsec2.png)
+
+You receive the same output as you did in the browser, without any new or valuable information. Next, check if the web application allows you to specify a relative path in the filename and write a file via Directory Traversal outside of the web root. You can do this by modifying the filename parameter in the request, so it contains `../../../../../../../test.txt`, then click Send.
+
+![file upload attacks offsec 3](../../../../images/file_upload_attacks_offsec3.png)
+
+The Response area shows you that the output includes the `../` sequences. Unfortunately, you have no way of knowing if the relative path was used for placing the file. It's possible that the web application's response merely echoed your filename and sanitized it internally. For now, assume the relative path was used for placing the file, since you cannot find any other attack vector. If your assumption is correct, you can try to blindly overwrite files, which may lead you to system access. You should be aware, that blindly overwriting files in a real-life pentest could result in lost data or costly downtime of a production system.
+
+Web apps using Apache, Nginx or other dedicated web servers often run with specific users, such as `www-data` on Linux. Traditionally on Windows, the IIS web server runs as a `Network Service` account, a passwordless built-in Windows identity with low privileges. Starting with IIS version 7.5, Microsoft introduced the [IIS Application Pool Identities](https://docs.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities). These are virtual accounts running web applications grouped by application pools. Each [application pools](https://docs.microsoft.com/en-us/iis/configuration/system.applicationhost/applicationpools) has its own identity, making it possible to set more precise permissions for accounts running web applications.
+
+When using programming languages that include their own web server, administrators and devs often deploy the web app without any privilege structures by running applications as root or Administrator to avoid any permissions issues. This means you should always verify whether you can leverage root or administrator privileges in a file upload vuln.
+
+Try to overwrite the `authorized_keys` file in the home directory for `root`. If this file contains the public key of a private key you control, you can access the system via SSH as the `root` user. To do this, you create an SSH keypair with `ssh-keygen`, as well as a file with the name `authorized_keys` containing the previously created public key.
+
+```bash
+kali@kali:~$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/kali/.ssh/id_rsa): fileup
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in fileup
+Your public key has been saved in fileup.pub
+...
+
+kali@kali:~$ cat fileup.pub > authorized_keys
+```
+
+Now that the `authorized_keys` file contains your public key, you can upload it using the relative path `../../../../../../../root/.ssh/authorized_keys`. You select your `authorized_keys` file in the file upload form and enable intercept in Burp before you click on the Upload button. When Burp shows the intercepted request, you can modify the filename accordingly and press Forward.
+
+![file upload attacks offsec 4](../../../../images/file_upload_attacks_offsec4.png)
+
+If you've successfully overwritten the `authorized_keys` file of the `root` user, you should be able to use your private key to connect to the system via SSH. It should be noted that often the `root` user does not carry SSH access permissions. However, since you can't check for other users by, for example, displaying the contents of `/etc/passwd`, this is your only option.
+
+The target system runs an SSH server on port 2222. Use the corresponding private key of the public key in the `authorized_keys` file to try to connect to the system. You use the `-i` parameter to specify your private key and `-p` for the port.
+
+```bash
+kali@kali:~$ rm ~/.ssh/known_hosts # to avoid conflicts
+
+kali@kali:~$ ssh -p 2222 -i fileup root@mountaindesserts.com
+The authenticity of host '[mountaindesserts.com]:2222 ([192.168.50.16]:2222)' can't be established.
+ED25519 key fingerprint is SHA256:R2JQNI3WJqpEehY2Iv9QdlMAoeB3jnPvjJqqfDZ3IXU.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+...
+root@76b77a6eae51:~#
+```
+
+You could successfully connect as `root` with you private key due to the overwritten `authorized_keys` file.
 
 ## Preventing File Upload Vulnerabilities
 
