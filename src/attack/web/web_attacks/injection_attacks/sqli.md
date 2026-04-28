@@ -153,13 +153,41 @@ The AND operator will be evaluated first, and it will return false. Then, the OR
 
 ![Login as admin](../../../../images/sqli5.png)
 
-You were able to log in successfully as admin. However, the login fails when using 'notAdmin' as a user, since that user does not exist in the table and therefore resulted in a fals query overall.
+You were able to log in successfully as admin. However, the login fails when using 'notAdmin' as a user, since that user does not exist in the table and therefore resulted in a false query overall.
 
 To successfully login once again, you will need an overall true query. This can be achieved by injecting an OR condition into the password field, so it will always return true.
 
 ![Login as notAdmin](../../../../images/sqli6.png)
 
 The additional OR condition resulted in a true query overall, as the WHERE clause returns everything in the table, and the user present in the first row is logged in. In this case, as both conditions will return true, you do not have to provide a test username and password and can directly start with ```'``` injection and log in with just ```' or '1'='1```.
+
+### Enum with OR Operator
+
+If the web app provides error information on bad queries, you could use the OR operator to enumerate the system.
+
+```
+' or 1=1 in (select @@version) -- //
+```
+
+You want to force the SQL statement to create a database error that the web page will display back to you. In this case, you want to retrieve the MySQL version via the `@@version` directive. You're using the IN operator to compare a boolean value (`1=1`) with what should be a numeric value. If this causes an error, the application might indicate which values caused the error and thus allow you to get the database version number.
+
+Dumping all the data inside the users table.
+
+```
+' OR 1=1 in (SELECT * FROM users) -- //
+```
+
+Trying to grab only the password column from the users table.
+
+```
+' or 1=1 in (SELECT password FROM users) -- //
+```
+
+Specifying which user's password you want to retrieve:
+
+```
+' or 1=1 in (SELECT password FROM users WHERE username = 'admin') -- //
+```
 
 ## Using comments
 
