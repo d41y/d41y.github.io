@@ -619,6 +619,38 @@ If there are no errors, you can now browse to ```/shell.php``` and execute comma
 
 ![web shell](../../../../images/sqli21.png)
 
+## Blind SQL Injection
+
+Blind SQL injections describe scenarios in which databse responses are never returned and behavior is inferred using either boolean- or time-based logic.
+
+As an example, generic boolean-based blind SQLi cause the application to return different and predictable values whenever the database query returns a TRUE or FALSE result, hence the "boolean" name. These values can be reviewed within the application context.
+
+Time-based blind SQLi infer the query by instructing the database to wait for a specified amount of time. Based on the response time, the attacker can conclude if the statement is TRUE or FALSE.
+
+After encountering the following page:
+
+![sqli offsec 1](../../../../images/sqli_offsec1.png)
+
+... and closely reviewing the URL, you'll notice that the application takes a user parameter as input, defaulting to `offsec` since this is your current logged-in user. The application then queries the user's record, returning the username, password, hash, and description values.
+
+To test for boolean-based SQLi, you can try to append the below payload to the URL:
+
+```
+http://192.168.50.16/blindsqli.php?user=offsec' AND 1=1 -- //
+```
+
+Sine `1=1` will always be TRUE, the application will return the values only if the user is present in the database. Using this syntax, you could enumerate the entire database for other usernames or even extend your SQL query to verify data in other tables.
+
+You can achieve the same result by using a time-based SQLi payload:
+
+```
+http://192.168.50.16/blindsqli.php?user=offsec' AND IF (1=1, sleep(3),'false') -- //
+```
+
+In this case, you appended an IF condition that will always be true inside the statement itself but will return false if the user is non-existent.
+
+You know that the user `offsec` is active, so if you paste the above URL payload into your Kali VM's browser, you'll notice that the application hangs for about three seconds.
+
 ## SQLi Mitigation
 
 ### Input Sanitization
