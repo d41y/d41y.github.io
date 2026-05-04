@@ -1959,3 +1959,51 @@ d41y@htb[/htb]$ echo VNCFake1 | proxychains4 -q vncviewer 172.20.0.52 -autopass 
 
 Finally, you can use `F8` to interact with the remote machine, which will give you a prompt with different options.
 
+### Software Deployment
+
+Software deployment and remote management tools are essential for IT administrators to efficiently manage and monitor their networks. These tools streamline tasks such as software installation, patch management, configuration management, and remote control of devices. Commonly used tools include Microsoft Intune, System Center Configuration Manager (_SCCM_), PDQ Deploy, MeshCentral, ManageEngine Desktop Central, SolarWinds Orion, Kaseya VSA, Ivanti Endpoint Manager and others.
+
+While these tools provide significant benefits for IT management, they can also be exploited for lateral movement. If you gain access to credentials for an account that manages these tools, you can leverage those privileges to install malicious software on remote machines and gain access to those systems.
+
+##### MeshCentral
+
+... is a powerful open-source remote management tool that allows administrators to manage and monitor devices remotely.
+
+It provides a centralized platform for managing multiple devices over the internet or a local network. It allows IT administrators to perform various tasks such as remote desktop control, file transfer, terminal access, and monitoring of devices.
+
+The agent-based installation method used by MeshCentral involves creating a service on the remote computer that connects to the MeshCentral server via port 443 by default. As a result, even if a device has more ports blocked, it may still maintain an open connection for remote management or software deployment tools. You can exploit this configuration to move laterally within the network, abusing the open port and agent connection to gain access to and control additional devices.
+
+###### Enum
+
+To identify if MeshCentral is installed, you can enumerate and search for open port 443.
+
+```bash
+d41y@htb[/htb]$ nmap -p443 10.129.229.243 -sC -sV                                            
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-06-21 18:26 AST        
+Nmap scan report for 10.129.229.243                                               
+Host is up (0.13s latency).                                                       
+                                                                                  
+PORT    STATE SERVICE   VERSION                                                                                                                                     
+443/tcp open  ssl/https                                                           
+| http-robots.txt: 1 disallowed entry                                                                                                                               
+|_/                                                                               
+|_ssl-date: TLS randomness does not represent time
+|_http-title: MeshCentral - Login
+| fingerprint-strings:
+...SNIP...
+```
+
+Assume you have already gained access to MeshCentral credentials. The username is `admin` and the password is `RemoteManagement01`.
+
+![windows lateral movement 12](../../../images/windows_lateral_movement12.png)
+
+There are hundreds of software that may work similarly to MeshCentral. Your task will be to read the software documentation and understand which functionalities you can abuse to perform RCE on the target for lateral movement. Once you connect to MeshCentral, you can go to "My Devices" and select the device you want to interact with, in this case SRV02.
+
+![windows lateral movement 13](../../../images/windows_lateral_movement13.png)
+
+Once you are within the device, you can select the "Terminal" tab and click "Connect" to establish a remote session with the target server.
+
+From here, you can perform any desired action on the target server.
+
+![windows lateral movement 14](../../../images/windows_lateral_movement14.png)
+
