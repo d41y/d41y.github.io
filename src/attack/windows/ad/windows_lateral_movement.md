@@ -1735,3 +1735,119 @@ inlanefreight\josias
 > [!NOTE]
 > Alternatively, `dcomexec.py` also supports `ShellWindows` and `ShellBrowserWindow` objects; you can substitute MMC20 and if those are enabled, it will allow you to perform code execution.
 
+### SSH
+
+#### Rights
+
+For SSH lateral movement on Windows systems, several prerequisites and permissions are essential. The target system must have an SSH server, such as OpenSSH, installed and operational, while the initiating system needs an SSH client. Network connectivity should permit SSH traffic, typically on TCP port 22. Valid user credentials for an account on the target system are required, and administrative privileges are often necessary for various tasks. File system access permissions are needed for operations like file transfer using `scp` or `sftp`, and certain group policies may require adjustment to facilitate SSH connections and appropriate user rights.
+
+#### Enum
+
+To leverage SSH for lateral movement you must find if the protocol is running on any PC in the network and check your credentials.
+
+```bash
+d41y@htb[/htb]$ nmap 10.129.229.244 -p 22 -sCV -Pn
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-06-16 01:09 UTC
+Nmap scan report for srv01.inlanefreight.local (10.129.229.244)
+Host is up (0.0013s latency).
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH for_Windows_7.7 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 6e:40:59:3c:f2:74:9e:1a:e6:ac:46:a0:72:b1:fd:0f (RSA)
+|   256 30:ec:1b:be:37:99:5e:85:4a:ab:90:40:83:46:77:c6 (ECDSA)
+|_  256 91:04:43:21:65:02:b2:72:17:f5:ba:65:99:8b:06:02 (ED25519)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 1.27 seconds
+```
+
+To test credentials, you can use `netexec` with the protocol `ssh`, you must specify the target IP address or domain name `<ip/domain>`, the user `-u <user>` and the password `-p <password>`:
+
+```bash
+d41y@htb[/htb]$ netexec ssh 10.129.229.244 -u ambioris -p Ward@do9049
+SSH         10.129.229.244  22     10.129.229.244   [*] SSH-2.0-OpenSSH_for_Windows_7.7
+SSH         10.129.229.244  22     10.129.229.244   [+] ambioris:Ward@do9049  Windows - Shell access!
+```
+
+As you can see, you have valid credentials to connect to SSH.
+
+#### Lateral Movement from Linux and Windows
+
+SSH is not common on Windows environments, but sometimes administrators can install it for different purposes, if you find SSH on Windows, then you can use it for lateral movement. To authenticate with credentials you must use the following command `ssh <user>@<ip/domain>`, the user will be `ambioris` and the password `Ward@do9049`.
+
+Connect from your Linux machine:
+
+```bash
+d41y@htb[/htb]$ ssh Ambioris@10.129.229.244
+Ambioris@10.129.229.244's password: 
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+inlanefreight\ambioris@SRV01 C:\Users\ambioris>
+```
+
+After a successful connection, the Windows command shell prompt will appear:
+
+```powershell
+PS C:\Tools> ssh ambioris@SRV01
+ambioris@SRV01's password:
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+inlanefreight\ambioris@SRV01 C:\Users\ambioris>
+```
+
+#### Private Key Authentication
+
+SSH also allows you to use public and private key combination for authentication purposes. If you have a private key, you can use it to authenticate without a password. Use a private key located at `C:\helen_id_rsa` in SRV01 to authenticate as helen. You will use the option `-i <path private key>` to specify the private key, the option `-l <login@domain>` to specify username and domain name, the option `-p <port>` to specify the port number, by default it will use port 22, you don't need to specify it if the server is using the default, and finally you specify the target machine or IP:
+
+```powershell
+PS C:\Tools> ssh -i C:\helen_id_rsa -l helen@inlanefreight.local -p 22 SRV01
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions for 'C:\\helen_id_rsa' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "C:\\helen_id_rsa": bad permissions
+```
+
+You got an error because the private key privileges are too permissive. You can use `icacls` to list the privileges:
+
+```powershell
+PS C:\Tools> icacls.exe C:\helen_id_rsa
+C:\helen_id_rsa NT AUTHORITY\SYSTEM:(I)(F)
+                BUILTIN\Administrators:(I)(F)
+                BUILTIN\Users:(I)(RX)
+```
+
+As you can see, the `BUILTIN\Users:(I)(RX)` can read and execute this file, you need to remove that group. The easy way is to copy the file to a directory your user owns, in this case, you are using Ambiori's session so copy it to `C:\Users\Ambioris`.
+
+```powershell
+PS C:\Tools> copy C:\helen_id_rsa C:\Users\Ambioris\
+        1 file(s) copied.
+```
+
+Now, if you check the rights on the file, you will notice that `BUILTIN\Users:(I)(RX)` is removed, and you have explicitly `INLANEFREIGHT\Ambioris:(F)`. This is because of the inheritance on this directory.
+
+```powershell
+PS C:\Tools> icacls helen_id_rsa
+helen_id_rsa NT AUTHORITY\SYSTEM:(F)
+             BUILTIN\Administrators:(F)
+             INLANEFREIGHT\Ambioris:(F)
+
+Successfully processed 1 files; Failed processing 0 files
+```
+
+Now, if you attempt to use the SSH key file to authenticate as Helen, it won't complain, and it will allow you to authenticate:
+
+```powershell
+PS C:\Tools> ssh -i C:\helen_id_rsa -l helen@inlanefreight.local -p 22 SRV01
+The authenticity of host 'srv01 (fe80::647f:620f:3a1a:e978%6)' can't be established.
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+inlanefreight\helen@SRV01 C:\Users\helen>
+```
+
