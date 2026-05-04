@@ -2355,3 +2355,109 @@ Remove Group
 #### Alternative Tools for Abusing WSUS
 
 While SharpWSUS is a powerful tool for exploiting WSUS servers, other tools are available for similar purposes. [WSUSpendu](https://github.com/alex-dengx/WSUSpendu), a PowerShell tool, allows for the injection of malicious updates, forcing systems relying on the compromised WSUS server to execute arbitrary commands. Another option is [Thunder_Woosus](https://github.com/ThunderGunExpress/Thunder_Woosus), a C# tool designed for manipulating WSUS updates and enabling arbitrary command execution on targeted machines.
+
+## General Considerations
+
+### User Privileges
+
+Administrative rights are not always necessary for lateral movement. Services such as PSRemoting, RDP, WMI, DCOM, and SSH allow non-admininstrators to execute commands. It is essential to test all your credentials against these services.
+
+### Firewall Blocking
+
+Firewalls and network segmentation are crucial considerations. Sometimes, you may have access to a workstation that doesn't have direct access to specific servers, requiring you to use other devics to reach your target network.
+
+Administrators can apply various network configurations and restrictions, such as:
+
+- Changing default ports
+- Restricting access to specific workstations
+- Allowing inbound access only from specific IPs or networks
+- Blocking outbound internet access for specific workstations
+- Monitoring network traffic
+
+To identfiy non-default ports, use the `netstat` command. For example, running `netstat -ano` on SRV01 might yield:
+
+```powershell
+PS C:\Tools> netstat -ano
+netstat -ano
+
+Active Connections
+
+ Proto  Local Address          Foreign Address        State           PID
+ TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       1704
+ TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+ TCP    0.0.0.0:23389          0.0.0.0:0              LISTENING       336
+```
+
+In this example, you can see the port `23389`. You can investigate to which service this port belongs using `tasklist`:
+
+```powershell
+PS C:\Tools> tasklist /svc /FI "PID eq 336"
+
+Image Name                PID Services
+=====================  ====== =====================
+svchost.exe               336 TermService
+```
+
+Investigating further reveals that `TermService` is responsible for `Remote Desktop Services`, indicating that this port is for RDP.
+
+### Credentials
+
+Searching for credentials is a crucial aspect of identifying lateral movement opportunities. Successful lateral movement often relies on using and reusing credentials, public/private keys, tokens, and website logins found during enumeration.
+
+### IPv6
+
+IPv6 is often overlooked, but it is enabled by default on Windows. If firewalls block IPv4 connections but overlook IPv6, you can use IPv6 to bypass these restrictions.
+
+To connect to an IPv6 network, use the IPv6 address within brackets, like this: `[dead:beef::647f:620f:3a1a:e978]`. For WinRM use the following command:
+
+```
+PS C:\Tools> Enter-PSSession -ComputerName [dead:beef::647f:620f:3a1a:e978] -Authentication Negotiate
+```
+
+If you are attempting to connect to RDP using IPv6, you can use the following address:
+
+![windows lateral movement 24](../../../images/windows_lateral_movement24.png)
+
+## Detection
+
+### Monitoring Authentication Logs
+
+Monitoring authentication logs involves scrutinizing login activity to identify unusual patterns. For example, logins from unexpected locations or at odd hours can indicate unauthorized access attempts. Similarly, multiple failed login attempts and account lockouts signal that an attacker is trying to brute-force passwords or use stolen credentials.
+
+To monitor unusual login patterns, you can use Windows Event Viewer or dedicated tools to analyze authentication logs.
+
+### Honeypots and Deception
+
+A honeypot is an artificial environment designed to mimic real systems to observe and analyze the behavior of attackers. This approach is widely used in cybersecurity to create a deceptive trap that attacks cybercriminals. By deploying a honeypot, you can gain insights into the tactics and methods used by attackers, which helps in strengthening the overall security posture of their networks by addressing vulns identified during these interactions.
+
+Deploying honeypots can be done using tools like [KFSensor](https://www.kfsensor.net/), [sshesame](https://github.com/jaksi/sshesame) or setting up a fake share on a Windows system.
+
+### Network Traffic Analysis
+
+... involves examining the flow of data across the network to identify unusual communication patterns. Attackers often engage in lateral communications between system that don't typically interact. Detecting such patterns can be a signal of lateral movement. Additionally, the use of non-standard ports or protocols can indicate attempts to bypass security measures.
+
+Analyzing network flows requires tools like Windows Performance Monitor or third-party applications such as Wireshark or Microsoft Network monitor.
+
+### EDR
+
+You can use EDR solutions to monitor and analyze endpoint behavior for signs of suspicious activities, such as the execution of malicious scripts or tools like PSExec, PowerShell, or WMI. These tools can be used by attackers to move laterally within the network, so detecting their usage can indicate potential compromise. Using EDR solutions involves deploying EDR software and configuring it to monitor endpoint activities.
+
+## Prevention
+
+### Network Segmentation
+
+... involves dividing the network into smaller, isolated segments to restrict the lateral movement of attackers. Each segment should have strict access controls to ensure that only authorized traffic can pass between them. This reduces the risk of a compromised system impacting other areas of the network.
+
+You can use tools like Windows Firewall to create VLANs and subnets, configure firewall rules to control traffic between segments, and regularly review these rules for compliance.
+
+### Least Privilege
+
+Implementing the least privilege principle can substantially decrease the likelihood of lateral movement. This principle entails providing users and applications with only the essential persmissions required to carry out their functions. Should an attacker gain control of a user account or application, their actions are confined to the permissions allocated to that account or application, thereby restricting their capacity to move laterally within the network.
+
+You can apply the principle of least privilege by assigning roles and permissions through AD, enforcing least privilege via GPO, and auditing user permissions to revoke unnecessary rights.
+
+### Zero Trust Architecture
+
+Finally, another way of protection can be Zero Trust Architecture. This is a security model where no entity is trusted by default. Every access request must be verified and authenticated, regardless of its origin, to ensure comprehensive security.
+
+You can use Azure Active Directory Conditional Access to enforce verification for every request, apply network micro-segmentation, and continuously monitor and adjust access policies based on threat levels.
