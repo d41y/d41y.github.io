@@ -2218,7 +2218,7 @@ Unassigned Computers
 
 ###### Approve the Malicious Patch for Deployment Manually
 
-During your testing, sometimes, ShaprWSUS won't work to automatically approve the update. You also encounter some errors when uploading `PSExec64.exe` once the update is approved. See how you can do this process manually in case you have an error.
+During your testing, sometimes, SharpWSUS won't work to automatically approve the update. You also encounter some errors when uploading `PSExec64.exe` once the update is approved. See how you can do this process manually in case you have an error.
 
 Within the WSUS Service, navigate into "All Updates" and make sure that "Approval" is set to "Unapproved" and "Status" is "Any", and you will see the update you created with SharpWSUS named `NewAccountUpdate`.
 
