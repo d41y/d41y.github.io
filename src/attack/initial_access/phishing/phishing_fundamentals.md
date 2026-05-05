@@ -658,3 +658,46 @@ kali@kali:~/var/www/html$ cat credentials.txt
 Email: test@test.com
 Password: test
 ```
+
+### Crafting the Phishing Email
+
+Check the "Sent emails", find the email you're interested in and click "Reply to sender and all recipients":
+
+![phishing fundamentals offsec 16](../../../images/phishing_fundamentals_offsec16.png)
+
+You'll add the email text that ChatGPT generated, which mimics the communication style from the official Helpdeskt account.
+
+```
+Subject: Reminder: Please Log In to Keep Your Zoom License!
+
+Hello Sales department,
+
+Just a quick reminder—hope everything’s going smoothly on your end! We’re still working on updating our Zoom license inventory and noticed that some accounts haven’t yet logged in to schedule a meeting. To make sure your account remains on a full license, please click here to log in and schedule a meeting within the next week.
+
+If no meeting is scheduled by the deadline, any inactive accounts will be moved to a free license.
+
+Thanks again for your cooperation, and sorry for the added task! Let us know if you have any questions.
+
+Best regards,
+CORP.COM Helpdesk Team
+```
+
+You'll add a hyperlink to the text to redirect users to your cloned website. You'll do this in HTML mode:
+
+![phishing fundamentals offsec 17](../../../images/phishing_fundamentals_offsec17.png)
+
+With the HTML editor open, you'll paste your malicious URL as a hyperlink.
+
+![phishing fundamentals offsec 18](../../../images/phishing_fundamentals_offsec18.png)
+
+Finally, you'll send the email. At this point in a real-world scenario, you would begin your potentially long and nerve-wracking wait, hoping that your target responds to your phish.
+
+```bash
+kali@kali:~/var/www/html$ cat credentials.txt
+
+Email: test@test.com
+Password: test
+
+Email: j.smith.sales@corp.com
+Password: W00tw00t!!
+```
