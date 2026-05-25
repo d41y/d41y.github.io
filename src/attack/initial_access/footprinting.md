@@ -383,6 +383,82 @@ Furthermore, showing projects can, of course, be of great advantage to make new 
 
 ## Host-Based Enumeration
 
+### Port Scanning
+
+... is the process of inspecting TCP or UDP ports on a remote machine with the intention of detecting what services are running on the target and what potential attack vectors may exist.
+
+#### TCP/UDP Theory
+
+Netcat is not a port scanner, but it can be used as such in a rudimentary way to showcase how a typical port scanner works.
+
+##### TCP
+
+The simplest TCP port scanning method, usually called CONNECT scanning, relies on the [three-way TCP handshake](http://support.microsoft.com/kb/172983) mechanism. This mechanism is designed so that two hosts attempting to communicate can negotiate the parameters of the network TCP socket connection before transmitting any data.
+
+In basic terms, a host sends a TCP SYN packet to a server on a destination port. If the destination port is open, the server responds with a SYN-ACK packet and the client host sends an ACK packet to complete the handshake. If the handshake completes successfully, the port is considered open.
+
+```bash
+kali@kali:~$ nc -nvv -w 1 -z 192.168.50.152 3388-3390
+(UNKNOWN) [192.168.50.152] 3390 (?) : Connection refused
+(UNKNOWN) [192.168.50.152] 3389 (ms-wbt-server) open
+(UNKNOWN) [192.168.50.152] 3388 (?) : Connection refused
+ sent 0, rcvd 0
+```
+
+![footprinting offsec 1](../../images/footprinting_offsec1.png)
+
+Netcat sent several TCP SYN packets to port 3390, 3389, and 3388 on packets 1, 3, and 7, respectively. Due to a variety of factors, including timing issues, the packets may appear out of order in Wireshark. You observe that the server sent a TCP SYN-ACK packet from port 3389 on packet 4, indicating that the port is open. The other ports did not reply with a similar SYN-ACK packet, and actively rejected the connection attempt via an RST-ACK packet. Finally, on packet 6, Netcat closed this connection by sending a FIN-ACK packet.
+
+##### UDP
+
+Since UDP is stateless and does not involve a three-way-handshake, the mechanism behind UDP port scanning is different from TCP.
+
+```bash
+kali@kali:~$ nc -nv -u -z -w 1 192.168.50.149 120-123
+(UNKNOWN) [192.168.50.149] 123 (ntp) open
+```
+
+![footprinting offsec 2](../../images/footprinting_offsec2.png)
+
+An empty UDP packet is sent to a specific port. If the destination UDP port is open, the packet will be passed to the application layer. The response received will depend on how the application is programmed to respond to empty packets. In this exampl, the application sends no response. However, if the destination port is closed, the target should respond with an ICMP port unreachable (_packets 5, 7, and 9_), sent by the UDP/IP stack of the target machine.
+
+Most UDP scanners tend to use the standard "ICMP port unreachable" message to infer the status of a target port. However, this method can be completely unreliable when the target port is filtered by a firewall. In fact, in these cases, the scanner will report the target port as open because of the absence of the ICMP message.
+
+#### Windows LOTL
+
+If you are conducting initial network enumeration from a Windows laptop with no internet access, you are prevented from installing any extra tools that might help you, like the Windows nmap version. In such a limited scenario, you are forced to pursue the 'living of the land' strategy.
+
+The `Test-NetConnection` function checks if an IP responds to ICMP and whether a specified TCP port on the target host is open.
+
+For instance, from the Windows 11 client, you can verify if the SMB port 445 is open on a DC, as follows:
+
+```powershell
+PS C:\Users\student> Test-NetConnection -Port 445 192.168.50.151
+
+ComputerName     : 192.168.50.151
+RemoteAddress    : 192.168.50.151
+RemotePort       : 445
+InterfaceAlias   : Ethernet0
+SourceAddress    : 192.168.50.152
+TcpTestSucceeded : True
+```
+
+The returned value in the `TcpTestSucceeded` parameter indicates that port 445 is open.
+
+You can further script the whole process to scan the first 1024 ports on the DC with the PowerShell one-liner shown below. To do so, you need to instantiate a TcpClient Socket object as Test-NetConnection to send additional traffic that is not needed for your purpose.
+
+```powershell
+PS C:\Users\student> 1..1024 | % {echo ((New-Object Net.Sockets.TcpClient).Connect("192.168.50.151", $_)) "TCP port $_ is open"} 2>$null
+TCP port 88 is open
+...
+```
+
+You start by piping the first 1024 integer into a for-loop, which assigns the incremental integer value to the `$_` variable. Then, you create a Net.Sockets.TcpClient object and perform a TCP connection against the target IP on that specified port, and if the connection is successful, it prompts a log message that includes the open TCP port.
+
+#### Nmap
+
+Look at [nmap](/src/attack/tools/nmap.md)
+
 ### File Transfer Protocol (_FTP_)
 
 #### Intro
@@ -558,7 +634,7 @@ With version 3, the Samba server gained the ability to be a full member of an AD
 You know that Samba is suitable for both Linux and Windows systems. In a network, each host participates in the same workgroup. A workgroup is a group name that identifies an arbitrary collection of computers and their resources on an SMB network. There can be multiple workgroups on the network at any given time. IBM developed an application programming interface (_API_) for networking computers called the Network Basic Input/Ouput System (_NetBIOS_). The NetBIOS API provided a blueprint for an application to connect and share data with other computers. In a NetBIOS environment, when a machine goes online, it needs a name, which is done through the so-called name registration procedure. Either each host reserves its hostname on the network, or the NetBIOS Name Server (_NBNS_) is used for this purpose. It has also been enhanced to Windows Internet Name Service (_WINS_).
 
 > [!TIP]
-> ```smbclient``` allows to execute local system commands using an exclamation mark at the beginning (```!<cmd>```) without interrupting the connection.
+> ```smbclient``` allows to execute local system commands using an exclamation mark at the beginning (`!<cmd>`) without interrupting the connection.
 
 #### Enum
 
@@ -604,15 +680,15 @@ rpcclient $>
 
 All functions can be found [here](https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html). Some are listed below:
 
-| Query | Description |
-| ----- | ----------- |
-| ```srvinfo``` | server information |
-| ```enumdomains``` | enumerate all domains that are deployed in the network |
-| ```querydominfo``` | provides domain, server, and user information of deployed domains |
-| ```netshareenumall``` | enumerates all available shares |
-| ```netsharegetinfo <share>``` | provides information about a specific share |
-| ```enumdomusers``` | enumerates all domain users |
-| ```queryuser <RID>``` | provides information about a specific user |
+| Query                         | Description                                                       |
+| ----------------------------- | ----------------------------------------------------------------- |
+| ```srvinfo```                 | server information                                                |
+| ```enumdomains```             | enumerate all domains that are deployed in the network            |
+| ```querydominfo```            | provides domain, server, and user information of deployed domains |
+| ```netshareenumall```         | enumerates all available shares                                   |
+| ```netsharegetinfo <share>``` | provides information about a specific share                       |
+| ```enumdomusers```            | enumerates all domain users                                       |
+| ```queryuser <RID>```         | provides information about a specific user                        |
 
 ```bash
 rpcclient $> srvinfo
@@ -1060,6 +1136,49 @@ domain_logoff_information:
 [+] No printers returned (this is not an error)
 
 Completed after 0.61 seconds
+```
+
+### NetBIOS
+
+#### Intro
+
+NetBIOS uses multiple ports: UDP 137 (_name service_), UDP 138 (_datagram service_), and TCP 139 (_session service_). It should be noted that SMB and NetBIOS are two separate protocols. NetBIOS is an independent session layer protocol that allows computers on a local network to communicate with each other.
+
+While modern implementations of SMB can operate without NetBIOS, NetBIOS over TCP/IP (_NBT_) is used for backward compatibility with older systems and is often enabled alongside SMB. As a result, enumeration of these two services is commonly performed together.
+
+Systems exposing TCP port 139 often indicate legacy configurations and may provide additional enumeration opportunities compared to SMB over TCP 445 alone.
+
+#### Enum
+
+These services can be scanned with tools like nmap, using syntax such as the following:
+
+```bash
+kali@kali:~$ nmap -v -p 139,445 -oG smb.txt 192.168.50.1-254
+
+kali@kali:~$ cat smb.txt
+# Nmap 7.92 scan initiated Thu Mar 17 06:03:12 2022 as: nmap -v -p 139,445 -oG smb.txt 192.168.50.1-254
+# Ports scanned: TCP(2;139,445) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+Host: 192.168.50.1 ()	Status: Down
+...
+Host: 192.168.50.21 ()	Status: Up
+Host: 192.168.50.21 ()	Ports: 139/closed/tcp//netbios-ssn///, 445/closed/tcp//microsoft-ds///
+...
+Host: 192.168.50.217 ()	Status: Up
+Host: 192.168.50.217 ()	Ports: 139/closed/tcp//netbios-ssn///, 445/closed/tcp//microsoft-ds///
+# Nmap done at Thu Mar 17 06:03:18 2022 -- 254 IP addresses (15 hosts up) scanned in 6.17 seconds
+```
+
+There are more specialized tools for specifically identifying NetBIOS information, such as `nbtscan`. You can use this to query the NetBIOS name service for valid NetBIOS names, specifying the originating UDP port as 138 with the `-r` option.
+
+```bash
+kali@kali:~$ sudo nbtscan -r 192.168.50.0/24
+Doing NBT name scan for addresses from 192.168.50.0/24
+
+IP address       NetBIOS Name     Server    User             MAC address
+------------------------------------------------------------------------------
+192.168.50.124   SAMBA            <server>  SAMBA            00:00:00:00:00:00
+192.168.50.134   SAMBAWEB         <server>  SAMBAWEB         00:00:00:00:00:00
+...
 ```
 
 ### Network File System (_NFS_)
@@ -1993,7 +2112,7 @@ In addition to the pure exchange of information, SNMP also transmits control com
 
 For the SNMP client and server to exchange the respective values, the available SNMP objects must have unique addresses known on both sides. This addressing mechanism is an absolute prerequisite for successfully transmitting data and network monitoring using SNMP.
 
-To ensure that SNMP access works across manufacturers and with different client-server combinations, the Management Information Base (_MIB_) was created. MIB is an independent format for storing device information. A MIB is a text file in which all queryable SNMP objects are listed in a standardized tree hierarchy. It contains at least one object identifier (_OID_), which, in addition to the necessary unique address and a name, also provides information about the type, access rights, and a description of the respective object. MIB files are written in the Abstract Syntax Notation One (_ASN.1_) based ASCII text format. The MIBs do not contain data, but they explain where to find which information and what it looks like, which returns values for the specific OID, or which data type is used.
+To ensure that SNMP access works across manufacturers and with different client-server combinations, the [Management Information Base (_MIB_)](https://www.ibm.com/docs/en/aix/7.1.0?topic=management-information-base) was created. MIB is an independent format for storing device information. A MIB is a text file in which all queryable SNMP objects are listed in a standardized tree hierarchy. It contains at least one object identifier (_OID_), which, in addition to the necessary unique address and a name, also provides information about the type, access rights, and a description of the respective object. MIB files are written in the Abstract Syntax Notation One (_ASN.1_) based ASCII text format. The MIBs do not contain data, but they explain where to find which information and what it looks like, which returns values for the specific OID, or which data type is used.
 
 An OID represents a node in a hierarchical namespace. A sequence of numbers uniquely identifies each node, allowing the node's position in the tree to be determined. The longer the chain, the more specific the information. Many nodes in the OID tree contain nothing except references to those below them. The OIDs consist of integers and are usually concatenated by dot notation.
 
@@ -2004,6 +2123,19 @@ SNMPv2 existed in different versions. The version still exists today is v2c, and
 The security has been increased enormously for SNMPv3 by security features such as authentication using username and password and transmission encryption of the data. However, the complexity also increases to the same extent, with significantly more configuration options than v2c.
 
 Community strings can be seen as passwords that are used to determine whether the requested information can be viewed or not. It is important to note that many organizations are still using SNMPv2, as the transition to SNMPv3 can be very complex, but the services still need to remain active. This causes many administrators a great deal of concern and creates some problems they are keen to avoid. The lack of knowledge about how the information can be obtained and how you as attackers use it makes the administrator's approach seem inexplicable. At the same time, the lack of encryption of the data sent is also a problem. Because every time the community strings are sent over the network, they can be intercepted and read.
+
+> [!INFO]
+> Some interesting MIB sub-trees for targets:
+> 
+> **Users (_Windows_)** : `1.3.6.1.4.1.77.1.2.25`
+> **Currently-running processes** : `1.3.6.1.2.1.25.4.2.1.2`
+> **Installed software** : `1.3.6.1.2.1.25.6.3.1.2`
+> **Current TCP listening ports** : `1.3.6.1.2.1.6.13.1.3`
+> 
+> `1.3.6.1.4.1` : vendor-specific
+> `1.3.6.1.2.1` : standard MIB
+> 
+> Further read: [here](https://www.luleey.com/common-oids-of-snmp/?srsltid=AfmBOope8OovlS_WKg4bLwQuSL2uc8Yj-IXnzMHRXRoD9BARQn_-KHfv)
 
 #### Enum
 
@@ -2083,6 +2215,24 @@ iso.3.6.1.2.1.25.6.3.1.2.1246 = STRING: "python3-apt_2.0.0ubuntu0.20.04.6_amd64"
 ```
 
 Once you know the community string and the SNMP service that does not require authentication, you can query internal system information like in the previous example.
+
+Also takes a specific MIB sub-trees as an argument:
+
+```bash
+kali@kali:~$ snmpwalk -c public -v1 192.168.50.151 1.3.6.1.2.1.6.13.1.3
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.88.0.0.0.0.0 = INTEGER: 88
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.135.0.0.0.0.0 = INTEGER: 135
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.389.0.0.0.0.0 = INTEGER: 389
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.445.0.0.0.0.0 = INTEGER: 445
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.464.0.0.0.0.0 = INTEGER: 464
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.593.0.0.0.0.0 = INTEGER: 593
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.636.0.0.0.0.0 = INTEGER: 636
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.3268.0.0.0.0.0 = INTEGER: 3268
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.3269.0.0.0.0.0 = INTEGER: 3269
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.5357.0.0.0.0.0 = INTEGER: 5357
+iso.3.6.1.2.1.6.13.1.3.0.0.0.0.5985.0.0.0.0.0 = INTEGER: 5985
+...
+```
 
 ##### OneSixtyOne
 
@@ -3251,5 +3401,3 @@ Impacket v0.9.22 - Copyright 2020 SecureAuth Corporation
 [*] SMBv3.0 dialect used
 ILF-SQL-01
 ```
-
-## LLM-Powered Enumeration

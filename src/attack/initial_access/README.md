@@ -4,5 +4,6 @@
 - [Attacking Common Services](attacking_common_services/)
 - [Footprinting](footprinting.md)
 - [Password Attacks](password_attacks/)
+- [Phishing](phishing/)
 - [Shells & Payloads](shells_payloads.md)
 - [Web Reconnaissance](web_recon.md)

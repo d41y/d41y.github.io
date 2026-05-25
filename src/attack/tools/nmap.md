@@ -1,8 +1,11 @@
 # Network Enumeration with Nmap
 
-## TCP/UDP Port Scanning Theory
-
-...
+> [!DANGER]
+> Use nmap with caution!
+> 
+> A default nmap TCP scan will scan the 1000 most popular ports on a given machine. This port scan will create around 72 KB of traffic.
+> Probing all 65535 ports generates around 4 MB of traffic.
+> Doing that for a class C network (_254 hosts_) will result in sending over 1 GB of traffic! 
 
 ## Host Discovery
 
@@ -1022,7 +1025,7 @@ The spoofed packets are often filtered out by ISPs and routers, even though they
 
 Another scenario would be that only individual subnets would not have access to the server's specific services. So you can also manually specify the source IP address (```-S```) to test if you get better results with this one. Decoys can be used for SYN, ACK, ICMP scans, and OS detection scans.
 
-#### Testin Firewall Rules
+#### Testing Firewall Rules
 
 ```bash
 d41y@htb[/htb]$ sudo nmap 10.129.2.28 -n -Pn -p445 -O

