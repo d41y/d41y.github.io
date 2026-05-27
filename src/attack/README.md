@@ -3,7 +3,7 @@
 - [AI](ai/)
 - [AV Evasion](av_evasion/)
 - [Binary Exploitation](binary_exploitation/)
-- [Cloud]()
+- [Cloud](cloud/)
 - [Crypto]()
 - [GamePwn]()
 - [Hardware / ICS](hardware_ics/)
