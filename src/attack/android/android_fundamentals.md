@@ -225,6 +225,43 @@ Sharing files between applications also requires strong security practices and i
 
 #### Application Signing
 
+To install an application on a device or upload it to the Play Store, the APK file must be signed. Signing the APK is crucial for security, as it protects the package from malicious modifications. Devices running Android 7.0 and earlier support JAR signing, but this method does not offer complete protection - certain paths of the APK, such as ZIP metadata, are not covered by the signature.
 
+Signature Schema v2 was introduced in Android 7.0 and later to improve APK integrity and guard against unauthorized changes. Signature Scheme v3, introduced in Android 9, added support for including additional metadata in the signing block. Starting with Android 11, APK Signature Scheme v4 is used, which employs a Merkle hash tree calculated over all bytes of the APK and follows the structure of an fs-verity hash tree. The v4 signature is stored in a separate file and requires a corresponding v2 or v3 signature. The image below shows the flow of signature validation when an application is installed.
+
+![android fundamentals 3](../../images/android_fundamentals3.png)
+
+Signature v2 and v3 perform checks that invalidate the APK file if there are any modifications. This way, attacks like injecting DEX files into the APK file are prevented. Signature Scheme v1, however, is vulnerable to this kind of attack. The Janus vuln (_CVE-2017-13156_) allows malicious actors to inject DEX files into the APK - without affecting the signature - in cases where the APK is signed using the Signature Scheme v1. As a result, they can install and run the modified app.
+
+The malicious DEX file is prepended to the APK file, and the Android runtime accepts it as a valid update made to the earlier, legitimate version of the app. Then, the Dalvik VM will load the code of the DEX file. Android devices 5.0 < 8.1 that are signed using Signature Scheme v1 are affected by Janus.
+
+Application signing can be performed in several ways:
+
+- Android Studio, via the `Generate Signed App Bundle / APK`
+- The `jarsigner` / `apksigner` tools
+- [Play App Signing](https://support.google.com/googleplay/android-developer/answer/9842756?sjid=14772812161089830777-NC#zippy=%2Cwhat-is-play-app-signing%2Cwhy-should-i-use-play-app-signing%2Chow-does-play-app-signing-work%2Cwhat-are-the-benefits-of-using-play-app-signing%2Cwhat-are-the-requirements-for-using-play-app-signing%2Chow-do-i-enroll-in-play-app-signing%2Cwhat-happens-if-i-cancel-my-play-app-signing-subscription%2Cwhat-if-i-have-questions-about-play-app-signing)
+
+The certificates that are used to sign an application are self-signed. One can sign an APK file with `apksigner` tool using the following commands:
+
+```bash
+d41y@htb[/htb]$ echo -e "password\npassword\njohn doe\ntest\ntest\ntest\ntest\ntest\nyes" > params.txt
+d41y@htb[/htb]$ cat params.txt | keytool -genkey -keystore key.keystore -validity 1000 -keyalg RSA -alias john
+d41y@htb[/htb]$ zipalign -p -f -v 4 myapp.apk myapp_signed.apk
+d41y@htb[/htb]$ echo password | apksigner sign --ks key.keystore myapp_signed.apk
+```
+
+These commands accomplish the following:
+
+- Creates a file, `params.txt`, with the necessary input data for `keytool` to generate a keypair.
+- Pipes the contents of `params.txt` into `keytool` to automate the key generation process, storing the key in `key.keystore`.
+- `zipalign` allows uncompressed files within `myapp.apk` to be accessed directly via mmap, creating an optimized application named `myapp_signed.apk`.
+- The final app is signed with `apksigner`, using the key stored in `key.keystore` and the password being echoed through the pipe.
+
+#### Verified Boot
+
+... is an Android security feature that ensures the integrity of the OS. This is achieved using a unique set of cryptographic keys to sign and verify the boot image and ensure that only the authorized parties can modify the system. While Android is booting up, each stage verifies the integrity and authenticity of the next stage, and if the signature is valid, then the device boots up normally. Otherwise, the device either won't boot, or it will provide the user with a message updating them that the device is tampered with. Apart from this, Verified Boot utilizes Rollback Protection to prevent exploits from becoming persistent. This is done by ensuring that Android is only updating to the newest version. The recommended boot flow for a device is as follows:
+
+![android fundamentals 4](../../images/android_fundamentals4.png)
 
 ### APK Structure
+
