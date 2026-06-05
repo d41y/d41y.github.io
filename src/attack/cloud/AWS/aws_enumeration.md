@@ -505,3 +505,211 @@ You couldn't find any other resources, but you can get an idea of how to use the
 
 ### Obtaining Account IDs from S3 Buckets
 
+To perform this technique, the attacker needs an AWS account to interact with the AWS API. Additionally, the target account must have a publicly readable S3 bucket.
+
+You'll begin by creating an IAM user that, by default, won't have any permissions to execute actions. Then you'll add a policy to grant read access to the bucket with the condition that the permission will only apply if the account ID that owns the bucket starts with the digit "x". If you can't read the bucket, you'll keep trying with other numbers until you are able to read the bucket, showing you've identified the first digit of the account ID where the bucket resides. You can interate through the other digits until you retrieve all the account IDs.
+
+First, you'll choose a publicly readable bucket or object inside the target account. Because the bucket/object is publicly readable, you should be able to list the content of it with any IAM user of any AWS account.
+
+Then, you'll create a new IAM user in your attacker account. By default, IAM users don't have any permissions to execute any actions, so the new user won't be able to list the content of the public resource even when it's public.
+
+Next you'll create a policy that will grant permissions to list buckets and read objects. However, you'll add the condition that the read permission will only apply if the account ID that owns the bucket starts with the digit "x".
+
+After you apply the policy to the new IAM user, you'll test if you can list the bucket with the new user's credentials. You'll test the value x from 0 to 9 until you can list the bucket, meaning that you found the first digit of the account.
+
+![aws enumeration offsec 6](../../../images/aws_enumeration_offsec6.gif)
+
+In this case you can use the `offsec-assets-public-...` bucket, which is publicly readable. If it wasn't readable, you could also use a publicly readable object on the bucket, such as any of the images of the website.
+
+Begin by retrieving the bucket name.
+
+You can browse the website and get the bucket name from the URL of any of the images on the website. This time, you will use `curl`.
+
+First, you'll get the source code in HTML of the main site using `curl -s www.offseclab.io`. The `-s` flag will omit the loading statistic lines that curl outputs by default.
+
+In your next step, you will pipe the output to `grep` to filter out a particular string or pattern, aiming to extract the bucket's name. This bucket's name begins with the prefix "offseclab-assets-public-" and is followed by a random sequence of eight alphanumeric chars. This is represented as the regular expression `offseclab-assets-public-\w{8]`. The `-P` flag instructs grep to interpret the pattern using perl-regex syntax. Since the default behavior of grep is to display the entire line where the pattern is found, you'll use `-o` to display just the matched portion.
+
+```bash
+kali@kali:~$ curl -s www.offseclab.io | grep -o -P 'offseclab-assets-public-\w{8}'
+offseclab-assets-public-kaykoour
+offseclab-assets-public-kaykoour
+offseclab-assets-public-kaykoour
+offseclab-assets-public-kaykoour
+```
+
+The output shows four matches, one for every image in the homepage source code. You can copy the bucket name from the output.
+
+Last time, you validated that the bucket was publicly accessible by listing the content in the web browser. You'll use the AWS CLI tool this time. To list the content of the bucket, you can use the `s3 ls` command.
+
+```bash
+kali@kali:~$ aws --profile attacker s3 ls offseclab-assets-public-kaykoour
+                           PRE sites/
+```
+
+Ideally, you are running this command from your own AWS account, so it's safe to assume that the bucket probably has an ACL or policy that grants read access to all accounts.
+
+Now, create a new IAM user with the `iam create-user --user-name enum` command. Keep in mind that this user resides the in the attacker-controlled AWS account.
+
+Next, you'll also create access keys for the IAM user, so you can interact as this user with the AWS API through the AWS CLI tool. You'll run the `iam create-access-key --user-name enum` command and take note of the `AccessKeyId` and `SecretAccessKey` in the output.
+
+```bash
+kali@kali:~$ aws --profile attacker iam create-user --user-name enum
+{
+    "User": {
+        "Path": "/",
+        "UserName": "enum",
+        "UserId": "AIDAQOMAIGYU4HTPEJ32K",
+        "Arn": "arn:aws:iam::123456789012:user/enum",
+    }
+}
+
+kali@kali:~$ aws --profile attacker iam create-access-key --user-name enum
+{
+    "AccessKey": {
+        "UserName": "enum",
+        "AccessKeyId": "AKIAQOMAIGYURE7QCUXU",
+        "Status": "Active",
+        "SecretAccessKey": "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",
+    }
+}
+```
+
+To interact as the new IAM user, you'll create a profile in the AWS CLI with the newly created access keys. You'll run `aws configure --profile enum` and input the Access Key ID and Secret Access Key.
+
+Once the profile is created, you just need to add the `--profile enum` argument to every command you want to run as the enum user. Try this by running `aws sts get-caller-identity --profile enum`. This will return the UserId, Account, and ARN (_Amazon Resource Name_) of the identity interacting with the API.
+
+```bash
+kali@kali:~$ aws configure --profile enum
+AWS Access Key ID [None]: AKIAQOMAIGYURE7QCUXU
+AWS Secret Access Key [None]: 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
+Default region name [None]: us-east-1
+Default output format [None]: json
+
+kali@kali:~$ aws sts get-caller-identity --profile enum
+{
+    "UserId": "AIDAQOMAIGYU4HTPEJ32K",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/enum"
+}
+```
+
+Newly created users with no policies attached are almost fully restricted from accessing any resource, even listing public buckets in other AWS accounts. However, you can provide access by creating a policy that allows a very specific action, such as listing a public bucket. If you add a condition that checks if the account number owning the S3 bucket starts with a specific number, you can enuemrate and extract the account number.
+
+![aws enumeration offsec 7](../../../images/aws_enumeration_offsec7.png)
+
+Because the new enum user has no policies yet, it will deny all actions by default. This means that if you try to list the content of the bucket, you'll receive an AccessDenied error.
+
+```bash
+kali@kali:~$ aws --profile enum s3 ls offseclab-assets-private-kaykoour
+
+An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied  
+```
+
+Now, write a policy that will allow for listing the content of the bucket and reading objects inside it.
+
+You'll name the policy document `policy-s3-read.json`.
+
+```bash
+# policy-s3-read.json
+{
+     "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowResourceAccount",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetObject"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {"s3:ResourceAccount": ["0*"]}
+            }
+        }
+    ]
+}
+```
+
+The policy allows (_line 6_) to list buckets (_line 8_) and read any object in the buckets (_line 9_). There is a `*` wildcard in the `Resource` attribute (_line 11_) meaning that the actions are allowed for any bucket and object in any account. On lines 12-14, you add a condition to make this policy valid only if the account ID hosting the resource (_ResourceAccount_) starts with "0" following "any other digits".
+
+You'll associate this policy with the enum IAM user with an inline policy using the `iam put-user-policy` command.
+
+Using the `--user-name enum` argument, you can specify the name of the IAM user.
+
+The `--policy-name` argument lets you set a name for the policy. This is just for reference. You'll name the policy _s3-read_.
+
+The `--policy-document` argument expects a string with the policy in JSON format. The prefix `file://` instructs the tool to read the policy from `policy-s3-read.json`.
+
+The command will not return output if the policy was successfully applied. However, you can verify it using the `iam list-user-policies --user-name enum` command.
+
+```bash
+kali@kali:~$ aws --profile attacker iam put-user-policy \
+--user-name enum \
+--policy-name s3-read \
+--policy-document file://policy-s3-read.json
+
+kali@kali:~$ aws --profile attacker iam list-user-policies --user-name enum
+{
+    "PolicyNames": [
+        "s3-read"
+    ]
+}
+```
+
+According to the policy you set, the user will be able to read the content of the bucket only if the account ID where the bucket resides starts with "0".
+
+If you change the policy in the file and apply it again to the enum user, you'll be able to list the bucket. This time it works because your account starts with the digit "1".
+
+You can run `aws --profile attacker sts get-caller-identity` to retrieve the account ID of your lab.
+
+```bash
+kali@kali:~$ aws --profile enum s3 ls offseclab-assets-private-kaykoour
+
+An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied  
+
+kali@kali:~$ nano policy-s3-read.json
+
+kali@kali:~$ cat -n policy-s3-read.json 
+     1  {
+     2      "Version": "2012-10-17",
+     3      "Statement": [
+     4          {
+     5              "Sid": "AllowResourceAccount",
+     6              "Effect": "Allow",
+     7              "Action": [
+     8                  "s3:ListBucket",
+     9                  "s3:GetObject"
+    10              ],
+    11              "Resource": "*",
+    12              "Condition": {
+    13                  "StringLike": {"s3:ResourceAccount": ["1*"]}
+    14              }
+    15          }
+    16      ]
+    17  }
+
+kali@kali:~$ aws --profile attacker iam put-user-policy \
+--user-name enum \
+--policy-name s3-read \
+--policy-document file://policy-s3-read.json
+
+kali@kali:~$ aws --profile enum s3 ls offseclab-assets-private-kaykoour
+                           PRE sites/
+```
+
+Once you know that the policy starts with a digit, you can move to the next one by modifying the condition of the policy like so:
+
+```
+- __"StringLike": {"s3:ResourceAccount": ["10*"]}__
+- __"StringLike": {"s3:ResourceAccount": ["11*"]}__
+...
+- __"StringLike": {"s3:ResourceAccount": ["18*"]}__
+- __"StringLike": {"s3:ResourceAccount": ["19*"]}__
+```
+
+You can automate this process programmatically and build an application to obtain the account ID from a publicly accessible bucket or object.
+
+Tools such as [s3-account-search](https://github.com/WeAreCloudar/s3-account-search) also implement this technique, although this one uses roles instead of users to link the policy to the condition.
+
+As you can observe, there are several ways to implement this. The key concept is leveraging the "Condition" feature of the IAM policies to controll the cross-account-access.
+
