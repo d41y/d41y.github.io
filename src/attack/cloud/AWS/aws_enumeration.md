@@ -317,3 +317,191 @@ From the output, you can confirm there is another bucket, but it's protected, me
 You could also attempt to validate if there are other buckets using other information you found during the recon phase. For example, it could be buckets that include the name of the offseclab projects like _offseclab-assets-ruby-axevtewi_ or _offseclab-ruby-axevtewi_.
 
 
+## Reconnaissance via Cloud Service Provider's API
+
+### Configure AWS CLI
+
+In AWS, the service that manages users and their permissions within the AWS cloud environment within the AWS cloud environment is called Identity and Access Management (_IAM_).
+
+Installing AWS CLI:
+
+```bash
+kali@kali:~$ sudo apt update
+...
+
+kali@kali:~$ sudo apt install -y awscli
+...
+The following NEW packages will be installed:
+  awscli docutils-common python3-awscrt python3-docutils python3-jmespath python3-roman
+(Reading database ... 461429 files and directories currently installed.)
+...
+```
+
+To configure the credentials in AWS CLI, you'll use a named profile. This is a good practice, since using profiles will make it easier to differentiate one IAM user from another and rapidly switch between them,
+
+You'll run the `aws --profile attacker configure` command in the terminal. This will create a profile named _attacker_, When prompted, you'll set the values of _attacker\_access\_key\_id_ and _attacker\_access\_key\_secret_ provided.
+
+To use the profile, you'll need to add the `--profile attacker` argument to every AWS command  you run. Test this by running the `aws --profile attacker sts get-caller-identity` command. A JSON response with the user information is proof that the credentials were valid, and you are interacting with the AWS API as the _attacker_ IAM user.
+
+```bash
+kali@kali:~$ aws configure --profile attacker
+AWS Access Key ID []: AKIAQO...
+AWS Secret Access Key []: cOGzm...
+Default region name []: us-east-1
+Default output format []: json
+
+kali@kali:~$ aws --profile attacker sts get-caller-identity
+{
+    "UserId": "AIDAQOMAIGYU5VFQCHOI4",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/attacker"
+}
+```
+
+Once AWS CLI is properly configured with the _attacker_ profile, you can proceed.
+
+### Publicly Shared Resources
+
+Some cloud assets, given the nature of their function, are inherently designed to be published on the internet, such as standard OS images that organizations use as a building block for their EC2 instances. CSPs normally provide user-friendly ways to access these.
+
+Alternatively, some cloud resources are designed for internal use, for example, customer-built machine images or snapshots of virtual drives and databases. Despite this, large organizations migh have multiple public cloud accounts and need to share these resources between accounts or even publicly.
+
+Some commonly used resources are:
+
+- Publicly shared Amazon Machine Images (_AMIs_)
+- Publicly shared Elastic Block Storage (_EBS_) snapshots
+- Relational Databases (_RDS_) snapshots
+
+These shared resources commonly don't have a domain name or URL address to access them, so you'll need to use the CSP's API to request them.
+
+Open the CLI, where you have the AWS CLI tool configured with the _attacker's_ credentials. You'll search "Publicly Shared AMIs" as an example.
+
+AMIs are virtual machine images containing a pre-installed OS along with software and files. To deploy an EC2 instance in AWS, you must specify an AMI. You normally choose one from the public AMI catalog, which contains images publicly shared by AWS, third-party partners, community, and other accounts.
+
+The command `ec2 describe-images` will list all the images that the account can read. This will provide an extensive list of images as output. Include the `--owners amazon` argument to filter this list and show only AMIs provided by AWS.
+
+Optionally, you can add the `--executable-users all` argument to ensure that all public AMIs will be listed, including any self-owned public AMIs.
+
+```bash
+kali@kali:~$ aws --profile attacker ec2 describe-images --owners amazon --executable-users all
+{
+    "Images": [
+        {
+            "Architecture": "x86_64",
+            "CreationDate": "2022-06-29T09:46:55.000Z",
+            "ImageId": "ami-0d4f490f4e62171b4",
+            "ImageLocation": "amazon/Deep Learning Base AMI (Amazon Linux 2) Version 53.4",
+            "ImageType": "machine",
+            "Public": true,
+            "OwnerId": "898082745236",
+            "PlatformDetails": "Linux/UNIX",
+            "UsageOperation": "RunInstances",
+            "State": "available",
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "Iops": 3000,
+                        "SnapshotId": "snap-0ce7f231ea72dd0ea",
+                        "VolumeSize": 100,
+...
+```
+
+The output shows a list of public AMIs owned by Amazon. You can see several attributes of the AMIs, such as the `ImageId`, `ImageLocation`, `CreationDate`, `PlatformDetails`, and more.
+
+To list all the AMIs owned by another account, you can change the value of the `--owners` argument to the target's `Account ID`. The account ID is a unique identifier for the AWS account that you get when you sign up in AWS.
+
+You don't know the account ID of your target. However, you can leverage the filtering feature of the API to find resources by specifying other attributes.
+
+The structure of a filter expression is as follows:
+
+```bash
+--filters "Name=filter-name,Values=filter-value1,filter-value2,..."
+```
+
+`Name` refers to the attribute of the object you want to filter, and `Values` refers to the content of that attribute. Therefore, to filter for AMIs that include the word "offseclab" in the description attribute, you'll set:
+
+```
+    --filters "Name=description,Values=*Offseclab*"
+```
+
+You'll note that the `*Offseclab*` value is using the wildcard `*`. This means that it will match any number of chars at the beginning and the end surrounding the word "Offseclab".
+
+```bash
+kali@kali:~$ aws --profile attacker ec2 describe-images --executable-users all --filters "Name=description,Values=*Offseclab*"
+{
+    "Images": []
+}
+```
+
+You got a response with an empty list, meaning that there were no images that matched your filter.
+
+Another attribute that the user can set when creating the image is the `name`.
+
+```bash
+kali@kali:~$ aws --profile attacker ec2 describe-images --executable-users all --filters "Name=name,Values=*Offseclab*"
+{
+    "Images": [
+        {
+            "Architecture": "x86_64",
+            "CreationDate": "2023-08-05T19:43:29.000Z",
+            "ImageId": "ami-0854d94958c0a17e6",
+            "ImageLocation": "123456789012/Offseclab Base AMI",
+            "ImageType": "machine",
+            "Public": true,
+            "OwnerId": "123456789012",
+            "PlatformDetails": "Linux/UNIX",
+            "UsageOperation": "RunInstances",
+            "State": "available",
+            "BlockDeviceMappings": [
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs": {
+                        "DeleteOnTermination": true,
+                        "DeleteOnTermination": true,
+                        "SnapshotId": "snap-098dc18c797e4f255",
+                        "VolumeSize": 8,
+                        "VolumeType": "gp2",
+                        "Encrypted": false
+                    }
+                }
+            ],
+            "EnaSupport": true,
+            "Hypervisor": "xen",
+            "Name": "Offseclab Base AMI",
+            "RootDeviceName": "/dev/xvda",
+            "RootDeviceType": "ebs",
+            "SriovNetSupport": "simple",
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "Offseclab Base AMI"
+                }
+            ],
+            "VirtualizationType": "hvm",
+            "DeprecationTime": "2023-08-05T21:43:00.000Z"
+        }
+    ]
+}
+```
+
+This time you got a match and found one AMI. You also got the account ID that most likely belongs to the target organization. With the account ID, you can search for more AMIs or other resources.
+
+Similarly, you can seek publicly shared EBS snapshots using the `ec2 describe-snapshots` command:
+
+```bash
+kali@kali:~$ aws --profile attacker ec2 describe-snapshots --filters "Name=description,Values=*offseclab*"
+{
+    "Snapshots": []
+}
+```
+
+You couldn't find any other resources, but you can get an idea of how to use the CSP's API features to search for publicly shared resources.
+
+### Obtaining Account IDs from S3 Buckets
+
