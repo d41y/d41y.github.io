@@ -265,3 +265,332 @@ These commands accomplish the following:
 
 ### APK Structure
 
+The Android Package Kit file (_APK_) is the file format used by the Android OS to distribute and install applications. An APK is essentially an archive that contains all the components needed for an Android app to run. Among its contents is the application's compiled code, stored in a single DEX file. When an Android application is compiled, the Java (_or Kotlin_) source code is first converted into Java Bytecode, which is then transformed and optimized into a DEX file. These DEX files are executable and can be interpreted by the Dalvik VM or the Android Runtime, depending on the device and Android version.
+
+In addition to compiled code, APK files include resources such as assets, images, UI layouts, and the AndroidManifest.xml file - all of which are necessary for the application to function. APK files use the `.apk` extension and, since they are ZIP-based archives, they can be unpacked with standard tools such as the `unzip` command in Linux.
+
+```bash
+d41y@htb[/htb]$ unzip myapp.apk
+d41y@htb[/htb]$ ls -l
+
+total 27584
+-rw-r--r--    1 bertolis  bertolis     4220 Jan  1  1981 AndroidManifest.xml
+drwxr-xr-x   49 bertolis  bertolis     1568 May 10 13:36 META-INF
+drwxr-xr-x    3 bertolis  bertolis       96 May 10 13:36 assets
+-rw-r--r--    1 bertolis  bertolis  8285624 Jan  1  1981 classes.dex
+drwxr-xr-x    9 bertolis  bertolis      288 May 10 13:36 kotlin
+drwxr-xr-x    6 bertolis  bertolis      192 May 10 13:36 lib
+drwxr-xr-x  545 bertolis  bertolis    17440 May 10 13:36 res
+-rw-r--r--    1 bertolis  bertolis   922940 Jan  1  1981 resources.arsc
+```
+
+The files extracted from the APK are encoded, and neither the source code nor the config files are human-readable.
+
+```
+d41y@htb[/htb]$ vim AndroidManifest.xml
+```
+
+The image below shows the unzipped structure of an APK file.
+
+![android fundamentals 5](../../images/android_fundamentals5.png)
+
+#### META-INF
+
+This folder is generated when the application is signed, and it contains verification information. Any modification made to the APK file will lead to invalidation, and the APK will need to resigned. Listing the content of this directory reveals the following files:
+
+```bash
+d41y@htb[/htb]$ ls -l META-INF/
+
+total 664
+-rw-r--r--  1 bertolis  bertolis   1103 Jan  1  1981 CERT.RSA
+-rw-r--r--  1 bertolis  bertolis  77917 Jan  1  1981 CERT.SF
+-rw-r--r--  1 bertolis  bertolis  77843 Jan  1  1981 MANIFEST.MF
+<SNIP>
+```
+
+|**File**|**Description**|
+|---|---|
+|`CERT.RSA`|Contains the public key and the signature of CERT.SF.|
+|`CERT.SF`|Contains a list of names/hashes of the corresponding lines in the MANIFEST.MF file.|
+|`MANIFEST.MF`|Contains a list of names/hashes (usually SHA256 in Base64) for all the files of the APK, and is used to invalidate the APK if any of the files are modified.|
+
+#### assets
+
+This folder contains assets that developers bundle with the application, and can be retrieved by the AssetManager. These assets can be images, videos, documents, databases, and other raw files. Xamarin, Cordova, and React-Native applications will use this folder to save code and DLL's as well.
+
+#### lib
+
+This folder contains native libraries with compiled code targeting different device architectures. Android applications that use the Native Development Kit may include components written in C or C++. When an app includes native libraries, they are stored in the `lib` directory as shared object files with `.so` extension. Separate SO files are generated for each supported architecture, typically organized under subdirectories following this structure:
+
+```bash
+d41y@htb[/htb]$ ls -l lib/
+
+total 0
+drwxr-xr-x  3 bertolis  bertolis  96 May 10 13:36 arm64-v8a
+drwxr-xr-x  3 bertolis  bertolis  96 May 10 13:36 armeabi-v7a
+drwxr-xr-x  3 bertolis  bertolis  96 May 10 13:36 x86
+drwxr-xr-x  3 bertolis  bertolis  96 May 10 13:36 x86_64
+```
+
+#### res
+
+This folder contains predefined application resources that cannot be modified by the user at runtime, unlike assets. These resources include XML files defining color state lists, UI layouts, fonts, values, configurations for OS versions, screen orientations, network settings, and more.
+
+```bash
+d41y@htb[/htb]$ ls -l res/
+
+<SNIP>
+drwxr-xr-x 1 bertolis bertolis 10762 Jan 27 16:05 color
+drwxr-xr-x 1 bertolis bertolis  6624 Jan 27 16:05 drawable
+drwxr-xr-× 1 bertolis bertolis    30 Jan 27 16:05 raw
+drwxr-xr-× 1 bertolis bertolis   466 Jan 27 16:05 xml
+```
+
+#### AndroidManifest.xml
+
+The manifest file contains metadata about the application. It defines essential attributes and components that the system uses to manage the app, including:
+
+- package name
+- SDK version
+- build version
+- permissions
+- NetworkSecurityConfig
+- activities
+- providers
+- services
+
+#### classes.dex
+
+This file contains all compiled Java classes in DEX format, which are executed by the Android Runtime on devices running Android 5.0 or higher, or by the Dalvik VM on earlier versions. Large applications may include multiple DEX files, named sequentially as `classes2.dex`, `classes3.dex`, and so on.
+
+#### resources.arsc
+
+This file contains precompiled resources that are used by the app at runtime. It maps resource identifiers in the code to their actual values, such as strings, colors, layouts, and styles. It also includes a binary representation of XML resources. In some APKs, you may also find a `kotlin/` folder, which exists in apps written in Kotlin and contains Kotlin-specific metadata used by the runtime and tooling.
+
+## Android Apps & Development
+
+### Android Studio
+
+Android Studio is an Integrated Development Environment (_IDE_) based on JetBrain's IntelliJ IDEA and is the official IDE for Android application development. Familiartity with the Android Studio project structure can provide valuable insight during reverse engineering. Android Studio is available for Windows, Linux, and macOS. On Windows and macOS, you can download the `.exe` and `.dmg` installers respectively, and follow the Setup Wizard to complete the installation. For Debian based distros:
+
+```bash
+d41y@htb[/htb]$ wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.3.1.14/android-studio-2024.3.1.14-linux.tar.gz
+d41y@htb[/htb]$ tar xvzf android-studio-2024.3.1.14-linux.tar.gz
+d41y@htb[/htb]$ sh android-studio/bin/studio.sh
+```
+
+Once the Setup Wizard starts, click "Next" on the first four windows to download the SDK and accept the License Agreement. Then, wait for the components to download and click "Finish".
+
+On the next window, click on the "Create Project" button to create a new project.
+
+Select "Empty Views Activity" and choose "Groovy DSL (build.gradle)" in the "Build configuration language" option, and click "Next".
+
+Finally, you give the app a name, select the programming language and click "Finish".
+
+After clicking "Finish", you wait for the indexing process to complete before proceeding with the following steps.
+
+#### Project Structure
+
+Once the project is created, you see the project structure.
+
+![android fundamentals 6](../../images/android_fundamentals6.png)
+
+Understanding the Android Studio project structure is essential for reverse engineering, as it provides insight into how the app is organized during development.
+
+The project contains the following folders:
+
+##### app
+
+|**Files**|**Description**|
+|---|---|
+|`manifest`|Contains essential metadata about the app, including the package name, components (activities, services, etc.), permissions, network configuration, API level, and more.|
+|`java`|Contains the application's Java source code.|
+|`res`|Contains app resources such as UI strings, images, layout XML files, and other static assets used by the app.|
+
+##### Gradle Scripts
+
+|**Files**|**Description**|
+|---|---|
+|`build.gradle`|Defines build configurations for the project or module, including dependencies, build types, and whether code optimization tools (such as ProGuard) are enabled.|
+|`proguard-rules.pro`|Specifies custom rules for ProGuard|
+
+#### Types of Applications
+
+Depending on the technologies used, Mobile Apps can be categorized into three basic types.
+
+##### Native Apps
+
+... are built specifically for a particular OS. Android native apps are typically developed using Kotlin or Java. They are generally considered more secure than hybrid apps because they have direct access to platform-level security features and system APIs.
+
+##### Web Apps
+
+While similar in appearance to native apps, web apps are developed to be responsive and accessible from mobile web browsers. They are typically built using HTML, CSS, and JavaScript. Web apps can be vulnerable to web-based attacks due to their reliance on web technologies and browser security.
+
+##### Hybrid Apps
+
+... combine elements of both native and web apps and are designed to be cross-platform. They use WebViews to display web content within a native app container. While offering the flexibility of web apps, hybrid apps can also be vulnerable to web-based attacks, including XSS attacks, weak SSL implementations, and more.
+
+### Native Apps
+
+Native apps are software applications written in a specific programming language and tailored to run on a particular platform. In the context of Android, native apps are primarily developed using Java or Kotlin and built with Android Studio, typically leveraging components from the Android Software Development Kit.
+
+Google is using Kotlin as the default programming language for app development. However, Java is still a popular choice and many users prefer it over Kotlin. In the following steps, it is shown how to create a simple application in Java.
+
+Since you have already created a new project, examine how the app layout is created and connected with the Java code and other resources. On the left side section under `app/res/layout` you select the `activity_main.xml`.
+
+Layouts define the structure of the user interface of the application, and Android uses XML to create such layouts. In this file, `activity_main.xml`, you can add text, buttons, images, and other things that will be displayed to the user. The following snippet will create the layout of an application that prints a message on the screen when the button is tapped.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Application"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.097" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintVertical_bias="0.403" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="380dp"
+        android:layout_height="31dp"
+        android:text="@string/message"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textIsSelectable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintVertical_bias="0.25" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+The above snippet consists of three objects: two `TextView` and one `Button`. It is worth noticing the following attributes:
+
+|**Attribute**|**Description**|
+|---|---|
+|`tools:context=".MainActivity`|Defines the Activity in which the layout will be used. This is primarily used in the layout editor for preview purposes and does not affect the runtime behavior of the app.|
+|`android:id`|Assigns a unique identifier to the object, allowing it to be referenced in Java code (such as`MainActivity.java`) and other resources. The `@+id` prefix indicates it will be created as a new resource, whereas `@id` would be used if the resource were already defined.|
+|`android:text`|Sets the text content of the TextView or Button. The value can be a hardcoded string, like `android:text="My Application"`, or a reference to a string resource from the relative to the project file `res/values/strings.xml`. Referencing string resources is the recommended approach for localization and maintainability. The example below shows the contents of the `strings.xml` file used in this project.|
+
+```xml
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="message">Hello World!</string>
+</resources>
+```
+
+These values can also be accessed from the Java code using the `R` class. The `R` class, which is auto-generated by Android, contains the IDs of all the resources in the `res/` directory. Familiarity with these procedures will give you a better understanding of the app during the process of reverse engineering. Now see the content of the file `MainActivity.java`, which contains the Java code of the app.
+
+```java
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    TextView message;
+    Button button;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        message = (TextView)findViewById(R.id.message);
+        button = (Button)findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                message.setText("Hello from Java!");
+            }
+        });
+    }
+}
+```
+
+The class `MainActivity` includes the method `OnCreate()`. This method is called when the activity is starting, thus everything inside will run automatically. The line `setContentView(R.layout.activity_main);` indicates that the `activity_main.xml` file will be used to set the layout of this activity. Method `OnCreate()` is also used for initializations since it runs when the activity starts. The variables `message` and `button` are initialized to point to the corresponding objects found in the `activity_main.xml` file.
+
+```java
+message = (TextView)findViewById(R.id.message);
+button = (Button)findViewById(R.id.button);
+```
+
+Using the `R.java` file, the `R.id.message` points to the `android:id0"@+id/message"` attribute in the `activity_main.xml` file you saw earlier. Finally, the line `message.setText("Hello from Java!");` will be executed as soon as the button is clicked, like the line `button.setOnClickListener` indicates. Once it's tapped, the text `Hello from Java!` will be set in the TextView.
+
+The snippet below shows the same app written in Kotlin. To configure the project to use Kotlin as the default programming language, you must select Kotlin in the Language field on the "New Project" window while creating a new project in Android Studio. Then, optionally, you can also select Kotlin DSL (_build.gradle.kts_)  in the "Build configuration language" field to utilize Kotlin syntax for Gradle build scripts.
+
+```kotlin
+package com.example.myapplication
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val message = findViewById<TextView>(R.id.message)
+        val button = findViewById<Button>(R.id.button)
+
+        button.setOnClickListener {
+            message.text = "Hello from Java!"
+        }
+    }
+}
+```
+
+Although Kotlin and Java use different syntax, most tools will generate the same pseudocode when reverse engineering the app. This means that it's not necessary for you to master both programming languages. Once the app is developed, you can export a signed APK file ready for installation. Under "Build" -> "Generate Signed Bundle / APK", you select APK and click "next".
+
+On the next window, you click "Create new ..." to create a new key.
+
+Then, you set the "Key store path", "password", "Alias", and "First and Last Name", and click "OK".
+
+Once the key is created, you click "Next".
+
+Finally, you select the option "release" and click on "Finish".
+
+The signed APK file can be found under the directory `~/AndroidStudioProjects/MyApplication/app/release/`, with the name `app-release.apk`.
+
+```bash
+d41y@htb[/htb]$ ls -l ~/AndroidStudioProjects/MyApplication/app/release/
+
+total 8856
+-rw-r--r--@ 1 bertolis  bertolis  4527105 May  3 01:44 app-release.apk
+-rw-r--r--@ 1 bertolis  bertolis      379 May  3 01:44 output-metadata.json
+```
+
+You can rename and install the exported APK file directly on the device.
+
