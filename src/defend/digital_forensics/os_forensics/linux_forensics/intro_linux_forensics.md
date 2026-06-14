@@ -1236,3 +1236,307 @@ NetNS   Pid     FD      Sock Offset     Family  Type    Proto   Source Addr     
 <SNIP>
 ```
 
+## Forensics
+
+Assumed collected artifacts:
+
+|**Artifact**|**Location**|
+|---|---|
+|Scenario case artifacts general folder|`/home/linuxforensics/Desktop/cases/scenario1`|
+|Memory dump|`/home/linuxforensics/Desktop/cases/scenario1/web-server-dump`|
+|Apache web application logs|`/home/linuxforensics/Desktop/cases/scenario1/apache`|
+|Velociraptor offline collection general folder|`/home/linuxforensics/Desktop/cases/scenario1/collection`|
+|Velociraptor offline collection parsed results|`/home/linuxforensics/Desktop/cases/scenario1/collection/results`|
+|Velociraptor collected raw artifacts|`/home/linuxforensics/Desktop/cases/scenario1/collection/uploads`|
+|audit.log|`/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/audit/audit.log.1`, `/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/audit/audit.log`|
+|Systemd parsed results (journalctl)|`/home/linuxforensics/Desktop/cases/scenario1/journal.json`|
+|Root user .viminfo file|`/home/linuxforensics/Desktop/cases/scenario1/root_viminfo`|
+
+Host information:
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump banners.Banners
+
+Volatility 3 Framework 2.5.2
+
+Offset  Banner
+
+0x14c00200      Linux version 5.15.0-86-generic (buildd@lcy02-amd64-086) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023 (Ubuntu 5.15.0-86.96-generic 5.15.122)
+0x16c35778      Linux version 5.15.0-86-generic (buildd@lcy02-amd64-086) (gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023 (Ubuntu 5.15.0-86.96-generic 5.15.122)2)
+<SNIP>
+```
+
+Timezone of the compromised system is ETC/UTC:
+
+```bash
+linuxforensics@ubuntu:~$ cat ~/Desktop/cases/scenario1/collection/uploads/auto/etc/timezone
+
+Etc/UTC
+```
+
+### Network
+
+Your investigation starts with the analysis of network artifacts, and you will begin by utilizing Volatility to examine TCP connections from the memory dump.
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.sockstat.Sockstat | grep TCP
+
+4026531840      841     14      0x8f6305e52d00  AF_INET STREAM  TCP     127.0.0.53      53      0.0.0.0 0       LISTEN  -
+4026531840      910     3       0x8f6307a41b00  AF_INET STREAM  TCP     0.0.0.0 0       0.0.0.0 0       CLOSE   -
+4026531840      910     4       0x8f6311bcdf00  AF_INET6        STREAM  TCP     ::      80      ::      0       LISTEN  -
+4026531840      916     3       0x8f6307a41b00  AF_INET STREAM  TCP     0.0.0.0 0       0.0.0.0 0       CLOSE   -
+4026531840      917     3       0x8f6307a41b00  AF_INET STREAM  TCP     0.0.0.0 0       0.0.0.0 0       CLOSE   -
+4026531840      917     4       0x8f6311bcdf00  AF_INET6        STREAM  TCP     ::      80      ::      0       LISTEN  -
+4026531840      918     3       0x8f6307a41b00  AF_INET STREAM  TCP     0.0.0.0 0       0.0.0.0 0       CLOSE   -
+4026531840      918     4       0x8f6311bcdf00  AF_INET6        STREAM  TCP     ::      80      ::      0       LISTEN  -
+4026531840      919     3       0x8f6307a41b00  AF_INET STREAM  TCP     0.0.0.0 0       0.0.0.0 0       CLOSE   -
+4026531840      919     4       0x8f6311bcdf00  AF_INET6        STREAM  TCP     ::      80      ::      0       LISTEN  -
+4026531840      1441    3       0x8f6307a41b00  AF_INET STREAM  TCP     0.0.0.0 0       0.0.0.0 0       CLOSE   -
+4026531840      1441    4       0x8f6311bcdf00  AF_INET6        STREAM  TCP     ::      80      ::      0       LISTEN  -
+4026531840      28120   3       0x8f6307a44800  AF_INET STREAM  TCP     0.0.0.0 22      0.0.0.0 0       LISTEN  -
+4026531840      28120   4       0x8f631252d580  AF_INET6        STREAM  TCP     ::      22      ::      0       LISTEN  -
+4026531840      <PID>   12      0x8f6307a45100  AF_INET STREAM  TCP     192.168.152.225 39294   51.75.64.249    20128   ESTABLISHED      -
+4026531840      28645   0       0x8f6305e54800  AF_INET STREAM  TCP     192.168.152.225 59204   192.168.152.180 21      ESTABLISHED      -
+<SNIP>
+```
+
+You find multiple suspicious network connections:
+
+```bash
+NetNS   Pid     FD      Sock Offset     Family  Type    Proto   Source Addr     Source Port     Destination Addr        Destination Port        State   Filter
+
+4026531840      <PID>   12      0x8f6307a45100  AF_INET STREAM  TCP     192.168.152.225 39294   51.75.64.249    20128   ESTABLISHED     -
+4026531840      28645   0       0x8f6305e54800  AF_INET STREAM  TCP     192.168.152.225 59204   192.168.152.180 21      ESTABLISHED     -
+4026531840      28645   1       0x8f6305e54800  AF_INET STREAM  TCP     192.168.152.225 59204   192.168.152.180 21      ESTABLISHED     -
+4026531840      28645   2       0x8f6305e54800  AF_INET STREAM  TCP     192.168.152.225 59204   192.168.152.180 21      ESTABLISHED     -
+4026531840      28645   255     0x8f6305e54800  AF_INET STREAM  TCP     192.168.152.225 59204   192.168.152.180 21      ESTABLISHED     -
+```
+
+The first one and the most suspicious is `51.75.64.249` IP address. Quick check on VirusTotal showed no significant results:
+
+- https://www.virustotal.com/gui/ip-address/51.75.64.249/detection
+
+As an alternative for examining network artifacts, you can also review the `Linux.Network.NetstatEnriched` artifact obtained by the Velociraptor collector.
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Network.NetstatEnriched.json | grep "51.75.64.249" | jq .
+
+{
+  "Laddr": "192.168.152.225",
+  "Lport": 39294,
+  "Raddr": "51.75.64.249",
+  "Rport": 20128,
+  "Pid": <PID>,
+  "Status": "ESTABLISHED",
+  "ProcInfo": {
+    "Pid": <PID>,
+    "Name": "3",
+    "Ppid": 28343,
+    "CommandLine": "smd",
+    "CreateTime": 1697394962000,
+    "Times": {
+      "cpu": "cpu",
+      "user": 4393.34,
+      "system": 31.71,
+      "idle": 0,
+      "nice": 0,
+      "iowait": 0,
+      "irq": 0,
+      "softirq": 0,
+      "steal": 0,
+      "guest": 0,
+      "guestNice": 0
+    },
+    "Exe": "/memfd: (deleted)",
+    "Cwd": "/root",
+    "Username": "root",
+    "MemoryInfo": {
+      "rss": 271679488,
+      "vms": 318242816,
+      "hwm": 0,
+      "data": 0,
+      "stack": 0,
+      "locked": 0,
+      "swap": 0
+    }
+  },
+  "CallChain": "systemd -> cron -> cron -> sh -> run-one -> flock -> python3 -> 3",
+  "ChildrenTree": {
+    "name": "3",
+    "id": "<PID>",
+    "start_time": "2023-10-15T18:36:02Z",
+    "data": {
+      "Pid": <PID>,
+      "Name": "3",
+      "Ppid": 28343,
+      "CommandLine": "smd",
+      "CreateTime": 1697394962000,
+      "Times": {
+        "cpu": "cpu",
+        "user": 4393.34,
+        "system": 31.71,
+        "idle": 0,
+        "nice": 0,
+        "iowait": 0,
+        "irq": 0,
+        "softirq": 0,
+        "steal": 0,
+        "guest": 0,
+        "guestNice": 0
+      },
+      "Exe": "/memfd: (deleted)",
+      "Cwd": "/root",
+      "Username": "root",
+      "MemoryInfo": {
+        "rss": 271679488,
+        "vms": 318242816,
+        "hwm": 0,
+        "data": 0,
+        "stack": 0,
+        "locked": 0,
+        "swap": 0
+      }
+    },
+    "children": null
+  }
+}
+```
+
+From there, you can determine that the process connecting to this IP was executed via a cron job. From that artifact, you can also ascertain that Apache is running on that system:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Network.NetstatEnriched.json | jq .
+
+
+<SNIP>
+{
+  "Laddr": "::",
+  "Lport": 80,
+  "Raddr": "::",
+  "Rport": 0,
+  "Pid": 910,
+  "Status": "LISTEN",
+  "ProcInfo": {
+    "Pid": 910,
+    "Name": "httpd",
+    "Ppid": 1,
+    "CommandLine": "/usr/local/apache2/bin/httpd -k start",
+    "CreateTime": 1697391270000,
+    "Times": {
+      "cpu": "cpu",
+      "user": 0.31,
+      "system": 0.11,
+      "idle": 0,
+      "nice": 0,
+      "iowait": 0,
+      "irq": 0,
+      "softirq": 0,
+      "steal": 0,
+      "guest": 0,
+      "guestNice": 0
+    },
+    "Exe": "/usr/local/apache2/bin/httpd",
+    "Cwd": "/",
+    "Username": "root",
+    "MemoryInfo": {
+      "rss": 2293760,
+      "vms": 6553600,
+      "hwm": 0,
+      "data": 0,
+      "stack": 0,
+      "locked": 0,
+      "swap": 0
+    }
+  },
+  <SNIP>
+}
+```
+
+Review in the Velociraptor collection the other four TCP connections obtained from the memory dump with a destination port of `TCP/21` and a remote host IP of `192.168.152.180`:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Network.NetstatEnriched.json | grep "192.168.152.180" | jq .
+
+{
+  "Laddr": "192.168.152.225",
+  "Lport": 59204,
+  "Raddr": "192.168.152.180",
+  "Rport": 21,
+  "Pid": 28645,
+  "Status": "ESTABLISHED",
+  "ProcInfo": {
+    "Pid": 28645,
+    "Name": "bash",
+    "Ppid": 1,
+    "CommandLine": "<REDACTED>",
+    "CreateTime": 1697395704000,
+    "Times": {
+      "cpu": "cpu",
+      "user": 0.01,
+      "system": 0,
+      "idle": 0,
+      "nice": 0,
+      "iowait": 0,
+      "irq": 0,
+      "softirq": 0,
+      "steal": 0,
+      "guest": 0,
+      "guestNice": 0
+    },
+    "Exe": "/usr/bin/bash",
+    "Cwd": "/usr/bin",
+    "Username": "user",
+    "MemoryInfo": {
+      "rss": 3321856,
+      "vms": 5828608,
+      "hwm": 0,
+      "data": 0,
+      "stack": 0,
+      "locked": 0,
+      "swap": 0
+    }
+  },
+  "CallChain": "systemd -> bash",
+  "ChildrenTree": {
+    "name": "bash",
+    "id": "28645",
+    "start_time": "2023-10-15T18:48:24Z",
+    "data": {
+      "Pid": 28645,
+      "Name": "bash",
+      "Ppid": 1,
+      "CommandLine": "<REDACTED>",
+      "CreateTime": 1697395704000,
+      "Times": {
+        "cpu": "cpu",
+        "user": 0.01,
+        "system": 0,
+        "idle": 0,
+        "nice": 0,
+        "iowait": 0,
+        "irq": 0,
+        "softirq": 0,
+        "steal": 0,
+        "guest": 0,
+        "guestNice": 0
+      },
+      "Exe": "/usr/bin/bash",
+      "Cwd": "/usr/bin",
+      "Username": "user",
+      "MemoryInfo": {
+        "rss": 3321856,
+        "vms": 5828608,
+        "hwm": 0,
+        "data": 0,
+        "stack": 0,
+        "locked": 0,
+        "swap": 0
+      }
+    },
+    "children": null
+  }
+}
+```
+
+You can observe the execution of the shell command (`PID: 28645`) that is frequently employed by malicious actors to establish e reverse shell.
+
