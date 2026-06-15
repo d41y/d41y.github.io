@@ -745,6 +745,519 @@ Now that the data is loaded, you can use the Analysis tab to run queries against
 
 ## Credentialed Enum - from Windows
 
+### net
+
+To start gathering user information, you will use `net.exe`, which is installed by default on all Windows OS. More specifically, you will use the `net user` sub-command. While you can use this tool to enumerate local accounts on the machine, you'll instead use `/domain` to print out the users in the domain.
+
+```
+C:\Users\stephanie>net user /domain
+The request will be processed at a domain controller for domain corp.com.
+
+User accounts for \\DC1.corp.com
+
+-------------------------------------------------------------------------------
+Administrator            dave                     Guest
+iis_service              jeff                     jeffadmin
+jen                      krbtgt                   pete
+stephanie
+The command completed successfully.
+```
+
+The output from this command will vary depending on the size of the organization. Armed with a list of users, you can now query information about individual users.
+
+Administrators often tend to add prefixes or suffixes to usernames that identify accounts by their function. Based on the output above, you should check out the `jeffadmin` user because it might be an administrative account.
+
+```
+C:\Users\stephanie>net user jeffadmin /domain
+The request will be processed at a domain controller for domain corp.com.
+
+User name                    jeffadmin
+Full Name
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            9/2/2022 4:26:48 PM
+Password expires             Never
+Password changeable          9/3/2022 4:26:48 PM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   9/20/2022 1:36:09 AM
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators
+Global Group memberships     *Domain Users         *Domain Admins
+The command completed successfully.
+```
+
+According to the output, `jeffadmin` is part of the `Domain Admins`  group, which is something you should take note of. If you manage to compromise this account, you'll essentially elevate yourself to administrator.
+
+You can also use `net.exe` to enumerate groups in the domain with `net group`:
+
+```
+C:\Users\stephanie>net group /domain
+The request will be processed at a domain controller for domain corp.com.
+
+Group Accounts for \\DC1.corp.com
+
+-------------------------------------------------------------------------------
+*Cloneable Domain Controllers
+*Debug
+*Development Department
+*DnsUpdateProxy
+*Domain Admins
+*Domain Computers
+*Domain Controllers
+*Domain Guests
+*Domain Users
+*Enterprise Admins
+*Enterprise Key Admins
+*Enterprise Read-only Domain Controllers
+*Group Policy Creator Owners
+*Key Admins
+*Management Department
+*Protected Users
+*Read-only Domain Controllers
+*Sales Department
+*Schema Admins
+The command completed successfully.
+```
+
+You'll again use `net.exe` to enumerate the group members, this time focusing on the `Sales Department` group:
+
+```
+PS C:\Tools> net group "Sales Department" /domain
+The request will be processed at a domain controller for domain corp.com.
+
+Group name     Sales Department
+Comment
+
+Members
+
+-------------------------------------------------------------------------------
+pete                     stephanie
+The command completed successfully.
+```
+
+### PowerShell and .NET Classes
+
+There are several tools you can use to enumerate AD. PowerShell cmdlets like `Get-ADUser` work well but they are only installed by default on DCs as part of the [Remote Server Administrative Tools](https://learn.microsoft.com/en-us/troubleshoot/windows-server/system-management-components/remote-server-administration-tools) (_RSAT_). RSAT is very rarely present on clients in a domain, and you must have administrative privileges to install them.
+
+In the Microsoft .NET classes related to AD, you find the `System.DirectoryServices.ActiveDirectory` namespace. While there are a few classes to choose from here, you'll focus on the Domain Class. It specifically contains a reference to the `PdcRoleOwner` in the properties, which is exactly what you need. By checking the methods, you find a method called `GetCurrentDomain()`, which will return the domain object for the current user.
+
+To invoke the Domain Class and the `GetCurrentDomain` method, you'll run the following command in PowerShell:
+
+```powershell
+PS C:\Users\stephanie> [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+
+Forest                  : corp.com
+DomainControllers       : {DC1.corp.com}
+Children                : {}
+DomainMode              : Unknown
+DomainModeLevel         : 7
+Parent                  :
+PdcRoleOwner        : DC1.corp.com
+RidRoleOwner            : DC1.corp.com
+InfrastructureRoleOwner : DC1.corp.com
+Name                  	: corp.com
+```
+
+The output revels the `PdcRoleOwner` property, which in this case is `DC01.corp.com`. While you can certainly add this hostname directly into your script as part of the LDAP path, you want to automate the process so you can also use this script in the future engagements.
+
+First, you'll create a variable that will store the domain object, then you will print the variable so you can verify that it still works within your script:
+
+```powershell
+# Store the domain object in the $domainObj variable
+$domainObj = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+
+# Print the variable
+$domainObj
+```
+
+To run the script, you must bypass the execution policy, which was designed to keep you from accidentally running PowerShell scripts.
+
+```powershell
+PS C:\Users\stephanie> powershell -ep bypass
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\stephanie>
+```
+
+Now run the script and verify that it prints the domain object:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+
+Forest                  : corp.com
+DomainControllers       : {DC1.corp.com}
+Children                : {}
+DomainMode              : Unknown
+DomainModeLevel         : 7
+Parent                  :
+PdcRoleOwner            : DC1.corp.com
+RidRoleOwner            : DC1.corp.com
+InfrastructureRoleOwner : DC1.corp.com
+Name                    : corp.com
+```
+
+Your `domainObj` variable now holds the information about the domain object. Although this print statement isn't required, it's a nice way to verify that your command and the variable worked as intended.
+
+Since the hostname in the `PdcRoleOwner` property is required for your LDAP path, you can extract the name directly from the domain object. In case you need more information from the domain object later in your script, you will keep the `$domainObj` for the time being and create a new variable called `$PDC`, which will extract the value from the `PdcRoleOwner` property held in your `$domainObj` variable:
+
+```powershell
+# Store the domain object in the $domainObj variable
+$domainObj = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+
+# Store the PdcRoleOwner name to the $PDC variable
+$PDC = $domainObj.PdcRoleOwner.Name
+
+# Print the $PDC variable
+$PDC
+```
+
+Running the script:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+DC1.corp.com
+```
+
+While you can also get the DN for the domain via the domain object, it does not follow the naming standard required for LDAP. In your example, you know that the base domain is `corp.com` and the DN would in fact be `DN=corp,DC.com`. In this instance, you could grab `corp.com` from the `Name` property in the domain object and tell PowerShell to break it up and add the required `DC=` parameter. However, there is an easier way of doing it, which will also make sure you are obtaining the correct DN.
+
+You can use ADSI directly in PowerShell to retrieve the DN. You'll use two single quotes to indicate that the search starts at the top of the AD hierarchy:
+
+```powershell
+PS C:\Users\stephanie> ([adsi]'').distinguishedName
+DC=corp,DC=com
+```
+
+This returns the DN in proper format for the LDAP path.
+
+Now you can add a new variable in your script that will store the DN for the domain. To make sure the script still works, you'll add a print statement and print the contents of your new variable:
+
+```powershell
+# Store the domain object in the $domainObj variable
+$domainObj = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+
+# Store the PdcRoleOwner name to the $PDC variable
+$PDC = $domainObj.PdcRoleOwner.Name
+
+# Store the Distinguished Name variable into the $DN variable
+$DN = ([adsi]'').distinguishedName
+
+# Print the $DN variable
+$DN
+```
+
+Running it:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+DC=corp,DC=com
+```
+
+At this point, you are dynamically obtaining the Hostname and the DN with your script. Now you must assemble the pieces to build the full LDAP path. To do this, you'll add a new `$LDAP` variable to your script that will contain the `$PDC` and `$DN` variables, prefixed with `LDAP://`.
+
+```powershell
+$PDC = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().PdcRoleOwner.Name
+$DN = ([adsi]'').distinguishedName 
+$LDAP = "LDAP://$PDC/$DN"
+$LDAP
+```
+
+Running it:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+LDAP://DC1.corp.com/DC=corp,DC=com
+```
+
+To now build in some search functionality by using two .NET classes that are located in the `System.DirectoryServices` namespace, more specifically the `DirectoryEntry` and `DirectorySearcher` classes.
+
+The `DirectoryEntry` class encapsulates an object in the AD service hierarchy. In your case, you want to search the very top of the AD hierarchy, so you will provide the obtained LDAP path to the `DirectoryEntry` class.
+
+The `DirectorySearcher` class performs queries against AD using LDAP. When creating an instance of `DirectorySearcher`, you must specify the AD service you want to query in the form of the `SearchRoot` property. According to Microsoft's documentation, this property indicates where the search begins in the AD hierarchy. Since the `DirectoryEntry` class encapsulates the LDAP path that points to the top of the hierarchy, you will pass that as a variable to `DirectorySearcher`.
+
+The `DirectorySeacher` documentation lists `FindAll()`, which returns a collection of all the entries found in AD.
+
+```powershell
+$PDC = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().PdcRoleOwner.Name
+$DN = ([adsi]'').distinguishedName 
+$LDAP = "LDAP://$PDC/$DN"
+
+$direntry = New-Object System.DirectoryServices.DirectoryEntry($LDAP)
+
+$dirsearcher = New-Object System.DirectoryServices.DirectorySearcher($direntry)
+$dirsearcher.FindAll()
+```
+
+Running it:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+
+Path
+----
+LDAP://DC1.corp.com/DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Users,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Computers,DC=corp,DC=com
+LDAP://DC1.corp.com/OU=Domain Controllers,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=System,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=LostAndFound,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Infrastructure,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=ForeignSecurityPrincipals,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Program Data,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Microsoft,CN=Program Data,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=NTDS Quotas,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Managed Service Accounts,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=Keys,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=WinsockServices,CN=System,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=RpcServices,CN=System,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=FileLinks,CN=System,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=VolumeTable,CN=FileLinks,CN=System,DC=corp,DC=com
+LDAP://DC1.corp.com/CN=ObjectMoveTable,CN=FileLinks,CN=System,DC=corp,DC=com
+...
+```
+
+Filtering the output is rather simple, and there are several ways to do so. One way is to set up a filter that will sift through the `samAccountType` attribute, which is an attribute applied to all user, computer, and group objects.
+
+The official documentation reveals different values of the `samAccountType` attribute, but you'll start with 0x30000000 (_decimal 805306368_), which will enumerate all users in the domain.
+
+```powershell
+$PDC = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().PdcRoleOwner.Name
+$DN = ([adsi]'').distinguishedName 
+$LDAP = "LDAP://$PDC/$DN"
+
+$direntry = New-Object System.DirectoryServices.DirectoryEntry($LDAP)
+
+$dirsearcher = New-Object System.DirectoryServices.DirectorySearcher($direntry)
+$dirsearcher.filter="samAccountType=805306368"
+$dirsearcher.FindAll()
+```
+
+Running it:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+
+Path                                                         Properties
+----                                                         ----------
+LDAP://DC1.corp.com/CN=Administrator,CN=Users,DC=corp,DC=com {logoncount, codepage, objectcategory, description...}
+LDAP://DC1.corp.com/CN=Guest,CN=Users,DC=corp,DC=com         {logoncount, codepage, objectcategory, description...}
+LDAP://DC1.corp.com/CN=krbtgt,CN=Users,DC=corp,DC=com        {logoncount, codepage, objectcategory, description...}
+LDAP://DC1.corp.com/CN=dave,CN=Users,DC=corp,DC=com          {logoncount, codepage, objectcategory, usnchanged...}
+LDAP://DC1.corp.com/CN=stephanie,CN=Users,DC=corp,DC=com     {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=jeff,CN=Users,DC=corp,DC=com          {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=jeffadmin,CN=Users,DC=corp,DC=com     {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=iis_service,CN=Users,DC=corp,DC=com   {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=pete,CN=Users,DC=corp,DC=com          {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=jen,CN=Users,DC=corp,DC=com           {logoncount, codepage, objectcategory, dscorepropagatio
+```
+
+When enumerating AD, you are very interested in the attributes of each object, which are stored in the `Properties` field.
+
+Knowing this, you can store the results you receive from your search in a new variable. You'll iterate through each object and print each property on its own line via a nested loop as shown below.
+
+```powershell
+$domainObj = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+$PDC = $domainObj.PdcRoleOwner.Name
+$DN = ([adsi]'').distinguishedName 
+$LDAP = "LDAP://$PDC/$DN"
+
+$direntry = New-Object System.DirectoryServices.DirectoryEntry($LDAP)
+
+$dirsearcher = New-Object System.DirectoryServices.DirectorySearcher($direntry)
+$dirsearcher.filter="samAccountType=805306368"
+$result = $dirsearcher.FindAll()
+
+Foreach($obj in $result)
+{
+    Foreach($prop in $obj.Properties)
+    {
+        $prop
+    }
+
+    Write-Host "-------------------------------"
+}
+```
+
+This script will search through AD and filter the results based on the `samAccountType` of your choosing, then place the results into the new `$result` variable. It will then further filter the results based on two foreach loops. The first loop will extract the objects stored in `$result` and place them into the `$obj` variable. The second loop will extract all the properties for each object and store the information in the `$prop` variable. The script will then print `$prop` and present the output in the terminal.
+
+While the `Write-Host` command is not required for the script to function, it does print a line between each object. This helps make the output somewhat easier to read.
+
+The script will output lots of information, which can be overwhelming depending on the existing number of domain users.
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+...
+logoncount                     {173}
+codepage                       {0}
+objectcategory                 {CN=Person,CN=Schema,CN=Configuration,DC=corp,DC=com}
+dscorepropagationdata          {9/3/2022 6:25:58 AM, 9/2/2022 11:26:49 PM, 1/1/1601 12:00:00 AM}
+usnchanged                     {52775}
+instancetype                   {4}
+name                           {jeffadmin}
+badpasswordtime                {133086594569025897}
+pwdlastset                     {133066348088894042}
+objectclass                    {top, person, organizationalPerson, user}
+badpwdcount                    {0}
+samaccounttype                 {805306368}
+lastlogontimestamp             {133080434621989766}
+usncreated                     {12821}
+objectguid                     {14 171 173 158 0 247 44 76 161 53 112 209 139 172 33 163}
+memberof                       {CN=Domain Admins,CN=Users,DC=corp,DC=com, CN=Administrators,CN=Builtin,DC=corp,DC=com}
+whencreated                    {9/2/2022 11:26:48 PM}
+adspath                        {LDAP://DC1.corp.com/CN=jeffadmin,CN=Users,DC=corp,DC=com}
+useraccountcontrol             {66048}
+cn                             {jeffadmin}
+countrycode                    {0}
+primarygroupid                 {513}
+whenchanged                    {9/19/2022 6:44:22 AM}
+lockouttime                    {0}
+lastlogon                      {133088312288347545}
+distinguishedname              {CN=jeffadmin,CN=Users,DC=corp,DC=com}
+admincount                     {1}
+samaccountname                 {jeffadmin}
+objectsid                      {1 5 0 0 0 0 0 5 21 0 0 0 30 221 116 118 49 27 70 39 209 101 53 106 82 4 0 0}
+lastlogoff                     {0}
+accountexpires                 {9223372036854775807}
+...
+```
+
+You can filter based on any property of any object type. In the example below, you have made two changes. First, you have changed the filter to use the `name` property to only show information for `jeffadmin`. Additionally, you have added `.memberof` to the `$prop` variable to only display the groups `jeffadmin` is a member of:
+
+```powershell
+$dirsearcher = New-Object System.DirectoryServices.DirectorySearcher($direntry)
+$dirsearcher.filter="name=jeffadmin"
+$result = $dirsearcher.FindAll()
+
+Foreach($obj in $result)
+{
+    Foreach($prop in $obj.Properties)
+    {
+        $prop.memberof
+    }
+
+    Write-Host "-------------------------------"
+}
+```
+
+Running it:
+
+```powershell
+PS C:\Users\stephanie> .\enumeration.ps1
+CN=Domain Admins,CN=Users,DC=corp,DC=com
+CN=Administrators,CN=Builtin,DC=corp,DC=com
+```
+
+You can use this script to enumerate any object available to us in AD. However, in the current state, this would require you to make further edits to the script itself based on what you wish to enumerate.
+
+Instead, you can make the script more flexible, allowing you to add the required parameters via the command line. For example, you could have the script accept the `samAccountType` you wish to enumerate as a command line argument.
+
+```powershell
+function LDAPSearch {
+    param (
+        [string]$LDAPQuery
+    )
+
+    $PDC = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().PdcRoleOwner.Name
+    $DistinguishedName = ([adsi]'').distinguishedName
+
+    $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$PDC/$DistinguishedName")
+
+    $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher($DirectoryEntry, $LDAPQuery)
+
+    return $DirectorySearcher.FindAll()
+
+}
+```
+
+At the very top, you declare the function itself with the name of your choosing, in this case `LDAPSearch`. It then dynamically obtains the required LDAP path connection string and adds it to the `$DirectoryEntry` variable.
+
+Afterwards, the `DirectoryEntry` and your `$LDAPQuery` parameter is fed into the `DirectorySearcher`. Finally, the search is run, and the output is added into an array, which is displayed in your terminal depending on your needs.
+
+```powershell
+PS C:\Users\stephanie> Import-Module .\function.ps1
+```
+
+Within PowerShell, you can now use the `LDAPSearch` command to obtain information from AD. To repeat parts of the user enumeration you did earlier, you can again filter on the specific `samAccountType`:
+
+```powershell
+PS C:\Users\stephanie> LDAPSearch -LDAPQuery "(samAccountType=805306368)"
+
+Path                                                         Properties
+----                                                         ----------
+LDAP://DC1.corp.com/CN=Administrator,CN=Users,DC=corp,DC=com {logoncount, codepage, objectcategory, description...}
+LDAP://DC1.corp.com/CN=Guest,CN=Users,DC=corp,DC=com         {logoncount, codepage, objectcategory, description...}
+LDAP://DC1.corp.com/CN=krbtgt,CN=Users,DC=corp,DC=com        {logoncount, codepage, objectcategory, description...}
+LDAP://DC1.corp.com/CN=dave,CN=Users,DC=corp,DC=com          {logoncount, codepage, objectcategory, usnchanged...}
+LDAP://DC1.corp.com/CN=stephanie,CN=Users,DC=corp,DC=com     {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=jeff,CN=Users,DC=corp,DC=com          {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=jeffadmin,CN=Users,DC=corp,DC=com     {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=iis_service,CN=Users,DC=corp,DC=com   {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=pete,CN=Users,DC=corp,DC=com          {logoncount, codepage, objectcategory, dscorepropagatio...
+LDAP://DC1.corp.com/CN=jen,CN=Users,DC=corp,DC=com           {logoncount, codepage, objectcategory, dscorepropagatio
+```
+
+You can also search directly for an `Object Class`, which is a component of AD that defines the object type.
+
+```powershell
+PS C:\Users\stephanie> LDAPSearch -LDAPQuery "(objectclass=group)"
+
+...                                                                                 ----------
+LDAP://DC1.corp.com/CN=Read-only Domain Controllers,CN=Users,DC=corp,DC=com            {usnchanged, distinguishedname, grouptype, whencreated...}
+LDAP://DC1.corp.com/CN=Enterprise Read-only Domain Controllers,CN=Users,DC=corp,DC=com {iscriticalsystemobject, usnchanged, distinguishedname, grouptype...}
+LDAP://DC1.corp.com/CN=Cloneable Domain Controllers,CN=Users,DC=corp,DC=com            {iscriticalsystemobject, usnchanged, distinguishedname, grouptype...}
+LDAP://DC1.corp.com/CN=Protected Users,CN=Users,DC=corp,DC=com                         {iscriticalsystemobject, usnchanged, distinguishedname, grouptype...}
+LDAP://DC1.corp.com/CN=Key Admins,CN=Users,DC=corp,DC=com                              {iscriticalsystemobject, usnchanged, distinguishedname, grouptype...}
+LDAP://DC1.corp.com/CN=Enterprise Key Admins,CN=Users,DC=corp,DC=com                   {iscriticalsystemobject, usnchanged, distinguishedname, grouptype...}
+LDAP://DC1.corp.com/CN=DnsAdmins,CN=Users,DC=corp,DC=com                               {usnchanged, distinguishedname, grouptype, whencreated...}
+LDAP://DC1.corp.com/CN=DnsUpdateProxy,CN=Users,DC=corp,DC=com                          {usnchanged, distinguishedname, grouptype, whencreated...}
+LDAP://DC1.corp.com/CN=Sales Department,DC=corp,DC=com                                 {usnchanged, distinguishedname, grouptype, whencreated...}
+LDAP://DC1.corp.com/CN=Management Department,DC=corp,DC=com                            {usnchanged, distinguishedname, grouptype, whencreated...}
+LDAP://DC1.corp.com/CN=Development Department,DC=corp,DC=com                           {usnchanged, distinguishedname, grouptype, whencreated...}
+LDAP://DC1.corp.com/CN=Debug,CN=Users,DC=corp,DC=com                                   {usnchanged, distinguishedname, grouptype, whencreated...}
+```
+
+Your script enumerates more groups than `net.exe` including `Print Operators`, `IIS_IUSRS`, and others. This is because it enumerates all AD objects including `Domain Local` groups.
+
+To enumerate every group available in the domain and display the user members, you can pipe the output into a new variable and use a foreach loop that will print each property for a group. This allows you to select specific attributes you are interested in.
+
+```powershell
+PS C:\Users\stephanie\Desktop> foreach ($group in $(LDAPSearch -LDAPQuery "(objectCategory=group)")) {
+$group.properties | select {$_.cn}, {$_.member}
+}
+```
+
+Since the output can be somewhat difficult to read, once again search for the groups, but this time specify the `Sales Department` in the query and pipe it into a variable in your PowerShell command line:
+
+```powershell
+PS C:\Users\stephanie> $sales = LDAPSearch -LDAPQuery "(&(objectCategory=group)(cn=Sales Department))"
+```
+
+Now that you only have one object in your variable, you can simply print the `member` attribute directly:
+
+```powershell
+PS C:\Users\stephanie\Desktop> $sales.properties.member
+CN=Development Department,DC=corp,DC=com
+CN=pete,CN=Users,DC=corp,DC=com
+CN=stephanie,CN=Users,DC=corp,DC=com
+PS C:\Users\stephanie\Desktop>
+```
+
+The `net.exe` tool missed this because it only lists user objects, not group objects. In addition, `net.exe` cannot display specific attribues. This emphasizes the benefit of custom tools.
+
 ### ActiveDirectory PowerShell Module
 
 ... is a group of PowerShell cmdlets for administering an AD environment from the command line. It consists of 147 different cmdlets (_now probably more_).
