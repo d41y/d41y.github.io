@@ -1932,6 +1932,88 @@ testspn/kerberoast.inlanefreight.local        testspn
 testspn2/kerberoast.inlanefreight.local       testspn2
 ```
 
+#### Object Permissions
+
+You can use `Get-ObjectAcl` to enumerate ACEs with PowerView. 
+
+```powershell
+PS C:\Tools> Get-ObjectAcl -Identity stephanie
+
+...
+ObjectDN               : CN=stephanie,CN=Users,DC=corp,DC=com
+ObjectSID              : S-1-5-21-1987370270-658905905-1781884369-1104
+ActiveDirectoryRights  : ReadProperty
+ObjectAceFlags         : ObjectAceTypePresent
+ObjectAceType          : 4c164200-20c0-11d0-a768-00aa006e0529
+InheritedObjectAceType : 00000000-0000-0000-0000-000000000000
+BinaryLength           : 56
+AceQualifier           : AccessAllowed
+IsCallback             : False
+OpaqueLength           : 0
+AccessMask             : 16
+SecurityIdentifier     : S-1-5-21-1987370270-658905905-1781884369-553
+AceType                : AccessAllowedObject
+AceFlags               : None
+IsInherited            : False
+InheritanceFlags       : None
+PropagationFlags       : None
+AuditFlags             : None
+...
+```
+
+The amount of output may seem overwhelming since you enumerated every ACE that grants or denies some sort of permission to stephanie. While there are many properties that seem potentially useful, you are primarily interested in those listed above.
+
+The output lists two Security Identifiers, unique values that represent an object in AD. The first contains the value `S-1-5-21-1987370270-658905905-1781884369-1104`, which is rather difficult to read. In order to make sense of the SID, you can use PowerView's `Convert-SidToName` command to convert it to an actual domain object name:
+
+```powershell
+PS C:\Tools> Convert-SidToName S-1-5-21-1987370270-658905905-1781884369-1104
+CORP\stephanie
+```
+
+The conversion reveals that the SID in the ObjectSID property belongs to the stephanie user you are currently using. The ActiveDirectoryRights property describes the type of permission applied to the object. To find out who has the ReadProperty permission in this case, you need to convert the SecurityIdentifier value.
+
+```powershell
+PS C:\Tools> Convert-SidToName S-1-5-21-1987370270-658905905-1781884369-553
+CORP\RAS and IAS Servers
+```
+
+According to PowerView, the SID in the SecurityIdentifier property belongs to a default AD group named RAS and IAS Servers.
+
+Taking this information together, the RAS and IAS Servers group has ReadProperty access rights to your user. While this is a common configuration in AD and likely won't give you an attack vector, you have used the example to make sense of the information you have obtained.
+
+In short, you are interested in the ActiveDirectoryRights and SecurityIdentifier for each object you enumerate going forward.
+
+The highest access permission you can have on an object is GenericAll.
+
+You can continue to use `Get-ObjectAcl` and select only the properties you are interested in, namely ActiveDirectoryRights and SecurityIdentifier. While the ObjectSID is nice to have, you don't need it when you are enumerating specific objects in AD since it will only contain the SID for the object, you are in fact enumerating.
+
+```powershell
+PS C:\Tools> Get-ObjectAcl -Identity "Management Department" | ? {$_.ActiveDirectoryRights -eq "GenericAll"} | select SecurityIdentifier,ActiveDirectoryRights
+
+SecurityIdentifier                            ActiveDirectoryRights
+------------------                            ---------------------
+S-1-5-21-1987370270-658905905-1781884369-512             GenericAll
+S-1-5-21-1987370270-658905905-1781884369-1104            GenericAll
+S-1-5-32-548                                             GenericAll
+S-1-5-18                                                 GenericAll
+S-1-5-21-1987370270-658905905-1781884369-519             GenericAll
+```
+
+In this case, you have a total of five objects that have the GenericAll permission on the Management Department object. To make sense of this, convert all the SIDs into actual names:
+
+```powershell
+PS C:\Tools> "S-1-5-21-1987370270-658905905-1781884369-512","S-1-5-21-1987370270-658905905-1781884369-1104","S-1-5-32-548","S-1-5-18","S-1-5-21-1987370270-658905905-1781884369-519" | Convert-SidToName
+CORP\Domain Admins
+CORP\stephanie
+BUILTIN\Account Operators
+Local System
+CORP\Enterprise Admins
+```
+
+The first SID belongs to the Domain Admins group and the GenericAll permission comes as no surprise since Domain Admins have the highest privilege possible in the domain. But stephanie is also in the list.
+
+This finding is significant and indicates that stephanie is a powerful account.
+
 ### SharpView
 
 Many of the same functions supported by PowerView can be used with SharpView. You can type a method name with ```-Help``` to get an argument list.
