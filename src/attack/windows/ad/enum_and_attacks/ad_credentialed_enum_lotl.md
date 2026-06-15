@@ -1499,15 +1499,68 @@ You can see that one account, backupagent, belongs to this group. It is worth no
 
 Utilizing the ActiveDirectory module on a host can be a stealthier way of performing actions than dropping a tool onto a host or loading it into memory and attempting to use it. This way, your actions could potentially blend in more.
 
-### PowerView
+### [PowerView](https://powersploit.readthedocs.io/en/latest/Recon/)
 
 ... is a tool written in PowerShell to help you gain situational awareness within an AD environment. Much like BloodHound, it provides a way to identify where users are logged in on a network, enumerate domain information such as users, computers, groups, ACLs, trusts, hunt for file shares and passwords, perform Kerberoasting, and more. It is a highly versatile tool that can provide you with great insight into the security posture of your client's domain. It requires more manual work to determine misconfigurations and relationships within the domain than BloodHound but, when used right, can help you to identify subtle misconfigs.
 
 For commands, read [this](https://powersploit.readthedocs.io/en/latest/Recon/).
 
+#### Domain Information
+
+Basic information about the domain:
+
+```powershell
+PS C:\Tools> Get-NetDomain
+
+Forest                  : corp.com
+DomainControllers       : {DC1.corp.com}
+Children                : {}
+DomainMode              : Unknown
+DomainModeLevel         : 7
+Parent                  :
+PdcRoleOwner            : DC1.corp.com
+RidRoleOwner            : DC1.corp.com
+InfrastructureRoleOwner : DC1.corp.com
+Name                    : corp.com
+```
+
 #### Domain User Information
 
 The Get-DomainUser function will provide you with information on all users or specific users you specify.
+
+All users:
+
+```powershell
+PS C:\Tools> Get-NetUser
+
+logoncount             : 113
+iscriticalsystemobject : True
+description            : Built-in account for administering the computer/domain
+distinguishedname      : CN=Administrator,CN=Users,DC=corp,DC=com
+objectclass            : {top, person, organizationalPerson, user}
+lastlogontimestamp     : 9/13/2022 1:03:47 AM
+name                   : Administrator
+objectsid              : S-1-5-21-1987370270-658905905-1781884369-500
+samaccountname         : Administrator
+admincount             : 1
+codepage               : 0
+samaccounttype         : USER_OBJECT
+accountexpires         : NEVER
+cn                     : Administrator
+whenchanged            : 9/13/2022 8:03:47 AM
+instancetype           : 4
+usncreated             : 8196
+objectguid             : e5591000-080d-44c4-89c8-b06574a14d85
+lastlogoff             : 12/31/1600 4:00:00 PM
+objectcategory         : CN=Person,CN=Schema,CN=Configuration,DC=corp,DC=com
+dscorepropagationdata  : {9/2/2022 11:25:58 PM, 9/2/2022 11:25:58 PM, 9/2/2022 11:10:49 PM, 1/1/1601 6:12:16 PM}
+memberof               : {CN=Group Policy Creator Owners,CN=Users,DC=corp,DC=com, CN=Domain Admins,CN=Users,DC=corp,DC=com, CN=Enterprise
+                         Admins,CN=Users,DC=corp,DC=com, CN=Schema Admins,CN=Users,DC=corp,DC=com...}
+lastlogon              : 9/14/2022 2:37:15 AM
+...
+```
+
+Specific user:
 
 ```powershell
 PS C:\htb> Get-DomainUser -Identity mmorgan -Domain inlanefreight.local | Select-Object -Property name,samaccountname,description,memberof,whencreated,pwdlastset,lastlogontimestamp,accountexpires,admincount,userprincipalname,serviceprincipalname,useraccountcontrol
@@ -1528,6 +1581,36 @@ userprincipalname    : mmorgan@inlanefreight.local
 serviceprincipalname :
 mail                 :
 useraccountcontrol   : NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD, DONT_REQ_PREAUTH
+```
+
+#### Group Information
+
+All groups:
+
+```powershell
+PS C:\Tools> Get-NetGroup | select cn
+
+cn
+--
+...
+Key Admins
+Enterprise Key Admins
+DnsAdmins
+DnsUpdateProxy
+Sales Department
+Management Department
+Development Department
+Debug
+```
+
+Specific group:
+
+```powershell
+PS C:\Tools> Get-NetGroup "Sales Department" | select member
+
+member
+------
+{CN=Development Department,DC=corp,DC=com, CN=pete,CN=Users,DC=corp,DC=com, CN=stephanie,CN=Users,DC=corp,DC=com}
 ```
 
 #### Recursive Group Membership
@@ -1570,6 +1653,68 @@ MemberSID               : S-1-5-21-3842939050-3880317879-2865463114-1965
 
 Above you performed a recursive look at the Domain Admins group to list its members. Now you know who to target for potential elevation of privileges.
 
+#### OS Information
+
+```powershell
+PS C:\Tools> Get-NetComputer
+
+pwdlastset                    : 10/2/2022 10:19:40 PM
+logoncount                    : 319
+msds-generationid             : {89, 27, 90, 188...}
+serverreferencebl             : CN=DC1,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=corp,DC=com
+badpasswordtime               : 12/31/1600 4:00:00 PM
+distinguishedname             : CN=DC1,OU=Domain Controllers,DC=corp,DC=com
+objectclass                   : {top, person, organizationalPerson, user...}
+lastlogontimestamp            : 10/13/2022 11:37:06 AM
+name                          : DC1
+objectsid                     : S-1-5-21-1987370270-658905905-1781884369-1000
+samaccountname                : DC1$
+localpolicyflags              : 0
+codepage                      : 0
+samaccounttype                : MACHINE_ACCOUNT
+whenchanged                   : 10/13/2022 6:37:06 PM
+accountexpires                : NEVER
+countrycode                   : 0
+operatingsystem               : Windows Server 2022 Standard
+instancetype                  : 4
+msdfsr-computerreferencebl    : CN=DC1,CN=Topology,CN=Domain System Volume,CN=DFSR-GlobalSettings,CN=System,DC=corp,DC=com
+objectguid                    : 8db9e06d-068f-41bc-945d-221622bca952
+operatingsystemversion        : 10.0 (20348)
+lastlogoff                    : 12/31/1600 4:00:00 PM
+objectcategory                : CN=Computer,CN=Schema,CN=Configuration,DC=corp,DC=com
+dscorepropagationdata         : {9/2/2022 11:10:48 PM, 1/1/1601 12:00:01 AM}
+serviceprincipalname          : {TERMSRV/DC1, TERMSRV/DC1.corp.com, Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/DC1.corp.com, ldap/DC1.corp.com/ForestDnsZones.corp.com...}
+usncreated                    : 12293
+lastlogon                     : 10/18/2022 3:37:56 AM
+badpwdcount                   : 0
+cn                            : DC1
+useraccountcontrol            : SERVER_TRUST_ACCOUNT, TRUSTED_FOR_DELEGATION
+whencreated                   : 9/2/2022 11:10:48 PM
+primarygroupid                : 516
+iscriticalsystemobject        : True
+msds-supportedencryptiontypes : 28
+usnchanged                    : 178663
+ridsetreferences              : CN=RID Set,CN=DC1,OU=Domain Controllers,DC=corp,DC=com
+dnshostname                   : DC1.corp.com
+```
+
+OS and hostname only:
+
+```powershell
+PS C:\Tools> Get-NetComputer | select operatingsystem,dnshostname
+
+operatingsystem              dnshostname
+---------------              -----------
+Windows Server 2022 Standard DC1.corp.com
+Windows Server 2022 Standard web04.corp.com
+Windows Server 2022 Standard FILES04.corp.com
+Windows 11 Pro               client74.corp.com
+Windows 11 Pro               client75.corp.com
+Windows 10 Pro               CLIENT76.corp.com
+```
+
+The output reveals a total of six computers in this domain, three of which are servers, including one DC.
+
 #### Trust Enumeration
 
 ```powershell
@@ -1600,19 +1745,171 @@ WhenCreated     : 11/1/2021 6:20:22 PM
 WhenChanged     : 2/26/2022 11:55:55 PM 
 ```
 
-#### Testing for Local Admin Access
+#### Permissions and Logged On Users
 
-You can use the Test-AdminAccess function to test for local admin access on either the current machine or a remote one.
+During an AD assessment, you may not always want to escalate your privileges right away.
+
+Instead, it's important to establish a good foothold, and your goal at the very least should be to maintain your access. If you are able to compromise other users that have the same permissions as the user, you already have access to, this allows you to maintain your foothold. If, for example, the password is reset for the user you originally obtained access to, or the system administrators notice suspicious activity and disable the account, you would still have access to the domain via other users you compromised.
+
+When the time comes to escalate your privileges, you don't necessarily need to immediately escalate to Domain Admins because there may be other accounts that have higher privileges than a regular domain user, even if they aren't necessarily a part of the Domain Admins group. Service Accounts are a good example of this. Although they may not always have the highest privilege possible, they may have more permissions than a regular domain user, such as local administrator privileges on specific servers.
+
+In addition, an organization's most sensitive and important data may be stored in locations that do not require domain administrator privileges, such as a database or a file server. This means that obtaining domain administrator privileges should not always be the end goal during an assessment since you may be able to reach the "crown jewels" for an organization via other users in the domain.
+
+PowerView's `Find-LocalAdminAccess` scans the network to determine if your current user has administrative permissions on any computers in the domain. The command relies on the `OpenServiceW`function, which will connect to the Service Control Manager on the target machines. The SCM essentially maintains a database of installed services and drivers on Windows computers. PowerView will attempt to open this database with the `SC_MANAGER_ALL_ACCESS` access right, which require administrative privileges, and if the connection is successful, PowerView will deem that your current user has administrative privileges on the target machine.
 
 ```powershell
-PS C:\htb> Test-AdminAccess -ComputerName ACADEMY-EA-MS01
-
-ComputerName    IsAdmin
-------------    -------
-ACADEMY-EA-MS01    True
+PS C:\Tools> Find-LocalAdminAccess
+client74.corp.com
 ```
 
-Above, you determined that the user you are currently using is an administrator on the host ACADEMY-EA-MS01. You can perform the same function for each host to see where you have administrative access.
+This reveals that `stephanie` has administrative privileges on CLIENT74.
+
+Continue by trying to visualize how computers and users are connected. The first step in this process will be to obtain information such as which user is logged in to which computer.
+
+Historically, the two most reliable Windows APIs that could help you achieve these goals are [NetWkstaUserEnum](https://learn.microsoft.com/en-us/windows/win32/api/lmwksta/nf-lmwksta-netwkstauserenum) and [NetSessionEnum](https://learn.microsoft.com/en-us/windows/win32/api/lmshare/nf-lmshare-netsessionenum). The former requires administrative privileges, while the latter does not. However, Windows has undergone changes over the last couple of years, possibly making the discovery of logged in user enumeration more difficult.
+
+PowerVies's `Get-NetSession` command uses the `NetWkstaUserEnum` and `NetSessionEnum` APIs under the hood.
+
+```powershell
+PS C:\Tools> Get-NetSession -ComputerName files04
+
+PS C:\Tools> Get-NetSession -ComputerName web04
+PS C:\Tools>
+```
+
+A simple explanation would be that there are no users logged in on the machines. However, to make sure you aren't receiving any error messages, add the `-Verbose` flag:
+
+```powershell
+PS C:\Tools> Get-NetSession -ComputerName files04 -Verbose
+VERBOSE: [Get-NetSession] Error: Access is denied
+
+PS C:\Tools> Get-NetSession -ComputerName web04 -Verbose
+VERBOSE: [Get-NetSession] Error: Access is denied
+```
+
+Unfortunately, it appeats that `NetSessionEnum` does not work in this case and returns an "Access is denied" error message. This most likely means that you are not allowed to run the query, and based on the error message, it may have someting to do with privileges.
+
+Since you may have administrative privileges on CLIENT74 with stephanie, run `Get-NetSession` against that machine and inspect the output there as well.
+
+```powershell
+PS C:\Tools> Get-NetSession -ComputerName client74
+
+CName        : \\192.168.50.75
+UserName     : stephanie
+Time         : 8
+IdleTime     : 0
+ComputerName : client74
+```
+
+You did receive some more information this time. However, looking closer at the output, the IP address in `CName` does not match the IP address for CLIENT74. In fact, it matches the IP address for your current machine, which is CLIENT75. Since you haven't spawned any sessions to CLIENT74, something appears to be off in this case as well.
+
+According to the documentation for NetSessionEnum, there are five possible query levels: 0,1, 2, 10, 502. Level 0 only returns the name of the computer establishing the session. Levels 1 and 2 return more information but require administrative privileges.
+
+This leaves you with levels 10 and 502. Both should return information such as the name of the computer and name of the user establishing the connection. By default, PowerView uses query level 10 with `NetSessionEnum`, which should give you the information you are interested in.
+
+The permissions required to enumerate sessions with `NetSessionEnum` are defined in the `SrvsvcSessionInfo` registry key, which is located in the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\DefaultSecurity` hive.
+
+In order to view the permissions, you'll use the PowerShell Get-Acl cmdlet.
+
+```powershell
+PS C:\Tools> Get-Acl -Path HKLM:SYSTEM\CurrentControlSet\Services\LanmanServer\DefaultSecurity\ | fl
+
+Path   : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\DefaultSecurity\
+Owner  : NT AUTHORITY\SYSTEM
+Group  : NT AUTHORITY\SYSTEM
+Access : BUILTIN\Users Allow  ReadKey
+         BUILTIN\Administrators Allow  FullControl
+         NT AUTHORITY\SYSTEM Allow  FullControl
+         CREATOR OWNER Allow  FullControl
+         APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES Allow  ReadKey
+         S-1-15-3-1024-1065365936-1281604716-3511738428-1654721687-432734479-3232135806-4053264122-3456934681 Allow  ReadKey
+```
+
+The output reveals the groups and users have either the `FullControl` or `ReadKey` , meaning they can all read the `SrvsvcSessionInfo` key itself.
+
+However, the BUILTIN group, NT AUTHORITY group, CREATER OWNER and APPLICATION PACKAGE AUTHORITY are defined by the system, and do not allow `NetSessionEnum` to enumerate this registry key from a remote standpoint.
+
+The long string in the end of the output is, according to [Microsoft's documentation](https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/sids-not-resolve-into-friendly-names), a capability SID.
+
+A capability SID is an unforgeable token of authority that grants a Windows component or a Universal Windows Application access to various resources. However, it will not give you remote access to the registry key of interest.
+
+In older Windows versions, Authenticated Users were allowed to access the registry hive and obtain information from the `SrvsvcSessionInfo` key. However, following the least privilege principle, regular domain users should not be able to acquire this information within the domain, which is likely part of the reason the permissions for the registry hive changed as well. In this case, due to permissions, you can be certain that `NetSessionEnum`will not be able to obtain this type of information on default windows 11.
+
+Get a better sense of the OS versions of use. You can do this with `Net-GetComputer`, this time including the `operatingsystemversion` attribute:
+
+```powershell
+PS C:\Tools> Get-NetComputer | select dnshostname,operatingsystem,operatingsystemversion
+
+dnshostname       operatingsystem              operatingsystemversion
+-----------       ---------------              ----------------------
+DC1.corp.com      Windows Server 2022 Standard 10.0 (20348)
+web04.corp.com    Windows Server 2022 Standard 10.0 (20348)
+FILES04.corp.com  Windows Server 2022 Standard 10.0 (20348)
+client74.corp.com Windows 11 Pro               10.0 (22000)
+client75.corp.com Windows 11 Pro               10.0 (22000)
+CLIENT76.corp.com Windows 10 Pro               10.0 (16299)
+```
+
+Windows 10 is the oldest OS in the environment, and based on the output above, it runs version 16299, otherwise known as [build 1709](https://learn.microsoft.com/en-us/windows/uwp/whats-new/windows-10-build-16299).
+
+While the documentation from Microsoft is not clear when they made a change to the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\DefaultSecurity` registry hive, it appears to be around the release of this exact build. It also seems to affect all Windows Server OS since Windows Server 2019 build 1809. This creates an issue for you since you won't be able to use PowerView to build the domain map you had in mind.
+
+Even though `NetSessionEnum` does not work in this case, you should keep it in your toolkit since it's not uncommon to find older systems in real-world environments.
+
+Fortunately There are other tools you can use, such as the [PsLoggedOn](https://learn.microsoft.com/en-us/sysinternals/downloads/psloggedon) application from the Sysinternals Suite. The documentation states that PsLoggedOn will enumerate the registry keys under `HKEY_USERS` to retrieve the security identifiers of logged-in users and convert the SIDs to usernames. PsLoggedOn will also use the `NetSessionEnum` API to see who is loggd on to the computer via resource shares.
+
+One limitation, however, is that PsLoggedOn relies on the Remote Registry service to scan the associated key. The Remote Registry service has not been enabled by default on Windows workstations since Windows 8, but system administrators may enable it for various administrative tasks, for backwards compatibility, or for installing monitoring/deployment tools, scripts, agents, etc.
+
+It is also enabled by default on later Windows Server OS such as Server 2012 R2, 2016 (1607), 2019 (1809), and Server 2022 (21H2). If it is enabled, the service will stop after ten minutes of inactivity to save resources, but it will re-enable once you connect with PsLoggedOn.
+
+Running PsLoggedOn:
+
+```powershell
+PS C:\Tools\PSTools> .\PsLoggedon.exe \\files04
+
+PsLoggedon v1.35 - See who's logged on
+Copyright (C) 2000-2016 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+Users logged on locally:
+     <unknown time>             CORP\jeff
+Unable to query resource logons
+```
+
+In this case, you discover that jeff is logged in on FILES04 with his domain user account. This is great information, which suggests another potential attack vector.
+
+```powershell
+PS C:\Tools\PSTools> .\PsLoggedon.exe \\web04
+
+PsLoggedon v1.35 - See who's logged on
+Copyright (C) 2000-2016 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+No one is logged on locally.
+Unable to query resource logons
+```
+
+According to the output, there are no users logged in on WEB04. This may be a false positive since you cannot know for sure that the Remote Registry Service is running, but you didn't receive any error messages, which suggests the output is accurate.
+
+As you discovered earlier, it appears that you have administrative privileges on CLIENT74 via stephanie, so this is a machine of high interest, and you should enumerate possible sessions there as well.
+
+```powershell
+PS C:\Tools\PSTools> .\PsLoggedon.exe \\client74
+
+PsLoggedon v1.35 - See who's logged on
+Copyright (C) 2000-2016 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+Users logged on locally:
+     <unknown time>             CORP\jeffadmin
+
+Users logged on via resource shares:
+     10/5/2022 1:33:32 AM       CORP\stephanie
+```
+
+It appears that jeffadmin has an open session on CLIENT74, and the output reveals some very interesting pieces of information. If you enumeration is accurate and you in fact have admininstrative privileges on CLIENT74, you should be able to log in there and possibly steal jeffadmin's creds. It would be very tempting to try this immediately, but it's best practice to stay the course and continue your enumeration. After all, your goal is not to get a quick win, but rather to provide a thorough analysis.
+
+Another interesting thing to note in the output is that stephanie is logged on via resource shares. This is shown because PsLoggedOn also uses the `NetSessionEnum` API, which in this case requires a logon to work. This may also explain why you saw a logon earlier for stephanie while using PowerView.
 
 #### Finding Users with SPN set
 
