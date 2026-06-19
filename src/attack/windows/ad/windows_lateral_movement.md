@@ -378,7 +378,7 @@ By default, PSExec performs the following action:
 > [!INFO]
 > PsExec eliminates the double-hop problem because credentials are passed with the command and generates an interactive logon session.
 
-You can use PsExec to connect to a remote host and execute commands interactively. You mus specify the computer or target where you are connecting `\\SRV02`, the option `-i` for interactive shell, the administrator login credentials with the option `-u <user>` and the password `-p <password>`, and `cmd` to specify the application to execute:
+You can use PsExec to connect to a remote host and execute commands interactively. You must specify the computer or target where you are connecting `\\SRV02`, the option `-i` for interactive shell, the administrator login credentials with the option `-u <user>` and the password `-p <password>`, and `cmd` to specify the application to execute:
 
 ```
 C:\Tools\SysinternalsSuite> .\PsExec.exe \\SRV02 -i -u INLANEFREIGHT\helen -p RedRiot88 cmd

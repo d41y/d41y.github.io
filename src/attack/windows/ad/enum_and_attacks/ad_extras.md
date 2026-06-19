@@ -1622,7 +1622,7 @@ GPP_AUTO... 172.16.5.5      445    ACADEMY-EA-DC01  Passwords: ['ILFreightguarda
 
 In the output above, you can see that you have retrieved the credentials for an account called guarddesk. This may have been set up so that shared workstations used by guards automatically log in at boot to accommodate multiple users throughout the day and night working different shifts. In this case, the credentials are likely a local admin, so it would be worth finding hosts where you can log in as admin and hunt for additional data. Sometimes you may discover credentials for a highly privileged user or credentials for a disabled account/an expired password that is no use to you.
 
-### ASREPRoasting
+### AS-REP Roasting
 
 It's possible to obtain the TGT for any account that has the "Do not require Kerberos pre-authentication" setting enabled. Many vendor installation guides specify that their service account be configured in this way. The authentication service reply (_AS\_REP_) is encrypted with the account's password, and any domain user can request it.
 
@@ -1757,6 +1757,9 @@ $krb5asrep$23$mmorgan@inlanefreight.local@INLANEFREIGHT.LOCAL:47e0d517f2a5815da8
 
 <SNIP>
 ```
+
+> [!NOTE]
+> Using `-outputfile <FILENAME>` stores the output in hashcat format.
 
 ### Group Policy Object (_GPO_) Abuse
 
