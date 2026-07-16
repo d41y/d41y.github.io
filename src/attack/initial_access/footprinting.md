@@ -2131,11 +2131,13 @@ Community strings can be seen as passwords that are used to determine whether th
 > **Currently-running processes** : `1.3.6.1.2.1.25.4.2.1.2`
 > **Installed software** : `1.3.6.1.2.1.25.6.3.1.2`
 > **Current TCP listening ports** : `1.3.6.1.2.1.6.13.1.3`
+> **Net-SNMP**: `1.3.6.1.4.1.8072[.1.3]`
 > 
 > `1.3.6.1.4.1` : vendor-specific
 > `1.3.6.1.2.1` : standard MIB
 > 
 > Further read: [here](https://www.luleey.com/common-oids-of-snmp/?srsltid=AfmBOope8OovlS_WKg4bLwQuSL2uc8Yj-IXnzMHRXRoD9BARQn_-KHfv)
+> List of ISO assigned OIDs: [here](https://www.alvestrand.no/objectid/1.html)
 
 #### Enum
 
