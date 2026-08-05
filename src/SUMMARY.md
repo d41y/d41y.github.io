@@ -139,6 +139,7 @@
 				- [Domain Trusts Attacks](attack/windows/ad/enum_and_attacks/ad_domain_trust_attacks.md)
 				- [Cross-Forest Trust Attacks](attack/windows/ad/enum_and_attacks/ad_cross_forest_trust_attacks.md)
 			- [Lateral Movement](attack/windows/ad/windows_lateral_movement.md)
+			- [Kerberos](attack/windows/ad/kerberos_attacks.md))
 
 - [Defend](defend/README.md)
 	- [Defensive Considerations, Mitigation, Hardening](defend/defensive_considerations/README.md)
