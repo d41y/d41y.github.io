@@ -627,7 +627,7 @@ In this example, the trusted list of the account DBSRV$ contains only the accoun
 
 Unlike the other two types of delegation, the resource has the right to modify its own trusted list. Thus, any service account has the right to modify its trusted list to allow one or more accounts to delegate authentication to themselves.
 
-If a service account adds one or more accounts to its trusted list, it updates its `msDSAllowedToActOnBehalfOfOtherIdentity` attribute in the directory.
+If a service account adds one or more accounts to its trusted list, it updates its `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute in the directory.
 
 In the following PowerShell command, you add the account WEBSRV$ to the trusted list of DBSRV.
 
