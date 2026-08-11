@@ -570,3 +570,95 @@ $krb5tgs$23$*sql-test$INLANEFREIGHT.LOCAL$MSSQL_svc_test/inlanefreight.local~144
 $krb5tgs$23$*adam.jones$INLANEFREIGHT.LOCAL$IIS_dev/inlanefreight.local~80*$2b9cfebc5043606bbebb9f140bdf48cb$c05bf3d19a3e26<SNIP>
 ```
 
+## Delegation Attacks
+
+### Theory
+
+The Kerberos protocol allows a user to authenticate to a service to use it, and Kerberos delegation enables that service to authenticate to another service as the original user.
+
+![kerberos attacks 1](../../../images/kerberos_attacks1.png)
+
+In this example, a user authenticates to WEBSRV to access the website. Once authenticated on the website, the user needs to access information stored in a database, but should not be given access to all the information within it. The service account managing the website must communicate with the database using the user's rights so that the database only gives access to resources that the user has the right to access. This is where delegation comes into play. The service account, here WEBSRV$, will pretend to be the user when accessing the database. This is called delegation.
+
+Kerberos delegation exists in three types: unconstrained, constrained, and resource-based constrained.
+
+#### Unconstrained Delegation
+
+Unconstrained delegation allows a service, here WEBSRV, to impersonate a user when accessing any other service. This is a very permissive and dangerous privilege, therefore, not any user can grant it.
+
+![kerberos attacks 2](../../../images/kerberos_attacks2.png)
+
+For an account to have an unconstrained delegation, on the "Delegation" tab of the account, the "Trust this computer for delegation to any service (Kerberos only)" must be selected.
+
+![kerberos attacks 3](../../../images/kerberos_attacks3.png)
+
+Only an administrator or a privileged user to whom these privileges have been explicitly given can set this option to other accounts. More specifically, it is necessary to have the "SeEnableDelegationPrivilege" privilege to perform this action. A service account cannot modify itself to add this option. It is important to remember this for the following sections.
+
+Specifically, when this option is enabled, the "TRUSTED_FOR_DELEGATION" flag is set on the account in the UAC flags.
+
+When this flag is set on a service account, and a user makes a TGS request to access this service, the DC will add a copy of the user's TGT to the TGS ticket. This way, the service account can extract this TGT, and thus make TGS requests to the DC using a copy of the user's TGT. The service will therefore have valid TGS ticket or ST as the user and will be able to access any services as the user.
+
+#### Constrained Delegation
+
+Since unconstrained delegation is not very restrictive, constrained delegation is another "more restrictive" type of delegation. This time, a service has the right to impersonate a user to a well-defined list of services. In this example, WEBSRV can only relay authentication to the SQL/DBSRV service but not to the others.
+
+![kerberos attacks 4](../../../images/kerberos_attacks4.png)
+
+A constrained delegation can be configured in the same place as an unconstrained delegation in the "Delegation" tab of the service account. The "Trust this computer for delegation to specified services only" option should be chosen.
+
+![kerberos attacks 5](../../../images/kerberos_attacks5.png)
+
+As with the unconstrained delegation, this option is not modifiable by default by a service account. When this option is enabled, the list of services allowed for delegation is stored in "msDS-AllowedToDelegateTo" attribute of the service account in charge of the delegation.
+
+While for unconstrained delegation a copy of the user's TGT gets sent to the service account, this is not the case for constrained delegation. If the service account, here WEBSRV, wishes to authenticate to a resource on behalf of the user, it must make a special TGS request to the DC. Two fields will be modified compared to a classic TGS request.
+
+- The "additional tickets" field contain a copy of the TGS ticket or Service Ticket the user sent to the service.
+- The "cname-in-addl-tkt" flag will be set to indicate to the DC that it should not use the server information but the ticket information in additional tickets, i.e., the user's information the server wants to impersonate.
+
+The DC will then verify that the service has the right to delegate authentication to the requested resource and that the copy of the TGS ticket or Service Ticket is forwardable. If all goes well, it will return a TGS ticket or Service Ticket to the service with the information of the user to be delegated to consume the final resource.
+
+#### Resource-Based Constrained Delegation
+
+Until now, delegation management was done at the level of the service that wanted to impersonate a user to access a resource. Resource-based constrained delegation reverses the responsibilities and shifts delegation management to the final resource. It is no longer at the service level that you list the resources to which you can delegate, but at the resource level, a trust list is established. Any account on this trusted list has the right to delegate authentication to access the resource.
+
+In this example, the trusted list of the account DBSRV$ contains only the account WEBSRV\$. Thus, a user will be authorized if WEBSRV$ wishes to impersonate a user to access a service exposed by DBSRV. On the other hand, other accounts are not allowed to delegate authentication to any service provided by DBSRV.
+
+![kerberos attacks 6](../../../images/kerberos_attacks6.png)
+
+Unlike the other two types of delegation, the resource has the right to modify its own trusted list. Thus, any service account has the right to modify its trusted list to allow one or more accounts to delegate authentication to themselves.
+
+If a service account adds one or more accounts to its trusted list, it updates its `msDSAllowedToActOnBehalfOfOtherIdentity` attribute in the directory.
+
+In the following PowerShell command, you add the account WEBSRV$ to the trusted list of DBSRV.
+
+```powershell
+PS C:\Tools> Import-Module ActiveDirectory
+PS C:\Tools> Set-ADComputer DBSRV -PrincipalsAllowedToDelegateToAccount (Get-ADComputer WEBSRV)
+```
+
+The attribute is updated in the directory.
+
+The delegation request is the same as for constrained delegation. A TGS request is made by the service account to access a specific resource. A copy of the user's TGS ticket is embedded in this request. The DC will then check that this service is indeed in the trusted list of the requested resource. If this is the case, it will provide the service with a TGS ticket to access this resource as the user.
+
+#### S4U2Proxy & S4U2Self
+
+S4U2Proxy (_[Service for User to Proxy](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-sfu/bde93b0e-f3c9-4ddf-9f44-e1453be7af5a)_) and S4U2Self (_[Service for User to Self](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-sfu/02636893-7a1f-4357-af9a-b672e3e3de13)_) are two AD extensions that allow delegation.
+
+##### S4U2Proxy
+
+It has already been described how S4U2Proxy works. This extension corresponds to the TGS request made by a service account to impersonate a user. The service account makes this TGS request to access a specific resource, and a copy of the user's TGS ticket is embedded in this request. The DC will then check that the service has the right to delegate authentication to the requested resource. If this is the case, it will provide the service with a TGS ticket to access this resource as the user.
+
+##### S4U2Self
+
+But what happens if a user has authenticated to the service without using Kerberos and therefore without providing a TGS ticket? This could be the case if then authentication mechanism uses the NTLM protocol. The S4U2Self extension solves this problem.
+
+This step is done before S4U2Proxy since the service account doesn't have any user's TGS ticket to embed in its request. The S4U2Self extension allows a service to obtain a forwardable TGS ticket to itself on behalf of an arbitrary user. Thus, when a user authenticates to the service via NTLM for example, the service will first request a forwardable TGS to itself on behalf of the user to act as if the user had authenticated via Kerberos, then once the service has this special TGS ticket, it can make its TGS request to use the desired resource, embedding the brand new forwardable TGS ticket it just asked for.
+
+This extension allows delegation even if the authentication protocol is not always the same between the user and the different services. This is called protocol transition.
+
+It is precisely this feature that can be enabled or disabled in the constrained delegation. If the "Use Kerberos only" option is chose, then the service account cannot do protocol transition, therefore, cannot use the S4U2Self extension. On the other hand, if the "Use any authentication protocol" option is set, then the service account can use the S4U2Self extension and, therefore, can create a TGS ticket for any arbitrary user.
+
+This option is quite dangerous.
+
+![kerberos attacks 7](../../../images/kerberos_attacks7.png)
+
