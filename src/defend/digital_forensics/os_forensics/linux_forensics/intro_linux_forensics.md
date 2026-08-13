@@ -2664,3 +2664,226 @@ Alternatively, review `Linux.Syslog.SSHLogin.json` file:
 ```json
 {"Time":"0000-10-15T18:34:00Z","IP":"192.168.152.180","Result":"Accepted","Method":"publickey","AttemptedUser":"john","OSPath":"/var/log/auth.log"}
 ```
+
+### Audit Log Review
+
+Timelines allow you to reconstruct system events in chronological order. Creating timelines is crucial because it transforms raw, scattered data into a coherent narrative which allows you to understand what, when happened, and what was triggered by certain events. Besides that, a timeline is mandatory since it provides verifiable timestamps for accountability and aids rapid triage and holds up in court by establishing causality with UTC-aligned, tamper-evident data.
+
+#### Zircolite
+
+Previously, auditd was installed on the system, and you will now utilize it to address questions that were not covered in earlier investigations. To simplify your analysis, you can merge `audit.log.1` and `audit.log` into a single and use the Zircolite utility to analyze the audit log file.
+
+```bash
+linuxforensics@ubuntu:~$ cd tools/Zircolite
+linuxforensics@ubuntu:~/tools/Zircolite$ cp /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/audit/audit.log.1 audit_full.log
+linuxforensics@ubuntu:~/tools/Zircolite$ cat /home/linuxforensics/Desktop/cases/scenario1/collection/uploads/auto/var/log/audit/audit.log >> audit_full.log
+```
+
+Next run the Zircolite utility:
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ python3 zircolite.py -A "2023-10-15T18:00:00" -B "2023-10-15T19:00:00" --events audit_full.log --auditd --ruleset rules/rules_linux.json --csv -o audit_logs_zircolite.csv
+
+    ███████╗██╗██████╗  ██████╗ ██████╗ ██╗     ██╗████████╗███████╗
+    ╚══███╔╝██║██╔══██╗██╔════╝██╔═══██╗██║     ██║╚══██╔══╝██╔════╝
+      ███╔╝ ██║██████╔╝██║     ██║   ██║██║     ██║   ██║   █████╗
+     ███╔╝  ██║██╔══██╗██║     ██║   ██║██║     ██║   ██║   ██╔══╝
+    ███████╗██║██║  ██║╚██████╗╚██████╔╝███████╗██║   ██║   ███████╗
+    ╚══════╝╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝   ╚═╝   ╚══════╝
+   -= Standalone SIGMA Detection tool for EVTX/Auditd/Sysmon Linux =-
+
+[+] Checking prerequisites
+[+] Extracting events Using 'tmp-6C3C5JHY' directory
+100%|██████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.82it/s]
+[+] Processing events
+100%|██████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.60s/it]
+[+] Creating model
+[+] Inserting data
+100%|███████████████████████████████████████████████████████████████████████████| 43638/43638 [00:01<00:00, 24754.19it/s]
+[+] Cleaning unused objects
+[+] Loading ruleset from : rules/rules_linux.json
+[+] Executing ruleset - 168 rules
+    - Systemd Service Creation [medium] : 2 events
+    - Program Executions in Suspicious Folders [medium] : 52 events
+    - Systemd Service Reload or Start [low] : 5 events
+    - Suspicious C2 Activities [medium] : 110 events
+    - Creation Of An User Account [medium] : 8 events
+    - Use Of Hidden Paths Or Files [low] : 87 events
+    - System Information Discovery - Auditd [low] : 32 events
+    - Hidden Files and Directories [low] : 3 events
+    - System Owner or User Discovery [low] : 2 events
+    - System and Hardware Information Discovery [informational] : 3 events
+100%|█████████████████████████████████████████████████████████████████████████████████| 168/168 [00:00<00:00, 305.00it/s]
+[+] Results written in : audit_logs_zircolite.csv
+[+] Cleaning
+
+Finished in 4 seconds
+```
+
+What hasn't been noticed yet so far is user creation, so grep it:
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ grep "Creation Of An User Account" audit_logs_zircolite.csv
+
+Creation Of An User Account;Detects the creation of a new user account. Such accounts may be used for persistence that do not require persistent remote access tools to be deployed on the system.;medium;8;;39323;SYSCALL;2023-10-15 18:25:18;;;;;unset;27790;root;4294967295;unconfined;;offline;audit_full.log-M9JOXJGB.json;;;x86_64;execve;yes;0;561bc231fc00;561bc2320500;561bc231d9b0;8;2;27788;root;root;root;root;root;root;root;(none);useradd;/usr/sbin/useradd;user_modification;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Creation Of An User Account;Detects the creation of a new user account. Such accounts may be used for persistence that do not require persistent remote access tools to be deployed on the system.;medium;8;;39328;SYSCALL;2023-10-15 18:25:18;;;;;unset;27790;root;4294967295;unconfined;;offline;audit_full.log-M9JOXJGB.json;;;x86_64;openat;yes;5;ffffff9c;562870257f60;20902;0;1;27788;root;root;root;root;root;root;root;(none);useradd;/usr/sbin/useradd;etcpasswd;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+<SNIP>
+```
+
+Zircolite couldn't parse the created user. Then use the `aureport` and `ausearch` utilities to parse the audit log file.
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ aureport -if audit_full.log
+
+Summary Report
+======================
+Range of time in logs: 01/01/1970 00:00:00.000 - 10/15/2023 19:13:33.165
+Selected time for report: 01/01/1970 00:00:00 - 10/15/2023 19:13:33.165
+
+Number of changes in configuration: 1158
+Number of changes to accounts, groups, or roles: 2
+Number of logins: 3
+Number of failed logins: 0
+Number of authentications: 8
+Number of failed authentications: 7
+Number of users: 3
+Number of terminals: 9
+Number of host names: 30
+Number of executables: 91
+Number of commands: 159
+Number of files: 484
+Number of AVC's: 0
+Number of MAC events: 0
+Number of failed syscalls: 159
+Number of anomaly events: 0
+Number of responses to anomaly events: 0
+Number of crypto events: 0
+Number of integrity events: 0
+Number of virt events: 0
+Number of keys: 90
+Number of process IDs: 6563
+Number of events: 10627
+```
+
+The first question is:
+
+- Can you answer how `/bin/bash` started at 18:48:25?
+
+You can find PID 28644 started from PPID 916 (_apache_):
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ sudo ausearch --syscall EXECVE -if audit_full.log -i --start 10/15/2023 '18:00:00' -te 10/15/2023 '18:50:00' | grep "18:48:25"
+
+type=PROCTITLE msg=audit(10/15/2023 18:48:25.772:7398) : proctitle=/bin/bash
+type=PATH msg=audit(10/15/2023 18:48:25.772:7398) : item=1 name=/lib64/ld-linux-x86-64.so.2 inode=262857 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:48:25.772:7398) : item=0 name=/bin/bash inode=262649 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=EXECVE msg=audit(10/15/2023 18:48:25.772:7398) : argc=1 a0=/bin/bash
+type=SYSCALL msg=audit(10/15/2023 18:48:25.772:7398) : arch=x86_64 syscall=execve success=yes exit=0 a0=0x7fa7fe1c85b0 a1=0x7fa7fe1c90a8 a2=0x7fa7fe1c85f0 a3=0x7fa7fe3573f8 items=2 ppid=916 pid=28644 auid=unset uid=user gid=user euid=user suid=user fsuid=user egid=user sgid=user fsgid=user tty=(none) ses=unset comm=bash exe=/usr/bin/bash subj=unconfined key=susp_shell
+type=PROCTITLE msg=audit(10/15/2023 18:48:25.776:7401) : proctitle=/bin/bash
+type=PATH msg=audit(10/15/2023 18:48:25.776:7401) : item=1 name=/lib64/ld-linux-x86-64.so.2 inode=262857 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:48:25.776:7401) : item=0 name=/usr/bin/bash inode=262649 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=EXECVE msg=audit(10/15/2023 18:48:25.776:7401) : argc=2 a0=bash a1=-i
+type=SYSCALL msg=audit(10/15/2023 18:48:25.776:7401) : arch=x86_64 syscall=execve success=yes exit=0 a0=0x5629b457f740 a1=0x5629b4580120 a2=0x5629b457bc90 a3=0x0 items=2 ppid=28644 pid=28645 auid=unset uid=user gid=user euid=user suid=user fsuid=user egid=user sgid=user fsgid=user tty=(none) ses=unset comm=bash exe=/usr/bin/bash subj=unconfined key=susp_shell
+type=PROCTITLE msg=audit(10/15/2023 18:48:25.784:7402) : proctitle=/bin/sh /usr/bin/lesspipe
+type=PATH msg=audit(10/15/2023 18:48:25.784:7402) : item=2 name=/lib64/ld-linux-x86-64.so.2 inode=262857 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:48:25.784:7402) : item=1 name=/bin/sh inode=262734 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:48:25.784:7402) : item=0 name=/usr/bin/lesspipe inode=262902 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=EXECVE msg=audit(10/15/2023 18:48:25.784:7402) : argc=2 a0=/bin/sh a1=/usr/bin/lesspipe
+type=SYSCALL msg=audit(10/15/2023 18:48:25.784:7402) : arch=x86_64 syscall=execve success=yes exit=0 a0=0x56458c6a5f60 a1=0x56458c6a6490 a2=0x56458c6a61b0 a3=0x8 items=3 ppid=28645 pid=28647 auid=unset uid=user gid=user euid=user suid=user fsuid=user egid=user sgid=user fsgid=user tty=(none) ses=unset comm=lesspipe exe=/usr/bin/dash subj=unconfined key=susp_shell
+```
+
+Next, can you determine the PPID of the `/bin/bash` process that was initiated at 18:48:25?
+
+```
+916
+```
+
+The next question can be:
+
+- How and which new user was created?
+
+Therefore, find events associated with user creation:
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ sudo ausearch --syscall EXECVE -if audit_full.log -i --start 10/15/2023 '18:00:00' -te 10/15/2023 '18:50:00' | grep -v "grep" | grep "useradd"
+
+type=PROCTITLE msg=audit(10/15/2023 18:25:18.339:6561) : proctitle=useradd -ou 0 -g 0 john
+type=PATH msg=audit(10/15/2023 18:25:18.339:6561) : item=0 name=/usr/sbin/useradd inode=276398 dev=fd:00 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=EXECVE msg=audit(10/15/2023 18:25:18.339:6561) : argc=6 a0=useradd a1=-ou a2=0 a3=-g a4=0 a5=john
+type=SYSCALL msg=audit(10/15/2023 18:25:18.339:6561) : arch=x86_64 syscall=execve success=yes exit=0 a0=0x561bc231fc00 a1=0x561bc2320500 a2=0x561bc231d9b0 a3=0x8 items=2 ppid=27788 pid=27790 auid=unset uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=(none) ses=unset comm=useradd exe=/usr/sbin/useradd subj=unconfined key=user_modification
+```
+
+Alternatively, you can use aureport as well to find the username created during an attack:
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ sudo aureport -if audit_full.log -m
+
+Account Modifications Report
+=================================================
+# date time auid addr term exe acct success event
+=================================================
+1. 10/15/2023 18:25:18 -1 ? ? /usr/sbin/useradd ? yes 6566
+2. 10/15/2023 18:25:39 -1 ? ? /usr/bin/passwd john yes 6581
+```
+
+In the `Linux.Sys.Users.json` and `Linux.Users.RootUsers.json` you can find the entries for standard and root users:
+
+```bash
+Linux users: Linux.Sys.Users.json:
+{"User":"john","Description":"","Uid":"0","Gid":"0","Homedir":"/home/john","Shell":"/bin/sh"}
+{"User":"user","Description":"user","Uid":"1000","Gid":"1000","Homedir":"/home/user","Shell":"/bin/bash"}
+
+Linux root users: Linux.Users.RootUsers.json
+{"Host":null,"User":"root","Description":"root","Uid":"0","Gid":"0","Homedir":"/root","Shell":"/bin/bash"}
+{"Host":null,"User":"john","Description":"","Uid":"0","Gid":"0","Homedir":"/home/john","Shell":"/bin/sh"}
+```
+
+To address the lingering question of how the `/etc/sudoers` file was modified, the following command should provide the necessary information.
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ sudo ausearch -f /etc/sudoers -if audit_full.log -i --start 10/15/2023 '18:00:00' -te 10/15/2023 '19:00:00'
+
+----
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.030:6517) : proctitle=vim /etc/sudoers
+type=PATH msg=audit(10/15/2023 18:20:50.030:6517) : item=3 name=/etc/sudoers~ inode=132058 dev=fd:00 mode=file,440 ouid=root ogid=root rdev=00:00 nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:20:50.030:6517) : item=2 name=/etc/sudoers inode=132058 dev=fd:00 mode=file,440 ouid=root ogid=root rdev=00:00 nametype=DELETE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:20:50.030:6517) : item=1 name=/etc/ inode=131074 dev=fd:00 mode=dir,755 ouid=root ogid=root rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(10/15/2023 18:20:50.030:6517) : item=0 name=/etc/ inode=131074 dev=fd:00 mode=dir,755 ouid=root ogid=root rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=SYSCALL msg=audit(10/15/2023 18:20:50.030:6517) : arch=x86_64 syscall=rename success=yes exit=0 a0=0x55b6a53aec20 a1=0x55b6a5602730 a2=0xfffffffffffffc60 a3=0x0 items=4 ppid=1434 pid=27745 auid=unset uid=user gid=user euid=root suid=root fsuid=root egid=user sgid=user fsgid=user tty=(none) ses=unset comm=vim exe=/usr/bin/vim.basic subj=unconfined key=actions
+----
+<SNIP>
+```
+
+So you can see that the user used vim to modify the `/etc/sudoers` file and perform privilege escalation. `ausearch` can also be used to generate a timeline of events:
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ sudo ausearch --syscall EXECVE -if audit_full.log -i --start 10/15/2023 '18:00:00' -te 10/15/2023 '18:50:00' | grep -v "grep" | grep "type=EXECVE" | grep "vim.basic\|sudoers"
+
+type=EXECVE msg=audit(10/15/2023 18:20:06.170:6503) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/11 ~/.vim/syntax/sudoers.vim
+type=EXECVE msg=audit(10/15/2023 18:20:06.966:6504) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/12 ~/.vim/syntax/sudoers/*.vim
+type=EXECVE msg=audit(10/15/2023 18:20:08.654:6505) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/13 ~/.vim/after/syntax/sudoers.vim
+type=EXECVE msg=audit(10/15/2023 18:20:08.658:6506) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/14 ~/.vim/after/syntax/sudoers/*.vim
+type=EXECVE msg=audit(10/15/2023 18:20:11.510:6513) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/21 ~/.vim/syntax/sudoers.vim
+type=EXECVE msg=audit(10/15/2023 18:20:11.510:6514) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/22 ~/.vim/syntax/sudoers/*.vim
+type=EXECVE msg=audit(10/15/2023 18:20:11.514:6515) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/23 ~/.vim/after/syntax/sudoers.vim
+type=EXECVE msg=audit(10/15/2023 18:20:11.518:6516) : argc=3 a0=sh a1=-c a2=vimglob() { while [ $# -ge 1 ]; do echo "$1"; shift; done }; vimglob >/tmp/vCZw76e/24 ~/.vim/after/syntax/sudoers/*.vim
+```
+
+```bash
+linuxforensics@ubuntu:~/tools/Zircolite$ sudo ausearch -if audit_full.log -i --start 10/15/2023 '18:00:00' -te 10/15/2023 '18:50:00' | grep -v "grep" | grep -v "/usr/bin/dpkg --status-fd" | grep "PROCTITLE"
+
+<SNIP>
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.030:6517) : proctitle=vim /etc/sudoers
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.030:6518) : proctitle=vim /etc/sudoers
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.038:6519) : proctitle=vim /etc/sudoers
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.038:6520) : proctitle=vim /etc/sudoers
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.038:6521) : proctitle=vim /etc/sudoers
+type=PROCTITLE msg=audit(10/15/2023 18:20:50.038:6522) : proctitle=vim /etc/sudoers
+type=PROCTITLE msg=audit(10/15/2023 18:20:52.342:6523) : proctitle=sudo bash
+type=PROCTITLE msg=audit(10/15/2023 18:20:52.350:6524) : proctitle=sudo bash
+type=PROCTITLE msg=audit(10/15/2023 18:20:52.354:6529) : proctitle=bash
+type=PROCTITLE msg=audit(10/15/2023 18:20:58.070:6530) : proctitle=whoami
+<SNIP>
+```
+
+Retrieving all those timestamps you can create a solid timeline of events and actions that describe when, what, and by whom a certain event was triggered. It makes it possible for you to pinpoint entry vector, trace lateral movement, and quantify the radius of an attack with great precision.
