@@ -926,3 +926,548 @@ C:\Users\student\Desktop>dir C:\Users\student\Downloads
                3 File(s)         31,206 bytes
                2 Dir(s)  39,122,550,784 bytes free
 ```
+
+## Gathering System Information
+
+### What Types of Information can You gather from the System?
+
+![cmd 3](../../../images/cmd3.png)
+
+### How to You get this Information?
+
+#### systeminfo
+
+```
+C:\htb> systeminfo
+
+
+Host Name:                 DESKTOP-htb
+OS Name:                   Microsoft Windows 10 Pro
+OS Version:                10.0.19042 N/A Build 19042
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+
+<snipped>
+```
+
+#### hostname
+
+```
+C:\htb> hostname
+
+DESKTOP-htb
+```
+
+#### ver
+
+```
+C:\htb> ver
+
+Microsoft Windows [Version 10.0.19042.2006]
+```
+
+#### ipconfig
+
+```
+C:\htb> ipconfig
+
+Windows IP Configuration
+
+<SNIP>
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : htb.local
+   Link-local IPv6 Address . . . . . : fe80::2958:39a:df51:b60%23
+   IPv4 Address. . . . . . . . . . . : 10.0.25.17
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 10.0.25.1
+
+Ethernet adapter Ethernet 2:
+
+   Connection-specific DNS Suffix  . : internal.htb.local
+   Link-local IPv6 Address . . . . . : fe80::bc3b:6f9f:68d4:3ec5%26
+   IPv4 Address. . . . . . . . . . . : 172.16.50.15
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 172.16.50.1
+
+<SNIP>
+```
+
+#### arp
+
+```
+C:\htb> arp /a
+
+<SNIP>
+
+Interface: 10.0.25.17 --- 0x17
+  Internet Address      Physical Address      Type
+  10.0.25.1             00-e0-67-15-cf-43     dynamic
+  10.0.25.5             54-9f-35-1c-3a-e2     dynamic
+  10.0.25.10            00-0c-29-62-09-81     dynamic
+  10.0.25.255           ff-ff-ff-ff-ff-ff     static
+  224.0.0.22            01-00-5e-00-00-16     static
+  224.0.0.251           01-00-5e-00-00-fb     static
+  224.0.0.252           01-00-5e-00-00-fc     static
+  239.255.255.250       01-00-5e-7f-ff-fa     static
+  255.255.255.255       ff-ff-ff-ff-ff-ff     static
+
+Interface: 172.16.50.15 --- 0x1a
+  Internet Address      Physical Address      Type
+  172.16.50.1           15-c0-6b-58-70-ed     dynamic
+  172.16.50.20          80-e5-53-3c-72-30     dynamic
+  172.16.50.32          fb-90-01-5c-1f-88     dynamic
+  172.16.50.65          7a-49-56-10-3b-76     dynamic
+  172.16.50.255         ff-ff-ff-ff-ff-ff     static
+  224.0.0.22            01-00-5e-00-00-16     static
+  224.0.0.251           01-00-5e-00-00-fb     static
+  224.0.0.252           01-00-5e-00-00-fc     static
+  239.255.255.250       01-00-5e-7f-ff-fa     static
+
+<SNIP>
+```
+
+#### whoami
+
+```
+C:\htb> whoami
+
+ACADEMY-WIN11\htb-student
+```
+
+#### User Privileges
+
+```
+C:\htb> whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                          State
+============================= ==================================== ========
+SeShutdownPrivilege           Shut down the system                 Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking             Enabled
+SeUndockPrivilege             Remove computer from docking station Disabled
+SeIncreaseWorkingSetPrivilege Increase a process working set       Disabled
+SeTimeZonePrivilege           Change the time zone                 Disabled
+```
+
+#### User Groups
+
+```
+C:\htb> whoami /groups
+
+GROUP INFORMATION
+-----------------
+
+Group Name                             Type             SID          Attributes
+====================================== ================ ============ ==================================================
+Everyone                               Well-known group S-1-1-0      Mandatory group, Enabled by default, Enabled group
+BUILTIN\Users                          Alias            S-1-5-32-545 Mandatory group, Enabled by default, Enabled group
+BUILTIN\Performance Log Users          Alias            S-1-5-32-559 Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\INTERACTIVE               Well-known group S-1-5-4      Mandatory group, Enabled by default, Enabled group
+CONSOLE LOGON                          Well-known group S-1-2-1      Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\Authenticated Users       Well-known group S-1-5-11     Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\This Organization         Well-known group S-1-5-15     Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\Local account             Well-known group S-1-5-113    Mandatory group, Enabled by default, Enabled group
+LOCAL                                  Well-known group S-1-2-0      Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NTLM Authentication       Well-known group S-1-5-64-10  Mandatory group, Enabled by default, Enabled group
+Mandatory Label\Medium Mandatory Level Label            S-1-16-8192
+```
+
+#### Other Users
+
+```
+C:\htb> net user
+
+User accounts for \\ACADEMY-WIN11
+
+-------------------------------------------------------------------------------
+Administrator            DefaultAccount           Guest
+htb-student              WDAGUtilityAccount
+The command completed successfully.
+```
+
+#### Other Groups
+
+```
+C:\htb> net group
+net group
+This command can be used only on a Windows Domain Controller.
+
+More help is available by typing NET HELPMSG 3515.
+
+
+C:\htb>net localgroup
+
+Aliases for \\ACADEMY-WIN11
+
+-------------------------------------------------------------------------------
+*__vmware__
+*Access Control Assistance Operators
+*Administrators
+*Backup Operators
+*Cryptographic Operators
+*Device Owners
+*Distributed COM Users
+*Event Log Readers
+*Guests
+*Hyper-V Administrators
+*IIS_IUSRS
+*Network Configuration Operators
+*Performance Log Users
+*Performance Monitor Users
+*Power Users
+*Remote Desktop Users
+*Remote Management Users
+*Replicator
+*System Managed Accounts Group
+*Users
+The command completed successfully.
+```
+
+#### net share
+
+```
+C:\htb> net share  
+
+Share name   Resource                        Remark
+
+-------------------------------------------------------------------------------
+C$           C:\                             Default share
+IPC$                                         Remote IPC
+ADMIN$       C:\Windows                      Remote Admin
+Records      D:\Important-Files              Mounted share for records storage  
+The command completed successfully.
+```
+
+#### net view
+
+```
+C:\htb> net view  
+```
+
+## Finding Files and Directories
+
+#### where
+
+```
+C:\Users\student\Desktop>where calc.exe
+
+C:\Windows\System32\calc.exe
+
+C:\Users\student\Desktop>where bio.txt
+
+INFO: Could not find files for the given pattern(s).
+```
+
+##### Recursive where
+
+```
+C:\Users\student\Desktop>where /R C:\Users\student\ bio.txt
+
+C:\Users\student\Downloads\bio.txt
+```
+
+##### Using Wildcards
+
+```
+C:\Users\student\Desktop>where /R C:\Users\student\ *.csv
+
+C:\Users\student\AppData\Local\live-hosts.csv
+```
+
+#### find
+
+```
+C:\Users\student\Desktop> find "password" "C:\Users\student\not-passwords.txt" 
+```
+
+##### find Modifiers
+
+```
+C:\Users\student\Desktop> find /N /I /V "IP Address" example.txt
+
+# /V negate
+# /N display line numbers
+# /I ignore case
+```
+
+#### findstr
+
+```
+C:\Users\student\Desktop> findstr  
+```
+
+#### Compare
+
+```
+C:\Users\student\Desktop> comp .\file-1.md .\file-2.md
+
+Comparing .\file-1.md and .\file-2.md...
+Files compare OK  
+```
+
+##### Comparing Different Files
+
+```powershell
+PS C:\htb> echo a > .\file-1.md
+PS C:\Users\MTanaka\Desktop> echo a > .\file-2.md
+PS C:\Users\MTanaka\Desktop> comp .\file-1.md .\file-2.md /A
+Comparing .\file-1.md and .\file-2.md...
+Files compare OK
+<SNIP>
+PS C:\Users\MTanaka\Desktop> echo b > .\file-2.md
+PS C:\Users\MTanaka\Desktop> comp .\file-1.md .\file-2.md /A
+Comparing .\file-1.md and .\file-2.md...
+Compare error at OFFSET 2
+file1 = a
+file2 = b  
+```
+
+#### fc
+
+```
+C:\htb> fc.exe /?
+
+Compares two files or sets of files and displays the differences between
+them
+
+FC [/A] [/C] [/L] [/LBn] [/N] [/OFF[LINE]] [/T] [/U] [/W] [/nnnn]
+   [drive1:][path1]filename1 [drive2:][path2]filename2
+FC /B [drive1:][path1]filename1 [drive2:][path2]filename2
+
+  /A         Displays only first and last lines for each set of differences.
+  /B         Performs a binary comparison.
+  /C         Disregards the case of letters.
+  /L         Compares files as ASCII text.
+  /LBn       Sets the maximum consecutive mismatches to the specified
+             number of lines.
+  /N         Displays the line numbers on an ASCII comparison.
+  /OFF[LINE] Do not skip files with offline attribute set.
+  /T         Does not expand tabs to spaces.
+  /U         Compare files as UNICODE text files.
+  /W         Compresses white space (tabs and spaces) for comparison.
+  /nnnn      Specifies the number of consecutive lines that must match
+             after a mismatch.
+  [drive1:][path1]filename1
+             Specifies the first file or set of files to compare.
+  [drive2:][path2]filename2
+             Specifies the second file or set of files to compare.
+```
+
+```
+# /N prints line numbers
+
+C:\Users\student\Desktop> fc passwords.txt modded.txt /N
+
+Comparing files passwords.txt and MODDED.TXT
+***** passwords.txt
+    1:  123456
+    2:  password
+***** MODDED.TXT
+    1:  123456
+    2:
+    3:  password
+*****
+
+***** passwords.txt
+    5:  12345
+    6:  qwerty
+***** MODDED.TXT
+    6:  12345
+    7:  Just something extra to show functionality. Did it see the space inserted above?
+    8:  qwerty
+*****
+```
+
+#### sort
+
+```
+C:\Users\student\Desktop> type .\file-1.md
+a
+b
+d
+h
+w
+a
+q
+h
+g
+
+C:\Users\MTanaka\Desktop> sort.exe .\file-1.md /O .\sort-1.md
+C:\Users\MTanaka\Desktop> type .\sort-1.md
+
+a
+a
+b
+d
+g
+h
+h
+q
+w
+```
+
+#### unique
+
+```
+C:\htb> type .\sort-1.md
+
+a
+a
+b
+d
+g
+h
+h
+q
+w
+
+PS C:\Users\MTanaka\Desktop> sort.exe .\sort-1.md /unique
+
+a
+b
+d
+g
+h
+q
+w  
+```
+
+## Environment Variables
+
+### Definition
+
+Environment variables are settings that are often applied globally to your hosts. They can be found on Windows, Linux, and macOS hosts. This concept is not specific to one OS type, but they function differently on each OS. Environment variables can be accessed by most users and applications on the host and are used to run scripts and speed up how applications function and reference data. On a Windows host, environment variables are not case sensitive and can have spaces and numbers in the name. The only real catch you will find is that they cannot have a name that starts with a number or include an equal sign. When referenced, you will see these variables called like so:
+
+```
+%SUPER_IMPORTANT_VARIABLE%
+```
+
+#### Scope
+
+- **Global**:
+	- Global variables are accessible globally. In this context, the global scope lets you know that you can access and reference the data stored inside the variable from anywhere within a program.
+- **Local**:
+	- Local variables are only accessible within a local context. Local means that the data stored within these variables can only be accessed and referenced within the function or context in which it has been declared.
+
+### Global
+
+```
+C:\Users\alice> echo %WINDIR%
+
+C:\Windows
+```
+
+```
+C:\Users\bob> echo %WINDIR%
+
+C:\Windows
+```
+
+### Local
+
+```
+C:\Users\alice> set SECRET=HTB{5UP3r_53Cr37_V4r14813}
+
+C:\Users\alice> echo %SECRET%
+HTB{5UP3r_53Cr37_V4r14813}
+```
+
+```
+C:\Users\bob> echo %SECRET%
+%SECRET%
+
+C:\Users\bob> set %SECRET%
+Environment variable %SECRET% not defined
+```
+
+### set
+
+```
+C:\Users\htb\Desktop>set %SYSTEMROOT%
+
+Environment variable C:\Windows not defined
+```
+
+### Display with echo
+
+```
+C:\Users\htb\>echo %PATH%
+
+C:\Users\htb\Desktop
+```
+
+### Managing Environment Variables
+
+You can either use `set` or `setix` to perform your intended actions on environment variables.
+
+**When to use `set` vs `setx`? **
+
+Both `set` and `setx` are command line utilities that allow you to display, set, and remove environment variables. The difference lies in how they achieve those goals. The `set` utility only manipulates environment variables in the current command line session. This means that once you close your current session, any additions, removals, or changes will not be reflected the next time you open a command prompt. Suppose you need to make permanent changes to environment variables. In that case, you can use `setx` to make the appropriate changes to the registry, which will exist upon restart of your current command prompt session.
+
+#### set
+
+```
+C:\htb> set DCIP=172.16.5.2
+```
+
+```
+C:\htb> echo %DCIP%
+
+172.16.5.2
+```
+
+#### setx
+
+```
+C:\htb> setx DCIP 172.16.5.2
+
+SUCCESS: Specified value was saved.
+```
+
+#### Editing with setx
+
+```
+C:\htb> setx DCIP 172.16.5.5
+
+SUCCESS: Specified value was saved.
+```
+
+```
+C:\htb> echo %DCIP%
+
+172.16.5.5
+```
+
+#### Removing with setx
+
+```
+C:\htb> setx DCIP ""
+
+
+SUCCESS: Specified value was saved.
+```
+
+```
+C:\htb> set DCIP
+Environment variable DCIP not defined
+
+C:\htb> echo %DCIP%
+%DCIP%
+```
+
+### Important Environment Variables
+
+| Variable Name         | Description                                                                                                                                                                                                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `%PATH%`              | Specifies a set of directories(locations) where executable programs are located.                                                                                                                                                                                                          |
+| `%OS%`                | The current operating system on the user's workstation.                                                                                                                                                                                                                                   |
+| `%SYSTEMROOT%`        | Expands to `C:\Windows`. A system-defined read-only variable containing the Windows system folder. Anything Windows considers important to its core functionality is found here, including important data, core system binaries, and configuration files.                                 |
+| `%LOGONSERVER%`       | Provides us with the login server for the currently active user followed by the machine's hostname. We can use this information to know if a machine is joined to a domain or workgroup.                                                                                                  |
+| `%USERPROFILE%`       | Provides us with the location of the currently active user's home directory. Expands to `C:\Users\{username}`.                                                                                                                                                                            |
+| `%ProgramFiles%`      | Equivalent of `C:\Program Files`. This location is where all the programs are installed on an `x64` based system.                                                                                                                                                                         |
+| `%ProgramFiles(x86)%` | Equivalent of `C:\Program Files (x86)`. This location is where all 32-bit programs running under `WOW64` are installed. Note that this variable is only accessible on a 64-bit host. It can be used to indicate what kind of host we are interacting with. (`x86` vs. `x64` architecture) |
