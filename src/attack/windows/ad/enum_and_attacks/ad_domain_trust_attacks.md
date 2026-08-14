@@ -676,7 +676,7 @@ Password:
 519: INLANEFREIGHT\Enterprise Admins (SidTypeGroup)
 ```
 
-### Constructing a Golden Ticket using ticketer.py
+	### Constructing a Golden Ticket using ticketer.py
 
 Next, you can use [ticketer.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/ticketer.py) from the Impacket toolkit to construct a Golden Ticket. This ticket will be valid to access resources in the child domain and the parent domain.
 
