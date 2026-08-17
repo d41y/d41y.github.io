@@ -594,3 +594,192 @@ total 8856
 
 You can rename and install the exported APK file directly on the device.
 
+### Native Code
+
+Native code is compiled to run on a specific processor architecture, which can give apps written in native code a performance advantage on compatible hardware. Android Studio supports the inclusion of native code through the Native Development Kit, which allows developers to write portions of the app in C or C++. This is often done to reduce latency, optimize for hardware capabilities, or in some cases harden the security of an application.
+
+Native code is typically included in the application as shared libraries (`.so` files). These libraries can then be invoked from Java or Kotlin using the Java Native Interface. JNI is a framework that defines how managed code interacts with unmanaged native code, enabling cross-language method calls and data exchange.
+
+![android fundamentals 7](../../images/android_fundamentals7.png)
+
+Create a Native C++ project to get more familiar with the way it works. To accomplish this, first launch Android Studio and navigate to `New Project` -> `Native C++`. Proceed to name your app, then in the following window under the `C++ Standard` section, select `Toolchain Default` from the dropdown menu. Finally, click Finish.
+
+Once the project is created, you notice the `native-lib.cpp` file found under the `App` -> `cpp` folder in the left side section of Android Studio.
+
+The following snippet of C++ code shows a function that returns the string `Hello from C++`.
+
+```cpp
+#include <jni.h>
+#include <string>
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_example_myapplication_MainActivity_stringFromJNI(
+        JNIEnv* env,
+        jobject /* this */) {
+    std::string hello = "Hello from C++";
+    return env->NewStringUTF(hello.c_str());
+}
+```
+
+The function name `Java_com_example_myapplication_MainActivity_stringFromJNI` follows the JNI naming convention and indicates that it will be called from the `MainActivity` class. The line `return env->NewStringUTF(hello.c_str());` returns a string to the Java layer. It's important to understand how this function handles calls from Java, as this pattern frequently appears during reverse engineering. Also take a look at the `MainActivity.java` file to see how the `native-lib.cpp` library is loaded and how the native function is called.
+
+```java
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    TextView message;
+
+    // Used to load the 'myapplication' library on application startup.
+    static {
+        System.loadLibrary("myapplication");
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        message = (TextView)findViewById(R.id.sample_text);
+        message.setText(stringFromJNI());
+    }
+
+    /**
+     * A native method that is implemented by the 'myapplication' native library,
+     * which is packaged with this application.
+     */
+    public native String stringFromJNI();
+}
+```
+
+Inside the `MainActivity` class you can see the line `System.loadLibrary("myapplication");`. This is where the library is loaded statically, defined by the name `myapplication`. Listing the content of the file `App` -> `cpp` -> `CMakeLists.txt` reveals the following snippet.
+
+```cmake
+add_library( # Sets the name of the library.
+        myapplication
+
+        # Sets the library as a shared library.
+        SHARED
+
+        # Provides a relative path to your source file(s).
+        native-lib.cpp)
+```
+
+As you can see, the name of the file `native-lib.cpp` is set to `myapplication`. The `CMakeLists.txt` is used to describe the files of the native C++ project. Back to the `MainActivity.java` you can also see the line `public native String stringFromJNI()`, which indicates the declaration of the native method `stringFromJNI()`. This method returns the string `Hello from C++` that you saw earlier in the `native-lib.cpp` file, and it is then printed on the screen through the `TextView message` object.
+
+You are not limited to only loading a library statically. Libraries can be loaded while the application is running as well. The following snippet of code shows a class that loads the library while the app is running.
+
+```java
+public class Update {
+    // Method declaration
+    public native String stringFromJNI();
+
+    // Copy the file locally and load it
+    public String update(String path_sd_card, String filesDir){
+        FileOutputStream outputStream;
+        FileInputStream inputStream;
+      
+        try {
+            inputStream = new FileInputStream(new File(path_sd_card + "/Download/libupgrade.so"));
+            outputStream = new FileOutputStream(new File(filesDir + "/libupgrade.so"));
+
+            FileChannel inChannel = inputStream.getChannel();
+            FileChannel outChannel = outputStream.getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.load(filesDir + "/libupgrade.so");
+
+        // Returns the value of the function stringFromJNI() from the libupgrade.so file
+        return stringFromJNI();
+    }
+}
+```
+
+After the file is copied into the application's home directory, the line `System.load(filesDir + "/libupgrade.so");` loads the library. Bad code implementation could lead to remote command execution.
+
+### JavaScript & WebViews
+
+WebViews are components that allow developers to embed and display web content directly within an Android application. While powerful, improper use of WebView features can introduce serious security risks - a common issue in Android apps. Poor WebView implementation can expose the app to a wide range of vulns, such cross-site scripting and local file inclusion. Because of this, the official Android documentation recommends using the system's default browser to deliver web content whenever possible, instead of embedding it with a WebView.
+
+In recent versions, the default WebView configuration has become more restrictive, mitigating many common attacks by default. However, developers often enable advanced features that must be handled with extreme care to avoid introducing vulns.
+
+The following XML snippet will define a WebView element inside the `activity_main.xml` layout file.
+
+```xml
+<WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+```
+
+Now create a reference that points to this object, in the `MainActivity.java` file.
+
+```java
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.webkit.WebView;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        WebView webview = (WebView) findViewById(R.id.webview);
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.loadUrl("file:///android_asset/html/index.html");
+    }
+}
+```
+
+The above code will create a reference to the WebView object and load the `index.html` file, which you are going to create next. The line `webview.getSettings().setJavaScriptEnabled(true);` means that the WebView is allowed to execute JavaScript code, and this is where vulns can occur. Android Studio displays the following message if this feature is used in the code.
+
+The HTML and JavaScript files are usually placed under the folder `app/assets`. If the folder is missing, you can simply right-click on `app` and create a new folder named `assets`. The following is an example of a project structure that includes HTML, CSS, and JavaScript.
+
+![android fundamentals 8](../../images/android_fundamentals8.png)
+
+Here are the snippets of the `index.html` and the `script.js` files. The HTML code calls the JavaScript function `printMessage()` which then prints the message `Hello from JavaScript` to the screen.
+
+```html
+<html>
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/script.js"></script>
+</head>
+<body>
+<h1>
+    <script>printMessage()</script>
+</h1>
+</body>
+</html>
+```
+
+```js
+function printMessage() {
+    document.write("Hello from Javascript");
+}
+```
+
+WebViews can also load content from sources outside the local project. Assuming you want to load Google's home page in the app you just created, then the `webview.loadUrl("file:///android_asset/html/index.html");` will change to `webview.loadUrl("https://www.google.com/");`.
+
+The permission `<uses-permission android:name="android.permission.INTERNET" />` also needs to be added to the `AndroidManifest.xml` file, before the `<application> </application>` tags.
+
+![android fundamentals 9](../../images/android_fundamentals9.png)
+
+The picture below shows the Google page embedded in the app you created.
+
+![android fundamentals 10](../../images/android_fundamentals10.png)
+
