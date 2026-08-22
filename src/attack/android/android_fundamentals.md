@@ -783,3 +783,142 @@ The picture below shows the Google page embedded in the app you created.
 
 ![android fundamentals 10](../../images/android_fundamentals10.png)
 
+### Application Frameworks
+
+Building Android apps from scratch can be challenging as it requires knowledge of multiple languages and tools. Consequently, Android developers often use frameworks to develop applications faster, with better code quality, and simpler maintainability. An application framework is a set of libraries that provides developers with a structured way to build applications using pre-built components and tools. These often include UI elements, security and authentication mechanisms, error handling, logging systems, and more. Different application frameworks are used across various IDEs and programming languages, which increases the overall attack surface. As a result, different methodologies are required when performing application penetration testing.
+
+#### Flutter
+
+... is an open-source mobile application framework developed by Google. With Flutter, developers can build applications in the Dart programming language, using customizable widgets that can be combined to create complex user interfaces. As a cross-platform application framework, development is possible for Android, iOS, web, and Desktop apps providing high performance through compiled native code.
+
+Flutter application development can be done by downloading the Flutter SDK from the [official website](https://flutter.dev/) and setting up an IDE with the Flutter and Dart plugins. In the following example, you will see a simple app created with Flutter and disscues the project's structure, so you can better understand it while performing static analysis in later sections. The following snippet is a simple `Hello World` application written in Dart.
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Hello World App',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('My Flatter App'),
+        ),
+        body: Center(
+          child: Text(
+            'Hello from Flutter',
+            style: TextStyle(fontSize: 28),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+The above snippet of code will print the text `Hello from Flutter` in the center of the screen.
+
+![android fundamentals 11](../../images/android_fundamentals11.png)
+
+In the screenshot below, you can see that the project structure includes directories that contain data responsible for compatibility with various platforms. Alongside them, you can also see the directory `lib` that contains the file `main.dart`. This is where the code resides.
+
+![android fundamentals 12](../../images/android_fundamentals12.png)
+
+As mentioned earlier, Flutter compiles the code natively, and thus the app will store the compiled C++ code in shared libraries. However, pentesters can still decode and examine the resources during the static analysis using the appropriate tools. Incidentally, reading the code of an application that includes native components requires a different approach than analyzing a typical Android app written in Java or Kotlin. This is because the tools used to decompile Java bytecode into human-readable pseudocode are not effective for shared libraries containing compiled C or C++ code. Analyzing these native binaries requires specialized tools and techniques.
+
+#### Xamarin
+
+... is a cross-platform application development framework that supports building Android, iOS, and desktop applications. Owned by Microsoft, Xamarin allows developers to create Android apps using C# as the primary programming language within Visual Studio. To get started, you can install the Mobile development with .NET workload in Visual Studio. The following snippet shows a simple "Hello World" application written in C# using Xamarin.
+
+```c#
+using Android.App;
+using Android.OS;
+using Android.Runtime;
+using Android.Widget;
+using AndroidX.AppCompat.App;
+
+namespace MyApplication
+{
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
+    public class MainActivity : AppCompatActivity
+    {
+        Button button;
+        TextView message;
+      
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            // Set our view from the "main" layout resource
+            SetContentView(Resource.Layout.activity_main);
+          
+            message = FindViewById<TextView>(Resource.Id.message);
+            button = FindViewById<Button>(Resource.Id.button);
+
+            button.Click += (sender, args) =>
+            {
+                message.Text = "Hello World!";
+            };
+        }
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+}
+```
+
+The above application will print the message `Hello World!` on the screen once the button is pressed.
+
+![android fundamentals 13](../../images/android_fundamentals13.png)
+
+The screenshot below shows the project structure of a Xamarin application in Visual Studio.
+
+![android fundamentals 14](../../images/android_fundamentals14.png)
+
+When creating a Xamarin app, the C# source code is compiled into Common Intermediate Language (_CIL_) using the .NET compiler. This intermediate code is then interpreted or just-in-time compiled into platform-specific machine code at runtime, depending on the target environment. Unlike native C++ code, which is compiled into shared libraries, Xamarin applications bundle their intermediate code as .NET assemblies, often packaged inside a sinle file like assemblies.blob.
+
+Since Xamarin apps contain intermediate code rather than native binaries, the reverse engineering process differs from analyzing native C++ or Java/Kotlin applications. The extracted .dll files can be loaded into .NET reverse engineering tools to recover readable pseudocode.
+
+#### Other Frameworks
+
+More application development frameworks can be used to create Android applications, with some of them being React Native, Apache Cordova, and Ionic. These frameworks can create hybrid cross-platform applications that run on Android, iOS, and web browsers using web-based technologies like JS, HTML, and CSS. You can install these frameworks using the NPM command-line tool and start the development on Android Studio. Applications can then run on a Physical or virtual device. The following snippet is a simple `Hello World` using the React Native framework. [This page](https://reactnative.dev/docs/environment-setup) will guide you through building and running a React Native app.
+
+```javascript
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Hello From React Native</Text>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontSize: 28,
+  },
+});
+```
+
+This snippet above will print `Hello From React Native` on the screen.
+
+![android fundamentals 15](../../images/android_fundamentals15.png)
+
+When an application is developed using React Native, the majority of the application's logic and UI are written in JavaScript. The framework will also create the MainActivity and other necessary Java classes that act as the entry point for your application. When the application is prepared for release, the JavaScript code will be bundled into a standalone file called `index.android.bundle`. This file is optimized and minified to improve performance and reduce the overall size of the application. While reversing apps created with React Native, apart from analyzing the Java code to identify the necessary entry points, testers should also analyze the JS code bundled in the `index.android.bundle` file. Another thing testers should keep in mind is that the attack surface will be different than native apps. Apps created with such frameworks may be susceptible to web vulns since they use web technologies.
+
+On the other hand, apps created with Cordova and Ionic frameworks use a WebView component to render the user interface and execute the application code, which is HTML, CSS, and JS. When you build an app using Cordova or Ionic, the web assets are packaged within the application as part of the project structure and can be found during reverse engineering under the directories `assets/www/` and `assets/public/` accordingly.
+
