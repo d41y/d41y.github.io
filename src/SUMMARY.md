@@ -122,6 +122,7 @@
 			- [Session Security](attack/web/web_security_techniques/session_security.md)
 	- [Wi-Fi](attack/wifi/README.md)
 		- [0x00](attack/wifi/wifi_pentesting_basics.md)
+		- [WPS](attack/wifi/wps.md)
 	- [Windows](attack/windows/README.md)
 		- [0x00](attack/windows/windows_fundamentals.md)
 		- [Active Directory](attack/windows/ad/README.md)
