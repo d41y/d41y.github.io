@@ -373,11 +373,11 @@ Initial guesses:
 
 For MySQL:
 
-| Payload | When to Use | Expected Output | Wrong Output |
-| ------- | ----------- | --------------- | ------------ |
-| **SELECT @@version** | when you have full query output | MySQL Version 'i.e. ```10.3.22-MariaDB-1ubuntu1```' | in MSSQL it returns MSSQL version; error with other DBMS |
-| **SELECT POW(1,1)** | when you only have numeric output | ```1``` | error with other DBMS |
-| **SELCECT SLEEP(5)** | blind / no output | delays page response for 5 seconds and returns 0 | will not delay with other DBMS |
+| Payload              | When to Use                       | Expected Output                                     | Wrong Output                                             |
+| -------------------- | --------------------------------- | --------------------------------------------------- | -------------------------------------------------------- |
+| **SELECT @@version** | when you have full query output   | MySQL Version 'i.e. ```10.3.22-MariaDB-1ubuntu1```' | in MSSQL it returns MSSQL version; error with other DBMS |
+| **SELECT POW(1,1)**  | when you only have numeric output | ```1```                                             | error with other DBMS                                    |
+| **SELCECT SLEEP(5)** | blind / no output                 | delays page response for 5 seconds and returns 0    | will not delay with other DBMS                           |
 
 #### INFORMATION_SCHEMA Database
 
