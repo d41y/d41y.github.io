@@ -256,6 +256,17 @@ The above configuration is how the web server determines which files to allow PH
 
 ![php.jpg](../../../../images/file_upload11.png)
 
+### .htaccess
+
+Another possible server-side configuration issue involves the use of an `.htaccess` file. Apache can be configured to associate a custom file extension with the PHP handler using the `AddType` directive. For example, `AddType application/x-httpd-php .dork` tells Apache to treat files ending in `.dork` as PHP files. The command `echo "AddType application/x-httpd-php .dork" > .htaccess` creates or overwrites the `.htaccess` file with this directive. This demonstrates how a web-server configuration can affect whether an uploaded file with a non-standard extension is interpreted as executable code, rather than relying solely on the extension validation implemented by the web application.
+
+```bash
+makoyi@kali 26/03/26 [~]   
+❯ echo "AddType application/x-httpd-php .dork" > .htaccess
+```
+
+Upload the above file and if it works you might be able to upload `.dork` files that will get executed as `.php` files.
+
 ### Character Injection
 
 ... is another method of bypassing a whitelist validation test.
