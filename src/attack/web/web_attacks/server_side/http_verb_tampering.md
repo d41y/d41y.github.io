@@ -53,7 +53,7 @@ The sanitization filter is only being tested on the GET parameter. If the GET re
 
 In this example, you can add new files by typing their names and hitting enter.
 
-However, suppose you are trying to delete all files ny clicking on the red ```Reset``` button. In that case, you see that this functionality seems to be restricted for authenticated users only, as you get the following HTTP Basic Auth prompt:
+However, suppose you are trying to delete all files by clicking on the red ```Reset``` button. In that case, you see that this functionality seems to be restricted for authenticated users only, as you get the following HTTP Basic Auth prompt:
 
 ![http verb tampering 2](../../../../images/http_verb_tampering_2.png)
 
