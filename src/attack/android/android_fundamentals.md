@@ -1551,3 +1551,81 @@ You notice that the `android:scheme` attribute is set to `https`, and the `andro
 
 On the other hand, bad programming could still lead to security issues. Imagine an application handling the URL `https://www.myapp.com/home?uid=50&token=RLsB?19oYMAL6M5v`. If the app doesn't verify the `uid` and `token` parameters passed in via the deep link, a malicious actor could craft their own link with different parameter values, leading to unauthorized access to another user's data. To enhance security when using Deep Links, it is suggested to use Android App Links instead of generic Deep Links. Additionally, one should validate the input of parameters and avoid passing sensitive data through URLs.
 
+## Setting up the Testing Environment
+
+### Android Emulators
+
+Setting up the testing environment requires your host machine, an emulated Android device and the tools you will use for the application pentesting.
+
+Android emulators are a vital tool for application pentesting. They are programs allowing users to run Android applications and simulate the Android OS on devices like personal computers. They are widely used for app development, testing, and gaming purposes. Android emulators are a cost-effective solution that allows testing applications on various devices and Android API levels without needing each physical device. Apart from this, emulators also provide most of the capabilities that a real device does, like simulating incoming phone calls and text messages, camera, Bluetooth, sensors, accessing the Google Play Store, and more. Pentesters can benefit from emulators since they can simulate real-world scenarios and evaluate Android application vulns.
+
+Most real Android devices use ARM or ARM64 CPU architecture, specifically designed for mobile devices and providing high-energy performance. However, Android emulators use x86 or x86_64 CPU architectures for better performance and compability with the host machine's hardware. Different CPU architecture can affect how exploits or vulns behave in emulated environments compared to real devices.
+
+#### Android Studio AVD
+
+Android Studio's AVD is a fast and feature-rich emulator that allows you to test applications. It will help you run and debug applications developed with Android Studio in order to exploit other apps. Android Studio includes the AVD Manager, which simplifies creating, configuring, and managing Android Virtual Devices to simulate real-world scenarios.
+
+##### Creating the AVD
+
+Inside Android Studio go to `Tools`-> `Device Manager`.
+
+On the right side of the Android Studio, the `Device Manager` windows will pop up, containing a default virtual device that might be created while installing Android Studio. The following image shows an example of the `Device Manager` window, having many devices created.
+
+![android fundamentals 23](../../images/android_fundamentals23.png)
+
+See the process of creating a new device by clicking on the button under `Tools` -> `Device Manager` -> `Create device`. Along with other properties, an AVD contains a hardware profile that defines the characteristics of a device as shipped from the factory. The Device Manager comes pre-equipped with certain hardware profiles, allowing users to define or tailor these profiles according to their requirements.
+
+![android fundamentals 24](../../images/android_fundamentals24.png)
+
+Navigating to the `x86 Images` you can see the different Android API levels. The Google Play logo in the `Play Store` column indicates that the device includes Google Play Store and access to other services. Assuming you select the `Pixel 4` device, moving on to the next step you are prompted to choose a system image.
+
+![android fundamentals 25](../../images/android_fundamentals25.png)
+
+System images labeled with `Google APIs` provide access only to Google Play services, while images labeled `Google Play` also provide a Google Play Store. If the download icon appears near the Release Name, the image is not installed, and you must download it. System images that include the Google Play Store are signed with a release key, and thus elevated privileges are not supported. On the other hand, system images that onyl include `Google APIs` will allow elevated privileges by using the ADB tool through the terminal. This is a necessary feature that you will utilize while conducting application pentesting. Assuming you select the `Tiramisu 33 x86_64 (Google APIs)` image, moving on to the next step, you are prompted to give the AVD a name and verify the configurations.
+
+![android fundamentals 26](../../images/android_fundamentals26.png)
+
+Once you click the `Finish` button and create the device, you can find it and start it in the `Device Manager` by clicking the `Play` button under the `Actions` tab.
+
+![android fundamentals 27](../../images/android_fundamentals27.png)
+
+Once the emulator is launched, it will look like this:
+
+![android fundamentals 28](../../images/android_fundamentals28.png)
+
+On the device's right side, there is a vertical bar. You can stop the emulator by clicking the `x` icon on the top. Finally, among other action buttons in the menu bar, there is a 3-dot icon that contains various device settings you can configure as the device is running.
+
+#### Other Emulators
+
+| **[Corellium](https://www.corellium.com/)**                                               |
+| ----------------------------------------------------------------------------------------- |
+| Supports a wide range of mobile devices including both Android and iOS operating systems. |
+| Offers a web-based interface.                                                             |
+| Provides integrated advanced debugging tools.                                             |
+| Enables users to take snapshots of the emulator.                                          |
+| Emulates both standard and rooted/jailbroken devices.                                     |
+
+|**[BlueStacks](https://www.bluestacks.com/)**|
+|---|
+|Widely popular and user-friendly|
+|Multi-instance feature for running multiple apps simultaneously|
+|Integrates with gaming platforms like Twitch and Discord|
+
+|**[NoxPlayer](https://www.bignox.com/)**|
+|---|
+|Lightweight and efficient emulator|
+|Supports gamepad, keyboard, and script recording|
+|Offers advanced features like GPS spoofing and virtual location|
+
+|**[MEmu Play](https://www.memuplay.com/)**|
+|---|
+|High performance and compatibility|
+|Offers multiple Android versions|
+|Allows multiple instances and easy app cloning|
+|Keyboard mapping and joystick support|
+
+|**[LDPlayer](https://www.ldplayer.net/)**|
+|---|
+|Optimized for gaming and productivity apps|
+|Customizable controls and graphics settings|
+|Multi-instance support and synchronization|
