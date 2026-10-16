@@ -527,7 +527,7 @@ cn' UNION SELECT 1, grantee, privilege_type, 4 FROM information_schema.user_priv
 
 ![privilege_type](../../../../images/sqli17.png)
 
-You can see that the ```FILE``` privilegeis listed for your user, enabling you to read files and potentially even write files.
+You can see that the ```FILE``` privilege is listed for your user, enabling you to read files and potentially even write files.
 
 #### LOAD_FILE
 
