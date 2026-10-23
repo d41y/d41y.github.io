@@ -1799,3 +1799,22 @@ drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Ringtones
 
 #### ADB Root
 
+Setting up ADB with a real Android device requires some extra steps on the device's side. After installing ADB on the host machine, you also have to enable `USB Debugging` on your Android device. To do this, you first have to go to `Settings` -> `About phone` or `About device` or `About emulated device`, find the `Build number`, and tap on it seven times. This will display the message `You are now a developer!`.
+
+![android fundamentals 29](../../images/android_fundamentals29.png)
+
+The `Developer Options` menu can be found under `Settings` -> `Developer Options` or `Settings` -> `System` -> `Developer Options`, depending on the Android version. After navigating to the path mentioned earlier, the next step is to enable `USB Debugging` and confirm any prompts that appear.
+
+![android fundamentals 30](../../images/android_fundamentals30.png)
+
+Once enabled, you can connect the device to the computer using a USB cable. When prompted on the device, choose `File transfer` or `MTP` mode. You can confirm that the device is connected by executing the following command.
+
+```bash
+d41y@htb[/htb]$ adb devices
+
+List of devices attached
+1234567890ABCDEF    device
+```
+
+The device's serial number should be included in the output, indicating that ADB is successfully connected to your device. Finally, you can start executing `adb` commands from your host computer to the device.
+
