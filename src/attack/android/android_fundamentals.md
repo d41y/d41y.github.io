@@ -1629,3 +1629,173 @@ On the device's right side, there is a vertical bar. You can stop the emulator b
 |Optimized for gaming and productivity apps|
 |Customizable controls and graphics settings|
 |Multi-instance support and synchronization|
+### Android Debug Bridge
+
+Android Debug Bridge (_ADB_) is a versatile command-line tool that enables communication between a computer and a device. As a part of the Android SDK, it allows developers to perform tasks like installing and debugging applications, transferring files between the host computer and the device, and accessing the device through a shell. Android Debug Bridge is a client-server program that can be used on physical and emulated devices, and it includes the following three components.
+
+|**Components**|**Description**|
+|---|---|
+|`The client`|It runs on the host machine and can be invoked from the terminal by issuing the `adb` command.|
+|`The daemon (adbd)`|It runs as a background process on each device, and it is responsible for executing the commands in the device.|
+|`The server`|It runs as a background process on the host machine, and it manages the communication between the client and the daemon.|
+
+The following steps show how the ADB connection process works.
+
+**Step 1**: The ADB client will start as soon as you issue an `adb` command in the terminal. When this happens, the client will check for an `adb` server process running on the host machine. If there isn't one, it starts the server process, which binds to the local TCP port 5037 and listens for commands sent from the `adb` client.
+
+**Step 2**: The server then locates the connected emulators by scanning the odd-numbered ports from 5555 to 5585. Finally, it sets up the connection with the emulators that run an ADB daemon.
+
+**Step 3**: Each emulator instance has a unique pair of ports to avoid conflicts when running multiple emulators simultaneously. These pairs are an even-numbered port for console connections and an odd-numbered port for ADB connections. In the console connection, you can issue commands to control the emulator using tools like telnet. In the ADB connections, you can perform various development and debugging tasks using the `adb` command. The following is an example of two connected emulators.
+
+|**Emulator**|**Service**|**Port**|
+|---|---|---|
+|`Emulator 1`|console|5554|
+|`Emulator 1`|adb|5555|
+|`Emulator 2`|console|5556|
+|`Emulator 2`|adb|5557|
+
+**Step 4**: Once the connections are set up, you can use the `adb` command to access the emulators.
+
+#### Installing and Using ADB
+
+##### Debian-based Linux
+
+On Debian-based Linux, through the `apt` package manager:
+
+```bash
+d41y@htb[/htb]$ apt-get install adb
+```
+
+You can install `adb` on the workstation using the following steps:
+
+```bash
+d41y@htb[/htb]$ echo "deb http://deb.debian.org/debian bookworm main" | sudo tee /etc/apt/sources.list.d/debian-bookworm.list
+d41y@htb[/htb]$ sudo apt update
+d41y@htb[/htb]$ sudo apt install adb
+```
+
+##### MacOS
+
+On MacOS, through the `Homebrew` package manager:
+
+```bash
+d41y@htb[/htb]$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+d41y@htb[/htb]$ brew update
+d41y@htb[/htb]$ brew install android-platform-tools
+```
+
+##### Windows
+
+On Windows, through the `Scoop` command-line installer.
+
+```powershell
+C:\> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+C:\> iex (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+C:\> scoop bucket add extras
+C:\> scoop install adb
+```
+
+ADB is also made available to you as part of the [Android SDK Platform Tools package](https://developer.android.com/tools/releases/platform-tools), available through Android Studio's [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager). On Windows, the resulting platform tools including `adb.exe` are located at `C:\Users\<username>\AppData\Local\Android\Sdk\platform-tools`.
+
+```powershell
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Windows\system32> cd C:\Users\Owner\AppData\Local\Android\Sdk\platform-tools
+
+PS C:\Users\Owner\AppData\Local\Android\Sdk\platform-tools> ls
+
+
+    Directory: C:\Users\Owner\AppData\Local\Android\Sdk\platform-tools
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         5/17/2024  12:24 PM        5857056 adb.exe
+-a----         5/17/2024  12:24 PM         108320 AdbWinApi.dll
+-a----         5/17/2024  12:24 PM          73504 AdbWinUsbApi.dll
+-a----         5/17/2024  12:24 PM         439072 etc1tool.exe
+-a----         5/17/2024  12:24 PM        1807136 fastboot.exe
+-a----         5/17/2024  12:24 PM          54560 hprof-conv.exe
+-a----         5/17/2024  12:24 PM         242128 libwinpthread-1.dll
+-a----         5/17/2024  12:24 PM         477472 make_f2fs.exe
+-a----         5/17/2024  12:24 PM         477472 make_f2fs_casefold.exe
+-a----         5/17/2024  12:24 PM           1157 mke2fs.conf
+-a----         5/17/2024  12:24 PM         754464 mke2fs.exe
+-a----         5/17/2024  12:24 PM        1110529 NOTICE.txt
+-a----         5/17/2024  12:24 PM          18404 package.xml
+-a----         5/17/2024  12:24 PM             38 source.properties
+-a----         5/17/2024  12:24 PM        2838304 sqlite3.exe
+```
+
+---
+
+To start the ADB server on the host computer, you can type the following command.
+
+```bash
+d41y@htb[/htb]$ adb start-server
+```
+
+Once the ADB is installed on your host computer and the emulator is started, you can start issuing ADB commands. As mentioned earlier, starting the ADB server can also be done directly executing commands using the ADB client. Below are some useful ADB commands.
+
+|**Command**|**Description**|
+|---|---|
+|`adb help`|List all commands.|
+|`adb kill-server`|Kills the adb server.|
+|`adb devices`|Lists connected devices.|
+|`adb root`|Restarts `adbd` with root permissions.|
+|`adb install <apk>`|Install app.|
+|`adb push <local> <remote>`|Copy file/dir to device.|
+|`adb pull <remote> <local>`|Copy file/dir from device.|
+|`adb logcat [options] [filter] [filter]`|View device log.|
+
+List the connected devices using the following command.
+
+```bash
+d41y@htb[/htb]$ adb devices
+
+List of devices attached
+emulator-5554   device
+```
+
+The above command reveals one attached device using port 5554. Apart from providing interactive shell access to the emulated device, ADB can also be used non-interactively to execute commands from the host machine directly to the emulated device. The following `adb` command executes the `whoami` command inside the emulated device and prints the result to the terminal.
+
+```bash
+d41y@htb[/htb]$ adb shell whoami
+
+shell
+```
+
+Issue the following command to get a shell in the emulated device.
+
+```bash
+d41y@htb[/htb]$ adb shell
+
+emu64x:/ $
+```
+
+You can now start executing Linux commands inside the emulator.
+
+```bash
+emu64x:/sdcard $ ls -l /sdcard/
+
+total 104
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Alarms
+drwxrws--x 5 media_rw media_rw 4096 2023-04-28 17:29 Android
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Audiobooks
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 DCIM
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Documents
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Download
+drwxrws--- 3 u0_a146  media_rw 4096 2023-04-28 17:30 Movies
+drwxrws--- 3 u0_a146  media_rw 4096 2023-04-28 17:30 Music
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Notifications
+drwxrws--- 3 u0_a146  media_rw 4096 2023-04-28 17:30 Pictures
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Podcasts
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Recordings
+drwxrws--- 2 u0_a146  media_rw 4096 2023-04-28 17:30 Ringtones
+```
+
+#### ADB Root
+
