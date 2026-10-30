@@ -175,3 +175,106 @@ Key facets of SRUM forensics encompass:
 - **User and System Context**: SRUM data includes user identifiers, which helps in attributing activities to specific users. This can aid in user behavior analysis and determining whether certain actions were performed by legitimate users or potential threat actors.
 - **Malware Analysis and Detection**: SRUM data can be used to identify unusual or unauthorized applications that may be indicative of malware or malicious activities. Sudden spikes in resource usage, abnormal application patterns, or unauthorized software installations can all be detected through SRUM analysis.
 - **Incident Response**: During incident response, SRUM can provide rapid insights into recent application and process activities, enabling analysts to quickly identify potential threats and respond effectively.
+
+### Evidence Acquisition Techniques & Tools
+
+Evidence acquisition is a critical phase in DFIR, involving the collection of digital artifacts and data from various sources to preserve potential evidence for analysis. This process requires specialized tools and techniques to ensure the integrity, authenticity, and admissibility of the collected evidence.
+
+An overview of evidence acquisition techniques commonly used in DFIR:
+
+- Forensic Imaging
+- Extracting Host-based Evidence & Rapid Triage
+- Extracting Network Evidence
+
+#### Forensic Imaging
+
+... is a fundamental process in DFIR that involves creating an exact, bit-by-bit copy of digital storage media, such as hard drives, solid-state drives, USB drives, and memory cards. This process is crucial for preserving the original state of the data, ensuring data integrity, and maintaining the admissibility of evidence in legal proceedings. Foresinc imaging plays a critical role in investigations by allowing analysts to examine evidence without altering or compromising the original data.
+
+Below are some forensic imaging tools and solutions:
+
+- [FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager): FTK Imager is one of the most widely used disk imaging tools in the cybersecurity field. It allows you to create perfect copies of computer disks for analysis, preserving the integrity of the evidence. It also lets you view and analyze the contents of data storage devices without altering the data.
+- [AFF4 Imager](https://github.com/Velocidex/c-aff4): A free, open-source tool crafted for creating and duplicating forensic disk images. It's user-friendly and compatible with numerous file systems. A benefit of the AFF4 Imager is its capability to extract files based on their creation time, segment volumes, and reduce the time taken for imaging through compression.
+- **DD and DCFLDD**: Both are command-line utilities available on Unix-based systems. DD is a versatile tool included in most Unix-based systems by default, while DCFLDD is an enhanced version of DD with features specifically useful for forensics, such as hashing.
+- **Virtualization Tools**: Given the prevalent use of virtualization in modern systems, incident responders will often need to collect evidence from virtual environments. Depending on the specific virtualization solution, evidence can be gathered by temporarily halting the system and transferring the directory that houses it. Another method is to utilize the snapshot capability present in numerous virtualization software tools.
+
+##### Example 1: Forensic Image with FTK Imager
+
+- Select `File` -> `Create Disk Image`.
+
+![intro dfir 1](../../../images/intro_dfir_1.png)
+
+- Next, select the media source. Typically, it's either `Physical Drive` or `Logical Drive`.
+
+![intro dfir 2](../../../images/intro_dfir_2.png)
+
+- Choose the drive from which you wish to create an image.
+
+![intro dfir 3](../../../images/intro_dfir_3.png)
+
+- Specify the destination for the image.
+
+![intro dfir 4](../../../images/intro_dfir_4.png)
+
+- Select the desired image type.
+
+![intro dfir 5](../../../images/intro_dfir_5.png)
+
+- Input evidence details.
+
+![intro dfir 6](../../../images/intro_dfir_6.png)
+
+- Choose the destination folder and filename for the image. At this step, you can also adjust settings for image fragmentation and compression.
+
+![intro dfir 7](../../../images/intro_dfir_7.png)
+
+- Once all settings are confirmed, click `Start`.
+
+![intro dfir 8](../../../images/intro_dfir_8.png)
+
+- You'll observe the progress of the imaging.
+
+![intro dfir 9](../../../images/intro_dfir_9.png)
+
+- If you opted to verify the image, you'll also see the verification progress.
+
+![intro dfir 10](../../../images/intro_dfir_10.png)
+
+- After the image has been verified, you'll receive an imaging summary. Now, you're prepared to analyze this dump.
+
+![intro dfir 11](../../../images/intro_dfir_11.png)
+
+##### Example 2: Mounting a Disk Image with Arsenal Image Mounter
+
+Now see another demonstration of utilizing [Arsenal Image Mounter](https://arsenalrecon.com/downloads) to mount a disk image you have previously created from a compromised VM running on VMWare. The virtual hard disk of the VM has been stored as `HTBVM01-000003.vmdk`.
+
+After you've installed Arsenal Image Mounter, ensure you launch it with administrative rights. In the main window of Arsenal Image Mounter, click on the `Mount disk image` button. From there, you'll navigate to the location of your `.VMDK` file and select it.
+
+![intro dfir 12](../../../images/intro_dfir_12.png)
+
+Arsenal Image Mounter will then start its analysis of the VMDK file. You'll also have the choice to decide if you want to mount the disk as read-only or read-write, based on your specific requirements.
+
+_Choosing to mount a disk image as read-only is a foundational step in DFIR and incident response. This approach is vital for preserving the original state of evidence, ensuring its authenticity and integrity remain intact._
+
+Once mounted, the image will appear as a drive, assigned to the letter `D:\`.
+
+![intro dfir 13](../../../images/intro_dfir_13.png)
+
+#### Extracting Host-based Evidence & Rapid Triage
+
+##### Host-based Evidence
+
+Modern OS, with Microsoft Windows being a prime example, generate a plethora of evidence artifacts. These can arise from application execution, file modifications, or even the creation of user accounts. Each of these actions leaves behind a trail, providing insights for incident response analysts.
+
+Evidence on a host system varies in its nature. The term volatility refers to the persistence of data on a host system, with volatile data being information that disappears after events such as logoffs or power shutdowns. One crucial type of volatile evidence is the system's active memory. During investigations, especially those concerning malware infections, this live system memory becomes indispensable. Malware often leaves traces within system memory, and losing this evidence can hinder an analyst's investigation. To capture memory, tools like FTK Imager are commonly employed.
+
+Some other memory acquisition solutions are:
+
+- [WinPmem](https://github.com/Velocidex/WinPmem): WinPmem has been the default open source memory acquisition driver for windows for a long time. It used to live in the Rekall project, but has recently been separated into its own repo.
+- [DumpIt](https://www.magnetforensics.com/resources/magnet-dumpit-for-windows/) A simplistic utility that generates a physical memory dump of Windows and Linux machines. On Windows, it concatenates 32-bit and 64-bit system physical memory into a single output file, making it extremely easy to use.
+- [MemDump](http://www.nirsoft.net/utils/nircmd.html): MemDump is a free, straightforward command-line utility that enables you to capture the contents of a system's RAM. It's quite beneficical in forensics investigations or when analyzing a system for malicious activity. Its simplicity and easy of use make it a popular choice for memory acquisition.
+- [Belkasoft RAM Capturer](https://belkasoft.com/ram-capturer): This is another powerful tool you can use for memory acquisition, provided free of charge by Belkasoft. It can capture the RAM of a running Windows computer, even if there's active anti-debugging or anti-dumping protection. This makes it a highly effective tool for extracting as much data as possible during a live forensics investigation.
+- [Magnet RAM Capture](https://www.magnetforensics.com/resources/magnet-ram-capture/): Developed by Magnet Forensics, this tool provides a free and simple way to capture the volatile memory of a system.
+- [LiME (Linux Memory Extractor)](https://github.com/504ensicsLabs/LiME): LiME is a Loadable Kernel Module (_LKM_) which allows the acqusition of volatile memory. LiME is unique in that it's designed to be transparent to the target system, evading many common anti-forensic measures.
+
+###### Example 1: Acquiring Memory with WinPmem
+
