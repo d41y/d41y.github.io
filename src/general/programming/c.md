@@ -468,3 +468,18 @@ int numbers[3][4] = {
 
 - Commas are required after each brace that closes off a row, except in the case of the final row
 
+#### Designated Initializers
+
+_Example C code_:
+
+```c
+int matrix[4][3] = { [0][0] = 1, [1][1] = 5, [2][2] = 9 };
+```
+
+- Initializes the three indicated elements of matrix to the specified values
+	- unspecified elements are set to zero by default
+	- each set of values that initializes the elements in a row is between braces
+	- the entire initialization goes between another pair of braces
+	- the values for a row are separated by commas
+	- each set of row values is separated from the next set by a comma
+
