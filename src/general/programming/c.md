@@ -320,3 +320,151 @@ int main (int argc, char *argv[]) {
 
 ## Performing Calculations, Comparisons, and Manipulations
 
+### cast and sizeof Operators
+
+#### cast
+
+- It is possible for you to demand the precise type conversion that you want
+	- called a cast and consists of preceding the quantity with the name of the desired type in parantheses
+	- parantheses and type name together constitute a cast operator
+	- the actual type desired, such as long, is substituted for the word type
+- The type cast operator has a higher precedence than all the arithmetic operators except the unary minus and unary plus
+
+_Example C code_:
+
+```c
+(int) 21.51 + (int) 26.99
+// evaluated in C as
+// 21 + 26
+```
+
+#### sizeof
+
+- You can find out how many bytes are occupied in memory by a given type by using the sizeof operator
+	- `sizeof` is a special keyword in C
+- `sizeof` is actually an operator, and not a function
+	- evaluated at compile time and not at runtime, unless a variable-length array is used in its argument
+- The argument to the `sizeof` operator can be a variable, an array name, the name of a basic data type, the name of a derived data type, or an expression
+- You can also apply the `sizeof` operator to an expression
+	- result is the size of the value that results from evaluating the expression
+- Use the `sizeof` operator wherever possible to avoid having to calculate and hard-code sizes into your program
+
+### Operator Precedence
+
+- Precedence dictates the order of evaluation when two operators share an operand
+
+```
+x = 7 + 3 * 2
+x = 7 + 6
+x = 13
+```
+
+- Each operator is assigned a precedence level
+- Whatever is enclosed in parantheses is executed first
+
+#### Associativity
+
+- What if two operators have the same precedence?
+	- then associativity rules are applied
+- If they share an operand, they are executed according to the order in which they occur in the statement
+	- for most operators, the order is from left to right
+
+| **Operator**                                                       | **Description**                                                                                                                                                                                                     | **Associativity** |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| ()  <br>[]  <br>.  <br>->                                          | Parentheses (grouping)  <br>Brackets (array subscript)  <br>Member selection via object name  <br>Member selection via pointer                                                                                      | left-to-right     |
+| ++  --  <br>+  -  <br>!  ~  <br>(_type_)  <br>*  <br>&  <br>sizeof | Unary preincrement/predecrement  <br>Unary plus/minus  <br>Unary logical negation/bitwise complement  <br>Unary cast (change _type_)  <br>Dereference  <br>Address  <br>Determine size in bytes                     | right-to-left     |
+| *  /  %                                                            | Multiplication/division/modulus                                                                                                                                                                                     | left-to-right     |
+| +  -                                                               | Addition/subtraction                                                                                                                                                                                                | left-to-right     |
+| <<  >>                                                             | Bitwise shift left, Bitwise shift right                                                                                                                                                                             | left-to-right     |
+| <  <=  <br>>  >=                                                   | Relational less than/less than or equal to  <br>Relational greater than/greater than or equal to                                                                                                                    | left-to-right     |
+| ==  !=                                                             | Relational is equal to/is not equal to                                                                                                                                                                              | left-to-right     |
+| &                                                                  | Bitwise AND                                                                                                                                                                                                         | left-to-right     |
+| ^                                                                  | Bitwise exclusive OR                                                                                                                                                                                                | left-to-right     |
+| \|                                                                 | Bitwise inclusive OR                                                                                                                                                                                                | left-to-right     |
+| &&                                                                 | Logical AND                                                                                                                                                                                                         | left-to-right     |
+| \|                                                                 | Logical OR                                                                                                                                                                                                          | left-to-right     |
+| ?:                                                                 | Ternary conditional                                                                                                                                                                                                 | right-to-left     |
+| =  <br>+=  -=  <br>*=  /=  <br>%=  &=  <br>^=  \|=  <br><<=  >>=   | Assignment  <br>Addition/subtraction assignment  <br>Multiplication/division assignment  <br>Modulus/bitwise AND assignment  <br>Bitwise exclusive/inclusive OR assignment  <br>Bitwise shift left/right assignment | right-to-left     |
+| ,                                                                  | Comma (separate expressions)                                                                                                                                                                                        | left-to-right     |
+## Program Flow Control
+
+#### switch Statements
+
+##### goto
+
+- Has two parts - the goto and a label name
+- label name is following the same convention used in naming a variable
+
+_Example C code_:
+
+```c
+goto part2;
+```
+
+- For the above to there must be another statement bearing the part2 label
+- You should never need to use the goto statement
+
+## Arrays
+
+### Declaring, Initiliazing, and Accessing Elements
+
+- Arrays allow you to group values together under a single name
+- An array is a fixed number of data items that are all of the same type
+
+- Data items in an array are referred to as elements
+- The elements in an array have to be the same type
+- Declaring to use an array in a program is similar to a normal variable that contains a single value
+
+_Example C code_:
+
+```c
+long numbers[10];
+```
+
+- The number between square brackets defines how many elements the array contains
+	- called the size of the array or the array dimension
+
+- Each of the data items stored in an array is accessed by the same name
+- You select a particular element by using an index value between square brackets following the array name
+	- index values for elements in an array of size 10 would be from 0-9
+	- arrays are zero based
+
+#### Array out of Bounds
+
+- If you use an expression or a variable for an index value that is outside the range for the array, your program may crash or the array can contain garbage data
+	- referred to as an out of bounds error
+- The compiler cannot check for out of bounds errors so your program will still compile
+
+### Syntax, Partial, and Designated Values
+
+#### Initializing an Array
+
+- It is not necessary to completely initialize an entire array
+- If fewer initial values are specified, only an equal number of elements are initialized
+	- remaining values in the array are set to zero
+
+_Example C code_:
+
+```c
+float sample_data[500] = { 100.0, 300.0, 500.5 };
+```
+
+- Initializes the first three values of sample to 100.0, 300.0, and 500.5, and sets the remaining 497 elements to zero
+
+### Multidimensional Arrays
+
+- When listing elements for initialization, the values are listed by row
+	- the difference is that you put the initial values for each row between `{ }`, and then enclose all the rows between braces
+
+_Example C code_:
+
+```c
+int numbers[3][4] = {
+    { 10, 20, 30, 40 },
+    { 11, 21, 31, 41 },
+    { 12, 22, 32, 42 }
+};
+```
+
+- Commas are required after each brace that closes off a row, except in the case of the final row
+
