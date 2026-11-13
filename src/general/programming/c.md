@@ -523,3 +523,180 @@ int maint(void) {
 
 ## Character Arrays and String Functions
 
+### Literals, Null Terminators
+
+- Every time you have displayed a message using the `printf()` function, you have defined the message a string constant
+- Understand the difference between singleq quotation and double quotation marks
+	- both are used to create two different types of constants in C
+- You must specify a double quote within a string as the escape sequence `\"`
+
+#### Null Character
+
+- A special character with the code value 0 is added to the end of each string to mark where it ends
+	- this character is known as the null character and you write it as `\0`
+
+### Character Array
+
+- C has no special variable type for strings
+	- this means there are no special operators in the language for processing strings
+	- the standard library provides an extensive range of functions to handle strings
+- Strings are stored in an array of type char
+	- characters in a string a stored in adjacent memory cells, one character per cell
+- To declare a string in C, simply use the char type and the brackets to indicate the size
+
+_Example C code_:
+
+```c
+char myString[20];
+```
+
+- This variable can accomodate a string that contains up to 19 characters
+	- you must allow one element for the termination character ( `\0`)
+- You can initialize a string variable when you declare it
+	- it automatically adds the null terminator
+
+_Example C code_:
+
+```c
+char word[] = { 'H', 'e', 'l', 'l', 'o', '!' }
+```
+
+#### Assigning a Value to a String after Initializing
+
+- Since you can not assign arrays in C, you can not assign strings either
+
+_Example C code_:
+
+```c
+char s[100]; // declare
+s = "hello"; // initialize - does not work!
+```
+
+- You are performing an assignment operation, and you cannot assign one array of characters to another array of characters like this
+	- you have to use `strncpy()` to assign a value to a char array after it has been declared or initialized
+
+#### Displaying a String
+
+- When you want to refer to a string stored in an array, you just use the array name by itself
+- To display a string as output using the `printf()` function, you do the following
+
+_Example C code_:
+
+```c
+printf("\nThe message is : %s", message);
+```
+
+- The `%s` format specifier is for outputting a null-terminated string
+
+#### Inputting a String
+
+- To input a string via the keyboard, use the `scanf()` function
+
+_Example C code_:
+
+```c
+char input[10];
+printf("Please input your name: ");
+scanf("%s", input);
+```
+
+- The `%s` format specifier is for inputting strings
+- No need to use the `&` on a string
+
+### Immutable Strings
+
+#### \#define
+
+- The preprocessor lets you define constants
+
+_Example C code_:
+
+```c
+#define TAXRATE 0.015
+```
+
+- When your program is compiled, the value 0.015 will be substituted everywhere you have used TAXRATE
+	- compile-time substitution
+- A defined name is not a variable
+	- you can not assign a value to it
+- Special syntax
+	- no equal sign use to assign the value 0.015 to TAXRATE
+	- no semicolon
+
+### Searching, Finding, and Common Functions
+
+#### String Functions
+
+- `strlen()` - Getting the length of a string
+- `strcpy()` / `strncpy()` - Copying one character string to another
+- `strcat()` / `strncat()` - Combining two character strings together
+- `strcmp()` / `strncmp()` - Determining if two character strings are equal
+
+### Searching, Tokenizing, and Analyzing Strings
+
+#### Searching
+
+- The `strchr()` function searches a given string for a specified character
+	- first argument to the function is the string to be searched
+	- second argument is the character that you are looking for
+- The function will search the string starting at the beginning and return a pointer to the first position in the string where the character is found
+	- the address of this position in memory
+	- is of type char* described as "the pointer to char"
+- To store the value that is returned, you must create a variable that can store the address of a character
+- If the character is not found, the function returns a special value NULL
+
+_Example C code_:
+
+```c
+char str[] = "The quick brown fox"; // the string to be searched
+char ch = 'q'; // the character you are looking for
+char *pGot_char = NULL; // pointer initialized to NULL
+pGot_Char = strchr(str, ch); // stores address where ch is found
+```
+
+#### Searching for a Substring
+
+- The `strstr()` function is probably the most useful of all the searching functions
+	- searches one string for the first occurence of a substring
+	- returns a pointer to the position in the first string where the substring is found
+	- if no match, returns NULL
+
+_Example C code_:
+
+```c
+char text[] = "Every dog has his day";
+char word[] = "dog";
+char *pFound = NULL;
+pFound = strstr(text, word)
+```
+
+#### Tokenizing a String
+
+- A token is a sequence of characters within a string that is bound by a delimiter
+- A delimiter can be anything, but, should be unique to the string
+	- spaces, commas, and a period are good examples
+- Breaking a sentence into words is called tokenizing
+- The `strtok()` function is used for tokenizing a string
+
+_Example C code_:
+
+```c
+int main() {
+    char str[80] = "Hello how are you - my name is - jason";
+    const char[s] = "-";
+    char *token;
+    
+    // get the first token
+    token = strtok(str, s);
+    
+    // walk through other tokens
+    while(token != NULL) {
+        
+        printf("%s\n, token)
+        token = strtok(NULL, s);
+    }
+    
+    return 0;
+}
+```
+
