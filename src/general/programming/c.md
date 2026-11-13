@@ -483,3 +483,43 @@ int matrix[4][3] = { [0][0] = 1, [1][1] = 5, [2][2] = 9 };
 	- the values for a row are separated by commas
 	- each set of row values is separated from the next set by a comma
 
+## Function Parameters, Returns, and Scope
+
+### Function Definitions and Prototypes
+
+#### Function Prototypes
+
+- A function prototype is a statement that defines a function
+	- defines its name, its return value type, and the type of each of its parameters
+	- provides all the external specifications for the function
+- A function prototype enables the compiler to generate the appropriate instructions at each point where you call the function
+	- it also checks that you are using the function correctly in each invocation
+- When you include a standard header file in a program, the header file adds the function prototypes for that library to your program
+	- the header file `stdio.h` contains function prototypes for `printf()`, among others
+
+- Generally appear at the beginning of a source file prior to the implementations of any functions or in a header file
+- Allows any of the functions in the file to call any function regardless of where you have placed the implementation of the functions
+- Parameter names do not have to be the same as those used in the function definition
+	- not required to include the names of parameters in a function prototype
+	- will help keep your programs more consistent in design
+	- prevent any errors from occuring if, at any stage, you choose to call a function from another part of your program
+
+_Example C code_:
+
+```c
+#include <stdio.h>
+
+// function prototypes
+double Average(double data_values[], size_t count);
+double Sum(double *x, size_t n);
+size t GetData(double*, size_t);
+
+int maint(void) {
+    // code in main()
+}
+
+// definitions/implementations for Average(), Sum() and GetData()...
+```
+
+## Character Arrays and String Functions
+
